@@ -206,7 +206,7 @@ class RedaxoSync
 		
 		ob_start();
 		
-		if (eval("return true; ?> $content") == false) {
+		if (false && eval("return true; ?> $content") == false) {
 			$error = ob_get_clean();
 			$error = trim(str_replace("Parse error: syntax error, ", "", $error));
 			$error = preg_replace("/in .:[^:]+ : eval\\(\\)'d code/s","in $objectName.module.php", $error);
@@ -279,7 +279,7 @@ class RedaxoSync
 		
 		ob_start();
 		
-		if (eval("return true; ?> $content") == false) {
+		if (false && eval("return true; ?> $content") == false) {
 			$error = ob_get_clean();
 			$error = trim(str_replace("Parse error: syntax error, ", "", $error));
 			$error = preg_replace("/in .:[^:]+ : eval\\(\\)'d code/s","in $objectName.template.php", $error);
@@ -347,7 +347,7 @@ class RedaxoSync
 		
 		ob_start();
 		
-		if (eval("return true; ?> $content") == false) {
+		if (false && eval("return true; ?> $content") == false) {
 			$error = ob_get_clean();
 			$error = trim(str_replace("Parse error: syntax error, ", "", $error));
 			$error = preg_replace("/in .:[^:]+ : eval\\(\\)'d code/s","in $objectName.module.php", $error);
@@ -380,7 +380,7 @@ class RedaxoSync
 		
 		ob_start();
 		
-		if (eval("return true; ?> $content") == false) {
+		if (false && eval("return true; ?> $content") == false) {
 			$error = ob_get_clean();
 			$error = trim(str_replace("Parse error: syntax error, ", "", $error));
 			$error = preg_replace("/in .:[^:]+ : eval\\(\\)'d code/s","in $objectName.template.php", $error);
