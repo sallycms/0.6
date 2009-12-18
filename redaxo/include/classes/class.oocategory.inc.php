@@ -1,0 +1,240 @@
+<?php
+
+/**
+ * Object Oriented Framework: Bildet eine Kategorie der Struktur ab
+ * @package redaxo4
+ * @version svn:$Id$
+ */
+
+class OOCategory extends OORedaxo
+{
+
+  function OOCategory($params = false, $clang = false)
+  {
+    parent :: OORedaxo($params, $clang);
+  }
+
+  /*
+   * CLASS Function:
+   * Return an OORedaxo object based on an id
+   */
+  function getCategoryById($category_id, $clang = false)
+  {
+  	return OOArticle :: getArticleById($category_id, $clang, true);
+  }
+
+  /*
+   * CLASS Function:
+   * Return all Children by id
+   */
+  function getChildrenById($cat_parent_id, $ignore_offlines = false, $clang = false)
+  {
+    global $REX;
+    
+    $cat_parent_id = (int) $cat_parent_id;
+
+    if(!is_int($cat_parent_id))
+      return array();
+    
+    if ($clang === false)
+      $clang = $REX['CUR_CLANG'];
+
+    $clist = rex_register_extension_point('CLIST_GET', null, array(
+    	'cat_parent_id' => $cat_parent_id,
+     	'clang' => $clang
+    ));
+
+    if($clist === null){
+    	$clist = array();
+    	
+    	$sql = rex_sql::getInstance();
+    	$sql->setQuery('SELECT id FROM '.$REX['TABLE_PREFIX'].'article WHERE startpage = 1 AND re_id = '.$cat_parent_id.' AND clang = '.$REX['CUR_CLANG'].' ORDER BY catprior,name');
+    	while ($row = mysql_fetch_array($sql->result, MYSQL_NUM)) {
+    		$clist[] = $row[0];  
+		}
+		$sql->freeResult();
+		
+		rex_register_extension_point('CLIST_CREATED', $clist, array(
+    		'cat_parent_id' => $cat_parent_id,
+     		'clang' => $clang
+    	));
+    }
+    
+    
+    $catlist = array ();
+  
+    foreach ($clist as $var)
+    {
+      $category = OOCategory :: getCategoryById($var, $clang);
+      if ($ignore_offlines)
+      {
+        if ($category->isOnline())
+        {
+          $catlist[] = $category;
+        }
+      }
+      else
+      {
+        $catlist[] = $category;
+      }
+    }
+      
+    return $catlist;
+  }
+
+  /*
+   * Accessor Method:
+   * returns the article priority
+   */
+  function getPriority()
+  {
+    return $this->_catprior;
+  }
+
+  /**
+   * CLASS Function:
+   * Return a list of top level categories, ie.
+   * categories that have no parent.
+   * Returns an array of OOCategory objects sorted by $prior.
+   *
+   * If $ignore_offlines is set to TRUE,
+   * all categories with status 0 will be
+   * excempt from this list!
+   */
+  function getRootCategories($ignore_offlines = false, $clang = false)
+  {
+    global $REX;
+
+    if ($clang === false)
+      $clang = $REX['CUR_CLANG'];
+
+    return OOCategory :: getChildrenById(0, $ignore_offlines, $clang);
+  }
+
+  /*
+   * Object Function:
+   * Return a list of all subcategories.
+   * Returns an array of OORedaxo objects sorted by $prior.
+   *
+   * If $ignore_offlines is set to TRUE,
+   * all categories with status 0 will be
+   * excempt from this list!
+   */
+  function getChildren($ignore_offlines = false, $clang = false)
+  {
+    if ($clang === false)
+      $clang = $this->_clang;
+
+    return OOCategory :: getChildrenById($this->_id, $ignore_offlines, $clang);
+  }
+
+  /*
+   * Object Function:
+   * Returns the parent category
+   */
+  function getParent($clang = false)
+  {
+    if ($clang === false)
+      $clang = $this->_clang;
+
+    return OOCategory :: getCategoryById($this->_re_id, $clang);
+  }
+
+  /*
+   * Object Function:
+   * Returns TRUE if this category is the direct
+   * parent of the other category.
+   */
+  function isParent($other_cat)
+  {
+     return $this->getId() == $other_cat->getParentId() &&
+            $this->getClang() == $other_cat->getClang();
+  }
+
+  /*
+   * Object Function:
+   * Returns TRUE if this category is an ancestor
+   * (parent, grandparent, greatgrandparent, etc)
+   * of the other category.
+   */
+  function isAncestor($other_cat)
+  {
+    $category = OOCategory :: _getCategoryObject($other_cat);
+    return in_array($this->_id, explode('|', $category->getPath()));
+  }
+
+  /*
+   * Object Function:
+   * Return a list of articles in this category
+   * Returns an array of OOArticle objects sorted by $prior.
+   *
+   * If $ignore_offlines is set to TRUE,
+   * all articles with status 0 will be
+   * excempt from this list!
+   */
+  function getArticles($ignore_offlines = false)
+  {
+    return OOArticle :: getArticlesOfCategory($this->_id, $ignore_offlines, $this->_clang);
+  }
+
+  /*
+   * Object Function:
+   * Return the start article for this category
+   */
+  function getStartArticle()
+  {
+    return OOArticle :: getCategoryStartArticle($this->_id, $this->_clang);
+  }
+
+  /*
+   * Accessor Method:
+   * returns the name of the article
+   */
+  function getName()
+  {
+    return $this->_catname;
+  }
+
+  function & _getCategoryObject($category, $clang = false)
+  {
+    if (is_object($category))
+    {
+      return $category;
+    }
+    elseif (is_int($category))
+    {
+      return OOCategory :: getCategoryById($category, $clang);
+    }
+    elseif (is_array($category))
+    {
+      $catlist = array ();
+      foreach ($category as $cat)
+      {
+        $catobj = OOCategory :: _getCategoryObject($cat, $clang);
+        if (is_object($catobj))
+        {
+          $catlist[] = $catobj;
+        }
+        else
+        {
+          return null;
+        }
+      }
+      return $catlist;
+    }
+    return null;
+  }
+
+  function hasValue($value)
+  {
+    return parent::hasValue($value, array('cat_'));
+  }
+  
+  /*
+   * Static Method: Returns boolean if is category
+   */
+  function isValid($category)
+  {
+    return is_object($category) && is_a($category, 'oocategory');
+  }
+}
