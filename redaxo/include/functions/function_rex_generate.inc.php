@@ -960,7 +960,7 @@ function rex_generateTemplate($template_id)
     $templateFile = rex_template::getFilePath($template_id);
 
   	$content = $sql->getValue('content');
-  	foreach($REX['VARIABLES'] as $var)
+  	foreach($REX['VARIABLES'] as $idx => $var)
   	{
       if (is_string($var)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
         $tmp = new $var();
