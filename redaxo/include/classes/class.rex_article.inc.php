@@ -313,6 +313,15 @@ class rex_article
           $RE_C[$RE_SLICE_ID]           = $i;
           $this->CONT->next();
         }
+		  
+		  // Autoloading für die Variablen anstoßen
+		  
+		  foreach ($REX['VARIABLES'] as $idx => $var) {
+			  if (is_string($var)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
+			  $tmp = new $var();
+			  $tmp = null;
+			}
+		  }
 
         // ---------- moduleselect: nur module nehmen auf die der user rechte hat
         if($this->mode=='edit')
@@ -883,8 +892,14 @@ class rex_article
     $tmp = '';
     $sliceId = $sql->getValue($REX['TABLE_PREFIX'].'article_slice.id');
 
-    foreach($REX['VARIABLES'] as $var)
+    foreach($REX['VARIABLES'] as $idx => $var)
     {
+      if (is_string($var)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
+        $tmp = new $var();
+        $tmp = null;
+        $var = $REX['VARIABLES'][$idx];
+      }
+      
       if ($this->mode == 'edit')
       {
         if (($this->function == 'add' && $sliceId == '0') ||

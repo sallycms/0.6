@@ -171,6 +171,12 @@ function rex_execPreSaveAction($module_id, $function, $REX_ACTION)
     // *********************** WERTE ERSETZEN
     foreach ($REX['VARIABLES'] as $obj)
     {
+      if (is_string($obj)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
+        $tmp = new $obj();
+        $tmp = null;
+        $obj = $REX['VARIABLES'][$idx];
+      }
+      
       $iaction = $obj->getACOutput($REX_ACTION, $iaction);
     }
 
@@ -210,6 +216,12 @@ function rex_execPostSaveAction($module_id, $function, $REX_ACTION)
     // ***************** WERTE ERSETZEN UND POSTACTION AUSFÜHREN
     foreach ($REX['VARIABLES'] as $obj)
     {
+      if (is_string($obj)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
+        $tmp = new $obj();
+        $tmp = null;
+        $obj = $REX['VARIABLES'][$idx];
+      }
+      
       $iaction = $obj->getACOutput($REX_ACTION, $iaction);
     }
 

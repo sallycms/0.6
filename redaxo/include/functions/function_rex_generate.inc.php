@@ -962,6 +962,12 @@ function rex_generateTemplate($template_id)
   	$content = $sql->getValue('content');
   	foreach($REX['VARIABLES'] as $var)
   	{
+      if (is_string($var)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
+        $tmp = new $var();
+        $tmp = null;
+        $var = $REX['VARIABLES'][$idx];
+      }
+      
   		$content = $var->getTemplate($content);
   	}
     if(rex_put_file_contents($templateFile, $content) !== FALSE)

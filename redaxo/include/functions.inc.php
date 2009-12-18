@@ -52,6 +52,11 @@ function __autoload($className) {
 	if (isset($classes[$className])) {
 		require_once $REX['INCLUDE_PATH'].'/classes/class.'.$classes[$className].'.inc.php';
 	}
+	elseif (in_array($className, $REX['VARIABLES'])) {
+		$index = array_search($className, $REX['VARIABLES']);
+		require_once $REX['INCLUDE_PATH'].'/classes/variables/class.'.$className.'.inc.php';
+		$REX['VARIABLES'][$index] = new $className();
+	}
 	else {
 		rex_register_extension_point('__AUTOLOAD', $className);
 	}
@@ -73,9 +78,4 @@ if ($REX['REDAXO']) {
 	require_once $REX['INCLUDE_PATH'].'/functions/function_rex_generate.inc.php';
 	require_once $REX['INCLUDE_PATH'].'/functions/function_rex_mediapool.inc.php';
 	require_once $REX['INCLUDE_PATH'].'/functions/function_rex_structure.inc.php';
-}
-
-foreach ($REX['VARIABLES'] as $key => $value) {
-	require_once $REX['INCLUDE_PATH'].'/classes/variables/class.'.$value.'.inc.php';
-	$REX['VARIABLES'][$key] = new $value();
 }

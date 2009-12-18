@@ -189,8 +189,14 @@ if ($article->getRows() == 1)
           $REX_ACTION = array ();
           $REX_ACTION['SAVE'] = true;
 
-          foreach ($REX['VARIABLES'] as $obj)
+          foreach ($REX['VARIABLES'] as $idx => $obj)
           {
+            if (is_string($obj)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
+              $tmp = new $obj();
+              $tmp = null;
+              $obj = $REX['VARIABLES'][$idx];
+            }
+            
             $REX_ACTION = $obj->getACRequestValues($REX_ACTION);
           }
 
