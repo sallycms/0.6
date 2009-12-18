@@ -7,6 +7,74 @@
  */
 
 /**
+ * Funktion zum Anlegen eines Sprache-Objekts
+ * 
+ * @param $locale Locale der Sprache
+ * @param $searchpath Pfad zum Ordner indem die Sprachdatei gesucht werden soll
+ * @param $setlocale TRUE, wenn die locale für die Umgebung gesetzt werden soll, sonst FALSE
+ * @return unknown_type
+ */
+function rex_create_lang($locale = "de_de", $searchpath = '', $setlocale = TRUE)
+{
+  global $REX;
+
+  $_searchpath = $searchpath;
+
+  if ($searchpath == '')
+  {
+    $searchpath = $REX['INCLUDE_PATH'] .DIRECTORY_SEPARATOR. "lang";
+  }
+  $lang_object = new i18n($locale, $searchpath);
+
+  if ($_searchpath == '')
+  {
+    $REX['LOCALES'] = $lang_object->getLocales($searchpath);
+  }
+
+  if($setlocale)
+  {
+    $locales = array();
+    foreach(explode(',', trim($lang_object->msg('setlocale'))) as $locale)
+    {
+      $locales[]= $locale .'.'. strtoupper(str_replace('iso-', 'iso', $lang_object->msg('htmlcharset')));
+      $locales[]= $locale .'.'. strtoupper(str_replace('iso-', 'iso', str_replace("-","",$lang_object->msg('htmlcharset'))));
+      $locales[]= $locale .'.'. strtolower(str_replace('iso-', 'iso', $lang_object->msg('htmlcharset')));
+      $locales[]= $locale .'.'. strtolower(str_replace('iso-', 'iso', str_replace("-","",$lang_object->msg('htmlcharset'))));
+    }
+    
+    foreach(explode(',', trim($lang_object->msg('setlocale'))) as $locale)
+      $locales[]= $locale;
+    
+    setlocale(LC_ALL, $locales);
+  }
+
+  return $lang_object;
+}
+
+/**
+ * Returns the truncated $string
+ *
+ * @param $string String Searchstring
+ * @param $start String Suffix to search for
+ */
+function truncate($string, $length = 80, $etc = '...', $break_words = false)
+{
+  if ($length == 0)
+    return '';
+
+  if (strlen($string) > $length)
+  {
+    $length -= strlen($etc);
+    if (!$break_words)
+      $string = preg_replace('/\s+?(\S+)?$/', '', substr($string, 0, $length +1));
+
+    return substr($string, 0, $length).$etc;
+  }
+  else
+    return $string;
+}
+
+/**
  * Berechnet aus einem Relativen Pfad einen Absoluten
  */
 function rex_absPath($rel_path, $rel_to_current = false)
