@@ -67,8 +67,8 @@ class Core {
 		return !self::getInstance()->cache == null;
 	}
 	
-	public function getCurrentClang(){
-		return $this->curclang;
+	public static function getCurrentClang(){
+		return self::getInstance()->curclang;
 	}
 
 } 
