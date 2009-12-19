@@ -12,20 +12,19 @@
 class FileCache implements ICache{
 	
 	private $cachepath;
-	private $article;
-	private $category;
 	private $vars;
+	private $objects;
 	
 	public function __construct($cachepath){
 		$this->cachepath = $cachepath;
-		$this->article = $this->category = $this->vars = array();
+		$this->objects = $this->vars = array();
 		
 	}
 	
 	public function set($key, $value){
 		$type = explode('_', $key);
-		if($type[0] == 'article' || $type[0] == 'category'){
-			return $this->setRedaxo($type, $value);
+		if($type[0] == 'obj'){
+			return $this->setObj($key, $value);
 		}else{
 			return $this->setVar($key, $value);
 		}
@@ -33,8 +32,8 @@ class FileCache implements ICache{
 	
 	public function get($key, $default){
 		$type = explode('_', $key);
-		if($type[0] == 'article' || $type[0] == 'category'){
-			return $this->getRedaxo($type, $default);
+		if($type[0] == 'obj'){
+			return $this->getObj($key, $default);
 		}else{
 			return $this->getVar($key, $default);
 		}
@@ -42,10 +41,10 @@ class FileCache implements ICache{
 	
 	public function delete($key){
 		$type = explode('_', $key);
-		if($type[0] == 'article' || $type[0] == 'category'){
-			return $this->deleteRedaxo($type);
+		if($type[0] == 'obj'){
+			return $this->getObj($key, $default);
 		}else{
-			return $this->deleteVar($key);
+			return $this->getVar($key, $default);
 		}
 	}
 	
@@ -87,34 +86,27 @@ class FileCache implements ICache{
 		}
 	}
 	
-	private function setRedaxo($params, $value) {
-		$var = $this->$params[0];
-		if(empty($var))
-			$this->readFile($params[0]);
-		$var = $this->$params[0];
-		$var[$params[1]][$params[2]] = serialize($value);
-		$this->$params[0] = $var;
-		$this->writeFile($params[0]);
+	private function setObj($key, $value) {
+		if(empty($this->objects))
+			$this->readFile('objects');
+		$this->objects[$key] = serialize($value);
+		$this->writeFile('objects');
 	}
 
-	private function getRedaxo($params, $default) {
-		
-		if(empty($this->$params[0]))
-			$this->readFile($params[0]);				
-		$var = $this->$params[0];
-		if(isset($var[$params[1]][$params[2]])){
-			return unserialize($var[$params[1]][$params[2]]);
+	private function getObj($key, $default) {
+		if(empty($this->objects))
+			$this->readFile('objects');				
+		if(isset($this->objects[$key])){
+			return unserialize($this->objects[$key]);
 		}
 		return $default;
 	}
 	
-	private function deleteRedaxo($params){
-		$this->readFile($params[0]);
-		$var = $this->$params[0];
-		unset($var[$params[1]][$params[2]]);
-		$this->$params[0] = $var;
-		$this->writeFile($params[0]);
-		if($params[0] == 'category') $this->deleteRedaxo(array('article', $params[1], $params[2]));
+	private function deleteObj($key){
+		if(empty($this->objects))
+			$this->readFile('objects');
+		unset($this->objects[$key]);
+		$this->writeFile('objects');
 	}
 	
 	private function setVar($key, $value) {
