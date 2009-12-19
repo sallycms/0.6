@@ -24,6 +24,8 @@ class rex_sql
   var $error; // Fehlertext
   var $errno; // Fehlernummer
 
+  private static $identifiers = array(1 => null, 2 => null);
+    
   function rex_sql($DBID = 1)
   {
     global $REX;
@@ -60,22 +62,30 @@ class rex_sql
   /**
    * Stellt die Verbindung zur Datenbank her
    */
-  function selectDB($DBID)
+  public function selectDB($DBID, $forceReconnect = false)
   {
     global $REX;
+		
+		if ($forceReconnect || self::$identifiers[$DBID] === null) {
+			$level = error_reporting(0);
+			$func  = $REX['DB'][$DBID]['PERSISTENT'] ? 'mysql_pconnect' : 'mysql_connect';
 
-    $this->DBID = $DBID;
+			$this->DBID       = $DBID;
+			$this->identifier = $func($REX['DB'][$DBID]['HOST'], $REX['DB'][$DBID]['LOGIN'], $REX['DB'][$DBID]['PSW']);
+			
+			self::$identifiers[$DBID] = $this->identifier;
 
-    if($REX['DB'][$DBID]['PERSISTENT'])
-      $this->identifier = @mysql_pconnect($REX['DB'][$DBID]['HOST'], $REX['DB'][$DBID]['LOGIN'], $REX['DB'][$DBID]['PSW']);
-    else
-      $this->identifier = @mysql_connect($REX['DB'][$DBID]['HOST'], $REX['DB'][$DBID]['LOGIN'], $REX['DB'][$DBID]['PSW']);
+			if (!mysql_select_db($REX['DB'][$DBID]['NAME'], $this->identifier)) {
+				exit('<span style="color:red;font-family:verdana,arial;font-size:11px;">Es konnte keine Verbindung zur Datenbank hergestellt werden. | Bitte kontaktieren Sie <a href=mailto:'.$REX['ERROR_EMAIL'].'>'.$REX['ERROR_EMAIL'].'</a>. | Danke!</span>');
+			}
 
-    if (!@mysql_select_db($REX['DB'][$DBID]['NAME'], $this->identifier))
-    {
-      echo "<font style='color:red; font-family:verdana,arial; font-size:11px;'>Class SQL 1.1 | Database down. | Please contact <a href=mailto:" . $REX['ERROR_EMAIL'] . ">" . $REX['ERROR_EMAIL'] . "</a>\n | Thank you!\n</font>";
-      exit;
-    }
+			error_reporting($level);
+		}
+		else {
+			$this->identifier = self::$identifiers[$DBID];
+			$this->DBID       = $DBID;
+		}
+  	
   }
 
   /**
