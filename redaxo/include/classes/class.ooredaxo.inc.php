@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Object Oriented Framework: Basisklasse für die Strukturkomponenten
+ * Object Oriented Framework: Basisklasse fï¿½r die Strukturkomponenten
  * @package redaxo4
  * @version svn:$Id$
  */
@@ -94,65 +94,30 @@ class OORedaxo
     return false;
   }
 
-  /**
-   * CLASS Function:
-   * Returns an Array containing article field names
-   */
-  function getClassVars()
-  {
-    static $vars = array ();
-
-    if (empty($vars))
-    {
-      global $REX;
-
-      $vars = array();
-
-//      $file = $REX['INCLUDE_PATH']. '/generated/articles/'.  $REX['START_ARTICLE_ID'] .'.0.article';
-//      if($REX['GG'] && file_exists($file))
-//      {
-//        // Im GetGenerated Modus, die Spaltennamen aus den generated Dateien holen
-//        include_once($file);
-//
-//        // da getClassVars() eine statische Methode ist, können wir hier nicht mit $this->getId() arbeiten!
-//        $genVars = OORedaxo::convertGeneratedArray($REX['ART'][$REX['START_ARTICLE_ID']],0);
-//        unset($genVars['article_id']);
-//        unset($genVars['last_update_stamp']);
-//        foreach($genVars as $name => $value)
-//        {
-//          $vars[] = $name;
-//        }
-//      }
-//      else
-//      {
-        // Im Backend die Spalten aus der DB auslesen / via EP holen
-        $sql = new rex_sql();
-        $sql->setQuery('SELECT * FROM '. $REX['TABLE_PREFIX'] .'article LIMIT 0');
-        foreach($sql->getFieldnames() as $field)
-        {
-          $vars[] = $field;
-        }
-      }
-//    }
-
-    return $vars;
-  }
-
-  /*
-  * CLASS Function:
-  * Converts Genernated Array to OOBase Format Array
-  */
-//  function convertGeneratedArray($generatedArray, $clang)
-//  {
-//    $OORedaxoArray['id'] = $generatedArray['article_id'][$clang];
-//    $OORedaxoArray['clang'] = $clang;
-//    foreach ($generatedArray as $key => $var)
-//    {
-//      $OORedaxoArray[$key] = $var[$clang];
-//    }
-//    unset ($OORedaxoArray['_article_id']);
-//    return $OORedaxoArray;
-//  }
+/**
+ * CLASS Function:
+ * Returns an Array containing article field names
+ */
+function getClassVars()
+{
+	static $vars = array ();
+	
+	if (empty($vars))
+	{
+		global $REX;
+		$sql = rex_sql::getInstance();
+		$sql->setQuery('SHOW COLUMNS FROM '.$REX['TABLE_PREFIX'].'article');
+			
+		$columns = array();
+		for($i = 0; $i < $sql->getRows(); $i++)
+		{
+			$vars[] = $sql->getValue('Field');
+			$sql->next();
+		}
+	}
+		
+	return $vars;
+}
 
   /*
    * Accessor Method:
@@ -324,10 +289,10 @@ class OORedaxo
    * Accessor Method:
    * Returns a link to this article
    *
-   * @param [$params] Parameter für den Link
-   * @param [$attributes] array Attribute die dem Link hinzugefügt werden sollen. Default: null
+   * @param [$params] Parameter fï¿½r den Link
+   * @param [$attributes] array Attribute die dem Link hinzugefï¿½gt werden sollen. Default: null
    * @param [$sorround_tag] string HTML-Tag-Name mit dem der Link umgeben werden soll, z.b. 'li', 'div'. Default: null
-   * @param [sorround_attributes] array Attribute die Umgebenden-Element hinzugefügt werden sollen. Default: null
+   * @param [sorround_attributes] array Attribute die Umgebenden-Element hinzugefï¿½gt werden sollen. Default: null
    */
   function toLink($params = '', $attributes = null, $sorround_tag = null, $sorround_attributes = null)
   {
@@ -373,18 +338,15 @@ class OORedaxo
       else
         $explode = explode('|', $this->_path);
 
-      if (is_array($explode))
+      foreach ($explode as $var)
       {
-        foreach ($explode as $var)
+        if ($var != '')
         {
-          if ($var != '')
-          {
-            $return[] = OOCategory :: getCategoryById($var, $this->_clang);
-          }
+          $return[] = OOCategory :: getCategoryById($var, $this->_clang);
         }
       }
     }
-
+    
     return $return;
   }
   
