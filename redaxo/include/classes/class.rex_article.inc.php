@@ -700,10 +700,13 @@ class rex_article
       
       $templateFile = rex_template::getFilePath($this->template_id);
       
-      if (file_exists($templateFile)) {
-        include $templateFile;
+      if (!file_exists($templateFile)) {
+        $tpl = new rex_template($this->template_id);
+        $tpl->generate();
+        $tpl = null;
       }
       
+      include $templateFile;
       $CONTENT = ob_get_clean();
     }
     else
