@@ -8,34 +8,34 @@
 
 class OOArticle extends OORedaxo {
 	
-	private function OOArticle($params = FALSE, $clang = FALSE) {
-		parent :: OORedaxo($params, $clang);
+	public function __construct($params = false, $clang = false) {
+		parent::__construct($params, $clang);
 	}
-
+	
 
 	/**
 	 * CLASS Function:
 	 * Return an OORedaxo object based on an id
 	 */
-	public static function getArticleById($article_id, $clang = FALSE, $OOCategory = FALSE)
+	public static function getArticleById($article_id, $clang = false, $OOCategory = false)
 	{
 		global $REX;
-    
+		
 		$article_id = (int) $article_id;
-    
+
 		if(!is_int($article_id))
 			return NULL;
-      
-		if ($clang === FALSE)
+
+		if ($clang === false)
 			$clang = $REX['CUR_CLANG'];
-    
+
 		$key = ($OOCategory ? 'obj_category' : 'obj_article').'_'.$article_id.'_'.$clang;
 		$obj = Core::getInstance()->hasCache() ? Core::getInstance()->getCache()->get($key, null) : null;
 		
 		if(!$obj)
     	{  
       		$article = rex_sql::getInstance();
-      		$article->setQuery("SELECT * FROM " . $REX['TABLE_PREFIX'] . "article WHERE id='$article_id' AND clang='$clang' LIMIT 1");
+      		$article->setQuery("SELECT * FROM ".$REX['TABLE_PREFIX']."article WHERE id = '$article_id' AND clang = '$clang' LIMIT 1");
       		if($article->rows > 0)
       		{
         		if ($OOCategory)
@@ -54,10 +54,10 @@ class OOArticle extends OORedaxo {
 	* CLASS Function:
 	* Return the site wide start article
 	*/
-	public function getSiteStartArticle($clang = FALSE) {
+	public function getSiteStartArticle($clang = false) {
 		global $REX;
 		
-		if ($clang === FALSE)
+		if ($clang === false)
 		$clang = $REX['CUR_CLANG'];
 		
 		return OOArticle :: getArticleById($REX['START_ARTICLE_ID'], $clang);
@@ -67,10 +67,10 @@ class OOArticle extends OORedaxo {
 	* CLASS Function:
 	* Return start article for a certain category
 	*/
-	public function getCategoryStartArticle($a_category_id, $clang = FALSE) {
+	public function getCategoryStartArticle($a_category_id, $clang = false) {
 		global $REX;
 		
-		if ($clang === FALSE) $clang = $REX['CUR_CLANG'];
+		if ($clang === false) $clang = $REX['CUR_CLANG'];
 		
 		return OOArticle :: getArticleById($a_category_id, $clang);
 	}
@@ -79,11 +79,11 @@ class OOArticle extends OORedaxo {
 	* CLASS Function:
 	* Return a list of articles for a certain category
 	*/
-	public function getArticlesOfCategory($a_category_id, $ignore_offlines = FALSE, $clang = FALSE) {
+	public function getArticlesOfCategory($a_category_id, $ignore_offlines = false, $clang = false) {
 		global $REX;
 
 
-		if ($clang === FALSE)
+		if ($clang === false)
 		$clang = $REX['CUR_CLANG'];
 		
     	$key = 'alist_'.$a_category_id.'_'.$clang;
@@ -122,7 +122,7 @@ class OOArticle extends OORedaxo {
 	* CLASS Function:
 	* Return a list of top-level articles
 	*/
-	public function getRootArticles($ignore_offlines = FALSE, $clang = FALSE) {
+	public function getRootArticles($ignore_offlines = false, $clang = false) {
 		return OOArticle :: getArticlesOfCategory(0, $ignore_offlines, $clang);
 	}
 
