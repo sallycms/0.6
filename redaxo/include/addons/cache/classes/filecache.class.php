@@ -14,12 +14,11 @@ class FileCache implements ICache{
 	private $cachepath;
 	private $article;
 	private $category;
-	private $alist;
-	private $clist;
+	private $vars;
 	
 	public function __construct($cachepath){
 		$this->cachepath = $cachepath;
-		$this->article = $this->category = $this->alist = $this->clist = array();
+		$this->article = $this->category = $this->vars = array();
 		
 	}
 	
@@ -27,10 +26,8 @@ class FileCache implements ICache{
 		$type = explode('_', $key);
 		if($type[0] == 'article' || $type[0] == 'category'){
 			return $this->setRedaxo($type, $value);
-		}elseif($type[0] == 'alist'){
-			return $this->setAlist($type, $value);
-		}elseif($type[0] == 'clist'){
-			return $this->setClist($type, $value);
+		}else{
+			return $this->setVar($key, $value);
 		}
 	}
 	
@@ -38,10 +35,8 @@ class FileCache implements ICache{
 		$type = explode('_', $key);
 		if($type[0] == 'article' || $type[0] == 'category'){
 			return $this->getRedaxo($type, $default);
-		}elseif($type[0] == 'alist'){
-			return $this->getAlist($type, $default);
-		}elseif($type[0] == 'clist'){
-			return $this->getClist($type, $default);
+		}else{
+			return $this->getVar($key, $default);
 		}
 	}
 	
@@ -49,10 +44,8 @@ class FileCache implements ICache{
 		$type = explode('_', $key);
 		if($type[0] == 'article' || $type[0] == 'category'){
 			return $this->deleteRedaxo($type);
-		}elseif($type[0] == 'alist'){
-			return $this->deleteAlist($type);
-		}elseif($type[0] == 'clist'){
-			return $this->deleteClist($type);
+		}else{
+			return $this->deleteVar($key);
 		}
 	}
 	
@@ -124,52 +117,29 @@ class FileCache implements ICache{
 		if($params[0] == 'category') $this->deleteRedaxo(array('article', $params[1], $params[2]));
 	}
 	
-	private function setAlist($params, $value) {
-		if(empty($this->alist))
-			$this->readFile('alist');
-		$this->alist[$params[1]][$params[2]] = $value;
-		$this->writeFile('alist');
+	private function setVar($key, $value) {
+		if(empty($this->vars))
+			$this->readFile('vars');
+		$this->vars[$key] = $value;
+		$this->writeFile('vars');
 	}
 
-	private function getAlist($params, $default) {
-		if(empty($this->alist))
-			$this->readFile('alist');				
-		if(isset($this->alist[$params[1]][$params[2]])){
-			return $this->alist[$params[1]][$params[2]];
+	private function getVar($key, $default) {
+		if(empty($this->vars))
+			$this->readFile('vars');				
+		if(isset($this->vars[$key])){
+			return $this->vars[$key];
 		}
 		return $default;
 	}
 	
-	private function deleteAlist($params){
-		if(empty($this->alist))
-			$this->readFile('alist');
-		unset($this->alist[$params[1]][$params[2]]);
-		$this->writeFile('alist');
+	private function deleteVar($key){
+		if(empty($this->vars))
+			$this->readFile('vars');
+		unset($this->vars[$key]);
+		$this->writeFile('vars');
 	}
 	
-	private function setClist($params, $value) {
-		if(empty($this->clist))
-			$this->readFile('clist');
-		$this->clist[$params[1]][$params[2]] = $value;
-		$this->writeFile('clist');
-	}
-
-	private function getClist($params, $default) {
-		if(empty($this->clist))
-			$this->readFile('clist');				
-		if(isset($this->clist[$params[1]][$params[2]])){
-			return $this->clist[$params[1]][$params[2]];
-		}
-		return $default;
-	}
-	
-	private function deleteClist($params){
-		if(empty($this->clist))
-			$this->readFile('clist');
-		unset($this->clist[$params[1]][$params[2]]);
-		$this->writeFile('clist');
-	}
-		
 	private function readFile($varname){
 		$cacheFile = $this->cachepath.$varname.'.cache';
 		if (file_exists($cacheFile)){ 
