@@ -39,10 +39,8 @@ class OOCategory extends OORedaxo
     if ($clang === false)
       $clang = $REX['CUR_CLANG'];
 
-    $clist = rex_register_extension_point('CLIST_GET', null, array(
-    	'cat_parent_id' => $cat_parent_id,
-     	'clang' => $clang
-    ));
+    $key = 'clist_'.$cat_parent_id.'_'.$clang;
+	$clist = Core::getInstance()->hasCache() ? Core::getInstance()->getCache()->get($key, null) : null;
 
     if($clist === null){
     	$clist = array();
@@ -54,10 +52,7 @@ class OOCategory extends OORedaxo
 		}
 		$sql->freeResult();
 		
-		rex_register_extension_point('CLIST_CREATED', $clist, array(
-    		'cat_parent_id' => $cat_parent_id,
-     		'clang' => $clang
-    	));
+		Core::getInstance()->getCache()->set($key, $clist);
     }
     
     

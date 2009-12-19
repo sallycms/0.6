@@ -8,7 +8,7 @@ class Core {
 	}
 	
 	public static function getInstance() {
-		if(!sself::$instance){
+		if(!self::$instance){
 			self::$instance = new Core();
 		}
 		return self::$instance;
@@ -16,6 +16,14 @@ class Core {
 	
 	public function setCache(ICache $cache) {
 		$this->cache = $cache;
+	}
+	
+	public function getCache(){
+		return $this->cache;
+	}
+	
+	public function hasCache(){
+		return !self::getInstance()->getCache() == null;
 	}
 
 } 

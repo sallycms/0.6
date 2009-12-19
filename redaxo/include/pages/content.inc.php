@@ -501,6 +501,7 @@ if ($article->getRows() == 1)
           'clang' => $clang,
           'name' => $meta_article_name,
         ));
+        Core::getInstance()->getCache()->delete('article_'.$article_id.'_'.$clang);
       }
       else
       {

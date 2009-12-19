@@ -12,40 +12,42 @@ class OOArticle extends OORedaxo {
 		parent :: OORedaxo($params, $clang);
 	}
 
+
 	/**
-	* CLASS Function:
-	* Return an OORedaxo object based on an id
-	*/
-	public function getArticleById($article_id, $clang = FALSE, $OOCategory = FALSE) {
-		
+	 * CLASS Function:
+	 * Return an OORedaxo object based on an id
+	 */
+	public static function getArticleById($article_id, $clang = FALSE, $OOCategory = FALSE)
+	{
 		global $REX;
-		
+    
 		$article_id = (int) $article_id;
-		
-		if (!is_int($article_id))
-		return NULL;
-		
+    
+		if(!is_int($article_id))
+			return NULL;
+      
 		if ($clang === FALSE)
-		$clang = $REX['CUR_CLANG'];
+			$clang = $REX['CUR_CLANG'];
+    
+		$key = ($OOCategory ? 'category' : 'article').'_'.$article_id.'_'.$clang;
+		$obj = Core::getInstance()->hasCache() ? Core::getInstance()->getCache()->get($key, null) : null;
 		
-		$obj = rex_register_extension_point('OOREDAXO_GET', null, array(
-			'id' => $article_id,
-			'clang' => $clang,
-			'oocategory' => $OOCategory
-		));
-		
-		if (!$obj) {
-			$article = rex_sql::getInstance();
-			$article->setQuery("SELECT * FROM " . $REX['TABLE_PREFIX'] . "article WHERE id='$article_id' AND clang='$clang'");
-			if($article->rows > 0) {
-				if ($OOCategory) $obj = new OOCategory(mysql_fetch_array($article->result, MYSQL_ASSOC));
-				else $obj = new OOArticle(mysql_fetch_array($article->result, MYSQL_ASSOC));
-				rex_register_extension_point('OOREDAXO_CREATED', $obj);
-			}
-			$article->freeResult();
-		}
-		
-		return $obj;
+		if(!$obj)
+    	{  
+      		$article = rex_sql::getInstance();
+      		$article->setQuery("SELECT * FROM " . $REX['TABLE_PREFIX'] . "article WHERE id='$article_id' AND clang='$clang'");
+      		if($article->rows > 0)
+      		{
+        		if ($OOCategory)
+          			$obj = new OOCategory(mysql_fetch_array($article->result, MYSQL_ASSOC));
+        		else
+         			 $obj = new OOArticle(mysql_fetch_array($article->result, MYSQL_ASSOC));
+      		 	if(Core::getInstance()->hasCache())
+       				Core::getInstance()->getCache()->set($key, $obj);
+      		}
+      		$article->freeResult();
+    	}
+        return $obj;
 	}
 
 	/**
@@ -80,15 +82,14 @@ class OOArticle extends OORedaxo {
 	public function getArticlesOfCategory($a_category_id, $ignore_offlines = FALSE, $clang = FALSE) {
 		global $REX;
 
+
 		if ($clang === FALSE)
 		$clang = $REX['CUR_CLANG'];
-
-		$alist = rex_register_extension_point('ALIST_GET', null, array(
-			'category_id' => $a_category_id,
-			'clang' => $clang
-		));
 		
-		if($alist === null){
+    	$key = 'alist_'.$a_category_id.'_'.$clang;
+		$alist = Core::getInstance()->hasCache() ? Core::getInstance()->getCache()->get($key, null) : null;
+      
+  		if($alist === null){
 			$alist = array ($a_category_id);
 			
 			$sql = rex_sql::getInstance();
@@ -96,13 +97,12 @@ class OOArticle extends OORedaxo {
 			while ($row = mysql_fetch_array($sql->result, MYSQL_NUM)) {
 				$alist[] = $row[0];  
 			}
-			$sql->freeResult();
-			
-			rex_register_extension_point('ALIST_CREATED', $alist, array(
-				'category_id' => $a_category_id,
-				'clang' => $clang
-			));
-		}
+		   	$sql->freeResult();
+		   	if(Core::getInstance()->hasCache())
+    	   		Core::getInstance()->getCache()->set($key, $alist);
+    	
+    	}
+
 
 		$artlist = array ();
 			
