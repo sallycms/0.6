@@ -1,11 +1,15 @@
 <?php
-/**
- * Bindet nötige Klassen/Funktionen ein
- * @package redaxo4
- * @version svn:$Id$
+/*
+ * Copyright (c) 2009, webvariants GbR, http://www.webvariants.de
+ *
+ * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
+ * beiliegenden LICENSE Datei und unter:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
-// Nötige Konstanten (aus class.rex_list.inc.php)
+// NÃ¶tige Konstanten (aus class.rex_list.inc.php)
 define('REX_LIST_OPT_SORT', 0);
 
 function __autoload($className) {
