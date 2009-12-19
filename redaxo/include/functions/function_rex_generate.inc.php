@@ -216,7 +216,7 @@ function rex_generateArticleContent($article_id, $clang = null)
   
     // --------------------------------------------------- Artikelcontent speichern
     $article_content_file = $REX['INCLUDE_PATH']."/generated/articles/$article_id.$_clang.content";
-    $article_content = "?>".$CONT->getArticle();
+    $article_content = $CONT->getArticle();
   
     // ----- EXTENSION POINT
     $article_content = rex_register_extension_point('GENERATE_FILTER', $article_content,

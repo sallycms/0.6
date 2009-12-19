@@ -265,7 +265,7 @@ class rex_article
         
         if(file_exists($article_content_file))
         {
-          eval (rex_get_file_contents($article_content_file));
+          include $article_content_file;
         }
       }
     }else
@@ -683,8 +683,7 @@ class rex_article
     }
 
     // ----- end: article caching
-    $CONTENT = ob_get_contents();
-    ob_end_clean();
+    $CONTENT = ob_get_clean();
 
     return $CONTENT;
   }
@@ -699,14 +698,16 @@ class rex_article
     {
       ob_start();
       ob_implicit_flush(0);
-
-      $TEMPLATE = new rex_template();
-      $TEMPLATE->setId($this->template_id);
-      $tplContent = $this->replaceCommonVars($TEMPLATE->getTemplate());
-      eval("?>".$tplContent);
-
-      $CONTENT = ob_get_contents();
-      ob_end_clean();
+        
+      $template = new rex_template();
+      $template->setId($this->template_id);
+      
+      $templateFile = $template->getFile();
+      $template = null;
+      unset($template);
+      
+      include $templateFile;
+      $CONTENT = ob_get_clean();
     }
     else
     {
@@ -877,20 +878,21 @@ class rex_article
   }
 
   // ----- Modulvariablen werden ersetzt
-  function replaceVars(&$sql, $content)
+  function replaceVars(&$sql, $content, $forceMode = null)
   {
     $content = $this->replaceObjectVars($sql,$content);
-    $content = $this->replaceCommonVars($content);
+    $content = $this->replaceCommonVars($content, $forceMode);
     return $content;
   }
 
   // ----- REX_VAR Ersetzungen
-  function replaceObjectVars(&$sql,$content)
+  function replaceObjectVars(&$sql,$content, $forceMode = null)
   {
     global $REX;
 
     $tmp = '';
     $sliceId = $sql->getValue($REX['TABLE_PREFIX'].'article_slice.id');
+    $mode    = $forceMode === null ? $this->mode : $forceMode;
 
     foreach($REX['VARIABLES'] as $idx => $var)
     {
@@ -900,7 +902,7 @@ class rex_article
         $var = $REX['VARIABLES'][$idx];
       }
       
-      if ($this->mode == 'edit')
+      if ($mode == 'edit')
       {
         if (($this->function == 'add' && $sliceId == '0') ||
             ($this->function == 'edit' && $sliceId == $this->slice_id))
