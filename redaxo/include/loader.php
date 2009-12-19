@@ -53,6 +53,20 @@ function __autoload($className) {
 		'rex_var'                           => 'rex_var'
 	);
 	
+	static $interfaces = array(
+		'ICache' => 'cache'
+	);
+	
+	static $newclasses = array(
+		'Core' => 'core'
+	);
+	
+	if (isset($interfaces[$className])) {
+		require_once $REX['INCLUDE_PATH'].'/classes/'.$interfaces[$className].'.interface.php';
+	}
+	if (isset($newclasses[$className])) {
+		require_once $REX['INCLUDE_PATH'].'/classes/'.$newclasses[$className].'.class.php';
+	}
 	if (isset($classes[$className])) {
 		require_once $REX['INCLUDE_PATH'].'/classes/class.'.$classes[$className].'.inc.php';
 	}
