@@ -10,28 +10,24 @@
 // ----------------------------------------- Alles generieren
 
 /**
- * L�scht den vollst�ndigen Artikel-Cache.
+ * Löscht den vollständigen Artikel-Cache.
  */
-function rex_generateAll()
-{
-  global $REX, $I18N;
+function rex_generateAll() {
+	global $REX, $I18N;
 
-  // ----------------------------------------------------------- generated l�schen
-  rex_deleteDir($REX['INCLUDE_PATH'].'/generated', FALSE);
+	// ----------------------------------------------------------- generated löschen
+	rex_deleteDir($REX['INCLUDE_PATH'].'/generated', FALSE);
   
-  // ----------------------------------------------------------- generiere clang
-  if(($MSG = rex_generateClang()) !== TRUE)
-  {
-    return $MSG;
-  }
+	// ----------------------------------------------------------- generiere clang
+	if (($MSG = rex_generateClang()) !== TRUE) return $MSG;
   
-  // ----------------------------------------------------------- message
-  $MSG = $I18N->msg('delete_cache_message');
+	// ----------------------------------------------------------- message
+	$MSG = $I18N->msg('delete_cache_message');
 
-  // ----- EXTENSION POINT
-  $MSG = rex_register_extension_point('ALL_GENERATED', $MSG);
+	// ----- EXTENSION POINT
+	$MSG = rex_register_extension_point('ALL_GENERATED', $MSG);
 
-  return $MSG;
+	return $MSG;
 }
 
 // ----------------------------------------- ARTICLE
@@ -405,88 +401,68 @@ function _rex_deleteArticle($id)
 }
 
 /**
- * L�scht einen Ordner/Datei mit Unterordnern
+ * Löscht einen Ordner/Datei mit Unterordnern
  *
- * @param $file Zu l�schender Ordner/Datei
- * @param $delete_folders Ordner auch l�schen? false => nein, true => ja
+ * @param $file Zu löschender Ordner/Datei
+ * @param $delete_folders Ordner auch löschen? false => nein, true => ja
  * 
  * @return TRUE bei Erfolg, sonst FALSE
  */
-function rex_deleteDir($file, $delete_folders = FALSE)
-{
+function rex_deleteDir($file, $delete_folders = FALSE) {
   $debug = FALSE;
   $state = TRUE;
   
+
   $file = rtrim($file, DIRECTORY_SEPARATOR);
 
-  if (file_exists($file))
-  {
-    // Fehler unterdr�cken, falls keine Berechtigung
-    if (@ is_dir($file))
-    {
+  if (file_exists($file)) {
+    // Fehler unterdrücken, falls keine Berechtigung
+    if (@ is_dir($file)) {
       $handle = opendir($file);
-      if (!$handle)
-      {
-        if($debug)
-          echo "Unable to open dir '$file'<br />\n";
-          
+      if (!$handle) {
+        if ($debug) echo "Unable to open dir '$file'<br />\n";
         return FALSE;
       }
 
-      while ($filename = readdir($handle))
-      {
-        if ($filename == '.' || $filename == '..')
-        {
+      while ($filename = readdir($handle)) {
+        if ($filename == '.' || $filename == '..' || $filename == '.svn') {
           continue;
         }
 
-        if (!rex_deleteDir($file.DIRECTORY_SEPARATOR.$filename, $delete_folders))
-        {
+        if (!rex_deleteDir($file.DIRECTORY_SEPARATOR.$filename, $delete_folders)) {
           $state = FALSE;
         }
       }
       closedir($handle);
 
-      if ($state !== TRUE)
-      {
+      if ($state !== TRUE) {
         return FALSE;
       }
       
 
-      // Ordner auch l�schen?
-      if ($delete_folders)
-      {
-        // Fehler unterdr�cken, falls keine Berechtigung
-        if (!@ rmdir($file))
-        {
-          if($debug)
-            echo "Unable to delete folder '$file'<br />\n";
-            
+      // Ordner auch löschen?
+      if ($delete_folders) {
+        // Fehler unterdrücken, falls keine Berechtigung
+        if (!@ rmdir($file)) {
+          if ($debug) echo "Unable to delete folder '$file'<br />\n";
           return FALSE;
         }
       }
     }
-    else
-    {
-      // Datei l�schen
-      // Fehler unterdr�cken, falls keine Berechtigung
-      if (!@ unlink($file))
-      {
-        if($debug)
-          echo "Unable to delete file '$file'<br />\n";
-            
+    else {
+      // Datei löschen
+      // Fehler unterdrücken, falls keine Berechtigung
+      if (!@ unlink($file)) {
+        if ($debug) echo "Unable to delete file '$file'<br />\n";
         return FALSE;
       }
     }
   }
-  else
-  {
-    if($debug)
-      echo "file '$file'not found!<br />\n";
+  else {
+    if ($debug) echo "file '$file'not found!<br />\n";
     // Datei/Ordner existiert nicht
     return FALSE;
   }
-
   return TRUE;
 }
 
@@ -678,51 +654,42 @@ function rex_deleteCLang($clang)
  * 
  * @return TRUE bei Erfolg, sonst FALSE
  */
-function rex_addCLang($id, $name)
-{
-  global $REX;
+function rex_addCLang($id, $name) {
+	global $REX;
   
-  if(isset($REX['CLANG'][$id])) return FALSE;
+	if (isset($REX['CLANG'][$id])) return FALSE;
 
-  $REX['CLANG'][$id] = $name;
-  $file = $REX['INCLUDE_PATH']."/clang.inc.php";
-  rex_replace_dynamic_contents($file, "\$REX['CLANG'] = ". var_export($REX['CLANG'], TRUE) .";\n");
+	$REX['CLANG'][$id] = $name;
+	$file = $REX['INCLUDE_PATH']."/clang.inc.php";
+	rex_replace_dynamic_contents($file, "\$REX['CLANG'] = ". var_export($REX['CLANG'], TRUE) .";\n");
   
-  $add = new rex_sql();
-  $add->setQuery("select * from ".$REX['TABLE_PREFIX']."article where clang='0'");
-  $fields = $add->getFieldnames();
+	$add = new rex_sql();
+	$add->setQuery("select * from ".$REX['TABLE_PREFIX']."article where clang='0'");
+	$fields = $add->getFieldnames();
+	
+	$adda = new rex_sql;
+	// $adda->debugsql = 1;
+	for ($i = 0; $i < $add->getRows(); $i ++) {
+		$adda->setTable($REX['TABLE_PREFIX']."article");
 
-  $adda = new rex_sql;
-  // $adda->debugsql = 1;
-  for ($i = 0; $i < $add->getRows(); $i ++)
-  {
-    $adda->setTable($REX['TABLE_PREFIX']."article");
-
-    foreach($fields as $key => $value)
-    {
-      if ($value == 'pid')
-        echo ''; // nix passiert
-      else
-        if ($value == 'clang')
-          $adda->setValue('clang', $id);
-        else
-          if ($value == 'status')
-            $adda->setValue('status', '0'); // Alle neuen Artikel offline
-      else
-        $adda->setValue($value, $add->escape($add->getValue($value)));
-    }
-
-    $adda->insert();
-    $add->next();
-  }
-
-  $add = new rex_sql();
-  $add->setQuery("insert into ".$REX['TABLE_PREFIX']."clang set id='$id',name='$name'");
-
-  // ----- EXTENSION POINT
-  rex_register_extension_point('CLANG_ADDED','',array ('id' => $id, 'name' => $name));
-  
-  return TRUE;
+		foreach ($fields as $key => $value) {
+			if ($value == 'pid') echo ''; // nix passiert
+			elseif ($value == 'clang') $adda->setValue('clang', $id);
+			elseif ($value == 'status') $adda->setValue('status', '0'); // Alle neuen Artikel offline
+			else $adda->setValue($value, $add->escape($add->getValue($value)));
+		}
+		
+		$adda->insert();
+		$add->next();
+	}
+	
+	$add = new rex_sql();
+	$add->setQuery("insert into ".$REX['TABLE_PREFIX']."clang set id='$id',name='$name'");
+	
+	// ----- EXTENSION POINT
+	rex_register_extension_point('CLANG_ADDED','',array ('id' => $id, 'name' => $name));
+	
+	return true;
 }
 
 /**
@@ -850,26 +817,23 @@ function rex_generatePlugins($PLUGINS)
  * 
  * @return TRUE bei Erfolg, sonst eine Fehlermeldung
  */
-function rex_generateClang()
-{
-  global $REX;
-  
-  $lg = new rex_sql();
-  $lg->setQuery("select * from ".$REX['TABLE_PREFIX']."clang order by id");
-  
-  $REX['CLANG'] = array();
-  while($lg->hasNext())
-  {
-    $REX['CLANG'][$lg->getValue("id")] = $lg->getValue("name"); 
-    $lg->next();
-  }
-  
-  $file = $REX['INCLUDE_PATH']."/clang.inc.php";
-  if(rex_replace_dynamic_contents($file, "\$REX['CLANG'] = ". var_export($REX['CLANG'], TRUE) .";\n") === FALSE)
-  {
-    return 'Datei "'.$file.'" hat keine Schreibrechte';
-  }
-  return TRUE;
+function rex_generateClang() {
+	global $REX;
+	
+	$lg = new rex_sql();
+	$lg->setQuery("select * from ".$REX['TABLE_PREFIX']."clang order by id");
+
+	$REX['CLANG'] = array();
+	while ($lg->hasNext()) {
+    	$REX['CLANG'][$lg->getValue("id")] = $lg->getValue("name"); 
+    	$lg->next();
+	}
+	
+	$file = $REX['INCLUDE_PATH']."/clang.inc.php";
+	if(rex_replace_dynamic_contents($file, "\$REX['CLANG'] = ". var_export($REX['CLANG'], TRUE) .";\n") === FALSE) {
+		return 'Datei "'.$file.'" hat keine Schreibrechte';
+	}
+	return TRUE;
 }
 
 /**
