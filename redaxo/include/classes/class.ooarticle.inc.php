@@ -29,13 +29,13 @@ class OOArticle extends OORedaxo {
 		if ($clang === FALSE)
 			$clang = $REX['CUR_CLANG'];
     
-		$key = ($OOCategory ? 'category' : 'article').'_'.$article_id.'_'.$clang;
+		$key = ($OOCategory ? 'obj_category' : 'obj_article').'_'.$article_id.'_'.$clang;
 		$obj = Core::getInstance()->hasCache() ? Core::getInstance()->getCache()->get($key, null) : null;
 		
 		if(!$obj)
     	{  
       		$article = rex_sql::getInstance();
-      		$article->setQuery("SELECT * FROM " . $REX['TABLE_PREFIX'] . "article WHERE id='$article_id' AND clang='$clang'");
+      		$article->setQuery("SELECT * FROM " . $REX['TABLE_PREFIX'] . "article WHERE id='$article_id' AND clang='$clang' LIMIT 1");
       		if($article->rows > 0)
       		{
         		if ($OOCategory)
