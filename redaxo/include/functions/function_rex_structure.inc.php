@@ -216,7 +216,7 @@ function rex_editCategory($category_id, $clang, $data)
         'data' => $data,
       )
     );
-
+    Core::getInstance()->getCache()->delete('category_'.$category_id.'_'.$clang);
     $success = true;
   }
   else
@@ -282,7 +282,8 @@ function rex_deleteCategoryReorganized($category_id)
             'path'   => $thisCat->getValue('path'),
             'status' => $thisCat->getValue('status'),
           ));
-          
+          Core::getInstance()->getCache()->delete('category_'.$category_id.'_'.$clang);
+          Core::getInstance()->getCache()->delete('clist_'.$re_id.'_'.$clang);
           $thisCat->next();
         }
 
@@ -320,7 +321,7 @@ function rex_categoryStatus($category_id, $clang, $status = null)
   $catStatusTypes = rex_categoryStatusTypes();
 
   $KAT = new rex_sql();
-  $KAT->setQuery("select * from ".$REX['TABLE_PREFIX']."article where id='$category_id' and clang=$clang and startpage=1");
+  $KAT->setQuery("select status, re_id from ".$REX['TABLE_PREFIX']."article where id='$category_id' and clang=$clang and startpage=1");
   if ($KAT->getRows() == 1)
   {
     // Status wurde nicht von außen vorgegeben,
@@ -347,7 +348,8 @@ function rex_categoryStatus($category_id, $clang, $status = null)
         'clang' => $clang,
         'status' => $newstatus
       ));
-
+	  Core::getInstance()->getCache()->delete('category_'.$category_id.'_'.$clang);
+	  Core::getInstance()->getCache()->delete('clist_'.$KAT->getValue('re_id').'_'.$clang);
       $success = true;
     }
     else
@@ -467,6 +469,7 @@ function rex_addArticle($data)
         'data' => $data,
       )
     );
+    Core::getInstance()->getCache()->delete('alist_'.$data['category_id'].'_'.$key);
   }
 
   return array($success, $message);
@@ -536,6 +539,8 @@ function rex_editArticle($article_id, $clang, $data)
         'data' => $data,
       )
     );
+    Core::getInstance()->getCache()->delete('article_'.$article_id.'_'.$clang);
+    Core::getInstance()->getCache()->delete('alist_'.$data['category_id'].'_'.$key);
 
     $success = true;
   }
@@ -588,7 +593,8 @@ function rex_deleteArticleReorganized($article_id)
           'template_id' => $Art->getValue('template_id'),
         )
       );
-      
+      Core::getInstance()->getCache()->delete('article_'.$article_id.'_'.$clang);
+      Core::getInstance()->getCache()->delete('alist_'.$data['category_id'].'_'.$key);
       $Art->next();
     }
   }
@@ -640,7 +646,7 @@ function rex_articleStatus($article_id, $clang, $status = null)
         'clang' => $clang,
         'status' => $newstatus
       ));
-
+		Core::getInstance()->getCache()->delete('article_'.$article_id.'_'.$clang);
       $success = true;
     }
     else
