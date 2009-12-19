@@ -76,7 +76,7 @@ $REX['TEMP_PREFIX']   = 'tmp_';
 // Frontenddatei
 $REX['FRONTEND_FILE']	= 'index.php';
 
-// Passwortverschlüsselung, z.B: md5 / mcrypt ...
+// Passwortverschlï¿½sselung, z.B: md5 / mcrypt ...
 $REX['PSWFUNC'] = "sha1";
 
 // bei fehllogin 5 sekunden kein relogin moeglich
@@ -154,8 +154,8 @@ $REX['VARIABLES'][] = 'rex_var_media';
 // ----------------- default values
 if (!isset($REX['NOFUNCTIONS'])) $REX['NOFUNCTIONS'] = false;
 
-// ----------------- INCLUDE FUNCTIONS
-if(!$REX['NOFUNCTIONS']) include_once ($REX['INCLUDE_PATH'].'/functions.inc.php');
+// ----------------- INCLUDE LOADER (Autoloading, etc.)
+if(!$REX['NOFUNCTIONS']) include_once ($REX['INCLUDE_PATH'].'/loader.php');
 
 // ----- SET CLANG
 include_once $REX['INCLUDE_PATH'].'/clang.inc.php';
