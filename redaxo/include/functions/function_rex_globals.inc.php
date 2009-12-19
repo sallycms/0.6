@@ -203,7 +203,7 @@ function _rex_cast_var($var, $vartype, $default, $mode)
       $var = (int) $var;
       if($mode == 'found')
       {
-        if(!OOArticle::isValid(OOArticle::exists($var)))
+        if(!OOArticle::exists($var))
           $var = (int) $default; 
       }
       break;
