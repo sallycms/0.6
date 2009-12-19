@@ -24,7 +24,7 @@ function rex_read_addons_folder($folder = '') {
 	$addons = array ();
 	$hdl = opendir($folder);
 	while (($file = readdir($hdl)) !== false) {
-		if ($file != '.' && $file != '..' && is_dir($folder.$file.'/.')) {
+		if ($file != '.' && $file != '..' && subStr($file, 0, 1) != '.' && is_dir($folder.$file.'/.')) {
 			$addons[] = $file;
 		}
 	}
