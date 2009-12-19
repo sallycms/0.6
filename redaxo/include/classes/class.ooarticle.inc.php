@@ -55,8 +55,6 @@ class OOArticle extends OORedaxo {
 	public function getSiteStartArticle($clang = false) {
 		global $REX;
 		
-		if ($clang === false) { $clang = $REX['CUR_CLANG']; }
-		
 		return OOArticle :: getArticleById($REX['START_ARTICLE_ID'], $clang);
 	}
 
@@ -66,8 +64,6 @@ class OOArticle extends OORedaxo {
 	*/
 	public function getCategoryStartArticle($a_category_id, $clang = false) {
 		global $REX;
-		
-		if ($clang === false) { $clang = $REX['CUR_CLANG']; }
 		
 		return OOArticle::getArticleById($a_category_id, $clang);
 	}
@@ -81,6 +77,7 @@ class OOArticle extends OORedaxo {
 
 		if ($clang === false) { $clang = $REX['CUR_CLANG']; }
 		$a_category_id = (int) $a_category_id;
+
 		
 		$key   = 'alist_'.$a_category_id.'_'.$clang;
 		$alist = Core::getInstance()->hasCache() ? Core::getInstance()->getCache()->get($key, null) : null;
@@ -121,8 +118,9 @@ class OOArticle extends OORedaxo {
 	* CLASS Function:
 	* Return a list of top-level articles
 	*/
-	public function getRootArticles($ignore_offlines = false, $clang = false) {
+	public function getRootArticles($ignore_offlines = FALSE, $clang = FALSE) {
 		return OOArticle::getArticlesOfCategory(0, $ignore_offlines, $clang);
+
 	}
 
 	/**

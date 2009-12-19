@@ -38,6 +38,8 @@ class rex_article
   var $info;
   var $debug;
   
+  var $OOArticle;
+  
   function rex_article($article_id = null, $clang = null)
   {
     global $REX;
@@ -136,11 +138,11 @@ class rex_article
     }
     else
     {
-      $OOArticle = OOArticle::getArticleById($this->article_id, $this->clang);
-      if(OOArticle::isValid($OOArticle))
+      $this->OOArticle = OOArticle::getArticleById($this->article_id, $this->clang);
+      if(OOArticle::isValid($this->OOArticle))
       {
-        $this->category_id = $OOArticle->getCategoryId();
-        $this->template_id = $OOArticle->getTemplateId();
+        $this->category_id = $this->OOArticle->getCategoryId();
+        $this->template_id = $this->OOArticle->getTemplateId();
         return TRUE;
       }
     }
@@ -196,7 +198,7 @@ class rex_article
   {
     global $REX;
     $value = $this->correctValue($value);
-    if (!$this->viasql) return OOArticle::getArticleById($this->article_id, $this->clang)->getValue($value);
+    if (!$this->viasql) return $this->OOArticle->getValue($value);
     else return $this->ARTICLE->getValue($value);
   }
 
@@ -220,7 +222,7 @@ class rex_article
   {
     global $REX;
     $value = $this->correctValue($value);
-    if (!$this->viasql) return OOArticle::getArticleById($this->article_id, $this->clang)->getValue($value) !== null;
+    if (!$this->viasql) return $this->OOArticle->getValue($value) !== null;
     else return $this->ARTICLE->hasValue($value);
   }
 

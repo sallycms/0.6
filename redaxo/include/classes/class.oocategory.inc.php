@@ -49,18 +49,14 @@ class OOCategory extends OORedaxo {
 		
 		$catlist = array();
 	
-		foreach ($clist as $var) {
+		foreach ($clist as $var)
+		{
 			$category = OOCategory :: getCategoryById($var, $clang);
-			if($ignore_offlines) {
-				
-				if ($category->isOnline()) {
-					$catlist[] = $category;
-				}
-				
-			} else {
-				$catlist[] = $category;
-			}
-		}
+		    if (!$ignore_offlines || ($ignore_offlines && $category->isOnline()))
+		    {
+		    	$catlist[] = $category;
+		    }
+		}  
 		
 		return $catlist;
 	}
