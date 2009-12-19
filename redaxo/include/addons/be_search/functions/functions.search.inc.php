@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Hebt einen Suchtreffer $neelde im Suchergebnis $string hervor
+ * Hebt einen Suchtreffer $needle im Suchergebnis $string hervor
  * 
  * @param $params
  */
@@ -15,7 +15,7 @@ function rex_a256_highlight_hit($string, $needle)
 }
 
 /**
- * Bindet ggf extensions ein
+ * Bindet ggf. extensions ein
  * 
  * @param $params Extension-Point Parameter
  */
@@ -47,7 +47,7 @@ function rex_a256_extensions_handler($params)
 }
 
 /**
- * Fügt die benötigen Stylesheets ein
+ * FÃ¼gt die benÃ¶tigen Stylesheets ein
  * 
  * @param $params Extension-Point Parameter
  */
