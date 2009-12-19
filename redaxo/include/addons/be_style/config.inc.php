@@ -13,6 +13,8 @@
  * @version svn:$Id$
  */
 
+if (!$REX["REDAXO"]) return;
+
 $mypage = 'be_style';
 
 /* Addon Parameter */
@@ -23,10 +25,7 @@ $REX['ADDON']['version'][$mypage] = '1.2';
 $REX['ADDON']['author'][$mypage] = 'Jan Kristinus, Markus Staab';
 $REX['ADDON']['supportpage'][$mypage] = 'forum.redaxo.de';
 
-if($REX["REDAXO"])
-{
-  require_once $REX['INCLUDE_PATH'].'/addons/'. $mypage .'/extensions/function_extensions.inc.php';
+require_once $REX['INCLUDE_PATH'].'/addons/'. $mypage .'/extensions/function_extensions.inc.php';
   
-  rex_register_extension('PAGE_HEADER', 'rex_be_style_css_add');
-  rex_register_extension('ADDONS_INCLUDED', 'rex_be_add_page');
-}
+rex_register_extension('PAGE_HEADER', 'rex_be_style_css_add');
+rex_register_extension('ADDONS_INCLUDED', 'rex_be_add_page');
