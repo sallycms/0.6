@@ -7,7 +7,7 @@ rex_title('WV Cache');
 $func = rex_request('func', 'string', '');
 
 if($func == 'delete'){
-	rex_cache_delete();
+	FileCache::flushstatic();
 }
 
 ?>
