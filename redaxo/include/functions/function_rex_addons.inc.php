@@ -50,7 +50,7 @@ function rex_read_addons_folder($folder = '')
  */
 function rex_install_dump($file, $debug = false)
 {
-  $sql = new rex_sql();
+  $sql = rex_sql::getInstance();
   $sql->debugsql = $debug;
   $error = '';
 
@@ -262,7 +262,7 @@ function rex_read_sql_dump($file)
  * Sucht innerhalb des $REX['ADDON']['page'] Array rekursiv nach der page
  * $needle
  *
- * Gibt bei erfolgreicher Suche den Namen des Addons zurück, indem die page
+ * Gibt bei erfolgreicher Suche den Namen des Addons zurï¿½ck, indem die page
  * gefuden wurde, sonst false
  */
 function rex_search_addon_page($needle, $haystack = null)

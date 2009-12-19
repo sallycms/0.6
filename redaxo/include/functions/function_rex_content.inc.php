@@ -114,7 +114,7 @@ function rex_moveSlice($slice_id, $clang, $direction)
 }
 
 /**
- * Löscht einen Slice
+ * Lï¿½scht einen Slice
  * 
  * @param int    $slice_id  Id des Slices
  * 
@@ -125,7 +125,7 @@ function rex_deleteSlice($slice_id)
   global $REX;
   
   // zu loeschender slice suchen
-  $curr = new rex_sql;
+  $curr = rex_sql::getInstance();
   $curr->setQuery('SELECT * FROM ' . $REX['TABLE_PREFIX'] . 'article_slice WHERE id=' . $slice_id);
   if($curr->getRows() != 1)
   {
@@ -133,7 +133,7 @@ function rex_deleteSlice($slice_id)
   }
   
   // nachfolge slice suchen
-  $next = new rex_sql;
+  $next = rex_sql::getInstance();
   $next->setQuery('SELECT * FROM ' . $REX['TABLE_PREFIX'] . 'article_slice WHERE re_article_slice_id=' . $slice_id);
   if ($next->getRows() == 1 )
   {
@@ -146,13 +146,13 @@ function rex_deleteSlice($slice_id)
 }
 
 /**
- * Führt alle pre-save Aktionen eines Moduls aus
+ * Fï¿½hrt alle pre-save Aktionen eines Moduls aus
  * 
  * @param int    $module_id  Id des Moduls
  * @param string $function   Funktion/Modus der Aktion
  * @param array  $REX_ACTION Array zum speichern des Status
  * 
- * @return array Ein Array welches eine Meldung sowie das gefüllte REX_ACTION-Array beinhaltet
+ * @return array Ein Array welches eine Meldung sowie das gefï¿½llte REX_ACTION-Array beinhaltet
  */
 function rex_execPreSaveAction($module_id, $function, $REX_ACTION)
 {
@@ -171,7 +171,7 @@ function rex_execPreSaveAction($module_id, $function, $REX_ACTION)
     // *********************** WERTE ERSETZEN
     foreach ($REX['VARIABLES'] as $obj)
     {
-      if (is_string($obj)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
+      if (is_string($obj)) { // Es hat noch kein Autoloading fï¿½r diese Klasse stattgefunden
         $tmp = new $obj();
         $tmp = null;
         $obj = $REX['VARIABLES'][$idx];
@@ -191,7 +191,7 @@ function rex_execPreSaveAction($module_id, $function, $REX_ACTION)
 }
 
 /**
- * Führt alle post-save Aktionen eines Moduls aus
+ * Fï¿½hrt alle post-save Aktionen eines Moduls aus
  * 
  * @param int    $module_id  Id des Moduls
  * @param string $function   Funktion/Modus der Aktion
@@ -213,10 +213,10 @@ function rex_execPostSaveAction($module_id, $function, $REX_ACTION)
     $REX_ACTION['MSG'] = '';
     $iaction = $ga->getValue('postsave');
 
-    // ***************** WERTE ERSETZEN UND POSTACTION AUSFÜHREN
+    // ***************** WERTE ERSETZEN UND POSTACTION AUSFï¿½HREN
     foreach ($REX['VARIABLES'] as $obj)
     {
-      if (is_string($obj)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
+      if (is_string($obj)) { // Es hat noch kein Autoloading fï¿½r diese Klasse stattgefunden
         $tmp = new $obj();
         $tmp = null;
         $obj = $REX['VARIABLES'][$idx];
@@ -236,7 +236,7 @@ function rex_execPostSaveAction($module_id, $function, $REX_ACTION)
 }
 
 /**
- * Übersetzt den Modus in das dazugehörige Bitwort
+ * ï¿½bersetzt den Modus in das dazugehï¿½rige Bitwort
  * 
  * @param string $function   Funktion/Modus der Aktion
  * 
@@ -539,12 +539,12 @@ function rex_copyArticle($id, $to_cat_id)
         $art_sql->setValue('path', $path);
         $art_sql->setValue('catname', $art_sql->escape($catname));
         $art_sql->setValue('catprior', 0);
-        $art_sql->setValue('prior', 99999); // Artikel als letzten Artikel in die neue Kat einfügen
+        $art_sql->setValue('prior', 99999); // Artikel als letzten Artikel in die neue Kat einfï¿½gen
         $art_sql->setValue('status', 0); // Kopierter Artikel offline setzen
         $art_sql->setValue('startpage', 0);
         $art_sql->addGlobalCreateFields();
 
-        // schon gesetzte Felder nicht wieder überschreiben
+        // schon gesetzte Felder nicht wieder ï¿½berschreiben
         $dont_copy = array ('id', 'pid', 're_id', 'catname', 'catprior', 'path', 'prior', 'status', 'createdate', 'createuser', 'startpage');
 
         foreach (array_diff($from_sql->getFieldnames(), $dont_copy) as $fld_name)
@@ -572,10 +572,10 @@ function rex_copyArticle($id, $to_cat_id)
     }
   }
 
-  // Caches des Artikels löschen, in allen Sprachen
+  // Caches des Artikels lï¿½schen, in allen Sprachen
   rex_deleteCacheArticle($id);
 
-  // Caches der Kategorien löschen, da sich derin befindliche Artikel geändert haben
+  // Caches der Kategorien lï¿½schen, da sich derin befindliche Artikel geï¿½ndert haben
   rex_deleteCacheArticle($to_cat_id);
 
   return $new_id;
@@ -636,7 +636,7 @@ function rex_moveArticle($id, $from_cat_id, $to_cat_id)
         $art_sql->setValue('re_id', $re_id);
         $art_sql->setValue('path', $path);
         $art_sql->setValue('catname', $art_sql->escape($catname));
-        // Artikel als letzten Artikel in die neue Kat einfügen
+        // Artikel als letzten Artikel in die neue Kat einfï¿½gen
         $art_sql->setValue('prior', '99999');
         // Kopierter Artikel offline setzen
         $art_sql->setValue('status', '0');
@@ -660,10 +660,10 @@ function rex_moveArticle($id, $from_cat_id, $to_cat_id)
     }
   }
 
-  // Caches des Artikels löschen, in allen Sprachen
+  // Caches des Artikels lï¿½schen, in allen Sprachen
   rex_deleteCacheArticle($id);
 
-  // Caches der Kategorien löschen, da sich derin befindliche Artikel geändert haben
+  // Caches der Kategorien lï¿½schen, da sich derin befindliche Artikel geï¿½ndert haben
   rex_deleteCacheArticle($from_cat_id);
   rex_deleteCacheArticle($to_cat_id);
 

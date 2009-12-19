@@ -2,21 +2,21 @@
 
 /**
  * Regelt die Rechte an den einzelnen Kategorien und gibt den Pfad aus
- * Kategorien = Startartikel und Bezüge
+ * Kategorien = Startartikel und Bezï¿½ge
  * @package redaxo4
  * @version svn:$Id$
  */
 
 $KATebene = 0; // aktuelle Ebene: default
-$KATPATH = '|'; // Standard für path Eintragungen in DB
+$KATPATH = '|'; // Standard fï¿½r path Eintragungen in DB
 if (!isset($KATout)) $KATout = ''; // Variable definiert und vorbelegt wenn nicht existent
 
 $KATPERM = false;
 if ($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('admin[]')) $KATPERM = true;
 
-$KAT = new rex_sql;
+$KAT = new rex_sql();
 // $KAT->debugsql = true;
-$KAT->setQuery("SELECT * FROM ".$REX['TABLE_PREFIX']."article WHERE id=$category_id AND startpage=1 AND clang=$clang");
+$KAT->setQuery("SELECT catname, path FROM ".$REX['TABLE_PREFIX']."article WHERE id=$category_id AND startpage=1 AND clang=$clang");
 
 if ($KAT->getRows()!=1)
 {
@@ -36,7 +36,7 @@ else
   $KATebene = count($KPATH)-1;
   for ($ii=1;$ii<$KATebene;$ii++)
   {
-    $SKAT = new rex_sql;
+    $SKAT = new rex_sql();
     $SKAT->setQuery('SELECT * FROM '. $REX['TABLE_PREFIX'] .'article WHERE id='. $KPATH[$ii] .' AND startpage=1 AND clang='. $clang);
 
     $catname = str_replace(' ', '&nbsp;', htmlspecialchars($SKAT->getValue('catname')));
