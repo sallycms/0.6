@@ -26,6 +26,7 @@ class OORedaxo {
 	public $_updateuser  = '';
 	public $_createuser  = '';
 	
+	private static $classvars;
 	/*
 	* Constructor
 	*/
@@ -90,7 +91,7 @@ class OORedaxo {
 	* Returns an Array containing article field names
 	*/
 	public static function getClassVars() {
-		static $vars = array ();
+		self::$vars = array ();
 		
 		if (empty($vars)) {
 			global $REX;
@@ -99,12 +100,12 @@ class OORedaxo {
 			
 			$columns = array();
 			for($i = 0; $i < $sql->getRows(); $i++) {
-				$vars[] = $sql->getValue('Field');
+				self::$vars[] = $sql->getValue('Field');
 				$sql->next();
 			}
 		}
 		
-		return $vars;
+		return self::$vars;
 	}
 	
 	/*
