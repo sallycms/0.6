@@ -22,7 +22,7 @@ class rex_var_template extends rex_var
   }
 
   /**
-   * Wert für die Ausgabe
+   * Wert fï¿½r die Ausgabe
    */
   function matchTemplate($content)
   {
@@ -36,12 +36,38 @@ class rex_var_template extends rex_var
       
       if($template_id > 0)
       {
-        $varname = '$__rex_tpl'. $template_id;
-        $tpl = '<?php
-        '. $varname .' = new rex_template('. $template_id .');
-        eval(\'?>\'.'. $this->handleGlobalVarParamsSerialized($var, $args, $varname .'->getTemplate()') .');
-        ?>';
-	      $content = str_replace($var . '[' . $param_str . ']', $tpl, $content);
+        $varname = '$__rex_tpl'.$template_id;
+        $tpl     = "<?php\n$varname = new rex_template($template_id);";
+        
+        if (isset($args['callback'])) {
+        	$tpl .= "\n".'$args[\'subject\'] = file_get_contents('.$varname.'->getFile());';
+        	$tpl .= "\n".'eval(\'?>\'.rex_call_func(unserialize("'.serialize($args['callback']).'", $args));';
+        }
+        else {
+        	$prefix = isset($args['prefix']) ? "\n".'eval("'.addslashes($args['prefix']).'")' : '';
+        	$suffix = isset($args['suffix']) ? "\n".'eval("'.addslashes($args['suffix']).'")' : '';
+        	
+        	$tpl .= $prefix;
+        	
+        	$filename = rex_template::getFilePath($template_id);
+        	$exists   = file_exists($filename) && filesize($filename) > 0;
+        	
+        	if (isset($args['instead']) && $exists) { // Bescheuertes Verhalten von REDAXO beibehalten.
+        		$tpl .= "\n".'eval("'.addslashes($args['instead']).'");';
+        	}
+        	elseif (isset($args['ifempty']) && !$exists) {
+        		$tpl .= "\n".'eval("'.addslashes($args['ifempty']).'");';
+        	}
+        	else {
+        		$tpl .= "\n".'include '.$varname.'->getFile();';
+        	}
+        	
+        	$tpl .= $suffix;
+        }
+        
+        $tpl .= "\n".'?>';
+        
+	    $content = str_replace($var.'['.$param_str.']', $tpl, $content);
       }
     }
 
