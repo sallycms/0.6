@@ -148,10 +148,9 @@ class OOArticle extends OORedaxo {
 	public static function exists($articleId) {
 		
 		global $REX;
-
-		//TODO
-		//return (id exists in MetaCache);
-		
+		if(Core::getInstance()->hasCache())
+    		 if(Core::getInstance()->getCache()->get('article_'.$articleId.'_'.$REX['CUR_CLANG'], null) != null) return true;
+    		
 		// prüfen, ob ID in Content Cache Dateien vorhanden
 		$cacheFiles = glob($REX['INCLUDE_PATH'].'/generated/articles/'.$articleId.'.*');
 		if (!empty($cacheFiles)) return true;
@@ -168,10 +167,10 @@ class OOArticle extends OORedaxo {
 	}
 	
 	public function getValue($value) {
-		// alias f�r re_id -> category_id
+		// alias für re_id -> category_id
 		if(in_array($value, array('re_id', '_re_id', 'category_id', '_category_id'))) {
-			// f�r die CatId hier den Getter verwenden,
-			// da dort je nach ArtikelTyp unterscheidungen getroffen werden m�ssen
+			// für die CatId hier den Getter verwenden,
+			// da dort je nach ArtikelTyp unterscheidungen getroffen werden müssen
 			return $this->getCategoryId();
 		}
 		return parent::getValue($value);
