@@ -684,7 +684,6 @@ class rex_article
 
     // ----- end: article caching
     $CONTENT = ob_get_clean();
-
     return $CONTENT;
   }
 
@@ -698,15 +697,13 @@ class rex_article
     {
       ob_start();
       ob_implicit_flush(0);
-        
-      $template = new rex_template();
-      $template->setId($this->template_id);
       
-      $templateFile = $template->getFile();
-      $template = null;
-      unset($template);
+      $templateFile = rex_template::getFilePath($this->template_id);
       
-      include $templateFile;
+      if (file_exists($templateFile)) {
+        include $templateFile;
+      }
+      
       $CONTENT = ob_get_clean();
     }
     else
