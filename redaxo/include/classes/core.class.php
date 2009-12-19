@@ -12,8 +12,11 @@
 class Core {
 	private static $instance;
 	private $cache;
+	private $curclang;
 	
 	private function __construct() {
+		global $REX;
+		$this->curclang = rex_request('clang','rex-clang-id', $REX['START_CLANG_ID']);	
 	}
 	
 	/**
@@ -62,6 +65,10 @@ class Core {
 	 */
 	public function hasCache(){
 		return !self::getInstance()->cache == null;
+	}
+	
+	public function getCurrentClang(){
+		return $this->curclang;
 	}
 
 } 
