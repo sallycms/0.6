@@ -85,39 +85,48 @@ class OOMedia
     {
       return null;
     }
+    
+	$key = 'obj_media_'.$id;
+	$media = Core::getInstance()->hasCache() ? Core::getInstance()->getCache()->get($key, null) : null;
 
-    $query = 'SELECT '.OOMedia :: _getTableName().'.*, '.OOMediaCategory :: _getTableName().'.name catname  FROM '.OOMedia :: _getTableJoin().' WHERE file_id = '.$id;
-    $sql = new rex_sql();
-//    $sql->debugsql = true;
-    $result = $sql->getArray($query);
-    if (count($result) == 0)
-    {
-      return null;
-    }
-
-    $result = $result[0];
-    $aliasMap = array(
-      'file_id' => 'id',
-      're_file_id' => 'parent_id',
-      'category_id' => 'cat_id',
-      'catname' => 'cat_name',
-      'filename' => 'name',
-      'originalname' => 'orgname',
-      'filetype' => 'type',
-      'filesize' => 'size'
-    );
-
-    $media = new OOMedia();
-    foreach($sql->getFieldNames() as $fieldName)
-    {
-      if(in_array($fieldName, array_keys($aliasMap)))
-        $var_name = '_'. $aliasMap[$fieldName];
-      else
-        $var_name = '_'. $fieldName;
-
-      $media->$var_name = $result[$fieldName];
-    }
-
+	if($media === null){
+	
+	    $query = 'SELECT '.OOMedia :: _getTableName().'.*, '.OOMediaCategory :: _getTableName().'.name catname  FROM '.OOMedia :: _getTableJoin().' WHERE file_id = '.$id;
+	    $sql = new rex_sql();
+	//    $sql->debugsql = true;
+	    $result = $sql->getArray($query);
+	    if (count($result) == 0)
+	    {
+	      return null;
+	    }
+	
+	    $result = $result[0];
+	    $aliasMap = array(
+	      'file_id' => 'id',
+	      're_file_id' => 'parent_id',
+	      'category_id' => 'cat_id',
+	      'catname' => 'cat_name',
+	      'filename' => 'name',
+	      'originalname' => 'orgname',
+	      'filetype' => 'type',
+	      'filesize' => 'size'
+	    );
+	
+	    $media = new OOMedia();
+	    foreach($sql->getFieldNames() as $fieldName)
+	    {
+	      if(in_array($fieldName, array_keys($aliasMap)))
+	        $var_name = '_'. $aliasMap[$fieldName];
+	      else
+	        $var_name = '_'. $fieldName;
+	
+	      $media->$var_name = $result[$fieldName];
+		}
+		if(Core::getInstance()->hasCache()){
+			Core::getInstance()->getCache()->set($key, $media);
+		}
+	}
+	
     return $media;
   }
 
@@ -496,7 +505,7 @@ class OOMedia
             $resizeParam = 100;
           }
 
-          // Evtl. Größeneinheiten entfernen
+          // Evtl. Grï¿½ï¿½eneinheiten entfernen
           $resizeParam = str_replace(array (
             'px',
             'pt',
@@ -521,7 +530,7 @@ class OOMedia
 
     $title = $this->getTitle();
 
-    // Alternativtext hinzufügen
+    // Alternativtext hinzufï¿½gen
     if (!isset($params['alt']))
     {
       if ($title != '')
@@ -530,7 +539,7 @@ class OOMedia
       }
     }
 
-    // Titel hinzufügen
+    // Titel hinzufï¿½gen
     if (!isset($params['title']))
     {
       if ($title != '')
@@ -539,7 +548,7 @@ class OOMedia
       }
     }
 
-    // Evtl. Zusatzatrribute anfügen
+    // Evtl. Zusatzatrribute anfï¿½gen
     $additional = '';
     foreach ($params as $name => $value)
     {
@@ -746,7 +755,7 @@ class OOMedia
     $folder = $REX['HTDOCS_PATH'] .'redaxo/media/';
     $icon = $folder .'mime-'.$ext.'.gif';
 
-    // Dateityp für den kein Icon vorhanden ist
+    // Dateityp fï¿½r den kein Icon vorhanden ist
     if (!file_exists($icon))
     {
       if($useDefaultIcon)

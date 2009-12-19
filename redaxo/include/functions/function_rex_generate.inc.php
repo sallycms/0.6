@@ -51,35 +51,15 @@ function rex_deleteCacheArticle($id, $clang = null)
     if($clang !== null && $clang != $_clang)
       continue;
       
-    //rex_deleteCacheArticleMeta($id, $clang);
     rex_deleteCacheArticleContent($id, $clang);
-    //rex_deleteCacheArticleLists($id, $clang);
+    if(Core::getInstance()->hasCache()){
+    	Core::getInstance()->getCache()->delete('obj_article_'.$id.'_'.$clang);
+    	Core::getInstance()->getCache()->delete('alist_'.$id.'_'.$clang);
+    	Core::getInstance()->getCache()->delete('clist_'.$id.'_'.$clang);
+    }
   }
 }
 
-/**
- * L�scht die gecachten Meta-Dateien eines Artikels. Wenn keine clang angegeben, wird
- * der Artikel in allen Sprachen gel�scht.
- *
- * @param $id ArtikelId des Artikels
- * @param [$clang ClangId des Artikels]
- * 
- * @return void
- */
-/*function rex_deleteCacheArticleMeta($id, $clang = null)
-{
-  global $REX;
-  
-  $cachePath = $REX['INCLUDE_PATH']. DIRECTORY_SEPARATOR .'generated'. DIRECTORY_SEPARATOR .'articles'. DIRECTORY_SEPARATOR;
-
-  foreach($REX['CLANG'] as $_clang => $clang_name)
-  {
-    if($clang !== null && $clang != $_clang)
-      continue;
-      
-    @unlink($cachePath . $id .'.'. $_clang .'.article');
-  }
-}*/
 
 /**
  * L�scht die gecachten Content-Dateien eines Artikels. Wenn keine clang angegeben, wird

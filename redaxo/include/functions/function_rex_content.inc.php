@@ -323,6 +323,8 @@ function rex_article2startpage($neu_id){
     }
     $alt2->update();
     $neu2->update();
+    
+    
   }
 
   // alle artikel suchen nach |art_id| und pfade ersetzen
@@ -648,6 +650,11 @@ function rex_moveArticle($id, $from_cat_id, $to_cat_id)
         // Prios neu berechnen
         rex_newArtPrio($to_cat_id, $clang, 1, 0);
         rex_newArtPrio($from_cat_id, $clang, 1, 0);
+        
+        //cache aufräumen
+        Core::getInstance()->getCache()->delete('article_'.$id.'_'.$clang);
+        Core::getInstance()->getCache()->delete('alist_'.$from_cat_id.'_'.$clang);
+        Core::getInstance()->getCache()->delete('alist_'.$to_cat_id.'_'.$clang);
       }
       else
       {
@@ -659,14 +666,6 @@ function rex_moveArticle($id, $from_cat_id, $to_cat_id)
       return false;
     }
   }
-
-  // Caches des Artikels l�schen, in allen Sprachen
-  rex_deleteCacheArticle($id);
-
-  // Caches der Kategorien l�schen, da sich derin befindliche Artikel ge�ndert haben
-  rex_deleteCacheArticle($from_cat_id);
-  rex_deleteCacheArticle($to_cat_id);
-
   return true;
 }
 
@@ -824,7 +823,7 @@ function rex_newCatPrio($re_id, $clang, $new_prio, $old_prio)
       'pid'
     );
 
-    //rex_deleteCacheArticleLists($re_id, $clang);
+    Core::getInstance()->getCache()->delete('clist_'.$re_id.'_'.$clang);
   }
 }
 
@@ -859,6 +858,6 @@ function rex_newArtPrio($re_id, $clang, $new_prio, $old_prio)
       'pid'
     );
 
-    //rex_deleteCacheArticleLists($re_id, $clang);
+    Core::getInstance()->getCache()->delete('alist_'.$re_id.'_'.$clang);
   }
 }

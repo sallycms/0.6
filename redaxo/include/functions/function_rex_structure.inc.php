@@ -210,7 +210,9 @@ function rex_editCategory($category_id, $clang, $data)
         'data' => $data,
       )
     );
-    Core::getInstance()->getCache()->delete('category_'.$category_id.'_'.$clang);
+    if(Core::getInstance()->hasCache()){
+    	Core::getInstance()->getCache()->delete('obj_category_'.$category_id.'_'.$clang);
+    }
     $success = true;
   }
   else
@@ -276,7 +278,7 @@ function rex_deleteCategoryReorganized($category_id)
             'path'   => $thisCat->getValue('path'),
             'status' => $thisCat->getValue('status'),
           ));
-          Core::getInstance()->getCache()->delete('category_'.$category_id.'_'.$clang);
+          Core::getInstance()->getCache()->delete('obj_category_'.$category_id.'_'.$clang);
           Core::getInstance()->getCache()->delete('clist_'.$re_id.'_'.$clang);
           $thisCat->next();
         }
@@ -341,8 +343,10 @@ function rex_categoryStatus($category_id, $clang, $status = null)
         'clang' => $clang,
         'status' => $newstatus
       ));
-	  Core::getInstance()->getCache()->delete('category_'.$category_id.'_'.$clang);
-	  Core::getInstance()->getCache()->delete('clist_'.$KAT->getValue('re_id').'_'.$clang);
+      if(Core::getInstance()->hasCache()){
+	  	Core::getInstance()->getCache()->delete('category_'.$category_id.'_'.$clang);
+	  	Core::getInstance()->getCache()->delete('clist_'.$KAT->getValue('re_id').'_'.$clang);
+      }
       $success = true;
     }
     else
@@ -462,7 +466,9 @@ function rex_addArticle($data)
         'data' => $data,
       )
     );
-    Core::getInstance()->getCache()->delete('alist_'.$data['category_id'].'_'.$key);
+    if(Core::getInstance()->hasCache()){
+    	Core::getInstance()->getCache()->delete('alist_'.$data['category_id'].'_'.$key);
+    }
   }
 
   return array($success, $message);
@@ -531,8 +537,10 @@ function rex_editArticle($article_id, $clang, $data)
         'data' => $data,
       )
     );
-    Core::getInstance()->getCache()->delete('article_'.$article_id.'_'.$clang);
-    Core::getInstance()->getCache()->delete('alist_'.$data['category_id'].'_'.$key);
+    if(Core::getInstance()->hasCache()){
+    	Core::getInstance()->getCache()->delete('article_'.$article_id.'_'.$clang);
+    	Core::getInstance()->getCache()->delete('alist_'.$data['category_id'].'_'.$key);
+    }
 
     $success = true;
   }
@@ -585,8 +593,10 @@ function rex_deleteArticleReorganized($article_id)
           'template_id' => $Art->getValue('template_id'),
         )
       );
-      Core::getInstance()->getCache()->delete('article_'.$article_id.'_'.$clang);
-      Core::getInstance()->getCache()->delete('alist_'.$data['category_id'].'_'.$key);
+      if(Core::getInstance()->hasCache()){
+      	Core::getInstance()->getCache()->delete('obj_article_'.$article_id.'_'.$clang);
+      	Core::getInstance()->getCache()->delete('alist_'.$data['category_id'].'_'.$key);
+      }
       $Art->next();
     }
   }
@@ -637,7 +647,9 @@ function rex_articleStatus($article_id, $clang, $status = null)
         'clang' => $clang,
         'status' => $newstatus
       ));
+      if(Core::getInstance()->hasCache()){
 		Core::getInstance()->getCache()->delete('article_'.$article_id.'_'.$clang);
+      }
       $success = true;
     }
     else

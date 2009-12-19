@@ -91,21 +91,21 @@ class OORedaxo {
 	* Returns an Array containing article field names
 	*/
 	public static function getClassVars() {
-		self::$vars = array ();
+		self::$classvars = array();
 		
-		if (empty($vars)) {
+		if (empty(self::$classvars)) {
 			global $REX;
 			$sql = rex_sql::getInstance();
 			$sql->setQuery('SHOW COLUMNS FROM '.$REX['TABLE_PREFIX'].'article');
 			
 			$columns = array();
 			for($i = 0; $i < $sql->getRows(); $i++) {
-				self::$vars[] = $sql->getValue('Field');
+				self::$classvars[] = $sql->getValue('Field');
 				$sql->next();
 			}
 		}
 		
-		return self::$vars;
+		return self::$classvars;
 	}
 	
 	/*

@@ -111,6 +111,9 @@ if ($subpage=='detail' && rex_post('btn_delete', 'string'))
       {
         if($media->delete() !== FALSE)
         {
+          if(Core::getInstance()->hasCache()){
+            Core::getInstance()->getCache()->delete('obj_media'.$file_id);
+          }
           $info = $I18N->msg('pool_file_deleted');
         }else
         {
@@ -163,8 +166,11 @@ if ($subpage=="detail" && rex_post('btn_update', 'string')){
       $FILEINFOS["filename"] = $gf->getValue('filename');
       
       $return = rex_mediapool_updateMedia($_FILES['file_new'],$FILEINFOS,$REX['USER']->getValue("login"));
+      if(Core::getInstance()->hasCache()){
+		Core::getInstance()->getCache()->delete('obj_media'.$FILEINFOS["file_id"]);
+      }
       $info = $return['msg'];
-
+	
       if($return["ok"] == 1)
       {
         // ----- EXTENSION POINT
@@ -684,7 +690,7 @@ if ($subpage == '')
 
     $encoded_file_name = urlencode($file_name);
 
-    // Eine titel Spalte schätzen
+    // Eine titel Spalte schï¿½tzen
     $alt = '';
     foreach(array('title', 'med_description') as $col)
     {
@@ -695,7 +701,7 @@ if ($subpage == '')
       }
     }
 
-    // Eine beschreibende Spalte schätzen
+    // Eine beschreibende Spalte schï¿½tzen
     $desc = '';
     foreach(array('med_description') as $col)
     {

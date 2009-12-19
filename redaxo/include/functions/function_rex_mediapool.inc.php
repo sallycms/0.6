@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Funktionensammlung für den Medienpool
+ * Funktionensammlung fï¿½r den Medienpool
  *
  * @package redaxo4
  * @version svn:$Id$
  */
 
 /**
- * Erstellt einen Filename der eindeutig ist für den Medienpool
+ * Erstellt einen Filename der eindeutig ist fï¿½r den Medienpool
  * @param $FILENAME Dateiname
  */
 function rex_mediapool_filename($FILENAME, $doSubindexing = true)
@@ -17,7 +17,7 @@ function rex_mediapool_filename($FILENAME, $doSubindexing = true)
 
   // ----- neuer filename und extension holen
   $NFILENAME = strtolower($FILENAME);
-  $NFILENAME = str_replace(array('ä','ö', 'ü', 'ß'),array('ae', 'oe', 'ue', 'ss'),$NFILENAME);
+  $NFILENAME = str_replace(array('ï¿½','ï¿½', 'ï¿½', 'ï¿½'),array('ae', 'oe', 'ue', 'ss'),$NFILENAME);
   $NFILENAME = preg_replace('/[^a-zA-Z0-9.\-\+]/','_',$NFILENAME);
   if (strrpos($NFILENAME,'.') != '')
   {
@@ -57,7 +57,7 @@ function rex_mediapool_filename($FILENAME, $doSubindexing = true)
 /**
  * Holt ein upgeloadetes File und legt es in den Medienpool
  * Dabei wird kontrolliert ob das File schon vorhanden ist und es
- * wird eventuell angepasst, weiterhin werden die Fileinformationen übergeben
+ * wird eventuell angepasst, weiterhin werden die Fileinformationen ï¿½bergeben
  *
  * @param $FILE
  * @param $rex_file_category
@@ -165,7 +165,7 @@ function rex_mediapool_saveMedia($FILE, $rex_file_category, $FILEINFOS, $userlog
 /**
  * Holt ein upgeloadetes File und legt es in den Medienpool
  * Dabei wird kontrolliert ob das File schon vorhanden ist und es
- * wird eventuell angepasst, weiterhin werden die Fileinformationen übergeben
+ * wird eventuell angepasst, weiterhin werden die Fileinformationen ï¿½bergeben
  *
  * @param $FILE
  * @param $rex_file_category
@@ -213,6 +213,7 @@ function rex_mediapool_updateMedia($FILE, &$FILEINFOS, $userlogin = null){
         }
         @chmod($REX['MEDIAFOLDER'].'/'. $FILEINFOS["filename"], $REX['FILEPERM']);
         $updated = true;
+        
       }else
       {
           $RETURN["msg"] = $I18N->msg('pool_file_upload_error');
@@ -313,7 +314,7 @@ function rex_mediapool_syncFile($physical_filename,$category_id,$title,$filesize
 }
 
 /**
- * Fügt einen rex_select Objekt die hierarchische Medienkategorien struktur
+ * Fï¿½gt einen rex_select Objekt die hierarchische Medienkategorien struktur
  * hinzu
  *
  * @param $select
@@ -343,8 +344,8 @@ function rex_mediapool_addMediacatOptions( &$select, &$mediacat, &$mediacat_ids,
 }
 
 /**
- * Fügt einen rex_select Objekt die hierarchische Medienkategorien struktur
- * hinzu unter berücksichtigung der Medienkategorierechte
+ * Fï¿½gt einen rex_select Objekt die hierarchische Medienkategorien struktur
+ * hinzu unter berï¿½cksichtigung der Medienkategorierechte
  *
  * @param $select
  * @param $mediacat
