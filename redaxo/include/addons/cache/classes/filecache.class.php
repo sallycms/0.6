@@ -24,7 +24,7 @@ class FileCache implements ICache{
 	}
 	
 	public function set($key, $value){
-		$type = split('_', $key);
+		$type = explode('_', $key);
 		if($type[0] == 'article' || $type[0] == 'category'){
 			return $this->setRedaxo($type, $value);
 		}elseif($type[0] == 'alist'){
@@ -35,7 +35,7 @@ class FileCache implements ICache{
 	}
 	
 	public function get($key, $default){
-		$type = split('_', $key);
+		$type = explode('_', $key);
 		if($type[0] == 'article' || $type[0] == 'category'){
 			return $this->getRedaxo($type, $default);
 		}elseif($type[0] == 'alist'){
@@ -46,7 +46,7 @@ class FileCache implements ICache{
 	}
 	
 	public function delete($key){
-		$type = split('_', $key);
+		$type = explode('_', $key);
 		if($type[0] == 'article' || $type[0] == 'category'){
 			return $this->deleteRedaxo($type);
 		}elseif($type[0] == 'alist'){
