@@ -39,6 +39,11 @@ $REX['ADDON']['image_resize']['max_resizepixel'] = 500;
 $REX['ADDON']['image_resize']['jpg_quality'] = 75;
 // --- /DYN
 
+// Resize Script
+$rex_resize = rex_get('rex_resize', 'string');
+if ($rex_resize != '')
+{
+
 include_once ($REX['INCLUDE_PATH'].'/addons/image_resize/classes/class.thumbnail.inc.php');
 
 require_once $REX['INCLUDE_PATH'].'/addons/image_resize/extensions/extension_wysiwyg.inc.php';
@@ -56,10 +61,7 @@ if ($REX['REDAXO'])
   }
 }
 
-// Resize Script
-$rex_resize = rex_get('rex_resize', 'string');
-if ($rex_resize != '')
-{
+
 	rex_thumbnail::createFromUrl($rex_resize);
 }
 
