@@ -42,9 +42,9 @@ class FileCache implements ICache{
 	public function delete($key){
 		$type = explode('_', $key);
 		if($type[0] == 'obj'){
-			return $this->getObj($key, $default);
+			return $this->deleteObj($key);
 		}else{
-			return $this->getVar($key, $default);
+			return $this->deleteVar($key);
 		}
 	}
 	

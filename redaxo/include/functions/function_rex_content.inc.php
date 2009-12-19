@@ -410,7 +410,7 @@ function rex_copyMeta($from_id, $to_id, $from_clang = 0, $to_clang = 0, $params 
 
     $uc->update();
 
-    rex_deleteCacheArticleMeta($to_id,$to_clang);
+    Core::getInstance()->getCache()->delete('article_'.$gc->getValue('id').'_'.$gc->getValue('clang'));
     return true;
   }
   return false;

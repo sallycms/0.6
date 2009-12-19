@@ -17,9 +17,9 @@ function rex_addons_folder($addon = null) {
 	return $REX['INCLUDE_PATH'].'/addons/';
 }
 
-function rex_read_addons_folder($folder = '') {
+function rex_read_addons_folder($folder = null) {
 	
-	if ($folder == '') $folder = rex_addons_folder();
+	if ($folder === null) $folder = rex_addons_folder();
 	
 	$addons = array ();
 	$hdl = opendir($folder);

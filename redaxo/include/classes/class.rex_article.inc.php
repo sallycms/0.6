@@ -2,7 +2,7 @@
 
 /**
  * Artikel Objekt.
- * Zuständig für die Verarbeitung eines Artikel
+ * Zustï¿½ndig fï¿½r die Verarbeitung eines Artikel
  *
  * @package redaxo4
  * @version svn:$Id$
@@ -92,7 +92,7 @@ class rex_article
     $this->viasql = $viasql;
   }
 
-  // ----- Slice Id setzen für Editiermodus
+  // ----- Slice Id setzen fï¿½r Editiermodus
   function setSliceId($value)
   {
     $this->slice_id = $value;
@@ -119,16 +119,15 @@ class rex_article
   {
     global $REX;
 
-    $article_id = (int) $article_id;
     $this->article_id = (int) $article_id;
 
     if ($this->viasql)
     {
       // ---------- select article
-      $qry = "SELECT * FROM ".$REX['TABLE_PREFIX']."article WHERE ".$REX['TABLE_PREFIX']."article.id='$article_id' AND clang='".$this->clang."'";
+      $qry = "SELECT * FROM ".$REX['TABLE_PREFIX']."article WHERE ".$REX['TABLE_PREFIX']."article.id='$this->article_id' AND clang='".$this->clang."' LIMIT 1";
       $this->ARTICLE->setQuery($qry);
 
-      if ($this->ARTICLE->getRows() == 1)
+      if ($this->ARTICLE->getRows() > 0)
       {
         $this->template_id = $this->getValue('template_id');
         $this->category_id = $this->getValue('category_id');
@@ -137,7 +136,7 @@ class rex_article
     }
     else
     {
-      $OOArticle = OOArticle::getArticleById($article_id, $this->clang);
+      $OOArticle = OOArticle::getArticleById($this->article_id, $this->clang);
       if(OOArticle::isValid($OOArticle))
       {
         $this->category_id = $OOArticle->getCategoryId();
@@ -174,8 +173,7 @@ class rex_article
 
   function setEval($value)
   {
-    if ($value) $this->eval = TRUE;
-    else $this->eval = FALSE;
+    $this->eval = $value;
   }
 
   function correctValue($value)
@@ -185,7 +183,7 @@ class rex_article
       if ($this->getValue('startpage')!=1) $value = 're_id';
       else $value = 'id';
     }
-    // Nicht generated, oder über SQL muss article_id -> id heissen
+    // Nicht generated, oder ï¿½ber SQL muss article_id -> id heissen
     else if ($this->viasql && $value == 'article_id')
     {
       $value = 'id';
@@ -314,10 +312,10 @@ class rex_article
           $this->CONT->next();
         }
 		  
-		  // Autoloading für die Variablen anstoßen
+		  // Autoloading fï¿½r die Variablen anstoï¿½en
 		  
 		  foreach ($REX['VARIABLES'] as $idx => $var) {
-			  if (is_string($var)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
+			  if (is_string($var)) { // Es hat noch kein Autoloading fï¿½r diese Klasse stattgefunden
 			  $tmp = new $var();
 			  $tmp = null;
 			}
@@ -444,8 +442,8 @@ class rex_article
               {
                 $moveUp = $I18N->msg('move_slice_up');
                 $moveDown = $I18N->msg('move_slice_down');
-                // upd stamp übergeben, da sonst ein block nicht mehrfach hintereindander verschoben werden kann
-                // (Links wären sonst gleich und der Browser lässt das klicken auf den gleichen Link nicht zu)
+                // upd stamp ï¿½bergeben, da sonst ein block nicht mehrfach hintereindander verschoben werden kann
+                // (Links wï¿½ren sonst gleich und der Browser lï¿½sst das klicken auf den gleichen Link nicht zu)
                 $listElements[] = '<a href="'. sprintf($sliceUrl, '&amp;upd='. time() .'&amp;function=moveup') .'" title="'. $moveUp .'" class="rex-slice-move-up"><span>'. $RE_MODUL_NAME[$I_ID] .'</span></a>';
                 $listElements[] = '<a href="'. sprintf($sliceUrl, '&amp;upd='. time() .'&amp;function=movedown') .'" title="'. $moveDown .'" class="rex-slice-move-down"><span>'. $RE_MODUL_NAME[$I_ID] .'</span></a>';
               }
@@ -498,8 +496,8 @@ class rex_article
                 // ----- PRE VIEW ACTION [EDIT]
                 $REX_ACTION = array ();
 
-                // nach klick auf den übernehmen button,
-                // die POST werte übernehmen
+                // nach klick auf den ï¿½bernehmen button,
+                // die POST werte ï¿½bernehmen
                 if(rex_var::isEditEvent())
                 {
                   foreach ($REX['VARIABLES'] as $obj)
@@ -687,7 +685,7 @@ class rex_article
     return $CONTENT;
   }
 
-  // ----- Template inklusive Artikel zurückgeben
+  // ----- Template inklusive Artikel zurï¿½ckgeben
   function getArticleTemplate()
   {
     // global $REX hier wichtig, damit in den Artikeln die Variable vorhanden ist!
@@ -798,7 +796,7 @@ class rex_article
 
       $dummysql = new rex_sql();
 
-      // Den Dummy mit allen Feldern aus rex_article_slice füllen
+      // Den Dummy mit allen Feldern aus rex_article_slice fï¿½llen
       $slice_fields = new rex_sql();
       $slice_fields->setQuery('SELECT * FROM '. $REX['TABLE_PREFIX'].'article_slice LIMIT 1');
       foreach($slice_fields->getFieldnames() as $fieldname)
@@ -896,7 +894,7 @@ class rex_article
 
     foreach($REX['VARIABLES'] as $idx => $var)
     {
-      if (is_string($var)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
+      if (is_string($var)) { // Es hat noch kein Autoloading fï¿½r diese Klasse stattgefunden
         $tmp = new $var();
         $tmp = null;
         $var = $REX['VARIABLES'][$idx];
@@ -911,9 +909,9 @@ class rex_article
           {
             // Wenn der aktuelle Slice nicht gespeichert werden soll
             // (via Action wurde das Nicht-Speichern-Flag gesetzt)
-            // Dann die Werte manuell aus dem Post übernehmen
-            // und anschließend die Werte wieder zurücksetzen,
-            // damit die nächsten Slices wieder die Werte aus der DB verwenden
+            // Dann die Werte manuell aus dem Post ï¿½bernehmen
+            // und anschlieï¿½end die Werte wieder zurï¿½cksetzen,
+            // damit die nï¿½chsten Slices wieder die Werte aus der DB verwenden
             $var->setACValues($sql,$REX['ACTION']);
             $tmp = $var->getBEInput($sql,$content);
             $sql->flushValues();
@@ -932,9 +930,9 @@ class rex_article
         $tmp = $var->getFEOutput($sql,$content);
       }
 
-      // Rückgabewert nur auswerten wenn auch einer vorhanden ist
-      // damit $content nicht verfälscht wird
-      // null ist default Rückgabewert, falls kein RETURN in einer Funktion ist
+      // Rï¿½ckgabewert nur auswerten wenn auch einer vorhanden ist
+      // damit $content nicht verfï¿½lscht wird
+      // null ist default Rï¿½ckgabewert, falls kein RETURN in einer Funktion ist
       if($tmp !== null)
       {
         $content = $tmp;

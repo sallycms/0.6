@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Funktionensammlung für die Strukturverwaltung
+ * Funktionensammlung fï¿½r die Strukturverwaltung
  *
  * @package redaxo4
  * @version svn:$Id$
@@ -122,7 +122,7 @@ function rex_addCategory($category_id, $data)
 /**
  * Bearbeitet einer Kategorie
  * 
- * @param int   $category_id Id der Kategorie die verändert werden soll
+ * @param int   $category_id Id der Kategorie die verï¿½ndert werden soll
  * @param int   $clang       Id der Sprache
  * @param array $data        Array mit den Daten der Kategorie 
  * 
@@ -167,11 +167,7 @@ function rex_editCategory($category_id, $clang, $data)
         $EART->setValue('catname', $data['catname']);
         $EART->addGlobalUpdateFields();
 
-        if($EART->update())
-        {
-          rex_deleteCacheArticle($ArtSql->getValue('id'), $clang);
-        }
-        else
+        if(!$EART->update())
         {
           $message .= $EART->getError();
         }
@@ -194,8 +190,6 @@ function rex_editCategory($category_id, $clang, $data)
 
     $message = $I18N->msg('category_updated');
 
-    rex_deleteCacheArticle($category_id, $clang);
-    
     // ----- EXTENSION POINT
     // Objekte clonen, damit diese nicht von der extension veraendert werden koennen
     $message = rex_register_extension_point('CAT_UPDATED', $message,
@@ -228,9 +222,9 @@ function rex_editCategory($category_id, $clang, $data)
 }
 
 /**
- * Löscht eine Kategorie und reorganisiert die Prioritäten verbleibender Geschwister-Kategorien
+ * Lï¿½scht eine Kategorie und reorganisiert die Prioritï¿½ten verbleibender Geschwister-Kategorien
  * 
- * @param int $category_id Id der Kategorie die gelöscht werden soll
+ * @param int $category_id Id der Kategorie die gelï¿½scht werden soll
  * 
  * @return array Ein Array welches den status sowie eine Fehlermeldung beinhaltet
  */
@@ -247,16 +241,16 @@ function rex_deleteCategoryReorganized($category_id)
   $thisCat = new rex_sql;
   $thisCat->setQuery('SELECT * FROM '.$REX['TABLE_PREFIX'].'article WHERE id='.$category_id.' and clang='. $clang);
 
-  // Prüfen ob die Kategorie existiert
+  // Prï¿½fen ob die Kategorie existiert
   if ($thisCat->getRows() == 1)
   {
     $KAT = new rex_sql;
     $KAT->setQuery("select * from ".$REX['TABLE_PREFIX']."article where re_id='$category_id' and clang='$clang' and startpage=1");
-    // Prüfen ob die Kategorie noch Unterkategorien besitzt
+    // Prï¿½fen ob die Kategorie noch Unterkategorien besitzt
     if ($KAT->getRows() == 0)
     {
       $KAT->setQuery("select * from ".$REX['TABLE_PREFIX']."article where re_id='$category_id' and clang='$clang' and startpage=0");
-      // Prüfen ob die Kategorie noch Artikel besitzt (ausser dem Startartikel)
+      // Prï¿½fen ob die Kategorie noch Artikel besitzt (ausser dem Startartikel)
       if ($KAT->getRows() == 0)
       {
         $thisCat = new rex_sql;
@@ -304,11 +298,11 @@ function rex_deleteCategoryReorganized($category_id)
 }
 
 /**
- * Ändert den Status der Kategorie
+ * ï¿½ndert den Status der Kategorie
  * 
- * @param int       $category_id   Id der Kategorie die gelöscht werden soll
+ * @param int       $category_id   Id der Kategorie die gelï¿½scht werden soll
  * @param int       $clang         Id der Sprache
- * @param int|null  $status        Status auf den die Kategorie gesetzt werden soll, oder NULL wenn zum nächsten Status weitergeschaltet werden soll
+ * @param int|null  $status        Status auf den die Kategorie gesetzt werden soll, oder NULL wenn zum nï¿½chsten Status weitergeschaltet werden soll
  * 
  * @return array Ein Array welches den status sowie eine Fehlermeldung beinhaltet
  */
@@ -324,8 +318,8 @@ function rex_categoryStatus($category_id, $clang, $status = null)
   $KAT->setQuery("select status, re_id from ".$REX['TABLE_PREFIX']."article where id='$category_id' and clang=$clang and startpage=1");
   if ($KAT->getRows() == 1)
   {
-    // Status wurde nicht von außen vorgegeben,
-    // => zyklisch auf den nächsten Weiterschalten
+    // Status wurde nicht von auï¿½en vorgegeben,
+    // => zyklisch auf den nï¿½chsten Weiterschalten
     if(!$status)
       $newstatus = ($KAT->getValue('status') + 1) % count($catStatusTypes);
     else
@@ -340,7 +334,6 @@ function rex_categoryStatus($category_id, $clang, $status = null)
     if($EKAT->update())
     {
       $message = $I18N->msg('category_status_updated');
-      rex_deleteCacheArticle($category_id, $clang);
 
       // ----- EXTENSION POINT
       $message = rex_register_extension_point('CAT_STATUS', $message, array (
@@ -366,7 +359,7 @@ function rex_categoryStatus($category_id, $clang, $status = null)
 }
 
 /**
- * Gibt alle Stati zurück, die für eine Kategorie gültig sind
+ * Gibt alle Stati zurï¿½ck, die fï¿½r eine Kategorie gï¿½ltig sind
  * 
  * @return array Array von Stati
  */
@@ -478,7 +471,7 @@ function rex_addArticle($data)
 /**
  * Bearbeitet einen Artikel
  * 
- * @param int   $article_id  Id des Artikels der verändert werden soll
+ * @param int   $article_id  Id des Artikels der verï¿½ndert werden soll
  * @param int   $clang       Id der Sprache
  * @param array $data        Array mit den Daten des Artikels 
  * 
@@ -518,8 +511,7 @@ function rex_editArticle($article_id, $clang, $data)
     
     // ----- PRIOR
     rex_newArtPrio($data['category_id'], $clang, $data['prior'], $thisArt->getValue('prior'));
-    rex_deleteCacheArticle($article_id, $clang);
-        
+            
     // ----- EXTENSION POINT
     $message = rex_register_extension_point('ART_UPDATED', $message,
       array (
@@ -553,9 +545,9 @@ function rex_editArticle($article_id, $clang, $data)
 }
 
 /**
- * Löscht einen Artikel und reorganisiert die Prioritäten verbleibender Geschwister-Artikel
+ * Lï¿½scht einen Artikel und reorganisiert die Prioritï¿½ten verbleibender Geschwister-Artikel
  * 
- * @param int $article_id Id des Artikels die gelöscht werden soll
+ * @param int $article_id Id des Artikels die gelï¿½scht werden soll
  * 
  * @return array Ein Array welches den status sowie eine Fehlermeldung beinhaltet
  */
@@ -602,11 +594,11 @@ function rex_deleteArticleReorganized($article_id)
 }
 
 /**
- * Ändert den Status des Artikels
+ * ï¿½ndert den Status des Artikels
  * 
- * @param int       $article_id Id des Artikels die gelöscht werden soll
+ * @param int       $article_id Id des Artikels die gelï¿½scht werden soll
  * @param int       $clang      Id der Sprache
- * @param int|null  $status     Status auf den der Artikel gesetzt werden soll, oder NULL wenn zum nächsten Status weitergeschaltet werden soll
+ * @param int|null  $status     Status auf den der Artikel gesetzt werden soll, oder NULL wenn zum nï¿½chsten Status weitergeschaltet werden soll
  * 
  * @return array Ein Array welches den status sowie eine Fehlermeldung beinhaltet
  */
@@ -622,8 +614,8 @@ function rex_articleStatus($article_id, $clang, $status = null)
   $GA->setQuery("select * from ".$REX['TABLE_PREFIX']."article where id='$article_id' and clang=$clang");
   if ($GA->getRows() == 1)
   {
-    // Status wurde nicht von außen vorgegeben,
-    // => zyklisch auf den nächsten Weiterschalten
+    // Status wurde nicht von auï¿½en vorgegeben,
+    // => zyklisch auf den nï¿½chsten Weiterschalten
     if(!$status)
       $newstatus = ($GA->getValue('status') + 1) % count($artStatusTypes);
     else
@@ -638,8 +630,7 @@ function rex_articleStatus($article_id, $clang, $status = null)
     if($EA->update())
     {
       $message = $I18N->msg('article_status_updated');
-      rex_deleteCacheArticle($article_id, $clang);
-
+      
       // ----- EXTENSION POINT
       $message = rex_register_extension_point('ART_STATUS', $message, array (
         'id' => $article_id,
@@ -663,7 +654,7 @@ function rex_articleStatus($article_id, $clang, $status = null)
 }
 
 /**
- * Gibt alle Stati zurück, die für einen Artikel gültig sind
+ * Gibt alle Stati zurï¿½ck, die fï¿½r einen Artikel gï¿½ltig sind
  * 
  * @return array Array von Stati
  */
