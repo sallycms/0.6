@@ -32,9 +32,9 @@ class OOArticle extends OORedaxo {
 			
 			if($article->rows > 0) {
 				if ($OOCategory) {
-					$obj = new OOCategory(mysql_fetch_array($article->result, MYSQL_ASSOC));
+					$obj = new OOCategory(mysql_fetch_array($article->result, MYSQL_ASSOC), $clang);
 				} else {
-					$obj = new OOArticle(mysql_fetch_array($article->result, MYSQL_ASSOC));
+					$obj = new OOArticle(mysql_fetch_array($article->result, MYSQL_ASSOC), $clang);
 				}
 				
 				if(Core::getInstance()->hasCache()) {

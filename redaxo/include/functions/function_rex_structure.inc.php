@@ -595,7 +595,7 @@ function rex_deleteArticleReorganized($article_id)
       );
       if(Core::getInstance()->hasCache()){
       	Core::getInstance()->getCache()->delete('obj_article_'.$article_id.'_'.$clang);
-      	Core::getInstance()->getCache()->delete('alist_'.$data['category_id'].'_'.$key);
+      	Core::getInstance()->getCache()->delete('alist_'.$data['category_id'].'_'.$clang);
       }
       $Art->next();
     }

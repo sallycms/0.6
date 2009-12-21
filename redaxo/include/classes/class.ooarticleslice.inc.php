@@ -224,7 +224,10 @@ class OOArticleSlice
 
       $sql->next();
     }
-    return count($slices) == 1 ? $slices[0] : $slices;
+	 
+	 if (!empty($slices)) {
+		return count($slices) == 1 ? $slices[0] : $slices;
+	 }
 
     return $default;
   }
