@@ -48,18 +48,6 @@ include_once ($REX['INCLUDE_PATH'].'/addons/image_resize/classes/class.thumbnail
 require_once $REX['INCLUDE_PATH'].'/addons/image_resize/extensions/extension_wysiwyg.inc.php';
 rex_register_extension('OUTPUT_FILTER', 'rex_resize_wysiwyg_output');
 
-if ($REX['REDAXO'])
-{
-	// Bei Update Cache loeschen
-  if(!function_exists('rex_image_ep_mediaupdated'))
-  {
-  	rex_register_extension('MEDIA_UPDATED', 'rex_image_ep_mediaupdated');
-  	function rex_image_ep_mediaupdated($params){
-  		rex_thumbnail::deleteCache($params["filename"]);
-  	}
-  }
-}
-
 // Resize Script
 $rex_resize = rex_get('rex_resize', 'string');
 if ($rex_resize != '')
@@ -69,6 +57,14 @@ if ($rex_resize != '')
 
 if($REX['REDAXO'])
 {
+	// Bei Update Cache loeschen
+	if(!function_exists('rex_image_ep_mediaupdated'))
+	{
+		rex_register_extension('MEDIA_UPDATED', 'rex_image_ep_mediaupdated');
+		function rex_image_ep_mediaupdated($params){
+			rex_thumbnail::deleteCache($params["filename"]);
+		}
+	}
 	$I18N->appendFile($REX['INCLUDE_PATH'].'/addons/'.$mypage.'/lang/');
 	$REX['ADDON'][$mypage]['SUBPAGES'] = array (
   	array ('', $I18N->msg('iresize_subpage_desc')),
