@@ -2,7 +2,7 @@
 
 
 /**
- * Funktionensammlung f�r die generierung der Artikel/Templates/Kategorien/Metainfos.. etc.
+ * Funktionensammlung für die generierung der Artikel/Templates/Kategorien/Metainfos.. etc.
  * @package redaxo4
  * @version svn:$Id$
  */
@@ -34,8 +34,8 @@ function rex_generateAll() {
 
 
 /**
- * L�scht die gecachten Dateien eines Artikels. Wenn keine clang angegeben, wird
- * der Artikel in allen Sprachen gel�scht.
+ * Löscht die gecachten Dateien eines Artikels. Wenn keine clang angegeben, wird
+ * der Artikel in allen Sprachen gelöscht.
  *
  * @param $id ArtikelId des Artikels
  * @param [$clang ClangId des Artikels]
@@ -62,8 +62,8 @@ function rex_deleteCacheArticle($id, $clang = null)
 
 
 /**
- * L�scht die gecachten Content-Dateien eines Artikels. Wenn keine clang angegeben, wird
- * der Artikel in allen Sprachen gel�scht.
+ * Löscht die gecachten Content-Dateien eines Artikels. Wenn keine clang angegeben, wird
+ * der Artikel in allen Sprachen gelöscht.
  *
  * @param $id ArtikelId des Artikels
  * @param [$clang ClangId des Artikels]
@@ -86,8 +86,8 @@ function rex_deleteCacheArticleContent($id, $clang = null)
 }
 
 /**
- * L�scht die gecachten List-Dateien eines Artikels. Wenn keine clang angegeben, wird
- * der Artikel in allen Sprachen gel�scht.
+ * Löscht die gecachten List-Dateien eines Artikels. Wenn keine clang angegeben, wird
+ * der Artikel in allen Sprachen gelöscht.
  *
  * @param $id ArtikelId des Artikels
  * @param [$clang ClangId des Artikels]
@@ -117,7 +117,7 @@ function rex_deleteCacheArticleContent($id, $clang = null)
  * @param $article_id Id des zu generierenden Artikels
  * @param [$clang ClangId des Artikels]
  * 
- * @return TRUE bei Erfolg, FALSE wenn eine ung�tlige article_id �bergeben wird, sonst eine Fehlermeldung
+ * @return TRUE bei Erfolg, FALSE wenn eine ungütlige article_id übergeben wird, sonst eine Fehlermeldung
  */
 /*function rex_generateArticleMeta($article_id, $clang = null)
 {
@@ -131,7 +131,7 @@ function rex_deleteCacheArticleContent($id, $clang = null)
     $CONT = new rex_article;
     $CONT->setCLang($_clang);
     $CONT->getContentAsQuery(); // Content aus Datenbank holen, no cache
-    $CONT->setEval(FALSE); // Content nicht ausf�hren, damit in Cachedatei gespeichert werden kann
+    $CONT->setEval(FALSE); // Content nicht ausführen, damit in Cachedatei gespeichert werden kann
     if (!$CONT->setArticleId($article_id)) return FALSE;
 
     // --------------------------------------------------- Artikelparameter speichern
@@ -160,7 +160,7 @@ function rex_deleteCacheArticleContent($id, $clang = null)
       return $I18N->msg('article_could_not_be_generated')." ".$I18N->msg('check_rights_in_directory').$REX['INCLUDE_PATH']."/generated/articles/";
     }
     
-    // damit die aktuellen �nderungen sofort wirksam werden, einbinden!
+    // damit die aktuellen Änderungen sofort wirksam werden, einbinden!
     require ($article_file);
   }
   
@@ -173,7 +173,7 @@ function rex_deleteCacheArticleContent($id, $clang = null)
  * @param $article_id Id des zu generierenden Artikels
  * @param [$clang ClangId des Artikels]
  * 
- * @return TRUE bei Erfolg, FALSE wenn eine ung�tlige article_id �bergeben wird, sonst eine Fehlermeldung
+ * @return TRUE bei Erfolg, FALSE wenn eine ungütlige article_id übergeben wird, sonst eine Fehlermeldung
  */
 function rex_generateArticleContent($article_id, $clang = null)
 {
@@ -187,7 +187,7 @@ function rex_generateArticleContent($article_id, $clang = null)
     $CONT = new rex_article;
     $CONT->setCLang($_clang);
     $CONT->getContentAsQuery(); // Content aus Datenbank holen, no cache
-    $CONT->setEval(FALSE); // Content nicht ausf�hren, damit in Cachedatei gespeichert werden kann
+    $CONT->setEval(FALSE); // Content nicht ausführen, damit in Cachedatei gespeichert werden kann
     if (!$CONT->setArticleId($article_id)) return FALSE;
   
     // --------------------------------------------------- Artikelcontent speichern
@@ -218,7 +218,7 @@ function rex_generateArticleContent($article_id, $clang = null)
  * @param $id ArtikelId des Artikels, der generiert werden soll
  * @param $refreshall Boolean Bei True wird der Inhalte auch komplett neu generiert, bei False nur die Metainfos
  * 
- * @return TRUE bei Erfolg, FALSE wenn eine ung�tlige article_id �bergeben wird
+ * @return TRUE bei Erfolg, FALSE wenn eine ungütlige article_id übergeben wird
  */
 function rex_generateArticle($id, $refreshall = true)
 {
@@ -239,7 +239,7 @@ function rex_generateArticle($id, $refreshall = true)
     $CONT = new rex_article;
     $CONT->setCLang($clang);
     $CONT->getContentAsQuery(); // Content aus Datenbank holen, no cache
-    $CONT->setEval(FALSE); // Content nicht ausf�hren, damit in Cachedatei gespeichert werden kann
+    $CONT->setEval(FALSE); // Content nicht ausführen, damit in Cachedatei gespeichert werden kann
     if (!$CONT->setArticleId($id)) return FALSE;
       
     // ----------------------- generiere generated/articles/xx.article
@@ -285,9 +285,9 @@ function rex_generateArticle($id, $refreshall = true)
 }
 
 /**
- * L�scht einen Artikel
+ * Löscht einen Artikel
  *
- * @param $id ArtikelId des Artikels, der gel�scht werden soll
+ * @param $id ArtikelId des Artikels, der gelöscht werden soll
  * 
  * @return Erfolgsmeldung bzw. Fehlermeldung bei Fehlern.
  */
@@ -300,11 +300,11 @@ function rex_deleteArticle($id)
 }
 
 /**
- * L�scht einen Artikel
+ * Löscht einen Artikel
  * 
- * @param $id ArtikelId des Artikels, der gel�scht werden soll
+ * @param $id ArtikelId des Artikels, der gelöscht werden soll
  * 
- * @return TRUE wenn der Artikel gel�scht wurde, sonst eine Fehlermeldung
+ * @return TRUE wenn der Artikel gelöscht wurde, sonst eine Fehlermeldung
  */
 function _rex_deleteArticle($id)
 {
@@ -315,7 +315,7 @@ function _rex_deleteArticle($id)
   // kontrolle ob erlaubnis nicht hier.. muss vorher geschehen
   //
   // -> startpage = 0
-  // --> artikelfiles l�schen
+  // --> artikelfiles löschen
   // ---> article
   // ---> content
   // ---> clist
@@ -359,8 +359,8 @@ function _rex_deleteArticle($id)
     	$return['message'] = $I18N->msg('article_deleted');
     }
 
-    // Rekursion �ber alle Kindkategorien ergab keine Fehler
-    // => l�schen erlaubt
+    // Rekursion über alle Kindkategorien ergab keine Fehler
+    // => löschen erlaubt
     if($return['state'] === true)
     {
       //rex_deleteCacheArticle($id);
@@ -449,7 +449,7 @@ function rex_deleteDir($file, $delete_folders = FALSE) {
 
 
 /**
- * L�sch allen Datei in einem Ordner
+ * Löscht allen Datei in einem Ordner
  *
  * @param $file Pfad zum Ordner
  * 
@@ -463,7 +463,7 @@ function rex_deleteFiles($file)
 
   if (file_exists($file))
   {
-    // Fehler unterdr�cken, falls keine Berechtigung
+    // Fehler unterdrücken, falls keine Berechtigung
     if (@ is_dir($file))
     {
       $handle = opendir($file);
@@ -495,8 +495,8 @@ function rex_deleteFiles($file)
     }
     else
     {
-      // Datei l�schen
-      // Fehler unterdr�cken, falls keine Berechtigung
+      // Datei löschen
+      // Fehler unterdrücken, falls keine Berechtigung
     }
   }
   else
@@ -592,9 +592,9 @@ function rex_copyDir($srcdir, $dstdir, $startdir = "")
 // ----------------------------------------- CLANG
 
 /**
- * L�scht eine Clang
+ * Löscht eine Clang
  *
- * @param $id Zu l�schende ClangId
+ * @param $id Zu löschende ClangId
  * 
  * @return TRUE bei Erfolg, sonst FALSE
  */
@@ -673,7 +673,7 @@ function rex_addCLang($id, $name) {
 }
 
 /**
- * �ndert eine Clang
+ * ändert eine Clang
  *
  * @param $id   Id der Clang
  * @param $name Name der Clang
@@ -732,8 +732,8 @@ function rex_generateAddons($ADDONS)
     $content .= "\n";      
   }
 
-  // Da dieser Funktion �fter pro request aufgerufen werden kann,
-  // hier die caches l�schen
+  // Da dieser Funktion öfter pro request aufgerufen werden kann,
+  // hier die caches löschen
   clearstatcache();
 
   $file = $REX['INCLUDE_PATH']."/addons.inc.php";
@@ -780,8 +780,8 @@ function rex_generatePlugins($PLUGINS)
     }
   }
 
-  // Da dieser Funktion �fter pro request aufgerufen werden kann,
-  // hier die caches l�schen
+  // Da dieser Funktion öfter pro request aufgerufen werden kann,
+  // hier die caches löschen
   clearstatcache();
 
   $file = $REX['INCLUDE_PATH']."/plugins.inc.php";
@@ -839,7 +839,7 @@ function rex_generateTemplate($template_id)
   	$content = $sql->getValue('content');
   	foreach($REX['VARIABLES'] as $idx => $var)
   	{
-      if (is_string($var)) { // Es hat noch kein Autoloading f�r diese Klasse stattgefunden
+      if (is_string($var)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
         $tmp = new $var();
         $tmp = null;
         $var = $REX['VARIABLES'][$idx];

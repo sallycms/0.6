@@ -505,7 +505,7 @@ class OOMedia
             $resizeParam = 100;
           }
 
-          // Evtl. Gr��eneinheiten entfernen
+          // Evtl. Größeneinheiten entfernen
           $resizeParam = str_replace(array (
             'px',
             'pt',
@@ -530,7 +530,7 @@ class OOMedia
 
     $title = $this->getTitle();
 
-    // Alternativtext hinzuf�gen
+    // Alternativtext hinzufügen
     if (!isset($params['alt']))
     {
       if ($title != '')
@@ -539,7 +539,7 @@ class OOMedia
       }
     }
 
-    // Titel hinzuf�gen
+    // Titel hinzufügen
     if (!isset($params['title']))
     {
       if ($title != '')
@@ -548,7 +548,7 @@ class OOMedia
       }
     }
 
-    // Evtl. Zusatzatrribute anf�gen
+    // Evtl. Zusatzatrribute anfügen
     $additional = '';
     foreach ($params as $name => $value)
     {
@@ -755,7 +755,7 @@ class OOMedia
     $folder = $REX['HTDOCS_PATH'] .'redaxo/media/';
     $icon = $folder .'mime-'.$ext.'.gif';
 
-    // Dateityp f�r den kein Icon vorhanden ist
+    // Dateityp für den kein Icon vorhanden ist
     if (!file_exists($icon))
     {
       if($useDefaultIcon)

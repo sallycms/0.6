@@ -175,7 +175,7 @@ class OOArticleSlice
   }
 
   /**
-   * Gibt den Slice formatiert zur�ck
+   * Gibt den Slice formatiert zurück
    * @since 4.1 - 29.05.2008
    */
   function getSlice()

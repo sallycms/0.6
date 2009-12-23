@@ -1,7 +1,7 @@
 <?php
 
 /**
-* Object Oriented Framework: Basisklasse f�r die Strukturkomponenten
+* Object Oriented Framework: Basisklasse für die Strukturkomponenten
 * @package redaxo4
 * @version svn:$Id$
 */
@@ -239,7 +239,7 @@ class OORedaxo {
 	* @param [$params] Parameter für den Link
 	* @param [$attributes] array Attribute die dem Link hinzugef�gt werden sollen. Default: null
 	* @param [$surround_tag] string HTML-Tag-Name mit dem der Link umgeben werden soll, z.b. 'li', 'div'. Default: null
-	* @param [$surround_attributes] array Attribute die Umgebenden-Element hinzugef�gt werden sollen. Default: null
+	* @param [$surround_attributes] array Attribute die Umgebenden-Element hinzugefügt werden sollen. Default: null
 	*/
 	public function toLink($params = '', $attributes = null, $surround_tag = null, $surround_attributes = null) {
 		$name = htmlspecialchars($this->getName());

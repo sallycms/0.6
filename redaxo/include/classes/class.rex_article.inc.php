@@ -2,7 +2,7 @@
 
 /**
  * Artikel Objekt.
- * Zust�ndig f�r die Verarbeitung eines Artikel
+ * Zuständig für die Verarbeitung eines Artikel
  *
  * @package redaxo4
  * @version svn:$Id$
@@ -94,7 +94,7 @@ class rex_article
     $this->viasql = $viasql;
   }
 
-  // ----- Slice Id setzen f�r Editiermodus
+  // ----- Slice Id setzen für Editiermodus
   function setSliceId($value)
   {
     $this->slice_id = $value;
@@ -185,7 +185,7 @@ class rex_article
       if ($this->getValue('startpage')!=1) $value = 're_id';
       else $value = 'id';
     }
-    // Nicht generated, oder �ber SQL muss article_id -> id heissen
+    // Nicht generated, oder über SQL muss article_id -> id heißen
     else if ($this->viasql && $value == 'article_id')
     {
       $value = 'id';
@@ -314,10 +314,10 @@ class rex_article
           $this->CONT->next();
         }
 		  
-		  // Autoloading f�r die Variablen ansto�en
+		  // Autoloading für die Variablen anstoßen
 		  
 		  foreach ($REX['VARIABLES'] as $idx => $var) {
-			  if (is_string($var)) { // Es hat noch kein Autoloading f�r diese Klasse stattgefunden
+			  if (is_string($var)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
 			  $tmp = new $var();
 			  $tmp = null;
 			}
@@ -444,8 +444,8 @@ class rex_article
               {
                 $moveUp = $I18N->msg('move_slice_up');
                 $moveDown = $I18N->msg('move_slice_down');
-                // upd stamp �bergeben, da sonst ein block nicht mehrfach hintereindander verschoben werden kann
-                // (Links w�ren sonst gleich und der Browser l�sst das klicken auf den gleichen Link nicht zu)
+                // upd stamp übergeben, da sonst ein block nicht mehrfach hintereindander verschoben werden kann
+                // (Links wären sonst gleich und der Browser lässt das klicken auf den gleichen Link nicht zu)
                 $listElements[] = '<a href="'. sprintf($sliceUrl, '&amp;upd='. time() .'&amp;function=moveup') .'" title="'. $moveUp .'" class="rex-slice-move-up"><span>'. $RE_MODUL_NAME[$I_ID] .'</span></a>';
                 $listElements[] = '<a href="'. sprintf($sliceUrl, '&amp;upd='. time() .'&amp;function=movedown') .'" title="'. $moveDown .'" class="rex-slice-move-down"><span>'. $RE_MODUL_NAME[$I_ID] .'</span></a>';
               }
@@ -498,8 +498,8 @@ class rex_article
                 // ----- PRE VIEW ACTION [EDIT]
                 $REX_ACTION = array ();
 
-                // nach klick auf den �bernehmen button,
-                // die POST werte �bernehmen
+                // nach klick auf den Übernehmen button,
+                // die POST werte übernehmen
                 if(rex_var::isEditEvent())
                 {
                   foreach ($REX['VARIABLES'] as $obj)
@@ -687,7 +687,7 @@ class rex_article
     return $CONTENT;
   }
 
-  // ----- Template inklusive Artikel zur�ckgeben
+  // ----- Template inklusive Artikel zurückgeben
   function getArticleTemplate()
   {
     // global $REX hier wichtig, damit in den Artikeln die Variable vorhanden ist!
@@ -798,7 +798,7 @@ class rex_article
 
       $dummysql = new rex_sql();
 
-      // Den Dummy mit allen Feldern aus rex_article_slice f�llen
+      // Den Dummy mit allen Feldern aus rex_article_slice füllen
       $slice_fields = new rex_sql();
       $slice_fields->setQuery('SELECT * FROM '. $REX['TABLE_PREFIX'].'article_slice LIMIT 1');
       foreach($slice_fields->getFieldnames() as $fieldname)
@@ -896,7 +896,7 @@ class rex_article
 
     foreach($REX['VARIABLES'] as $idx => $var)
     {
-      if (is_string($var)) { // Es hat noch kein Autoloading f�r diese Klasse stattgefunden
+      if (is_string($var)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
         $tmp = new $var();
         $tmp = null;
         $var = $REX['VARIABLES'][$idx];
@@ -911,9 +911,9 @@ class rex_article
           {
             // Wenn der aktuelle Slice nicht gespeichert werden soll
             // (via Action wurde das Nicht-Speichern-Flag gesetzt)
-            // Dann die Werte manuell aus dem Post �bernehmen
-            // und anschlie�end die Werte wieder zur�cksetzen,
-            // damit die n�chsten Slices wieder die Werte aus der DB verwenden
+            // Dann die Werte manuell aus dem Post übernehmen
+            // und anschließend die Werte wieder zurücksetzen,
+            // damit die nächsten Slices wieder die Werte aus der DB verwenden
             $var->setACValues($sql,$REX['ACTION']);
             $tmp = $var->getBEInput($sql,$content);
             $sql->flushValues();
@@ -932,9 +932,9 @@ class rex_article
         $tmp = $var->getFEOutput($sql,$content);
       }
 
-      // R�ckgabewert nur auswerten wenn auch einer vorhanden ist
-      // damit $content nicht verf�lscht wird
-      // null ist default R�ckgabewert, falls kein RETURN in einer Funktion ist
+      // Rückgabewert nur auswerten wenn auch einer vorhanden ist
+      // damit $content nicht verfälscht wird
+      // null ist default Rückgabewert, falls kein RETURN in einer Funktion ist
       if($tmp !== null)
       {
         $content = $tmp;

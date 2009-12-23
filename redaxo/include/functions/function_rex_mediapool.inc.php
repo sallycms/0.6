@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Funktionensammlung f�r den Medienpool
+ * Funktionensammlung für den Medienpool
  *
  * @package redaxo4
  * @version svn:$Id$
  */
 
 /**
- * Erstellt einen Filename der eindeutig ist f�r den Medienpool
+ * Erstellt einen Filename der eindeutig ist für den Medienpool
  * @param $FILENAME Dateiname
  */
 function rex_mediapool_filename($FILENAME, $doSubindexing = true)
@@ -17,7 +17,7 @@ function rex_mediapool_filename($FILENAME, $doSubindexing = true)
 
   // ----- neuer filename und extension holen
   $NFILENAME = strtolower($FILENAME);
-  $NFILENAME = str_replace(array('�','�', '�', '�'),array('ae', 'oe', 'ue', 'ss'),$NFILENAME);
+  $NFILENAME = str_replace(array('ä','ö', 'ü', 'ß'),array('ae', 'oe', 'ue', 'sz'),$NFILENAME);
   $NFILENAME = preg_replace('/[^a-zA-Z0-9.\-\+]/','_',$NFILENAME);
   if (strrpos($NFILENAME,'.') != '')
   {
@@ -57,7 +57,7 @@ function rex_mediapool_filename($FILENAME, $doSubindexing = true)
 /**
  * Holt ein upgeloadetes File und legt es in den Medienpool
  * Dabei wird kontrolliert ob das File schon vorhanden ist und es
- * wird eventuell angepasst, weiterhin werden die Fileinformationen �bergeben
+ * wird eventuell angepasst, weiterhin werden die Fileinformationen übergeben
  *
  * @param $FILE
  * @param $rex_file_category
@@ -165,7 +165,7 @@ function rex_mediapool_saveMedia($FILE, $rex_file_category, $FILEINFOS, $userlog
 /**
  * Holt ein upgeloadetes File und legt es in den Medienpool
  * Dabei wird kontrolliert ob das File schon vorhanden ist und es
- * wird eventuell angepasst, weiterhin werden die Fileinformationen �bergeben
+ * wird eventuell angepasst, weiterhin werden die Fileinformationen übergeben
  *
  * @param $FILE
  * @param $rex_file_category
@@ -314,7 +314,7 @@ function rex_mediapool_syncFile($physical_filename,$category_id,$title,$filesize
 }
 
 /**
- * F�gt einen rex_select Objekt die hierarchische Medienkategorien struktur
+ * Fügt einen rex_select Objekt die hierarchische Medienkategorien struktur
  * hinzu
  *
  * @param $select
@@ -344,8 +344,8 @@ function rex_mediapool_addMediacatOptions( &$select, &$mediacat, &$mediacat_ids,
 }
 
 /**
- * F�gt einen rex_select Objekt die hierarchische Medienkategorien struktur
- * hinzu unter ber�cksichtigung der Medienkategorierechte
+ * Fügt einem rex_select-Objekt die hierarchische Medienkategorienstruktur
+ * unter Berücksichtigung der Medienkategorierechte hinzu
  *
  * @param $select
  * @param $mediacat

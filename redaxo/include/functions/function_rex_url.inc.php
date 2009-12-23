@@ -63,13 +63,13 @@ function rex_param_string($params, $divider = '&amp;')
 }
 
 /**
- * Gibt eine Url zu einem Artikel zur�ck
+ * Gibt eine Url zu einem Artikel zurück
  *
  * @param [$_id] ArtikelId des Artikels
  * @param [$_clang] SprachId des Artikels
  * @param [$_params] Array von Parametern
- * @param [$_divider] Trennzeichen f�r Parameter
- * (z.B. &amp; f�r HTML, & f�r Javascript)
+ * @param [$_divider] Trennzeichen für Parameter
+ * (z.B. &amp; für HTML, & für Javascript)
  */
 function rex_getUrl($_id = 0, $_clang = false, $_params = '', $_divider = '&amp;')
 {
@@ -119,7 +119,7 @@ function rex_getUrl($_id = 0, $_clang = false, $_params = '', $_divider = '&amp;
 // ----------------------------------------- Rewrite functions
 
 /**
- * Standard Rewriter, gibt normale Urls zur�ck im Format
+ * Standard Rewriter, gibt normale Urls zurück im Format
  * index.php?article_id=$article_id[&clang=$clang&$params]
  */
 function rex_no_rewrite($id, $name, $clang, $param_string, $divider)

@@ -7,9 +7,9 @@
  */
 
 /**
- * Gibt die Superglobale variable $varname des Array $_GET zur�ck und castet dessen Wert ggf.
+ * Gibt die Superglobale variable $varname des Array $_GET zurück und castet dessen Wert ggf.
  * 
- * Falls die Variable nicht vorhanden ist, wird $default zur�ckgegeben
+ * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
 function rex_get($varname, $vartype = '', $default = '')
 {
@@ -17,9 +17,9 @@ function rex_get($varname, $vartype = '', $default = '')
 }
 
 /**
- * Gibt die Superglobale variable $varname des Array $_POST zur�ck und castet dessen Wert ggf.
+ * Gibt die Superglobale variable $varname des Array $_POST zurück und castet dessen Wert ggf.
  * 
- * Falls die Variable nicht vorhanden ist, wird $default zur�ckgegeben
+ * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
 function rex_post($varname, $vartype = '', $default = '')
 {
@@ -27,9 +27,9 @@ function rex_post($varname, $vartype = '', $default = '')
 }
 
 /**
- * Gibt die Superglobale variable $varname des Array $_REQUEST zur�ck und castet dessen Wert ggf.
+ * Gibt die Superglobale variable $varname des Array $_REQUEST zurück und castet dessen Wert ggf.
  * 
- * Falls die Variable nicht vorhanden ist, wird $default zur�ckgegeben
+ * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
 function rex_request($varname, $vartype = '', $default = '')
 {
@@ -37,9 +37,9 @@ function rex_request($varname, $vartype = '', $default = '')
 }
 
 /**
- * Gibt die Superglobale variable $varname des Array $_SERVER zur�ck und castet dessen Wert ggf.
+ * Gibt die Superglobale variable $varname des Array $_SERVER zurück und castet dessen Wert ggf.
  * 
- * Falls die Variable nicht vorhanden ist, wird $default zur�ckgegeben
+ * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
 function rex_server($varname, $vartype = '', $default = '')
 {
@@ -47,9 +47,9 @@ function rex_server($varname, $vartype = '', $default = '')
 }
 
 /**
- * Gibt die Superglobale variable $varname des Array $_SESSION zur�ck und castet dessen Wert ggf.
+ * Gibt die Superglobale variable $varname des Array $_SESSION zurück und castet dessen Wert ggf.
  * 
- * Falls die Variable nicht vorhanden ist, wird $default zur�ckgegeben
+ * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
 function rex_session($varname, $vartype = '', $default = '')
 {
@@ -70,7 +70,7 @@ function rex_session($varname, $vartype = '', $default = '')
 /**
  * Setzt den Wert einer Session Variable.
  * 
- * Variablen werden Instanzabh�ngig gespeichert.
+ * Variablen werden Instanzabhängig gespeichert.
  */
 function rex_set_session($varname, $value)
 {
@@ -80,9 +80,9 @@ function rex_set_session($varname, $value)
 }
 
 /**
- * L�scht den Wert einer Session Variable.
+ * Löscht den Wert einer Session Variable.
  * 
- * Variablen werden Instanzabh�ngig gel�scht.
+ * Variablen werden Instanzabhängig gelöscht.
  */
 function rex_unset_session($varname)
 {
@@ -92,9 +92,9 @@ function rex_unset_session($varname)
 }
 
 /**
- * Gibt die Superglobale variable $varname des Array $_COOKIE zur�ck und castet dessen Wert ggf.
+ * Gibt die Superglobale variable $varname des Array $_COOKIE zurück und castet dessen Wert ggf.
  * 
- * Falls die Variable nicht vorhanden ist, wird $default zur�ckgegeben
+ * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
 function rex_cookie($varname, $vartype = '', $default = '')
 {
@@ -102,9 +102,9 @@ function rex_cookie($varname, $vartype = '', $default = '')
 }
 
 /**
- * Gibt die Superglobale variable $varname des Array $_FILES zur�ck und castet dessen Wert ggf.
+ * Gibt die Superglobale variable $varname des Array $_FILES zurück und castet dessen Wert ggf.
  * 
- * Falls die Variable nicht vorhanden ist, wird $default zur�ckgegeben
+ * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
 function rex_files($varname, $vartype = '', $default = '')
 {
@@ -112,9 +112,9 @@ function rex_files($varname, $vartype = '', $default = '')
 }
 
 /**
- * Gibt die Superglobale variable $varname des Array $_ENV zur�ck und castet dessen Wert ggf.
+ * Gibt die Superglobale variable $varname des Array $_ENV zurück und castet dessen Wert ggf.
  * 
- * Falls die Variable nicht vorhanden ist, wird $default zur�ckgegeben
+ * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
 function rex_env($varname, $vartype = '', $default = '')
 {
@@ -122,12 +122,12 @@ function rex_env($varname, $vartype = '', $default = '')
 }
 
 /**
- * Durchsucht das Array $haystack nach dem Schl�ssel $needle.
+ * Durchsucht das Array $haystack nach dem Schlüssel $needle.
  *  
  * Falls ein Wert gefunden wurde wird dieser nach 
- * $vartype gecastet und anschlie�end zur�ckgegeben.
+ * $vartype gecastet und anschließend zurückgegeben.
  * 
- * Falls die Suche erfolglos endet, wird $default zur�ckgegeben
+ * Falls die Suche erfolglos endet, wird $default zurückgegeben
  * 
  * @access private
  */
@@ -160,7 +160,7 @@ function _rex_array_key_cast($haystack, $needle, $vartype, $default = '')
 /**
  * Castet die Variable $var zum Typ $vartype
  * 
- * M�gliche PHP-Typen sind:
+ * Mögliche PHP-Typen sind:
  *  - bool (auch boolean)
  *  - int (auch integer)
  *  - double
@@ -171,7 +171,7 @@ function _rex_array_key_cast($haystack, $needle, $vartype, $default = '')
  *  - array
  *  - '' (nicht casten)
  *  
- * M�gliche REDAXO-Typen sind:
+ * Mögliche REDAXO-Typen sind:
  *  - rex-article-id
  *  - rex-category-id
  *  - rex-clang-id
