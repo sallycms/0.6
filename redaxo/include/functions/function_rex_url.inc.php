@@ -71,7 +71,7 @@ function rex_param_string($params, $divider = '&amp;')
  * @param [$_divider] Trennzeichen für Parameter
  * (z.B. &amp; für HTML, & für Javascript)
  */
-function rex_getUrl($_id = 0, $_clang = false, $_params = '', $_divider = '&amp;')
+function rex_getUrl($_id = 0, $_clang = false, $name = 'NoName', $_params = '', $_divider = '&amp;')
 {
   global $REX;
 
@@ -90,15 +90,9 @@ function rex_getUrl($_id = 0, $_clang = false, $_params = '', $_divider = '&amp;
 
   // ----- get params
   $param_string = rex_param_string($_params, $_divider);
-
-  $name = 'NoName';
-  if ($id != 0)
-  {
-    $ooa = OOArticle :: getArticleById($id, $clang);
-    if ($ooa)
-      $name = rex_parse_article_name($ooa->getName());
-  }
-
+  
+  $name = rex_parse_article_name($name);
+  
   // ----- EXTENSION POINT
   $url = rex_register_extension_point('URL_REWRITE', '', array ('id' => $id, 'name' => $name, 'clang' => $clang, 'params' => $param_string, 'divider' => $_divider));
 

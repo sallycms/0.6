@@ -6,10 +6,6 @@
  * @version svn:$Id$
  */
 
-// -----------------
-
-if (!$REX['GG'])
-	$REX['GG'] = false;
 
 // ----------------- SERVER VARS
 

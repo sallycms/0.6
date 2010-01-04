@@ -1,6 +1,6 @@
 <?php
 
-require $REX['INCLUDE_PATH'].'/addons/developer_utils/classes/class.querylogger.php';
+require_once $REX['INCLUDE_PATH'].'/addons/developer_utils/classes/class.querylogger.php';
 $filename = $REX['MEDIAFOLDER'].'/'.$REX['TEMP_PREFIX'].'/eh.querylogging';
 if (file_exists($filename)) _WV_QueryLogger::enableLogging(file_get_contents($filename));
 unset($filename);
@@ -820,7 +820,7 @@ class rex_sql
   /**
    * Gibt ein SQL Singelton Objekt zurück
    */
-  function getInstance($DBID=1, $createInstance = true)
+  public static function getInstance($DBID=1, $createInstance = true)
   {
     static $instance = null;
 
@@ -839,6 +839,7 @@ class rex_sql
   {
     if(is_resource($this->result))
       mysql_free_result($this->result);
+      
   }
 
   /**

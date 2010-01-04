@@ -119,7 +119,7 @@ class OORedaxo {
 	* Returns a url for linking to this article
 	*/
 	public function getUrl($params = '') {
-		return rex_getUrl($this->getId(), $this->getClang(), $params);
+		return rex_getUrl($this->getId(), $this->getClang(), $this->getName(), $params);
 	}
 	
 	/*

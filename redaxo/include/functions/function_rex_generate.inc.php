@@ -52,11 +52,11 @@ function rex_deleteCacheArticle($id, $clang = null)
       continue;
       
     rex_deleteCacheArticleContent($id, $clang);
-    if(Core::getInstance()->hasCache()){
-    	Core::getInstance()->getCache()->delete('obj_article_'.$id.'_'.$clang);
-    	Core::getInstance()->getCache()->delete('alist_'.$id.'_'.$clang);
-    	Core::getInstance()->getCache()->delete('clist_'.$id.'_'.$clang);
-    }
+    
+    Core::cache()->delete('article', $id.'_'.$clang);
+    Core::cache()->delete('alist', $id.'_'.$clang);
+    Core::cache()->delete('clist', $id.'_'.$clang);
+    
   }
 }
 

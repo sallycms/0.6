@@ -83,7 +83,8 @@ class OOArticle extends OORedaxo {
 		$alist = Core::cache()->get($namespace, $key, null);
 	
 		if($alist === null) {
-			$alist = array($a_category_id);
+			$alist = array();
+			if($a_category_id !== 0) $alist[] = $a_category_id;
 			
 			$sql = rex_sql::getInstance();
 			$sql->setQuery("SELECT id FROM " . $REX['TABLE_PREFIX'] . "article WHERE re_id='$a_category_id' AND clang='$clang' ORDER BY prior,name");

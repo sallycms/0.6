@@ -23,12 +23,6 @@ unset($REX);
 
 $REX['REDAXO'] = true;
 
-// Wenn $REX[GG] = true; dann wird der
-// Content aus den redaxo/include/generated/
-// genommen
-
-$REX['GG'] = false;
-
 // setzte pfad und includiere klassen und funktionen
 $REX['HTDOCS_PATH'] = '../';
 require 'include/master.inc.php';

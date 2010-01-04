@@ -37,7 +37,7 @@ else
   for ($ii=1;$ii<$KATebene;$ii++)
   {
     $SKAT = new rex_sql();
-    $SKAT->setQuery('SELECT * FROM '. $REX['TABLE_PREFIX'] .'article WHERE id='. $KPATH[$ii] .' AND startpage=1 AND clang='. $clang);
+    $SKAT->setQuery('SELECT id, catname FROM '. $REX['TABLE_PREFIX'] .'article WHERE id='. $KPATH[$ii] .' AND startpage=1 AND clang='. $clang);
 
     $catname = str_replace(' ', '&nbsp;', htmlspecialchars($SKAT->getValue('catname')));
     $catid = $SKAT->getValue('id');

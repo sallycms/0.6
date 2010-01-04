@@ -6,7 +6,7 @@
  * @version svn:$Id$
  */
 
-// ----- ob caching start für output filter
+// ----- ob caching start fï¿½r output filter
 ob_start();
 ob_implicit_flush(0);
 
@@ -19,15 +19,10 @@ unset($REX);
 
 // Flag ob Inhalte mit Redaxo aufgerufen oder
 // von der Webseite aus
-// Kann wichtig für die Darstellung sein
+// Kann wichtig fï¿½r die Darstellung sein
 // Sollte immer false bleiben
 
 $REX['REDAXO'] = false;
-
-// Wenn $REX[GG] = true; dann wird der
-// Content aus den redaxo/include/generated/
-// genommen
-$REX['GG'] = true;
 
 // setzte pfad und includiere klassen und funktionen
 $REX['HTDOCS_PATH'] = './';

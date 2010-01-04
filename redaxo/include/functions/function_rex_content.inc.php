@@ -412,7 +412,7 @@ function rex_copyMeta($from_id, $to_id, $from_clang = 0, $to_clang = 0, $params 
 
     $uc->update();
 
-    Core::getInstance()->getCache()->delete('article_'.$gc->getValue('id').'_'.$gc->getValue('clang'));
+    Core::cache()->delete('article', $gc->getValue('id').'_'.$gc->getValue('clang'));
     return true;
   }
   return false;
@@ -652,9 +652,9 @@ function rex_moveArticle($id, $from_cat_id, $to_cat_id)
         rex_newArtPrio($from_cat_id, $clang, 1, 0);
         
         //cache aufräumen
-        Core::getInstance()->getCache()->delete('article_'.$id.'_'.$clang);
-        Core::getInstance()->getCache()->delete('alist_'.$from_cat_id.'_'.$clang);
-        Core::getInstance()->getCache()->delete('alist_'.$to_cat_id.'_'.$clang);
+        Core::cache()->delete('article', $id.'_'.$clang);
+        Core::cache()->delete('alist', $from_cat_id.'_'.$clang);
+        Core::cache()->delete('alist', $to_cat_id.'_'.$clang);
       }
       else
       {
@@ -823,7 +823,7 @@ function rex_newCatPrio($re_id, $clang, $new_prio, $old_prio)
       'pid'
     );
 
-    Core::getInstance()->getCache()->delete('clist_'.$re_id.'_'.$clang);
+    Core::cache()->delete('clist', $re_id.'_'.$clang);
   }
 }
 
@@ -858,6 +858,6 @@ function rex_newArtPrio($re_id, $clang, $new_prio, $old_prio)
       'pid'
     );
 
-    Core::getInstance()->getCache()->delete('alist_'.$re_id.'_'.$clang);
+    Core::cache()->delete('alist', $re_id.'_'.$clang);
   }
 }
