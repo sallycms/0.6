@@ -23,10 +23,12 @@ class OOArticle extends OORedaxo {
 
 		if($clang === false) { $clang = $REX['CUR_CLANG']; }
 
-		$key = ($OOCategory ? 'obj_category' : 'obj_article').'_'.$article_id.'_'.$clang;
-		$obj = Core::getInstance()->hasCache() ? Core::getInstance()->getCache()->get($key, null) : null;
+		$namespace = $OOCategory ? 'category' : 'article';
+		$key = $article_id.'_'.$clang;
 		
-		if(!$obj) {
+		$obj = Core::cache()->get($namespace, $key, null);
+		
+		if($obj === null) {
 			$article = rex_sql::getInstance();
 			$article->setQuery("SELECT * FROM ".$REX['TABLE_PREFIX']."article WHERE id = '$article_id' AND clang = '$clang' LIMIT 1");
 			
@@ -37,9 +39,7 @@ class OOArticle extends OORedaxo {
 					$obj = new OOArticle(mysql_fetch_array($article->result, MYSQL_ASSOC), $clang);
 				}
 				
-				if(Core::getInstance()->hasCache()) {
-					Core::getInstance()->getCache()->set($key, $obj);
-				}
+				Core::cache()->set($namespace, $key, $obj);
 			}
 			
 			$article->freeResult();
@@ -52,7 +52,7 @@ class OOArticle extends OORedaxo {
 	* CLASS Function:
 	* Return the site wide start article
 	*/
-	public function getSiteStartArticle($clang = false) {
+	public static function getSiteStartArticle($clang = false) {
 		global $REX;
 		
 		return OOArticle :: getArticleById($REX['START_ARTICLE_ID'], $clang);
@@ -62,7 +62,7 @@ class OOArticle extends OORedaxo {
 	* CLASS Function:
 	* Return start article for a certain category
 	*/
-	public function getCategoryStartArticle($a_category_id, $clang = false) {
+	public static function getCategoryStartArticle($a_category_id, $clang = false) {
 		global $REX;
 		
 		return OOArticle::getArticleById($a_category_id, $clang);
@@ -72,15 +72,15 @@ class OOArticle extends OORedaxo {
 	* CLASS Function:
 	* Return a list of articles for a certain category
 	*/
-	public function getArticlesOfCategory($a_category_id, $ignore_offlines = false, $clang = false) {
+	public static function getArticlesOfCategory($a_category_id, $ignore_offlines = false, $clang = false) {
 		global $REX;
 
 		if ($clang === false) { $clang = $REX['CUR_CLANG']; }
 		$a_category_id = (int) $a_category_id;
 
-		
-		$key   = 'alist_'.$a_category_id.'_'.$clang;
-		$alist = Core::getInstance()->hasCache() ? Core::getInstance()->getCache()->get($key, null) : null;
+		$namespace = 'alist';
+		$key   = $a_category_id.'_'.$clang;
+		$alist = Core::cache()->get($namespace, $key, null);
 	
 		if($alist === null) {
 			$alist = array($a_category_id);
@@ -94,9 +94,7 @@ class OOArticle extends OORedaxo {
 			
 			$sql->freeResult();
 			
-			if(Core::getInstance()->hasCache()) {
-				Core::getInstance()->getCache()->set($key, $alist);
-			}
+			Core::cache()->set($namespace, $key, $alist);
 		
 		}
 
@@ -118,7 +116,7 @@ class OOArticle extends OORedaxo {
 	* CLASS Function:
 	* Return a list of top-level articles
 	*/
-	public function getRootArticles($ignore_offlines = FALSE, $clang = FALSE) {
+	public static function getRootArticles($ignore_offlines = FALSE, $clang = FALSE) {
 		return OOArticle::getArticlesOfCategory(0, $ignore_offlines, $clang);
 
 	}
@@ -145,11 +143,11 @@ class OOArticle extends OORedaxo {
 	public static function exists($articleId) {
 		global $REX;
 		
-		if(Core::getInstance()->hasCache()) {
-			if(Core::getInstance()->getCache()->get('article_'.$articleId.'_'.$REX['CUR_CLANG'], null) != null) {
-				return true;
-			}
+	
+		if(Core::cache()->get('article', $articleId.'_'.$REX['CUR_CLANG'], null) != null) {
+			return true;
 		}
+		
 		
 		// prüfen, ob ID in Content Cache Dateien vorhanden
 		$cacheFiles = glob($REX['INCLUDE_PATH'].'/generated/articles/'.$articleId.'.*');
@@ -165,7 +163,7 @@ class OOArticle extends OORedaxo {
 	* Static Method: Returns boolean if is article
 	*/
 	public static function isValid($article) {
-		return is_object($article) && is_a($article, 'ooarticle');
+		return is_object($article) && ($article instanceof OOArticle);
 	}
 	
 	public function getValue($value) {

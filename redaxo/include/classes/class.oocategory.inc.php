@@ -15,7 +15,7 @@ class OOCategory extends OORedaxo {
 	* CLASS Function:
 	* Return an OORedaxo object based on an id
 	*/
-	public function getCategoryById($category_id, $clang = false) {
+	public static function getCategoryById($category_id, $clang = false) {
 		return OOArticle::getArticleById($category_id, $clang, true);
 	}
 	
@@ -23,15 +23,16 @@ class OOCategory extends OORedaxo {
 	* CLASS Function:
 	* Return all Children by id
 	*/
-	public function getChildrenById($cat_parent_id, $ignore_offlines = false, $clang = false) {
+	public static function getChildrenById($cat_parent_id, $ignore_offlines = false, $clang = false) {
 		global $REX;
 		
 		$cat_parent_id = (int) $cat_parent_id;
 	
 		if($clang === false) { $clang = $REX['CUR_CLANG']; }
-	
-		$key   = 'clist_'.$cat_parent_id.'_'.$clang;
-		$clist = Core::getInstance()->hasCache() ? Core::getInstance()->getCache()->get($key, null) : null;
+		
+		$namespace = 'clist';
+		$key   = $cat_parent_id.'_'.$clang;
+		$clist = Core::cache()->get($namespace, $key, null);
 	
 		if($clist === null) {
 			$clist = array();
@@ -44,7 +45,7 @@ class OOCategory extends OORedaxo {
 			}
 			$sql->freeResult();
 			
-			Core::getInstance()->getCache()->set($key, $clist);
+			Core::cache()->set($namespace, $key, $clist);
 		}
 		
 		$catlist = array();
@@ -77,7 +78,7 @@ class OOCategory extends OORedaxo {
 	* all categories with status 0 will be
 	* excempt from this list!
 	*/
-	public function getRootCategories($ignore_offlines = false, $clang = false) {
+	public static function getRootCategories($ignore_offlines = false, $clang = false) {
 		global $REX;
 	
 		if ($clang === false) { $clang = $REX['CUR_CLANG']; }

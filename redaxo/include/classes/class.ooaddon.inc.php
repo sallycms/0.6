@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Klasse zum prüfen ob Addons installiert/aktiviert sind
+ * Klasse zum prï¿½fen ob Addons installiert/aktiviert sind
  * @package redaxo4
  * @version svn:$Id$
  */
@@ -9,24 +9,24 @@
 class OOAddon extends rex_addon
 {
   /*
-   * Prüft, ob ein System-Addon vorliegt
+   * Prï¿½ft, ob ein System-Addon vorliegt
    * 
    * @param string $addon Name des Addons
    * 
    * @return boolean TRUE, wenn es sich um ein System-Addon handelt, sonst FALSE
    */
-  function isSystemAddon($addon)
+  public static function isSystemAddon($addon)
   {
     global $REX;
     return in_array($addon, $REX['SYSTEM_ADDONS']);
   }
 
   /**
-   * Gibt ein Array von verfügbaren Addons zurück.
+   * Gibt ein Array von verfï¿½gbaren Addons zurï¿½ck.
    * 
-   * @return array Array der verfügbaren Addons
+   * @return array Array der verfï¿½gbaren Addons
    */
-  function getAvailableAddons()
+  public static function getAvailableAddons()
   {
     $avail = array();
     foreach(OOAddon::getRegisteredAddons() as $addonName)
@@ -39,12 +39,12 @@ class OOAddon extends rex_addon
   }
   
   /**
-   * Gibt ein Array aller registrierten Addons zurück.
+   * Gibt ein Array aller registrierten Addons zurï¿½ck.
    * Ein Addon ist registriert, wenn es dem System bekannt ist (addons.inc.php).
    * 
    * @return array Array aller registrierten Addons
    */
-  function getRegisteredAddons()
+  public static function getRegisteredAddons()
   {
     global $REX;
     

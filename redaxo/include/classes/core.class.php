@@ -9,66 +9,59 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
-class Core {
+class Core
+{
 	private static $instance;
 	private $cache;
 	private $curclang;
-	
-	private function __construct() {
+
+	private function __construct()
+	{
 		global $REX;
-		$this->curclang = rex_request('clang','rex-clang-id', $REX['START_CLANG_ID']);	
+		$this->curclang = rex_request('clang', 'rex-clang-id', $REX['START_CLANG_ID']);
+		$this->cache = new BlackHoleCache();
 	}
-	
+
 	/**
 	 * Gibt die Instanz des Core Objekts als Singleton zurück
-	 * 
+	 *
 	 * @return Core  Die singleton Core Instanz
 	 */
-	public static function getInstance() {
+	public static function getInstance()
+	{
 		if (!self::$instance) self::$instance = new Core();
 		return self::$instance;
 	}
 
 	/**
-	 * Hook Methode für Addons um einen Cache an Redaxo anzumelden, 
+	 * Hook Methode für Addons um einen Cache an Redaxo anzumelden,
 	 * der sich um das Metadatencaching kümmert.
-	 * 
+	 *
 	 * @param ICache  $cache  Implementierung des Cache.
 	 */
-	public function setCache(ICache $cache) {
-		$this->cache = $cache;
+	public static function setCache(ICache $cache)
+	{
+		self::getInstance()->cache = $cache;
 	}
-	
+
 	/**
 	 * Gibt die angemeldete Cache-Instanz zurück.
-	 * 
-	 * Bricht mit einem E_USER_ERROR ab, wenn darauf zugegriffen 
-	 * wird, ohne dass ein Cache gesetzt wurde. Sollte die Gefahr 
-	 * bestehen, dass der Zugriff auf den Cache vor dem Laden des 
-	 * Caching Addons, sollte unbedingt hasCache() augfgerufen 
-	 * werden.  
-	 * 
+	 *
 	 * @return ICache  Cache Instanz
 	 */
-	public function getCache() {
-		if (!isset($this->cache)) {
-			throw new Exception('muh');
-			//trigger_error('Cache is not yet available. Call getCache() later. :)', E_USER_ERROR);
-		}
-		return $this->cache;
+	public static function cache()
+	{
+		return self::getInstance()->cache;
 	}
-	
-	/**
-	 * Prüft, ob bereits ein Cache gesetzt wurde.
-	 * 
-	 * @return boolean
-	 */
-	public function hasCache(){
-		return !self::getInstance()->cache == null;
-	}
-	
-	public static function getCurrentClang(){
+
+	public static function getCurrentClang()
+	{
 		return self::getInstance()->curclang;
 	}
 
-} 
+	public static function getTempDir()
+	{
+		global $REX;
+		return $REX['MEDIAFOLDER'].'/'.$REX['TEMP_PREFIX'];
+	}
+}
