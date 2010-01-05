@@ -91,7 +91,7 @@ class OORedaxo {
 	* Returns an Array containing article field names
 	*/
 	public static function getClassVars() {
-		self::$classvars = array();
+		if(!isset(self::$classvars)) self::$classvars = array();
 		
 		if (empty(self::$classvars)) {
 			global $REX;

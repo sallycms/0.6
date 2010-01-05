@@ -101,7 +101,7 @@ if ($function == 'status_article' && $article_id != ''
   else
     $warning = $message;
 }
-// Hier mit !== vergleichen, da 0 auch einen gültige category_id ist (RootArtikel)
+// Hier mit !== vergleichen, da 0 auch einen gï¿½ltige category_id ist (RootArtikel)
 elseif (rex_post('artadd_function', 'boolean') && $category_id !== '' && $KATPERM &&  !$REX['USER']->hasPerm('editContentOnly[]'))
 {
   // --------------------- ARTIKEL ADD
@@ -282,18 +282,15 @@ if ($function == 'add_cat' && $KATPERM && !$REX['USER']->hasPerm('editContentOnl
 
 // --------------------- KATEGORIE LIST
 
-$KAT = new rex_sql;
-// $KAT->debugsql = true;
-$KAT->setQuery('SELECT * FROM '.$REX['TABLE_PREFIX'].'article WHERE re_id='. $category_id .' AND startpage=1 AND clang='. $clang .' ORDER BY catprior');
-
-for ($i = 0; $i < $KAT->getRows(); $i++)
+$categories = OOCategory::getChildrenById($category_id , false, $clang);
+foreach ($categories as $cat)
 {
-  $i_category_id = $KAT->getValue('id');
+  $i_category_id = $cat->getId();
   $kat_link = 'index.php?page=structure&amp;category_id='. $i_category_id .'&amp;clang='. $clang;
-  $kat_icon_td = '<td class="rex-icon"><a class="rex-i-element rex-i-category" href="'. $kat_link .'"><span class="rex-i-element-text">'. htmlspecialchars($KAT->getValue("catname")). '</span></a></td>';
+  $kat_icon_td = '<td class="rex-icon"><a class="rex-i-element rex-i-category" href="'. $kat_link .'"><span class="rex-i-element-text">'. htmlspecialchars($cat->getName()). '</span></a></td>';
 
-  $kat_status = $catStatusTypes[$KAT->getValue('status')][0];
-  $status_class = $catStatusTypes[$KAT->getValue('status')][1];
+  $kat_status = $catStatusTypes[$cat->getValue('status')][0];
+  $status_class = $catStatusTypes[$cat->getValue('status')][1];
 
   if ($KATPERM)
   {
@@ -322,8 +319,8 @@ for ($i = 0; $i < $KAT->getRows(); $i++)
         <tr class="'. $class .'">
           '. $kat_icon_td .'
           '. $add_td .'
-          <td><input type="text" class="rex-form-text" id="rex-form-field-name" name="kat_name" value="'. htmlspecialchars($KAT->getValue("catname")). '" />'. $meta_buttons .'</td>
-          <td><input type="text" class="rex-form-text" id="rex-form-field-prior" name="Position_Category" value="'. htmlspecialchars($KAT->getValue("catprior")) .'" /></td>
+          <td><input type="text" class="rex-form-text" id="rex-form-field-name" name="kat_name" value="'. htmlspecialchars($cat->getName()). '" />'. $meta_buttons .'</td>
+          <td><input type="text" class="rex-form-text" id="rex-form-field-prior" name="Position_Category" value="'. htmlspecialchars($cat->getValue("catprior")) .'" /></td>
           <td colspan="3">'. $add_buttons .'</td>
         </tr>';
 
@@ -331,9 +328,9 @@ for ($i = 0; $i < $KAT->getRows(); $i++)
   		echo rex_register_extension_point('CAT_FORM_EDIT', '', array (
       	'id' => $edit_id,
       	'clang' => $clang,
-        'category' => $KAT,
-      	'catname' => $KAT->getValue('catname'),
-      	'catprior' => $KAT->getValue('catprior'),
+        'category' => $cat,
+      	'catname' => $cat->getValue('catname'),
+      	'catprior' => $cat->getValue('catprior'),
       	'data_colspan' => ($data_colspan+1),
 		  ));
 		  
@@ -361,8 +358,8 @@ for ($i = 0; $i < $KAT->getRows(); $i++)
         <tr>
           '. $kat_icon_td .'
           '. $add_td .'
-          <td><a href="'. $kat_link .'">'. htmlspecialchars($KAT->getValue("catname")) .'</a></td>
-          <td>'. htmlspecialchars($KAT->getValue("catprior")) .'</td>
+          <td><a href="'. $kat_link .'">'. htmlspecialchars($cat->getName()) .'</a></td>
+          <td>'. htmlspecialchars($cat->getValue("catprior")) .'</td>
           <td><a href="index.php?page=structure&amp;category_id='. $category_id .'&amp;edit_id='. $i_category_id .'&amp;function=edit_cat&amp;clang='. $clang .'">'. $I18N->msg('change') .'</a></td>
           <td>'. $category_delete .'</td>
           <td>'. $kat_status .'</td>
@@ -391,7 +388,6 @@ for ($i = 0; $i < $KAT->getRows(); $i++)
         </tr>';
   }
 
-  $KAT->next();
 }
 
 echo '
@@ -427,8 +423,8 @@ echo '
 
 if ($category_id > -1)
 {
-  $TEMPLATES = new rex_sql;
-  $TEMPLATES->setQuery('select * from '.$REX['TABLE_PREFIX'].'template where active=1 order by name');
+  $TEMPLATES = rex_sql::getInstance();
+  $TEMPLATES->setQuery('select id, name from '.$REX['TABLE_PREFIX'].'template where active=1 order by name');
   $TMPL_SEL = new rex_select;
   $TMPL_SEL->setName('template_id');
   $TMPL_SEL->setId('rex-form-template');
@@ -514,7 +510,7 @@ if ($category_id > -1)
         </thead>
         ';
 
-  // tbody nur anzeigen, wenn später auch inhalt drinnen stehen wird
+  // tbody nur anzeigen, wenn spï¿½ter auch inhalt drinnen stehen wird
   if($sql->getRows() > 0 || $function == 'add_art')
   {
     echo '<tbody>
@@ -654,7 +650,7 @@ if ($category_id > -1)
     $sql->counter++;
   }
 
-  // tbody nur anzeigen, wenn später auch inhalt drinnen stehen wird
+  // tbody nur anzeigen, wenn spï¿½ter auch inhalt drinnen stehen wird
   if($sql->getRows() > 0 || $function == 'add_art')
   {
     echo '

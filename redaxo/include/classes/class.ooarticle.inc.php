@@ -27,11 +27,10 @@ class OOArticle extends OORedaxo {
 		$key = $article_id.'_'.$clang;
 		
 		$obj = Core::cache()->get($namespace, $key, null);
-		
 		if($obj === null) {
 			$article = rex_sql::getInstance();
 			$article->setQuery("SELECT * FROM ".$REX['TABLE_PREFIX']."article WHERE id = '$article_id' AND clang = '$clang' LIMIT 1");
-			
+
 			if($article->rows > 0) {
 				if ($OOCategory) {
 					$obj = new OOCategory(mysql_fetch_array($article->result, MYSQL_ASSOC), $clang);
