@@ -11,7 +11,7 @@
  * 
  * @param $locale Locale der Sprache
  * @param $searchpath Pfad zum Ordner indem die Sprachdatei gesucht werden soll
- * @param $setlocale TRUE, wenn die locale für die Umgebung gesetzt werden soll, sonst FALSE
+ * @param $setlocale TRUE, wenn die locale fï¿½r die Umgebung gesetzt werden soll, sonst FALSE
  * @return unknown_type
  */
 function rex_create_lang($locale = "de_de", $searchpath = '', $setlocale = TRUE)
@@ -106,7 +106,7 @@ function rex_absPath($rel_path, $rel_to_current = false)
 }
 
 /**
- * Prüfen ob ein/e Datei/Ordner beschreibbar ist
+ * Prï¿½fen ob ein/e Datei/Ordner beschreibbar ist
  *
  * @access public
  * @param string $item Datei oder Verzeichnis
@@ -156,7 +156,7 @@ function _rex_is_writable_info($is_writable, $item = '')
 
 function _rex_is_writable($item)
 {
-  // Fehler unterdrücken, falls keine Berechtigung
+  // Fehler unterdrï¿½cken, falls keine Berechtigung
   if (@ is_dir($item))
   {
     if (!@ is_writable($item . '/.'))
@@ -164,7 +164,7 @@ function _rex_is_writable($item)
       return 1;
     }
   }
-  // Fehler unterdrücken, falls keine Berechtigung
+  // Fehler unterdrï¿½cken, falls keine Berechtigung
   elseif (@ is_file($item))
   {
     if (!@ is_writable($item))
@@ -195,11 +195,11 @@ function rex_setAttributes($name,$value,$content)
 }
 
 /**
- * Gibt den nächsten freien Tabindex zurück.
+ * Gibt den nï¿½chsten freien Tabindex zurï¿½ck.
  * Der Tabindex ist eine stetig fortlaufende Zahl,
- * welche die Priorität der Tabulatorsprünge des Browsers regelt.
+ * welche die Prioritï¿½t der Tabulatorsprï¿½nge des Browsers regelt.
  *
- * @return integer nächster freier Tabindex
+ * @return integer nï¿½chster freier Tabindex
  */
 function rex_tabindex($html = true)
 {
@@ -320,7 +320,7 @@ function rex_ini_get($val)
 }
 
 /**
- * Übersetzt den text $text, falls dieser mit dem prefix "translate:" beginnt.
+ * ï¿½bersetzt den text $text, falls dieser mit dem prefix "translate:" beginnt.
  */
 function rex_translate($text, $I18N_Catalogue = null, $use_htmlspecialchars = true)
 {
@@ -357,7 +357,7 @@ function rex_redirect($article_id, $clang = '', $params = array())
 {
   global $REX;
 
-  // Alle OBs schließen
+  // Alle OBs schlieï¿½en
   while(@ob_end_clean());
 
   $divider = '&';
@@ -368,7 +368,7 @@ function rex_redirect($article_id, $clang = '', $params = array())
 
 /**
  * Trennt einen String an Leerzeichen auf.
- * Dabei wird beachtet, dass Strings in " zusammengehören
+ * Dabei wird beachtet, dass Strings in " zusammengehï¿½ren
  */
 function rex_split_string($string)
 {
@@ -461,7 +461,7 @@ function rex_replace_dynamic_contents($path, $content)
 
 /**
  * Allgemeine funktion die eine Datenbankspalte fortlaufend durchnummeriert.
- * Dies ist z.B. nützlich beim Umgang mit einer Prioritäts-Spalte
+ * Dies ist z.B. nï¿½tzlich beim Umgang mit einer Prioritï¿½ts-Spalte
  */
 function rex_organize_priorities($tableName, $priorColumnName, $whereCondition = '', $orderBy = '', $id_field='id')
 {
@@ -534,13 +534,3 @@ function rex_highlight_file($filename, $return = false)
   echo $s;  
 }
 
-// make objectcloning work for php4
-// see http://acko.net/node/54
-// usage: $cloned = clone($yourObject);
-if (version_compare(phpversion(), '5.0') < 0 && !function_exists('clone')) {
-  eval('
-  function clone($object) {
-    return $object;
-  }
-  ');
-}
