@@ -440,7 +440,7 @@ class rex_article
               $listElements = array();
               $listElements[] = '<a href="'. sprintf($sliceUrl, '&amp;function=edit') .'" class="rex-tx3">'. $I18N->msg('edit') .' <span>'. $RE_MODUL_NAME[$I_ID] .'</span></a>';
               $listElements[] = '<a href="'. sprintf($sliceUrl, '&amp;function=delete&amp;save=1') .'" class="rex-tx2" onclick="return confirm(\''.$I18N->msg('delete').' ?\')">'. $I18N->msg('delete') .' <span>'. $RE_MODUL_NAME[$I_ID] .'</span></a>';
-              if ($REX['USER']->hasPerm('moveSlice[]'))
+              if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveSlice[]'))
               {
                 $moveUp = $I18N->msg('move_slice_up');
                 $moveDown = $I18N->msg('move_slice_down');
