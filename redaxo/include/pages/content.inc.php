@@ -57,7 +57,7 @@ if ($article->getRows() == 1)
   // ----- ctype holen
   $template_attributes = $article->getValue('template_attributes');
 
-  // Für Artikel ohne Template
+  // Fï¿½r Artikel ohne Template
   if($template_attributes === null)
   	$template_attributes = '';
 
@@ -191,7 +191,7 @@ if ($article->getRows() == 1)
 
           foreach ($REX['VARIABLES'] as $idx => $obj)
           {
-            if (is_string($obj)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
+            if (is_string($obj)) { // Es hat noch kein Autoloading fï¿½r diese Klasse stattgefunden
               $tmp = new $obj();
               $tmp = null;
               $obj = $REX['VARIABLES'][$idx];
@@ -204,10 +204,10 @@ if ($article->getRows() == 1)
           list($action_message, $REX_ACTION) = rex_execPreSaveAction($module_id, $function, $REX_ACTION);
           // ----- / PRE SAVE ACTION
 
-          // Statusspeicherung für die rex_article Klasse
+          // Statusspeicherung fï¿½r die rex_article Klasse
           $REX['ACTION'] = $REX_ACTION;
 
-          // Werte werden aus den REX_ACTIONS übernommen wenn SAVE=true
+          // Werte werden aus den REX_ACTIONS ï¿½bernommen wenn SAVE=true
           if (!$REX_ACTION['SAVE'])
           {
             // ----- DONT SAVE/UPDATE SLICE
@@ -304,9 +304,9 @@ if ($article->getRows() == 1)
             $info .= rex_execPostSaveAction($module_id, $function, $REX_ACTION);
             // ----- / POST SAVE ACTION
 
-            // Update Button wurde gedrückt?
+            // Update Button wurde gedrï¿½ckt?
             // TODO: Workaround, da IE keine Button Namen beim
-            // drücken der Entertaste übermittelt
+            // drï¿½cken der Entertaste ï¿½bermittelt
             if (rex_post('btn_save', 'string'))
             {
               $function = '';
@@ -320,7 +320,7 @@ if ($article->getRows() == 1)
     // ------------------------------------------ START: Slice move up/down
     if ($function == 'moveup' || $function == 'movedown')
     {
-      if ($REX['USER']->hasPerm('moveSlice[]'))
+      if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveSlice[]'))
       {
         // modul und rechte vorhanden ?
 
