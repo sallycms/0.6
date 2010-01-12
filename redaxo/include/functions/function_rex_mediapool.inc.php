@@ -147,6 +147,7 @@ function rex_mediapool_saveMedia($FILE, $rex_file_category, $FILEINFOS, $userlog
   $RETURN['ok'] = $success ? 1 : 0;
   $RETURN['filename'] = $NFILENAME;
   $RETURN['old_filename'] = $FILENAME;
+  $RETURN['id'] = $FILESQL->getLastId();
 
   if($size)
   {

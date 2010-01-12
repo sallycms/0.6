@@ -26,7 +26,7 @@ function rex_addCategory($category_id, $data)
     trigger_error('Expecting $data to be an array!', E_USER_ERROR);
 
   $startpageTemplates = array();
-  if ($category_id != "")
+  if (empty($category_id))
   {
     // TemplateId vom Startartikel der jeweiligen Sprache vererben
     $sql = new rex_sql;
@@ -184,12 +184,12 @@ function rex_editCategory($category_id, $clang, $data)
 
       if($data['catprior'] <= 0)
         $data['catprior'] = 1;
-
+	  Core::cache()->flush();
       rex_newCatPrio($re_id, $clang, $data['catprior'], $old_prio);
     }
 
     $message = $I18N->msg('category_updated');
-
+	Core::cache()->delete('category', $category_id.'_'.$clang);
     // ----- EXTENSION POINT
     // Objekte clonen, damit diese nicht von der extension veraendert werden koennen
     $message = rex_register_extension_point('CAT_UPDATED', $message,
@@ -210,7 +210,6 @@ function rex_editCategory($category_id, $clang, $data)
         'data' => $data,
       )
     );
-    Core::cache()->delete('category', $category_id.'_'.$clang);
     $success = true;
   }
   else
@@ -232,17 +231,17 @@ function rex_deleteCategoryReorganized($category_id)
 {
   global $REX, $I18N;
 
-	$return = array();
+  $return = array();
   $return['state'] = FALSE;
   $return['message'] = '';
   
   $clang = 0;
 
-  $thisCat = new rex_sql;
-  $thisCat->setQuery('SELECT * FROM '.$REX['TABLE_PREFIX'].'article WHERE id='.$category_id.' and clang='. $clang);
+  $thisCat = OOCategory::getCategoryById($category_id, $clang); //new rex_sql;
+  //$thisCat->setQuery('SELECT * FROM '.$REX['TABLE_PREFIX'].'article WHERE id='.$category_id.' and clang='. $clang);
 
   // Prüfen ob die Kategorie existiert
-  if ($thisCat->getRows() == 1)
+  if ($thisCat !== null)
   {
     $KAT = new rex_sql;
     $KAT->setQuery("select * from ".$REX['TABLE_PREFIX']."article where re_id='$category_id' and clang='$clang' and startpage=1");
@@ -331,18 +330,18 @@ function rex_categoryStatus($category_id, $clang, $status = null)
     $EKAT->setValue("status", $newstatus);
     $EKAT->addGlobalCreateFields();
 
+    
     if($EKAT->update())
     {
       $message = $I18N->msg('category_status_updated');
-
+	  Core::cache()->delete('category', $category_id.'_'.$clang);
+	  Core::cache()->delete('clist', $KAT->getValue('re_id').'_'.$clang);
       // ----- EXTENSION POINT
       $message = rex_register_extension_point('CAT_STATUS', $message, array (
         'id' => $category_id,
         'clang' => $clang,
         'status' => $newstatus
       ));
-	  Core::cache()->delete('category', $category_id.'_'.$clang);
-	  Core::cache()->delete('clist', $KAT->getValue('re_id').'_'.$clang);
       $success = true;
     }
     else

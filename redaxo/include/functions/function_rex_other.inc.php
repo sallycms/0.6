@@ -534,3 +534,6 @@ function rex_highlight_file($filename, $return = false)
   echo $s;  
 }
 
+function rex_exception(Exception $e){
+	return rex_warning('Error in '.$e->getFile().' Line: '.$e->getLine().'<br />'.$e->getMessage());
+}
