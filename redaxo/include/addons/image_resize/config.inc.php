@@ -16,8 +16,8 @@
  */
 
 // Resize Script verlassen, wenn Frontend und kein Resize-Aufruf
-$rex_resize = rex_get('rex_resize', 'string');
-if (!$REX['REDAXO'] && $rex_resize == '') return;
+$rex_resize = rex_get('rex_resize', 'string', null);
+if (!$REX['REDAXO'] && !$rex_resize) return;
 
 $mypage = 'image_resize';
 
@@ -39,7 +39,7 @@ $REX['ADDON']['image_resize']['default_filters'] = array();
 $REX['ADDON']['image_resize']['max_cachefiles'] = 5;
 $REX['ADDON']['image_resize']['max_filters'] = 5;
 $REX['ADDON']['image_resize']['max_resizekb'] = 1000;
-$REX['ADDON']['image_resize']['max_resizepixel'] = 500;
+$REX['ADDON']['image_resize']['max_resizepixel'] = 2000;
 $REX['ADDON']['image_resize']['jpg_quality'] = 75;
 // --- /DYN
 

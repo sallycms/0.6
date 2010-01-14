@@ -77,6 +77,19 @@ class rex_thumbnail
     }
   }
 
+  function size_both($width, $height){
+  	$this->img['width_thumb']  = (int) $width;
+    $this->img['height_thumb'] = (int) $height;
+  	$width_ratio = $this->img['width'] / $this->img['width_thumb'];
+    $height_ratio = $this->img['height'] / $this->img['height_thumb'];
+  	
+    if($width_ratio > $height_ratio){
+  		$this->size_width($width);
+  	}else{
+  		$this->size_height($height);
+  	}
+  }
+  
   function size_height($size)
   {
     // --- height
@@ -109,32 +122,48 @@ class rex_thumbnail
   }
 
   /**
-   * Ausschnitt aus dem Bild auf bestimmte größe zuschneiden
+   * Ausschnitt aus dem Bild auf bestimmte grï¿½ï¿½e zuschneiden
    *
    * @param $width int Breite des Ausschnitts
    * @param $height int Hoehe des Ausschnitts
-   * @param $offset int Verschiebung des Ausschnitts vom Zentrum ausgehend
+   * @param $offset int Verschiebung des Ausschnitts
+   * * @param $offsetType
    */
-  function size_crop($width, $height, $offset)
+  function size_crop($width, $height, $offset, $offsetType)
   {
-    $this->img['width_thumb']  = (int) $width;
+
+  	$this->img['width_thumb']  = (int) $width;
     $this->img['height_thumb'] = (int) $height;
 
     $width_ratio = $this->img['width'] / $this->img['width_thumb'];
     $height_ratio = $this->img['height'] / $this->img['height_thumb'];
 
-    // Es muss an der Breite beschnitten werden
-    if ($width_ratio > $height_ratio)
-    {
-      $this->img['width_offset_thumb'] = (int) (round(($this->img['width'] - $this->img['width_thumb'] * $height_ratio) / 2) + $offset);
-      $this->img['width']              = (int) round($this->img['width_thumb'] * $height_ratio);
+    if($width_ratio >= 1 || $height_ratio >= 1){
+	    // Es muss an der Breite beschnitten werden
+	    if ($width_ratio > $height_ratio)
+	    {
+	      $this->img['width_offset_thumb'] = (int) (round(($this->img['width'] - $this->img['width_thumb'] * $height_ratio) / 2) + $offset);
+		  if($offsetType == 'r') $this->img['width_offset_thumb'] = (int) $offset;
+		  elseif($offsetType == 'l') $this->img['width_offset_thumb'] = (int) $this->img['width'] - round($this->img['width_thumb'] * $height_ratio) - $offset;
+		      
+		  $this->img['width']              = (int) round($this->img['width_thumb'] * $height_ratio);
+	      
+	    }
+	    // es muss an der HÃ¶he beschnitten werden
+	    elseif ($width_ratio < $height_ratio)
+	    { 
+	      	//$this->img['height_offset_thumb'] = (int) (round(($this->img['height'] - $this->img['height_thumb'] * $width_ratio) / 2) + $offset);
+	      	$this->img['height_offset_thumb'] = 0;
+	      	if($offsetType == 'r') $this->img['height_offset_thumb'] = (int) $offset;
+	      	if($offsetType == 'l') $this->img['height_offset_thumb'] = (int) $this->img['height'] - round($this->img['height_thumb'] * $width_ratio) - $offset;
+	       	
+	      	$this->img['height']              = (int) round($this->img['height_thumb'] * $width_ratio);	      
+	    }
+    }else{
+    	$this->img['width_thumb'] = $this->img['width'];
+        $this->img['height_thumb'] = $this->img['height'];
     }
-    // es muss an der Höhe beschnitten werden
-    elseif ($width_ratio < $height_ratio)
-    {
-      $this->img['height_offset_thumb'] = (int) (round(($this->img['height'] - $this->img['height_thumb'] * $width_ratio) / 2) + $offset);
-      $this->img['height']              = (int) round($this->img['height_thumb'] * $width_ratio);
-    }
+    
   }
 
   function jpeg_quality($quality = 85)
@@ -243,7 +272,7 @@ class rex_thumbnail
 			$cachefile = '';
 			$cachetime = -1;
 
-			// nur das Šlteste Cachefile lšschen
+			// nur das ï¿½lteste Cachefile lï¿½schen
 			foreach($glo as $gl)
 			{
 				if ($cachetime == -1 || filectime($gl) < $cachetime)
@@ -403,13 +432,15 @@ class rex_thumbnail
 		  ob_end_clean();
 
     // get params
-    preg_match('@([0-9]+)([awhc])__(([0-9]+)h__)?((\-?[0-9]+)o__)?(.*)@', $rex_resize, $resize);
+    preg_match('@([0-9]*)([awhc])__(([0-9]*)([h])__)?((\-?[0-9]*)([rlo])__)?(.*)@', $rex_resize, $resize);
     
 	  $size = $resize[1];
 	  $mode = $resize[2];
 	  $height = $resize[4];
-    $offset = $resize[6];
-	  $imagefile = $resize[7];
+	  $mode2 = $resize[5];
+      $offset = $resize[7];
+      $offsetType = $resize[8];
+	  $imagefile = $resize[9];
 	  $rex_filter = rex_get('rex_filter', 'array');
 
 	  if (count($rex_filter)>$REX['ADDON']['image_resize']['max_filters']) $rex_filter = array();
@@ -442,7 +473,7 @@ class rex_thumbnail
 	      exit;
 	    }
 	    // cache is newer? - show cache
-      if ($cachetime > $filetime)
+        if ($cachetime > $filetime)
 	    {
 	      $thumb = new rex_thumbnail($cachepath);
 	      $thumb->send($cachepath, $cachetime);
@@ -491,10 +522,15 @@ class rex_thumbnail
 	  $thumb->img_filename = $imagefile;
   	  $thumb->img_cachepath = $REX['MEDIAFOLDER'].'/addons/image_resize/';
 
-	  // check method
+      // check method
 	  if ($mode == 'w')
 	  {
-	    $thumb->size_width($size);
+	  	if(!empty($mode2) && $mode2 == 'h'){
+	  		$thumb->size_both($size, $height);
+	  	}else{
+	  		$thumb->size_width($size);
+	  	}
+	    
 	  }
 	  if ($mode == 'h')
 	  {
@@ -503,10 +539,7 @@ class rex_thumbnail
 
 	  if ($mode == 'c')
 	  {
-	    $thumb->size_crop($size, $height, $offset);
-	  }elseif ($height != '')
-	  {
-	    $thumb->size_height($height);
+	    $thumb->size_crop($size, $height, $offset, $offsetType);
 	  }
 
 	  if ($mode == 'a')
