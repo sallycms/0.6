@@ -18,6 +18,8 @@ $exporttype     = rex_post('exporttype', 'string');
 $exportdl       = rex_post('exportdl', 'boolean');
 $EXPDIR         = rex_post('EXPDIR', 'array');
 
+@set_time_limit(0);
+
 if ($impname != '')
 {
   $impname = str_replace("/", "", $impname);
