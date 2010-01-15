@@ -102,6 +102,14 @@ class OOCategory extends OORedaxo {
 		return OOCategory::getChildrenById($this->_id, $ignore_offlines, $clang);
 	}
 	
+/*
+	* Object Function:
+	* Returns the parent category
+	*/
+	public function getParentId() {
+		return $this->_re_id;
+	}
+	
 	/*
 	* Object Function:
 	* Returns the parent category
@@ -110,7 +118,7 @@ class OOCategory extends OORedaxo {
 		
 		if ($clang === false) { $clang = $this->_clang; }
 	
-		return OOCategory::getCategoryById($this->_re_id, $clang);
+		return OOCategory::getCategoryById($this->getParentId(), $clang);
 	}
 	
 	/*
@@ -193,7 +201,7 @@ class OOCategory extends OORedaxo {
 	/*
 	* Static Method: Returns boolean if is category
 	*/
-	public function isValid($category) {
+	public static function isValid($category) {
 		return is_object($category) && is_a($category, 'oocategory');
 	}
 	

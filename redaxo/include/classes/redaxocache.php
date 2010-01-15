@@ -14,25 +14,37 @@
  * Sie ist stabil.   
  * 
  */
-class BlackHoleCache implements ICache {
+class RedaxoCache implements ICache {
+	
+	private $cache;
+	private $persistence;
 	
     public function __construct() {
-		
+		$this->flush();
+    }
+    
+    public function setPersistence(ICache $cache){
+    	$this->persistence = $cache;
     }
 
     public function set($namespace, $key, $value) {
-
+		$this->cache[$namespace][$key] = $value;
+		if($this->persistence) $this->persistence->set($namespace, $key, $value);
     }
 
     public function get($namespace, $key, $default) {
+    	if(isset($this->cache[$namespace][$key])) return $this->cache[$namespace][$key];
+    	if($this->persistence) return $this->persistence->get($namespace, $key, $default);
         return $default;
     }
 
     public function delete($namespace, $key) {
-
+		unset($this->cache[$namespace][$key]);
+		if($this->persistence) $this->persistence->delete($namespace, $key);
     }
 
     public function flush() {
-
+		$this->cache = array();
+		if($this->persistence) $this->persistence->flush();
     }
 }

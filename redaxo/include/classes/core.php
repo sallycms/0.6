@@ -19,7 +19,7 @@ class Core
 	{
 		global $REX;
 		$this->curclang = rex_request('clang', 'rex-clang-id', $REX['START_CLANG_ID']);
-		$this->cache = new BlackHoleCache();
+		$this->cache = new RedaxoCache();
 	}
 
 	/**
@@ -41,7 +41,7 @@ class Core
 	 */
 	public static function setCache(ICache $cache)
 	{
-		self::getInstance()->cache = $cache;
+		self::getInstance()->cache->setPersistence($cache);
 	}
 
 	/**
