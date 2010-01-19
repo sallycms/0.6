@@ -45,7 +45,7 @@ class OOMediaCategory
 	/**
 	 * @access protected
 	 */
-	protected static function _getTableName()
+	public static function _getTableName()
 	{
 		global $REX;
 		return $REX['TABLE_PREFIX'] . 'file_category';

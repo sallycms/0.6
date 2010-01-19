@@ -59,7 +59,7 @@ class OOMedia
 	/**
 	 * @access protected
 	 */
-	protected function _getTableName()
+	public static function _getTableName()
 	{
 		global $REX;
 		return $REX['TABLE_PREFIX'].'file';

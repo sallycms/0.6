@@ -74,7 +74,7 @@ class OORedaxo {
 		static $values = null;
 			
 		if(!$values) {
-			$values = OOREDAXO::getClassVars();
+			$values = self::getClassVars();
 		}
 		
 		foreach(array_merge(array(''), $prefixes) as $prefix) {
