@@ -14,6 +14,7 @@ class Core
 	private static $instance;
 	private $cache;
 	private $curclang;
+	private $varTypes;
 
 	private function __construct()
 	{
@@ -63,5 +64,33 @@ class Core
 	{
 		global $REX;
 		return $REX['MEDIAFOLDER'].'/'.$REX['TEMP_PREFIX'];
+	}
+
+	/**
+	 * API Methode um Variabletypen zu setzen.
+	 * Aus Kompatiblitätsgründen in das bekloppte globale $REX array
+	 * @param $varType Klassenname des Variablentyps 
+	 */
+	public static function registerVarType($varType){
+		global $REX;
+		$REX['VARIABLES'][] = $varType;
+	}
+	
+	/**
+	 * Gibt immer eine Liste von Instanzen der Variablentypen zurück
+	 * 
+	 * @return array 
+	 */
+	public static function getVarTypes(){
+		global $REX;
+		if(!isset($REX['VARIABLES']))$REX['VARIABLES'] = array(); 
+		foreach ($REX['VARIABLES'] as $idx => $obj) {
+			if (is_string($obj)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
+				$obj = new $obj();
+				if(!($obj instanceof rex_var)) throw new Exception('VarType '.self::getInstance()->varTypes[$idx].' is no inheriting Class of rex_var.');
+				$REX['VARIABLES'][$idx] = $obj;
+			}
+		}
+		return $REX['VARIABLES'];
 	}
 }

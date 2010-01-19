@@ -65,7 +65,8 @@ class RedaxoSync
 			$REX['GG']          = false;
 			$REX['HTDOCS_PATH'] = './';
 			$REX['REDAXO']      = false;
-			
+			$REX['SYNC']		= true;
+		
 			include_once 'redaxo/include/master.inc.php';
 			
 			self::$REX = $REX;

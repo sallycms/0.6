@@ -6,7 +6,6 @@
  * @version svn:$Id$
  */
 
-
 // ----------------- SERVER VARS
 
 // Setupservicestatus - if everything ok -> false; if problem set to true;
@@ -137,15 +136,18 @@ $REX['EXTPERM'][] = 'accesskeys[]';
 $REX['EXTRAPERM'] = array();
 $REX['EXTRAPERM'][] = 'editContentOnly[]';
 
-// ----- standard variables
-$REX['VARIABLES'] = array();
-$REX['VARIABLES'][] = 'rex_var_globals';
-$REX['VARIABLES'][] = 'rex_var_article';
-$REX['VARIABLES'][] = 'rex_var_category';
-$REX['VARIABLES'][] = 'rex_var_template';
-$REX['VARIABLES'][] = 'rex_var_value';
-$REX['VARIABLES'][] = 'rex_var_link';
-$REX['VARIABLES'][] = 'rex_var_media';
+if(!isset($REX['SYNC'])) $REX['SYNC'] = false;
+
+if(!$REX['SYNC']){
+	// ----- standard variables
+	Core::registerVarType('rex_var_globals');
+	Core::registerVarType('rex_var_article');
+	Core::registerVarType('rex_var_category');
+	Core::registerVarType('rex_var_template');
+	Core::registerVarType('rex_var_value');
+	Core::registerVarType('rex_var_link');
+	Core::registerVarType('rex_var_media');
+}
 
 // ----------------- default values
 if (!isset($REX['NOFUNCTIONS'])) $REX['NOFUNCTIONS'] = false;

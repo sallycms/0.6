@@ -10,7 +10,7 @@
  */
 
 // Nötige Konstanten (aus class.rex_list.inc.php)
-define('REX_LIST_OPT_SORT', 0);
+//define('REX_LIST_OPT_SORT', 0);
 
 function __autoload($className) {
 	global $REX;
@@ -38,7 +38,6 @@ function __autoload($className) {
 		'rex_form_widget_medialist_element' => 'rex_form',
 		'rex_form_widget_linkmap_element'   => 'rex_form',
 		'rex_formatter'                     => 'rex_formatter',
-		'rex_list'                          => 'rex_list',
 		'rex_login_sql'                     => 'rex_login',
 		'rex_login'                         => 'rex_login',
 		'rex_backend_login'                 => 'rex_login',
@@ -49,8 +48,6 @@ function __autoload($className) {
 		'rex_select'                        => 'rex_select',
 		'rex_category_select'               => 'rex_select',
 		'rex_sql'                           => 'rex_sql',
-		'rex_template'                      => 'rex_template',
-		'rex_var'                           => 'rex_var'
 	);
 	
 		
@@ -59,11 +56,6 @@ function __autoload($className) {
     }
 	if (isset($classes[$className])) {
 		require_once $REX['INCLUDE_PATH'].'/classes/class.'.$classes[$className].'.inc.php';
-	}
-	elseif (in_array($className, $REX['VARIABLES'])) {
-		$index = array_search($className, $REX['VARIABLES']);
-		require_once $REX['INCLUDE_PATH'].'/classes/variables/class.'.$className.'.inc.php';
-		$REX['VARIABLES'][$index] = new $className();
 	}
 	else {
 		rex_register_extension_point('__AUTOLOAD', $className);

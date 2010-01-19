@@ -189,14 +189,8 @@ if ($article->getRows() == 1)
           $REX_ACTION = array ();
           $REX_ACTION['SAVE'] = true;
 
-          foreach ($REX['VARIABLES'] as $idx => $obj)
+          foreach (Core::getVarTypes() as $idx => $obj)
           {
-            if (is_string($obj)) { // Es hat noch kein Autoloading f�r diese Klasse stattgefunden
-              $tmp = new $obj();
-              $tmp = null;
-              $obj = $REX['VARIABLES'][$idx];
-            }
-            
             $REX_ACTION = $obj->getACRequestValues($REX_ACTION);
           }
 
@@ -244,7 +238,7 @@ if ($article->getRows() == 1)
               }
 
               // ****************** SPEICHERN FALLS NOETIG
-              foreach ($REX['VARIABLES'] as $obj)
+              foreach (Core::getVarTypes() as $obj)
               {
                 $obj->setACValues($newsql, $REX_ACTION, true);
               }

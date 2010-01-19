@@ -314,15 +314,6 @@ class rex_article
           $this->CONT->next();
         }
 		  
-		  // Autoloading für die Variablen anstoßen
-		  
-		  foreach ($REX['VARIABLES'] as $idx => $var) {
-			  if (is_string($var)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
-			  $tmp = new $var();
-			  $tmp = null;
-			}
-		  }
-
         // ---------- moduleselect: nur module nehmen auf die der user rechte hat
         if($this->mode=='edit')
         {
@@ -502,14 +493,14 @@ class rex_article
                 // die POST werte übernehmen
                 if(rex_var::isEditEvent())
                 {
-                  foreach ($REX['VARIABLES'] as $obj)
+                  foreach (Core::getVarTypes() as $obj)
                     $REX_ACTION = $obj->getACRequestValues($REX_ACTION);
                 }
                 // Sonst die Werte aus der DB holen
                 // (1. Aufruf via Editieren Link)
                 else
                 {
-                  foreach ($REX['VARIABLES'] as $obj)
+                  foreach (Core::getVarTypes() as $obj)
                     $REX_ACTION = $obj->getACDatabaseValues($REX_ACTION, $this->CONT);
                 }
 
@@ -527,13 +518,13 @@ class rex_article
                   $iaction = $ga->getValue('preview');
 
                   // ****************** VARIABLEN ERSETZEN
-                  foreach($REX['VARIABLES'] as $obj)
+                  foreach(Core::getVarTypes() as $obj)
                     $iaction = $obj->getACOutput($REX_ACTION,$iaction);
 
                   eval('?>'.$iaction);
 
                   // ****************** SPEICHERN FALLS NOETIG
-                  foreach($REX['VARIABLES'] as $obj)
+                  foreach(Core::getVarTypes() as $obj)
                     $obj->setACValues($this->CONT, $REX_ACTION);
 
                   $ga->next();
@@ -894,14 +885,8 @@ class rex_article
     $sliceId = $sql->getValue($REX['TABLE_PREFIX'].'article_slice.id');
     $mode    = $forceMode === null ? $this->mode : $forceMode;
 
-    foreach($REX['VARIABLES'] as $idx => $var)
+    foreach(Core::getVarTypes() as $idx => $var)
     {
-      if (is_string($var)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
-        $tmp = new $var();
-        $tmp = null;
-        $var = $REX['VARIABLES'][$idx];
-      }
-      
       if ($mode == 'edit')
       {
         if (($this->function == 'add' && $sliceId == '0') ||

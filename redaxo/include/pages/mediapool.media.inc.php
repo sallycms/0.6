@@ -190,21 +190,20 @@ if ($subpage=="detail" && rex_post('btn_update', 'string')){
 
 if ($subpage == "detail")
 {
-  $gf = new rex_sql;
-  $gf->setQuery("select * from ".$REX['TABLE_PREFIX']."file where file_id='$file_id'");
-  if ($gf->getRows()==1)
+  $media = OOMedia::getMediaById($file_id);
+  if ($media)
   {
     $TPERM = false;
-    if ($PERMALL || $REX['USER']->hasPerm("media[".$gf->getValue("category_id")."]")) $TPERM = true;
+    if ($PERMALL || $REX['USER']->hasPerm("media[".$media->getCategoryId()."]")) $TPERM = true;
 
     echo $cat_out;
 
-    $ftitle = $gf->getValue('title');
-    $fname = $gf->getValue('filename');
-    $ffiletype = $gf->getValue('filetype');
-    $ffile_size = $gf->getValue('filesize');
-    $ffile_size = OOMedia::_getFormattedSize($ffile_size);
-    $rex_file_category = $gf->getValue('category_id');
+    $ftitle = $media->getTitle();
+    $fname = $media->getFileName();
+    $ffiletype = $media->getType();
+    $ffile_size = $media->getSize();
+    $ffile_size = $media->getFormattedSize();
+    $rex_file_category = $media->getCategoryId();
 
     $encoded_fname = urlencode($fname);
     $file_ext = substr(strrchr($fname, '.'),1);
@@ -214,11 +213,11 @@ if ($subpage == "detail")
       $thumbnail = '<img src="'. $icon_src .'" alt="'. htmlspecialchars($ftitle) .'" title="'. htmlspecialchars($ftitle) .'" />';
     }
 
-    $ffiletype_ii = OOMedia::_isImage($fname);
+    $ffiletype_ii = $media->isImage();
     if ($ffiletype_ii)
     {
-      $fwidth = $gf->getValue('width');
-      $fheight = $gf->getValue('height');
+      $fwidth = $media->getWidth();
+      $fheight = $media->getHeight();
       if($size = @getimagesize($REX['HTDOCS_PATH'].'/files/'.$fname))
       {
         $fwidth = $size[0];
@@ -344,7 +343,7 @@ if ($subpage == "detail")
               	<div class="rex-clearer"></div>';
 
   // ----- EXTENSION POINT
-  echo rex_register_extension_point('MEDIA_FORM_EDIT', '', array ('file_id' => $file_id, 'media' => $gf));
+  echo rex_register_extension_point('MEDIA_FORM_EDIT', '', array ('file_id' => $file_id, 'media' => $media));
 
   echo '
                       '. $add_ext_info .'
@@ -358,14 +357,14 @@ if ($subpage == "detail")
                   <div class="rex-form-row">
                     <p class="rex-form-read">
                       <label for="fupdate">'. $I18N->msg('pool_last_update') .'</label>
-                      <span class="rex-form-read" id="fupdate">'. strftime($I18N->msg('datetimeformat'),$gf->getValue("updatedate")) .' ['. $gf->getValue("updateuser") .']</span>
+                      <span class="rex-form-read" id="fupdate">'. $media->getUpdateDate('%a %d. %B %Y') .' ['. $media->getUpdateUser() .']</span>
                     </p>
                   </div>
                   
                   <div class="rex-form-row">
                     <p class="rex-form-read">
                       <label for="fcreate">'. $I18N->msg('pool_created') .'</label>
-                      <span class="rex-form-read" id="fcreate">'. strftime($I18N->msg('datetimeformat'),$gf->getValue("createdate")).' ['.$gf->getValue("createuser") .']</span>
+                      <span class="rex-form-read" id="fcreate">'. $media->getCreateDate('%a %d. %B %Y'). ' ['.$media->getCreateUser() .']</span>
                     </p>
                   </div>
                   
@@ -663,7 +662,7 @@ if ($subpage == '')
     }
     $where .= ' AND ('. implode(' OR ', $types) .')';
   }
-  $qry = "SELECT * FROM ".$REX['TABLE_PREFIX']."file f WHERE ". $where ." ORDER BY f.updatedate desc";
+  $qry = "SELECT file_id FROM ".$REX['TABLE_PREFIX']."file f WHERE ". $where ." ORDER BY f.updatedate desc";
 
   // ----- EXTENSION POINT
   $qry = rex_register_extension_point('MEDIA_LIST_QUERY', $qry,
@@ -680,13 +679,14 @@ if ($subpage == '')
   for ($i=0;$i<$files->getRows();$i++)
   {
     $file_id =   $files->getValue('file_id');
-    $file_name = $files->getValue('filename');
-    $file_oname = $files->getValue('originalname');
-    $file_title = $files->getValue('title');
-    $file_type = $files->getValue('filetype');
-    $file_size = $files->getValue('filesize');
-    $file_stamp = rex_formatter::format($files->getValue('updatedate'), "strftime", "datetime");
-    $file_updateuser = $files->getValue('updateuser');
+    $media = OOMedia::getMediaById($file_id);
+    $file_name = $media->getFileName();
+    $file_oname = $media->getOrgFileName();
+    $file_title = $media->getTitle();
+    $file_type = $media->getValue('filetype');
+    $file_size = $media->getValue('filesize');
+    $file_stamp = $media->getUpdateDate('%a %d. %B %Y');
+    $file_updateuser = $media->getUpdateUser();
 
     $encoded_file_name = urlencode($file_name);
 
@@ -738,7 +738,7 @@ if ($subpage == '')
 
     // ----- get file size
     $size = $file_size;
-    $file_size = OOMedia::_getFormattedSize($size);
+    $file_size = $media->getFormattedSize();
 
     if ($file_title == '') $file_title = '['.$I18N->msg('pool_file_notitle').']';
     if($REX['USER']->hasPerm('advancedMode[]')) $file_title .= ' ['. $file_id .']';
@@ -787,14 +787,14 @@ if ($subpage == '')
 
     echo rex_register_extension_point('MEDIA_LIST_FUNCTIONS',$opener_link,
       array(
-        "file_id" => $files->getValue('file_id'),
-        "file_name" => $files->getValue('filename'),
-        "file_oname" => $files->getValue('originalname'),
-        "file_title" => $files->getValue('title'),
-        "file_type" => $files->getValue('filetype'),
-        "file_size" => $files->getValue('filesize'),
-        "file_stamp" => $files->getValue('updatedate'),
-        "file_updateuser" => $files->getValue('updateuser')
+        "file_id" => $file_id,
+        "file_name" => $file_name,
+        "file_oname" => $file_oname,
+        "file_title" => $file_title,
+        "file_type" => $file_type,
+        "file_size" => $file_size,
+        "file_stamp" => $media->getUpdateDate(),
+        "file_updateuser" => $file_updateuser
       )
     );
 

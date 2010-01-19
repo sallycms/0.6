@@ -531,7 +531,7 @@ function rex_editArticle($article_id, $clang, $data)
       )
     );
    	Core::cache()->delete('article ', $article_id.'_'.$clang);
-   	Core::cache()->delete('alist ', $data['category_id'].'_'.$key);
+   	Core::cache()->delete('alist ', $data['category_id'].'_'.$clang);
 
     $success = true;
   }

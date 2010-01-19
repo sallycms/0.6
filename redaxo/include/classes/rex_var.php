@@ -2,18 +2,18 @@
 
 
 /**
- * Abtrackte Basisklasse für REX_VARS
+ * Abtrackte Basisklasse fÃ¼r REX_VARS
  * @package redaxo4
  * @version svn:$Id$
  */
 
-class rex_var
+abstract class rex_var
 {
   // --------------------------------- Actions
 
   /**
    * Actionmethode:
-   * Zum füllen des sql aus dem $REX_ACTION Array
+   * Zum fÃ¼llen des sql aus dem $REX_ACTION Array
    */
   function setACValues(& $sql, $REX_ACTION, $escape = false)
   {
@@ -22,7 +22,7 @@ class rex_var
 
   /**
    * Actionmethode:
-   * Zum füllen des $REX_ACTION Arrays aus den Input Formularwerten
+   * Zum fÃ¼llen des $REX_ACTION Arrays aus den Input Formularwerten
    * @return REX_ACTION Array
    */
   function getACRequestValues($REX_ACTION)
@@ -32,7 +32,7 @@ class rex_var
 
   /**
    * Actionmethode:
-   * Zum füllen des $REX_ACTION Arrays aus der Datenbank (rex_sql)
+   * Zum fÃ¼llen des $REX_ACTION Arrays aus der Datenbank (rex_sql)
    * @return REX_ACTION Array
    */
   function getACDatabaseValues($REX_ACTION, & $sql)
@@ -55,7 +55,7 @@ class rex_var
   // --------------------------------- Ouput
 
   /**
-   * Ausgabe eines Modules fürs Frontend
+   * Ausgabe eines Modules fÃ¼rs Frontend
    * sql Objekt mit der passenden Slice
    *
    * FE = Frontend
@@ -108,7 +108,7 @@ class rex_var
   /**
    * GetValue Wrapper, da hier immer auf die gleiche Tabelle gearbeitet wird und
    * mit MySQL 3.x mit Tabellenprefix angegeben werden muss, da der SQL gleichnamige
-   * Spalten unterschiedlicher Tabellen enthält.
+   * Spalten unterschiedlicher Tabellen enthÃ¤lt.
    */
   function getValue(& $sql, $value)
   {
@@ -118,7 +118,7 @@ class rex_var
   /**
    * setValue Wrapper, da hier immer auf die gleiche Tabelle gearbeitet wird und
    * mit MySQL 3.x mit Tabellenprefix angegeben werden muss, da der SQL gleichnamige
-   * Spalten unterschiedlicher Tabellen enthält.
+   * Spalten unterschiedlicher Tabellen enthï¿½lt.
    */
   function setValue(& $sql, $fieldname, $value, $escape = false)
   {
@@ -138,8 +138,8 @@ class rex_var
     switch($name)
     {
       case '0'       : $name = 'id';
-    	case 'id'      :
-    	case 'prefix'  :
+      case 'id'      :
+      case 'prefix'  :
       case 'suffix'  :
       case 'ifempty' :
       case 'instead' :
@@ -187,7 +187,7 @@ class rex_var
   
   /**
    * Parameter aus args zur Laufzeit auf den Wert einer Variablen anwenden.
-   * Wichtig für Variablen, die Variable ausgaben haben.
+   * Wichtig fï¿½r Variablen, die Variable ausgaben haben.
    */
   function handleGlobalVarParamsSerialized($varname, $args, $value)
   {
@@ -227,7 +227,7 @@ class rex_var
 
   /**
    * Durchsucht den String $content nach Variablen mit dem Namen $varname.
-   * Gibt die Parameter der Treffer (Text der Variable zwischen den []) als Array zurück.
+   * Gibt die Parameter der Treffer (Text der Variable zwischen den []) als Array zurï¿½ck.
    */
   function matchVar($content, $varname)
   {

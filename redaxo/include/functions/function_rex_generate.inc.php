@@ -86,88 +86,6 @@ function rex_deleteCacheArticleContent($id, $clang = null)
 }
 
 /**
- * Löscht die gecachten List-Dateien eines Artikels. Wenn keine clang angegeben, wird
- * der Artikel in allen Sprachen gelöscht.
- *
- * @param $id ArtikelId des Artikels
- * @param [$clang ClangId des Artikels]
- * 
- * @return void
- */
-/*function rex_deleteCacheArticleLists($id, $clang = null)
-{
-  global $REX;
-  
-  $cachePath = $REX['INCLUDE_PATH']. DIRECTORY_SEPARATOR .'generated'. DIRECTORY_SEPARATOR .'articles'. DIRECTORY_SEPARATOR;
-
-  foreach($REX['CLANG'] as $_clang => $clang_name)
-  {
-    if($clang !== null && $clang != $_clang)
-      continue;
-      
-    @unlink($cachePath . $id .'.'. $_clang .'.alist');
-    @unlink($cachePath . $id .'.'. $_clang .'.clist');
-  }
-}*/
-
-
-/**
- * Generiert den Artikel-Cache der Metainformationen.
- * 
- * @param $article_id Id des zu generierenden Artikels
- * @param [$clang ClangId des Artikels]
- * 
- * @return TRUE bei Erfolg, FALSE wenn eine ungütlige article_id übergeben wird, sonst eine Fehlermeldung
- */
-/*function rex_generateArticleMeta($article_id, $clang = null)
-{
-  global $REX, $I18N;
-  
-  foreach($REX['CLANG'] as $_clang => $clang_name)
-  {
-    if($clang !== null && $clang != $_clang)
-      continue;
-    
-    $CONT = new rex_article;
-    $CONT->setCLang($_clang);
-    $CONT->getContentAsQuery(); // Content aus Datenbank holen, no cache
-    $CONT->setEval(FALSE); // Content nicht ausführen, damit in Cachedatei gespeichert werden kann
-    if (!$CONT->setArticleId($article_id)) return FALSE;
-
-    // --------------------------------------------------- Artikelparameter speichern
-    $params = array(
-      'article_id' => $article_id,
-      'last_update_stamp' => time()
-    );
-
-    $class_vars = OORedaxo::getClassVars();
-    unset($class_vars[array_search('id', $class_vars)]);
-    $db_fields = $class_vars;
-
-    foreach($db_fields as $field)
-      $params[$field] = $CONT->getValue($field);
-
-    $content = '<?php'."\n";
-    foreach($params as $name => $value)
-    {
-      $content .='$REX[\'ART\']['. $article_id .'][\''. $name .'\']['. $_clang .'] = \''. rex_addslashes($value,'\\\'') .'\';'."\n";
-    }
-    $content .= '?>';
-    
-    $article_file = $REX['INCLUDE_PATH']."/generated/articles/$article_id.$_clang.article";
-    if (rex_put_file_contents($article_file, $content) === FALSE)
-    {
-      return $I18N->msg('article_could_not_be_generated')." ".$I18N->msg('check_rights_in_directory').$REX['INCLUDE_PATH']."/generated/articles/";
-    }
-    
-    // damit die aktuellen Änderungen sofort wirksam werden, einbinden!
-    require ($article_file);
-  }
-  
-  return TRUE;
-}*/
-
-/**
  * Generiert den Artikel-Cache des Artikelinhalts.
  * 
  * @param $article_id Id des zu generierenden Artikels
@@ -823,49 +741,43 @@ function rex_generateClang() {
  * 
  * @return TRUE bei Erfolg, sonst FALSE
  */
-function rex_generateTemplate($template_id)
-{
-  global $REX;
-
-  $sql = rex_sql::getInstance();
-  $qry = 'SELECT * FROM '. $REX['TABLE_PREFIX']  .'template WHERE id = '.$template_id;
-  $sql->setQuery($qry);
-
-  if($sql->getRows() == 1)
-  {
-    $templatesDir = rex_template::getTemplatesDir();
-    $templateFile = rex_template::getFilePath($template_id);
-
-  	$content = $sql->getValue('content');
-  	foreach($REX['VARIABLES'] as $idx => $var)
-  	{
-      if (is_string($var)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
-        $tmp = new $var();
-        $tmp = null;
-        $var = $REX['VARIABLES'][$idx];
-      }
-      
-  		$content = $var->getTemplate($content);
-  	}
-    if(rex_put_file_contents($templateFile, $content) !== FALSE)
-    {
-      return TRUE;
-    }
-    else
-    {
-      trigger_error('Unable to generate template '. $template_id .'!', E_USER_ERROR);
-
-      if(!is_writable())
-        trigger_error('directory "'. $templatesDir .'" is not writable!', E_USER_ERROR);
-    }
-  }
-  else
-  {
-    trigger_error('Template with id "'. $template_id .'" does not exist!', E_USER_ERROR);
-  }
-
-  return FALSE;
-}
+//function rex_generateTemplate($template_id)
+//{
+//  global $REX;
+//
+//  $sql = rex_sql::getInstance();
+//  $qry = 'SELECT * FROM '. $REX['TABLE_PREFIX']  .'template WHERE id = '.$template_id;
+//  $sql->setQuery($qry);
+//
+//  if($sql->getRows() == 1)
+//  {
+//    $templatesDir = rex_template::getTemplatesDir();
+//    $templateFile = rex_template::getFilePath($template_id);
+//
+//  	$content = $sql->getValue('content');
+//  	foreach(Core::getVarTypes() as $idx => $var)
+//  	{
+//  		$content = $var->getTemplate($content);
+//  	}
+//    if(rex_put_file_contents($templateFile, $content) !== FALSE)
+//    {
+//      return TRUE;
+//    }
+//    else
+//    {
+//      trigger_error('Unable to generate template '. $template_id .'!', E_USER_ERROR);
+//
+//      if(!is_writable())
+//        trigger_error('directory "'. $templatesDir .'" is not writable!', E_USER_ERROR);
+//    }
+//  }
+//  else
+//  {
+//    trigger_error('Template with id "'. $template_id .'" does not exist!', E_USER_ERROR);
+//  }
+//
+//  return FALSE;
+//}
 
 // ----------------------------------------- generate helpers
 

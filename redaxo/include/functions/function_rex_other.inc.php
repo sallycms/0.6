@@ -453,7 +453,7 @@ function rex_replace_dynamic_contents($path, $content)
   if($fcontent = rex_get_file_contents($path))
   {
     $content = "// --- DYN\n". trim($content) ."\n// --- /DYN";
-    $fcontent = ereg_replace("(\/\/.---.DYN.*\/\/.---.\/DYN)", $content, $fcontent);
+    $fcontent = preg_replace("#(//\s---\sDYN.*//\s---\s/DYN)#s", $content, $fcontent);
     return rex_put_file_contents($path, $fcontent);
   }
   return false;

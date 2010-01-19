@@ -109,7 +109,7 @@ class rex_var_media extends rex_var
   }
 
   /**
-   * MediaButton für die Eingabe
+   * MediaButton fÃ¼r die Eingabe
    */
   function matchMediaButton(& $sql, $content)
   {
@@ -140,7 +140,7 @@ class rex_var_media extends rex_var
   }
 
   /**
-   * MediaListButton für die Eingabe
+   * MediaListButton fÃ¼r die Eingabe
    */
   function matchMediaListButton(& $sql, $content)
   {
@@ -176,7 +176,7 @@ class rex_var_media extends rex_var
   }
 
   /**
-   * Wert für die Ausgabe
+   * Wert fÃ¼r die Ausgabe
    */
   function matchMedia(& $sql, $content)
   {
@@ -218,7 +218,7 @@ class rex_var_media extends rex_var
   }
 
   /**
-   * Wert für die Ausgabe
+   * Wert fÃ¼r die Ausgabe
    */
   function matchMediaList(& $sql, $content)
   {
@@ -246,7 +246,7 @@ class rex_var_media extends rex_var
   }
 
   /**
-   * Gibt das Button Template zurück
+   * Gibt das Button Template zurÃ¼ck
    */
   function getMediaButton($id, $category = '', $args = array())
   {
@@ -290,7 +290,7 @@ class rex_var_media extends rex_var
   }
 
   /**
-   * Gibt das ListButton Template zurück
+   * Gibt das ListButton Template zurÃ¼ck
    */
   function getMedialistButton($id, $value, $category = '', $args = array())
   {
