@@ -10,43 +10,43 @@
 class OOMedia
 {
 	// id
-	var $_id = "";
+	private $_id = "";
 	// parent (FOR FUTURE USE!)
-	var $_parent_id = "";
+	private $_parent_id = "";
 	// categoryid
-	var $_cat_id = "";
+	private $_cat_id = "";
 
 	// categoryname
-	var $_cat_name = "";
+	private $_cat_name = "";
 	// oomediacategory
-	var $_cat = "";
+	private $_cat = "";
 
 	// filename
-	var $_name = "";
+	private $_name = "";
 	// originalname
-	var $_orgname = "";
+	private $_orgname = "";
 	// filetype
-	var $_type = "";
+	private $_type = "";
 	// filesize
-	var $_size = "";
+	private $_size = "";
 
 	// filewidth
-	var $_width = "";
+	private $_width = "";
 	// fileheight
-	var $_height = "";
+	private $_height = "";
 
 	// filetitle
-	var $_title = "";
+	private $_title = "";
 
 	// updatedate
-	var $_updatedate = "";
+	private $_updatedate = "";
 	// createdate
-	var $_createdate = "";
+	private $_createdate = "";
 
 	// updateuser
-	var $_updateuser = "";
+	private $_updateuser = "";
 	// createuser
-	var $_createuser = "";
+	private $_createuser = "";
 
 	/**
 	 * @access protected
@@ -821,7 +821,7 @@ class OOMedia
 			$sql = new rex_sql();
 			$sql->setQuery($qry);
 
-			if($this->fileExists())
+			if(self::fileExists($this->getFileName()))
 			{
 				unlink($REX['MEDIAFOLDER'].DIRECTORY_SEPARATOR.$this->getFileName());
 			}
@@ -831,14 +831,9 @@ class OOMedia
 		return false;
 	}
 
-	public function fileExists($filename = null)
+	public static function fileExists($filename = null)
 	{
 		global $REX;
-
-		if($filename === null)
-		{
-			$filename = $this->getFileName();
-		}
 
 		return file_exists($REX['MEDIAFOLDER'].DIRECTORY_SEPARATOR.$filename);
 	}
