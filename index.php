@@ -1,40 +1,37 @@
 <?php
 
 /**
- *
  * @package redaxo4
  * @version svn:$Id$
  */
 
-// ----- ob caching start f�r output filter
 ob_start();
 ob_implicit_flush(0);
 
-// ----------------- MAGIC QUOTES CHECK
-include './redaxo/include/functions/function_rex_mquotes.inc.php';
+// Globale Variablen vorbereiten
 
-// --------------------------- globals
+require 'redaxo/include/functions/function_rex_mquotes.inc.php';
+
+// $REX vorbereiten
 
 unset($REX);
-
-// Flag ob Inhalte mit Redaxo aufgerufen oder
-// von der Webseite aus
-// Kann wichtig f�r die Darstellung sein
-// Sollte immer false bleiben
-
-$REX['REDAXO'] = false;
-
-// setzte pfad und includiere klassen und funktionen
+$REX['REDAXO']      = false; // Backend = true, Frontend = false
+$REX['GG']          = true;  // Get from Generated?
 $REX['HTDOCS_PATH'] = './';
-include './redaxo/include/master.inc.php';
 
-// ----- INCLUDE ADDONS
-include_once $REX['INCLUDE_PATH'].'/addons.inc.php';
+// Core laden
+
+require_once 'redaxo/include/master.inc.php';
+require_once 'redaxo/include/addons.inc.php';
+
+// Setup?
 
 if ($REX['SETUP']) {
-	header('Location:redaxo/');
+	header('Location: redaxo/');
 	exit();
 }
+
+// Aktuellen Artikel finden und ausgeben
 
 $REX['ARTICLE'] = new rex_article();
 $REX['ARTICLE']->setCLang($REX['CUR_CLANG']);
@@ -44,12 +41,12 @@ if ($REX['SETUP']) {
 	exit();
 }
 elseif ($REX['ARTICLE']->setArticleId($REX['ARTICLE_ID'])) {
-	echo $REX['ARTICLE']->getArticleTemplate();
+	print $REX['ARTICLE']->getArticleTemplate();
 }
 else {
-	echo 'Kein Startartikel selektiert / No starting Article selected. Please click here to enter <a href="redaxo/index.php">redaxo</a>';
+	print 'Kein Startartikel selektiert. Bitte setze ihn im <a href="redaxo/index.php">Backend</a>.';
 	$REX['STATS'] = 0;
 }
 
-$CONTENT = ob_get_clean();
-rex_send_article($REX['ARTICLE'], $CONTENT, 'frontend');
+$content = ob_get_clean();
+rex_send_article($REX['ARTICLE'], $content, 'frontend');
