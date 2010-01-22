@@ -726,7 +726,7 @@ class rex_sql
 	 * @param string $qryType void oder DBQuery
 	 * @return array
 	 */
-	public function function _getArray($sql, $fetch_type, $qryType = 'default')
+	public function _getArray($sql, $fetch_type, $qryType = 'default')
 	{
 		if ($sql != '') {
 			switch ($qryType)

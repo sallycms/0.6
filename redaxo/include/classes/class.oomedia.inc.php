@@ -68,7 +68,7 @@ class OOMedia
 	/**
 	 * @access protected
 	 */
-	protected function _getTableJoin()
+	protected static function _getTableJoin()
 	{
 		$mediatable = OOMedia :: _getTableName();
 		$cattable = OOMediaCategory :: _getTableName();
