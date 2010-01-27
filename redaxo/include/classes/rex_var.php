@@ -263,22 +263,22 @@ abstract class rex_var
    * darin befindliche Leerzeichen nicht getrennt.
    * @access protected
    */
-  function splitString($string)
+  protected static function splitString($string)
   {
     return rex_split_string($string);
   }
 
-  function isAddEvent()
+  public static function isAddEvent()
   {
     return rex_request('function', 'string') == 'add';
   }
 
-  function isEditEvent()
+  public static function isEditEvent()
   {
     return rex_request('function', 'string') == 'edit';
   }
 
-  function isDeleteEvent()
+  public static function isDeleteEvent()
   {
     return rex_request('function', 'string') == 'delete';
   }
