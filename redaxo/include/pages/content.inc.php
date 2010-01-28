@@ -292,7 +292,8 @@ if ($article->getRows() == 1)
             $EA->setWhere('id='. $article_id .' AND clang='. $clang);
             $EA->addGlobalUpdateFields();
             $EA->update();
-            rex_deleteCacheArticle($article_id, $clang);
+
+            rex_deleteCacheArticleContent($article_id, $clang);
 
             // ----- POST SAVE ACTION [ADD/EDIT/DELETE]
             $info .= rex_execPostSaveAction($module_id, $function, $REX_ACTION);
