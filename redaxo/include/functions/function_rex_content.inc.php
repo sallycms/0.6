@@ -124,25 +124,19 @@ function rex_deleteSlice($slice_id)
 {
   global $REX;
   
-  // zu loeschender slice suchen
-  $curr = rex_sql::getInstance();
-  $curr->setQuery('SELECT * FROM ' . $REX['TABLE_PREFIX'] . 'article_slice WHERE id=' . $slice_id);
-  if($curr->getRows() != 1)
-  {
-    return false;
+  $slice = OOArticleSlice::getArticleSliceById($slice_id);
+  if($slice !== null){
+  	$sql = rex_sql::getInstance();
+
+  	$nextslice = $slice->getNextSlice();
+  	if($nextslice !== null){
+  	 	$sql->setQuery('UPDATE ' . $REX['TABLE_PREFIX'] . 'article_slice SET re_article_slice_id=' . $slice->getValue('re_article_slice_id') . ' where id=' . $nextslice->getValue('id'));
+  	}
+  	
+  	$sql->setQuery('DELETE FROM ' . $REX['TABLE_PREFIX'] . 'article_slice WHERE id=' . $slice_id);
+    return $sql->getRows() == 1;
   }
-  
-  // nachfolge slice suchen
-  $next = rex_sql::getInstance();
-  $next->setQuery('SELECT * FROM ' . $REX['TABLE_PREFIX'] . 'article_slice WHERE re_article_slice_id=' . $slice_id);
-  if ($next->getRows() == 1 )
-  {
-    // ggf. nachfolger auf eigenen vorgaenger verweisen
-    $next->setQuery('UPDATE ' . $REX['TABLE_PREFIX'] . 'article_slice SET re_article_slice_id=' . $curr->getValue('re_article_slice_id') . ' where id=' . $next->getValue('id'));
-  }
-  // slice loeschen
-  $curr->setQuery('DELETE FROM ' . $REX['TABLE_PREFIX'] . 'article_slice WHERE id=' . $slice_id);
-  return $curr->getRows() == 1;
+  return false;
 }
 
 /**

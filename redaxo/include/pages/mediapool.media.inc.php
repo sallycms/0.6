@@ -749,7 +749,7 @@ if ($subpage == '')
     {
       if (OOMedia::_isImage($file_name))
       {
-        $opener_link .= "<a href=\"javascript:insertImage('$file_name','".$files->getValue("title")."')\">".$I18N->msg('pool_image_get')."</a><br>";
+        $opener_link .= "<a href=\"javascript:insertImage('$file_name','".$file_title."')\">".$I18N->msg('pool_image_get')."</a><br>";
       }
 
     } elseif ($opener_input_field == 'TINY'){
