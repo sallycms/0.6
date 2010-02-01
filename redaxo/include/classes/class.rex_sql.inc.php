@@ -187,6 +187,9 @@ class rex_sql
 	public static function fetch($what, $from, $where = '1', $mode = MYSQL_ASSOC)
 	{
 		global $REX;
+		
+		// Verbindung herstellen
+		self::getInstance(1);
 
 		$query = sprintf(
 			'SELECT %s FROM %s%s WHERE %s LIMIT 1',
@@ -197,7 +200,7 @@ class rex_sql
 		);
 
 		$result = mysql_query($query);
-
+		
 		if ($result === false || mysql_num_rows($result) == 0) {
 			return false;
 		}
@@ -236,6 +239,9 @@ class rex_sql
 	 */
 	public static function getArrayEx($query)
 	{
+		// Verbindung herstellen
+		self::getInstance(1);
+		
 		$result = mysql_query($query);
 
 		if ($result === false || mysql_num_rows($result) == 0 || mysql_num_fields($result) == 0) {
@@ -277,6 +283,9 @@ class rex_sql
 	 */
 	public function setDBQuery($qry)
 	{
+		// Verbindung herstellen
+		$this->selectDB($this->DBID);
+		
 		if (($qryDBID = self::stripQueryDBID($qry)) !== false) {
 			$this->selectDB($qryDBID);
 		}
@@ -295,6 +304,9 @@ class rex_sql
 	{
 		// Alle Werte zurücksetzen
 		$this->flush();
+		
+		// Verbindung herstellen
+		$this->selectDB($this->DBID);
 
 		$qry = trim($qry);
 		$this->query = $qry;
@@ -997,6 +1009,7 @@ class rex_sql
 
 			if (self::isValid($db) && is_resource($db->identifier)) {
 				mysql_close($db->identifier);
+				self::$identifiers[$dbID] = null;
 			}
 		}
 	}
