@@ -429,7 +429,7 @@ class rex_sql
 
 		$row = $this->counter;
 		
-		if (is_int($row)) {
+		if (is_int($rowNumber)) {
 			$row = $rowNumber;
 		}
 
