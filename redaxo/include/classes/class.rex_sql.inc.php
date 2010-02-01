@@ -75,7 +75,7 @@ class rex_sql
 		if ($forceReconnect || self::$identifiers[$DBID] === null) {
 			$level = error_reporting(0);
 			$func  = $REX['DB'][$DBID]['PERSISTENT'] ? 'mysql_pconnect' : 'mysql_connect';
-
+		
 			$this->DBID       = $DBID;
 			$this->identifier = $func($REX['DB'][$DBID]['HOST'], $REX['DB'][$DBID]['LOGIN'], $REX['DB'][$DBID]['PSW']);
 			
@@ -325,14 +325,14 @@ class rex_sql
 						$this->last_insert_id = mysql_insert_id($this->identifier);
 				}
 
-				_WV_QueryLogger::log($qry, $duration, $this->rows);
+				if (class_exists('_WV_QueryLogger')) _WV_QueryLogger::log($qry, $duration, $this->rows);
 			}
 		}
 		else {
 			$this->error = mysql_error($this->identifier);
 			$this->errno = mysql_errno($this->identifier);
 
-			_WV_QueryLogger::log($qry, $duration, _WV_QueryLogger::ERROR);
+			if (class_exists('_WV_QueryLogger')) _WV_QueryLogger::log($qry, $duration, _WV_QueryLogger::ERROR);
 		}
 
 		if ($this->debugsql || $this->error != '') {
@@ -923,7 +923,7 @@ class rex_sql
 			$instances[$dbID] = new self($dbID);
 		}
 
-		return $instances[$dbID];
+		return empty($instances[$dbID]) ? null : $instances[$dbID];
 	}
 
 	/**
@@ -978,7 +978,7 @@ class rex_sql
 	/**
 	 * Schließt die Verbindung zum DB Server
 	 */
-	public function disconnect($dbID = 1)
+	public static function disconnect($dbID = 1)
 	{
 		global $REX;
 

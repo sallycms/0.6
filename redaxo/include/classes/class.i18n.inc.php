@@ -52,7 +52,7 @@ class i18n
 			$lines = array_map('trim', file($filename));
 			
 			foreach ($lines as $line) {
-				if (preg_match('#^(\w*)\s*=\s*(.*)$#', $buffer, $matches)) {
+				if (preg_match('#^(\w*)\s*=\s*(.*)$#', $line, $matches)) {
 					$this->addMsg($matches[1], trim($matches[2]));
 				}
 			}
@@ -100,7 +100,7 @@ class i18n
 		// Wir überspringen $key -> $i = 1
 		for ($i = 1; $i < $argc; ++$i) {
 			$patterns[]     = '/\{'.($i-1).'\}/';
-			$replacements[] = $args[$i];
+			$replacements[] = $argv[$i];
 		}
 
 		return preg_replace($patterns, $replacements, $msg);
