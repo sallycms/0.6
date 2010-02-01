@@ -33,8 +33,8 @@ class OORedaxo {
 	public function __construct($params = false, $clang = false) {
 		if ($params !== false) {
 			
-			foreach (OORedaxo::getClassVars() as $var) {
-				if(isset($params[$var])) {
+			foreach (self::getClassVars() as $var) {
+				if (isset($params[$var])) {
 					$class_var        = '_'.$var;
 					$value            = $params[$var];
 					$this->$class_var = $value;
@@ -90,19 +90,16 @@ class OORedaxo {
 	* CLASS Function:
 	* Returns an Array containing article field names
 	*/
-	public static function getClassVars() {
-		if(!isset(self::$classvars)) self::$classvars = array();
+	public static function getClassVars()
+	{
+		if (!isset(self::$classvars)) {
+			self::$classvars = array();
+		}
 		
 		if (empty(self::$classvars)) {
 			global $REX;
-			$sql = rex_sql::getInstance();
-			$sql->setQuery('SHOW COLUMNS FROM '.$REX['TABLE_PREFIX'].'article');
-			
-			$columns = array();
-			for($i = 0; $i < $sql->getRows(); $i++) {
-				self::$classvars[] = $sql->getValue('Field');
-				$sql->next();
-			}
+			$fields = rex_sql::getArrayEx('SHOW COLUMNS FROM '.$REX['TABLE_PREFIX'].'article');
+			self::$classvars = array_keys($fields);
 		}
 		
 		return self::$classvars;

@@ -43,20 +43,19 @@ class OOCategory extends OORedaxo {
 			while($row = mysql_fetch_array($sql->result, MYSQL_NUM)) {
 				$clist[] = $row[0];
 			}
-			$sql->freeResult();
 			
+			$sql->freeResult();
 			Core::cache()->set($namespace, $key, $clist);
 		}
 		
 		$catlist = array();
-	
-		foreach ($clist as $var)
-		{
-			$category = OOCategory :: getCategoryById($var, $clang);
-		    if (!$ignore_offlines || ($ignore_offlines && $category->isOnline()))
-		    {
-		    	$catlist[] = $category;
-		    }
+
+		foreach ($clist as $var) {
+			$category = OOCategory::getCategoryById($var, $clang);
+			
+			if ($category && (!$ignore_offlines || ($ignore_offlines && $category->isOnline()))) {
+				$catlist[] = $category;
+			}
 		}  
 		
 		return $catlist;

@@ -32,8 +32,8 @@ class OOArticle extends OORedaxo
 		$obj       = Core::cache()->get($namespace, $key, null);
 		
 		if ($obj === null) {
-			$article = rex_sql::fetch('*', 'article', 'id = '.$article_id.' AND clang = '.$clang.' LIMIT 1');
-
+			$article = rex_sql::fetch('*', 'article', 'id = '.$article_id.' AND clang = '.$clang);
+			
 			if ($article) {
 				$class = $OOCategory ? 'OOCategory' : 'OOArticle';
 				$obj   = new $class($article, $clang);
