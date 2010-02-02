@@ -985,7 +985,7 @@ class rex_article
     {
       if(empty($match)) continue;
 
-      $url = rex_getURL($match[1], $match[2]);
+      $url = OOArticle::getArticleById($match[1], $match[2])->getUrl();
       $content = str_replace($match[0],$url.$match[3],$content);
     }
 
@@ -995,7 +995,7 @@ class rex_article
     {
       if(empty($match)) continue;
 
-      $url = rex_getURL($match[1], $this->clang);
+      $url = OOArticle::getArticleById($match[1])->getUrl();
       $content = str_replace($match[0],$url.$match[2],$content);
     }
 

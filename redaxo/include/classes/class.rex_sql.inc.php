@@ -48,20 +48,6 @@ class rex_sql
 		$this->debug      = false;
 		$this->identifier = null;
 		$this->selectDB($DBID);
-
-		if (empty($REX['REX_SQL_INIT_'.$DBID])) {
-			// ggf. Strict Mode abschalten
-			
-			$this->setQuery('SET SQL_MODE = ""');
-			
-			// Verbindung auf UTF8 trimmen
-			
-			if (rex_lang_is_utf8()) {
-				// $this->setQuery('SET NAMES utf8');
-			}
-		}
-		
-		$REX['REX_SQL_INIT_'.$DBID] = true;
 		$this->flush();
 	}
 
@@ -70,27 +56,8 @@ class rex_sql
 	 */
 	public function selectDB($DBID, $forceReconnect = false)
 	{
-		global $REX;
-		
-		if ($forceReconnect || self::$identifiers[$DBID] === null) {
-			$level = error_reporting(0);
-			$func  = $REX['DB'][$DBID]['PERSISTENT'] ? 'mysql_pconnect' : 'mysql_connect';
-		
-			$this->DBID       = $DBID;
-			$this->identifier = $func($REX['DB'][$DBID]['HOST'], $REX['DB'][$DBID]['LOGIN'], $REX['DB'][$DBID]['PSW']);
-			
-			self::$identifiers[$DBID] = $this->identifier;
-
-			if (!mysql_select_db($REX['DB'][$DBID]['NAME'], $this->identifier)) {
-				exit('<span style="color:red;font-family:verdana,arial;font-size:11px;">Es konnte keine Verbindung zur Datenbank hergestellt werden. | Bitte kontaktieren Sie <a href=mailto:'.$REX['ERROR_EMAIL'].'>'.$REX['ERROR_EMAIL'].'</a>. | Danke!</span>');
-			}
-
-			error_reporting($level);
-		}
-		else {
-			$this->identifier = self::$identifiers[$DBID];
-			$this->DBID       = $DBID;
-		}
+		$this->identifier = SQLConnection::factory($DBID)->getConnection();
+		$this->DBID       = $DBID;
 	}
 
 	/**

@@ -28,15 +28,17 @@ class OOArticle extends OORedaxo
 
 		$clang     = (int) $clang;
 		$namespace = $OOCategory ? 'category' : 'article';
+
 		$key       = $article_id.'_'.$clang;
 		$obj       = Core::cache()->get($namespace, $key, null);
-		
+
 		if ($obj === null) {
 			$article = rex_sql::fetch('*', 'article', 'id = '.$article_id.' AND clang = '.$clang);
-			
+
 			if ($article) {
 				$class = $OOCategory ? 'OOCategory' : 'OOArticle';
 				$obj   = new $class($article, $clang);
+
 				
 				Core::cache()->set($namespace, $key, $obj);
 			}
@@ -89,7 +91,7 @@ class OOArticle extends OORedaxo
 			if ($category_id != 0) {
 				array_unshift($alist, $category_id);
 			}
-			
+
 			Core::cache()->set($namespace, $key, $alist);
 		}
 
@@ -169,7 +171,6 @@ class OOArticle extends OORedaxo
 		if (in_array($value, array('_re_id', 'category_id', '_category_id'))) {
 			// für die CatId hier den Getter verwenden,
 			// da dort je nach ArtikelTyp Unterscheidungen getroffen werden müssen
-			var_dump($value);
 			return $this->getCategoryId();
 		}
 		

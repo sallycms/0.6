@@ -31,7 +31,6 @@ abstract class OOAddon extends rex_addon
 		foreach (self::getRegisteredAddons() as $addonName) {
 			if (self::isAvailable($addonName)) $avail[] = $addonName;
 		}
-
 		return $avail;
 	}
 
@@ -54,3 +53,4 @@ abstract class OOAddon extends rex_addon
 		return $addons;
 	}
 }
+

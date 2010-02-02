@@ -98,7 +98,7 @@ abstract class rex_var
   /**
    * Wandelt PHP Code in Einfache Textausgaben um
    */
-  function stripPHP($content)
+  protected static function stripPHP($content)
   {
     $content = str_replace('<?', '&lt;?', $content);
     $content = str_replace('?>', '?&gt;', $content);

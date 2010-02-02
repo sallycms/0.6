@@ -27,7 +27,7 @@ class rex_var_value extends rex_var
       $REX_ACTION['VALUE'][$i] = $value;
     }
     $REX_ACTION['PHP'] = stripslashes(rex_request('INPUT_PHP', 'string'));
-    $REX_ACTION['HTML'] = $this->stripPHP(stripslashes(rex_request('INPUT_HTML', 'string')));
+    $REX_ACTION['HTML'] = self::stripPHP(stripslashes(rex_request('INPUT_HTML', 'string')));
 
     return $REX_ACTION;
   }
@@ -66,7 +66,7 @@ class rex_var_value extends rex_var
     $php_content = $this->getValue($sql, 'php');
     $php_content = rex_highlight_string($php_content, true);
 
-    $content = str_replace('REX_PHP', $this->stripPHP($php_content), $content);
+    $content = str_replace('REX_PHP', self::stripPHP($php_content), $content);
     return $content;
   }
 
@@ -91,14 +91,14 @@ class rex_var_value extends rex_var
     $content = $this->matchIsValue($sql, $content);
     $content = $this->matchPhpValue($sql, $content);
     $content = str_replace('REX_HTML', $this->getValue($sql, 'html'), $content);
-
+	
     return $content;
   }
 
   /**
-   * Wert für die Ausgabe
+   * Wert fÃ¼r die Ausgabe
    */
-  function _matchValue(& $sql, $content, $var, $escape = false, $nl2br = false, $stripPHP = false, $booleanize = false)
+  private function _matchValue(& $sql, $content, $var, $escape = false, $nl2br = false, $stripPHP = false, $booleanize = false)
   {
     $matches = $this->getVarParams($content, $var);
 
@@ -128,7 +128,7 @@ class rex_var_value extends rex_var
 
           if ($stripPHP)
           {
-            $replace = $this->stripPHP($replace);
+            $replace = self::stripPHP($replace);
           }
         }
 
@@ -145,17 +145,17 @@ class rex_var_value extends rex_var
     return $this->_matchValue($sql, $content, 'REX_VALUE', true, $nl2br);
   }
 
-  function matchHtmlValue(& $sql, $content)
+  private function matchHtmlValue(& $sql, $content)
   {
     return $this->_matchValue($sql, $content, 'REX_HTML_VALUE', false, false, true);
   }
 
-  function matchPhpValue(& $sql, $content)
+  private function matchPhpValue(& $sql, $content)
   {
     return $this->_matchValue($sql, $content, 'REX_PHP_VALUE', false, false, false);
   }
 
-  function matchIsValue(& $sql, $content)
+  private function matchIsValue(& $sql, $content)
   {
     return $this->_matchValue($sql, $content, 'REX_IS_VALUE', false, false, false, true);
   }

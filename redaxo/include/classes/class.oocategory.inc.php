@@ -43,7 +43,7 @@ class OOCategory extends OORedaxo {
 			while($row = mysql_fetch_array($sql->result, MYSQL_NUM)) {
 				$clist[] = $row[0];
 			}
-			
+
 			$sql->freeResult();
 			Core::cache()->set($namespace, $key, $clist);
 		}
