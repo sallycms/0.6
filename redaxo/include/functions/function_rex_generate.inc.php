@@ -85,6 +85,13 @@ function rex_deleteCacheArticleContent($id, $clang = null)
   }
 }
 
+function rex_deleteCacheSliceContent($slice_id){
+	global $REX;
+  
+  	$cachePath = $REX['INCLUDE_PATH']. DIRECTORY_SEPARATOR .'generated'. DIRECTORY_SEPARATOR .'articles'. DIRECTORY_SEPARATOR;
+   	@unlink($cachePath . $slice_id .'.content');
+}
+
 /**
  * Generiert den Artikel-Cache des Artikelinhalts.
  * 
@@ -102,24 +109,37 @@ function rex_generateArticleContent($article_id, $clang = null)
     if($clang !== null && $clang != $_clang)
       continue;
       
-    $CONT = new rex_article;
-    $CONT->setCLang($_clang);
-    $CONT->getContentAsQuery(); // Content aus Datenbank holen, no cache
-    $CONT->setEval(FALSE); // Content nicht ausführen, damit in Cachedatei gespeichert werden kann
-    if (!$CONT->setArticleId($article_id)) return FALSE;
-  
+    $query = "SELECT ".$REX['TABLE_PREFIX']."article_slice.id, ".$REX['TABLE_PREFIX']."article_slice.ctype
+          FROM
+            ".$REX['TABLE_PREFIX']."article_slice
+          LEFT JOIN ".$REX['TABLE_PREFIX']."article ON ".$REX['TABLE_PREFIX']."article_slice.article_id=".$REX['TABLE_PREFIX']."article.id
+          WHERE
+            ".$REX['TABLE_PREFIX']."article_slice.article_id='".$article_id."' AND
+            ".$REX['TABLE_PREFIX']."article.clang='".$clang."' 
+            ORDER BY ".$REX['TABLE_PREFIX']."article_slice.re_article_slice_id";
+      
+    $slices = rex_sql::getArrayEx($query);
+    $article_content = '';
+    if(!empty($slices)){
+	    $oldctype = null;
+	    $ctype_content = array();
+	    foreach($slices as $slice => $ctype){
+	    	if(!$oldctype){
+	      		$article_content .= "<?php if (\$this->ctype == '".$ctype."' || (\$this->ctype == '-1')) { ?>";
+	    		
+	    	}elseif($oldctype !== $ctype){
+	    		$article_content .= '<?= '.implode('.', $ctype_content).' ?>';
+	    		$ctype_content = array();
+	    		$article_content .= "<?php } elseif (\$this->ctype == '".$ctype."' || (\$this->ctype == '-1')) { ?>";
+	    	}
+	    	$oldctype = $ctype;
+	    	$ctype_content[] = 'OOArticleSlice::getArticleSliceById('.$slice.', '.$clang.')->getContent()';
+	    }
+	    $article_content .= '<?= '.implode('.', $ctype_content).' ?>';
+	    $article_content .= "<?php } ?>";
+    }
     // --------------------------------------------------- Artikelcontent speichern
     $article_content_file = $REX['INCLUDE_PATH']."/generated/articles/$article_id.$_clang.content";
-    $article_content = $CONT->getArticle();
-  
-    // ----- EXTENSION POINT
-    $article_content = rex_register_extension_point('GENERATE_FILTER', $article_content,
-      array (
-        'id' => $article_id,
-        'clang' => $_clang,
-        'article' => $CONT
-      )
-    );
   
     if (rex_put_file_contents($article_content_file, $article_content) === FALSE)
     {

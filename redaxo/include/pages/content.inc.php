@@ -13,13 +13,6 @@
 */
 
 
-
-
-
-
-
-
-
 unset ($REX_ACTION);
 
 $category_id = rex_request('category_id', 'rex-category-id');
@@ -294,6 +287,8 @@ if ($article->getRows() == 1)
             $EA->update();
 
             rex_deleteCacheArticleContent($article_id, $clang);
+            rex_deleteCacheSliceContent($slice_id);
+            
 
             // ----- POST SAVE ACTION [ADD/EDIT/DELETE]
             $info .= rex_execPostSaveAction($module_id, $function, $REX_ACTION);

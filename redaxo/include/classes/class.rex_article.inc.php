@@ -226,7 +226,7 @@ class rex_article
     else return $this->ARTICLE->hasValue($value);
   }
 
-  function getArticle($curctype = -1)
+  function getArticle($curctype = -1) 
   {
     global $REX,$I18N;
 
@@ -303,7 +303,9 @@ class rex_article
         for ($i=0;$i<$this->CONT->getRows();$i++)
         {
           $RE_SLICE_ID = $this->CONT->getValue('re_article_slice_id');
+          $sliceId = $this->CONT->getValue($REX['TABLE_PREFIX'].'article_slice.id');
           
+          $RE_RE[$sliceId] 				= $RE_SLICE_ID;
           $RE_CONTS[$RE_SLICE_ID]       = $this->CONT->getValue($REX['TABLE_PREFIX'].'article_slice.id');
           $RE_CONTS_CTYPE[$RE_SLICE_ID] = $this->CONT->getValue($REX['TABLE_PREFIX'].'article_slice.ctype');
           $RE_MODUL_IN[$RE_SLICE_ID]    = $this->CONT->getValue($REX['TABLE_PREFIX'].'module.eingabe');
@@ -351,6 +353,7 @@ class rex_article
 
         // ---------- SLICE IDS SORTIEREN UND AUSGEBEN
         $I_ID = 0;
+        if($this->getSlice) $I_ID = $RE_RE[$this->getSlice];
         $PRE_ID = 0;
         $LCTSL_ID = 0;
         $this->CONT->reset();
@@ -358,10 +361,6 @@ class rex_article
 
         for ($i=0;$i<$this->CONT->getRows();$i++)
         {
-          // ----- ctype unterscheidung
-          if ($this->mode != "edit" && $i == 0)
-            $this->content = "<?php if (\$this->ctype == '".$RE_CONTS_CTYPE[$I_ID]."' || (\$this->ctype == '-1')) { ?>";
-
           // ------------- EINZELNER SLICE - AUSGABE
           $this->CONT->counter = $RE_C[$I_ID];
           $slice_content = "";
@@ -605,20 +604,11 @@ class rex_article
             $LCTSL_ID = $RE_CONTS[$I_ID];
           }
 
-          // ----- zwischenstand: ctype .. wenn ctype neu dann if
-          if ($this->mode != "edit" && isset($RE_CONTS_CTYPE[$RE_CONTS[$I_ID]]) && $RE_CONTS_CTYPE[$I_ID] != $RE_CONTS_CTYPE[$RE_CONTS[$I_ID]] && $RE_CONTS_CTYPE[$RE_CONTS[$I_ID]] != "")
-          {
-            $this->content .= "<?php } if(\$this->ctype == '".$RE_CONTS_CTYPE[$RE_CONTS[$I_ID]]."' || \$this->ctype == '-1'){ ?>";
-          }
-
           // zum nachsten slice
           $I_ID = $RE_CONTS[$I_ID];
           $PRE_ID = $I_ID;
 
         }
-
-        // ----- end: ctype unterscheidung
-        if ($this->mode != "edit" && $i>0) $this->content .= "<?php } ?>";
 
         // ----- add module im edit mode
         if ($this->mode == "edit")

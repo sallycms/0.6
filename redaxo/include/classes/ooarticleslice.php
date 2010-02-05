@@ -187,6 +187,22 @@ class OOArticleSlice
 		$art->getSlice = $this->getId();
 		return $art->replaceLinks( $art->getArticle() );
 	}
+	
+	public function getContent(){
+		global $REX, $I18N;
+		$slice_content_file = $REX['INCLUDE_PATH'].'/generated/articles/'.$this->getId().'.content';
+		if(!file_exists($slice_content_file)){
+			$slice_content = $this->getSlice();
+			if (rex_put_file_contents($slice_content_file, $slice_content) === FALSE)
+    		{
+      			return $I18N->msg('slice_could_not_be_generated')." ".$I18N->msg('check_rights_in_directory').$REX['INCLUDE_PATH']."/generated/articles/";
+    		}
+		}
+		if(file_exists($slice_content_file))
+        {
+          include $slice_content_file;
+        }
+	}
 
 	public static function _getSliceWhere($where, $table = null, $fields = null, $default = null)
 	{
