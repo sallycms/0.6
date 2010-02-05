@@ -362,7 +362,7 @@ function rex_redirect($article_id, $clang = '', $params = array())
 
   $divider = '&';
 
-  header('Location: '. rex_getUrl($article_id, $clang, $params, $divider));
+  header('Location: '. rex_getUrl($article_id, $clang, '', $params, $divider));
   exit();
 }
 
