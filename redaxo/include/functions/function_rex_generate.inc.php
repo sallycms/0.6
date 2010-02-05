@@ -109,21 +109,33 @@ function rex_generateArticleContent($article_id, $clang = null)
     if($clang !== null && $clang != $_clang)
       continue;
       
-    $query = "SELECT ".$REX['TABLE_PREFIX']."article_slice.id, ".$REX['TABLE_PREFIX']."article_slice.ctype
+    $query = "SELECT ".$REX['TABLE_PREFIX']."article_slice.id, ".$REX['TABLE_PREFIX']."article_slice.ctype, ".$REX['TABLE_PREFIX']."article_slice.re_article_slice_id
           FROM
             ".$REX['TABLE_PREFIX']."article_slice
           LEFT JOIN ".$REX['TABLE_PREFIX']."article ON ".$REX['TABLE_PREFIX']."article_slice.article_id=".$REX['TABLE_PREFIX']."article.id
           WHERE
             ".$REX['TABLE_PREFIX']."article_slice.article_id='".$article_id."' AND
             ".$REX['TABLE_PREFIX']."article.clang='".$clang."' 
-            ORDER BY ".$REX['TABLE_PREFIX']."article_slice.re_article_slice_id";
-      
-    $slices = rex_sql::getArrayEx($query);
+            ORDER BY ".$REX['TABLE_PREFIX']."article_slice.re_article_slice_id ASC";
+    
+    $sql = rex_sql::getInstance();
+    $slices = $sql->getArray($query);
     $article_content = '';
     if(!empty($slices)){
+	    $sliceArray = array();
+	    foreach($slices as $slice){
+	    	$re_id = $slice['re_article_slice_id'];
+	    	
+	    	$sliceArray[$re_id]['id'] = $slice['id'];
+	    	$sliceArray[$re_id]['ctype'] = $slice['ctype'];
+	    }
+
 	    $oldctype = null;
 	    $ctype_content = array();
-	    foreach($slices as $slice => $ctype){
+	    $idx = 0;
+	    for($i=0; $i < count($sliceArray); $i++){
+	    	$ctype = $sliceArray[$idx]['ctype'];
+	    	$id    = $sliceArray[$idx]['id'];
 	    	if(!$oldctype){
 	      		$article_content .= "<?php if (\$this->ctype == '".$ctype."' || (\$this->ctype == '-1')) { ?>";
 	    		
@@ -133,7 +145,8 @@ function rex_generateArticleContent($article_id, $clang = null)
 	    		$article_content .= "<?php } elseif (\$this->ctype == '".$ctype."' || (\$this->ctype == '-1')) { ?>";
 	    	}
 	    	$oldctype = $ctype;
-	    	$ctype_content[] = 'OOArticleSlice::getArticleSliceById('.$slice.', '.$clang.')->getContent()';
+	    	$idx = $id;
+	    	$ctype_content[] = 'OOArticleSlice::getArticleSliceById('.$id.', '.$clang.')->getContent()';
 	    }
 	    $article_content .= '<?= '.implode('.', $ctype_content).' ?>';
 	    $article_content .= "<?php } ?>";
