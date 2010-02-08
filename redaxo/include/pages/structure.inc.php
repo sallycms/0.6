@@ -39,7 +39,7 @@ if (rex_post('catedit_function', 'boolean') && $edit_id != '' && $KATPERM)
   $data = array();
   $data['catprior'] = rex_post('Position_Category', 'int');
   $data['catname']  = rex_post('kat_name', 'string');
-  $data['path']     = $KATPATH;
+  $data['path']     = $KATPATH; // wird in functions/function_rex_category.inc.php erzeugt.
 
   list($success, $message) = rex_editCategory($edit_id, $clang, $data);
 

@@ -2,86 +2,83 @@
 
 /**
  * Regelt die Rechte an den einzelnen Kategorien und gibt den Pfad aus
- * Kategorien = Startartikel und Bez�ge
+ * Kategorien = Startartikel und Bezüge
  * @package redaxo4
  * @version svn:$Id$
  */
 
-$KATebene = 0; // aktuelle Ebene: default
-$KATPATH = '|'; // Standard f�r path Eintragungen in DB
-if (!isset($KATout)) $KATout = ''; // Variable definiert und vorbelegt wenn nicht existent
+$KATPATH = '|'; // Standard für path Eintragungen in DB
+$KATPERM = $REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('admin[]');
 
-$KATPERM = false;
-if ($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('admin[]')) $KATPERM = true;
+if (!isset($KATout)) {
+	$KATout = ''; // Variable definiert und vorbelegt wenn nicht existent
+}
 
 $KAT = new rex_sql();
-// $KAT->debugsql = true;
-$KAT->setQuery("SELECT catname, path FROM ".$REX['TABLE_PREFIX']."article WHERE id=$category_id AND startpage=1 AND clang=$clang");
+$KAT->setQuery('SELECT catname, path FROM '.$REX['TABLE_PREFIX'].'article WHERE id = '.$category_id.' AND startpage = 1 AND clang = '.$clang);
 
-if ($KAT->getRows()!=1)
-{
-  // kategorie existiert nicht
-  if($category_id != 0)
-  {
-    $category_id = 0;
-    $article_id = 0;
-  }
+if ($KAT->getRows() != 1) {
+	// Kategorie existiert nicht
+	
+	if ($category_id != 0) {
+		$category_id = 0;
+		$article_id  = 0;
+	}
 }
-else
-{
-  // kategorie existiert
+else {
+	$pathElements = trim($KAT->getValue('path'), '|');
+	$pathElements = empty($pathElements) ? array(): explode('|', $pathElements);
+	
+	// Informationen über den Pfad sammeln
+	
+	if (!empty($pathElements)) {
+		$path         = implode(',', $pathElements);
+		$query        = 'SELECT id, catname FROM '.$REX['TABLE_PREFIX'].'article WHERE id IN ('.$path.') AND startpage = 1 AND clang = '.$clang;
+		$pathElements = rex_sql::getArrayEx($query);
+		
+		foreach ($pathElements as $catID => $catName) {
+			$catName = str_replace(' ', '&nbsp;', htmlspecialchars($catName));
 
-  $KPATH = explode('|',$KAT->getValue('path'));
+			if ($KATPERM || $REX['USER']->hasPerm('csw['.$catID.']') || $REX['USER']->hasPerm('csr['.$catID.']'))
+			{
+				$KATout  .= '<li> : <a href="index.php?page=structure&amp;category_id='.$catID.'&amp;clang='.$clang.'"'.rex_tabindex().'>'.$catName.'</a></li>';
+				$KATPATH .= $catID.'|';
 
-  $KATebene = count($KPATH)-1;
-  for ($ii=1;$ii<$KATebene;$ii++)
-  {
-    $SKAT = new rex_sql();
-    $SKAT->setQuery('SELECT id, catname FROM '. $REX['TABLE_PREFIX'] .'article WHERE id='. $KPATH[$ii] .' AND startpage=1 AND clang='. $clang);
+				if ($REX['USER']->hasPerm('csw['.$catID.']')) {
+					$KATPERM = true;
+				}
+			}
+		}
+	}
+	
+	$pathElements = null;
+	unset($pathElements);
 
-    $catname = str_replace(' ', '&nbsp;', htmlspecialchars($SKAT->getValue('catname')));
-    $catid = $SKAT->getValue('id');
+	if ($KATPERM || $REX['USER']->hasPerm('csw['.$category_id.']') || $REX['USER']->hasPerm('csr['.$category_id.']')) {
+		$catName = str_replace(' ', '&nbsp;', htmlspecialchars($KAT->getValue('catname')));
 
-    if ($SKAT->getRows()==1)
-    {
-      if ($KATPERM || $REX['USER']->hasPerm('csw['.$catid.']') || $REX['USER']->hasPerm('csr['.$catid.']'))
-      {
-        $KATout .= '<li>: <a href="index.php?page=structure&amp;category_id='. $catid .'&amp;clang='. $clang .'"'. rex_tabindex() .'>'. $catname .'</a></li>';
-        $KATPATH .= $KPATH[$ii]."|";
+		$KATout  .= '<li> : <a href="index.php?page=structure&amp;category_id='.$category_id.'&amp;clang='.$clang.'"'.rex_tabindex().'>'.$catName.'</a></li>';
+		$KATPATH .= $category_id.'|';
 
-        if($REX['USER']->hasPerm('csw['.$catid.']'))
-        {
-          $KATPERM = true;
-        }
-      }
-    }
-  }
-
-  if ($KATPERM || $REX['USER']->hasPerm('csw['. $category_id .']') || $REX['USER']->hasPerm('csr['. $category_id .']'))
-  {
-    $catname = str_replace(' ', '&nbsp;', htmlspecialchars($KAT->getValue('catname')));
-
-    $KATout .= '<li>: <a href="index.php?page=structure&amp;category_id='. $category_id .'&amp;clang='. $clang .'"'. rex_tabindex() .'>'. $catname .'</a></li>';
-    $KATPATH .= $category_id .'|';
-
-    if ($REX['USER']->hasPerm('csw['. $category_id .']'))
-    {
-      $KATPERM = true;
-    }
-  }
-  else
-  {
-    $category_id = 0;
-    $article_id = 0;
-  }
+		if ($REX['USER']->hasPerm('csw['.$category_id.']')) {
+			$KATPERM = true;
+		}
+	}
+	else {
+		$category_id = 0;
+		$article_id  = 0;
+	}
 }
 
 $KATout = '
 <!-- *** OUTPUT OF CATEGORY-TOOLBAR - START *** -->
-  <ul id="rex-navi-path">
-    <li>'.$I18N->msg('path').'</li>
-    <li>: <a href="index.php?page=structure&amp;category_id=0&amp;clang='. $clang .'"'. rex_tabindex() .'>Homepage</a></li>
-    '. $KATout .'
-  </ul>
+<ul id="rex-navi-path">
+	<li>'.$I18N->msg('path').'</li>
+	<li> : <a href="index.php?page=structure&amp;category_id=0&amp;clang='.$clang.'"'.rex_tabindex().'>Homepage</a></li>
+	'.$KATout.'
+</ul>
 <!-- *** OUTPUT OF CATEGORY-TOOLBAR - END *** -->
 ';
+
+$KAT = null;
+unset($KAT);
