@@ -10,229 +10,236 @@
 /**
  * Sendet eine Datei zum Client
  *
- * @param $file string Pfad zur Datei
- * @param $contentType ContentType der Datei
- * @param $environment string Die Umgebung aus der der Inhalt gesendet wird
- * (frontend/backend)
+ * @param string $file         Pfad zur Datei
+ * @param string $contentType  ContentType der Datei
+ * @param string $environment  Die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
 function rex_send_file($file, $contentType, $environment = 'backend')
 {
-  global $REX;
+	global $REX;
 
-  // Cachen f¸r Dateien aktivieren
-  $temp = $REX['USE_LAST_MODIFIED'];
-  $REX['USE_LAST_MODIFIED'] = true;
+	// Cachen f√ºr Dateien aktivieren
+	$temp = $REX['USE_LAST_MODIFIED'];
+	$REX['USE_LAST_MODIFIED'] = true;
 
-  header('Content-Type: '. $contentType);
-  header('Content-Disposition: inline; filename="'.$file.'"');
+	header('Content-Type: '.$contentType);
+	header('Content-Disposition: inline; filename="'.basename($file).'"');
 
-  $content = rex_get_file_contents($file);
-  $cacheKey = md5($content . $file . $contentType . $environment);
+	$content  = rex_get_file_contents($file);
+	$cacheKey = md5($content.$file.$contentType.$environment);
 
-  rex_send_content(
-    $content,
-    filemtime($file),
-    $cacheKey,
-    $environment);
+	rex_send_content($content, filemtime($file), $cacheKey, $environment);
 
-  // Setting zur¸cksetzen
-  $REX['USE_LAST_MODIFIED'] = $temp;
+	// Setting zur√ºcksetzen
+	$REX['USE_LAST_MODIFIED'] = $temp;
 }
 
 /**
  * Sendet einen rex_article zum Client,
- * f¸gt ggf. HTTP1.1 cache headers hinzu
+ * f√ºgt ggf. HTTP1.1 cache headers hinzu
  *
- * @param $REX_ARTICLE rex_article Den zu sendenen Artikel
- * @param $content string Inhalt des Artikels
- * @param $environment string Die Umgebung aus der der Inhalt gesendet wird
- * (frontend/backend)
+ * @param rex_article $REX_ARTICLE  der zu sendene Artikel
+ * @param string      $content      Inhalt des Artikels
+ * @param string      $environment  die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
-function rex_send_article($REX_ARTICLE, $content, $environment, $sendcharset = FALSE)
+function rex_send_article($REX_ARTICLE, $content, $environment, $sendcharset = false)
 {
-  global $REX;
-  
-  // ----- EXTENSION POINT
-  $content = rex_register_extension_point( 'OUTPUT_FILTER', $content, array('environment' => $environment,'sendcharset' => $sendcharset));
+	global $REX;
 
-  // ----- EXTENSION POINT - keine Manipulation der Ausgaben ab hier (read only)
-  rex_register_extension_point( 'OUTPUT_FILTER_CACHE', $content, '', true);
+	// ----- EXTENSION POINT
+	$content = rex_register_extension_point('OUTPUT_FILTER', $content, array('environment' => $environment, 'sendcharset' => $sendcharset));
 
-  // dynamische teile sollen die md5 summe nicht beeinflussen
-  $etag = md5(preg_replace('@<!--DYN-->.*<!--/DYN-->@','', $content));
+	// ----- EXTENSION POINT - keine Manipulation der Ausgaben ab hier (read only)
+	rex_register_extension_point('OUTPUT_FILTER_CACHE', $content, '', true);
 
-  if($REX_ARTICLE)
-  {
-    $lastModified = $REX_ARTICLE->getValue('updatedate');
-    $etag .= $REX_ARTICLE->getValue('pid');
-    
-    if($REX_ARTICLE->getArticleId() == $REX['NOTFOUND_ARTICLE_ID'] &&
-       $REX_ARTICLE->getArticleId() != $REX['START_ARTICLE_ID'])
-    {
-      header("HTTP/1.0 404 Not Found");
-    }
-  }
-  else
-  {
-    $lastModified = time();
-  }
+	// Dynamische Teile sollen die MD5-Summe nicht beeinflussen.
+	$etag = md5(preg_replace('@<!--DYN-->.*<!--/DYN-->@','', $content));
 
-  rex_send_content(
-    $content,
-    $lastModified,
-    $etag,
-    $environment,
-    $sendcharset);
+	if ($REX_ARTICLE) {
+		$lastModified = $REX_ARTICLE->getValue('updatedate');
+		$etag        .= $REX_ARTICLE->getValue('pid');
+
+		if ($REX_ARTICLE->getArticleId() == $REX['NOTFOUND_ARTICLE_ID'] && $REX_ARTICLE->getArticleId() != $REX['START_ARTICLE_ID']) {
+			header('HTTP/1.0 404 Not Found');
+		}
+	}
+	else {
+		$lastModified = time();
+	}
+
+	rex_send_content(trim($content), $lastModified, $etag, $environment, $sendcharset);
 }
 
 /**
  * Sendet den Content zum Client,
- * f¸gt ggf. HTTP1.1 cache headers hinzu
+ * f√ºgt ggf. HTTP1.1 cache headers hinzu
  *
- * @param $content string Inhalt des Artikels
- * @param $lastModified integer Last-Modified Timestamp
- * @param $cacheKey string Cachekey zur identifizierung des Caches
- * @param $environment string Die Umgebung aus der der Inhalt gesendet wird
- * (frontend/backend)
+ * @param string $content       Inhalt des Artikels
+ * @param int    $lastModified  Last-Modified Timestamp
+ * @param string $cacheKey      Cachekey zur identifizierung des Caches
+ * @param string $environment   die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
-function rex_send_content($content, $lastModified, $etag, $environment, $sendcharset = FALSE)
+function rex_send_content($content, $lastModified, $etag, $environment, $sendcharset = false)
 {
-  global $REX;
+	global $REX;
 
-  // Cachen erlauben, nach revalidierung
-  // see http://xhtmlforum.de/35221-php-session-etag-header.html#post257967
-  session_cache_limiter('none');
-  header('Cache-Control: must-revalidate, proxy-revalidate, private');
-    
-  if($sendcharset)
-  {
-    global $I18N;
-    header('Content-Type: text/html; charset='.$I18N->msg('htmlcharset'));
-  }
-  
-  // ----- Last-Modified
-  if($REX['USE_LAST_MODIFIED'] === 'true' || $REX['USE_LAST_MODIFIED'] == $environment)
-    rex_send_last_modified($lastModified);
+	// Cachen erlauben, nach revalidierung
+	// see http://xhtmlforum.de/35221-php-session-etag-header.html#post257967
+	session_cache_limiter('none');
+	header('Cache-Control: must-revalidate, proxy-revalidate, private');
 
-  // ----- ETAG
-  if($REX['USE_ETAG'] === 'true' || $REX['USE_ETAG'] == $environment)
-    rex_send_etag($etag);
+	if ($sendcharset) {
+		global $I18N;
+		header('Content-Type: text/html; charset="'.$I18N->msg('htmlcharset').'"');
+	}
 
-  // ----- GZIP
-  if($REX['USE_GZIP'] === 'true' || $REX['USE_GZIP'] == $environment)
-    $content = rex_send_gzip($content);
+	// ----- Last-Modified
+	if ($REX['USE_LAST_MODIFIED'] === 'true' || $REX['USE_LAST_MODIFIED'] == $environment) {
+		rex_send_last_modified($lastModified);
+	}
 
-  // ----- MD5 Checksum
-  // dynamische teile sollen die md5 summe nicht beeinflussen
-  if($REX['USE_MD5'] === 'true' || $REX['USE_MD5'] == $environment)
-    rex_send_checksum(md5(preg_replace('@<!--DYN-->.*<!--/DYN-->@','', $content)));
+	// ----- ETAG
+	if ($REX['USE_ETAG'] === 'true' || $REX['USE_ETAG'] == $environment) {
+		rex_send_etag($etag);
+	}
 
-  // Evtl offene Db Verbindungen schlieﬂen
-  rex_sql::disconnect(null);
+	// ----- GZIP
+	if ($REX['USE_GZIP'] === 'true' || $REX['USE_GZIP'] == $environment) {
+		$content = rex_send_gzip($content);
+	}
 
-  // content length schicken, damit der browser einen ladebalken anzeigen kann
-  header('Content-Length: '. strlen($content));
-  
-  echo $content;
+	// ----- MD5 Checksum
+	// Dynamische Teile sollen die MD5-Summe nicht beeinflussen.
+	if ($REX['USE_MD5'] === 'true' || $REX['USE_MD5'] == $environment) {
+		rex_send_checksum(md5(preg_replace('@<!--DYN-->.*<!--/DYN-->@','', $content)));
+	}
+
+	// evtl. offene DB-Verbindungen schlie√üen
+	rex_sql::disconnect(null);
+
+	// content length schicken, damit der Browser einen Ladebalken anzeigen kann
+	header('Content-Length: '.strlen($content));
+
+	print $content;
 }
 
 /**
- * Pr¸ft, ob sich dateien ge‰ndert haben
+ * Pr√ºft, ob sich dateien ge√§ndert haben
  *
  * XHTML 1.1: HTTP_IF_MODIFIED_SINCE feature
  *
- * @param $lastModified integer Last-Modified Timestamp
+ * @param int $lastModified  Last-Modified Timestamp
  */
 function rex_send_last_modified($lastModified = null)
 {
-  if(!$lastModified)
-    $lastModified = time();
+	if (!$lastModified) {
+		$lastModified = time();
+	}
 
-  $lastModified = date('r', $lastModified);
+	$lastModified = date('r', $lastModified);
 
-  // Sende Last-Modification time
-  header('Last-Modified: ' . $lastModified);
+	// Sende Last-Modification time
+	header('Last-Modified: ' .$lastModified);
 
-  // Last-Modified Timestamp gefunden
-  // => den Browser anweisen, den Cache zu verwenden
-  if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $lastModified)
-  {
-    while(@ob_end_clean());
+	// Last-Modified Timestamp gefunden
+	// => den Browser anweisen, den Cache zu verwenden
+	if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $lastModified) {
+		while (ob_get_level()) {
+			ob_end_clean();
+		}
 
-    header('HTTP/1.1 304 Not Modified');
-    exit();
-  }
+		header('HTTP/1.1 304 Not Modified');
+		exit();
+	}
 }
 
 /**
- * Pr¸ft ob sich der Inhalt einer Seite im Cache des Browsers befindet und
+ * Pr√ºft ob sich der Inhalt einer Seite im Cache des Browsers befindet und
  * verweisst ggf. auf den Cache
  *
  * XHTML 1.1: HTTP_IF_NONE_MATCH feature
  *
- * @param $cacheKey string Cachekey zur identifizierung des Caches
+ * @param string $cacheKey  Cachekey zur identifizierung des Caches
  */
 function rex_send_etag($cacheKey)
 {
-  // Laut HTTP Spec muss der Etag in " sein
-  $cacheKey = '"'. $cacheKey .'"';
+	// Laut HTTP Spec muss der Etag in " sein
+	$cacheKey = '"'.$cacheKey.'"';
 
-  // Sende CacheKey als ETag
-  header('ETag: '. $cacheKey);
+	// Sende CacheKey als ETag
+	header('ETag: '.$cacheKey);
 
-  // CacheKey gefunden
-  // => den Browser anweisen, den Cache zu verwenden
-  if(isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] == $cacheKey)
-  {
-    while(@ob_end_clean());
+	// CacheKey gefunden
+	// => den Browser anweisen, den Cache zu verwenden
+	if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] == $cacheKey) {
+		while (ob_get_level()) {
+			ob_end_clean();
+		}
 
-    header('HTTP/1.1 304 Not Modified');
-    exit();
-  }
+		header('HTTP/1.1 304 Not Modified');
+		exit();
+	}
 }
 
 /**
  * Kodiert den Inhalt des Artikels in GZIP/X-GZIP, wenn der Browser eines der
- * Formate unterst¸tzt
+ * Formate unterst√ºtzt
  *
  * XHTML 1.1: HTTP_ACCEPT_ENCODING feature
  *
- * @param $content string Inhalt des Artikels
+ * @param string $content  Inhalt des Artikels
  */
 function rex_send_gzip($content)
 {
-  $enc = '';
-  $encodings = array();
-  $supportsGzip = false;
+	$enc          = '';
+	$encodings    = array();
+	$supportsGzip = false;
 
-  // Check if it supports gzip
-  if (isset($_SERVER['HTTP_ACCEPT_ENCODING']))
-    $encodings = explode(',', strtolower(preg_replace('/\s+/', '', $_SERVER['HTTP_ACCEPT_ENCODING'])));
+	if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+		$encodings = explode(',', strtolower(preg_replace('/\s+/', '', $_SERVER['HTTP_ACCEPT_ENCODING'])));
+	}
 
-  if ((in_array('gzip', $encodings) || in_array('x-gzip', $encodings) || isset($_SERVER['---------------'])) && function_exists('ob_gzhandler') && !ini_get('zlib.output_compression'))
-  {
-    $enc = in_array('x-gzip', $encodings) ? 'x-gzip' : 'gzip';
-    $supportsGzip = true;
-  }
+	if (!rex_is_avsuite() && (in_array('gzip', $encodings) || in_array('x-gzip', $encodings)) && function_exists('ob_gzhandler') && !ini_get('zlib.output_compression')) {
+		$enc          = in_array('x-gzip', $encodings) ? 'x-gzip' : 'gzip';
+		$supportsGzip = true;
+	}
 
-  if($supportsGzip)
-  {
-    header('Content-Encoding: '. $enc);
-    $content = gzencode($content, 9, FORCE_GZIP);
-  }
+	if ($supportsGzip) {
+		header('Content-Encoding: '.$enc);
+		$content = gzencode($content, 5, FORCE_GZIP);
+	}
 
-  return $content;
+	return $content;
+}
+
+/**
+ * Pr√ºft, ob sich der Client vermutlich √ºber eine AV-Suite mit dem Internet
+ * verbindet. Diese ersetzen (oder entfernen) m√∂gliche Accept-Header, um immer
+ * unkomprimierten Inhalt zu erhalten. Das erleichtert wohl das Pr√ºfen des
+ * Inhalts irgendwie.
+ *
+ * Falls wir also eine typische Angabe finden, deaktivieren wir die
+ * Komprimierung f√ºr diesen Request.
+ *
+ * @return bool  true, wenn der Client sich vermutlich hinter einer AV-Suite verbirgt
+ */
+function rex_is_avsuite()
+{
+	return
+		isset($_SERVER['---------------']) ||
+		isset($_SERVER['Accept-EncodXng']) ||
+		isset($_SERVER['XXXXXXXXXXXXXXX']);
 }
 
 /**
  * Sendet eine MD5 Checksumme als HTTP Header, damit der Browser validieren
- * kann, ob ‹bertragungsfehler aufgetreten sind
+ * kann, ob √úbertragungsfehler aufgetreten sind
  *
  * XHTML 1.1: HTTP_CONTENT_MD5 feature
  *
- * @param $md5 string MD5 Summe des Inhalts
+ * @param string $md5  MD5-Summe des Inhalts
  */
 function rex_send_checksum($md5)
 {
-  header('Content-MD5: '. $md5);
+	header('Content-MD5: '.$md5);
 }
