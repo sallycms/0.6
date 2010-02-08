@@ -101,9 +101,9 @@ function rex_get_registered_extensions($extensionPoint)
  * @example
  *   rex_call_func( 'myFunction', array( 'Param1' => 'ab', 'Param2' => 12))
  * @example
- *   rex_call_func( 'myObject::myMethod', array( 'Param1' => 'ab', 'Param2' => 12))
+ *   rex_call_func( 'myClass::myMethod', array( 'Param1' => 'ab', 'Param2' => 12))
  * @example
- *   rex_call_func( array('myObject', 'myMethod'), array( 'Param1' => 'ab', 'Param2' => 12))
+ *   rex_call_func( array('myClass', 'myMethod'), array( 'Param1' => 'ab', 'Param2' => 12))
  * @example
  *   $myObject = new myObject();
  *   rex_call_func( array($myObject, 'myMethod'), array( 'Param1' => 'ab', 'Param2' => 12))
