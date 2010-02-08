@@ -10,7 +10,7 @@
   /**
    * Konstruktor
    * 
-   * @param $i18nPrefix Sprachprefix aller I18N Sprachschlüssel
+   * @param $i18nPrefix Sprachprefix aller I18N Sprachschlï¿½ssel
    */
   function rex_baseManager($i18nPrefix)
   {
@@ -23,7 +23,7 @@
    * @param $addonName Name des Addons
    * @param $installDump Flag, ob die Datei install.sql importiert werden soll
    */
-  /*public*/ function install($addonName, $installDump = TRUE)
+  public function install($addonName, $installDump = TRUE)
   {
   	global $REX;
   	
@@ -35,8 +35,8 @@
     $config_file  = $install_dir.'config.inc.php';
     $files_dir    = $install_dir.'files';
     
-    // Prüfen des Addon Ornders auf Schreibrechte,
-    // damit das Addon später wieder gelöscht werden kann
+    // PrÃ¼fen des Addon Ornders auf Schreibrechte,
+    // damit das Addon spÃ¤ter wieder gelÃ¶scht werden kann
     $state = rex_is_writable($install_dir);
     
     if ($state === TRUE)
@@ -97,7 +97,6 @@
         $state = $this->I18N('install_not_found');
       }
     }
-  
     // Dateien kopieren
     if($state === TRUE && is_dir($files_dir))
     {
@@ -118,7 +117,7 @@
    * 
    * @param $addonName Name des Addons
    */
-  /*public*/ function uninstall($addonName)
+  public function uninstall($addonName)
   {
     $state = TRUE;
     
@@ -191,7 +190,7 @@
    * 
    * @param $addonName Name des Addons
    */
-  /*public*/ function activate($addonName)
+  public function activate($addonName)
   {
     if ($this->apiCall('isInstalled', array($addonName)))
     {
@@ -226,14 +225,14 @@
   }
   
   /**
-   * Löscht ein Addon im Filesystem
+   * Lï¿½scht ein Addon im Filesystem
    * 
    * @param $addonName Name des Addons
    */
   /*public*/ function delete($addonName)
   {
     // zuerst deinstallieren
-    // bei erfolg, komplett löschen
+    // bei erfolg, komplett lï¿½schen
     $state = TRUE;
     $state = $state && $this->uninstall($addonName);
     $state = $state && rex_deleteDir($this->baseFolder($addonName), TRUE);
@@ -243,7 +242,7 @@
   }
   
   /**
-   * Übersetzen eines Sprachschlüssels unter Verwendung des Prefixes 
+   * ï¿½bersetzen eines Sprachschlï¿½ssels unter Verwendung des Prefixes 
    */
   /*protected*/ function I18N()
   {
@@ -307,7 +306,7 @@
   }
   
   /**
-   * Findet den Basispfad für Media-Dateien
+   * Findet den Basispfad fï¿½r Media-Dateien
    */
   /*protected*/ function mediaFolder($addonName)
   {
@@ -332,7 +331,7 @@ class rex_addonManager extends rex_baseManager
   {
     global $REX, $I18N;
     
-    // System AddOns dürfen nicht gelöscht werden!
+    // System AddOns dï¿½rfen nicht gelï¿½scht werden!
     if(in_array($addonName, $REX['SYSTEM_ADDONS']))
       return $I18N->msg('addon_systemaddon_delete_not_allowed');
       
@@ -341,20 +340,20 @@ class rex_addonManager extends rex_baseManager
   
   /*protected*/ function includeConfig($addonName, $configFile)
   {
-    global $REX, $I18N; // Nötig damit im Addon verfügbar
+    global $REX, $I18N; // Nï¿½tig damit im Addon verfï¿½gbar
     require $configFile;
   }
   
   
   /*protected*/ function includeInstaller($addonName, $installFile)
   {
-    global $REX, $I18N; // Nötig damit im Addon verfügbar
+    global $REX, $I18N; // Nï¿½tig damit im Addon verfï¿½gbar
     require $installFile;
   }
   
   /*protected*/ function includeUninstaller($addonName, $uninstallFile)
   {
-    global $REX, $I18N; // Nötig damit im Addon verfügbar
+    global $REX, $I18N; // Nï¿½tig damit im Addon verfï¿½gbar
     require $uninstallFile;
   }
   
@@ -401,13 +400,13 @@ class rex_pluginManager extends rex_baseManager
   /**
    * Wandelt ein AddOn in ein PlugIn eines anderen AddOns um
    * 
-   * @param $addonName AddOn dem das PlugIn eingefügt werden soll
+   * @param $addonName AddOn dem das PlugIn eingefï¿½gt werden soll
    * @param $pluginName Name des Plugins
    * @param $includeFile Datei die eingebunden und umgewandelt werden soll
    */
   /*public static*/ function addon2plugin($addonName, $pluginName, $includeFile)
   {
-    global $REX, $I18N; // Nötig damit im Addon verfügbar
+    global $REX, $I18N; // Nï¿½tig damit im Addon verfï¿½gbar
         
     $ADDONSsic = $REX['ADDON'];
     $REX['ADDON'] = array();
@@ -430,8 +429,8 @@ class rex_pluginManager extends rex_baseManager
           $plugInConfig[$key][$pluginName] = $REX['ADDON'][$key][$pluginName];
           unset($REX['ADDON'][$key][$pluginName]);
           
-          // ggf array das leer geworden ist löschen
-          // damit es beim merge später nicht ein vorhandes überschreibt
+          // ggf array das leer geworden ist lï¿½schen
+          // damit es beim merge spï¿½ter nicht ein vorhandes ï¿½berschreibt
           if(empty($REX['ADDON'][$key]))
           {
             unset($REX['ADDON'][$key]);
@@ -442,7 +441,7 @@ class rex_pluginManager extends rex_baseManager
 
     // Addoneinstellungen als PlugIndaten speichern
     $ADDONSsic['plugins'][$addonName] = $plugInConfig;
-    // Alle überbleibenden Keys die ggf. andere Addons beinflussen einfließen lassen
+    // Alle ï¿½berbleibenden Keys die ggf. andere Addons beinflussen einflieï¿½en lassen
     $REX['ADDON'] = array_merge_recursive($ADDONSsic, $REX['ADDON']);
   }
   
@@ -471,7 +470,7 @@ class rex_pluginManager extends rex_baseManager
     if(!is_array($arguments))
       trigger_error('Expecting $arguments to be an array!', E_USER_ERROR);
       
-    // addonName als 1. Parameter einfügen
+    // addonName als 1. Parameter einfï¿½gen
     array_unshift($arguments, $this->addonName);
       
     return rex_call_func(array('OOPlugin', $method), $arguments, false);

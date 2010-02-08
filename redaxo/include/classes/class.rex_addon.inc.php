@@ -1,24 +1,25 @@
 <?php
 
 /**
- * Basisklasse f�r Addons/Plugins
+ * Basisklasse für Addons/Plugins
  *
  * @package redaxo4
  * @version svn:$Id$
  */
 
-/*private abstract*/ class rex_addon
+ class rex_addon
 {
-	/*static array*/ var $data;
-	/*private mixed*/ var $name;
-
+	private $data;
+	private $name;
+	private static $instances;
+	
 	/**
 	 * Privater rex_addon Konstruktor.
 	 * Erstellen von Objekten dieser Klasse ist nicht erlaubt!
 	 *
 	 * @param string|array $namespace Namensraum des rex-Addons
 	 */
-	/*private*/ function rex_addon($namespace)
+	private function __construct($namespace)
 	{
 		global $REX;
 
@@ -33,7 +34,7 @@
 
 			$addon = $namespace[0];
 			$plugin = $namespace[1];
-			$this->data =& $REX['ADDON']['plugins'][$addon];
+			$this->data = &$REX['ADDON']['plugins'][$addon];
 			$this->name = $plugin;
 		}
 		// addon?
@@ -51,9 +52,8 @@
 	 *
 	 * @return rex_addon Zum namespace erstellte rex-Addon instanz
 	 */
-	protected static function create($namespace)
+	public static function create($namespace)
 	{
-		static $addons = array();
 
 		$nsString = $namespace;
 		if(is_array($namespace))
@@ -61,12 +61,12 @@
 			$nsString = implode('/', $namespace);
 		}
 
-		if(!isset($addons[$nsString]))
+		if(!isset(self::$instances[$nsString]))
 		{
-			$addons[$nsString] = new rex_addon($namespace);
+			self::$instances[$nsString] = new self($namespace);
 		}
 
-		return $addons[$nsString];
+		return self::$instances[$nsString];
 	}
 
 	/**
@@ -78,7 +78,7 @@
 	 */
 	public static function isAvailable($addon)
 	{
-		return rex_addon::isInstalled($addon) && rex_addon::isActivated($addon);
+		return self::isInstalled($addon) && rex_addon::isActivated($addon);
 	}
 
 	/**
@@ -90,7 +90,7 @@
 	 */
 	public static function isActivated($addon)
 	{
-		return rex_addon::getProperty($addon, 'status', false) == true;
+		return (bool)self::getProperty($addon, 'status', false) == true;
 	}
 
 	/**
@@ -102,7 +102,7 @@
 	 */
 	public static function isInstalled($addon)
 	{
-		return rex_addon::getProperty($addon, 'install', false) == true;
+		return (bool)self::getProperty($addon, 'install', false) == true;
 	}
 
 	/**
@@ -113,9 +113,9 @@
 	 *
 	 * @return string Versionsnummer des Addons
 	 */
-	/*public*/ function getVersion($addon, $default = null)
+	public static function getVersion($addon, $default = null)
 	{
-		return rex_addon::getProperty($addon, 'version', $default);
+		return self::getProperty($addon, 'version', $default);
 	}
 
 	/**
@@ -126,9 +126,9 @@
 	 *
 	 * @return string Autor des Addons
 	 */
-	/*public*/ function getAuthor($addon, $default = null)
+	public static function getAuthor($addon, $default = null)
 	{
-		return rex_addon::getProperty($addon, 'author', $default);
+		return self::getProperty($addon, 'author', $default);
 	}
 
 	/**
@@ -139,7 +139,7 @@
 	 *
 	 * @return string Versionsnummer des Addons
 	 */
-	/*public*/ function getSupportPage($addon, $default = null)
+	public static function getSupportPage($addon, $default = null)
 	{
 		return rex_addon::getProperty($addon, 'supportpage', $default);
 	}

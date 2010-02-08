@@ -30,7 +30,7 @@ class i18n
 	}
 
 	/*
-	 * Lädt alle Übersetzungen der aktuellen Sprache aus dem Sprachpfad und fügt diese dem Katalog hinzu.
+	 * LÃ¤dt alle Ãœbersetzungen der aktuellen Sprache aus dem Sprachpfad und fÃ¼gt diese dem Katalog hinzu.
 	 */
 	public function loadTexts()
 	{
@@ -40,11 +40,11 @@ class i18n
 	}
 
 	/**
-	 * Sucht im angegebenden Ordner nach eine Sprachdatei der aktuellen Sprache und fügt diese dem Sprachkatalog an
+	 * Sucht im angegebenden Ordner nach eine Sprachdatei der aktuellen Sprache und fï¿½gt diese dem Sprachkatalog an
 	 *  
 	 * @param string $searchPath  Pfad in dem die Sprachdatei gesucht werden soll
 	 */
-	function appendFile($searchPath)
+	public function appendFile($searchPath)
 	{
 		$filename = $searchPath.'/'.$this->locale.'.lang';
 		
@@ -64,11 +64,11 @@ class i18n
 	}
 
 	/**
-	 * Durchsucht den Sprachkatalog nach einem Schlüssel und gibt die dazugehörige Übersetzung zurück
+	 * Durchsucht den Sprachkatalog nach einem SchlÃ¼ssel und gibt die dazugehÃ¶rige Ãœbersetzung zurÃ¼ck
 	 * 
-	 * @param string $key  zu suchender Schlüssel
+	 * @param string $key  zu suchender SchlÃ¼ssel
 	 */
-	function msg($key)
+	public function msg($key)
 	{
 		global $REX;
 
@@ -97,7 +97,7 @@ class i18n
 		$argv = func_get_args();
 		$argc = count($argv);
 		
-		// Wir überspringen $key -> $i = 1
+		// Wir Ã¼berspringen $key -> $i = 1
 		for ($i = 1; $i < $argc; ++$i) {
 			$patterns[]     = '/\{'.($i-1).'\}/';
 			$replacements[] = $argv[$i];
@@ -107,33 +107,33 @@ class i18n
 	}
 
 	/**
-	 * Fügt dem Sprachkatalog unter dem gegebenen Schlüssel eine neue Übersetzung hinzu 
+	 * FÃ¼gt dem Sprachkatalog unter dem gegebenen SchlÃ¼ssel eine neue Ãœbersetzung hinzu 
 	 *  
-	 * @param string $key  Schlüssel unter dem die Übersetzung abgelegt wird
-	 * @param string $msg  übersetzter Text
+	 * @param string $key  SchlÃ¼ssel unter dem die Ãœbersetzung abgelegt wird
+	 * @param string $msg  Ã¼bersetzter Text
 	 */
-	function addMsg($key, $msg) {
+	public function addMsg($key, $msg) {
 		$this->text[$key] = $msg;
 	}
 
 	/**
-	 * Prüft ob der Sprachkatalog zu dem gegebenen Schlüssel eine Übersetzung beinhaltet
+	 * PrÃ¼ft ob der Sprachkatalog zu dem gegebenen SchlÃ¼ssel eine Ãœbersetzung beinhaltet
 	 * 
-	 * @param  string $key zu suchender Schlüssel
-	 * @return boolean     true wenn der Schlüssel gefunden wurde, sonst false
+	 * @param  string $key zu suchender SchlÃ¼ssel
+	 * @return boolean     true wenn der SchlÃ¼ssel gefunden wurde, sonst false
 	 */
-	function hasMsg($key)
+	private function hasMsg($key)
 	{
 		return isset($this->text[$key]);
 	}
 
 	/**
-	 * Durchsucht den Searchpath nach allen verfügbaren Sprachdateien und gibt diese zurück
+	 * Durchsucht den Searchpath nach allen verfÃ¼gbaren Sprachdateien und gibt diese zurÃ¼ck
 	 * 
 	 * @param  string $searchpath  zu duruchsuchender Ordner
 	 * @return array               Array von gefundenen Sprachen (locales)
 	 */
-	function getLocales($searchpath)
+	public function getLocales($searchpath)
 	{
 		if (empty($this->locales) && is_readable($searchpath)) {
 			$this->locales = array();

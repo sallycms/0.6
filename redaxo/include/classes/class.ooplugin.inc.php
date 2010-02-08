@@ -39,7 +39,7 @@ class OOPlugin extends rex_addon
 	 * @override
 	 * @see redaxo/include/classes/rex_addon#getSupportPage($addon, $default)
 	 */
-	function getSupportPage($addon, $plugin, $default = null)
+	public static function getSupportPage($addon, $plugin, $default = null)
 	{
 		return parent::getSupportPage(array($addon, $plugin), $default);
 	}
@@ -48,7 +48,7 @@ class OOPlugin extends rex_addon
 	 * @override
 	 * @see redaxo/include/classes/rex_addon#getVersion($addon, $default)
 	 */
-	function getVersion($addon, $plugin, $default = null)
+	public static function getVersion($addon, $plugin, $default = null)
 	{
 		return parent::getVersion(array($addon, $plugin), $default);
 	}
@@ -57,7 +57,7 @@ class OOPlugin extends rex_addon
 	 * @override
 	 * @see redaxo/include/classes/rex_addon#getAuthor($addon, $default)
 	 */
-	function getAuthor($addon, $plugin, $default = null)
+	public static function getAuthor($addon, $plugin, $default = null)
 	{
 		return parent::getAuthor(array($addon, $plugin), $default);
 	}
@@ -81,11 +81,11 @@ class OOPlugin extends rex_addon
 	}
 
 	/**
-	 * Gibt ein Array aller verf�gbaren Plugins zur�ck.
+	 * Gibt ein Array aller verfügbaren Plugins zur�ck.
 	 *
 	 * @param string $addon Name des Addons
 	 *
-	 * @return array Array aller verf�gbaren Plugins
+	 * @return array Array aller verfügbaren Plugins
 	 */
 	public static function getAvailablePlugins($addon)
 	{
@@ -103,7 +103,7 @@ class OOPlugin extends rex_addon
 
 
 	/**
-	 * Gibt ein Array aller installierten Plugins zur�ck.
+	 * Gibt ein Array aller installierten Plugins zurück.
 	 *
 	 * @param string $addon Name des Addons
 	 *

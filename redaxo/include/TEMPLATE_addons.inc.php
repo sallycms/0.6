@@ -24,7 +24,7 @@ foreach(OOAddon::getAvailableAddons() as $addonName)
   $addonConfig = rex_addons_folder($addonName). 'config.inc.php';
   if(file_exists($addonConfig))
   {
-    require $addonConfig;
+    require_once $addonConfig;
   }
   
   foreach(OOPlugin::getAvailablePlugins($addonName) as $pluginName)

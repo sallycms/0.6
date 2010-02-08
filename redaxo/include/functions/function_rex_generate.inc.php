@@ -340,7 +340,7 @@ function _rex_deleteArticle($id)
  * @return TRUE bei Erfolg, sonst FALSE
  */
 function rex_deleteDir($file, $delete_folders = FALSE) {
-  $debug = FALSE;
+  $debug = true;
   $state = TRUE;
   
 
@@ -356,7 +356,7 @@ function rex_deleteDir($file, $delete_folders = FALSE) {
       }
 
       while ($filename = readdir($handle)) {
-        if ($filename == '.' || $filename == '..' || $filename == '.svn') {
+        if ($filename == '.' || $filename == '..') {
           continue;
         }
 
