@@ -199,7 +199,7 @@ function rex_send_gzip($content)
 		$encodings = explode(',', strtolower(preg_replace('/\s+/', '', $_SERVER['HTTP_ACCEPT_ENCODING'])));
 	}
 
-	if (!rex_is_avsuite() && (in_array('gzip', $encodings) || in_array('x-gzip', $encodings)) && function_exists('ob_gzhandler') && !ini_get('zlib.output_compression')) {
+	if ((in_array('gzip', $encodings) || in_array('x-gzip', $encodings)) && function_exists('ob_gzhandler') && !ini_get('zlib.output_compression')) {
 		$enc          = in_array('x-gzip', $encodings) ? 'x-gzip' : 'gzip';
 		$supportsGzip = true;
 	}
@@ -217,9 +217,6 @@ function rex_send_gzip($content)
  * verbindet. Diese ersetzen (oder entfernen) mögliche Accept-Header, um immer
  * unkomprimierten Inhalt zu erhalten. Das erleichtert wohl das Prüfen des
  * Inhalts irgendwie.
- *
- * Falls wir also eine typische Angabe finden, deaktivieren wir die
- * Komprimierung für diesen Request.
  *
  * @return bool  true, wenn der Client sich vermutlich hinter einer AV-Suite verbirgt
  */
