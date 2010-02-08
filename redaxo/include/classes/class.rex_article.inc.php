@@ -38,9 +38,7 @@ class rex_article
   var $info;
   var $debug;
   
-  var $OOArticle;
-  
-  function rex_article($article_id = null, $clang = null)
+  public function __construct($article_id = null, $clang = null)
   {
     global $REX;
 
@@ -59,10 +57,7 @@ class rex_article
     $this->slice_revision = 0;
 
     $this->debug = FALSE;
-
-    $this->ARTICLE = new rex_sql;
-    if($this->debug)
-      $this->ARTICLE->debugsql = 1;
+    $this->ARTICLE = null;
         
     if($clang !== null)
       $this->setCLang($clang);
@@ -126,6 +121,9 @@ class rex_article
     if ($this->viasql)
     {
       // ---------- select article
+      $this->ARTICLE = new rex_sql();
+      if($this->debug)
+      	$this->ARTICLE->debugsql = 1;
       $qry = "SELECT * FROM ".$REX['TABLE_PREFIX']."article WHERE ".$REX['TABLE_PREFIX']."article.id='$this->article_id' AND clang='".$this->clang."' LIMIT 1";
       $this->ARTICLE->setQuery($qry);
 
@@ -138,11 +136,11 @@ class rex_article
     }
     else
     {
-      $this->OOArticle = OOArticle::getArticleById($this->article_id, $this->clang);
-      if(OOArticle::isValid($this->OOArticle))
+      $this->ARTICLE = OOArticle::getArticleById($this->article_id, $this->clang);
+      if(OOArticle::isValid($this->ARTICLE))
       {
-        $this->category_id = $this->OOArticle->getCategoryId();
-        $this->template_id = $this->OOArticle->getTemplateId();
+        $this->category_id = $this->ARTICLE->getCategoryId();
+        $this->template_id = $this->ARTICLE->getTemplateId();
         return TRUE;
       }
     }
@@ -198,8 +196,7 @@ class rex_article
   {
     global $REX;
     $value = $this->correctValue($value);
-    if (!$this->viasql) return $this->OOArticle->getValue($value);
-    else return $this->ARTICLE->getValue($value);
+    return $this->ARTICLE->getValue($value);
   }
 
   function getValue($value)
@@ -222,8 +219,7 @@ class rex_article
   {
     global $REX;
     $value = $this->correctValue($value);
-    if (!$this->viasql) return $this->OOArticle->getValue($value) !== null;
-    else return $this->ARTICLE->hasValue($value);
+    return $this->ARTICLE->hasValue($value);
   }
 
   function getArticle($curctype = -1) 
@@ -654,7 +650,7 @@ class rex_article
         }
 
         // -------------------------- schreibe content
-        if ($this->eval === FALSE) echo $this->replaceLinks($this->content);
+        if ($this->eval === FALSE) echo $this->content;
         else eval("?>".$this->content);
 
       }else
@@ -962,33 +958,4 @@ class rex_article
     return str_replace($search, $replace,$content);
   }
 
-  function replaceLinks($content)
-  {
-    // Hier beachten, dass man auch ein Zeichen nach dem jeweiligen Link mitmatched,
-    // damit beim ersetzen von z.b. redaxo://11 nicht auch innerhalb von redaxo://112
-    // ersetzt wird
-    // siehe dazu: http://forum.redaxo.de/ftopic7563.html
-
-    // -- preg match redaxo://[ARTICLEID]-[CLANG] --
-    preg_match_all('@redaxo://([0-9]*)\-([0-9]*)(.){1}/?@im',$content,$matches,PREG_SET_ORDER);
-    foreach($matches as $match)
-    {
-      if(empty($match)) continue;
-
-      $url = OOArticle::getArticleById($match[1], $match[2])->getUrl();
-      $content = str_replace($match[0],$url.$match[3],$content);
-    }
-
-    // -- preg match redaxo://[ARTICLEID] --
-    preg_match_all('@redaxo://([0-9]*)(.){1}/?@im',$content,$matches,PREG_SET_ORDER);
-    foreach($matches as $match)
-    {
-      if(empty($match)) continue;
-
-      $url = OOArticle::getArticleById($match[1])->getUrl();
-      $content = str_replace($match[0],$url.$match[2],$content);
-    }
-
-    return $content;
-  }
 }

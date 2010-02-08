@@ -35,7 +35,7 @@ class rex_var_globals extends rex_var
     }
 
     // Variablen hier einfuegen, damit sie in einer
-    // Aktion abgefragt werden können
+    // Aktion abgefragt werden kï¿½nnen
     $REX_ACTION['ARTICLE_ID'] = rex_request('article_id', 'int');
     $REX_ACTION['CLANG_ID'] = rex_request('clang', 'int');
     $REX_ACTION['CTYPE_ID'] = rex_request('ctype', 'int');
@@ -47,7 +47,7 @@ class rex_var_globals extends rex_var
   function getACDatabaseValues($REX_ACTION, & $sql)
   {
     // Variablen hier einfuegen, damit sie in einer
-    // Aktion abgefragt werden können
+    // Aktion abgefragt werden kï¿½nnen
     $REX_ACTION['ARTICLE_ID'] = $this->getValue($sql, 'article_id');
     $REX_ACTION['CLANG_ID'] = $this->getValue($sql, 'clang');
     $REX_ACTION['CTYPE_ID'] = $this->getValue($sql, 'ctype');
@@ -68,7 +68,7 @@ class rex_var_globals extends rex_var
 
   function getBEOutput(& $sql, $content)
   {
-    // Modulabhängige Globale Variablen ersetzen
+    // ModulabhÃ¤ngige Globale Variablen ersetzen
     $content = str_replace('REX_MODULE_ID', $this->getValue($sql, 'modultyp_id'), $content);
     $content = str_replace('REX_SLICE_ID', $this->getValue($sql, 'id'), $content);
     $content = str_replace('REX_CTYPE_ID', $this->getValue($sql, 'ctype'), $content);

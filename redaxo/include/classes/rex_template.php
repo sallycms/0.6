@@ -80,9 +80,6 @@ class rex_template
 		global $REX;
 		if ($this->getId() < 1) return false;
 
-		//include_once ($REX['INCLUDE_PATH'].'/functions/function_rex_generate.inc.php');
-		//return rex_generateTemplate($this->getId());
-
 		$sql = rex_sql::getInstance();
 		$qry = 'SELECT * FROM '. $REX['TABLE_PREFIX']  .'template WHERE id = '.$this->getId();
 		$sql->setQuery($qry);

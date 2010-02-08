@@ -3,7 +3,7 @@
 
 /**
  *
- * The OOArticleSlice class is an object wrapper over the database table rex_articel_slice.
+ * The OOArticleSlice class is an object wrapper over the database table rex_article_slice.
  * Together with OOArticle and OOCategory it provides an object oriented
  * Framework for accessing vital parts of your website.
  * This framework can be used in Modules, Templates and PHP-Slices!
@@ -82,7 +82,7 @@ class OOArticleSlice
 		if ($clang === false)
 		$clang = $REX['CUR_CLANG'];
 
-		return OOArticleSlice::_getSliceWhere('id='. $an_id .' AND clang='. $clang.' and revision='.$revision);
+		return self::_getSliceWhere('id='. $an_id .' AND clang='. $clang.' and revision='.$revision);
 	}
 
 	/*
@@ -100,7 +100,7 @@ class OOArticleSlice
 		if ($clang === false)
 		$clang = $REX['CUR_CLANG'];
 
-		return OOArticleSlice::_getSliceWhere('a.article_id='. $an_article_id .' AND
+		return self::_getSliceWhere('a.article_id='. $an_article_id .' AND
                                           a.clang='. $clang .' AND
                                           (
                                            (a.re_article_slice_id=0 AND a.ctype=1 AND a.id = b.id)
@@ -125,7 +125,7 @@ class OOArticleSlice
 		if ($clang === false)
 		$clang = $REX['CUR_CLANG'];
 
-		return OOArticleSlice::_getSliceWhere('a.article_id='. $an_article_id .' AND
+		return self::_getSliceWhere('a.article_id='. $an_article_id .' AND
                                           a.clang='. $clang .' AND
                                           a.ctype='. $ctype .' AND
                                           (
@@ -153,7 +153,7 @@ class OOArticleSlice
 		if ($clang === false)
 		$clang = $REX['CUR_CLANG'];
 
-		return OOArticleSlice::_getSliceWhere('article_id='. $an_article_id .' AND clang='. $clang .' AND modultyp_id='. $a_moduletype_id .' AND revision='.$revision, array());
+		return self::_getSliceWhere('article_id='. $an_article_id .' AND clang='. $clang .' AND modultyp_id='. $a_moduletype_id .' AND revision='.$revision, array());
 	}
 
 	/*
@@ -163,7 +163,7 @@ class OOArticleSlice
 	 */
 	public function getNextSlice()
 	{
-		return OOArticleSlice::_getSliceWhere('re_article_slice_id = '. $this->_id .' AND clang = '. $this->_clang.' AND revision='.$this->_revision);
+		return self::_getSliceWhere('re_article_slice_id = '. $this->_id .' AND clang = '. $this->_clang.' AND revision='.$this->_revision);
 	}
 
 	/*
@@ -171,7 +171,7 @@ class OOArticleSlice
 	 */
 	public function getPreviousSlice()
 	{
-		return OOArticleSlice::_getSliceWhere('id = '. $this->_re_article_slice_id .' AND clang = '. $this->_clang.' AND revision='.$this->_revision);
+		return self::_getSliceWhere('id = '. $this->_re_article_slice_id .' AND clang = '. $this->_clang.' AND revision='.$this->_revision);
 	}
 
 	/**
@@ -180,28 +180,29 @@ class OOArticleSlice
 	 */
 	public function getSlice()
 	{
-		// TODO:: ------------------- .' AND revision='.$this->revision
 		$art = new rex_article();
 		$art->setArticleId($this->getArticleId());
 		$art->setClang($this->getClang());
 		$art->getSlice = $this->getId();
-		return $art->replaceLinks( $art->getArticle() );
+		$art->setSliceRevision($this->_revision);
+		return self::replaceLinks( $art->getArticle() );
 	}
-	
+
 	public function getContent(){
 		global $REX, $I18N;
 		$slice_content_file = $REX['INCLUDE_PATH'].'/generated/articles/'.$this->getId().'.content';
 		if(!file_exists($slice_content_file)){
 			$slice_content = $this->getSlice();
+			$slice_content = self::replaceLinks($slice_content);
 			if (rex_put_file_contents($slice_content_file, $slice_content) === FALSE)
-    		{
-      			return $I18N->msg('slice_could_not_be_generated')." ".$I18N->msg('check_rights_in_directory').$REX['INCLUDE_PATH']."/generated/articles/";
-    		}
+			{
+				return $I18N->msg('slice_could_not_be_generated')." ".$I18N->msg('check_rights_in_directory').$REX['INCLUDE_PATH']."/generated/articles/";
+			}
 		}
 		if(file_exists($slice_content_file))
-        {
-          include $slice_content_file;
-        }
+		{
+			include $slice_content_file;
+		}
 	}
 
 	public static function _getSliceWhere($where, $table = null, $fields = null, $default = null)
@@ -250,7 +251,7 @@ class OOArticleSlice
 
 	public function getArticle()
 	{
-		return OOArticle :: getArticleById($this->getArticleId());
+		return OOArticle::getArticleById($this->getArticleId());
 	}
 
 	public function getArticleId()
@@ -336,4 +337,33 @@ class OOArticleSlice
 		return $this->_php;
 	}
 
+	private static function replaceLinks($content)
+	{
+		// Hier beachten, dass man auch ein Zeichen nach dem jeweiligen Link mitmatched,
+		// damit beim ersetzen von z.b. redaxo://11 nicht auch innerhalb von redaxo://112
+		// ersetzt wird
+		// siehe dazu: http://forum.redaxo.de/ftopic7563.html
+
+		// -- preg match redaxo://[ARTICLEID]-[CLANG] --
+		preg_match_all('@redaxo://([0-9]*)\-([0-9]*)(.){1}/?@im',$content,$matches,PREG_SET_ORDER);
+		foreach($matches as $match)
+		{
+			if(empty($match)) continue;
+
+			$url = OOArticle::getArticleById($match[1], $match[2])->getUrl();
+			$content = str_replace($match[0],$url.$match[3],$content);
+		}
+
+		// -- preg match redaxo://[ARTICLEID] --
+		preg_match_all('@redaxo://([0-9]*)(.){1}/?@im',$content,$matches,PREG_SET_ORDER);
+		foreach($matches as $match)
+		{
+			if(empty($match)) continue;
+
+			$url = OOArticle::getArticleById($match[1])->getUrl();
+			$content = str_replace($match[0],$url.$match[2],$content);
+		}
+
+		return $content;
+	}
 }
