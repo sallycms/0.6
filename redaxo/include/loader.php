@@ -16,7 +16,6 @@ function __autoload($className) {
 	global $REX;
 	
 	static $classes = array(
-		'i18n'                              => 'i18n',
 		'OOAddon'                           => 'ooaddon',
 		'OOArticle'                         => 'ooarticle',
 		'OOCategory'                        => 'oocategory',
