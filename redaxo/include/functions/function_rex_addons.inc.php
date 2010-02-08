@@ -6,34 +6,36 @@
  * @version svn:$Id$
  */
 
-
-function rex_addons_folder($addon = null) {
-	
+function rex_addons_folder($addon = null)
+{
 	global $REX;
-	
-	if(!is_null($addon))
+
+	if (!is_null($addon)) {
 		return $REX['INCLUDE_PATH'].'/addons/'.$addon.'/';
-	
+	}
+
 	return $REX['INCLUDE_PATH'].'/addons/';
 }
 
-function rex_read_addons_folder($folder = null) {
-	
-	if ($folder === null) $folder = rex_addons_folder();
-	
-	$addons = array ();
-	$hdl = opendir($folder);
-	while (($file = readdir($hdl)) !== false) {
-		if ($file != '.' && $file != '..' && subStr($file, 0, 1) != '.'
-			&& subStr($file, 0, 1) != '_' && is_dir($folder.$file.'/.')) {
-			
-			$addons[] = $file;
-		}
+function rex_read_addons_folder($folder = null)
+{
+	if ($folder === null) {
+		$folder = rex_addons_folder();
 	}
-	closedir($hdl);
 	
-	// Sortiere Array
-	natsort($addons);
+	$addons = array();
+	$handle = opendir($folder);
+	
+	if ($handle) {
+		while ($file = readdir($handle)) {
+			if ($file[0] != '.' && $file[0] != '_' && is_dir($folder.$file)) {
+				$addons[] = $file;
+			}
+		}
+		
+		closedir($handle);
+		natsort($addons);
+	}
 	
 	return $addons;
 }
@@ -43,34 +45,39 @@ function rex_read_addons_folder($folder = null) {
 /**
 * Importiert die gegebene SQL-Datei in die Datenbank
 *
-* @return true bei Erfolg, sonst eine Fehlermeldung
+* @return boolean  true bei Erfolg, sonst eine Fehlermeldung
 */
-function rex_install_dump($file, $debug = false) {
-	$sql = rex_sql::getInstance();
-	$sql->debugsql = $debug;
+function rex_install_dump($file, $debug = false)
+{
 	$error = '';
-	
+	$sql   = rex_sql::getInstance();
+	$sql->debugsql = $debug;
+
 	foreach (rex_read_sql_dump($file) as $query) {
 		$sql->setQuery(rex_install_prepare_query($query));
-	
-		if (($sqlerr = $sql->getError()) != '')
-			$error .= $sqlerr."\n<br />";
+		$sqlerr = $sql->getError();
+
+		if (!empty($sqlerr)) {
+			$error .= $sqlerr."<br />\n";
+		}
 	}
-	
+
 	return $error == '' ? true : $error;
 }
 
-function rex_install_prepare_query($qry) {
+function rex_install_prepare_query($qry)
+{
 	global $REX;
-	
-	// $REX['USER'] gibts im Setup nicht
-	if(isset($REX['USER']))
+
+	// $REX['USER'] gibts im Setup nicht.
+	if (isset($REX['USER'])) {
 		$qry = str_replace('%USER%', $REX['USER']->getValue('login'), $qry);
-	
+	}
+
 	$qry = str_replace('%TIME%', time(), $qry);
 	$qry = str_replace('%TABLE_PREFIX%', $REX['TABLE_PREFIX'], $qry);
 	$qry = str_replace('%TEMP_PREFIX%', $REX['TEMP_PREFIX'], $qry);
-	
+
 	return $qry;
 }
 
@@ -202,25 +209,27 @@ function PMA_splitSqlFile(& $ret, $sql, $release) {
 /**
 * Reads a file and split all statements in it.
 *
-* @param $file String Path to the SQL-dump-file
+* @param string $file  Path to the SQL-dump-file
 */
-function rex_read_sql_dump($file) {
+function rex_read_sql_dump($file)
+{
+	if (!is_file($file) || !is_readable($file)) {
+		return false;
+	}
+
+	$ret         = array();
+	$sqlsplit    = '';
+	$fileContent = file_get_contents($file);
 	
-	if (is_file($file) && is_readable($file)) {
-		$ret = array();
-		$sqlsplit = '';
-		$fileContent = file_get_contents($file);
-		PMA_splitSqlFile($sqlsplit, $fileContent, '');
-		
-		if (is_array($sqlsplit)) {
-			foreach ($sqlsplit as $qry) {
-				$ret[] = $qry['query'];
-			}
+	PMA_splitSqlFile($sqlsplit, $fileContent, '');
+
+	if (is_array($sqlsplit)) {
+		foreach ($sqlsplit as $qry) {
+			$ret[] = $qry['query'];
 		}
-		return $ret;
 	}
 	
-	return false;
+	return $ret;
 }
 
 /**
@@ -230,19 +239,26 @@ function rex_read_sql_dump($file) {
 * Gibt bei erfolgreicher Suche den Namen des Addons zurück, indem die page
 * gefunden wurde, sonst false
 */
-function rex_search_addon_page($needle, $haystack = null) {
-
+function rex_search_addon_page($needle, $haystack = null)
+{
 	global $REX;
-	
-	if ($haystack === null) $haystack = $REX['ADDON']['page'];
-	
-	foreach ($haystack as $key => $value) {
-		if (is_array($value))
-			$found = rex_search_addon_page($needle, $value);
-		else $found = $needle == $value;
-		
-		if ($found !== false) return $key;
+
+	if ($haystack === null) {
+		$haystack = $REX['ADDON']['page'];
 	}
-	
+
+	foreach ($haystack as $key => $value) {
+		if (is_array($value)) {
+			$found = rex_search_addon_page($needle, $value);
+		}
+		else {
+			$found = $needle == $value;
+		}
+
+		if ($found !== false) {
+			return $key;
+		}
+	}
+
 	return false;
 }
