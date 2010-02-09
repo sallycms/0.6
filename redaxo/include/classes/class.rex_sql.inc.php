@@ -204,10 +204,15 @@ class rex_sql
 	 * @param  string $query  die auszuführende Abfrage
 	 * @return array          ein Array mit den Werten
 	 */
-	public static function getArrayEx($query)
+	public static function getArrayEx($query, $tablePrefix = '')
 	{
 		// Verbindung herstellen
 		self::getInstance(1);
+		
+		if (!empty($tablePrefix)) {
+			global $REX;
+			$query = str_replace($tablePrefix, $REX['TABLE_PREFIX'], $query);
+		}
 		
 		$result = mysql_query($query);
 
@@ -267,13 +272,18 @@ class rex_sql
 	 * @return boolean True wenn die Abfrage erfolgreich war (keine DB-Errors
 	 * auftreten), sonst false
 	 */
-	public function setQuery($qry)
+	public function setQuery($qry, $tablePrefix = '')
 	{
 		// Alle Werte zurücksetzen
 		$this->flush();
 		
 		// Verbindung herstellen
 		$this->selectDB($this->DBID);
+		
+		if (!empty($tablePrefix)) {
+			global $REX;
+			$qry = str_replace($tablePrefix, $REX['TABLE_PREFIX'], $qry);
+		}
 
 		$qry = trim($qry);
 		$this->query = $qry;
@@ -326,8 +336,13 @@ class rex_sql
 	 *
 	 * @param $table Tabellenname
 	 */
-	public function setTable($table)
+	public function setTable($table, $prependWithPrefix = false)
 	{
+		if ($prependWithPrefix) {
+			global $REX;
+			$table = $REX['TABLE_PREFIX'].$table;
+		}
+		
 		$this->table = $table;
 	}
 
