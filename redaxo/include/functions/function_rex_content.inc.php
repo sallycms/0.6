@@ -435,9 +435,7 @@ function rex_copyMeta($from_id, $to_id, $from_clang = 0, $to_clang = 0, $params 
 
 		$update->update();
 
-		// TODO: Hier müsste doch eigentlich $to_id gelöscht werden?
-		// Core::cache()->delete('article', $to_id.'_'.$to_clang);
-		Core::cache()->delete('article', $from_id.'_'.$from_clang);
+		Core::cache()->delete('article', $to_id.'_'.$to_clang);
 		return true;
 	}
 	

@@ -8,7 +8,7 @@
 /**
  * Klasse zur Formatierung von Strings
  */
-class rex_formatter
+abstract class rex_formatter
 {
 	/**
 	 * Formatiert den String <code>$value</code>

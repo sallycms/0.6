@@ -81,8 +81,16 @@ class OOArticleSlice
 
 		if ($clang === false)
 		$clang = $REX['CUR_CLANG'];
-
-		return self::_getSliceWhere('id='. $an_id .' AND clang='. $clang.' and revision='.$revision);
+		
+		$namespace = 'slice';
+		$key = $an_id;
+		
+		$obj = Core::cache()->get($namespace, $key, null);
+		if($obj === null){
+			$obj = self::_getSliceWhere('id='. $an_id .' AND clang='. $clang.' and revision='.$revision);
+			Core::cache()->set($namespace, $key, $obj);
+		}
+		return $obj;
 	}
 
 	/*

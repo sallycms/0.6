@@ -291,7 +291,7 @@ class OOMediaCategory
 				foreach ($result as $row)
 				{
 					$id = $row['id'];
-					$this->_children[] = & OOMediaCategory::getCategoryById($id);
+					$this->_children[] = OOMediaCategory::getCategoryById($id);
 				}
 			}
 		}
