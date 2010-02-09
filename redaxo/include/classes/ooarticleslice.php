@@ -77,10 +77,10 @@ class OOArticleSlice
 	 */
 	public static function getArticleSliceById($an_id, $clang = false, $revision = 0)
 	{
-		global $REX;
-
 		if ($clang === false)
-		$clang = $REX['CUR_CLANG'];
+		{
+			$clang = Core::getCurrentClang();
+		}
 		
 		$namespace = 'slice';
 		$key = $an_id;

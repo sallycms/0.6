@@ -136,6 +136,11 @@ $REX['EXTPERM'][] = 'accesskeys[]';
 $REX['EXTRAPERM'] = array();
 $REX['EXTRAPERM'][] = 'editContentOnly[]';
 
+// ----------------- default values
+if (!isset($REX['NOFUNCTIONS'])) $REX['NOFUNCTIONS'] = false;
+// ----------------- INCLUDE LOADER (Autoloading, etc.)
+if(!$REX['NOFUNCTIONS']) include_once ($REX['INCLUDE_PATH'].'/loader.php');
+
 if(!isset($REX['SYNC'])) $REX['SYNC'] = false;
 
 if(!$REX['SYNC']){
@@ -148,12 +153,6 @@ if(!$REX['SYNC']){
 	Core::registerVarType('rex_var_link');
 	Core::registerVarType('rex_var_media');
 }
-
-// ----------------- default values
-if (!isset($REX['NOFUNCTIONS'])) $REX['NOFUNCTIONS'] = false;
-
-// ----------------- INCLUDE LOADER (Autoloading, etc.)
-if(!$REX['NOFUNCTIONS']) include_once ($REX['INCLUDE_PATH'].'/loader.php');
 
 // ----- SET CLANG
 include_once $REX['INCLUDE_PATH'].'/clang.inc.php';
