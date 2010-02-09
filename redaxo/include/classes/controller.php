@@ -18,7 +18,7 @@ abstract class Controller {
 
     protected $action;
    
-    public function __construct() {
+    protected function __construct() {
         $this->action = rex_request(self::ACTIONPARAM, 'string', 'index');
     }
 
@@ -50,9 +50,9 @@ abstract class Controller {
         return $this->$method();
     }
 
-    public abstract function index();
+    protected abstract function index();
 
-    public function render($filename, $params) {
+    protected function render($filename, $params) {
         global $REX, $I18N;
 
         // Die Parameternamen $params und $filename sind zu kurz, als dass

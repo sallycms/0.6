@@ -34,6 +34,8 @@ class OOMediaCategory
 	// files (media)
 	private $_files = "";
 
+	private $_revision = 0;
+	
 	/**
 	 * @access protected
 	 */
@@ -64,7 +66,7 @@ class OOMediaCategory
 
 		$query = 'SELECT * FROM ' . OOMediaCategory :: _getTableName() . ' WHERE id = ' . $id;
 
-		$sql = new rex_sql();
+		$sql = rex_sql::getInstance();
 		//        $sql->debugsql = true;
 		$result = $sql->getArray($query);
 
@@ -102,7 +104,7 @@ class OOMediaCategory
 	public static function getRootCategories()
 	{
 		$qry = 'SELECT id FROM ' . OOMediaCategory :: _getTableName() . ' WHERE re_id = 0 order by name';
-		$sql = new rex_sql();
+		$sql = rex_sql::getInstance();
 		$sql->setQuery($qry);
 		$result = $sql->getArray();
 
@@ -124,7 +126,7 @@ class OOMediaCategory
 	public static function getCategoryByName($name)
 	{
 		$query = 'SELECT id FROM ' . OOMediaCategory :: _getTableName() . ' WHERE name = "' . $name . '"';
-		$sql = new rex_sql();
+		$sql = rex_sql::getInstance();
 		//$sql->debugsql = true;
 		$result = $sql->getArray($query);
 
@@ -167,6 +169,10 @@ class OOMediaCategory
 	public function getName()
 	{
 		return $this->_name;
+	}
+	
+	public function setName($name){
+		$this->_name = $name;
 	}
 
 	/**
@@ -277,7 +283,7 @@ class OOMediaCategory
 		{
 			$this->_children = array ();
 			$qry = 'SELECT id FROM ' . OOMediaCategory :: _getTableName() . ' WHERE re_id = ' . $this->getId() . ' ORDER BY name ';
-			$sql = new rex_sql();
+			$sql = rex_sql::getInstance();
 			$sql->setQuery($qry);
 			$result = $sql->getArray();
 			if (is_array($result))
@@ -285,7 +291,7 @@ class OOMediaCategory
 				foreach ($result as $row)
 				{
 					$id = $row['id'];
-					$this->_children[] = & OOMediaCategory :: getCategoryById($id);
+					$this->_children[] = & OOMediaCategory::getCategoryById($id);
 				}
 			}
 		}
@@ -310,7 +316,7 @@ class OOMediaCategory
 		{
 			$this->_files = array ();
 			$qry = 'SELECT file_id FROM ' . OOMedia :: _getTableName() . ' WHERE category_id = ' . $this->getId();
-			$sql = new rex_sql();
+			$sql = rex_sql::getInstance();
 			$sql->setQuery($qry);
 			$result = $sql->getArray();
 			if (is_array($result))
@@ -403,12 +409,13 @@ class OOMediaCategory
 	 */
 	public function save()
 	{
-		$sql = new rex_sql();
+		$sql = rex_sql::getInstance();
 		$sql->setTable($this->_getTableName());
 		$sql->setValue('re_id', $this->getParentId());
 		$sql->setValue('name', $this->getName());
 		$sql->setValue('path', $this->getPath());
 		$sql->setValue('hide', $this->isHidden());
+		$sql->setValue('revision', $this->_revision);
 
 		if ($this->getId() !== null)
 		{
@@ -429,7 +436,7 @@ class OOMediaCategory
 	 */
 	public function delete($recurse = false)
 	{
-		// Rekursiv l�schen?
+		// Rekursiv löschen?
 		if(!$recurse && $this->hasChildren())
 		{
 			return false;
@@ -444,7 +451,7 @@ class OOMediaCategory
 			}
 		}
 
-		// Alle Dateien l�schen
+		// Alle Dateien löschen
 		if ($this->hasMedia())
 		{
 			$files = $this->getMedia();
@@ -455,36 +462,9 @@ class OOMediaCategory
 		}
 
 		$qry = 'DELETE FROM ' . $this->_getTableName() . ' WHERE id = ' . $this->getId() . ' LIMIT 1';
-		$sql = new rex_sql();
+		$sql = rex_sql::getInstance();
 		// $sql->debugsql = true;
 		$sql->setQuery($qry);
 		return !$sql->hasError() || $sql->getRows() != 1;
-	}
-
-	/**
-	 * @access public
-	 * @deprecated 4.2 - 17.05.2008
-	 */
-	public function countFiles()
-	{
-		return $this->countMedia();
-	}
-
-	/**
-	 * @access public
-	 * @deprecated 4.2 - 17.05.2008
-	 */
-	public function hasFiles()
-	{
-		return $this->hasMedia();
-	}
-
-	/**
-	 * @access public
-	 * @deprecated 4.2 - 17.05.2008
-	 */
-	public function getFiles()
-	{
-		return $this->getMedia();
 	}
 }

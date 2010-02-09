@@ -75,19 +75,12 @@ if ($PERMALL)
   }else
   {
     $OOCats = $OOCat->getChildren();
-    // TODO getParentTree() verwenden
-    $paths = explode("|",$OOCat->getPath());
 
-    for ($i=1;$i<count($paths);$i++)
-    {
-      $iid = current($paths);
-      if ($iid != "")
-      {
-        $icat = OOMediaCategory::getCategoryById($iid);
-        $textpath .= '<li> : <a href="'.$link.$iid.'">'.$icat->getName().'</a></li>';
-      }
-      next($paths);
+    $parents = $OOCat->getParentTree();
+    foreach($parents as $parent){
+    	$textpath .= '<li> : <a href="'.$link.$parent->getId().'">'.$parent->getName().'</a></li>';
     }
+    
     $textpath .= '<li> : <a href="'.$link.$cat_id.'">'.$OOCat->getName().'</a></li>';
     $catpath = $OOCat->getPath()."$cat_id|";
   }
@@ -163,10 +156,9 @@ if ($PERMALL)
     ';
   }
 
-  foreach( $OOCats as $OOCat) {
+  foreach($OOCats as $OOCat) {
 
     $iid = $OOCat->getId();
-    $iname = $OOCat->getName();
 
     if ($media_method == 'update_file_cat' && $edit_id == $iid)
     {
@@ -177,7 +169,7 @@ if ($PERMALL)
           <td class="rex-small">'. $iid .'</td>
           <td>
             <label class="rex-form-hidden-label" for="rex-form-field-name">'. $I18N->msg('pool_kat_name') .'</label>
-            <input class="rex-form-text" type="text" id="rex-form-field-name" name="cat_name" value="'. htmlspecialchars($iname) .'" />
+            <input class="rex-form-text" type="text" id="rex-form-field-name" name="cat_name" value="'. htmlspecialchars($OOCat->getName()) .'" />
           </td>
           <td colspan="2">
             <input type="submit" class="rex-form-submit" value="'. $I18N->msg('pool_kat_update'). '"'. rex_accesskey($I18N->msg('pool_kat_update'), $REX['ACKEY']['SAVE']) .' />

@@ -16,7 +16,7 @@ class SQLConnection{
 
 	private $connection;
 	
-	private static $instances;
+	private static $instances = array();
 		
 	private function __construct($DBID){
 		
@@ -30,7 +30,7 @@ class SQLConnection{
 		if (!mysql_select_db($REX['DB'][$DBID]['NAME'], $this->connection)) {
 			exit('<span style="color:red;font-family:verdana,arial;font-size:11px;">Es konnte keine Verbindung zur Datenbank hergestellt werden. | Bitte kontaktieren Sie <a href=mailto:'.$REX['ERROR_EMAIL'].'>'.$REX['ERROR_EMAIL'].'</a>. | Danke!</span>');
 		}
-
+				
 		error_reporting($level);
 		
 		if (empty($REX['REX_SQL_INIT_'.$DBID])) {
@@ -49,8 +49,8 @@ class SQLConnection{
 	}
 	
 	public static function factory($DBID = 1){
-		if(!isset($instances[$DBID])) $instances[$DBID] = new self($DBID);
-		return $instances[$DBID];
+		if(!isset(self::$instances[$DBID])) self::$instances[$DBID] = new self($DBID);
+		return self::$instances[$DBID];
 	}
 	
 	public  function getConnection(){
