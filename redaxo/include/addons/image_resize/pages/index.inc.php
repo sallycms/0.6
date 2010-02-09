@@ -20,7 +20,7 @@ require $REX['INCLUDE_PATH'] . '/layout/top.php';
 
 if ($subpage == 'clear_cache')
 {
-  $c = rex_thumbnail::deleteCache();
+  $c = Thumbnail::deleteCache();
   $msg = $I18N->msg('iresize_cache_files_removed', $c);
 }
 

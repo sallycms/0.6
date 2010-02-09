@@ -26,9 +26,9 @@ $REX['ADDON']['rxid'][$mypage] = '469';
 $REX['ADDON']['page'][$mypage] = $mypage;
 $REX['ADDON']['name'][$mypage] = 'Image Resize';
 $REX['ADDON']['perm'][$mypage] = 'image_resize[]';
-$REX['ADDON']['version'][$mypage] = '1.2';
-$REX['ADDON']['author'][$mypage] = 'Wolfgang Hutteger, Markus Staab, Jan Kristinus';
-$REX['ADDON']['supportpage'][$mypage] = 'forum.redaxo.de';
+$REX['ADDON']['version'][$mypage] = '1.3';
+$REX['ADDON']['author'][$mypage] = 'Wolfgang Hutteger, Markus Staab, Jan Kristinus, Christian Zozmann';
+$REX['ADDON']['supportpage'][$mypage] = 'forum.redaxo.de, www.webvariants.de';
 $REX['PERM'][] = 'image_resize[]';
 
 /* User Parameter */
@@ -52,7 +52,7 @@ rex_register_extension('OUTPUT_FILTER', 'rex_resize_wysiwyg_output');
 $rex_resize = rex_get('rex_resize', 'string');
 if ($rex_resize != '')
 {
-	rex_thumbnail::createFromUrl($rex_resize);
+	Thumbnail::getResizedImage(urldecode($rex_resize));
 }
 
 if($REX['REDAXO'])
@@ -62,7 +62,7 @@ if($REX['REDAXO'])
 	{
 		rex_register_extension('MEDIA_UPDATED', 'rex_image_ep_mediaupdated');
 		function rex_image_ep_mediaupdated($params){
-			rex_thumbnail::deleteCache($params["filename"]);
+			Thumbnail::deleteCache($params["filename"]);
 		}
 	}
 	$I18N->appendFile($REX['INCLUDE_PATH'].'/addons/'.$mypage.'/lang/');

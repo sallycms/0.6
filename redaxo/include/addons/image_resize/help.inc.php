@@ -6,6 +6,7 @@
  * @author <a href="http://www.vscope.at">www.vscope.at</a>
  *
  * @author markus[dot]staab[at]redaxo[dot]de Markus Staab
+ * @author zozi@webvariants.de
  * 
  *
  * @package redaxo4
