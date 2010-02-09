@@ -487,6 +487,56 @@ function rex_lang_is_utf8()
   return strpos($REX['LANG'], 'utf8') !== false;
 }
 
+function rex_is_multilingual()
+{
+	return !rex_is_monolingual();
+}
+
+function rex_is_monolingual()
+{
+	global $REX;
+	return count($REX['CLANG']) == 1;
+}
+
+function rex_is_backend()
+{
+	global $REX;
+	return $REX['REDAXO'] ? true : false;
+}
+
+function rex_is_frontend()
+{
+	return !rex_is_backend();
+}
+
+function rex_cur_clang()
+{
+	global $REX;
+	return (int) $REX['CUR_CLANG'];
+}
+
+function rex_get_clang($clang = false, $default = -1)
+{
+	global $REX;
+	
+	if ($clang === false) {
+		$clang = $default;
+	}
+	
+	if (!isset($REX['CLANG'][$clang])) {
+		$clang = $REX['CUR_CLANG'];
+	}
+	
+	return (int) $clang;
+}
+
+function rex_is_int($value)
+{
+	if (is_int($value)) return true;
+	if (is_string($value) && strval(intval($value)) === $value) return true;
+	return false;
+}
+
 // ------------------------------------- Allgemeine PHP Functions
 
 /* PHP5 Functions */

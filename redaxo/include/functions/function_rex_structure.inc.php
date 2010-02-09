@@ -7,673 +7,869 @@
  * @version svn:$Id$
  */
 
+
+
 /**
  * Erstellt eine neue Kategorie
  * 
- * @param int   $category_id KategorieId in der die neue Kategorie erstellt werden soll
- * @param array $data        Array mit den Daten der Kategorie
- * 
- * @return array Ein Array welches den status sowie eine Fehlermeldung beinhaltet
+ * @param  int   $parentID KategorieId in der die neue Kategorie erstellt werden soll
+ * @param  array $data     Array mit den Daten der Kategorie (muss enthalten: catname, status)
+ * @return array           Ein Array welches den status sowie eine Fehlermeldung beinhaltet
  */
-function rex_addCategory($category_id, $data)
+function rex_addCategory($parentID, $data)
 {
-  global $REX, $I18N;
+	global $REX, $I18N;
 
-  $success = false;
-  $message = '';
+	$message  = $I18N->msg('category_added_and_startarticle_created');
+	$sql      = new rex_sql();
+	$parentID = (int) $parentID;
 
-  if(!is_array($data))
-    trigger_error('Expecting $data to be an array!', E_USER_ERROR);
+	if (!is_array($data)) {
+		trigger_error('Expecting $data to be an array!', E_USER_ERROR);
+	}
 
-  $startpageTemplates = array();
-  if (empty($category_id))
-  {
-    // TemplateId vom Startartikel der jeweiligen Sprache vererben
-    $sql = new rex_sql;
-    // $sql->debugsql = 1;
-    $sql->setQuery("select clang,template_id from ".$REX['TABLE_PREFIX']."article where id=$category_id and startpage=1");
-    for ($i = 0; $i < $sql->getRows(); $i++, $sql->next())
-    {
-      $startpageTemplates[$sql->getValue("clang")] = $sql->getValue("template_id");
-    }
-  }
+	$startpageTemplates = array();
+	
+	if (!empty($parentID)) {
+		// TemplateId vom Startartikel der jeweiligen Sprache vererben
+		$startpageTemplates = rex_sql::getArrayEx(
+			'SELECT clang, template_id FROM #_article '.
+			'WHERE id = '.$parentID.' AND startpage = 1', '#_'
+		);
+	}
 
-  if(isset($data['catprior']))
-  {
-    if($data['catprior'] <= 0)
-      $data['catprior'] = 1;
-  }
+	if (isset($data['catprior']) && $data['catprior'] <= 0) {
+		$data['catprior'] = 1;
+	}
+	else {
+		$maxPrior         = rex_sql::fetch('MAX(catprior)', 'article', 're_id = '.$parentID.' AND catprior <> 0 AND clang = 0') + 1;
+		$data['catprior'] = $data['catprior'] > $maxPrior ? $maxPrior : $data['catprior'];
+	}
 
-  if(!isset($data['name']))
-  {
-    $data['name'] = $data['catname'];
-  }
+	if (!isset($data['name'])) {
+		$data['name'] = $data['catname'];
+	}
 
-  if(!isset($data['status']))
-  {
-    $data['status'] = 0;
-  }
+	if (!isset($data['status'])) {
+		$data['status'] = false;
+	}
+	
+	if (!isset($data['path'])) {
+		if ($parentID != 0) {
+			$data['path']  = rex_sql::fetch('path', 'article', 'id = '.$parentID.' AND startpage = 1 AND clang = 0');
+			$data['path'] .= $parent.'|';
+		}
+		else {
+			$data['path'] = '|';
+		}
+	}
+	
+	// Wir müssen uns die Kategoriedaten nur merken, wenn es eine Erweiterung
+	// gibt, die sie nutzen möchte.
+	// AddOns, die stattdessen CAT_ADDED_NEW verwenden, erhalten den gleichen EP,
+	// nur ohne das rex_sql-Objekt. Das spart Speicher, wenn er gar nicht
+	// benötigt wird.
+	
+	$hasOldExtensions = rex_extension_is_registered('CAT_ADDED');
+	$hasNewExtensions = rex_extension_is_registered('CAT_ADDED_NEW');
+	
+	// Die ID ist für alle Sprachen gleich und entspricht einfach der aktuell
+	// höchsten plus 1.
+	
+	$newID = rex_sql::fetch('MAX(id)', 'article', 'clang = 0') + 1;
+	
+	// Bevor wir die neuen Datensätze einfügen, machen wir in den sortierten
+	// Listen (je eine pro Sprache) Platz, indem wir alle Kategorien, deren
+	// Priorität größergleich der Priorität der neuen Kategorie ist, um eine
+	// Position nach unten schieben.
+	
+	$sql->setQuery(
+		'UPDATE #_article SET catprior = catprior + 1 '.
+		'WHERE re_id = '.$parentID.' AND catprior <> 0 AND catprior >= '.$data['catprior'].' '.
+		'ORDER BY catprior ASC', '#_'
+	);
 
-  // Kategorie in allen Sprachen anlegen
-  $AART = new rex_sql;
-  foreach($REX['CLANG'] as $key => $val)
-  {
-    $template_id = $REX['DEFAULT_TEMPLATE_ID'];
-    if(isset ($startpageTemplates[$key]) && $startpageTemplates[$key] != '')
-      $template_id = $startpageTemplates[$key];
+	// Kategorie in allen Sprachen anlegen
+	
+	$records     = array();
+	$sqlTemplate = '(%d,%d,"%s","%s",%d,"%s",%d,%d,"%s",%d,%d,%d,%d,%d,"%s","%s",%d)';
+	$createTime  = time();
+	
+	foreach (array_keys($REX['CLANG']) as $clangID) {
+		$templateID = $REX['DEFAULT_TEMPLATE_ID'];
+		
+		if (!empty($startpageTemplates[$clangID])) {
+			$templateID = $startpageTemplates[$clangID];
+		}
+		
+		$records[] = sprintf($sqlTemplate,
+			/*          id */ (int) $newID,
+			/*       re_id */ (int) $parentID,
+			/*        name */ $sql->escape($data['name']),
+			/*     catname */ $sql->escape($data['catname']),
+			/*    catprior */ (int) $data['catprior'],
+			/*  attributes */ '',
+			/*   startpage */ 1,
+			/*       prior */ 1,
+			/*        path */ $sql->escape($data['path']),
+			/*      status */ $data['status'] ? 1 : 0,
+			/*  createdate */ $createTime,
+			/*  updatedate */ $createTime,
+			/* template_id */ (int) $templateID,
+			/*       clang */ (int) $clangID,
+			/*  createuser */ $sql->escape($REX['USER']->getValue('login')),
+			/*  updateuser */ $sql->escape($REX['USER']->getValue('login')),
+			/*    revision */ 0
+		);
+	}
+	
+	$sql->setQuery('INSERT INTO '.$REX['TABLE_PREFIX'].'article (id,re_id,name,'.
+		'catname,catprior,attributes,startpage,prior,path,status,createdate,'.
+		'updatedate,template_id,clang,createuser,updateuser,revision) VALUES '.
+		implode(',', $records)
+	);
+	
+	// Falls Extensions vorhanden sind, führen wir sie einmal pro Sprache aus.
+	
+	if ($hasOldExtensions || $hasNewExtensions) {
+		foreach (array_keys($REX['CLANG']) as $clangID) {
+			$category = null;
+			
+			// rex_sql-Objekt erzeugen, um die Kompatibilität beizubehalten.
+			
+			if ($hasOldExtensions) {
+				$category = new rex_sql();
+				$category->setQuery('SELECT * FROM #_article WHERE id = '.$id.' AND clang = '.$clangID.' AND startpage = 1', '#_');
+			}
+			
+			// EP auslösen
+			
+			$message = rex_register_extension_point('CAT_ADDED', $message, array(
+				'category' => clone $category,
+				'id'       => $id,
+				're_id'    => $parentID,
+				'clang'    => $clangID,
+				'name'     => $data['catname'],
+				'prior'    => $data['catprior'],
+				'path'     => $data['path'],
+				'status'   => $data['status'],
+				'data'     => $data
+			));
+			
+			$message = rex_register_extension_point('CAT_ADDED_NEW', $message, array(
+				'id'       => $id,
+				're_id'    => $parentID,
+				'clang'    => $clangID,
+				'name'     => $data['catname'],
+				'prior'    => $data['catprior'],
+				'path'     => $data['path'],
+				'status'   => $data['status'],
+				'data'     => $data
+			));
+		}
+		
+		$category = null;
+		unset($category);
+	}
 
-    $AART->setTable($REX['TABLE_PREFIX'].'article');
-    if (!isset ($id))
-      $id = $AART->setNewId('id');
-    else
-      $AART->setValue('id', $id);
-
-    $AART->setValue('clang', $key);
-    $AART->setValue('template_id', $template_id);
-    $AART->setValue('name', $data['name']);
-    $AART->setValue('catname', $data['catname']);
-    $AART->setValue('attributes', '');
-    $AART->setValue('catprior', $data['catprior']);
-    $AART->setValue('re_id', $category_id);
-    $AART->setValue('prior', 1);
-    $AART->setValue('path', $data['path']);
-    $AART->setValue('startpage', 1);
-    $AART->setValue('status', $data['status']);
-    $AART->addGlobalUpdateFields();
-    $AART->addGlobalCreateFields();
-    
-    if($AART->insert())
-    {
-      // ----- PRIOR
-      if(isset($data['catprior']))
-      {
-        rex_newCatPrio($category_id, $key, 0, $data['catprior']);
-      }
-      
-      // ----- EXTENSION POINT
-      // Objekte clonen, damit diese nicht von der extension veraendert werden koennen
-      $message = rex_register_extension_point('CAT_ADDED', $message,
-        array (
-          'category' => clone($AART),
-          'id' => $id,
-          're_id' => $category_id,
-          'clang' => $key,
-          'name' => $data['catname'],
-          'prior' => $data['catprior'],
-          'path' => $data['path'],
-          'status' => $data['status'],
-          'article' => clone($AART),
-          'data' => $data,
-        )
-      );
-      
-      $message = $I18N->msg("category_added_and_startarticle_created");
-      $success = true;
-    }
-    else
-    {
-      $message = $AART->getError();
-    }
-  }
-  
-  return array($success, $message);
+	return array(true, $message, $newID);
 }
+
+
+
 
 /**
  * Bearbeitet einer Kategorie
  * 
- * @param int   $category_id Id der Kategorie die verändert werden soll
- * @param int   $clang       Id der Sprache
- * @param array $data        Array mit den Daten der Kategorie 
- * 
- * @return array Ein Array welches den status sowie eine Fehlermeldung beinhaltet
+ * @param  int   $categoryID Id der Kategorie die verändert werden soll
+ * @param  int   $clang      Id der Sprache
+ * @param  array $data       Array mit den Daten der Kategorie 
+ * @return array             ein Array welches den status sowie eine Fehlermeldung beinhaltet
  */
-function rex_editCategory($category_id, $clang, $data)
+function rex_editCategory($categoryID, $clang, $data)
 {
-  global $REX, $I18N;
+	global $REX, $I18N;
 
-  $success = false;
-  $message = '';
+	$categoryID = (int) $categoryID;
+	$clang      = (int) $clang;
 
-  if(!is_array($data))
-    trigger_error('Expecting $data to be an array!', E_USER_ERROR);
+	if (!isset($data['catname'])) {
+		trigger_error('Expecting $data to contain the key "catname"!', E_USER_ERROR);
+	}
 
-  // --- Kategorie mit alten Daten selektieren
-  $thisCat = new rex_sql;
-  $thisCat->setQuery('SELECT * FROM '.$REX['TABLE_PREFIX'].'article WHERE startpage=1 and id='.$category_id.' and clang='. $clang);
+	// Kategorie mit alten Daten selektieren
+	
+	$oldData = rex_sql::fetch('*', 'article', 'startpage = 1 and id = '.$categoryID.' and clang = '.$clang);
 
-  // --- Kategorie selbst updaten
-  $EKAT = new rex_sql;
-  $EKAT->setTable($REX['TABLE_PREFIX']."article");
-  $EKAT->setWhere("id=$category_id AND startpage=1 AND clang=$clang");
-  $EKAT->setValue('catname', $data['catname']);
-  $EKAT->setValue('catprior', $data['catprior']);
-  $EKAT->setValue('path', $data['path']);
-  $EKAT->addGlobalUpdateFields();
+	// Kategorie selbst updaten
+	
+	$sql = new rex_sql();
+	$sql->setQuery(
+		'UPDATE '.$REX['TABLE_PREFIX'].'article '.
+		'SET catname = "'.$sql->escape($data['catname']).'", '.
+		'updatedate = UNIX_TIMESTAMP(), updateuser = "'.$sql->escape($REX['USER']->getValue('login')).'" '.
+		'WHERE id = '.$categoryID.' AND clang = '.$clang
+	);
 
-  if($EKAT->update())
-  {
-    // --- Kategorie Kindelemente updaten
-    if(isset($data['catname']))
-    {
-      $ArtSql = new rex_sql();
-      $ArtSql->setQuery('SELECT id FROM '.$REX['TABLE_PREFIX'].'article WHERE re_id='.$category_id .' AND startpage=0 AND clang='.$clang);
+	// Name der Kategorie in den Kindern ändern
+	
+	$sql->setQuery(
+		'UPDATE '.$REX['TABLE_PREFIX'].'article '.
+		'SET catname = "'.$sql->escape($data['catname']).'" '.
+		'WHERE re_id = '.$categoryID.' AND startpage = 0 AND clang = '.$clang
+	);
+	
+	// Kinder abrufen, um für jedes Kind den Cache zu leeren.
+	
+	$children = rex_sql::getArrayEx(
+		'SELECT id FROM '.$REX['TABLE_PREFIX'].'article '.
+		'WHERE re_id = '.$categoryID.' AND startpage = 0 AND clang = '.$clang
+	);
+	
+	foreach ($children as $child) {
+		rex_deleteCacheArticle($child, $clang);
+	}
+	
+	// Priorität verarbeiten
 
-      $EART = new rex_sql();
-      for($i = 0; $i < $ArtSql->getRows(); $i++)
-      {
-        $EART->setTable($REX['TABLE_PREFIX'].'article');
-        $EART->setWhere('id='. $ArtSql->getValue('id') .' AND startpage=0 AND clang='.$clang);
-        $EART->setValue('catname', $data['catname']);
-        $EART->addGlobalUpdateFields();
+	if (isset($data['catprior'])) {
+		$parentID = $oldData['re_id'];
+		$oldPrio  = $oldData['catprior'];
+		$newPrio  = (int) $data['catprior'];
 
-        if(!$EART->update())
-        {
-          $message .= $EART->getError();
-        }
+		if ($newPrio <= 0) {
+			$newPrio = 1;
+		}
+		else {
+			$maxPrio = rex_sql::fetch('MAX(catprior)', 'article', 're_id = '.$parentID.' AND catprior <> 0 AND clang = 0');
+			
+			if ($newPrio > $maxPrio) {
+				$newPrio = $maxPrio;
+			}
+		}
+		
+		// Nur aktiv werden, wenn sich auch etwas geändert hat.
+		
+		if ($newPrio != $oldPrio) {
+			$relation    = $newPrio < $oldPrio ? '+' : '-';
+			list($a, $b) = $newPrio < $oldPrio ? array($newPrio, $oldPrio) : array($newPrio, $position);
+			
+			// Alle anderen entsprechend verschieben
+			
+			$sql->setQuery(
+				'UPDATE '.$REX['TABLE_PREFIX'].'article '.
+				'SET catprior = catprior '.$relation.' 1 '.
+				'WHERE catprior BETWEEN '.$a.' AND '.$b.' '.
+				'AND re_id = '.$parentID.' AND catprior <> 0 AND clang = '.$clang
+			);
+			
+			// Eigene neue Position speichern
+			
+			$sql->setQuery(
+				'UPDATE '.$REX['TABLE_PREFIX'].'article '.
+				'SET catprior = '.$newPrio.' '.
+				'WHERE id = '.$categoryID.' AND clang = '.$clang
+			);
+		}
+	}
+	
+	// Cache der Kategorie löschen
 
-        $ArtSql->next();
-      }
-    }
-
-    // ----- PRIOR
-    if(isset($data['catprior']))
-    {
-      $re_id = $thisCat->getValue('re_id');
-      $old_prio = $thisCat->getValue('catprior');
-
-      if($data['catprior'] <= 0)
-        $data['catprior'] = 1;
-	  Core::cache()->flush();
-      rex_newCatPrio($re_id, $clang, $data['catprior'], $old_prio);
-    }
-
-    $message = $I18N->msg('category_updated');
-	Core::cache()->delete('category', $category_id.'_'.$clang);
-    // ----- EXTENSION POINT
-    // Objekte clonen, damit diese nicht von der extension veraendert werden koennen
-    $message = rex_register_extension_point('CAT_UPDATED', $message,
-      array (
-        'id' => $category_id,
-
-        'category' => clone($EKAT),
-        'category_old' => clone($thisCat),
-        'article' => clone($EKAT),
-        
-        're_id' => $thisCat->getValue('re_id'),
-        'clang' => $clang,
-        'name' => $thisCat->getValue('catname'),
-        'prior' => $thisCat->getValue('catprior'),
-        'path' => $thisCat->getValue('path'),
-        'status' => $thisCat->getValue('status'),
-        
-        'data' => $data,
-      )
-    );
-    $success = true;
-  }
-  else
-  {
-    $message = $EKAT->getError();
-  }
-
-  return array($success, $message);
+	$message = $I18N->msg('category_updated');
+	$message = rex_register_extension_point('CAT_UPDATED', $message, array(
+		'id'     => $categoryID,
+		're_id'  => $oldData['re_id'],
+		'clang'  => $clang,
+		'name'   => $oldData['catname'],
+		'prior'  => $oldData['catprior'],
+		'path'   => $oldData['path'],
+		'status' => $oldData['status'],
+		'data'   => $data,
+	));
+	
+	Core::cache()->delete('category', $categoryID.'_'.$clang);
+	return array(true, $message);
 }
 
+
+
+
 /**
- * Löscht eine Kategorie und reorganisiert die Prioritäten verbleibender Geschwister-Kategorien
+ * Löscht eine Kategorie und reorganisiert die Prioritäten verbleibender
+ * Geschwister-Kategorien
  * 
- * @param int $category_id Id der Kategorie die gelöscht werden soll
- * 
- * @return array Ein Array welches den status sowie eine Fehlermeldung beinhaltet
+ * @param  int $categoryID  Id der Kategorie die gelöscht werden soll
+ * @return array            ein Array welches den Status sowie eine Fehlermeldung beinhaltet
  */
-function rex_deleteCategoryReorganized($category_id)
+function rex_deleteCategoryReorganized($categoryID)
 {
-  global $REX, $I18N;
+	global $I18N;
 
-  $return = array();
-  $return['state'] = FALSE;
-  $return['message'] = '';
-  
-  $clang = 0;
+	$message    = '';
+	$clang      = 0;
+	$categoryID = (int) $categoryID;
 
-  $thisCat = OOCategory::getCategoryById($category_id, $clang); //new rex_sql;
-  //$thisCat->setQuery('SELECT * FROM '.$REX['TABLE_PREFIX'].'article WHERE id='.$category_id.' and clang='. $clang);
+	// Prüfen ob die Kategorie existiert
 
-  // Prüfen ob die Kategorie existiert
-  if ($thisCat !== null)
-  {
-    $KAT = new rex_sql;
-    $KAT->setQuery("select * from ".$REX['TABLE_PREFIX']."article where re_id='$category_id' and clang='$clang' and startpage=1");
-    // Prüfen ob die Kategorie noch Unterkategorien besitzt
-    if ($KAT->getRows() == 0)
-    {
-      $KAT->setQuery("select * from ".$REX['TABLE_PREFIX']."article where re_id='$category_id' and clang='$clang' and startpage=0");
-      // Prüfen ob die Kategorie noch Artikel besitzt (ausser dem Startartikel)
-      if ($KAT->getRows() == 0)
-      {
-        $thisCat = new rex_sql;
-        $thisCat->setQuery('SELECT * FROM '.$REX['TABLE_PREFIX'].'article WHERE id='.$category_id);
-        
-        $re_id = $thisCat->getValue('re_id');
-        $return = rex_deleteArticle($category_id);
-        
-        while($thisCat->hasNext())
-        {
-          $_clang = $thisCat->getValue('clang');
-          
-          // ----- PRIOR
-          rex_newCatPrio($re_id, $_clang, 0, 1);
-          
-          // ----- EXTENSION POINT
-          $return = rex_register_extension_point('CAT_DELETED', $return, array (
-            'id'     => $category_id,
-            're_id'  => $re_id,
-            'clang'  => $_clang,
-            'name'   => $thisCat->getValue('catname'),
-            'prior'  => $thisCat->getValue('catprior'),
-            'path'   => $thisCat->getValue('path'),
-            'status' => $thisCat->getValue('status'),
-          ));
-          Core::cache()->delete('category', $category_id.'_'.$clang);
-          Core::cache()->delete('clist', $re_id.'_'.$clang);
-          $thisCat->next();
-        }
+	$testID = rex_sql::fetch('id', 'article', 'id = '.$categoryID.' AND clang = '. $clang);
+	
+	if ($testID === false) {
+		$message = $I18N->msg('category_could_not_be_deleted');
+		return array(false, $message);
+	}
+	
+	// Prüfen ob die Kategorie noch Unterkategorien besitzt
+	
+	$numSubCats = rex_sql::fetch('COUNT(*)', 'article', 're_id = '.$categoryID.' AND clang = '.$clang.' AND startpage = 1');
+	
+	if ($numSubCats > 0) {
+		$message  = $I18N->msg('category_could_not_be_deleted').' ';
+		$message .= $I18N->msg('category_still_contains_subcategories');
+		return array(false, $message);
+	}
 
-      }else
-      {
-        $return['message'] = $I18N->msg('category_could_not_be_deleted').' '.$I18N->msg('category_still_contains_articles');
-      }
-    }else
-    {
-      $return['message'] = $I18N->msg('category_could_not_be_deleted').' '.$I18N->msg('category_still_contains_subcategories');
-    }
-  }else
-  {
-    $return['message'] = $I18N->msg('category_could_not_be_deleted');
-  }
+	// Prüfen ob die Kategorie noch Artikel besitzt (ausser dem Startartikel)
+	
+	$numChildren = rex_sql::fetch('COUNT(*)', 'article', 're_id = '.$categoryID.' AND clang = '.$clang.' AND startpage = 0');
+	
+	if ($numChildren > 0) {
+		$message  = $I18N->msg('category_could_not_be_deleted').' ';
+		$message .= $I18N->msg('category_still_contains_articles');
+		return array(false, $message);
+	}
+	
+	$sql       = new rex_sql();
+	$instances = rex_sql::getArrayEx(
+		'SELECT clang, re_id, catname, catprior, path, status '.
+		'FROM #_article WHERE id = '.$categoryID, '#_'
+	);
+	
+	// Kategorie löschen
+	
+	$return = rex_deleteArticle($categoryID);
+	
+	// Kinder neu positionieren
+	
+	$cache = Core::cache();
 
-  return array($return['state'],$return['message']);
+	foreach ($instances as $clang => $data) {
+		$sql->setQuery(
+			'UPDATE #_article SET catprior = catprior - 1 '.
+			'WHERE re_id = '.$data['re_id'].' AND catprior > '.$data['catprior'].' '.
+			'AND catprior <> 0 AND clang = '.$clang, '#_'
+		);
+
+		$return = rex_register_extension_point('CAT_DELETED', $return, array(
+			'id'     => $categoryID,
+			'clang'  => $clang,
+			're_id'  => $data['re_id'],
+			'name'   => $data['catname'],
+			'prior'  => $data['catprior'],
+			'path'   => $data['path'],
+			'status' => $data['status']
+		));
+		
+		$cache->delete('category', $categoryID.'_'.$clang);
+		$cache->delete('clist', $data['re_id'].'_'.$clang);
+	}
+
+	return array($return['state'], $return['message']);
 }
 
+
+
+
 /**
- * ändert den Status der Kategorie
+ * Ändert den Status der Kategorie
  * 
- * @param int       $category_id   Id der Kategorie die gelöscht werden soll
- * @param int       $clang         Id der Sprache
- * @param int|null  $status        Status auf den die Kategorie gesetzt werden soll, oder NULL wenn zum nächsten Status weitergeschaltet werden soll
- * 
- * @return array Ein Array welches den status sowie eine Fehlermeldung beinhaltet
+ * @param  int      $categoryID  Id der Kategorie die gelöscht werden soll
+ * @param  int      $clang       Id der Sprache
+ * @param  int|null $newStatus   Status auf den die Kategorie gesetzt werden soll, oder null wenn zum nächsten Status weitergeschaltet werden soll
+ * @return array                 Ein Array welches den status sowie eine Fehlermeldung beinhaltet
  */
-function rex_categoryStatus($category_id, $clang, $status = null)
+function rex_categoryStatus($categoryID, $clang, $newStatus = null)
 {
-  global $REX, $I18N;
+	global $REX, $I18N;
 
-  $success = false;
-  $message = '';
-  $catStatusTypes = rex_categoryStatusTypes();
+	$success        = false;
+	$message        = '';
+	$catStatusTypes = rex_categoryStatusTypes();
+	$categoryID     = (int) $categoryID;
+	$clang          = (int) $clang;
 
-  $KAT = new rex_sql();
-  $KAT->setQuery("select status, re_id from ".$REX['TABLE_PREFIX']."article where id='$category_id' and clang=$clang and startpage=1");
-  if ($KAT->getRows() == 1)
-  {
-    // Status wurde nicht von außen vorgegeben,
-    // => zyklisch auf den nächsten Weiterschalten
-    if(!$status)
-      $newstatus = ($KAT->getValue('status') + 1) % count($catStatusTypes);
-    else
-      $newstatus = $status;
+	$sql       = new rex_sql();
+	$oldStatus = rex_sql::fetch('status,re_id', 'article', 'id = '.$categoryID.' AND clang = '.$clang);
+	
+	if ($oldStatus !== false) {
+		$re_id     = $oldStatus['re_id'];
+		$oldStatus = $oldStatus['status'];
+		
+		// Status wurde nicht von außen vorgegeben,
+		// => zyklisch auf den nächsten weiterschalten
+		
+		if ($newStatus === null) {
+			$newStatus = ($oldStatus + 1) % count($catStatusTypes);
+		}
+		
+		$sql->setTable('article', true);
+		$sql->setWhere('id = '.$categoryID.' AND clang = '.$clang);
+		$sql->setValue('status', $newStatus);
+		$sql->addGlobalCreateFields();
 
-    $EKAT = new rex_sql;
-    $EKAT->setTable($REX['TABLE_PREFIX'].'article');
-    $EKAT->setWhere("id='$category_id' and clang=$clang and startpage=1");
-    $EKAT->setValue("status", $newstatus);
-    $EKAT->addGlobalCreateFields();
+		if ($sql->update()) {
+			rex_deleteCacheArticle($categoryID, $clang);
 
-    
-    if($EKAT->update())
-    {
-      $message = $I18N->msg('category_status_updated');
-	  Core::cache()->delete('category', $category_id.'_'.$clang);
-	  Core::cache()->delete('clist', $KAT->getValue('re_id').'_'.$clang);
-      // ----- EXTENSION POINT
-      $message = rex_register_extension_point('CAT_STATUS', $message, array (
-        'id' => $category_id,
-        'clang' => $clang,
-        'status' => $newstatus
-      ));
-      $success = true;
-    }
-    else
-    {
-      $message = $EKAT->getError();
-    }
-  }
-  else
-  {
-    $message = $I18N->msg("no_such_category");
-  }
+			$success = true;
+			$message = rex_register_extension_point('CAT_STATUS', $I18N->msg('category_status_updated'), array(
+				'id'     => $categoryID,
+				'clang'  => $clang,
+				'status' => $newStatus
+			));
+			
+			$cache = Core::cache();
+			$cache->delete('category', $categoryID.'_'.$clang);
+			$cache->delete('clist', $re_id.'_'.$clang);
+		}
+		else {
+			$message = $sql->getError();
+		}
+	}
+	else {
+		$message = $I18N->msg('no_such_category');
+	}
 
-  return array($success, $message);
+	return array($success, $message);
 }
 
 /**
  * Gibt alle Stati zurück, die für eine Kategorie gültig sind
  * 
- * @return array Array von Stati
+ * @return array  Array von Stati (jeweils array(Titel, css-Klasse))
  */
 function rex_categoryStatusTypes()
 {
-  global $I18N;
+	global $I18N;
+	static $catStatusTypes;
 
-  static $catStatusTypes;
+	if (!$catStatusTypes) {
+		$catStatusTypes = array(
+			// Name, CSS-Class
+			array($I18N->msg('status_offline'), 'rex-offline'),
+			array($I18N->msg('status_online'),  'rex-online')
+		);
 
-  if(!$catStatusTypes)
-  {
-    $catStatusTypes = array(
-      // Name, CSS-Class
-      array($I18N->msg('status_offline'), 'rex-offline'),
-      array($I18N->msg('status_online'), 'rex-online')
-    );
+		$catStatusTypes = rex_register_extension_point('CAT_STATUS_TYPES', $catStatusTypes);
+	}
 
-    // ----- EXTENSION POINT
-    $catStatusTypes = rex_register_extension_point('CAT_STATUS_TYPES', $catStatusTypes);
-  }
-
-  return $catStatusTypes;
+	return $catStatusTypes;
 }
+
+
+
+
+
+
 
 /**
  * Erstellt einen neuen Artikel
  * 
- * @param array $data Array mit den Daten des Artikels
- * 
- * @return array Ein Array welches den status sowie eine Fehlermeldung beinhaltet
+ * @param  array $data  Array mit den Daten des Artikels
+ * @return array        ein Array welches den Status sowie eine Fehlermeldung beinhaltet
  */
 function rex_addArticle($data)
 {
-  global $REX, $I18N;
+	global $REX, $I18N;
 
-  $success = true;
-  $message = '';
+	$success = true;
+	$message = '';
 
-  if(!is_array($data))
-    trigger_error('Expecting $data to be an array!', E_USER_ERROR);
+	if (!isset($data['name']) || !isset($data['category_id']) || !isset($data['prior']) || !isset($data['template_id'])) {
+		trigger_error('Expecting $data to be an array!', E_USER_ERROR);
+	}
+	
+	$articleName  = $data['name'];
+	$categoryID   = (int) $data['category_id'];
+	$prior        = (int) $data['prior'];
+	$templateID   = (int) $data['template_id'];
+	
+	if ($categoryID == 0) {
+		$categoryData = array('catname' => '', 'path' => '|');
+	}
+	else {
+		$categoryData = rex_sql::fetch('catname,path', 'article', 'id = '.$categoryID.' AND clang = 0 AND startpage = 1');
+	}
+	
+	// Existiert die Kategorie überhaupt?
+	
+	if ($categoryData === false) {
+		trigger_error('The parent category does not exist!', E_USER_ERROR);
+	}
+	
+	// Priorität vorverarbeiten
 
-  if(isset($data['prior']))
-  {
-    if($data['prior'] <= 0)
-      $data['prior'] = 1;
-  }
+	if (isset($data['prior']) && $data['prior'] <= 0) {
+		$data['prior'] = 1;
+	}
+	else {
+		$maxPrior      = rex_sql::fetch('MAX(prior)', 'article', 're_id = '.$categoryID.' AND catprior = 0 AND clang = 0') + 1;
+		$data['prior'] = $data['prior'] > $maxPrior ? $maxPrior : $data['prior'];
+	}
+	
+	// Status beachten
 
-  $message = $I18N->msg('article_added');
+	if (!isset($data['status'])) {
+		$data['status'] = false;
+	}
+	
+	// Pfad vorverarbeiten
+	
+	if (!isset($data['path'])) {
+		$data['path'] = $categoryData['path'];
+	}
+	
+	// Die ID ist für alle Sprachen gleich und entspricht einfach der aktuell
+	// höchsten plus 1.
+	
+	$newID = rex_sql::fetch('MAX(id)', 'article', 'clang = 0') + 1;
+	
+	// Bevor wir die neuen Datensätze einfügen, machen wir in den sortierten
+	// Listen (je eine pro Sprache) Platz, indem wir alle Artikel, deren
+	// Priorität größergleich der Priorität des neuen Artikel ist, um eine
+	// Position nach unten schieben.
+	
+	$sql = new rex_sql();
+	$sql->setQuery(
+		'UPDATE #_article SET prior = prior + 1 '.
+		'WHERE re_id = '.$categoryID.' AND catprior = 0 AND prior >= '.$data['prior'].' '.
+		'ORDER BY prior ASC', '#_'
+	);
+	
+	// Kategorienamen abrufen
+	
+	$categoryNames = rex_sql::getArrayEx(
+		'SELECT clang, catname FROM #_article '.
+		'WHERE id = '.$categoryID.' AND catprior <> 0 AND startpage = 1', '#_'
+	);
 
-  $AART = new rex_sql;
-  foreach($REX['CLANG'] as $key => $val)
-  {
-    // ------- Kategorienamen holen
-    $category = OOCategory::getCategoryById($data['category_id'], $key);
-  
-    $category_name = '';
-    if($category)
-      $category_name = addslashes($category->getName());
-      
-    $AART->setTable($REX['TABLE_PREFIX'].'article');
-    if (!isset ($id) or !$id)
-      $id = $AART->setNewId('id');
-    else
-      $AART->setValue('id', $id);
-    $AART->setValue('name', $data['name']);
-    $AART->setValue('catname', $category_name);
-    $AART->setValue('attributes', '');
-    $AART->setValue('clang', $key);
-    $AART->setValue('re_id', $data['category_id']);
-    $AART->setValue('prior', $data['prior']);
-    $AART->setValue('path', $data['path']);
-    $AART->setValue('startpage', 0);
-    $AART->setValue('status', 0);
-    $AART->setValue('template_id', $data['template_id']);
-    $AART->addGlobalCreateFields();
-    $AART->addGlobalUpdateFields();
+	// Artikel in allen Sprachen anlegen
+	
+	$records     = array();
+	$sqlTemplate = '(%d,%d,"%s","%s",%d,"%s",%d,%d,"%s",%d,%d,%d,%d,%d,"%s","%s",%d)';
+	$createTime  = time();
+	$cache       = Core::cache();
+	
+	foreach (array_keys($REX['CLANG']) as $clangID) {
+		$records[] = sprintf($sqlTemplate,
+			/*          id */ (int) $newID,
+			/*       re_id */ (int) $categoryID,
+			/*        name */ $sql->escape($data['name']),
+			/*     catname */ $sql->escape($categoryNames[$clangID]),
+			/*    catprior */ 0,
+			/*  attributes */ '',
+			/*   startpage */ 0,
+			/*       prior */ (int) $data['prior'],
+			/*        path */ $sql->escape($data['path']),
+			/*      status */ $data['status'] ? 1 : 0,
+			/*  createdate */ $createTime,
+			/*  updatedate */ $createTime,
+			/* template_id */ $templateID,
+			/*       clang */ $clangID,
+			/*  createuser */ $sql->escape($REX['USER']->getValue('login')),
+			/*  updateuser */ $sql->escape($REX['USER']->getValue('login')),
+			/*    revision */ 0
+		);
+		
+		$cache->delete('alist', $categoryID.'_'.$clangID);
+	}
+	
+	$sql->setQuery('INSERT INTO '.$REX['TABLE_PREFIX'].'article (id,re_id,name,'.
+		'catname,catprior,attributes,startpage,prior,path,status,createdate,'.
+		'updatedate,template_id,clang,createuser,updateuser,revision) VALUES '.
+		implode(',', $records)
+	);
+	
+	// (Fast) fertig!
+	
+	$message = $I18N->msg('article_added');
+	
+	if (rex_extension_is_registered('ART_ADDED')) {
+		foreach (array_keys($REX['CLANG']) as $clangID) {
+			$message = rex_register_extension_point('ART_ADDED', $message, array(
+				'id'          => $id,
+				'clang'       => $clangID,
+				'status'      => $data['status'] ? 1 : 0,
+				'name'        => $data['name'],
+				'path'        => $data['path'],
+				're_id'       => (int) $data['category_id'],
+				'prior'       => (int) $data['prior'],
+				'template_id' => (int) $data['template_id'],
+				'data'        => $data
+			));
+		}
+	}
 
-    if($AART->insert())
-    {
-      // ----- PRIOR
-      rex_newArtPrio($data['category_id'], $key, 0, $data['prior']);
-    }
-    else
-    {
-      $success = false;
-      $message = $AART->getError();
-    }
-    
-    // ----- EXTENSION POINT
-    $message = rex_register_extension_point('ART_ADDED', $message,
-      array (
-        'id' => $id,
-        'clang' => $key,
-        'status' => 0,
-        'name' => $data['name'],
-        're_id' => $data['category_id'],
-        'prior' => $data['prior'],
-        'path' => $data['path'],
-        'template_id' => $data['template_id'],
-        'data' => $data,
-      )
-    );
-    Core::cache()->delete('alist', $data['category_id'].'_'.$key);
-  }
-
-  return array($success, $message);
+	return array($success, $message);
 }
+
+
+
+
 
 /**
  * Bearbeitet einen Artikel
  * 
- * @param int   $article_id  Id des Artikels der verändert werden soll
- * @param int   $clang       Id der Sprache
- * @param array $data        Array mit den Daten des Artikels 
- * 
- * @return array Ein Array welches den status sowie eine Fehlermeldung beinhaltet
+ * @param  int   $articleID  Id des Artikels der verändert werden soll
+ * @param  int   $clang      Id der Sprache
+ * @param  array $data       Array mit den Daten des Artikels 
+ * @return array             ein Array welches den Status sowie eine Fehlermeldung beinhaltet
  */
-function rex_editArticle($article_id, $clang, $data)
+function rex_editArticle($articleID, $clang, $data)
 {
-  global $REX, $I18N;
+	global $REX, $I18N;
 
-  $success = false;
-  $message = '';
+	$articleID = (int) $articleID;
+	$clang     = (int) $clang;
 
-  if(!is_array($data))
-    trigger_error('Expecting $data to be an array!', E_USER_ERROR);
+	if (!is_array($data)) {
+		trigger_error('Expecting $data to be an array!', E_USER_ERROR);
+	}
+	
+	$hasOldExtensions = rex_extension_is_registered('ART_UPDATED');
+	$hasNewExtensions = rex_extension_is_registered('ART_UPDATED_NEW');
 
-  // Artikel mit alten Daten selektieren
-  $thisArt = new rex_sql;
-  $thisArt->setQuery('select * from '.$REX['TABLE_PREFIX'].'article where id='.$article_id.' and clang='. $clang);
+	// Artikel mit alten Daten selektieren. Wir brauchen sie, unabhängig von
+	// ART_UPDATED. Und da wir da die gleichen Daten benötigen, nutzen wir hier
+	// gleich ein rex_sql-Objekt.
+	
+	$oldData = new rex_sql();
+	$oldData->setQuery('SELECT * FROM #_article WHERE id = '.$articleID.' AND clang = '.$clang, '#_');
+	
+	// Kategorie selbst updaten
+	
+	$sql = new rex_sql();
+	$sql->setQuery(
+		'UPDATE '.$REX['TABLE_PREFIX'].'article '.
+		'SET name = "'.$sql->escape($data['name']).'", template_id = '.$data['template_id'].', '.
+		'updatedate = UNIX_TIMESTAMP(), updateuser = "'.$sql->escape($REX['USER']->getValue('login')).'" '.
+		'WHERE id = '.$articleID.' AND clang = '.$clang
+	);
+	
+	// Priorität verarbeiten
 
-  if(isset($data['prior']))
-  {
-    if($data['prior'] <= 0)
-      $data['prior'] = 1;
-  }
+	if (isset($data['prior'])) {
+		$parentID = $oldData->getValue('re_id');
+		$oldPrio  = $oldData->getValue('prior');
+		$newPrio  = (int) $data['prior'];
 
-  $EA = new rex_sql;
-  $EA->setTable($REX['TABLE_PREFIX']."article");
-  $EA->setWhere("id='$article_id' and clang=$clang");
-  $EA->setValue('name', $data['name']);
-  $EA->setValue('template_id', $data['template_id']);
-  $EA->setValue('prior', $data['prior']);
-  $EA->addGlobalUpdateFields();
+		if ($newPrio <= 0) {
+			$newPrio = 1;
+		}
+		else {
+			$maxPrio = rex_sql::fetch('MAX(catprior)', 'article', 're_id = '.$parentID.' AND catprior = 0 AND clang = 0');
+			
+			if ($newPrio > $maxPrio) {
+				$newPrio = $maxPrio;
+			}
+		}
+		
+		// Nur aktiv werden, wenn sich auch etwas geändert hat.
+		
+		if ($newPrio != $oldPrio) {
+			$relation    = $newPrio < $oldPrio ? '+' : '-';
+			list($a, $b) = $newPrio < $oldPrio ? array($newPrio, $oldPrio) : array($newPrio, $position);
+			
+			// Alle anderen entsprechend verschieben
+			
+			$sql->setQuery(
+				'UPDATE #_article SET prior = prior '.$relation.' 1 '.
+				'WHERE prior BETWEEN '.$a.' AND '.$b.' '.
+				'AND re_id = '.$parentID.' AND catprior = 0 AND clang = '.$clang, '#_'
+			);
+			
+			// Eigene neue Position speichern
+			
+			$sql->setQuery(
+				'UPDATE #_article SET prior = '.$newPrio.' '.
+				'WHERE id = '.$articleID.' AND clang = '.$clang, '#_'
+			);
+		}
+	}
 
-  if($EA->update())
-  {
-    $message = $I18N->msg('article_updated');
-    
-    // ----- PRIOR
-    rex_newArtPrio($data['category_id'], $clang, $data['prior'], $thisArt->getValue('prior'));
-            
-    // ----- EXTENSION POINT
-    $message = rex_register_extension_point('ART_UPDATED', $message,
-      array (
-        'id' => $article_id,
+	if ($hasOldExtensions) {
+		$article = new rex_sql();
+		$article->setQuery('SELECT * FROM #_article WHERE id = '.$articleID.' AND clang = '.$clangID, '#_');
+		
+		$message = rex_register_extension_point('ART_UPDATED', $I18N->msg('article_updated'), array(
+			'id'          => $articleID,
+			'article'     => clone $newData,
+			'article_old' => clone $oldData,
+			'status'      => (int) $oldData->getValue('status'),
+			'name'        => $data['name'],
+			'clang'       => $clang,
+			're_id'       => (int) $data['category_id'],
+			'prior'       => (int) $data['prior'],
+			'path'        => $data['path'],
+			'template_id' => (int) $data['template_id'],
+		));
+	}
+	
+	if ($hasNewExtensions) {
+		$message = rex_register_extension_point('ART_UPDATED', $I18N->msg('article_updated'), array(
+			'id'          => $articleID,
+			'data'        => $data,
+			'status'      => (int) $oldData->getValue('status'),
+			'name'        => $data['name'],
+			'clang'       => $clang,
+			're_id'       => (int) $data['category_id'],
+			'prior'       => (int) $data['prior'],
+			'path'        => $data['path'],
+			'template_id' => (int) $data['template_id'],
+		));
+	}
+	
+	$cache = Core::cache();
+	$cache->delete('article', $articleID.'_'.$clang);
+	$cache->delete('alist', $data['category_id'].'_'.$clang);
 
-				'article' => clone($EA),
-				'article_old' => clone($thisArt),
-
-        'status' => $thisArt->getValue('status'),
-        'name' => $data['name'],
-        'clang' => $clang,
-        're_id' => $data['category_id'],
-        'prior' => $data['prior'],
-        'path' => $data['path'],
-        'template_id' => $data['template_id'],
-        
-        'data' => $data,
-      )
-    );
-   	Core::cache()->delete('article ', $article_id.'_'.$clang);
-   	Core::cache()->delete('alist ', $data['category_id'].'_'.$clang);
-
-    $success = true;
-  }
-  else
-  {
-    $message = $EA->getError();
-  }
-
-  return array($success, $message);
+	return array(true, $message);
 }
+
+
+
+
+
+
 
 /**
  * Löscht einen Artikel und reorganisiert die Prioritäten verbleibender Geschwister-Artikel
  * 
- * @param int $article_id Id des Artikels die gelöscht werden soll
- * 
- * @return array Ein Array welches den status sowie eine Fehlermeldung beinhaltet
+ * @param  int $articleID  Id des Artikels die gelöscht werden soll
+ * @return array           ein Array welches den Status sowie eine Fehlermeldung beinhaltet
  */
-function rex_deleteArticleReorganized($article_id)
+function rex_deleteArticleReorganized($articleID)
 {
-  global $REX;
+	global $REX;
 
-  $return = array();
-  $return['state'] = FALSE;
-  $return['message'] = '';
+	$message   = '';
+	$clang     = 0;
+	$articleID = (int) $articleID;
 
-  $Art = new rex_sql;
-  $Art->setQuery('select * from '.$REX['TABLE_PREFIX'].'article where id='.$article_id.' and startpage=0');
+	// Prüfen ob der Artikel existiert
+	
+	$data = rex_sql::getArrayEx(
+		'SELECT clang, re_id, name, status, prior, path, template_id '.
+		'FROM '.$REX['TABLE_PREFIX'].'article '.
+		'WHERE id = '.$articleID.' AND startpage = 0'
+	);
+	
+	if ($data === false) {
+		$message = $I18N->msg('article_could_not_be_deleted');
+		return array(false, $message);
+	}
 
-  if ($Art->getRows() == count($REX['CLANG']))
-  {
-    $return = rex_deleteArticle($article_id);
-    $re_id = $Art->getValue("re_id");
+	$return = rex_deleteArticle($articleID);
+	$cache  = Core::cache();
+	$sql    = new rex_sql();
 
-    foreach($REX['CLANG'] as $clang => $clang_name)
-    {
-      // ----- PRIOR
-      rex_newArtPrio($Art->getValue("re_id"), $clang, 0, 1);
-      
-      // ----- EXTENSION POINT
-      $return = rex_register_extension_point('ART_DELETED', $return,
-        array (
-          "id"          => $article_id,
-          "clang"       => $clang,
-          "re_id"       => $re_id,
-          'name'        => $Art->getValue('name'),
-          'status'      => $Art->getValue('status'),
-          'prior'       => $Art->getValue('prior'),
-          'path'        => $Art->getValue('path'),
-          'template_id' => $Art->getValue('template_id'),
-        )
-      );
-      Core::cache()->delete('article', $article_id.'_'.$clang);
-      Core::cache()->delete('alist', $data['category_id'].'_'.$clang);
-      $Art->next();
-    }
-  }
-  return array($return['state'],$return['message']);
+	foreach ($data as $clang => $article) {
+		$sql->setQuery(
+			'UPDATE #_article SET prior = prior - 1 '.
+			'WHERE re_id = '.$article['re_id'].' AND prior > '.$data['prior'].' '.
+			'AND catprior = 0 AND clang = '.$clang, '#_'
+		);
+
+		$return = rex_register_extension_point('ART_DELETED', $return, array(
+			'id'          => $articleID,
+			'clang'       => $clang,
+			'name'        => $article['name'],
+			'path'        => $article['path'],
+			're_id'       => (int) $article['re_id'],
+			'status'      => (int) $article['status'],
+			'prior'       => (int) $article['prior'],
+			'template_id' => (int) $article['template_id']
+		));
+	
+		$cache->delete('article', $articleID.'_'.$clang);
+		$cache->delete('alist', $data['category_id'].'_'.$clang);
+	}
+	
+	return array($return['state'], $return['message']);
 }
 
 /**
- * ändert den Status des Artikels
+ * Ändert den Status des Artikels
  * 
- * @param int       $article_id Id des Artikels die gelöscht werden soll
- * @param int       $clang      Id der Sprache
- * @param int|null  $status     Status auf den der Artikel gesetzt werden soll, oder NULL wenn zum nächsten Status weitergeschaltet werden soll
- * 
- * @return array Ein Array welches den status sowie eine Fehlermeldung beinhaltet
+ * @param  int      $articleID   Id des Artikels die gelöscht werden soll
+ * @param  int      $clang       Id der Sprache
+ * @param  int|null $newStatus   Status auf den der Artikel gesetzt werden soll, oder null wenn zum nächsten Status weitergeschaltet werden soll
+ * @return array                 ein Array welches den Status sowie eine Fehlermeldung beinhaltet
  */
-function rex_articleStatus($article_id, $clang, $status = null)
+function rex_articleStatus($articleID, $clang, $newStatus = null)
 {
-  global $REX, $I18N;
+	global $REX, $I18N;
 
-  $success = false;
-  $message = '';
-  $artStatusTypes = rex_articleStatusTypes();
+	$success        = false;
+	$message        = '';
+	$artStatusTypes = rex_articleStatusTypes();
+	$articleID      = (int) $articleID;
+	$clang          = (int) $clang;
 
-  $GA = new rex_sql;
-  $GA->setQuery("select * from ".$REX['TABLE_PREFIX']."article where id='$article_id' and clang=$clang");
-  if ($GA->getRows() == 1)
-  {
-    // Status wurde nicht von außen vorgegeben,
-    // => zyklisch auf den nächsten Weiterschalten
-    if(!$status)
-      $newstatus = ($GA->getValue('status') + 1) % count($artStatusTypes);
-    else
-      $newstatus = $status;
+	$sql       = new rex_sql();
+	$oldStatus = rex_sql::fetch('status', 'article', 'id = '.$articleID.' AND clang = '.$clang);
+	
+	if ($oldStatus !== false) {
+		// Status wurde nicht von außen vorgegeben,
+		// => zyklisch auf den nächsten weiterschalten
+		
+		if ($newStatus === null) {
+			$newStatus = ($oldStatus + 1) % count($artStatusTypes);
+		}
 
-    $EA = new rex_sql;
-    $EA->setTable($REX['TABLE_PREFIX']."article");
-    $EA->setWhere("id='$article_id' and clang=$clang");
-    $EA->setValue('status', $newstatus);
-    $EA->addGlobalUpdateFields();
+		$sql->setTable('article', true);
+		$sql->setWhere('id = '.$articleID.' AND clang = '.$clang);
+		$sql->setValue('status', $newStatus);
+		$sql->addGlobalUpdateFields();
 
-    if($EA->update())
-    {
-      $message = $I18N->msg('article_status_updated');
-      
-      // ----- EXTENSION POINT
-      $message = rex_register_extension_point('ART_STATUS', $message, array (
-        'id' => $article_id,
-        'clang' => $clang,
-        'status' => $newstatus
-      ));
-	  Core::cache()->delete('article', $article_id.'_'.$clang);
-      $success = true;
-    }
-    else
-    {
-      $message = $EA->getError();
-    }
-  }
-  else
-  {
-    $message = $I18N->msg("no_such_category");
-  }
+		if ($sql->update()) {
+			$success = true;
+			$message = rex_register_extension_point('ART_STATUS', $I18N->msg('article_status_updated'), array(
+				'id'     => $articleID,
+				'clang'  => $clang,
+				'status' => $newStatus
+			));
+			
+			Core::cache()->delete('article', $articleID.'_'.$clang);
+		}
+		else {
+			$message = $sql->getError();
+		}
+	}
+	else {
+		$message = $I18N->msg('no_such_category');
+	}
 
-  return array($success, $message);
+	return array($success, $message);
 }
 
 /**
  * Gibt alle Stati zurück, die für einen Artikel gültig sind
  * 
- * @return array Array von Stati
+ * @return array  Array von Stati (jeweils array(Titel, css-Klasse))
  */
 function rex_articleStatusTypes()
 {
-  global $I18N;
+	global $I18N;
+	static $artStatusTypes;
 
-  static $artStatusTypes;
+	if (!$artStatusTypes) {
+		$artStatusTypes = array(
+			// Name, CSS-Class
+			array($I18N->msg('status_offline'), 'rex-offline'),
+			array($I18N->msg('status_online'), 'rex-online')
+		);
 
-  if(!$artStatusTypes)
-  {
-    $artStatusTypes = array(
-      // Name, CSS-Class
-      array($I18N->msg('status_offline'), 'rex-offline'),
-      array($I18N->msg('status_online'), 'rex-online')
-    );
+		$artStatusTypes = rex_register_extension_point('ART_STATUS_TYPES', $artStatusTypes);
+	}
 
-    // ----- EXTENSION POINT
-    $artStatusTypes = rex_register_extension_point('ART_STATUS_TYPES', $artStatusTypes);
-  }
-
-  return $artStatusTypes;
+	return $artStatusTypes;
 }

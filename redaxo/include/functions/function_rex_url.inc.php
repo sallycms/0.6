@@ -8,36 +8,35 @@
 
 function rex_parse_article_name($name)
 {
-  static $firstCall = true;
-  static $search, $replace;
+	static $search = null, $replace = null;
 
-  if($firstCall)
-  {
-    global $REX, $I18N;
+	if ($search === null || $replace === null) {
+		global $REX, $I18N;
 
-    // Im Frontend gibts kein I18N
-    if(!$I18N)
-      $I18N = rex_create_lang($REX['LANG']);
+		// Im Frontend gibts kein I18N
+		
+		if (!$I18N) {
+			$I18N = rex_create_lang($REX['LANG']);
+		}
 
-    // Sprachspezifische Sonderzeichen Filtern
-    $search = explode('|', $I18N->msg('special_chars'));
-    $replace = explode('|', $I18N->msg('special_chars_rewrite'));
+		// sprachspezifische Sonderzeichen filtern
+		
+		$search  = explode('|', $I18N->msg('special_chars'));
+		$replace = explode('|', $I18N->msg('special_chars_rewrite'));
+	}
 
-    $firstCall = false;
-  }
-
-  return 
-    // ggf uebrige zeichen url-codieren
-    urlencode(
-      // mehrfach hintereinander auftretende spaces auf eines reduzieren
-      preg_replace('/ {2,}/',' ',
-        // alle sonderzeichen raus 
-        preg_replace('/[^a-zA-Z_\-0-9 ]/', '',
-          // sprachspezifische zeichen umschreiben 
-          str_replace($search, $replace, $name)
-        )
-      )
-    );
+	return 
+		// ggf übrige zeichen url-codieren
+		urlencode(
+			// mehrfach hintereinander auftretende Spaces auf eines reduzieren
+			preg_replace('/ {2,}/',' ',
+				// alle sonderzeichen raus 
+				preg_replace('/[^a-zA-Z_\-0-9 ]/', '',
+					// sprachspezifische Zeichen umschreiben
+					str_replace($search, $replace, $name)
+			)
+		)
+	);
 }
 
 /**
@@ -45,21 +44,16 @@ function rex_parse_article_name($name)
  */
 function rex_param_string($params, $divider = '&amp;')
 {
-  $param_string = '';
-
-  if (is_array($params))
-  {
-    foreach ($params as $key => $value)
-    {
-      $param_string .= $divider.urlencode($key).'='.urlencode($value);
-    }
-  }
-  elseif ($params != '')
-  {
-    $param_string = $params;
-  }
-
-  return $param_string;
+	if (!empty($params)) {
+		if (is_array($params)) {
+			return $divider.http_build_query($params, '', $divider);
+		}
+		else {
+			return $params;
+		}
+	}
+	
+	return '';
 }
 
 /**
@@ -71,43 +65,66 @@ function rex_param_string($params, $divider = '&amp;')
  * @param [$_divider] Trennzeichen für Parameter
  * (z.B. &amp; für HTML, & für Javascript)
  */
-function rex_getUrl($_id = 0, $_clang = false, $name = 'NoName', $_params = '', $_divider = '&amp;')
+function rex_getUrl($id = 0, $clang = false, $name = 'NoName', $params = '', $divider = '&amp;')
 {
-  global $REX;
+	global $REX;
 
-  $id = (int) $_id;
-  $clang = (int) $_clang;
+	$clangOrig = $clang; 
+	$id        = (int) $id;
+	$clang     = (int) $clang;
 
-  // ----- get id
-  if ($id == 0)
-    $id = $REX["ARTICLE_ID"];
+	if ($id <= 0) {
+		$id = $REX['ARTICLE_ID'];
+	}
 
-  // ----- get clang
-  // Wenn eine rexExtension vorhanden ist, immer die clang mitgeben!
-  // Die rexExtension muss selbst entscheiden was sie damit macht
-  if ($_clang === false  && (count($REX['CLANG']) > 1 || rex_extension_is_registered( 'URL_REWRITE')))
-    $clang = $REX['CUR_CLANG'];
+	// Wenn eine rexExtension vorhanden ist, immer die clang mitgeben!
+	// Die rexExtension muss selbst entscheiden was sie damit macht.
+	
+	if ($clangOrig === false && (rex_is_multilingual() || rex_extension_is_registered('URL_REWRITE'))) {
+		$clang = rex_cur_clang();
+	}
+	
+	// Die Erzeugung von URLs kann in Abhängigkeit von den installierten
+	// AddOns eine ganze Weile dauern. Da sich die URLs auf einer Seite
+	// wohl eher selten ändern, cachen wir sie hier zwischen.
+	
+	static $urlCache = array();
+	$cacheKey        = substr(md5($id.'_'.$clang.'_'.json_encode($params).'_'.$divider), 0, 10); // $params kann ein Array sein.
+	
+	if (isset($urlCache[$cacheKey])) {
+		return $urlCache[$cacheKey];
+	}
 
-  // ----- get params
-  $param_string = rex_param_string($_params, $_divider);
-  
-  $name = rex_parse_article_name($name);
-  
-  // ----- EXTENSION POINT
-  $url = rex_register_extension_point('URL_REWRITE', '', array ('id' => $id, 'name' => $name, 'clang' => $clang, 'params' => $param_string, 'divider' => $_divider));
+	$paramString = rex_param_string($params, $divider);
+	
+	if ($id != 0) {
+		$ooa = OOArticle::getArticleById($id, $clang);
+		if ($ooa) {
+			$name = rex_parse_article_name($ooa->getName());
+		}
+	}
 
-  if ($url == '')
-  {
-    // ----- get rewrite function
-    if ($REX['MOD_REWRITE'] === true || $REX['MOD_REWRITE'] == 'true')
-      $rewrite_fn = 'rex_apache_rewrite';
-    else
-      $rewrite_fn = 'rex_no_rewrite';
+	$url = rex_register_extension_point('URL_REWRITE', '', array(
+		'id'      => $id,
+		'name'    => $name,
+		'clang'   => $clang,
+		'params'  => $paramString,
+		'divider' => $divider
+	));
 
-    $url = call_user_func($rewrite_fn, $id, $name, $clang, $param_string, $_divider);
-  }
+	if (empty($url)) {
+		if ($REX['MOD_REWRITE'] === true || $REX['MOD_REWRITE'] == 'true') {
+			$rewrite_fn = 'rex_apache_rewrite';
+		}
+		else {
+			$rewrite_fn = 'rex_no_rewrite';
+		}
 
-  return $url;
+		$url = call_user_func($rewrite_fn, $id, $name, $clang, $paramString, $divider);
+	}
+
+	$urlCache[$cacheKey] = $url;
+	return $url;
 }
 
 // ----------------------------------------- Rewrite functions
@@ -118,29 +135,29 @@ function rex_getUrl($_id = 0, $_clang = false, $name = 'NoName', $_params = '', 
  */
 function rex_no_rewrite($id, $name, $clang, $param_string, $divider)
 {
-  global $REX;
-  $_clang = '';
+	global $REX;
+	$clangString = '';
 
-  if (count($REX['CLANG']) > 1)
-  {
-    $_clang .= $divider.'clang='.$clang;
-  }
+	if (rex_is_multilingual()) {
+		$clangString = $divider.'clang='.$clang;
+	}
 
-  return $REX["FRONTEND_FILE"].'?article_id='.$id .$_clang.$param_string;
+	return $REX['FRONTEND_FILE'].'?article_id='.$id.$clangString.$paramString;
 }
 
 /**
- * Standard Rewriter, gibt umschrieben Urls im Format
+ * Standard Rewriter, gibt umschriebene URLs im Format
  *
  * <id>-<clang>-<name>.html[?<params>]
+ *
+ * zurück.
  */
 function rex_apache_rewrite($id, $name, $clang, $params, $divider)
 {
-  if ($params != '')
-  {
-    // strip first "&"
-    $params = '?'.substr($params, strpos($params, $divider) + strlen($divider));
-  }
+	if (!empty($params)) {
+		// strip first "&"
+		$params = '?'.substr($params, strpos($params, $divider) + strlen($divider));
+	}
 
-  return $id.'-'.$clang.'-'.$name.'.html'.$params;
+	return $id.'-'.$clang.'-'.$name.'.html'.$params;
 }

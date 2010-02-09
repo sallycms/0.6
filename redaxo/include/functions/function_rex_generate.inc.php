@@ -318,9 +318,12 @@ function _rex_deleteArticle($id)
 		
 		if ($return['state'] === true) {
 			//rex_deleteCacheArticle($id);
-			$ART->setQuery('DELETE FROM #_article WHERE id = '.$id, '#_');
-			$ART->setQuery('DELETE FROM #_article_slice WHERE article_id = '.$id, '#_');
-
+			
+			$sql = new rex_sql();
+			$sql->setQuery('DELETE FROM #_article WHERE id = '.$id, '#_');
+			$sql->setQuery('DELETE FROM #_article_slice WHERE article_id = '.$id, '#_');
+			$sql = null;
+			
 			// Listen generieren (auskommtiert, weil: werden layze erzeugt)
 			//rex_generateLists($re_id);
 		}
