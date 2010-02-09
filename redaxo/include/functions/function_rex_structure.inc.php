@@ -105,13 +105,13 @@ function rex_addCategory($parentID, $data)
 		$records[] = sprintf($sqlTemplate,
 			/*          id */ (int) $newID,
 			/*       re_id */ (int) $parentID,
-			/*        name */ $sql->escape($data['name']),
-			/*     catname */ $sql->escape($data['catname']),
+			/*        name */ $data['name'], // Magic Quotes von REDAXO!
+			/*     catname */ $data['catname'], // Magic Quotes von REDAXO!
 			/*    catprior */ (int) $data['catprior'],
 			/*  attributes */ '',
 			/*   startpage */ 1,
 			/*       prior */ 1,
-			/*        path */ $sql->escape($data['path']),
+			/*        path */ $data['path'], // Magic Quotes von REDAXO!
 			/*      status */ $data['status'] ? 1 : 0,
 			/*  createdate */ $createTime,
 			/*  updatedate */ $createTime,
@@ -206,7 +206,7 @@ function rex_editCategory($categoryID, $clang, $data)
 	$sql = new rex_sql();
 	$sql->setQuery(
 		'UPDATE '.$REX['TABLE_PREFIX'].'article '.
-		'SET catname = "'.$sql->escape($data['catname']).'", '.
+		'SET catname = "'.$data['catname'].'", '. // Magic Quotes von REDAXO!
 		'updatedate = UNIX_TIMESTAMP(), updateuser = "'.$sql->escape($REX['USER']->getValue('login')).'" '.
 		'WHERE id = '.$categoryID.' AND clang = '.$clang
 	);
@@ -214,16 +214,16 @@ function rex_editCategory($categoryID, $clang, $data)
 	// Name der Kategorie in den Kindern ändern
 	
 	$sql->setQuery(
-		'UPDATE '.$REX['TABLE_PREFIX'].'article '.
-		'SET catname = "'.$sql->escape($data['catname']).'" '.
-		'WHERE re_id = '.$categoryID.' AND startpage = 0 AND clang = '.$clang
+		'UPDATE #_article '.
+		'SET catname = "'.$data['catname'].'" '. // Magic Quotes von REDAXO!
+		'WHERE re_id = '.$categoryID.' AND startpage = 0 AND clang = '.$clang, '#_'
 	);
 	
 	// Kinder abrufen, um für jedes Kind den Cache zu leeren.
 	
 	$children = rex_sql::getArrayEx(
-		'SELECT id FROM '.$REX['TABLE_PREFIX'].'article '.
-		'WHERE re_id = '.$categoryID.' AND startpage = 0 AND clang = '.$clang
+		'SELECT id FROM #_article '.
+		'WHERE re_id = '.$categoryID.' AND startpage = 0 AND clang = '.$clang, '#_'
 	);
 	
 	foreach ($children as $child) {
@@ -464,12 +464,6 @@ function rex_categoryStatusTypes()
 	return $catStatusTypes;
 }
 
-
-
-
-
-
-
 /**
  * Erstellt einen neuen Artikel
  * 
@@ -544,12 +538,15 @@ function rex_addArticle($data)
 		'ORDER BY prior ASC', '#_'
 	);
 	
-	// Kategorienamen abrufen
+	// Kategorienamen abrufen.
+	// Wenn wir im Root einen Artikel hinzufügen, gibt es keinen catname.
 	
-	$categoryNames = rex_sql::getArrayEx(
-		'SELECT clang, catname FROM #_article '.
-		'WHERE id = '.$categoryID.' AND catprior <> 0 AND startpage = 1', '#_'
-	);
+	if ($categoryID != 0) {
+		$categoryNames = rex_sql::getArrayEx(
+			'SELECT clang, catname FROM #_article '.
+			'WHERE id = '.$categoryID.' AND catprior <> 0 AND startpage = 1', '#_'
+		);
+	}
 
 	// Artikel in allen Sprachen anlegen
 	
@@ -562,13 +559,13 @@ function rex_addArticle($data)
 		$records[] = sprintf($sqlTemplate,
 			/*          id */ (int) $newID,
 			/*       re_id */ (int) $categoryID,
-			/*        name */ $sql->escape($data['name']),
-			/*     catname */ $sql->escape($categoryNames[$clangID]),
+			/*        name */ $data['name'], // Magic Quotes von REDAXO!
+			/*     catname */ isset($categoryNames[$clangID]) ? $categoryNames[$clangID] : '', // Magic Quotes von REDAXO!
 			/*    catprior */ 0,
 			/*  attributes */ '',
 			/*   startpage */ 0,
 			/*       prior */ (int) $data['prior'],
-			/*        path */ $sql->escape($data['path']),
+			/*        path */ $data['path'], // Magic Quotes von REDAXO!
 			/*      status */ $data['status'] ? 1 : 0,
 			/*  createdate */ $createTime,
 			/*  updatedate */ $createTime,
@@ -649,7 +646,7 @@ function rex_editArticle($articleID, $clang, $data)
 	$sql = new rex_sql();
 	$sql->setQuery(
 		'UPDATE '.$REX['TABLE_PREFIX'].'article '.
-		'SET name = "'.$sql->escape($data['name']).'", template_id = '.$data['template_id'].', '.
+		'SET name = "'.$data['name'].'", template_id = '.$data['template_id'].', '. // Magic Quotes von REDAXO!
 		'updatedate = UNIX_TIMESTAMP(), updateuser = "'.$sql->escape($REX['USER']->getValue('login')).'" '.
 		'WHERE id = '.$articleID.' AND clang = '.$clang
 	);
@@ -758,8 +755,7 @@ function rex_deleteArticleReorganized($articleID)
 	
 	$data = rex_sql::getArrayEx(
 		'SELECT clang, re_id, name, status, prior, path, template_id '.
-		'FROM '.$REX['TABLE_PREFIX'].'article '.
-		'WHERE id = '.$articleID.' AND startpage = 0'
+		'FROM #_article WHERE id = '.$articleID.' AND startpage = 0', '#_'
 	);
 	
 	if ($data === false) {
@@ -774,7 +770,7 @@ function rex_deleteArticleReorganized($articleID)
 	foreach ($data as $clang => $article) {
 		$sql->setQuery(
 			'UPDATE #_article SET prior = prior - 1 '.
-			'WHERE re_id = '.$article['re_id'].' AND prior > '.$data['prior'].' '.
+			'WHERE re_id = '.$article['re_id'].' AND prior > '.$article['prior'].' '.
 			'AND catprior = 0 AND clang = '.$clang, '#_'
 		);
 
@@ -790,7 +786,7 @@ function rex_deleteArticleReorganized($articleID)
 		));
 	
 		$cache->delete('article', $articleID.'_'.$clang);
-		$cache->delete('alist', $data['category_id'].'_'.$clang);
+		$cache->delete('alist', $article['re_id'].'_'.$clang);
 	}
 	
 	return array($return['state'], $return['message']);
