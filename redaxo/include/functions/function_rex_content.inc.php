@@ -512,12 +512,10 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 
 		// id holen, als re setzen und weitermachen..
 		rex_copyContent($from_id, $to_id, $from_clang, $to_clang, $sliceData['id'], $revision);
+		rex_deleteCacheArticleContent($to_id, $to_clang);
 		return true;
 	}
 	
-	// TODO: Müsste das hier nicht in dem if passieren? Hier unten ist doch gar nichts
-	// geändert worden...
-	rex_deleteCacheArticleContent($to_id, $to_clang);
 	return true;
 }
 

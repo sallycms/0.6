@@ -14,62 +14,62 @@
 reset($REX['CLANG']);
 $num_clang = count($REX['CLANG']);
 
-if ($num_clang>1)
-{
-   echo '
+if ($num_clang > 1) {
+	print '
 <!-- *** OUTPUT OF CLANG-TOOLBAR - START *** -->
-   <div id="rex-clang" class="rex-toolbar">
-   <div class="rex-toolbar-content">
-     <ul>
-       <li>'.$I18N->msg("languages").' : </li>';
+	<div id="rex-clang" class="rex-toolbar">
+		<div class="rex-toolbar-content">
+			<ul>
+				<li>'.$I18N->msg('languages').' : </li>';
 
-	 $stop = false;
-   $i = 1;
-   foreach($REX['CLANG'] as $key => $val)
-   {
-   	if($i == 1)
-   		echo '<li class="rex-navi-first rex-navi-clang-'.$key.'">';
-		else
-			echo '<li class="rex-navi-clang-'.$key.'">';
-		    
-    $val = rex_translate($val);
-
-		if (!$REX['USER']->hasPerm('admin[]') && !$REX['USER']->hasPerm('clang[all]') && !$REX['USER']->hasPerm('clang['. $key .']'))
-		{
-			echo '<span class="rex-strike">'. $val .'</span>';
-
-			if ($clang == $key) $stop = true;
+	$stop = false;
+	$i    = 1;
+	
+	foreach ($REX['CLANG'] as $clangID => $clangName) {
+		if ($i == 1) {
+			print '<li class="rex-navi-first rex-navi-clang-'.$clangID.'">';
 		}
-		else
-    {
-    	$class = '';
-    	if ($key==$clang) $class = ' class="rex-active"';
-      echo '<a'.$class.' href="index.php?page='. $REX["PAGE"] .'&amp;clang='. $key . $sprachen_add .'&amp;ctype='. $ctype .'"'. rex_tabindex() .'>'. $val .'</a>';
-    }
+		else {
+			print '<li class="rex-navi-clang-'.$clangID.'">';
+		}
 
-    echo '</li>';
-    $i++;
+		$clangName = rex_translate($clangName); // enthält htmlspecialchars()
+
+		if (!$REX['USER']->hasPerm('admin[]') && !$REX['USER']->hasPerm('clang[all]') && !$REX['USER']->hasPerm('clang['.$clangID.']')) {
+			print '<span class="rex-strike">'.$clangName.'</span>';
+			$stop |= $clang == $clangID;
+		}
+		else {
+			$class = '';
+			
+			if ($clangID == $clang) {
+				$class = ' class="rex-active"';
+			}
+			
+			print '<a'.$class.' href="index.php?page='.$REX['PAGE'].'&amp;clang='.$clangID.$sprachen_add.'&amp;ctype='.$ctype.'"'.rex_tabindex().'>'.$clangName.'</a>';
+		}
+
+		print '</li>';
+		++$i;
 	}
 
-	echo '
-     </ul>
-   </div>
-   </div>
+	print '
+		</ul>
+	</div>
+</div>
 <!-- *** OUTPUT OF CLANG-TOOLBAR - END *** -->
 ';
 
-	if ($stop)
-	{
-		echo '
+	if ($stop) {
+		print '
 <!-- *** OUTPUT OF CLANG-VALIDATE - START *** -->
-      '. rex_warning('You have no permission to this area') .'
+'.rex_warning('You have no permission to this area').'
 <!-- *** OUTPUT OF CLANG-VALIDATE - END *** -->
 ';
-		require $REX['INCLUDE_PATH']."/layout/bottom.php";
+		require $REX['INCLUDE_PATH'].'/layout/bottom.php';
 		exit;
 	}
 }
-else
-{
+else {
 	$clang = 0;
 }
