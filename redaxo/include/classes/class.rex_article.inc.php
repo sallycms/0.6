@@ -126,8 +126,8 @@ class rex_article
 
       if ($this->ARTICLE->getRows() > 0)
       {
-        $this->template_id = $this->ARTICLE->getValue('template_id');
-        $this->category_id = $this->ARTICLE->getValue('category_id');
+        $this->template_id = $this->getValue('template_id');
+        $this->category_id = $this->getValue('category_id');
         return TRUE;
       }
     }

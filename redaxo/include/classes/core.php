@@ -18,8 +18,6 @@ class Core
 
 	private function __construct()
 	{
-		global $REX;
-		$this->curclang = rex_request('clang', 'rex-clang-id', $REX['START_CLANG_ID']);
 		$this->cache = new RedaxoCache();
 	}
 
@@ -57,7 +55,11 @@ class Core
 
 	public static function getCurrentClang()
 	{
-		return self::getInstance()->curclang;
+		$instance = self::getInstance();
+		if(!isset($instance->curclang)){
+			$instance->curclang = rex_request('clang', 'rex-clang-id', $REX['START_CLANG_ID']);
+		}
+		return $instance->curclang;
 	}
 
 	public static function getTempDir()
