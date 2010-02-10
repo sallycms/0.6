@@ -278,7 +278,7 @@ class rex_sql
 		$this->flush();
 		
 		// Verbindung herstellen
-		$this->selectDB($this->DBID);
+		//$this->selectDB($this->DBID);
 		
 		if (!empty($tablePrefix)) {
 			global $REX;

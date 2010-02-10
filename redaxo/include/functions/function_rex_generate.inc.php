@@ -90,7 +90,7 @@ function rex_deleteCacheSliceContent($slice_id)
 	global $REX;
 
 	$cachePath = $REX['INCLUDE_PATH'].'/generated/articles/';
-	@unlink($cachePath.$slice_id.'.content');
+	@unlink($cachePath.$slice_id.'.slice');
 }
 
 /**
@@ -728,50 +728,6 @@ function rex_generateClang()
 	return true;
 }
 
-/**
- * Generiert den TemplateCache im Filesystem
- * 
- * @param $template_id Id des zu generierenden Templates
- * 
- * @return true bei Erfolg, sonst false
- */
-//function rex_generateTemplate($template_id)
-//{
-//  global $REX;
-//
-//  $sql = rex_sql::getInstance();
-//  $qry = 'SELECT * FROM '. $REX['TABLE_PREFIX']  .'template WHERE id = '.$template_id;
-//  $sql->setQuery($qry);
-//
-//  if($sql->getRows() == 1)
-//  {
-//    $templatesDir = rex_template::getTemplatesDir();
-//    $templateFile = rex_template::getFilePath($template_id);
-//
-//  	$content = $sql->getValue('content');
-//  	foreach(Core::getVarTypes() as $idx => $var)
-//  	{
-//  		$content = $var->getTemplate($content);
-//  	}
-//    if(rex_put_file_contents($templateFile, $content) !== false)
-//    {
-//      return true;
-//    }
-//    else
-//    {
-//      trigger_error('Unable to generate template '. $template_id .'!', E_USER_ERROR);
-//
-//      if(!is_writable())
-//        trigger_error('directory "'. $templatesDir .'" is not writable!', E_USER_ERROR);
-//    }
-//  }
-//  else
-//  {
-//    trigger_error('Template with id "'. $template_id .'" does not exist!', E_USER_ERROR);
-//  }
-//
-//  return false;
-//}
 
 /**
  * Escaped einen String
