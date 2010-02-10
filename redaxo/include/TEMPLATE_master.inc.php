@@ -152,12 +152,12 @@ if(!$REX['SYNC']){
 	Core::registerVarType('rex_var_value');
 	Core::registerVarType('rex_var_link');
 	Core::registerVarType('rex_var_media');
+
+	// ----- SET CLANG
+	include_once $REX['INCLUDE_PATH'].'/clang.inc.php';
+	
+	$REX['CUR_CLANG']  = Core::getCurrentClang();
+	
+	if (empty($_REQUEST['article_id'])) $REX['ARTICLE_ID'] = $REX['START_ARTICLE_ID'];
+	else $REX['ARTICLE_ID'] = rex_request('article_id','rex-article-id', $REX['NOTFOUND_ARTICLE_ID']);
 }
-
-// ----- SET CLANG
-include_once $REX['INCLUDE_PATH'].'/clang.inc.php';
-
-$REX['CUR_CLANG']  = Core::getCurrentClang();
-
-if (empty($_REQUEST['article_id'])) $REX['ARTICLE_ID'] = $REX['START_ARTICLE_ID'];
-else $REX['ARTICLE_ID'] = rex_request('article_id','rex-article-id', $REX['NOTFOUND_ARTICLE_ID']);
