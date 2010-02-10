@@ -6,7 +6,6 @@
  * @version svn:$Id$
  */
 
-// request vars
 $category_id = rex_request('category_id', 'rex-category-id');
 $article_id  = rex_request('article_id',  'rex-article-id');
 $clang       = rex_request('clang',       'rex-clang-id', $REX['START_CLANG_ID']);
@@ -14,18 +13,17 @@ $ctype       = rex_request('ctype',       'rex-ctype-id');
 $edit_id     = rex_request('edit_id',     'rex-category-id');
 $function    = rex_request('function',    'string');
 
-$info = '';
+$info    = '';
 $warning = '';
 
 require $REX['INCLUDE_PATH'].'/functions/function_rex_category.inc.php';
 require $REX['INCLUDE_PATH'].'/functions/function_rex_content.inc.php';
 
-
-// --------------------------------------------- TITLE
+// Titel ausgeben
 
 rex_title($I18N->msg('title_structure'), $KATout);
 
-$sprachen_add = '&amp;category_id='. $category_id;
+$sprachen_add = '&amp;category_id='.$category_id;
 require $REX['INCLUDE_PATH'].'/functions/function_rex_languages.inc.php';
 
 // -------------- STATUS_TYPE Map
