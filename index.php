@@ -16,7 +16,6 @@ require 'redaxo/include/functions/function_rex_mquotes.inc.php';
 
 unset($REX);
 $REX['REDAXO']      = false; // Backend = true, Frontend = false
-$REX['GG']          = true;  // Get from Generated?
 $REX['HTDOCS_PATH'] = './';
 
 // Core laden
@@ -36,11 +35,7 @@ if ($REX['SETUP']) {
 $REX['ARTICLE'] = new rex_article();
 $REX['ARTICLE']->setCLang($REX['CUR_CLANG']);
 
-if ($REX['SETUP']) {
-	header('Location: redaxo/index.php');
-	exit();
-}
-elseif ($REX['ARTICLE']->setArticleId($REX['ARTICLE_ID'])) {
+if ($REX['ARTICLE']->setArticleId($REX['ARTICLE_ID'])) {
 	print $REX['ARTICLE']->getArticleTemplate();
 }
 else {
