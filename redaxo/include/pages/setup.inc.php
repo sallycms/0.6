@@ -213,7 +213,7 @@ if ($checkmodus == '0.5')
 
   $Basedir = dirname(__FILE__);
   $license_file = $Basedir.'/../../../_lizenz.txt';
-  $license = '<p class="rex-tx1">'.nl2br(rex_get_file_contents($license_file)).'</p>';
+  $license = '<p class="rex-tx1">'.nl2br(file_get_contents($license_file)).'</p>';
 
   if(strpos($REX['LANG'], 'utf') !== false)
     echo utf8_encode($license);
@@ -326,7 +326,7 @@ elseif ($MSG['err'] != "")
 if ($checkmodus == 2 && $send == 1)
 {
   $master_file = $REX['INCLUDE_PATH'].'/master.inc.php';
-  $cont = rex_get_file_contents($master_file);
+  $cont = file_get_contents($master_file);
 
   // Einfache quotes nicht escapen, da der String zwischen doppelten quotes stehen wird
   $serveraddress             = str_replace("\'", "'", rex_post('serveraddress', 'string'));
@@ -915,7 +915,7 @@ if($user_sql->getRows() > 0)
 if ($checkmodus == 5)
 {
   $master_file = $REX['INCLUDE_PATH'].'/master.inc.php';
-  $cont = rex_get_file_contents($master_file);
+  $cont = file_get_contents($master_file);
   $cont = ereg_replace("(REX\['SETUP'\].?\=.?)[^;]*", '\\1false', $cont);
 
   if(rex_put_file_contents($master_file, $cont))

@@ -14,7 +14,7 @@ if ($func == 'setup')
   // REACTIVATE SETUP
 
   $master_file = $REX['INCLUDE_PATH'].'/master.inc.php';
-  $cont = rex_get_file_contents($master_file);
+  $cont = file_get_contents($master_file);
   $cont = ereg_replace("(REX\['SETUP'\].?\=.?)[^;]*", '\\1true', $cont);
   // echo nl2br(htmlspecialchars($cont));
   if (rex_put_file_contents($master_file, $cont) !== false)
@@ -36,7 +36,7 @@ elseif ($func == 'updateinfos')
   $neu_notfoundartikel    = rex_post('neu_notfoundartikel', 'int');
   $neu_defaulttemplateid  = rex_post('neu_defaulttemplateid', 'int');
   $neu_lang               = rex_post('neu_lang', 'string');
-  // ' darf nichtg escaped werden, da in der Datei der Schlüssel nur zwischen " steht
+  // ' darf nichtg escaped werden, da in der Datei der Schlï¿½ssel nur zwischen " steht
   $neu_error_emailaddress = str_replace("\'", "'", rex_post('neu_error_emailaddress', 'string'));
   $neu_SERVER             = str_replace("\'", "'", rex_post('neu_SERVER', 'string'));
   $neu_SERVERNAME         = str_replace("\'", "'", rex_post('neu_SERVERNAME', 'string'));
@@ -47,7 +47,7 @@ elseif ($func == 'updateinfos')
 
   $REX['LANG'] = $neu_lang;
   $master_file = $REX['INCLUDE_PATH'] .'/master.inc.php';
-  $cont = rex_get_file_contents($master_file);
+  $cont = file_get_contents($master_file);
 
   if(!OOArticle::isValid($startArt))
   {
@@ -87,9 +87,9 @@ elseif ($func == 'updateinfos')
   rex_put_file_contents($master_file, $cont);
   $info = $I18N->msg('info_updated');
 
-  // Zuweisungen für Wiederanzeige
+  // Zuweisungen fï¿½r Wiederanzeige
   $REX['MOD_REWRITE'] = $neu_modrewrite === 'TRUE';
-  // FŸr die Wiederanzeige Slashes strippen
+  // Fï¿½r die Wiederanzeige Slashes strippen
   $REX['ERROR_EMAIL'] = stripslashes($neu_error_emailaddress);
   $REX['SERVER'] = stripslashes($neu_SERVER);
   $REX['SERVERNAME'] = stripslashes($neu_SERVERNAME);

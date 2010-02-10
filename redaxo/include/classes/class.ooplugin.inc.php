@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Klasse zum pr�fen ob Plugins installiert/aktiviert sind
+ * Klasse zum prüfen ob Plugins installiert/aktiviert sind
  * @package redaxo4
  * @version svn:$Id$
  */
@@ -81,7 +81,7 @@ class OOPlugin extends rex_addon
 	}
 
 	/**
-	 * Gibt ein Array aller verfügbaren Plugins zur�ck.
+	 * Gibt ein Array aller verfügbaren Plugins zurück.
 	 *
 	 * @param string $addon Name des Addons
 	 *

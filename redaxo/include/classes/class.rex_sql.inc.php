@@ -891,14 +891,7 @@ class rex_sql
 	 */
 	public static function getServerVersion()
 	{
-		global $REX;
-		
-		if (empty($REX['MYSQL_VERSION'])) {
-			$res = $this->getArray('SELECT VERSION() AS v');
-			$REX['MYSQL_VERSION'] = $res[0]['v'];
-		}
-		
-		return $REX['MYSQL_VERSION'];
+		return $this->getArray('SELECT VERSION() AS v');
 	}
 
 	/**

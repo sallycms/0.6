@@ -47,11 +47,10 @@ function __autoload($className) {
 		'rex_sql'                           => 'rex_sql',
 	);
 	
-		
 	if(file_exists($REX['INCLUDE_PATH'].'/classes/'.strtolower($className).'.php')) {
         require_once $REX['INCLUDE_PATH'].'/classes/'.strtolower($className).'.php';
     }
-	if (isset($classes[$className])) {
+	elseif (isset($classes[$className])) {
 		require_once $REX['INCLUDE_PATH'].'/classes/class.'.$classes[$className].'.inc.php';
 	}
 	else {
@@ -61,7 +60,7 @@ function __autoload($className) {
 
 // Funktionen
 
-require_once $REX['INCLUDE_PATH'].'/functions/function_rex_time.inc.php';
+
 require_once $REX['INCLUDE_PATH'].'/functions/function_rex_globals.inc.php';
 require_once $REX['INCLUDE_PATH'].'/functions/function_rex_client_cache.inc.php';
 require_once $REX['INCLUDE_PATH'].'/functions/function_rex_url.inc.php';
@@ -71,6 +70,7 @@ require_once $REX['INCLUDE_PATH'].'/functions/function_rex_plugins.inc.php';
 require_once $REX['INCLUDE_PATH'].'/functions/function_rex_other.inc.php';
 
 if ($REX['REDAXO']) {
+	require_once $REX['INCLUDE_PATH'].'/functions/function_rex_time.inc.php';
 	require_once $REX['INCLUDE_PATH'].'/functions/function_rex_title.inc.php';
 	require_once $REX['INCLUDE_PATH'].'/functions/function_rex_generate.inc.php';
 	require_once $REX['INCLUDE_PATH'].'/functions/function_rex_mediapool.inc.php';

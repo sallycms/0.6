@@ -40,9 +40,9 @@ class SQLConnection{
 			
 			// Verbindung auf UTF8 trimmen
 			
-			if (rex_lang_is_utf8()) {
-				// $this->setQuery('SET NAMES utf8');
-			}
+//			if (rex_lang_is_utf8()) {
+//				$this->setQuery('SET NAMES utf8');
+//			}
 		}
 		
 		$REX['REX_SQL_INIT_'.$DBID] = true;

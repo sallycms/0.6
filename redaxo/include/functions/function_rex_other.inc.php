@@ -522,11 +522,13 @@ function rex_is_frontend()
 {
 	return !rex_is_backend();
 }
-
+/**
+ * @deprecated
+ * @return int clangId
+ */
 function rex_cur_clang()
 {
-	global $REX;
-	return (int) $REX['CUR_CLANG'];
+	return (int) Core::getCurrentClang();
 }
 
 function rex_get_clang($clang = false, $default = -1)
@@ -538,7 +540,7 @@ function rex_get_clang($clang = false, $default = -1)
 	}
 	
 	if (!isset($REX['CLANG'][$clang])) {
-		$clang = $REX['CUR_CLANG'];
+		$clang = Core::getCurrentClang();
 	}
 	
 	return (int) $clang;

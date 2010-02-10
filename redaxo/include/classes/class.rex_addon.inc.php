@@ -54,7 +54,6 @@
 	 */
 	public static function create($namespace)
 	{
-
 		$nsString = $namespace;
 		if(is_array($namespace))
 		{

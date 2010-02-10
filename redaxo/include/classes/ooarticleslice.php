@@ -106,7 +106,7 @@ class OOArticleSlice
 		global $REX;
 
 		if ($clang === false)
-		$clang = $REX['CUR_CLANG'];
+			$clang = Core::getCurrentClang();
 
 		return self::_getSliceWhere('a.article_id='. $an_article_id .' AND
                                           a.clang='. $clang .' AND
@@ -131,7 +131,7 @@ class OOArticleSlice
 		global $REX;
 
 		if ($clang === false)
-		$clang = $REX['CUR_CLANG'];
+			$clang = Core::getCurrentClang();
 
 		return self::_getSliceWhere('a.article_id='. $an_article_id .' AND
                                           a.clang='. $clang .' AND
@@ -159,7 +159,7 @@ class OOArticleSlice
 		global $REX;
 
 		if ($clang === false)
-		$clang = $REX['CUR_CLANG'];
+			$clang = Core::getCurrentClang();
 
 		return self::_getSliceWhere('article_id='. $an_article_id .' AND clang='. $clang .' AND modultyp_id='. $a_moduletype_id .' AND revision='.$revision, array());
 	}
@@ -295,11 +295,11 @@ class OOArticleSlice
 	public function getValue($index)
 	{
 		if(is_int($index))
-		return $this->_values[$index-1];
+			return $this->_values[$index-1];
 
 		$attrName = '_'. $index;
 		if(isset($this->$attrName))
-		return $this->$attrName;
+			return $this->$attrName;
 
 		return null;
 	}

@@ -76,8 +76,8 @@ class OORedaxo {
 		if(!$values) {
 			$values = self::getClassVars();
 		}
-		
-		foreach(array_merge(array(''), $prefixes) as $prefix) {
+		$prefixes[] = '';
+		foreach($prefixes as $prefix) {
 			if(in_array($prefix.$value, $values)) {
 				return true;
 			}
@@ -97,9 +97,7 @@ class OORedaxo {
 		}
 		
 		if (empty(self::$classvars)) {
-			global $REX;
-			$fields = rex_sql::getArrayEx('SHOW COLUMNS FROM '.$REX['TABLE_PREFIX'].'article');
-			self::$classvars = array_keys($fields);
+			self::$classvars = array_keys(rex_sql::getArrayEx('SHOW COLUMNS FROM #_article', '#_'));
 		}
 		
 		return self::$classvars;
@@ -158,7 +156,7 @@ class OORedaxo {
 	* @deprecated 4.0 17.09.2007
 	*/
 	public function getFileMedia() {
-		return OOMedia :: getMediaByFileName($this->getValue('art_file'));
+		return OOMedia::getMediaByFileName($this->getValue('art_file'));
 	}
 	
 	/**
@@ -227,7 +225,7 @@ class OORedaxo {
 	* Accessor Method:
 	* returns true if article has a template.
 	*/
-	public function hasTemplate() { return $this->_template_id > 0; }
+	public function hasTemplate() { return (bool)$this->_template_id > 0; }
 	
 	/*
 	* Accessor Method:
@@ -270,14 +268,12 @@ class OORedaxo {
 		$return = array ();
 		
 		if($this->_path) {
+			$explode = explode('|', $this->_path);
+			$explode = array_filter($explode);
 			
 			if($this->isStartArticle()) {
-				$explode = explode('|', $this->_path.$this->_id.'|');
-			} else {
-				$explode = explode('|', $this->_path);
+				$explode[] = $this->_id;
 			}
-			
-			$explode = array_filter($explode);
 			foreach($explode as $var) {
 				$return[] = OOCategory::getCategoryById($var, $this->_clang);
 			}

@@ -100,7 +100,7 @@ class rex_login
 
   /**
    * Setzt eine eindeutige System Id, damit mehrere
-   * Sessions auf der gleichen Domain unterschieden werden können
+   * Sessions auf der gleichen Domain unterschieden werden kï¿½nnen
    */
   function setSysID($system_id)
   {
@@ -133,7 +133,7 @@ class rex_login
   }
 
   /**
-   * Prüft, ob die aktuelle Session ausgeloggt ist
+   * PrÃ¼ft, ob die aktuelle Session ausgeloggt ist
    */
   function isLoggedOut()
   {
@@ -154,7 +154,7 @@ class rex_login
   /**
    * Setzt den LoginQuery
    *
-   * Dieser wird benutzt, um den eigentlichne Loginvorgang durchzuführen.
+   * Dieser wird benutzt, um den eigentlichne Loginvorgang durchzufï¿½hren.
    * Hier wird das eingegebene Password und der Login eingesetzt.
    */
   function setLoginquery($login_query)
@@ -163,7 +163,7 @@ class rex_login
   }
 
   /**
-   * Setzt den Namen der Spalte, der die User-Id enthält
+   * Setzt den Namen der Spalte, der die User-Id enthï¿½lt
    */
   function setUserID($uid)
   {
@@ -179,10 +179,10 @@ class rex_login
   }
 
   /**
-   * Prüft die mit setLogin() und setPassword() gesetzten Werte
-   * anhand des LoginQueries/UserQueries und gibt den Status zurück
+   * Prï¿½ft die mit setLogin() und setPassword() gesetzten Werte
+   * anhand des LoginQueries/UserQueries und gibt den Status zurï¿½ck
    *
-   * Gibt true zurück bei erfolg, sonst false
+   * Gibt true zurï¿½ck bei erfolg, sonst false
    */
   function checkLogin()
   {
@@ -199,7 +199,7 @@ class rex_login
     {
       // LoginStatus: 0 = noch checken, 1 = ok, -1 = not ok
 
-      // checkLogin schonmal ausgeführt ? gecachte ausgabe erlaubt ?
+      // checkLogin schonmal ausgefï¿½hrt ? gecachte ausgabe erlaubt ?
       if ($this->cache)
       {
         if($this->login_status > 0)
@@ -294,7 +294,7 @@ class rex_login
   }
 
   /**
-   * Gibt einen Benutzer-Spezifischen Wert zurück
+   * Gibt einen Benutzer-Spezifischen Wert zurï¿½ck
    */
   function getValue($value, $default = NULL)
   {
@@ -313,7 +313,7 @@ class rex_login
   }
 
   /**
-   * Verschlüsselt den übergebnen String, falls eine Password-Funktion gesetzt ist.
+   * Verschlï¿½sselt den ï¿½bergebnen String, falls eine Password-Funktion gesetzt ist.
    */
   function encryptPassword($psw)
   {
@@ -332,7 +332,7 @@ class rex_login
   }
 
   /**
-   * Gibt den Wert einer Session-Variable zurück
+   * Gibt den Wert einer Session-Variable zurï¿½ck
    */
   function getSessionVar($varname, $default = '')
   {
@@ -347,7 +347,7 @@ class rex_login
    */
   function sessionFixation()
   {
-    // 1. parameter ist erst seit php5.1 verfügbar
+    // 1. parameter ist erst seit php5.1 verfï¿½gbar
     if (version_compare(phpversion(), '5.1.0', '>=') == 1)
     {
       session_regenerate_id(true);

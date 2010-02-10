@@ -72,7 +72,7 @@ class rex_template
 	{
 		$file = $this->getFile();
 		if (!$file) return false;
-		return rex_get_file_contents($file);
+		return file_get_contents($file);
 	}
 
 	public function generate()
@@ -126,13 +126,13 @@ class rex_template
 
 	public static function hasModule($template_attributes, $ctype, $module_id)
 	{
-		$template_modules = rex_getAttributes('modules', $template_attributes, array ());
+		$template_modules = rex_getAttributes('modules', $template_attributes, array());
 
 		if (!isset($template_modules[$ctype]['all']) || $template_modules[$ctype]['all'] == 1)
-		return true;
+			return true;
 
 		if (in_array($module_id, $template_modules[$ctype]))
-		return true;
+			return true;
 
 		return false;
 	}

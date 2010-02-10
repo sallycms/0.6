@@ -17,7 +17,6 @@ class rex_article
   var $function;
 
   var $category_id;  
-  var $CONT;
   
   var $template_id;
   var $template_attributes;
@@ -40,8 +39,6 @@ class rex_article
   
   public function __construct($article_id = null, $clang = null)
   {
-    global $REX;
-
     $this->article_id = 0;
     $this->template_id = 0;
     $this->ctype = -1; // zeigt alles an
@@ -50,7 +47,7 @@ class rex_article
     $this->mode = "view";
     $this->content = "";
 
-    $this->eval = FALSE;
+    $this->eval = false;
     $this->viasql = false;
 
     $this->article_revision = 0;
@@ -59,10 +56,10 @@ class rex_article
     $this->debug = FALSE;
     $this->ARTICLE = null;
         
-    if($clang !== null)
-      $this->setCLang($clang);
-    else
-      $this->setClang($REX['CUR_CLANG']);
+    if($clang === null)
+      $clang = Core::getCurrentClang();
+
+    $this->setClang($clang);
 
     // ----- EXTENSION POINT
     rex_register_extension_point('ART_INIT', "",
@@ -98,7 +95,7 @@ class rex_article
   function setClang($value)
   {
     global $REX;
-    if (!isset($REX['CLANG'][$value]) || $REX['CLANG'][$value] == "") $value = $REX['CUR_CLANG'];
+    if (!isset($REX['CLANG'][$value]) || empty($REX['CLANG'][$value])) $value = Core::getCurrentClang();
     $this->clang = $value;
   }
   
@@ -129,8 +126,8 @@ class rex_article
 
       if ($this->ARTICLE->getRows() > 0)
       {
-        $this->template_id = $this->getValue('template_id');
-        $this->category_id = $this->getValue('category_id');
+        $this->template_id = $this->ARTICLE->getValue('template_id');
+        $this->category_id = $this->ARTICLE->getValue('category_id');
         return TRUE;
       }
     }
@@ -139,8 +136,8 @@ class rex_article
       $this->ARTICLE = OOArticle::getArticleById($this->article_id, $this->clang);
       if(OOArticle::isValid($this->ARTICLE))
       {
+      	$this->template_id = $this->ARTICLE->getTemplateId();
         $this->category_id = $this->ARTICLE->getCategoryId();
-        $this->template_id = $this->ARTICLE->getTemplateId();
         return TRUE;
       }
     }
@@ -217,7 +214,6 @@ class rex_article
 
   function hasValue($value)
   {
-    global $REX;
     $value = $this->correctValue($value);
     return $this->ARTICLE->hasValue($value);
   }
@@ -680,7 +676,7 @@ class rex_article
       if (!file_exists($templateFile)) {
         $tpl = new rex_template($this->template_id);
         $tpl->generate();
-        $tpl = null;
+        unset($tpl);
       }
       
       include $templateFile;

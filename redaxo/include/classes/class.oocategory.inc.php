@@ -24,11 +24,11 @@ class OOCategory extends OORedaxo {
 	* Return all Children by id
 	*/
 	public static function getChildrenById($cat_parent_id, $ignore_offlines = false, $clang = false) {
-		global $REX;
-		
+
 		$cat_parent_id = (int) $cat_parent_id;
 	
-		if($clang === false) { $clang = $REX['CUR_CLANG']; }
+		if($clang === false) { $clang = Core::getCurrentClang(); }
+		$clang = (int) $clang;
 		
 		$namespace = 'clist';
 		$key   = $cat_parent_id.'_'.$clang;
@@ -37,14 +37,8 @@ class OOCategory extends OORedaxo {
 		if($clist === null) {
 			$clist = array();
 			
-			$sql = rex_sql::getInstance();
-			$sql->setQuery('SELECT id FROM '.$REX['TABLE_PREFIX'].'article WHERE startpage = 1 AND re_id = '.$cat_parent_id.' AND clang = '.$REX['CUR_CLANG'].' ORDER BY catprior,name');
+			$clist = rex_sql::getArrayEx('SELECT id FROM #_article WHERE startpage = 1 AND re_id = '.$cat_parent_id.' AND clang = '.$clang.' ORDER BY catprior,name', '#_');
 			
-			while($row = mysql_fetch_array($sql->result, MYSQL_NUM)) {
-				$clist[] = $row[0];
-			}
-
-			$sql->freeResult();
 			Core::cache()->set($namespace, $key, $clist);
 		}
 		
@@ -56,8 +50,7 @@ class OOCategory extends OORedaxo {
 			if ($category && (!$ignore_offlines || ($ignore_offlines && $category->isOnline()))) {
 				$catlist[] = $category;
 			}
-		}  
-		
+		} 
 		return $catlist;
 	}
 	
@@ -78,10 +71,6 @@ class OOCategory extends OORedaxo {
 	* excempt from this list!
 	*/
 	public static function getRootCategories($ignore_offlines = false, $clang = false) {
-		global $REX;
-	
-		if ($clang === false) { $clang = $REX['CUR_CLANG']; }
-	
 		return OOCategory::getChildrenById(0, $ignore_offlines, $clang);
 	}
 	

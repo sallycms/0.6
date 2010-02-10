@@ -18,12 +18,10 @@ class OOArticle extends OORedaxo
 	 */
 	public static function getArticleById($article_id, $clang = false, $OOCategory = false)
 	{
-		global $REX;
-		
 		$article_id = (int) $article_id;
 
 		if ($clang === false) {
-			$clang = $REX['CUR_CLANG'];
+			$clang = Core::getCurrentClang();
 		}
 
 		$clang     = (int) $clang;
@@ -43,7 +41,6 @@ class OOArticle extends OORedaxo
 				Core::cache()->set($namespace, $key, $obj);
 			}
 		}
-		
 		return $obj;
 	}
 
@@ -73,7 +70,7 @@ class OOArticle extends OORedaxo
 		global $REX;
 
 		if ($clang === false) {
-			$clang = $REX['CUR_CLANG'];
+			$clang = Core::getCurrentClang();
 		}
 		
 		$category_id = (int) $category_id;
@@ -141,7 +138,7 @@ class OOArticle extends OORedaxo
 	{
 		global $REX;
 		
-		if (Core::cache()->get('article', $articleId.'_'.$REX['CUR_CLANG'], null) !== null) {
+		if (Core::cache()->get('article', $articleId.'_'.Core::getCurrentClang(), null) !== null) {
 			return true;
 		}
 		

@@ -4,7 +4,7 @@
 /**
  * REDAXO Tar Klasse
  *
- * Diese Subklasse fixed ein paar Bugs gegenüber der
+ * Diese Subklasse fixed ein paar Bugs gegenï¿½ber der
  * original Implementierung und erhoeht die Performanz
  *
  * @author	Markus Staab
@@ -62,7 +62,7 @@ class rex_tar extends tar
 //    $file_contents = fread($fp,filesize($filename));
 //    fclose($fp);
     // STM: hier mit get_file_contents ist viel schneller
-    $file_contents = rex_get_file_contents($filename);
+    $file_contents = file_get_contents($filename);
 
     // Add file to processed data
     $this->numFiles++;
@@ -116,7 +116,7 @@ class rex_tar extends tar
 //    $this->tar_file = fread($fp,filesize($filename));
 //    fclose($fp);
     // STM: hier mit get_file_contents ist viel schneller
-    $this->tar_file = rex_get_file_contents($filename);
+    $this->tar_file = file_get_contents($filename);
 
     if($this->tar_file[0] == chr(31) && $this->tar_file[1] == chr(139) && $this->tar_file[2] == chr(8)) {
       if(!function_exists("gzinflate"))
