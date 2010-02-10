@@ -58,7 +58,6 @@ class OOArticle extends OORedaxo
 	 */
 	public static function getCategoryStartArticle($a_category_id, $clang = false)
 	{
-		global $REX;
 		return self::getArticleById($a_category_id, $clang);
 	}
 

@@ -198,7 +198,7 @@ class OOArticleSlice
 
 	public function getContent(){
 		global $REX, $I18N;
-		$slice_content_file = $REX['INCLUDE_PATH'].'/generated/articles/'.$this->getId().'.content';
+		$slice_content_file = $REX['INCLUDE_PATH'].'/generated/articles/'.$this->getId().'.slice';
 		if(!file_exists($slice_content_file)){
 			$slice_content = $this->getSlice();
 			$slice_content = self::replaceLinks($slice_content);
