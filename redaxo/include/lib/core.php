@@ -55,6 +55,8 @@ class Core
 
 	public static function getCurrentClang()
 	{
+		global $REX;
+		
 		$instance = self::getInstance();
 		if(!isset($instance->curclang)){
 			$instance->curclang = rex_request('clang', 'rex-clang-id', $REX['START_CLANG_ID']);
