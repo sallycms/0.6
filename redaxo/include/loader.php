@@ -52,6 +52,8 @@ function __autoload($className) {
     }
 	elseif (isset($classes[$className])) {
 		require_once $REX['INCLUDE_PATH'].'/classes/class.'.$classes[$className].'.inc.php';
+	}elseif(file_exists($REX['INCLUDE_PATH'].'/lib/'.strtolower(str_replace('_', '/', $className)).'.php')){
+		require_once $REX['INCLUDE_PATH'].'/lib/'.strtolower(str_replace('_', '/', $className)).'.php';
 	}
 	else {
 		rex_register_extension_point('__AUTOLOAD', $className);

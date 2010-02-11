@@ -609,3 +609,31 @@ function rex_exception(Exception $e)
 {
 	return rex_warning('Error in '.$e->getFile().' Line: '.$e->getLine().'<br />'.$e->getMessage());
 }
+
+/**
+ * Somewhat naive way to determine if an array is a hash.
+ */
+function is_hash(&$array)
+{
+	if (!is_array($array))
+		return false;
+
+	$keys = array_keys($array);
+	return @is_string($keys[0]) ? true : false;
+}
+
+// http://snippets.dzone.com/posts/show/4660
+function array_flatten(array $array)
+{
+	$i = 0;
+	$n = count($array);
+
+	while ($i < $n)
+	{
+		if (is_array($array[$i]))
+			array_splice($array,$i,1,$array[$i]);
+        else
+			++$i;
+    }
+    return $array;
+}

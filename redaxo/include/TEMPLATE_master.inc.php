@@ -88,6 +88,7 @@ $REX['SYSTEM_ADDONS'] = array('import_export', 'be_search', 'image_resize');
 $REX['MEDIAPOOL']['BLOCKED_EXTENSIONS'] = array('.php','.php3','.php4','.php5','.php6','.phtml','.pl','.asp','.aspx','.cfm','.jsp');
 
 // ----------------- DB1
+$REX['DB']['1']['DRIVER'] = "mysql";
 $REX['DB']['1']['HOST'] = "localhost";
 $REX['DB']['1']['LOGIN'] = "develop";
 $REX['DB']['1']['PSW'] = "develop";

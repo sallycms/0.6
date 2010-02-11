@@ -56,7 +56,7 @@ class rex_sql
 	 */
 	public function selectDB($DBID, $forceReconnect = false)
 	{
-		$this->identifier = SQLConnection::factory($DBID)->getConnection();
+		$this->identifier = DB_MySQL_Connection::factory($DBID)->getConnection();
 		$this->DBID       = $DBID;
 	}
 
