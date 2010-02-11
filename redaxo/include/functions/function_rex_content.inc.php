@@ -142,6 +142,39 @@ function rex_deleteSlice($slice_id)
 }
 
 /**
+ * Prüft, ob ein Modul für ein bestimmtes Slice im System bekannt ist.
+ *
+ * @return int  -1, falls kein Modul gefunden wurde, sonst die ID des Moduls
+ */
+function rex_slice_module_exists($sliceID, $clang)
+{
+	global $REX;
+	
+	$sliceID = (int) $sliceID;
+	$clang   = (int) $clang;
+	$from    = 'article_slice s LEFT JOIN '.$REX['TABLE_PREFIX'].'module m ON s.modultyp_id = m.id';
+	$id      = rex_sql::fetch('m.id', $from, 's.id = '.$sliceID.' AND s.clang = '.$clang);
+	
+	return $id === false ? -1 : $id;
+}
+
+/**
+ * Prüft, ob ein Modul im System bekannt ist.
+ *
+ * @return boolean  true oder ... false
+ */
+function rex_module_exists($moduleID)
+{
+	$moduleID = (int) $moduleID;
+	
+	if ($moduleID < 0) {
+		return false;
+	}
+	
+	return rex_sql::fetch('id', 'module', 'id = '.$moduleID) > 0;
+}
+
+/**
  * Führt alle pre-save Aktionen eines Moduls aus
  * 
  * @param  int    $module_id   ID des Moduls

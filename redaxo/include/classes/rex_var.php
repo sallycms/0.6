@@ -15,7 +15,7 @@ abstract class rex_var
    * Actionmethode:
    * Zum füllen des sql aus dem $REX_ACTION Array
    */
-  function setACValues(& $sql, $REX_ACTION, $escape = false)
+  function setACValues(& $sql, $REX_ACTION, $escape = false, $prependTableName = true)
   {
     // nichts tun
   }
@@ -120,14 +120,16 @@ abstract class rex_var
    * mit MySQL 3.x mit Tabellenprefix angegeben werden muss, da der SQL gleichnamige
    * Spalten unterschiedlicher Tabellen enth�lt.
    */
-  function setValue(& $sql, $fieldname, $value, $escape = false)
+  function setValue(& $sql, $fieldname, $value, $escape = false, $prependTableName = true)
   {
     global $REX;
+	 
+	 $table = $prependTableName ? $REX['TABLE_PREFIX'].'article_slice.' : '';
 
-    if($escape)
-      return $sql->setValue($REX['TABLE_PREFIX'] . 'article_slice.' . $fieldname, addslashes($value));
+    if ($escape)
+      return $sql->setValue($table.$fieldname, addslashes($value));
 
-    return $sql->setValue($REX['TABLE_PREFIX'] . 'article_slice.' . $fieldname, $value);
+    return $sql->setValue($table.$fieldname, $value);
   }
 
   /**

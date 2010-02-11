@@ -47,14 +47,14 @@ class rex_var_media extends rex_var
     return $REX_ACTION;
   }
 
-  function setACValues(& $sql, $REX_ACTION, $escape = false)
+  function setACValues(& $sql, $REX_ACTION, $escape = false, $prependTableName = true)
   {
     global $REX;
 
     for ($i = 1; $i < 11; $i++)
     {
-      $this->setValue($sql, 'file'. $i    , $REX_ACTION['MEDIA'][$i]    , $escape);
-      $this->setValue($sql, 'filelist'. $i, $REX_ACTION['MEDIALIST'][$i], $escape);
+      $this->setValue($sql, 'file'. $i    , $REX_ACTION['MEDIA'][$i]    , $escape, $prependTableName);
+      $this->setValue($sql, 'filelist'. $i, $REX_ACTION['MEDIALIST'][$i], $escape, $prependTableName);
     }
   }
 
