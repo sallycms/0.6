@@ -77,16 +77,12 @@ class OOArticleSlice
 	 */
 	public static function getArticleSliceById($an_id, $clang = false, $revision = 0)
 	{
-		if ($clang === false)
-		{
-			$clang = Core::getCurrentClang();
-		}
-		
+		if ($clang === false) $clang = Core::getCurrentClang();
 		$namespace = 'slice';
 		$key = $an_id;
 		
 		$obj = Core::cache()->get($namespace, $key, null);
-		if($obj === null){
+		if ($obj === null) {
 			$obj = self::_getSliceWhere('id='. $an_id .' AND clang='. $clang.' and revision='.$revision);
 			Core::cache()->set($namespace, $key, $obj);
 		}
@@ -199,7 +195,7 @@ class OOArticleSlice
 	public function getContent(){
 		global $REX, $I18N;
 		$slice_content_file = $REX['INCLUDE_PATH'].'/generated/articles/'.$this->getId().'.slice';
-		if(!file_exists($slice_content_file)){
+		if (!file_exists($slice_content_file)) {
 			$slice_content = $this->getSlice();
 			$slice_content = self::replaceLinks($slice_content);
 			if (rex_put_file_contents($slice_content_file, $slice_content) === FALSE)
@@ -234,8 +230,7 @@ class OOArticleSlice
 		$rows = $sql->getRows();
 
 		$slices = array ();
-		for ($i = 0; $i < $rows; $i++)
-		{
+		for ($i = 0; $i < $rows; $i++) {
 			$slices[] = new OOArticleSlice(
 			$sql->getValue('id'), $sql->getValue('article_id'), $sql->getValue('clang'), $sql->getValue('ctype'), $sql->getValue('modultyp_id'),
 			$sql->getValue('re_article_slice_id'), $sql->getValue('next_article_slice_id'),
@@ -249,10 +244,7 @@ class OOArticleSlice
 
 			$sql->next();
 		}
-
-	 if (!empty($slices)) {
-	 	return count($slices) == 1 ? $slices[0] : $slices;
-	 }
+	 if (!empty($slices)) return count($slices) == 1 ? $slices[0] : $slices;
 
 	 return $default;
 	}
