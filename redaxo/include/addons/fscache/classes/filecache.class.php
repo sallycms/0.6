@@ -21,23 +21,23 @@ class FileCache implements ICache{
 	}
 	
 	public function set($namespace, $key, $value){
-		if(!isset($this->cache[$namespace]))
+		if(!array_key_exists($namespace, $this->cache))
 			$this->readFile($namespace);
 		$this->cache[$namespace][$key] = serialize($value);
 		$this->writeFile($namespace);
 	}
 	
 	public function get($namespace, $key, $default){
-		if(!isset($this->cache[$namespace]))
+		if(!array_key_exists($namespace, $this->cache))
 			$this->readFile($namespace);				
-		if(isset($this->cache[$namespace][$key])){
+		if(array_key_exists($key, $this->cache[$namespace])){
 			return unserialize($this->cache[$namespace][$key]);
 		}
 		return $default;
 	}
 	
 	public function delete($namespace, $key){
-		if(!isset($this->cache[$namespace]))
+		if(!array_key_exists($namespace, $this->cache))
 			$this->readFile($namespace);
 		unset($this->cache[$namespace][$key]);
 		$this->writeFile($namespace);
