@@ -7,7 +7,6 @@
 
 require_once '../pqp/classes/PhpQuickProfiler.php';
 $pqp = new PhpQuickProfiler(time());
-Console::logSpeed('start');
 ob_start();
 ob_implicit_flush(0);
 
@@ -47,23 +46,13 @@ try{
 	$slice = $service->create(array('namespace' => 'article', 'fk_id' => '1', 'module_id' => '3'));
 
 	$value = $slice->AddValue('file', '1', 'tada');
-	Console::log($slice);
-	Console::log($value);
-	
-	
 	$data2 = $service->findById(1);
 
-	Console::log($data2);
 	unset($service);
 }catch(Exception $e){
 		
 }
 
-
-
-
-Console::logSpeed('stop');
-$pqp->display();
 $content = ob_get_clean();
 
 rex_send_article($REX['ARTICLE'], $content, 'frontend');
