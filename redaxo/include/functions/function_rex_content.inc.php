@@ -622,6 +622,21 @@ function rex_copyArticle($id, $to_cat_id)
 
 				// Prios neu berechnen
 				rex_newArtPrio($to_cat_id, $clang, 1, 0);
+				
+				// ----- EXTENSION POINT
+    			rex_register_extension_point('ART_ADDED', $message,
+			      	array (
+				        'id' => $new_id,
+				        'clang' => $clang,
+				        'status' => $article->getValue('status'),
+				        'name' => $article->getName(),
+				        're_id' => $article->getValue('re_id'),
+				        'prior' => $article->getValue('prior'),
+				        'path' => $article->getValue('path'),
+				        'template_id' => $article->getValue('template_id'),
+			      	)
+    			);
+    			Core::cache()->delete('alist', $to_cat_id.'_'.$key);
 			}
 			else {
 				return false;
