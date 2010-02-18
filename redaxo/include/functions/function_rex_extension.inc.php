@@ -77,7 +77,7 @@ function rex_extension_is_registered($extensionPoint)
 }
 
 /**
- * Gibt ein Array mit Namen von Extensions zur�ck, die am angegebenen Extension Point definiert wurden
+ * Gibt ein Array mit Namen von Extensions zurück, die am angegebenen Extension Point definiert wurden
  *
  * @param string $extensionPoint  Name des ExtensionPoints
  */

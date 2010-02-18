@@ -89,7 +89,7 @@ class DB_PDO_Persistence implements Iterator{
     	return $this->affectedRows();
     }
     
-    public function select($table, $select = '*', $where = null, $group = null, $having = null, $order = null, $limit = null, $joins = null) {
+    public function select($table, $select = '*', $where = null, $group = null, $order = null, $limit = null, $having = null, $joins = null) {
 		$sql = new DB_PDO_SQLBuilder($this->connection, self::getPrefix().$table);
 		$sql->select($select);
 		if($where) $sql->where($where);

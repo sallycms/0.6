@@ -22,7 +22,7 @@ class Model_SliceValueBase extends Model_Base{
 	protected $finder;
 	protected $value;
 	
-    protected $attributes = array('id' => 'int', 'slice_id' => 'int', 'type' => 'string', 'finder' => 'string', 'value' => 'string');
+    protected $_attributes = array('slice_id' => 'int', 'type' => 'string', 'finder' => 'string', 'value' => 'string');
     
     public function getSliceId(){ return $this->slice_id; }
     

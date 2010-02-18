@@ -21,10 +21,10 @@ abstract class Model_Base {
 	
     protected $id = self::NEW_ID;
     
-    protected $attributes = array('id' => 'int');
-
     public function __construct($params) {
-    	foreach($this->attributes as $name => $type){
+    	if(isset($params['id'])) $this->id = $params['id'];
+    	
+    	foreach($this->_attributes as $name => $type){
     		if(isset($params[$name])) $this->$name = $params[$name];
     	}
     }
@@ -33,8 +33,8 @@ abstract class Model_Base {
 	public function setId($id) { $this->id = $id; }
 
     public function toAssocArray(){
-    	$return = array();
-    	foreach($this->attributes as $name => $type){
+    	$return = array('id' => $this->id);
+    	foreach($this->_attributes as $name => $type){
     		$return[$name] = $this->$name;
     	}
     	return $return;

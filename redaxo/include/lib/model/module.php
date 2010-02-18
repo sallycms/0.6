@@ -10,17 +10,14 @@
  */
 
 /**
- * DB Model Klasse für Slice Values 
+ * Business Model Klasse für Module
  * 
  * @author zozi@webvariants.de
  *
  */
-class Service_SliceValue extends Service_Base{
 
-	protected $tablename = 'slice_value';
+class Model_Module extends Model_ModuleBase {
 	
-	protected function makeObject(array $params){
-		return new Model_SliceValue($params);
-	}
-
+	
+	
 }

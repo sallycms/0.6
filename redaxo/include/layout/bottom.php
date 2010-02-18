@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Layout Fuß des Backends
+ * Layout FÃ¼r des Backends
  * @package redaxo4
  * @version svn:$Id$
  */

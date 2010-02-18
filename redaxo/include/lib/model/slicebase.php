@@ -22,7 +22,7 @@ class Model_SliceBase extends Model_Base{
 	protected $fk_id;
 	protected $module_id;
 	
-    protected $attributes = array('id' => 'int', 'namespace' => 'string', 'fk_id' => 'int', 'module_id' => 'int');
+    protected $_attributes = array('namespace' => 'string', 'fk_id' => 'int', 'module_id' => 'int');
     
     public function getNamespace(){ return $this->namespace; }
 

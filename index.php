@@ -41,17 +41,17 @@ else {
 	$REX['STATS'] = 0;
 }
 
-try{
-	$service = new Service_Slice();
+//try{
+	$service = Service_Factory::getService('Slice');
 	$slice = $service->create(array('namespace' => 'article', 'fk_id' => '1', 'module_id' => '3'));
 
 	$value = $slice->AddValue('file', '1', 'tada');
 	$data2 = $service->findById(1);
 
 	unset($service);
-}catch(Exception $e){
-		
-}
+//}catch(Exception $e){
+//		
+//}
 
 $content = ob_get_clean();
 

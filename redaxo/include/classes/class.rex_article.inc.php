@@ -427,21 +427,14 @@ class rex_article
 						)
 					);
 	}
-	
-	/*
-	 * TODO: Methode in andere Klasse verschieben
-	 */
-	public static function getModules() {
-		global $REX;
-		$sql = new rex_sql;
-		return $sql->getArray('select * from '.$REX['TABLE_PREFIX'].'module order by name');
-	}
 
 	public function getModuleSelect() {
 		static $moduleSelect;
 		if (empty($moduleSelect)) {
 			global $REX, $I18N;
-			$modules = self::getModules();
+			
+			$moduleService = Service_Factory::getService('Module');
+			$modules = $moduleService->find(null, null, 'name');
 			
 			$template_ctypes = rex_getAttributes('ctype', $this->template_attributes, array ());
 			// wenn keine ctyes definiert sind, gibt es immer den CTYPE=1
@@ -457,9 +450,9 @@ class rex_article
 				$moduleSelect[$ct_id]->addOption('----------------------------  '.$I18N->msg('add_block'),'');
 				
 				foreach($modules as $module) {
-					if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('module['.$module['id'].']')) {
-						if(rex_template::hasModule($this->template_attributes,$ct_id,$module['id'])) {
-							$moduleSelect[$ct_id]->addOption(rex_translate($module['name'],NULL,FALSE),$module['id']);
+					if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('module['.$module->getId().']')) {
+						if(rex_template::hasModule($this->template_attributes,$ct_id,$module->getId())) {
+							$moduleSelect[$ct_id]->addOption(rex_translate($module->getName(),NULL,FALSE),$module->getId());
 						}
 					}
 				}

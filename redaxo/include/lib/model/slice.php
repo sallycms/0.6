@@ -27,5 +27,10 @@ class Model_Slice extends Model_SliceBase {
 		$service = new Service_SliceValue();
 		return $service->delete(array('slice_id' => $this->getId()));
 	}
+	
+	public function getModule(){
+		$moduleService = Service_Factory::getService('Module');
+		return $moduleService->findById($this->getModuleId());
+	}
 
 }

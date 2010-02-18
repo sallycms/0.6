@@ -10,7 +10,7 @@
  */
 
 /**
- * Noch ein wrapper für $REX wird irgendwann mal umgebaut
+ * Ist noch ein wrapper für $REX wird irgendwann mal umgebaut
  * 
  * @author zozi@webvariants.de
  *
@@ -36,7 +36,6 @@ class Configuration{
         foreach($path as $step){
         	if(!isset($res[$step])) break;
             $res = $res[$step];
-            
         }
         return $res;
     }
