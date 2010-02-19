@@ -414,7 +414,6 @@ class rex_sql
 		if (is_int($rowNumber)) {
 			$row = $rowNumber;
 		}
-		if($feldname == 'category_id') debug_print_backtrace();
 		return mysql_result($this->result, $row, $feldname);
 	}
 

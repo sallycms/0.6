@@ -23,7 +23,7 @@ $info = '';
 $warning = '';
 $warning_block = '';
 
-// ---------------------------- ACTIONSFUNKTIONEN FÜR MODULE
+// ---------------------------- ACTIONSFUNKTIONEN FÃœR MODULE
 if ($add_action != "")
 {
   $action = new rex_sql();
@@ -52,7 +52,7 @@ elseif ($function_action == 'delete')
 
 
 
-// ---------------------------- FUNKTIONEN FÜR MODULE
+// ---------------------------- FUNKTIONEN FÃœR MODULE
 
 if ($function == 'delete')
 {
@@ -95,11 +95,11 @@ if ($function == 'delete')
   }
 }
 
-if ($function == 'add' or $function == 'edit')
+if ($function == 'add' || $function == 'edit')
 {
   if ($save == '1')
   {
-    $modultyp = new rex_sql;
+    
 
     if ($function == 'add')
     {
@@ -118,6 +118,7 @@ if ($function == 'add' or $function == 'edit')
         $warning = $IMOD->getError();
 
     } else {
+      $modultyp = new rex_sql;
       $modultyp->setQuery('select * from '.$REX['TABLE_PREFIX'].'module where id='.$modul_id);
       if ($modultyp->getRows()==1)
       {
