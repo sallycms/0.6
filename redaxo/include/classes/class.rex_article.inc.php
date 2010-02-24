@@ -650,9 +650,9 @@ class rex_article
   {
     global $REX,$I18N;
 
-    $MOD = new rex_sql;
-    $MOD->setQuery("SELECT * FROM ".$REX['TABLE_PREFIX']."module WHERE id=$module_id");
-    if ($MOD->getRows() != 1)
+	$moduleService = Service_Factory::getService('Module');
+	$module = $moduleService->findById($module_id); 
+    if (!$module)
     {
       $slice_content = rex_warning($I18N->msg('module_doesnt_exist'));
     }else
@@ -675,7 +675,7 @@ class rex_article
             
             <div class="rex-content-editmode-module-name">
               <h3 class="rex-hl4">
-                '. $I18N->msg("module") .': <span>'. htmlspecialchars($MOD->getValue("name")) .'</span>
+                '. $I18N->msg("module") .': <span>'. htmlspecialchars($module->getName()) .'</span>
               </h3>
             </div>
               
@@ -684,7 +684,7 @@ class rex_article
               <div class="rex-form-row">
                 <div class="rex-content-editmode-slice-input">
                 <div class="rex-content-editmode-slice-input-2">
-                  '. $MOD->getValue("eingabe") .'
+                  '. $module->getInput() .'
                 </div>
                 </div>
               </div>
