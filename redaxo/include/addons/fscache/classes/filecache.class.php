@@ -29,8 +29,8 @@ class FileCache implements ICache{
 	
 	public function get($namespace, $key, $default){
 		if(!array_key_exists($namespace, $this->cache))
-			$this->readFile($namespace);				
-		if(array_key_exists($key, $this->cache[$namespace])){
+			$this->readFile($namespace);
+		if(isset($this->cache[$namespace][$key])){
 			return unserialize($this->cache[$namespace][$key]);
 		}
 		return $default;
@@ -74,6 +74,7 @@ class FileCache implements ICache{
 	 */
 	function cache_decode($content){
 		global $REX;
+		if(!empty($content)) return array();
 		if(function_exists('json_decode') && strpos($REX['LANG'], 'utf8')){
 			return json_decode($content, true);
 		}else{
