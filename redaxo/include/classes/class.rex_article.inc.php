@@ -353,8 +353,7 @@ class rex_article
 				".$REX['TABLE_PREFIX']."article_slice.clang='".$this->clang."' AND
 				".$REX['TABLE_PREFIX']."article.clang='".$this->clang."' AND
 				".$REX['TABLE_PREFIX']."article_slice.revision='".$this->slice_revision."'
-				". $sliceLimit ."
-			ORDER BY ".$REX['TABLE_PREFIX']."article_slice.re_article_slice_id";
+				ORDER BY ".$REX['TABLE_PREFIX']."article_slice.re_article_slice_id";
 		
 		$sql = new rex_sql;
 		if ($this->debug) $sql->debugsql = 1;
@@ -397,7 +396,7 @@ class rex_article
 		
 		$this->initSlices();
 		$slice = $this->slices[$sliceID];
-		$sliceContent .= $slice['ModuleOutput'];
+		$sliceContent = $slice['ModuleOutput'];
 		// TODO: abhängigkeit zu CONT auflösen
 		$this->CONT->counter = $slice['Counter'];
 		$sliceContent = $this->replaceVars($this->CONT, $sliceContent);
