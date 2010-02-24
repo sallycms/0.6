@@ -56,7 +56,7 @@ class DB_PDO_Persistence implements Iterator{
 			
 			$time = microtime(true) - $start;
 			$this->setErrorMode($oldMode);
-			self::log($query, $time, self::LOG_UNKNOWN);
+			self::log($query, $time, $this->affectedRows());
 			
 			return true;
 			
