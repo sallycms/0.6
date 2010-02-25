@@ -1,11 +1,8 @@
 CREATE TABLE IF NOT EXISTS `rex_slice` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `namespace` varchar(255) NOT NULL,
-  `fk_id` bigint(20) NOT NULL,
   `module_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `namespace_fk_id` (`namespace`,`fk_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `rex_slice_value` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -15,4 +12,4 @@ CREATE TABLE IF NOT EXISTS `rex_slice_value` (
   `value` text,
   PRIMARY KEY (`id`),
   KEY `slice_id` (`slice_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
