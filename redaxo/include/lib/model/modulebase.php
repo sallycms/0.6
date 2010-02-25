@@ -34,10 +34,16 @@ class Model_ModuleBase extends Model_Base{
 									'updatedate' => 'int', 'attributes' => 'string', 'revision' => 'int');
 	
 	public function getName(){ return $this->name; }
+	public function setName($name){ $this->name = $name; }
 	public function getCategoryId(){ return $this->category_id; }
+	public function setCategoryId($categoryId){ $this->category_id = $categoryId; }
 	public function getInput(){ return $this->eingabe; }
+	public function setInput($input){ $this->eingabe = $input; }
 	public function getOutput(){ return $this->ausgabe; }
+	public function setOutput($output){ $this->ausgabe = $output; }
 	public function getAttributes(){ return $this->attributes; }
+	public function setAttributes($attributes){ $this->attributes = $attributes; }
 	public function getRevision(){ return $this->revision; }
+	public function setRevision($revision){ $this->revision = $revision; }
 	
 }

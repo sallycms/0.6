@@ -20,8 +20,7 @@ abstract class Service_Base {
     }
     
 	public function create($params) {
-		
-        $model = $this->makeObject($params);
+		$model = $this->makeObject($params);
         return $this->save($model);
     }
     

@@ -199,7 +199,7 @@ if ($function == 'add' || $function == 'edit')
       echo rex_warning_block($warning_block);
 
     echo '
-			<div class="rex-form rex-form-module-editmode">
+		<div class="rex-form rex-form-module-editmode">
       	<form action="index.php" method="post">
         <fieldset class="rex-form-col-1">
           <legend>'. $legend .'</legend>

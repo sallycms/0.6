@@ -37,7 +37,6 @@ abstract class Controller {
     }
 
     public function dispatch() {
-
         if (!method_exists($this, $this->action)) {
             throw new ControllerException('HTTP 404: Methode '. $this->action .' in '. get_class($this) .' nicht gefunden!');
         }
@@ -54,7 +53,6 @@ abstract class Controller {
 
     protected function render($filename, $params) {
         global $REX, $I18N;
-
         // Die Parameternamen $params und $filename sind zu kurz, als dass
         // man sie zuverlässig nutzen könnte. Wenn $params durch extract()
         // während der Ausführung überschrieben wird kann das unvorhersehbare
@@ -68,7 +66,6 @@ abstract class Controller {
 
         ob_start();
         require_once $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.$filenameHtuG50hNCdikAvf7CZ1F;
-
         print ob_get_clean();
     }
 

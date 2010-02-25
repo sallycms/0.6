@@ -222,8 +222,24 @@ if($REX['PAGES'][strtolower($REX['PAGE'])][2] == 1)
 // page variable validated
 rex_register_extension_point( 'PAGE_CHECKED', $REX['PAGE'], array('pages' => $REX['PAGES']));
 
+// Gewünschte Seite einbinden
+$controller = Controller::factory();
 
-if(isset($REX['PAGES'][$REX['PAGE']]['PATH']) && $REX['PAGES'][$REX['PAGE']]['PATH'] != "")
+if($controller !== null) {
+    require $REX['INCLUDE_PATH'].'/layout/top.php';
+    try{
+        $controller->dispatch();
+    }catch(PermissionException $e1){
+        print rex_warning($e1->getMessage());
+        if(!isset($REX['USER']) || ($REX['USER'] === null)){
+            require $REX['INCLUDE_PATH'].'/pages/login.inc.php';
+        }
+    }catch(ControllerException $e2){
+        print rex_warning($e2->getMessage());
+    }
+    require $REX['INCLUDE_PATH'].'/layout/bottom.php';
+}
+elseif(isset($REX['PAGES'][$REX['PAGE']]['PATH']) && $REX['PAGES'][$REX['PAGE']]['PATH'] != "")
 {
 	// If page has a new/overwritten path
 	require $REX['PAGES'][$REX['PAGE']]['PATH'];
