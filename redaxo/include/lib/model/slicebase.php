@@ -16,23 +16,15 @@
  *
  */
 
-class Model_SliceBase extends Model_Base{
+abstract class Model_SliceBase extends Model_Base{
 
 	protected $namespace;
 	protected $fk_id;
 	protected $module_id;
 	
-    protected $_attributes = array('namespace' => 'string', 'fk_id' => 'int', 'module_id' => 'int');
-    
-    public function getNamespace(){ return $this->namespace; }
-
-    public function getFkId(){ return $this->fk_id; }
+    protected $_attributes = array('module_id' => 'int');
     
     public function getModuleId(){ return $this->module_id; }
-    
-    public function setNamespace($namespace){ $this->namespace = $namespace; }
-
-    public function setFkId($fk_id){ $this->fk_id = $fk_id; }
     
     public function setModuleId($module_id){ $this->module_id = $module_id; }
 
