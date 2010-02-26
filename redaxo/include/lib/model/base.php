@@ -32,7 +32,7 @@ abstract class Model_Base {
     public function getId() { return $this->id; }
 	public function setId($id) { $this->id = $id; }
 
-    public function toAssocArray(){
+    public function toHash(){
     	$return = array('id' => $this->id);
     	foreach($this->_attributes as $name => $type){
     		$return[$name] = $this->$name;

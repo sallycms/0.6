@@ -28,12 +28,12 @@ abstract class Service_Base {
     	$persistence = DB_PDO_Persistence::getInstance();
 
     	if($model->getId() == Model_Base::NEW_ID) {
-    		$data = $model->toAssocArray();
+    		$data = $model->toHash();
     		unset($data['id']);
             $persistence->insert($this->getTableName(), $data);
             $model->setId($persistence->lastId());
         }else {
-            $persistence->update($this->getTableName(), $model->toAssocArray(), array('id' => $model->getId()));
+            $persistence->update($this->getTableName(), $model->toHash, array('id' => $model->getId()));
         }
 
         return $model;
