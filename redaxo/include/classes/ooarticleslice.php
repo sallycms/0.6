@@ -296,34 +296,50 @@ class OOArticleSlice
 
 	public function getValue($index)
 	{
-		if(is_int($index))
-		return $this->_values[$index-1];
-
-		$attrName = '_'. $index;
-		if(isset($this->$attrName))
-		return $this->$attrName;
-
+		$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_VALUE', $index);
+		if($value){
+			return $value->getValue();
+		}
+		
 		return null;
 	}
 
 	public function getLink($index)
 	{
-		return $this->_links[$index-1];
+		$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_LINK', $index);
+		if($value){
+			return $value->getValue();
+		}
+		
+		return null;
 	}
 
 	public function getLinkUrl($index)
 	{
-		return rex_getUrl($this->getLink($index));
+		
+		return rex_getUrl($this->getLink());
+				
+		return null;
 	}
 
 	public function getLinkList($index)
 	{
-		return $this->_linklists[$index-1];
+		$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_LINKLIST', $index);
+		if($value){
+			return $value->getValue();
+		}
+		
+		return null;
 	}
 
 	public function getMedia($index)
 	{
-		return $this->_files[$index-1];
+		$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_MEDIA', $index);
+		if($value){
+			return $value->getValue();
+		}
+		
+		return null;
 	}
 
 	public function getMediaUrl($index)
@@ -334,17 +350,32 @@ class OOArticleSlice
 
 	public function getMediaList($index)
 	{
-		return $this->_filelists[$index-1];
+		$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_MEDIALIST', $index);
+		if($value){
+			return $value->getValue();
+		}
+		
+		return null;
 	}
 
 	public function getHtml()
 	{
-		return $this->_html;
+		$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_HTML', $index);
+		if($value){
+			return $value->getValue();
+		}
+		
+		return null;
 	}
 
 	public function getPhp()
 	{
-		return $this->_php;
+		$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_PHP', $index);
+		if($value){
+			return $value->getValue();
+		}
+		
+		return null;
 	}
 
 	// ---- Artikelweite globale variablen werden ersetzt
