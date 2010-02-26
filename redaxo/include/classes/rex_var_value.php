@@ -51,9 +51,10 @@ class rex_var_value extends rex_var
 
 		$slice_id = $sql->getValue('slice_id');
 		$slice = Service_Factory::getService('Slice')->findById($slice_id);
-
-		foreach($REX_ACTION['REX_VALUE'] as $key => $value){
-			$slice->addValue('REX_VALUE', $key, $value);
+		if(isset($REX_ACTION['REX_VALUE'])){
+			foreach($REX_ACTION['REX_VALUE'] as $key => $value){
+				$slice->addValue('REX_VALUE', $key, $value);
+			}
 		}
 		$slice->addValue('REX_PHP', '', $REX_ACTION['REX_PHP']);
 		$slice->addValue('REX_HTML', '', $REX_ACTION['REX_HTML']);
@@ -142,7 +143,7 @@ class rex_var_value extends rex_var
 
 			$slice_id = $sql->getValue('slice_id');
 			$replace = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_VALUE', $id);
-				
+
 			if($replace){
 				$replace = $replace->getValue();
 			}else{

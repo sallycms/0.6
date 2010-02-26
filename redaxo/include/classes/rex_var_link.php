@@ -60,13 +60,15 @@ class rex_var_link extends rex_var
 
 		$slice_id = $sql->getValue('slice_id');
 		$slice = Service_Factory::getService('Slice')->findById($slice_id);
-
-		foreach($REX_ACTION['REX_LINK'] as $key => $value){
-			$slice->addValue('REX_LINK', $key, $value);
+		if(isset($REX_ACTION['REX_LINK'])){
+			foreach($REX_ACTION['REX_LINK'] as $key => $value){
+				$slice->addValue('REX_LINK', $key, $value);
+			}
 		}
-
-		foreach($REX_ACTION['REX_LINKLIST'] as $key => $value){
-			$slice->addValue('REX_LINKLIST', $key, $value);
+		if(isset($REX_ACTION['REX_LINKLIST'])){
+			foreach($REX_ACTION['REX_LINKLIST'] as $key => $value){
+				$slice->addValue('REX_LINKLIST', $key, $value);
+			}
 		}
 	}
 
@@ -251,7 +253,7 @@ class rex_var_link extends rex_var
 		{
 			list ($param_str, $args) = $match;
 			list ($id, $args) = $this->extractArg('id', $args, 0);
-				
+
 			$slice_id = $sql->getValue('slice_id');
 			$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_LINKLIST', $id);
 			if($value){

@@ -62,15 +62,16 @@ class rex_var_media extends rex_var
 
 		$slice_id = $sql->getValue('slice_id');
 		$slice = Service_Factory::getService('Slice')->findById($slice_id);
-
-		foreach($REX_ACTION['REX_MEDIA'] as $key => $value){
-			$slice->addValue('REX_MEDIA', $key, $value);
+		if(isset($REX_ACTION['REX_MEDIA'])){
+			foreach($REX_ACTION['REX_MEDIA'] as $key => $value){
+				$slice->addValue('REX_MEDIA', $key, $value);
+			}
 		}
-
-		foreach($REX_ACTION['REX_MEDIALIST'] as $key => $value){
-			$slice->addValue('REX_MEDIALIST', $key, $value);
+		if(isset($REX_ACTION['REX_MEDIALIST'])){
+			foreach($REX_ACTION['REX_MEDIALIST'] as $key => $value){
+				$slice->addValue('REX_MEDIALIST', $key, $value);
+			}
 		}
-
 	}
 
 	// --------------------------------- Output
@@ -249,26 +250,26 @@ class rex_var_media extends rex_var
       		'REX_FILELIST',
       		'REX_MEDIALIST'
       		);
-      	foreach ($vars as $var)
-      	{
-      		$matches = $this->getVarParams($content, $var);
-      		foreach ($matches as $match)
+      		foreach ($vars as $var)
       		{
-      			list ($param_str, $args) = $match;
-      			list ($id, $args) = $this->extractArg('id', $args, 0);
+      			$matches = $this->getVarParams($content, $var);
+      			foreach ($matches as $match)
+      			{
+      				list ($param_str, $args) = $match;
+      				list ($id, $args) = $this->extractArg('id', $args, 0);
 
-      			$slice_id = $sql->getValue('slice_id');
-     			$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_MEDIALIST', $id);
-      			if($value){
-      				$value = $value->getValue();
-      			}else{
-      				$value = '';
+      				$slice_id = $sql->getValue('slice_id');
+      				$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_MEDIALIST', $id);
+      				if($value){
+      					$value = $value->getValue();
+      				}else{
+      					$value = '';
+      				}
+      				$replace = $this->handleGlobalVarParams($var, $args, $value);
+      				$content = str_replace($var . '[' . $param_str . ']', $replace, $content);
       			}
-      			$replace = $this->handleGlobalVarParams($var, $args, $value);
-      			$content = str_replace($var . '[' . $param_str . ']', $replace, $content);
       		}
-      	}
-      	return $content;
+      		return $content;
 	}
 
 	/**
