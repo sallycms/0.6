@@ -19,12 +19,18 @@
 class Model_Slice extends Model_SliceBase {
 	
 	public function addValue($type, $finder, $value = null){
-		$service = new Service_SliceValue();
+		$service = Service_Factory::getService('SliceValue');
 		return $service->create(array('slice_id' => $this->getId(), 'type' => $type, 'finder' => $finder, 'value' => $value));
 	}
 	
+	public function getValue($type, $finder){
+		$service = Service_Factory::getService('SliceValue');
+		$sliceValue = $service->findBySliceTypeFinder(array('slice_id' => $this->getId(), 'type' => $type, 'finder' => $finder));
+		return $sliceValue; 
+	}
+	
 	public function flushValues(){
-		$service = new Service_SliceValue();
+		$service = Service_Factory::getService('SliceValue');
 		return $service->delete(array('slice_id' => $this->getId()));
 	}
 	
