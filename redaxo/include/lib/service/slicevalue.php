@@ -22,5 +22,14 @@ class Service_SliceValue extends Service_Base{
 	protected function makeObject(array $params){
 		return new Model_SliceValue($params);
 	}
+	
+	public function findBySliceTypeFinder($slice_id, $type, $finder){
+		$where = array('slice_id' => $slice_id, 'type' => $type, 'finder' => $finder);
+
+		$res = $this->find($where);
+    	if(count($res) == 1) return $res[0];
+    	
+    	return null;
+	}
 
 }

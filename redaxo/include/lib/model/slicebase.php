@@ -18,8 +18,6 @@
 
 abstract class Model_SliceBase extends Model_Base{
 
-	protected $namespace;
-	protected $fk_id;
 	protected $module_id;
 	
     protected $_attributes = array('module_id' => 'int');

@@ -1,3 +1,5 @@
+ALTER TABLE `rex_article_slice` ADD `slice_id` BIGINT( 20 ) NOT NULL DEFAULT '0' AFTER `re_article_slice_id`; 
+
 CREATE TABLE IF NOT EXISTS `rex_slice` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `module_id` bigint(20) NOT NULL,

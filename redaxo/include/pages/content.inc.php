@@ -195,9 +195,18 @@ if ($article->getRows() == 1)
 							$newsql->setTable('article_slice', true);
 
 							if ($function == 'edit') {
+								$ooslice = OOArticleSlice::getArticleSliceById($slice_id);
+								$slice = Service_Factory::getService('Slice')->findById($ooslice->getSliceId());
+								$slice->flushValues();
+								unset($ooslice);
 								$newsql->setWhere('id = '.$slice_id);
+								$newsql->setValue('slice_id', $slice->getId());
 							}
 							elseif ($function == 'add') {
+								$realslice = Service_Factory::getService('Slice')->create(array('module_id' => $module_id));
+								
+								$newsql->setValue('slice_id', $realslice->getId());
+								
 								$newsql->setValue('re_article_slice_id', $slice_id);
 								$newsql->setValue('article_id', $article_id);
 								$newsql->setValue('modultyp_id', $module_id);

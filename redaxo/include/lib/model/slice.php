@@ -20,7 +20,7 @@ class Model_Slice extends Model_SliceBase {
 	
 	public function addValue($type, $finder, $value = null){
 		$service = new Service_SliceValue();
-		return $service->create(array('slice_id' => $this->getId(), 'type' => 'file', 'finder' => '1', 'value' => 'tada'));
+		return $service->create(array('slice_id' => $this->getId(), 'type' => $type, 'finder' => $finder, 'value' => $value));
 	}
 	
 	public function flushValues(){

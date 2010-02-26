@@ -13,242 +13,283 @@
 
 class rex_var_link extends rex_var
 {
-  // --------------------------------- Actions
+	// --------------------------------- Actions
 
-  function getACRequestValues($REX_ACTION)
-  {
-    $values     = rex_request('LINK', 'array');
-    $listvalues = rex_request('LINKLIST', 'array');
-    for ($i = 1; $i < 11; $i++)
-    {
-      $link     = isset($values[$i]) ? stripslashes($values[$i]) : '';
-      $linklist = isset($listvalues[$i]) ? stripslashes($listvalues[$i]) : '';
+	function getACRequestValues($REX_ACTION)
+	{
+		$link     = rex_request('LINK', 'array');
+		foreach($link as $key => $value)
+		{
+			$REX_ACTION['REX_LINK'][$key] = $value;
+		}
 
-      $REX_ACTION['LINK'][$i] = $link;
-      $REX_ACTION['LINKLIST'][$i] = $linklist;
-    }
-    return $REX_ACTION;
-  }
+		$linklist = rex_request('LINKLIST', 'array');
+		foreach($linklist as $key => $value)
+		{
+			$REX_ACTION['REX_LINKLIST'][$key] = $value;
+		}
 
-  function getACDatabaseValues($REX_ACTION, & $sql)
-  {
-    for ($i = 1; $i < 11; $i++)
-    {
-      $REX_ACTION['LINK'][$i] = $this->getValue($sql, 'link'. $i);
-      $REX_ACTION['LINKLIST'][$i] = $this->getValue($sql, 'linklist'. $i);
-    }
+		return $REX_ACTION;
+	}
 
-    return $REX_ACTION;
-  }
+	function getACDatabaseValues($REX_ACTION, & $sql)
+	{
+			
+		$slice_id = $sql->getValue('slice_id');
 
-  function setACValues(& $sql, $REX_ACTION, $escape = false, $prependTableName = true)
-  {
-    global $REX;
+		$values = Service_Factory::getService('SliceValue')->find(array('slice_id' => $slice_id, 'type' => 'REX_LINK'));
+		foreach($values as $value)
+		{
+			$REX_ACTION['REX_LINK'][$value->getFinder()] = $value->getValue();
+		}
 
-    for ($i = 1; $i < 11; $i++)
-    {
-      $this->setValue($sql, 'link'. $i, $REX_ACTION['LINK'][$i], $escape, $prependTableName);
-      $this->setValue($sql, 'linklist'. $i, $REX_ACTION['LINKLIST'][$i], $escape, $prependTableName);
-    }
-  }
+		$values = Service_Factory::getService('SliceValue')->find(array('slice_id' => $slice_id, 'type' => 'REX_LINKLIST'));
+		foreach($values as $value)
+		{
+			$REX_ACTION['REX_LINKLIST'][$value->getFinder()] = $value->getValue();
+		}
 
-  // --------------------------------- Output
+		return $REX_ACTION;
+			
+	}
 
-  function getBEOutput(& $sql, $content)
-  {
-    return $this->getOutput($sql, $content);
-  }
+	function setACValues(& $sql, $REX_ACTION, $escape = false, $prependTableName = true)
+	{
+			
+		global $REX;
 
-  function getBEInput(& $sql, $content)
-  {
-    $content = $this->getOutput($sql, $content);
-    $content = $this->matchLinkButton($sql, $content);
-    $content = $this->matchLinkListButton($sql, $content);
+		$slice_id = $sql->getValue('slice_id');
+		$slice = Service_Factory::getService('Slice')->findById($slice_id);
 
-    return $content;
-  }
+		foreach($REX_ACTION['REX_LINK'] as $key => $value){
+			$slice->addValue('REX_LINK', $key, $value);
+		}
 
-  function getOutput(& $sql, $content)
-  {
-    $content = $this->matchLinkList($sql, $content);
-    $content = $this->matchLink($sql, $content);
-    $content = $this->matchLinkId($sql, $content);
+		foreach($REX_ACTION['REX_LINKLIST'] as $key => $value){
+			$slice->addValue('REX_LINKLIST', $key, $value);
+		}
+	}
 
-    return $content;
-  }
+	// --------------------------------- Output
 
-  /**
-   * @see rex_var::handleDefaultParam
-   */
-  function handleDefaultParam($varname, $args, $name, $value)
-  {
-    switch($name)
-    {
-      case '1' :
-      case 'category' :
-        $args['category'] = (int) $value;
-        break;
-    }
-    return parent::handleDefaultParam($varname, $args, $name, $value);
-  }
+	function getBEOutput(& $sql, $content)
+	{
+		return $this->getOutput($sql, $content);
+	}
 
-  /**
-   * Button f�r die Eingabe
-   */
-  function matchLinkButton(& $sql, $content)
-  {
-  	global $REX;
+	function getBEInput(& $sql, $content)
+	{
+		$content = $this->getOutput($sql, $content);
+		$content = $this->matchLinkButton($sql, $content);
+		$content = $this->matchLinkListButton($sql, $content);
 
-  	$def_category = '';
-  	$article_id = rex_request('article_id', 'int');
-  	if($article_id != 0)
-  	{
-  		$art = OOArticle::getArticleById($article_id);
-  		$def_category = $art->getCategoryId();
-  	}
+		return $content;
+	}
 
-    $var = 'REX_LINK_BUTTON';
-    $matches = $this->getVarParams($content, $var);
-    foreach ($matches as $match)
-    {
-      list ($param_str, $args) = $match;
-      list ($id, $args) = $this->extractArg('id', $args, 0);
-      
-      if ($id < 11 && $id > 0)
-      {
-        // Wenn vom Programmierer keine Kategorie vorgegeben wurde,
-        // die Linkmap mit der aktuellen Kategorie �ffnen
-      	list ($category, $args) = $this->extractArg('category', $args, $def_category);
+	function getOutput(& $sql, $content)
+	{
+		$content = $this->matchLinkList($sql, $content);
+		$content = $this->matchLink($sql, $content);
+		$content = $this->matchLinkId($sql, $content);
 
-        $replace = $this->getLinkButton($id, $this->getValue($sql, 'link' . $id), $category, $args);
-        $replace = $this->handleGlobalWidgetParams($var, $args, $replace);
-        $content = str_replace($var . '[' . $param_str . ']', $replace, $content);
-      }
-    }
+		return $content;
+	}
 
-    return $content;
-  }
+	/**
+	 * @see rex_var::handleDefaultParam
+	 */
+	function handleDefaultParam($varname, $args, $name, $value)
+	{
+		switch($name)
+		{
+			case '1' :
+			case 'category' :
+				$args['category'] = (int) $value;
+				break;
+		}
+		return parent::handleDefaultParam($varname, $args, $name, $value);
+	}
 
-  /**
-   * Button f�r die Eingabe
-   */
-  function matchLinkListButton(& $sql, $content)
-  {
-    $var = 'REX_LINKLIST_BUTTON';
-    $matches = $this->getVarParams($content, $var);
-    foreach ($matches as $match)
-    {
-      list ($param_str, $args) = $match;
-      list ($id, $args) = $this->extractArg('id', $args, 0);
-      
-      if ($id < 11 && $id > 0)
-      {
-        list ($category, $args) = $this->extractArg('category', $args, 0);
+	/**
+	 * Button für die Eingabe
+	 */
+	function matchLinkButton(& $sql, $content)
+	{
+		global $REX;
 
-        $replace = $this->getLinklistButton($id, $this->getValue($sql, 'linklist' . $id), $category);
-        $replace = $this->handleGlobalWidgetParams($var, $args, $replace);
-        $content = str_replace($var . '[' . $param_str . ']', $replace, $content);
-      }
-    }
+		$def_category = '';
+		$article_id = rex_request('article_id', 'int');
+		if($article_id != 0)
+		{
+			$art = OOArticle::getArticleById($article_id);
+			$def_category = $art->getCategoryId();
+		}
 
-    return $content;
-  }
+		$var = 'REX_LINK_BUTTON';
+		$matches = $this->getVarParams($content, $var);
+		foreach ($matches as $match)
+		{
+			list ($param_str, $args) = $match;
+			list ($id, $args) = $this->extractArg('id', $args, 0);
 
-  /**
-   * Wert f�r die Ausgabe
-   */
-  function matchLink(& $sql, $content)
-  {
-    $var = 'REX_LINK';
-    $matches = $this->getVarParams($content, $var);
-    foreach ($matches as $match)
-    {
-      list ($param_str, $args) = $match;
-      list ($id, $args) = $this->extractArg('id', $args, 0);
-      
-      if ($id > 0 && $id < 11)
-      {
-      	$replace = '';
-      	if ($this->getValue($sql, 'link' . $id) != "")
-      		$replace = rex_getUrl($this->getValue($sql, 'link' . $id));
+			$slice_id = $sql->getValue('slice_id');
+			$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_LINK', $id);
+			if($value){
+				$value = $value->getValue();
+			}else{
+				$value = '';
+			}
 
-        $replace = $this->handleGlobalVarParams($var, $args, $replace);
-        $content = str_replace($var . '[' . $param_str . ']', $replace, $content);
-      }
-    }
+			// Wenn vom Programmierer keine Kategorie vorgegeben wurde,
+			// die Linkmap mit der aktuellen Kategorie öffnen
+			list ($category, $args) = $this->extractArg('category', $args, $def_category);
 
-    return $content;
-  }
+			$replace = $this->getLinkButton($id, $value, $category, $args);
+			$replace = $this->handleGlobalWidgetParams($var, $args, $replace);
+			$content = str_replace($var . '[' . $param_str . ']', $replace, $content);
+		}
 
-  /**
-   * Wert f�r die Ausgabe
-   */
-  function matchLinkId(& $sql, $content)
-  {
-    $var = 'REX_LINK_ID';
-    $matches = $this->getVarParams($content, $var);
-    foreach ($matches as $match)
-    {
-      list ($param_str, $args) = $match;
-      list ($id, $args) = $this->extractArg('id', $args, 0);
-      
-      if ($id > 0 && $id < 11)
-      {
-        $replace = $this->getValue($sql, 'link' . $id);
-        $replace = $this->handleGlobalVarParams($var, $args, $replace);
-        $content = str_replace($var . '[' . $param_str . ']', $replace, $content);
-      }
-    }
+		return $content;
+	}
 
-    return $content;
-  }
+	/**
+	 * Button für die Eingabe
+	 */
+	function matchLinkListButton(& $sql, $content)
+	{
+		$var = 'REX_LINKLIST_BUTTON';
+		$matches = $this->getVarParams($content, $var);
+		foreach ($matches as $match)
+		{
+			list ($param_str, $args) = $match;
+			list ($id, $args) = $this->extractArg('id', $args, 0);
 
-  /**
-   * Wert f�r die Ausgabe
-   */
-  function matchLinkList(& $sql, $content)
-  {
-    $var = 'REX_LINKLIST';
-    $matches = $this->getVarParams($content, $var);
-    foreach ($matches as $match)
-    {
-      list ($param_str, $args) = $match;
-      list ($id, $args) = $this->extractArg('id', $args, 0);
-      
-      if ($id > 0 && $id < 11)
-      {
-        $replace = $this->getValue($sql, 'linklist' . $id);
-        $replace = $this->handleGlobalVarParams($var, $args, $replace);
-        $content = str_replace($var . '[' . $param_str . ']', $replace, $content);
-      }
-    }
+			list ($category, $args) = $this->extractArg('category', $args, 0);
 
-    return $content;
-  }
+			$slice_id = $sql->getValue('slice_id');
+			$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_LINKLIST', $id);
+			if($value){
+				$value = $value->getValue();
+			}else{
+				$value = '';
+			}
 
-  /**
-   * Gibt das Button Template zur�ck
-   */
-  function getLinkButton($id, $article_id, $category = '')
-  {
-    global $REX, $I18N;
+			$replace = $this->getLinklistButton($id, $value, $category);
+			$replace = $this->handleGlobalWidgetParams($var, $args, $replace);
+			$content = str_replace($var . '[' . $param_str . ']', $replace, $content);
+		}
 
-    $art_name = '';
-    $clang = '';
-    $art = OOArticle :: getArticleById($article_id);
+		return $content;
+	}
 
-    // Falls ein Artikel vorausgew�hlt ist, dessen Namen anzeigen und beim �ffnen der Linkmap dessen Kategorie anzeigen
-    if (OOArticle :: isValid($art))
-    {
-      $art_name = $art->getName();
+	/**
+	 * Wert für die Ausgabe
+	 */
+	function matchLink(& $sql, $content)
+	{
+		$var = 'REX_LINK';
+		$matches = $this->getVarParams($content, $var);
+		foreach ($matches as $match)
+		{
+			list ($param_str, $args) = $match;
+			list ($id, $args) = $this->extractArg('id', $args, 0);
+
+			$slice_id = $sql->getValue('slice_id');
+			$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_LINK', $id);
+			if($value){
+				$value = $value->getValue();
+			}else{
+				$value = '';
+			}
+			$replace = '';
+			if ($value != ""){
+				$replace = rex_getUrl($value);
+			}
+
+			$replace = $this->handleGlobalVarParams($var, $args, $replace);
+			$content = str_replace($var . '[' . $param_str . ']', $replace, $content);
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Wert für die Ausgabe
+	 */
+	function matchLinkId(& $sql, $content)
+	{
+		$var = 'REX_LINK_ID';
+		$matches = $this->getVarParams($content, $var);
+		foreach ($matches as $match)
+		{
+			list ($param_str, $args) = $match;
+			list ($id, $args) = $this->extractArg('id', $args, 0);
+
+			$slice_id = $sql->getValue('slice_id');
+			$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_LINK', $id);
+			if($value){
+				$value = $value->getValue();
+			}else{
+				$value = '';
+			}
+
+			$replace = $this->handleGlobalVarParams($var, $args, $value);
+			$content = str_replace($var . '[' . $param_str . ']', $replace, $content);
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Wert für die Ausgabe
+	 */
+	function matchLinkList(& $sql, $content)
+	{
+		$var = 'REX_LINKLIST';
+		$matches = $this->getVarParams($content, $var);
+		foreach ($matches as $match)
+		{
+			list ($param_str, $args) = $match;
+			list ($id, $args) = $this->extractArg('id', $args, 0);
+				
+			$slice_id = $sql->getValue('slice_id');
+			$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_LINKLIST', $id);
+			if($value){
+				$value = $value->getValue();
+			}else{
+				$value = '';
+			}
+
+			$replace = $this->handleGlobalVarParams($var, $args, $value);
+			$content = str_replace($var . '[' . $param_str . ']', $replace, $content);
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Gibt das Button Template zurück
+	 */
+	function getLinkButton($id, $article_id, $category = '')
+	{
+		global $REX, $I18N;
+
+		$art_name = '';
+		$clang = '';
+		$art = OOArticle :: getArticleById($article_id);
+
+		// Falls ein Artikel vorausgew�hlt ist, dessen Namen anzeigen und beim �ffnen der Linkmap dessen Kategorie anzeigen
+		if (OOArticle :: isValid($art))
+		{
+			$art_name = $art->getName();
 			$category = $art->getCategoryId();
-    }
+		}
 
-    $open_params = '&clang=' . Core::getCurrentClang();
-    if ($category != '')
-      $open_params .= '&category_id=' . $category;
+		$open_params = '&clang=' . Core::getCurrentClang();
+		if ($category != '')
+		$open_params .= '&category_id=' . $category;
 
-    $media = '
+		$media = '
 	<div class="rex-widget">
 		<div class="rex-widget-link">
       <p class="rex-widget-field">
@@ -263,35 +304,35 @@ class rex_var_link extends rex_var
  	</div>
  	<div class="rex-clearer"></div>';
 
-    return $media;
-  }
+		return $media;
+	}
 
-  /**
-   * Gibt das ListButton Template zurück
-   */
-  function getLinklistButton($id, $value, $category = '')
-  {
-    global $REX, $I18N;
+	/**
+	 * Gibt das ListButton Template zurück
+	 */
+	function getLinklistButton($id, $value, $category = '')
+	{
+		global $REX, $I18N;
 
-    $open_params = '&clang=' . Core::getCurrentClang();
-    if ($category != '')
-      $open_params .= '&category_id=' . $category;
+		$open_params = '&clang=' . Core::getCurrentClang();
+		if ($category != '')
+		$open_params .= '&category_id=' . $category;
 
-    $options = '';
-    $linklistarray = explode(',', $value);
-    if (is_array($linklistarray))
-    {
-      foreach ($linklistarray as $link)
-      {
-        if ($link != '')
-        {
-		  $article = OOArticle::getArticleById($link);
-          $options .= '<option value="' . $link . '">' . $article->getName() . '</option>';
-        }
-      }
-    }
+		$options = '';
+		$linklistarray = explode(',', $value);
+		if (is_array($linklistarray))
+		{
+			foreach ($linklistarray as $link)
+			{
+				if ($link != '')
+				{
+					$article = OOArticle::getArticleById($link);
+					$options .= '<option value="' . $link . '">' . $article->getName() . '</option>';
+				}
+			}
+		}
 
-    $link = '
+		$link = '
   <div class="rex-widget">
     <div class="rex-widget-linklist">
       <input type="hidden" name="LINKLIST['. $id .']" id="REX_LINKLIST_'. $id .'" value="'. $value .'" />
@@ -313,6 +354,6 @@ class rex_var_link extends rex_var
  	<div class="rex-clearer"></div>
     ';
 
-    return $link;
-  }
+		return $link;
+	}
 }

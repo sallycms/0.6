@@ -17,259 +17,285 @@
 
 class rex_var_media extends rex_var
 {
-  // --------------------------------- Actions
+	// --------------------------------- Actions
 
-  function getACRequestValues($REX_ACTION)
-  {
-    $values     = rex_request('MEDIA', 'array');
-    $listvalues = rex_request('MEDIALIST', 'array');
+	function getACRequestValues($REX_ACTION)
+	{
+		$media = rex_request('MEDIA', 'array');
+		foreach($media as $key => $value)
+		{
+			$REX_ACTION['REX_MEDIA'][$key] = $value;
+		}
 
-    for ($i = 1; $i < 11; $i++)
-    {
-      $media     = isset($values[$i]) ? stripslashes($values[$i]) : '';
-      $medialist = isset($listvalues[$i]) ? stripslashes($listvalues[$i]) : '';
+		$medialist = rex_request('MEDIALIST', 'array');
+		foreach($medialist as $key => $value)
+		{
+			$REX_ACTION['REX_MEDIALIST'][$key] = $value;
+		}
 
-      $REX_ACTION['MEDIA'][$i]     = $media;
-      $REX_ACTION['MEDIALIST'][$i] = $medialist;
-    }
+		return $REX_ACTION;
+	}
 
-    return $REX_ACTION;
-  }
+	function getACDatabaseValues($REX_ACTION, & $sql)
+	{
+			
+		$slice_id = $sql->getValue('slice_id');
 
-  function getACDatabaseValues($REX_ACTION, & $sql)
-  {
-    for ($i = 1; $i < 11; $i++)
-    {
-      $REX_ACTION['MEDIA'][$i]     = $this->getValue($sql, 'file'. $i);
-      $REX_ACTION['MEDIALIST'][$i] = $this->getValue($sql, 'filelist'. $i);
-    }
+		$values = Service_Factory::getService('SliceValue')->find(array('slice_id' => $slice_id, 'type' => 'REX_MEDIA'));
+		foreach($values as $value)
+		{
+			$REX_ACTION['REX_MEDIA'][$value->getFinder()] = $value->getValue();
+		}
 
-    return $REX_ACTION;
-  }
+		$values = Service_Factory::getService('SliceValue')->find(array('slice_id' => $slice_id, 'type' => 'REX_MEDIALIST'));
+		foreach($values as $value)
+		{
+			$REX_ACTION['REX_MEDIALIST'][$value->getFinder()] = $value->getValue();
+		}
 
-  function setACValues(& $sql, $REX_ACTION, $escape = false, $prependTableName = true)
-  {
-    global $REX;
+		return $REX_ACTION;
+	}
 
-    for ($i = 1; $i < 11; $i++)
-    {
-      $this->setValue($sql, 'file'. $i    , $REX_ACTION['MEDIA'][$i]    , $escape, $prependTableName);
-      $this->setValue($sql, 'filelist'. $i, $REX_ACTION['MEDIALIST'][$i], $escape, $prependTableName);
-    }
-  }
+	function setACValues(& $sql, $REX_ACTION, $escape = false, $prependTableName = true)
+	{
+		global $REX;
 
-  // --------------------------------- Output
+		$slice_id = $sql->getValue('slice_id');
+		$slice = Service_Factory::getService('Slice')->findById($slice_id);
 
-  function getBEInput(& $sql, $content)
-  {
-    $content = $this->matchMediaButton($sql, $content);
-    $content = $this->matchMediaListButton($sql, $content);
-    $content = $this->getOutput($sql, $content);
-    return $content;
-  }
+		foreach($REX_ACTION['REX_MEDIA'] as $key => $value){
+			$slice->addValue('REX_MEDIA', $key, $value);
+		}
 
-  function getBEOutput(& $sql, $content)
-  {
-    $content = $this->getOutput($sql, $content);
-    return $content;
-  }
+		foreach($REX_ACTION['REX_MEDIALIST'] as $key => $value){
+			$slice->addValue('REX_MEDIALIST', $key, $value);
+		}
 
-  /**
-   * Ersetzt die Value Platzhalter
-   */
-  function getOutput(& $sql, $content)
-  {
-    $content = $this->matchMedia($sql, $content);
-    $content = $this->matchMediaList($sql, $content);
-    return $content;
-  }
+	}
 
-  /**
-   * @see rex_var::handleDefaultParam
-   */
-  function handleDefaultParam($varname, $args, $name, $value)
-  {
-    switch($name)
-    {
-      case '1' :
-      case 'category' :
-        $args['category'] = (int) $value;
-        break;
-      case 'types' :
-        $args[$name] = (string) $value;
-        break;
-      case 'preview' :
-        $args[$name] = (boolean) $value;
-        break;
-      case 'mimetype' :
-        $args[$name] = (string) $value;
-        break;
-    }
-    return parent::handleDefaultParam($varname, $args, $name, $value);
-  }
+	// --------------------------------- Output
 
-  /**
-   * MediaButton für die Eingabe
-   */
-  function matchMediaButton(& $sql, $content)
-  {
-    $vars = array (
-      'REX_FILE_BUTTON',
-      'REX_MEDIA_BUTTON'
-    );
-    foreach ($vars as $var)
-    {
-      $matches = $this->getVarParams($content, $var);
-      foreach ($matches as $match)
-      {
-        list ($param_str, $args) = $match;
-        list ($id, $args) = $this->extractArg('id', $args, 0);
-        
-        if ($id < 11 && $id > 0)
-        {
-          list ($category, $args) = $this->extractArg('category', $args, '');
-          
-          $replace = $this->getMediaButton($id, $category, $args);
-          $replace = $this->handleGlobalWidgetParams($var, $args, $replace);
-          $content = str_replace($var . '[' . $param_str . ']', $replace, $content);
-        }
-      }
-    }
+	function getBEInput(& $sql, $content)
+	{
+		$content = $this->matchMediaButton($sql, $content);
+		$content = $this->matchMediaListButton($sql, $content);
+		$content = $this->getOutput($sql, $content);
+		return $content;
+	}
 
-    return $content;
-  }
+	function getBEOutput(& $sql, $content)
+	{
+		$content = $this->getOutput($sql, $content);
+		return $content;
+	}
 
-  /**
-   * MediaListButton für die Eingabe
-   */
-  function matchMediaListButton(& $sql, $content)
-  {
-    $vars = array (
-      'REX_FILELIST_BUTTON',
-      'REX_MEDIALIST_BUTTON'
-    );
-    foreach ($vars as $var)
-    {
-      $matches = $this->getVarParams($content, $var);
-      foreach ($matches as $match)
-      {
-        list ($param_str, $args) = $match;
-        list ($id, $args) = $this->extractArg('id', $args, 0);
-        
-        if ($id < 11 && $id > 0)
-        {
-        	$category = '';
-          if(isset($args['category']))
-          {
-            $category = $args['category'];
-            unset($args['category']);
-          }
+	/**
+	 * Ersetzt die Value Platzhalter
+	 */
+	function getOutput(& $sql, $content)
+	{
+		$content = $this->matchMedia($sql, $content);
+		$content = $this->matchMediaList($sql, $content);
+		return $content;
+	}
 
-          $replace = $this->getMedialistButton($id, $this->getValue($sql, 'filelist' . $id), $category, $args);
-          $replace = $this->handleGlobalWidgetParams($var, $args, $replace);
-          $content = str_replace($var . '[' . $param_str . ']', $replace, $content);
-        }
-      }
-    }
+	/**
+	 * @see rex_var::handleDefaultParam
+	 */
+	function handleDefaultParam($varname, $args, $name, $value)
+	{
+		switch($name)
+		{
+			case '1' :
+			case 'category' :
+				$args['category'] = (int) $value;
+				break;
+			case 'types' :
+				$args[$name] = (string) $value;
+				break;
+			case 'preview' :
+				$args[$name] = (boolean) $value;
+				break;
+			case 'mimetype' :
+				$args[$name] = (string) $value;
+				break;
+		}
+		return parent::handleDefaultParam($varname, $args, $name, $value);
+	}
 
-    return $content;
-  }
+	/**
+	 * MediaButton für die Eingabe
+	 */
+	function matchMediaButton(& $sql, $content)
+	{
+		$vars = array (
+      		'REX_FILE_BUTTON',
+      		'REX_MEDIA_BUTTON'
+      		);
+      		foreach ($vars as $var)
+      		{
+      			$matches = $this->getVarParams($content, $var);
+      			foreach ($matches as $match)
+      			{
+      				list ($param_str, $args) = $match;
+      				list ($id, $args) = $this->extractArg('id', $args, 0);
 
-  /**
-   * Wert für die Ausgabe
-   */
-  function matchMedia(& $sql, $content)
-  {
-    $vars = array (
-      'REX_FILE',
-      'REX_MEDIA'
-    );
-    foreach ($vars as $var)
-    {
-      $matches = $this->getVarParams($content, $var);
-      foreach ($matches as $match)
-      {
-        list ($param_str, $args) = $match;
-        list ($id, $args) = $this->extractArg('id', $args, 0);
-        
-        if ($id > 0 && $id < 11)
-        {
-          // Mimetype ausgeben
-          if(isset($args['mimetype']))
-          {
-            $OOM = OOMedia::getMediaByName($this->getValue($sql, 'file' . $id));
-            if($OOM)
-            {
-              $replace = $OOM->getType();
-            }
-          }
-          // "normale" ausgabe
-          else
-          {
-            $replace = $this->getValue($sql, 'file' . $id);
-          }
+      				list ($category, $args) = $this->extractArg('category', $args, '');
 
-          $replace = $this->handleGlobalVarParams($var, $args, $replace);
-          $content = str_replace($var . '[' . $param_str . ']', $replace, $content);
-        }
-      }
-    }
-    return $content;
-  }
+      				$replace = $this->getMediaButton($id, $category, $args);
+      				$replace = $this->handleGlobalWidgetParams($var, $args, $replace);
+      				$content = str_replace($var . '[' . $param_str . ']', $replace, $content);
+      			}
+      		}
 
-  /**
-   * Wert für die Ausgabe
-   */
-  function matchMediaList(& $sql, $content)
-  {
-    $vars = array (
-      'REX_FILELIST',
-      'REX_MEDIALIST'
-    );
-    foreach ($vars as $var)
-    {
-      $matches = $this->getVarParams($content, $var);
-      foreach ($matches as $match)
-      {
-        list ($param_str, $args) = $match;
-        list ($id, $args) = $this->extractArg('id', $args, 0);
-        
-        if ($id > 0 && $id < 11)
-        {
-          $replace = $this->getValue($sql, 'filelist' . $id);
-          $replace = $this->handleGlobalVarParams($var, $args, $replace);
-          $content = str_replace($var . '[' . $param_str . ']', $replace, $content);
-        }
-      }
-    }
-    return $content;
-  }
+      		return $content;
+	}
 
-  /**
-   * Gibt das Button Template zurück
-   */
-  function getMediaButton($id, $category = '', $args = array())
-  {
-    global $I18N;
+	/**
+	 * MediaListButton für die Eingabe
+	 */
+	function matchMediaListButton(& $sql, $content)
+	{
+		$vars = array (
+      		'REX_FILELIST_BUTTON',
+      		'REX_MEDIALIST_BUTTON'
+      		);
+      		foreach ($vars as $var)
+      		{
+      			$matches = $this->getVarParams($content, $var);
+      			foreach ($matches as $match)
+      			{
+      				list ($param_str, $args) = $match;
+      				list ($id, $args) = $this->extractArg('id', $args, 0);
 
-    $open_params = '';
-    if ($category != '')
-    {
-      $open_params .= '&amp;rex_file_category=' . $category;
-    }
+      				$slice_id = $sql->getValue('slice_id');
+      				$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, str_replace('_BUTTON', '', $var), $id);
+      				if($value){
+      					$value = $value->getValue();
+      				}else{
+      					$value = '';
+      				}
+      				$category = '';
+      				if(isset($args['category']))
+      				{
+      					$category = $args['category'];
+      					unset($args['category']);
+      				}
 
-    foreach($args as $aname => $avalue)
-    {
-      $open_params .= '&amp;args['. urlencode($aname) .']='. urlencode($avalue);
-    }
+      				$replace = $this->getMedialistButton($id, $value, $category, $args);
+      				$replace = $this->handleGlobalWidgetParams($var, $args, $replace);
+      				$content = str_replace($var . '[' . $param_str . ']', $replace, $content);
+      			}
+      		}
 
-    $wdgtClass = 'rex-widget-media';
-    if(isset($args['preview']) && $args['preview'] && OOAddon::isAvailable('image_resize'))
-    {
-      $wdgtClass .= ' rex-widget-preview';
-    }
 
-    $media = '
+      		return $content;
+	}
+
+	/**
+	 * Wert für die Ausgabe
+	 */
+	function matchMedia(& $sql, $content)
+	{
+		$vars = array (
+      		'REX_FILE',
+      		'REX_MEDIA'
+      		);
+      		foreach ($vars as $var)
+      		{
+      			$matches = $this->getVarParams($content, $var);
+      			foreach ($matches as $match)
+      			{
+      				list ($param_str, $args) = $match;
+      				list ($id, $args) = $this->extractArg('id', $args, 0);
+
+      				$slice_id = $sql->getValue('slice_id');
+      				$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_MEDIA', $id);
+      				if($value){
+      					$value = $value->getValue();
+      				}else{
+      					$value = '';
+      				}
+
+      				// Mimetype ausgeben
+      				if(isset($args['mimetype']))
+      				{
+      					$OOM = OOMedia::getMediaByName($value);
+      					if($OOM)
+      					{
+      						$replace = $OOM->getType();
+      					}
+      				}
+      				// "normale" ausgabe
+      				else
+      				{
+      					$replace = $value;
+      				}
+
+      				$replace = $this->handleGlobalVarParams($var, $args, $replace);
+      				$content = str_replace($var . '[' . $param_str . ']', $replace, $content);
+      			}
+      		}
+
+      		return $content;
+	}
+
+	/**
+	 * Wert für die Ausgabe
+	 */
+	function matchMediaList(& $sql, $content)
+	{
+		$vars = array (
+      		'REX_FILELIST',
+      		'REX_MEDIALIST'
+      		);
+      	foreach ($vars as $var)
+      	{
+      		$matches = $this->getVarParams($content, $var);
+      		foreach ($matches as $match)
+      		{
+      			list ($param_str, $args) = $match;
+      			list ($id, $args) = $this->extractArg('id', $args, 0);
+
+      			$slice_id = $sql->getValue('slice_id');
+     			$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_MEDIALIST', $id);
+      			if($value){
+      				$value = $value->getValue();
+      			}else{
+      				$value = '';
+      			}
+      			$replace = $this->handleGlobalVarParams($var, $args, $value);
+      			$content = str_replace($var . '[' . $param_str . ']', $replace, $content);
+      		}
+      	}
+      	return $content;
+	}
+
+	/**
+	 * Gibt das Button Template zurück
+	 */
+	function getMediaButton($id, $category = '', $args = array())
+	{
+		global $I18N;
+
+		$open_params = '';
+		if ($category != '')
+		{
+			$open_params .= '&amp;rex_file_category=' . $category;
+		}
+
+		foreach($args as $aname => $avalue)
+		{
+			$open_params .= '&amp;args['. urlencode($aname) .']='. urlencode($avalue);
+		}
+
+		$wdgtClass = 'rex-widget-media';
+		if(isset($args['preview']) && $args['preview'] && OOAddon::isAvailable('image_resize'))
+		{
+			$wdgtClass .= ' rex-widget-preview';
+		}
+
+		$media = '
     <div class="rex-widget">
       <div class="'. $wdgtClass .'">
         <p class="rex-widget-field">
@@ -286,47 +312,47 @@ class rex_var_media extends rex_var
 		<div class="rex-clearer"></div>
     ';
 
-    return $media;
-  }
+		return $media;
+	}
 
-  /**
-   * Gibt das ListButton Template zurück
-   */
-  function getMedialistButton($id, $value, $category = '', $args = array())
-  {
-    global $I18N;
+	/**
+	 * Gibt das ListButton Template zurück
+	 */
+	function getMedialistButton($id, $value, $category = '', $args = array())
+	{
+		global $I18N;
 
-    $open_params = '';
-    if ($category != '')
-    {
-      $open_params .= '&amp;rex_file_category=' . $category;
-    }
+		$open_params = '';
+		if ($category != '')
+		{
+			$open_params .= '&amp;rex_file_category=' . $category;
+		}
 
-    foreach($args as $aname => $avalue)
-    {
-      $open_params .= '&amp;args['. $aname .']='. urlencode($avalue);
-    }
+		foreach($args as $aname => $avalue)
+		{
+			$open_params .= '&amp;args['. $aname .']='. urlencode($avalue);
+		}
 
-    $wdgtClass = 'rex-widget-medialist';
-    if(isset($args['preview']) && $args['preview'] && OOAddon::isAvailable('image_resize'))
-    {
-      $wdgtClass .= ' rex-widget-preview';
-    }
+		$wdgtClass = 'rex-widget-medialist';
+		if(isset($args['preview']) && $args['preview'] && OOAddon::isAvailable('image_resize'))
+		{
+			$wdgtClass .= ' rex-widget-preview';
+		}
 
-    $options = '';
-    $medialistarray = explode(',', $value);
-    if (is_array($medialistarray))
-    {
-      foreach ($medialistarray as $file)
-      {
-        if ($file != '')
-        {
-          $options .= '<option value="' . $file . '">' . $file . '</option>';
-        }
-      }
-    }
+		$options = '';
+		$medialistarray = explode(',', $value);
+		if (is_array($medialistarray))
+		{
+			foreach ($medialistarray as $file)
+			{
+				if ($file != '')
+				{
+					$options .= '<option value="' . $file . '">' . $file . '</option>';
+				}
+			}
+		}
 
-    $media = '
+		$media = '
     <div class="rex-widget">
       <div class="'. $wdgtClass .'">
         <input type="hidden" name="MEDIALIST['. $id .']" id="REX_MEDIALIST_'. $id .'" value="'. $value .'" />
@@ -350,7 +376,7 @@ class rex_var_media extends rex_var
 	 	<div class="rex-clearer"></div>
     ';
 
-    return $media;
-  }
+		return $media;
+	}
 
 }

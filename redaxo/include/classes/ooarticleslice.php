@@ -19,6 +19,7 @@ class OOArticleSlice
 	private $_clang;
 	private $_ctype;
 	private $_modultyp_id;
+	private $_slice_id;
 
 	private $_re_article_slice_id;
 	private $_next_article_slice_id;
@@ -44,13 +45,14 @@ class OOArticleSlice
 	$id, $article_id, $clang, $ctype, $modultyp_id,
 	$re_article_slice_id, $next_article_slice_id,
 	$createdate,$updatedate,$createuser,$updateuser,$revision,
-	$values, $files, $filelists, $links, $linklists, $php, $html)
+	$values, $files, $filelists, $links, $linklists, $php, $html, $slice_id = 0)
 	{
 		$this->_id = $id;
 		$this->_article_id = $article_id;
 		$this->_clang = $clang;
 		$this->_ctype = $ctype;
 		$this->_modultyp_id = $modultyp_id;
+		$this->_slice_id = $slice_id;
 
 		$this->_re_article_slice_id = $re_article_slice_id;
 		$this->_next_article_slice_id = $next_article_slice_id;
@@ -243,7 +245,7 @@ class OOArticleSlice
 			array($sql->getValue('filelist1'), $sql->getValue('filelist2'), $sql->getValue('filelist3'), $sql->getValue('filelist4'), $sql->getValue('filelist5'), $sql->getValue('filelist6'), $sql->getValue('filelist7'), $sql->getValue('filelist8'), $sql->getValue('filelist9'), $sql->getValue('filelist10')),
 			array($sql->getValue('link1'), $sql->getValue('link2'), $sql->getValue('link3'), $sql->getValue('link4'), $sql->getValue('link5'), $sql->getValue('link6'), $sql->getValue('link7'), $sql->getValue('link8'), $sql->getValue('link9'), $sql->getValue('link10')),
 			array($sql->getValue('linklist1'), $sql->getValue('linklist2'), $sql->getValue('linklist3'), $sql->getValue('linklist4'), $sql->getValue('linklist5'), $sql->getValue('linklist6'), $sql->getValue('linklist7'), $sql->getValue('linklist8'), $sql->getValue('linklist9'), $sql->getValue('linklist10')),
-			$sql->getValue('php'), $sql->getValue('html'));
+			$sql->getValue('php'), $sql->getValue('html'), $sql->getValue('slice_id'));
 
 			$sql->next();
 		}
@@ -286,6 +288,11 @@ class OOArticleSlice
 	{
 		return $this->_id;
 	}
+	
+	public function getSliceId(){
+		return $this->_slice_id;
+	}
+	
 
 	public function getValue($index)
 	{
