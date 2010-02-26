@@ -80,7 +80,7 @@ class OOArticleSlice
 		if ($clang === false) $clang = Core::getCurrentClang();
 		$namespace = 'slice';
 		$key = $an_id;
-		
+
 		$obj = Core::cache()->get($namespace, $key, null);
 		if ($obj === null) {
 			$obj = self::_getSliceWhere('id='. $an_id .' AND clang='. $clang.' and revision='.$revision);
@@ -102,7 +102,7 @@ class OOArticleSlice
 		global $REX;
 
 		if ($clang === false)
-			$clang = Core::getCurrentClang();
+		$clang = Core::getCurrentClang();
 
 		return self::_getSliceWhere('a.article_id='. $an_article_id .' AND
                                           a.clang='. $clang .' AND
@@ -127,7 +127,7 @@ class OOArticleSlice
 		global $REX;
 
 		if ($clang === false)
-			$clang = Core::getCurrentClang();
+		$clang = Core::getCurrentClang();
 
 		return self::_getSliceWhere('a.article_id='. $an_article_id .' AND
                                           a.clang='. $clang .' AND
@@ -155,7 +155,7 @@ class OOArticleSlice
 		global $REX;
 
 		if ($clang === false)
-			$clang = Core::getCurrentClang();
+		$clang = Core::getCurrentClang();
 
 		return self::_getSliceWhere('article_id='. $an_article_id .' AND clang='. $clang .' AND modultyp_id='. $a_moduletype_id .' AND revision='.$revision, array());
 	}
@@ -189,7 +189,10 @@ class OOArticleSlice
 		$art->setClang($this->getClang());
 		$art->getSlice = $this->getId();
 		$art->setSliceRevision($this->_revision);
-		return self::replaceLinks( $art->getArticle() );
+		$content = $art->getArticle();
+		$content = self::replaceLinks($content);
+		$content = $this->replaceCommonVars($content);
+		return $content;
 	}
 
 	public function getContent(){
@@ -287,11 +290,11 @@ class OOArticleSlice
 	public function getValue($index)
 	{
 		if(is_int($index))
-			return $this->_values[$index-1];
+		return $this->_values[$index-1];
 
 		$attrName = '_'. $index;
 		if(isset($this->$attrName))
-			return $this->$attrName;
+		return $this->$attrName;
 
 		return null;
 	}
@@ -336,6 +339,52 @@ class OOArticleSlice
 	{
 		return $this->_php;
 	}
+
+	// ---- Artikelweite globale variablen werden ersetzt
+	private function replaceCommonVars($content)
+	{
+		global $REX;
+
+		static $user_id = null;
+		static $user_login = null;
+
+		// UserId gibts nur im Backend
+		if($user_id === null)
+		{
+			if(isset($REX['USER']))
+			{
+				$user_id = $REX['USER']->getValue('user_id');
+				$user_login = $REX['USER']->getValue('login');
+			}else
+			{
+				$user_id = '';
+				$user_login = '';
+			}
+		}
+
+		static $search = array(
+       'REX_ARTICLE_ID',
+       'REX_CATEGORY_ID',
+       'REX_CLANG_ID',
+       'REX_TEMPLATE_ID',
+       'REX_USER_ID',
+       'REX_USER_LOGIN'
+       );
+		
+       $article = $this->getArticle();
+       
+       $replace = array(
+       $article->getId(),
+       $article->getCategoryId(),
+       $article->getClang(),
+       $article->getTemplateId(),
+       $user_id,
+       $user_login
+       );
+
+       return str_replace($search, $replace,$content);
+	}
+
 
 	private static function replaceLinks($content)
 	{

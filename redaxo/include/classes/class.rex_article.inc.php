@@ -399,7 +399,7 @@ class rex_article
 		$sliceContent = $slice['ModuleOutput'];
 		// TODO: abhängigkeit zu CONT auflösen
 		$this->CONT->counter = $slice['Counter'];
-		$sliceContent = $this->replaceVars($this->CONT, $sliceContent);
+		$sliceContent = $this->replaceObjectVars($this->CONT, $sliceContent);
 		
 		// --------------- EP: SLICE_SHOW
 		$sliceContent = $this->triggerSliceShowEP($sliceContent, $slice);
@@ -622,9 +622,7 @@ class rex_article
 
     if ($this->template_id != 0 && $this->article_id != 0)
     {
-      ob_start();
-      ob_implicit_flush(0);
-      
+
       $templateFile = rex_template::getFilePath($this->template_id);
       
       if (!file_exists($templateFile)) {
@@ -633,6 +631,8 @@ class rex_article
         unset($tpl);
       }
       
+      ob_start();
+      ob_implicit_flush(0);
       include $templateFile;
       $CONTENT = ob_get_clean();
     }
