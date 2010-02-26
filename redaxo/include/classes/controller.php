@@ -23,15 +23,19 @@ abstract class Controller {
     }
 
     public static function factory() {
-        $name = rex_request(self::SUBPAGEPARAM, 'string', '');
-        if(empty($name)){
-            $name = rex_request(self::PAGEPARAM, 'string', self::DEFAULTPAGE);
+        $page = rex_request(self::PAGEPARAM, 'string', self::DEFAULTPAGE);
+        $subpage = rex_request(self::SUBPAGEPARAM, 'string', '');
+        
+        if(!empty($page)){
+            $name = strtoupper(substr($page, 0, 1)).substr($page, 1);
+        	if(!empty($subpage)){
+        		$name .= strtoupper(substr($subpage, 0, 1)).substr($subpage, 1);
+        	}
+        	$name .= 'Controller';
         }
-        if(!empty($name)){
-            $name = strtoupper(substr($name, 0, 1)).substr($name, 1).'Controller';
-            if(class_exists($name)) {
-                return new $name($name);
-            }
+        
+    	if(class_exists($name)) {
+        	return new $name($name);
         }
         return null;
     }
