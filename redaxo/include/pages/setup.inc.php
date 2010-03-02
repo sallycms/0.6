@@ -575,7 +575,7 @@ if ($checkmodus == 3 && $send == 1)
   elseif ($dbanlegen == 1)
   {
     // ----- volle Datenbank, alte DB löschen / drop
-    $import_sql = $REX['INCLUDE_PATH'].'/install/redaxo4_2.sql';
+    $import_sql = $REX['INCLUDE_PATH'].'/install/redaxo4_2_fork.sql';
 
     $db = new rex_sql;
     foreach($requiredTables as $table)
