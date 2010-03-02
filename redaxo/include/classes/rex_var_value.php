@@ -119,10 +119,12 @@ class rex_var_value extends rex_var
 		$slice_id = $sql->getValue('slice_id');
 		$html_content = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_HTML', '');
 		if($html_content){
-			$html_content->getValue();
+			$html_content = $html_content->getValue();
 			if(!$html_content){
 				$html_content = '';
 			}
+		}else{
+			$html_content = '';
 		}
 		$content = str_replace('REX_HTML', $html_content, $content);
 		return $content;
