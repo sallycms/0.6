@@ -592,7 +592,7 @@ function rex_addArticle($data)
 	if (rex_extension_is_registered('ART_ADDED')) {
 		foreach (array_keys($REX['CLANG']) as $clangID) {
 			$message = rex_register_extension_point('ART_ADDED', $message, array(
-				'id'          => $id,
+				'id'          => $newID,
 				'clang'       => $clangID,
 				'status'      => $data['status'] ? 1 : 0,
 				'name'        => $data['name'],

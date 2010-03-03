@@ -5,10 +5,9 @@
  * @version svn:$Id$
  */
 
-require_once '../pqp/classes/PhpQuickProfiler.php';
-$pqp = new PhpQuickProfiler(time());
 ob_start();
 ob_implicit_flush(0);
+
 
 // Globale Variablen vorbereiten
 require_once 'redaxo/include/functions/function_rex_mquotes.inc.php';
@@ -40,18 +39,6 @@ else {
 	print 'Kein Startartikel selektiert. Bitte setze ihn im <a href="redaxo/index.php">Backend</a>.';
 	$REX['STATS'] = 0;
 }
-
-//try{
-	$service = Service_Factory::getService('Slice');
-	$slice = $service->create(array('namespace' => 'article', 'fk_id' => '1', 'module_id' => '3'));
-
-	$value = $slice->AddValue('file', '1', 'tada');
-	$data2 = $service->findById(1);
-
-	unset($service);
-//}catch(Exception $e){
-//		
-//}
 
 $content = ob_get_clean();
 

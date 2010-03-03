@@ -257,7 +257,6 @@ if ($checkmodus == 1)
     $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'generated'.DIRECTORY_SEPARATOR.'templates',
     $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'generated'.DIRECTORY_SEPARATOR.'files',
     $REX['MEDIAFOLDER'],
-    $REX['MEDIAFOLDER'] .DIRECTORY_SEPARATOR.'_readme.txt',
     getImportDir()
   );
 
@@ -560,7 +559,7 @@ if ($checkmodus == 3 && $send == 1)
 
       // Nur hier zuerst die Addons installieren
       // Da sonst Daten aus dem eingespielten Export
-      // �berschrieben w�rden
+      // überschrieben würden
       if($err_msg == '')
         $err_msg .= rex_setup_addons(true, false);
       if($err_msg == '')
@@ -590,7 +589,7 @@ if ($checkmodus == 3 && $send == 1)
   elseif ($dbanlegen == 0)
   {
     // ----- leere Datenbank neu einrichten
-    $import_sql = $REX['INCLUDE_PATH'].'/install/redaxo4_2.sql';
+    $import_sql = $REX['INCLUDE_PATH'].'/install/redaxo4_2_fork.sql';
 
     if($err_msg == '')
       $err_msg .= rex_setup_import($import_sql);

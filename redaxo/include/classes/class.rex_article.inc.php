@@ -391,6 +391,9 @@ class rex_article
 	}
 	
 	private function getSliceOutput($sliceID) {
+		//damit $REX verfügbar ist
+		global $REX;
+		
 		ob_start();
 		ob_implicit_flush(0);
 		
@@ -737,11 +740,11 @@ class rex_article
           case 'modultyp_id'  : $def_value = $module_id; break;
           case 'article_id'   : $def_value = $this->article_id; break;
           case 'id'           : $def_value = 0; break;
+          case 'slice_id'     : $def_value = 0; break;
           default             : $def_value = '';
         }
         $dummysql->setValue($REX['TABLE_PREFIX']. 'article_slice.'. $fieldname, $def_value);
       }
-
       $slice_content = $this->replaceVars($dummysql,$slice_content);
     }
     return $slice_content;

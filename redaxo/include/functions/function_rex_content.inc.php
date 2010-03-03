@@ -124,16 +124,19 @@ function rex_deleteSlice($slice_id)
 {
 	global $REX;
 
-	$slice = OOArticleSlice::getArticleSliceById($slice_id);
+	$article_slice = OOArticleSlice::getArticleSliceById($slice_id);
 	
-	if ($slice !== null) {
+	
+	if ($article_slice !== null) {
 		$sql       = new rex_sql();
-		$nextslice = $slice->getNextSlice();
+		$nextslice = $article_slice->getNextSlice();
 		
 		if ($nextslice !== null){
-			$sql->setQuery('UPDATE #_article_slice SET re_article_slice_id = '.$slice->getValue('re_article_slice_id').' WHERE id = '.$nextslice->getValue('id'), '#_');
+			$sql->setQuery('UPDATE #_article_slice SET re_article_slice_id = '.$article_slice->getValue('re_article_slice_id').' WHERE id = '.$nextslice->getValue('id'), '#_');
 		}
 
+		Service_Factory::getService('Slice')->delete(array('id' => $article_slice->getSliceId()));
+		
 		$sql->setQuery('DELETE FROM #_article_slice WHERE id = '.$slice_id, '#_');
 		return $sql->getRows() == 1;
 	}
@@ -159,7 +162,7 @@ function rex_slice_module_exists($sliceID, $clang)
 }
 
 /**
- * Prüft, ob ein Modul im System bekannt ist.
+ * PrÃ¼ft, ob ein Modul im System bekannt ist.
  *
  * @return boolean  true oder ... false
  */
@@ -175,7 +178,7 @@ function rex_module_exists($moduleID)
 }
 
 /**
- * Führt alle pre-save Aktionen eines Moduls aus
+ * FÃ¼hrt alle pre-save Aktionen eines Moduls aus
  * 
  * @param  int    $module_id   ID des Moduls
  * @param  string $function    Funktion/Modus der Aktion
@@ -221,7 +224,7 @@ function rex_execPreSaveAction($module_id, $function, $REX_ACTION)
 }
 
 /**
- * Führt alle post-save Aktionen eines Moduls aus
+ * FÃ¼hrt alle post-save Aktionen eines Moduls aus
  * 
  * @param  int    $module_id   ID des Moduls
  * @param  string $function    Funktion/Modus der Aktion
@@ -249,7 +252,7 @@ function rex_execPostSaveAction($module_id, $function, $REX_ACTION)
 		$REX_ACTION['MSG'] = '';
 		$iaction = $ga->getValue('postsave');
 
-		// ***************** WERTE ERSETZEN UND POSTACTION AUSFÜHREN
+		// ***************** WERTE ERSETZEN UND POSTACTION AUSFÃœHREN
 		foreach (Core::getVarTypes() as $obj) {
 			$iaction = $obj->getACOutput($REX_ACTION, $iaction);
 		}
@@ -267,7 +270,7 @@ function rex_execPostSaveAction($module_id, $function, $REX_ACTION)
 }
 
 /**
- * übersetzt den Modus in das dazugehörige Bitwort
+ * Ã¼bersetzt den Modus in das dazugehÃ¶rige Bitwort
  * 
  * @param  string $function  Funktion/Modus der Aktion
  * @return int               ein Bitwort
@@ -332,7 +335,7 @@ function rex_article2startpage($neu_id)
 	$params = array('id', 'path', 'prior', 'catname', 'startpage', 'catprior', 'status', 're_id');
 
 	// cat felder sammeln.
-	// Ist speziell für das Metainfo-AddOn enthalten, um dessen Daten gleich mit zu kopieren.
+	// Ist speziell fÃ¼r das Metainfo-AddOn enthalten, um dessen Daten gleich mit zu kopieren.
 	
 	if (rex_addon::isAvailable('metainfo')) {
 		$db_fields = OORedaxo::getClassVars();
@@ -396,7 +399,7 @@ function rex_article2startpage($neu_id)
 	$update   = new rex_sql();
 	$articles = rex_sql::getArrayEx('SELECT id FROM #_article WHERE path LIKE "%|'.$alt_id.'|%"', '#_');
 	
-	$update->setQuery('UPDATE #_article SET re_id = '.$neu_id.' WHERE re_id = '.$alt_id, '#_'); // re_id = X enthält path LIKE "%|X|%".
+	$update->setQuery('UPDATE #_article SET re_id = '.$neu_id.' WHERE re_id = '.$alt_id, '#_'); // re_id = X enthÃ¤lt path LIKE "%|X|%".
 	$update->setQuery('UPDATE #_article SET path = REPLACE(path, "|'.$alt_id.'|", "|'.$neu_id.'|") WHERE path LIKE "%|'.$alt_id.'|%"', '#_');
 
 	$articles[] = $neu_id;
@@ -537,7 +540,7 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 		
 		$ins->insert();
 		
-		// Die Funktion ruft sich rekursiv auf. Das kann dauern. Da räumen wir lieber
+		// Die Funktion ruft sich rekursiv auf. Das kann dauern. Da rÃ¤umen wir lieber
 		// direkt den Speicher wieder auf.
 		
 		$ins = null;
@@ -590,23 +593,21 @@ function rex_copyArticle($id, $to_cat_id)
 				}
 				
 				$art_sql = new rex_sql();
-
 				if (empty($new_id)) {
 					$new_id = $art_sql->setNewId('id');
 				}
-				
 				$art_sql->setTable($REX['TABLE_PREFIX'].'article');
 				$art_sql->setValue('id',        $new_id); // neuen auto_incrment erzwingen
 				$art_sql->setValue('re_id',     $to_cat_id);
 				$art_sql->setValue('path',      $path);
 				$art_sql->setValue('catname',   $catname);
 				$art_sql->setValue('catprior',  0);
-				$art_sql->setValue('prior',     9999999); // Artikel als letzten Artikel in die neue Kat einfügen
+				$art_sql->setValue('prior',     9999999); // Artikel als letzten Artikel in die neue Kat einfÃ¼gen
 				$art_sql->setValue('status',    0);       // kopierten Artikel offline setzen
 				$art_sql->setValue('startpage', 0);
 				$art_sql->addGlobalCreateFields();
 
-				// schon gesetzte Felder nicht wieder überschreiben
+				// schon gesetzte Felder nicht wieder Ã¼berschreiben
 				$dont_copy = array('id', 'pid', 're_id', 'catname', 'catprior', 'path', 'prior', 'status', 'createdate', 'createuser', 'startpage');
 
 				foreach (array_diff(array_keys($from_data), $dont_copy) as $fld_name) {
@@ -647,10 +648,10 @@ function rex_copyArticle($id, $to_cat_id)
 		}
 	}
 
-	// Caches des Artikels löschen, in allen Sprachen
+	// Caches des Artikels lÃ¶schen, in allen Sprachen
 	rex_deleteCacheArticle($id);
 
-	// Caches der Kategorien löschen, da sich darin befindliche Artikel geändert haben
+	// Caches der Kategorien lÃ¶schen, da sich darin befindliche Artikel geÃ¤ndert haben
 	rex_deleteCacheArticle($to_cat_id);
 
 	return $new_id;
@@ -704,7 +705,7 @@ function rex_moveArticle($id, $from_cat_id, $to_cat_id)
 				$art_sql->setValue('re_id',   $re_id);
 				$art_sql->setValue('path',    $path);
 				$art_sql->setValue('catname', $catname);
-				$art_sql->setValue('prior',   9999999);   // Artikel als letzten Artikel in die neue Kat einfügen
+				$art_sql->setValue('prior',   9999999);   // Artikel als letzten Artikel in die neue Kat einfÃ¼gen
 				$art_sql->setValue('status',  0);         // kopierten Artikel offline setzen
 				$art_sql->addGlobalUpdateFields();
 				$art_sql->setWhere('clang = '.$clang.' AND startpage <> 1 AND id = '.$id.' AND re_id = '.$from_cat_id);
@@ -714,7 +715,7 @@ function rex_moveArticle($id, $from_cat_id, $to_cat_id)
 				rex_newArtPrio($to_cat_id, $clang, 1, 0);
 				rex_newArtPrio($from_cat_id, $clang, 1, 0);
 				
-				// Cache aufräumen
+				// Cache aufrÃ¤umen
 				$cache = Core::getInstance()->cache();
 				
 				$cache->delete('article_'.$id.'_'.$clang);
@@ -797,7 +798,7 @@ function rex_moveCategory($from_cat, $to_cat)
 				// make update
 				$new_path = $to_path.$from_cat.'|'.str_replace($from_path, '', $data['path']);
 
-				// path ändern und speichern
+				// path Ã¤ndern und speichern
 				$up->setTable($REX['TABLE_PREFIX'].'article');
 				$up->setWhere('id = '.$id);
 				$up->setValue('path', $new_path);

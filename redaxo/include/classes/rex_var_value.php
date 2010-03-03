@@ -32,7 +32,7 @@ class rex_var_value extends rex_var
 
 	function getACDatabaseValues($REX_ACTION, & $sql)
 	{
-		$slice_id = $sql->getValue('slice_id');
+		$slice_id = $this->getValue($sql, 'slice_id');
 		$values = Service_Factory::getService('SliceValue')->find(array('slice_id' => $slice_id, 'type' => 'REX_VALUE'));
 
 		foreach($values as $value)
@@ -66,7 +66,7 @@ class rex_var_value extends rex_var
 	{
 		$content = $this->getOutput($sql, $content, true);
 
-		$slice_id = $sql->getValue('slice_id');
+		$slice_id = $this->getValue($sql, 'slice_id');
 		$php_content = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_PHP', '');
 		if($php_content){
 			$php_content->getValue();
@@ -82,10 +82,10 @@ class rex_var_value extends rex_var
 	function getBEInput(& $sql, $content)
 	{
 		$content = $this->getOutput($sql, $content);
-		$slice_id = $sql->getValue('slice_id');
+		$slice_id = $this->getValue($sql, 'slice_id');
 		$php_content = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_PHP', '');
 		if($php_content){
-			$php_content->getValue();
+			$php_content = $php_content->getValue();
 			if(!$php_content){
 				$php_content = '';
 			}
@@ -97,7 +97,7 @@ class rex_var_value extends rex_var
 	function getFEOutput(& $sql, $content)
 	{
 		$content = $this->getOutput($sql, $content, true);
-		$slice_id = $sql->getValue('slice_id');
+		$slice_id = $this->getValue($sql, 'slice_id');
 		$php_content = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_PHP', '');
 		if($php_content){
 			$php_content->getValue();
@@ -116,7 +116,7 @@ class rex_var_value extends rex_var
 		$content = $this->matchIsValue($sql, $content);
 		$content = $this->matchPhpValue($sql, $content);
 
-		$slice_id = $sql->getValue('slice_id');
+		$slice_id = $this->getValue($sql, 'slice_id');
 		$html_content = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_HTML', '');
 		if($html_content){
 			$html_content = $html_content->getValue();
@@ -143,7 +143,7 @@ class rex_var_value extends rex_var
 			list ($param_str, $args) = $match;
 			list ($id, $args) = $this->extractArg('id', $args, 0);
 
-			$slice_id = $sql->getValue('slice_id');
+			$slice_id = $this->getValue($sql, 'slice_id');
 			$replace = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_VALUE', $id);
 
 			if($replace){
