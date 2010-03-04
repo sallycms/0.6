@@ -46,7 +46,7 @@ if($PERMALL)
     {
       foreach($sync_files as $file)
       {
-        // hier mit is_int, wg kompatibilität zu PHP < 4.2.0
+        // hier mit is_int, wg kompatibilitï¿½t zu PHP < 4.2.0
         if(!is_int($key = array_search($file, $diff_files))) continue;
 
         if(rex_mediapool_syncFile($file,$rex_file_category,$ftitle,'',''))
@@ -55,7 +55,7 @@ if($PERMALL)
           $info = $I18N->msg('pool_sync_files_synced');
         }else
         {
-        echo "¤$%&/(";
+        echo "ï¿½$%&/(";
         }
       }
       // diff count neu berechnen, da (hoffentlich) diff files in die db geladen wurden
@@ -82,6 +82,7 @@ if($PERMALL)
 
   if($diff_count > 0)
   {
+  	natcasesort($diff_files);
     foreach($diff_files as $file)
     {
       echo '<div class="rex-form-row">
