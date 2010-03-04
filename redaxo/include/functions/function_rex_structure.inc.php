@@ -139,7 +139,7 @@ function rex_addCategory($parentID, $data)
 			
 			if ($hasOldExtensions) {
 				$category = new rex_sql();
-				$category->setQuery('SELECT * FROM #_article WHERE id = '.$id.' AND clang = '.$clangID.' AND startpage = 1', '#_');
+				$category->setQuery('SELECT * FROM #_article WHERE id = '.$newID.' AND clang = '.$clangID.' AND startpage = 1', '#_');
 			}
 			
 			// EP auslösen
