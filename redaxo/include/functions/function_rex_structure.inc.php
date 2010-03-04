@@ -146,7 +146,7 @@ function rex_addCategory($parentID, $data)
 			
 			$message = rex_register_extension_point('CAT_ADDED', $message, array(
 				'category' => clone $category,
-				'id'       => $id,
+				'id'       => $newID,
 				're_id'    => $parentID,
 				'clang'    => $clangID,
 				'name'     => $data['catname'],
@@ -157,7 +157,7 @@ function rex_addCategory($parentID, $data)
 			));
 			
 			$message = rex_register_extension_point('CAT_ADDED_NEW', $message, array(
-				'id'       => $id,
+				'id'       => $newID,
 				're_id'    => $parentID,
 				'clang'    => $clangID,
 				'name'     => $data['catname'],
@@ -252,7 +252,7 @@ function rex_editCategory($categoryID, $clang, $data)
 		
 		if ($newPrio != $oldPrio) {
 			$relation    = $newPrio < $oldPrio ? '+' : '-';
-			list($a, $b) = $newPrio < $oldPrio ? array($newPrio, $oldPrio) : array($newPrio, $position);
+			list($a, $b) = $newPrio < $oldPrio ? array($newPrio, $oldPrio) : array($oldPrio, $newPrio);
 			
 			// Alle anderen entsprechend verschieben
 			
@@ -662,7 +662,7 @@ function rex_editArticle($articleID, $clang, $data)
 			$newPrio = 1;
 		}
 		else {
-			$maxPrio = rex_sql::fetch('MAX(catprior)', 'article', 're_id = '.$parentID.' AND catprior = 0 AND clang = 0');
+			$maxPrio = rex_sql::fetch('MAX(prior)', 'article', 're_id = '.$parentID.' AND catprior = 0 AND clang = 0');
 			
 			if ($newPrio > $maxPrio) {
 				$newPrio = $maxPrio;
@@ -670,10 +670,9 @@ function rex_editArticle($articleID, $clang, $data)
 		}
 		
 		// Nur aktiv werden, wenn sich auch etwas geändert hat.
-		
 		if ($newPrio != $oldPrio) {
 			$relation    = $newPrio < $oldPrio ? '+' : '-';
-			list($a, $b) = $newPrio < $oldPrio ? array($newPrio, $oldPrio) : array($newPrio, $position);
+			list($a, $b) = $newPrio < $oldPrio ? array($newPrio, $oldPrio) : array($oldPrio, $newPrio);
 			
 			// Alle anderen entsprechend verschieben
 			
@@ -692,6 +691,8 @@ function rex_editArticle($articleID, $clang, $data)
 		}
 	}
 
+	$message = $I18N->msg('article_updated');
+	
 	if ($hasOldExtensions) {
 		$article = new rex_sql();
 		$article->setQuery('SELECT * FROM #_article WHERE id = '.$articleID.' AND clang = '.$clangID, '#_');

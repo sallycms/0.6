@@ -366,6 +366,8 @@ class rex_article
 		global $REX;
 		$this->fetchArticleSlices();
 		
+		$slices = null;
+		$predecessors = null;
 		// ---------- SLICE IDS/MODUL SETZEN - speichern der daten
 		for ($i=0; $i < $this->CONT->getRows(); $i++) {
 			$previousSliceID = $this->CONT->getValue('re_article_slice_id');
