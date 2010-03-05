@@ -478,6 +478,7 @@ class RedaxoSync
 		self::removeAllFiles($path, 'clist');
 		self::removeAllFiles($path, 'article');
 		self::removeAllFiles($path, 'content');
+		self::removeAllFiles($path, 'slice');
 		
 		self::debug('cleared templates and articles cache');
 	}
