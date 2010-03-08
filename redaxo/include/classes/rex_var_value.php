@@ -22,7 +22,8 @@ class rex_var_value extends rex_var
 		$values = rex_request('VALUE', 'array');
 		foreach($values as $key => $value)
 		{
-			$REX_ACTION['REX_VALUE'][$key] = $value;
+			//TODO: wenn irgendwann rex_sql und damit der mquotes mist in rente ist das stripslashes wieder entfernen.
+			$REX_ACTION['REX_VALUE'][$key] = stripslashes($value);
 		}
 		$REX_ACTION['REX_PHP'] = stripslashes(rex_request('INPUT_PHP', 'string'));
 		$REX_ACTION['REX_HTML'] = self::stripPHP(stripslashes(rex_request('INPUT_HTML', 'string')));
