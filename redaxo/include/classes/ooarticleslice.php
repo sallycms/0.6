@@ -76,13 +76,15 @@ class OOArticleSlice
 		return $obj;
 	}
 
-	/*
+	/**
 	 * CLASS Function:
 	 * Return the first slice for an article.
 	 * This can then be used to iterate over all the
 	 * slices in the order as they appear using the
 	 * getNextSlice() function.
 	 * Returns an OOArticleSlice object
+	 * 
+	 * @return OOArticleSlice
 	 */
 	public static function getFirstSliceForArticle($an_article_id, $clang = false, $revision = 0)
 	{
@@ -105,9 +107,11 @@ class OOArticleSlice
                                           );
 	}
 
-	/*
+	/**
 	 * CLASS Function:
 	 * Returns the first slice of the given ctype of an article
+	 *
+	 * @return OOArticleSlice
 	 */
 	public static function getFirstSliceForCtype($ctype, $an_article_id, $clang = false, $revision = 0)
 	{
@@ -147,10 +151,12 @@ class OOArticleSlice
 		return self::_getSliceWhere('article_id='. $an_article_id .' AND clang='. $clang .' AND modultyp_id='. $a_moduletype_id .' AND revision='.$revision, array());
 	}
 
-	/*
+	/**
 	 * Object Function:
 	 * Return the next slice for this article
 	 * Returns an OOArticleSlice object.
+	 *
+	 * @return OOArticleSlice
 	 */
 	public function getNextSlice()
 	{
@@ -199,6 +205,16 @@ class OOArticleSlice
 		}
 	}
 
+	/**
+	 * 
+	 * 
+	 * @param string $where
+	 * @param string $table
+	 * @param string $fields
+	 * @param mixed $default
+	 * 
+	 * @return array of OOArticleSlice
+	 */
 	public static function _getSliceWhere($where, $table = null, $fields = null, $default = null)
 	{
 		global $REX;
@@ -267,6 +283,11 @@ class OOArticleSlice
 	public function getId()
 	{
 		return $this->_id;
+	}
+	
+	public function getReId()
+	{
+		return $this->_re_article_slice_id;
 	}
 	
 	public function getSliceId(){

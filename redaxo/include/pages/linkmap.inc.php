@@ -135,7 +135,11 @@ rex_title('Linkmap', $navi_path);
 			{
 				foreach($articles as $article)
 				{
-					$liClass = $article->isStartpage() ? ' class="rex-linkmap-startpage"' : '';
+					if ($article->isStartpage() && $article->getId() != $category_id) {
+						continue;
+					}
+					
+					$liClass = ''; // $article->isStartpage() ? ' class="rex-linkmap-startpage"' : '';
 					$url = rex_linkmap_backlink($article->getId(), htmlspecialchars($article->getName()));
 	
 					echo rex_linkmap_format_li($article, $category_id, $GlobalParams, $liClass, ' href="'. $url .'"');

@@ -111,10 +111,10 @@ function rex_generateArticleContent($article_id, $clang = null)
 		}
 
 		$query =
-			'SELECT slice.id, slice.ctype, slice.re_article_slice_id '.
-			'FROM #_article_slice slice LEFT JOIN #_article a ON slice.article_id = a.id '.
-			'WHERE slice.article_id = '.$article_id.' AND a.clang = '.$clang.' '.
-			'ORDER BY slice.re_article_slice_id ASC';
+			'SELECT id, ctype, re_article_slice_id '.
+			'FROM #_article_slice '.
+			'WHERE article_id = '.$article_id.' AND clang = '.$clang.' '.
+			'ORDER BY re_article_slice_id ASC';
 		
 		$sql             = new rex_sql();
 		$slices          = $sql->getArray(str_replace('#_', $REX['TABLE_PREFIX'], $query));
@@ -163,6 +163,12 @@ function rex_generateArticleContent($article_id, $clang = null)
 		if (rex_put_file_contents($article_content_file, $article_content) === false) {
 			return $I18N->msg('article_could_not_be_generated').' '.$I18N->msg('check_rights_in_directory').$REX['INCLUDE_PATH'].'/generated/articles/';
 		}
+		
+		rex_register_extension_point('CLANG_ARTICLE_GENERATED', '', array(
+			'id'      => $article_id,
+			'clang'   => $clang
+		));
+		rex_register_extension_point('ARTICLE_GENERATED', '', array('id' => $article_id));
 	}
 
 	return true;
@@ -176,9 +182,9 @@ function rex_generateArticleContent($article_id, $clang = null)
  * 
  * @return true bei Erfolg, false wenn eine ungütlige article_id übergeben wird
  */
-function rex_generateArticle($id, $refreshall = true)
-{
-	global $REX, $I18N;
+//function rex_generateArticle($id, $refreshall = true)
+//{
+//	global $REX, $I18N;
 
 	// Artikel generieren
 	// Vorraussetzung: Artikel steht schon in der Datenbank
@@ -190,39 +196,39 @@ function rex_generateArticle($id, $refreshall = true)
 	// ---> Artikelliste
 	// ---> Kategorieliste
 
-	foreach (array_keys($REX['CLANG']) as $clang) {
-		$CONT = new rex_article();
-		$CONT->setCLang($clang);
-		$CONT->getContentAsQuery(); // Content aus Datenbank holen, no cache
-		$CONT->setEval(false);      // Content nicht ausführen, damit in Cachedatei gespeichert werden kann
-		
-		if (!$CONT->setArticleId($id)) {
-			return false;
-		}
+//	foreach (array_keys($REX['CLANG']) as $clang) {
+//		$CONT = new rex_article();
+//		$CONT->setCLang($clang);
+//		$CONT->getContentAsQuery(); // Content aus Datenbank holen, no cache
+//		$CONT->setEval(false);      // Content nicht ausführen, damit in Cachedatei gespeichert werden kann
+//		
+//		if (!$CONT->setArticleId($id)) {
+//			return false;
+//		}
 
 		// generiere generated/articles/xx.article
 		
 //		$MSG = rex_generateArticleMeta($id, $clang);
 //		if($MSG === false) return false;
 
-		if ($refreshall) {
-			// generiere generated/articles/xx.content
-			$MSG = rex_generateArticleContent($id, $clang);
-			
-			if ($MSG === false) {
-				return false;
-			}
-		}
-
-		$MSG = rex_register_extension_point('CLANG_ARTICLE_GENERATED', '', array(
-			'id'      => $id,
-			'clang'   => $clang,
-			'article' => $CONT
-		));
-
-		if (!empty($MSG)) {
-			print rex_warning($MSG);
-		}
+//		if ($refreshall) {
+//			// generiere generated/articles/xx.content
+//			$MSG = rex_generateArticleContent($id, $clang);
+//			
+//			if ($MSG === false) {
+//				return false;
+//			}
+//		}
+//
+//		$MSG = rex_register_extension_point('CLANG_ARTICLE_GENERATED', '', array(
+//			'id'      => $id,
+//			'clang'   => $clang,
+//			'article' => $CONT
+//		));
+//
+//		if (!empty($MSG)) {
+//			print rex_warning($MSG);
+//		}
 
 		// Listen generieren
 		
@@ -235,11 +241,11 @@ function rex_generateArticle($id, $refreshall = true)
 //		{
 //		  rex_generateLists($CONT->getValue("re_id"));
 //		}
-	}
-
-	rex_register_extension_point('ARTICLE_GENERATED', '', array('id' => $id));
-	return true;
-}
+//	}
+//
+//	rex_register_extension_point('ARTICLE_GENERATED', '', array('id' => $id));
+//	return true;
+//}
 
 /**
  * Löscht einen Artikel
@@ -727,7 +733,6 @@ function rex_generateClang()
 	
 	return true;
 }
-
 
 /**
  * Escaped einen String

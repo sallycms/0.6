@@ -163,7 +163,7 @@ class OOMedia
 	}
 
 	/**
-	 * @access public
+	 * @return OOMedia
 	 */
 	public static function getMediaByFileName($name)
 	{

@@ -209,6 +209,7 @@ function _rex_cast_var($var, $vartype, $default, $mode)
 		case 'rex-clang-id':
 			$var = (int) $var;
 			if ($mode == 'found') {
+				global $REX;
 				if (empty($REX['CLANG'][$var])) {
 					$var = (int) $default;
 				}

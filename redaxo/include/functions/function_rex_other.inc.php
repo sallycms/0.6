@@ -484,7 +484,7 @@ function rex_organize_priorities($tableName, $priorColumnName, $whereCondition =
 	}
 	
 	$select->setQuery($qry);
-	
+	$gu = rex_sql::getInstance();
 	for ($i = 1; $i <= $select->getRows(); ++$i) {
 		$gu->setQuery('UPDATE '.$tableName.' SET '.$priorColumnName.' = '.$i.' WHERE '.$id_field.' = '.$select->getValue($id_field));
 		$select->next();

@@ -13,6 +13,13 @@
   	
   	private static $services = array();
   	
+  	/**
+  	 * Return a instance on a Service
+  	 *  
+  	 * @param string $modelName
+  	 * 
+  	 * @return Service_Base an implementation of Service_Base
+  	 */
   	public static function getService($modelName){
   		if(!isset(self::$services[$modelName])){
   			$serviceName = 'Service_'.$modelName;

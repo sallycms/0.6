@@ -23,6 +23,13 @@ class Model_Slice extends Model_SliceBase {
 		return $service->create(array('slice_id' => $this->getId(), 'type' => $type, 'finder' => $finder, 'value' => $value));
 	}
 	
+	/**
+	 * 
+	 * @param string $type
+	 * @param string $finder
+	 * 
+	 * @return Model_SliceValue
+	 */
 	public function getValue($type, $finder){
 		$service = Service_Factory::getService('SliceValue');
 		$sliceValue = $service->findBySliceTypeFinder(array('slice_id' => $this->getId(), 'type' => $type, 'finder' => $finder));

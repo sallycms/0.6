@@ -11,9 +11,11 @@ class OOCategory extends OORedaxo {
 		parent::__construct($params, $clang);
 	}
 	
-	/*
+	/**
 	* CLASS Function:
 	* Return an OORedaxo object based on an id
+	* 
+	* @return OOCategory
 	*/
 	public static function getCategoryById($category_id, $clang = false) {
 		return OOArticle::getArticleById($category_id, $clang, true);
@@ -190,7 +192,7 @@ class OOCategory extends OORedaxo {
 	* Static Method: Returns boolean if is category
 	*/
 	public static function isValid($category) {
-		return is_object($category) && is_a($category, 'oocategory');
+		return $category instanceof OOCategory;
 	}
 	
 }

@@ -291,7 +291,7 @@ class OORedaxo {
 		$tree = $this->getParentTree();
 		
 		foreach($tree as $treeObj) {
-			if($treeObj == $anObj) { return true; }
+			if($treeObj->getId() == $anObj->getId()) { return true; }
 		}
 		
 		return false;

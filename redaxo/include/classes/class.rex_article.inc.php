@@ -185,7 +185,7 @@ class rex_article
       else $value = 'id';
     }
     // Nicht generated, oder über SQL muss article_id -> id heißen
-    else if ($this->viasql && $value == 'article_id')
+    else if ($value == 'article_id')
     {
       $value = 'id';
     }

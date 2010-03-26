@@ -505,7 +505,7 @@ function rex_addArticle($data)
 		$data['prior'] = 1;
 	}
 	else {
-		$maxPrior      = rex_sql::fetch('MAX(prior)', 'article', 're_id = '.$categoryID.' AND catprior = 0 AND clang = 0') + 1;
+		$maxPrior      = rex_sql::fetch('MAX(prior)', 'article', '(re_id = '.$categoryID.' AND catprior = 0) OR id = '.$categoryID.'  AND clang = 0') + 1;
 		$data['prior'] = $data['prior'] > $maxPrior ? $maxPrior : $data['prior'];
 	}
 	
@@ -534,7 +534,7 @@ function rex_addArticle($data)
 	$sql = new rex_sql();
 	$sql->setQuery(
 		'UPDATE #_article SET prior = prior + 1 '.
-		'WHERE re_id = '.$categoryID.' AND catprior = 0 AND prior >= '.$data['prior'].' '.
+		'WHERE ((re_id = '.$categoryID.' AND catprior = 0) OR id = '.$categoryID.' ) AND prior >= '.$data['prior'].' '.
 		'ORDER BY prior ASC', '#_'
 	);
 	
@@ -654,7 +654,7 @@ function rex_editArticle($articleID, $clang, $data)
 	// Priorität verarbeiten
 
 	if (isset($data['prior'])) {
-		$parentID = $oldData->getValue('re_id');
+		$parentID = $oldData->getValue('startpage') ? $oldData->getValue('id') : $oldData->getValue('re_id');
 		$oldPrio  = $oldData->getValue('prior');
 		$newPrio  = (int) $data['prior'];
 
@@ -662,13 +662,12 @@ function rex_editArticle($articleID, $clang, $data)
 			$newPrio = 1;
 		}
 		else {
-			$maxPrio = rex_sql::fetch('MAX(prior)', 'article', 're_id = '.$parentID.' AND catprior = 0 AND clang = 0');
-			
+			$maxPrio = rex_sql::fetch('MAX(prior)', 'article', '((re_id = '.$parentID.' AND catprior = 0) OR id = '.$parentID.') AND clang = '.$clang);
 			if ($newPrio > $maxPrio) {
 				$newPrio = $maxPrio;
 			}
 		}
-		
+
 		// Nur aktiv werden, wenn sich auch etwas geändert hat.
 		if ($newPrio != $oldPrio) {
 			$relation    = $newPrio < $oldPrio ? '+' : '-';
@@ -679,7 +678,7 @@ function rex_editArticle($articleID, $clang, $data)
 			$sql->setQuery(
 				'UPDATE #_article SET prior = prior '.$relation.' 1 '.
 				'WHERE prior BETWEEN '.$a.' AND '.$b.' '.
-				'AND re_id = '.$parentID.' AND catprior = 0 AND clang = '.$clang, '#_'
+				'AND (re_id = '.$parentID.' AND catprior = 0) OR id = '.$parentID.' AND clang = '.$clang, '#_'
 			);
 			
 			// Eigene neue Position speichern
@@ -828,14 +827,14 @@ function rex_articleStatus($articleID, $clang, $newStatus = null)
 		$sql->addGlobalUpdateFields();
 
 		if ($sql->update()) {
+			Core::cache()->delete('article', $articleID.'_'.$clang);
+			
 			$success = true;
 			$message = rex_register_extension_point('ART_STATUS', $I18N->msg('article_status_updated'), array(
 				'id'     => $articleID,
 				'clang'  => $clang,
 				'status' => $newStatus
 			));
-			
-			Core::cache()->delete('article', $articleID.'_'.$clang);
 		}
 		else {
 			$message = $sql->getError();

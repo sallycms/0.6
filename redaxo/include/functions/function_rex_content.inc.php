@@ -122,17 +122,14 @@ function rex_moveSlice($slice_id, $clang, $direction)
  */
 function rex_deleteSlice($slice_id)
 {
-	global $REX;
-
 	$article_slice = OOArticleSlice::getArticleSliceById($slice_id);
-	
 	
 	if ($article_slice !== null) {
 		$sql       = new rex_sql();
 		$nextslice = $article_slice->getNextSlice();
 		
 		if ($nextslice !== null){
-			$sql->setQuery('UPDATE #_article_slice SET re_article_slice_id = '.$article_slice->getValue('re_article_slice_id').' WHERE id = '.$nextslice->getValue('id'), '#_');
+			$sql->setQuery('UPDATE #_article_slice SET re_article_slice_id = '.$article_slice->getReId().' WHERE id = '.$nextslice->getId(), '#_');
 		}
 
 		Service_Factory::getService('Slice')->delete(array('id' => $article_slice->getSliceId()));
@@ -503,55 +500,43 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 		return false;
 	}
 
-	$where     = 're_article_slice_id = '.$from_re_sliceid.' AND article_id = '.$from_id.' AND clang = '.$from_clang.' AND revision = '.$revision;
-	$sliceData = rex_sql::fetch('*', 'article_slice', $where);
-
-	if ($sliceData !== false) {
-		// letzte slice_id des Ziels holen ...
-		$lastID = rex_sql::fetch(
-			'r1.id',
-			'article_slice r1 LEFT JOIN '.$REX['TABLE_PREFIX'].'article_slice r2 ON r1.id = r2.re_article_slice_id',
-			'r1.article_id = '.$to_id.' AND r1.clang = '.$to_clang.'AND r1.revision = '.$revision.' AND r2.id IS NULL'
-		);
+	$ctypes = rex_sql::getArrayEx('SELECT DISTINCT ctype FROM #_article_slice WHERE article_id = '.$from_id. ' AND clang = '.$from_clang, '#_');
+	foreach($ctypes as $ctype){
+		$article_slice = OOArticleSlice::getFirstSliceForCtype($ctype, $from_id, $from_clang);
+		$re_slice_id = 0;
 		
-		if ($lastID !== false) {
-			$to_last_slice_id = $lastID;
+		while($article_slice){
+			$sliceservice = Service_Factory::getService('Slice');
+			$slice = $sliceservice->findById($article_slice->getSliceId());
+			$slice->setId(Model_Base::NEW_ID);
+			$sliceservice->save($slice);
+
+			$insert = rex_sql::getInstance();
+			$insert->setTable('article_slice', true);
+			$insert->setValue('clang', $insert->escape($to_clang));
+			$insert->setValue('ctype', $insert->escape($ctype));
+			$insert->setValue('re_article_slice_id', $insert->escape($re_slice_id));
+			$insert->setValue('slice_id', $insert->escape($slice->getId()));
+			$insert->setValue('article_id', $insert->escape($to_id));
+			$insert->setValue('modultyp_id', $insert->escape($slice->getModuleId()));
+			$insert->setValue('revision', 0);
+			$insert->addGlobalCreateFields();
+			$insert->insert();
+			
+			$re_slice_id = $insert->last_insert_id;
+				
+			$valueservice = Service_Factory::getService('SliceValue');
+			foreach($valueservice->find(array('slice_id' => $article_slice->getSliceId())) as $sliceValue){
+				$sliceValue->setId(Model_Base::NEW_ID);
+				$sliceValue->setSliceId($slice->getId());
+				$valueservice->save($sliceValue);
+			}	
+			
+			$article_slice = $article_slice->getNextSlice();
 		}
-		else {
-			$to_last_slice_id = 0;
-		}
-
-		$ins = new rex_sql();
-		$ins->setTable('article_slice', true);
-		
-		foreach ($sliceData as $colname => $value) {
-			if     ($colname == 'clang') $value = $to_clang;
-			elseif ($colname == 're_article_slice_id') $value = $to_last_slice_id;
-			elseif ($colname == 'article_id') $value = $to_id;
-			elseif ($colname == 'createdate') $value = time();
-			elseif ($colname == 'updatedate') $value = time();
-			elseif ($colname == 'createuser') $value = $REX['USER']->getValue('login');
-			elseif ($colname == 'updateuser') $value = $REX['USER']->getValue('login');
-
-			if ($colname != 'id') {
-				$ins->setValue($colname, $ins->escape($value));
-			}
-		}
-		
-		$ins->insert();
-		
-		// Die Funktion ruft sich rekursiv auf. Das kann dauern. Da rÃ¤umen wir lieber
-		// direkt den Speicher wieder auf.
-		
-		$ins = null;
-		unset($ins);
-
-		// id holen, als re setzen und weitermachen..
-		rex_copyContent($from_id, $to_id, $from_clang, $to_clang, $sliceData['id'], $revision);
-		rex_deleteCacheArticleContent($to_id, $to_clang);
-		return true;
 	}
 	
+	rex_deleteCacheArticleContent($to_id, $to_clang);
 	return true;
 }
 
@@ -577,7 +562,7 @@ function rex_copyArticle($id, $to_cat_id)
 
 		if ($from_data) {
 			// Validierung der to_cat_id
-			// Query kann eingespart werden, wenn in die Root-Kategorie kopiet
+			// Query kann eingespart werden, wenn in die Root-Kategorie kopiert
 			// werden soll.
 			$to_data = $to_cat_id == 0 ? false : rex_sql::fetch('path, id, name', 'article', 'clang = '.$clang.' AND startpage = 1 AND id = '.$to_cat_id);
 
@@ -593,21 +578,24 @@ function rex_copyArticle($id, $to_cat_id)
 				}
 				
 				$art_sql = new rex_sql();
+				$art_sql->setTable($REX['TABLE_PREFIX'].'article');
+				
 				if (empty($new_id)) {
 					$new_id = $art_sql->setNewId('id');
 				}
-				$art_sql->setTable($REX['TABLE_PREFIX'].'article');
+				
+				
 				$art_sql->setValue('id',        $new_id); // neuen auto_incrment erzwingen
 				$art_sql->setValue('re_id',     $to_cat_id);
 				$art_sql->setValue('path',      $path);
 				$art_sql->setValue('catname',   $catname);
 				$art_sql->setValue('catprior',  0);
-				$art_sql->setValue('prior',     9999999); // Artikel als letzten Artikel in die neue Kat einfÃ¼gen
+				$art_sql->setValue('prior',     9999999); // Artikel als letzten Artikel in die neue Kat einfügen
 				$art_sql->setValue('status',    0);       // kopierten Artikel offline setzen
 				$art_sql->setValue('startpage', 0);
 				$art_sql->addGlobalCreateFields();
 
-				// schon gesetzte Felder nicht wieder Ã¼berschreiben
+				// schon gesetzte Felder nicht wieder überschreiben
 				$dont_copy = array('id', 'pid', 're_id', 'catname', 'catprior', 'path', 'prior', 'status', 'createdate', 'createuser', 'startpage');
 
 				foreach (array_diff(array_keys($from_data), $dont_copy) as $fld_name) {
@@ -616,7 +604,6 @@ function rex_copyArticle($id, $to_cat_id)
 
 				$art_sql->setValue('clang', $clang);
 				$art_sql->insert();
-				$art_sql->flush();
 
 				// ArticleSlices kopieren
 				rex_copyContent($id, $new_id, $clang, $clang);
@@ -625,19 +612,22 @@ function rex_copyArticle($id, $to_cat_id)
 				rex_newArtPrio($to_cat_id, $clang, 1, 0);
 				
 				// ----- EXTENSION POINT
-    			rex_register_extension_point('ART_ADDED', $message,
+    			rex_register_extension_point('ART_ADDED', '',
 			      	array (
 				        'id' => $new_id,
 				        'clang' => $clang,
-				        'status' => $article->getValue('status'),
-				        'name' => $article->getName(),
-				        're_id' => $article->getValue('re_id'),
-				        'prior' => $article->getValue('prior'),
-				        'path' => $article->getValue('path'),
-				        'template_id' => $article->getValue('template_id'),
+				        'status' => $art_sql->getValue('status'),
+				        'name' => $art_sql->getValue('name'),
+				        're_id' => $art_sql->getValue('re_id'),
+				        'prior' => $art_sql->getValue('prior'),
+				        'path' => $art_sql->getValue('path'),
+				        'template_id' => $art_sql->getValue('template_id'),
 			      	)
     			);
-    			Core::cache()->delete('alist', $to_cat_id.'_'.$key);
+    			Core::cache()->delete('alist', $to_cat_id);
+    			
+    			
+				$art_sql->flush();
 			}
 			else {
 				return false;
@@ -648,10 +638,10 @@ function rex_copyArticle($id, $to_cat_id)
 		}
 	}
 
-	// Caches des Artikels lÃ¶schen, in allen Sprachen
+	// Caches des Artikels löschen, in allen Sprachen
 	rex_deleteCacheArticle($id);
 
-	// Caches der Kategorien lÃ¶schen, da sich darin befindliche Artikel geÃ¤ndert haben
+	// Caches der Kategorien löschen, da sich darin befindliche Artikel geändert haben
 	rex_deleteCacheArticle($to_cat_id);
 
 	return $new_id;
