@@ -1,0 +1,5 @@
+RewriteEngine On
+
+# Imageresize
+RewriteRule ^imageresize/(.*)$ index.php?rex_resize=$1 [L]
+
