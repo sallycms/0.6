@@ -7,87 +7,86 @@
  */
  
 $popups_arr = array('linkmap', 'mediapool');
+$page_title = htmlspecialchars($REX['SERVERNAME']);
 
-$page_title = $REX['SERVERNAME'];
-
-if(!isset($page_name))
-  $page_name = $REX["PAGES"][strtolower($REX["PAGE"])][0];
+if (!isset($page_name)) {
+	$page_name = $REX['PAGES'][strtolower($REX['PAGE'])][0];
+}
   
-if ($page_name != '')
-  $page_title .= ' - ' . $page_name;
+if (!empty($page_name)) {
+	$page_title .= ' $ndash; '.htmlspecialchars($page_name);
+}
 
-$body_id = str_replace('_', '-', $REX["PAGE"]);
-$bodyAttr = 'id="rex-page-'. $body_id .'"';
+$body_id  = str_replace('_', '-', $REX['PAGE']);
+$bodyAttr = 'id="rex-page-'.$body_id.'"';
 
-if (in_array($body_id, $popups_arr))
-  $bodyAttr .= ' class="rex-popup"';
+if (in_array($body_id, $popups_arr)) {
+	$bodyAttr .= ' class="rex-popup"';
+}
 
-if ($REX["PAGE_NO_NAVI"]) $bodyAttr .= ' onunload="closeAll();"';
+if ($REX['PAGE_NO_NAVI']) {
+	$bodyAttr .= ' onunload="closeAll()"';
+}
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $I18N->msg('htmllang'); ?>" lang="<?php echo $I18N->msg('htmllang'); ?>">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?= $I18N->msg('htmllang') ?>" lang="<?= $I18N->msg('htmllang') ?>">
 <head>
-  <title><?php echo htmlspecialchars($page_title) ?></title>
-  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $I18N->msg('htmlcharset'); ?>" />
-  <meta http-equiv="Content-Language" content="<?php echo $I18N->msg('htmllang'); ?>" />
-  <link rel="stylesheet" type="text/css" href="media/css_import.css" media="screen, projection, print" />
-  <!--[if lte IE 7]>
-		<link rel="stylesheet" href="media/css_ie_lte_7.css" type="text/css" media="screen, projection, print" />
+	<title><?= $page_title ?></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=<?= $I18N->msg('htmlcharset') ?>" />
+	<meta http-equiv="Content-Language" content="<?= $I18N->msg('htmllang') ?>" />
+	<link rel="stylesheet" type="text/css" href="media/css_import.css" media="screen, projection, print" />
+	<!--[if lte IE 7]>
+	<link rel="stylesheet" href="media/css_ie_lte_7.css" type="text/css" media="screen, projection, print" />
 	<![endif]-->
-			
+
 	<!--[if IE 7]>
-		<link rel="stylesheet" href="media/css_ie_7.css" type="text/css" media="screen, projection, print" />
+	<link rel="stylesheet" href="media/css_ie_7.css" type="text/css" media="screen, projection, print" />
 	<![endif]-->
-	
+
 	<!--[if lte IE 6]>
-		<link rel="stylesheet" href="media/css_ie_lte_6.css" type="text/css" media="screen, projection, print" />
+	<link rel="stylesheet" href="media/css_ie_lte_6.css" type="text/css" media="screen, projection, print" />
 	<![endif]-->
-
-  <!-- jQuery immer nach den Stylesheets! -->
-  <script src="media/jquery.min.js" type="text/javascript"></script>
-  <script src="media/standard.js" type="text/javascript"></script>
-  <script type="text/javascript">
-  <!--
-  var redaxo = true;
-
-  // jQuery is now removed from the $ namespace
-  // to use the $ shorthand, use (function($){ ... })(jQuery);
-  // and for the onload handler: jQuery(function($){ ... });
-  jQuery.noConflict();
-  //-->
-  </script>
-<?php
-  // ----- EXTENSION POINT
-  echo rex_register_extension_point('PAGE_HEADER', '');
-?>
+	<script src="media/jquery.min.js" type="text/javascript"></script>
+	<script src="media/standard.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	<!--
+	var redaxo = true;
+	jQuery.noConflict();
+	//-->
+	</script>
+	<?= rex_register_extension_point('PAGE_HEADER', '') ?>
 </head>
-<body <?php echo $bodyAttr; ?>>
+<body <?= $bodyAttr ?>>
 <div id="rex-website">
 <div id="rex-header">
-
-  <p class="rex-header-top"><a href="../index.php" onclick="window.open(this.href);"><?php echo htmlspecialchars($REX['SERVERNAME']); ?></a></p>
-
+	<p class="rex-header-top"><a href="../" onclick="window.open(this.href);"><?= htmlspecialchars($REX['SERVERNAME']) ?></a></p>
 </div>
 
-<div id="rex-navi-logout"><?php
+<div id="rex-navi-logout">
+<?php
   
-if ($REX['USER'] && !$REX["PAGE_NO_NAVI"])
-{
-  $accesskey = 1;
-  $user_name = $REX['USER']->getValue('name') != '' ? $REX['USER']->getValue('name') : $REX['USER']->getValue('login');
-  echo '<ul class="rex-logout"><li class="rex-navi-first"><span>' . $I18N->msg('logged_in_as') . ' '. htmlspecialchars($user_name) .'</span></li><li><a href="index.php?page=profile">' . $I18N->msg('profile_title') . '</a></li><li><a href="index.php?rex_logout=1"'. rex_accesskey($I18N->msg('logout'), $REX['ACKEY']['LOGOUT']) .'>' . $I18N->msg('logout') . '</a></li></ul>' . "\n";
-}else if(!$REX["PAGE_NO_NAVI"])
-{
-  echo '<p class="rex-logout">' . $I18N->msg('logged_out') . '</p>';
-}else
-{
-  echo '<p class="rex-logout">&nbsp;</p>';
+if ($REX['USER'] && !$REX['PAGE_NO_NAVI']) {
+	$user_name = $REX['USER']->getValue('name') != '' ? $REX['USER']->getValue('name') : $REX['USER']->getValue('login');
+	?>
+	<ul class="rex-logout">
+		<li class="rex-navi-first"><span><?= $I18N->msg('logged_in_as').' '.htmlspecialchars($user_name) ?></span></li>
+		<li><a href="index.php?page=profile"><?= $I18N->msg('profile_title') ?></a></li>
+		<li><a href="index.php?rex_logout=1"><?= $I18N->msg('logout') ?></a></li>
+	</ul>
+	<?php
+}
+elseif (!$REX['PAGE_NO_NAVI']) {
+	echo '<p class="rex-logout">'.$I18N->msg('logged_out').'</p>';
+}
+else {
+	echo '<p class="rex-logout">&nbsp;</p>';
 }
   
-?></div>
+?>
+</div>
 
-  <div id="rex-navi-main">
+<div id="rex-navi-main">
 <?php
 
 if ($REX['USER'] && !$REX["PAGE_NO_NAVI"])
@@ -230,7 +229,6 @@ if ($REX['USER'] && !$REX["PAGE_NO_NAVI"])
 
 ?>
 </div>
-
 
 <div id="rex-wrapper">
 <div id="rex-wrapper2">
