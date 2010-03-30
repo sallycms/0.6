@@ -29,15 +29,27 @@ class DB_PDO_Connection {
         $this->connection = new PDO($connString, $conf['LOGIN'], $conf['PSW']);
 	}
 	
+	/**
+	 * 
+	 * @return DB_PDO_Connection instance 
+	 */
 	public static function getInstance(){
         if (!self::$instance) self::$instance = new self();
         return self::$instance;
     }
 	
+    /**
+     * 
+     * @return PDO instance
+     */
 	public function getConnection(){
 		return $this->connection;
 	} 
 	
+	/**
+	 *  
+	 * @param string Connection string für PDO
+	 */
 	private function getConnectionString(&$conf){
 		return sprintf('%s:host=%s;dbname=%s', strtolower($conf['DRIVER']), $conf['HOST'], $conf['NAME']);
 	}

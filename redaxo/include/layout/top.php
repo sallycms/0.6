@@ -62,7 +62,7 @@ if ($REX["PAGE_NO_NAVI"]) $bodyAttr .= ' onunload="closeAll();"';
   echo rex_register_extension_point('PAGE_HEADER', '');
 ?>
 </head>
-<body <?php echo $bodyAttr; ?>">
+<body <?php echo $bodyAttr; ?>>
 <div id="rex-website">
 <div id="rex-header">
 

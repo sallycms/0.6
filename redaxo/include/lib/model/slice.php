@@ -45,5 +45,22 @@ class Model_Slice extends Model_SliceBase {
 		$moduleService = Service_Factory::getService('Module');
 		return $moduleService->findById($this->getModuleId());
 	}
-
+	
+	/**
+	 * Kopiert einen Slice und seine Values 
+	 * 
+	 * @return Model_Slice
+	 */
+	public function copy(){
+		$sliceservice = Service_Factory::getService('Slice');
+		$valueservice = Service_Factory::getService('SliceValue');
+		$clone = $sliceservice->create(array('module_id' => $this->getModuleId()));
+		
+		foreach($valueservice->find(array('slice_id' => $this->getId())) as $sliceValue){
+			$sliceValue->setId(Model_Base::NEW_ID);
+			$sliceValue->setSliceId($clone->getId());
+			$valueservice->save($sliceValue);
+		}
+		return $clone;	
+	}
 }

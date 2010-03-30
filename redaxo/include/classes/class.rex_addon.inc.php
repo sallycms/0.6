@@ -69,11 +69,11 @@
 	}
 
 	/**
-	 * Pr�ft ob das rex-Addon verf�gbar ist, also installiert und aktiviert.
+	 * Pr�ft ob das rex-Addon verfügbar ist, also installiert und aktiviert.
 	 *
 	 * @param string|array $addon Name des Addons
 	 *
-	 * @return boolean TRUE, wenn das rex-Addon verf�gbar ist, sonst FALSE
+	 * @return boolean TRUE, wenn das rex-Addon verfügbar ist, sonst FALSE
 	 */
 	public static function isAvailable($addon)
 	{
@@ -105,10 +105,10 @@
 	}
 
 	/**
-	 * Gibt die Version des rex-Addons zur�ck.
+	 * Gibt die Version des rex-Addons zurück.
 	 *
 	 * @param string|array $addon Name des Addons
-	 * @param mixed $default R�ckgabewert, falls keine Version gefunden wurde
+	 * @param mixed $default Rückgabewert, falls keine Version gefunden wurde
 	 *
 	 * @return string Versionsnummer des Addons
 	 */

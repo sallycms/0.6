@@ -101,7 +101,7 @@ class Thumbnail{
 	 */
 	private function sendError(){
 		global $REX;
-		self::sendImage($REX['MEDIAFOLDER'].self::ERRORFILE);
+		self::sendImage($REX['DYNFOLDER'].'/public'.self::ERRORFILE);
 	}
 
 	/**

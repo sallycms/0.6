@@ -18,7 +18,7 @@ unset($REX);
 
 // Flag ob Inhalte mit Redaxo aufgerufen oder
 // von der Webseite aus
-// Kann wichtig f�r die Darstellung sein
+// Kann wichtig für die Darstellung sein
 // Sollte immer true bleiben
 
 $REX['REDAXO'] = true;

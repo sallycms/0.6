@@ -119,7 +119,7 @@ function rex_setup_addons($uninstallBefore = false, $installDump = true)
 
   $addonErr = '';
   $ADDONS = rex_read_addons_folder();
-  $addonManager = new rex_addonManager($ADDONS);
+  $addonManager = rex_addonManager::getInstance();
   foreach($REX['SYSTEM_ADDONS'] as $systemAddon)
   {
     $state = true;

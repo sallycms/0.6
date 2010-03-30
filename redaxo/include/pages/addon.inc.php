@@ -33,7 +33,7 @@ if($pluginname != '')
 }
 else
 {
-  $addonManager = new rex_addonManager($ADDONS);
+  $addonManager = rex_addonManager::getInstance($ADDONS);
 }
 
 // ----------------- HELPPAGE

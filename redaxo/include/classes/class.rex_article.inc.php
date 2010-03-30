@@ -470,13 +470,13 @@ class rex_article
 		$formURL      = 'index.php';
 		$moduleSelect = $this->getModuleSelect();
 		$sliceID      = $last ? $currentSlice['ID'] : $currentSlice['Previous'];
-		$formID       = $last ? '' : 'id="slice'.$currentSlice['ID'];
+		$formID       = $last ? '' : ' id="slice'.$currentSlice['ID'].'"';
 		$moduleSelect[$this->ctype]->setId("module_id".$sliceID);
 
 		
 		$sliceContent = '
 			<div class="rex-form rex-form-content-editmode">
-				<form action="'.$formURL.'" method="get" '.$formID.'">
+				<form action="'.$formURL.'" method="get"'.$formID.'>
 					<fieldset class="rex-form-col-1">
 						<legend><span>'. $I18N->msg("add_block") .'</span></legend>
 						<input type="hidden" name="article_id" value="'. $this->article_id .'" />

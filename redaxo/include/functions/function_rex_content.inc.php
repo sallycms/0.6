@@ -508,9 +508,8 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 		while($article_slice){
 			$sliceservice = Service_Factory::getService('Slice');
 			$slice = $sliceservice->findById($article_slice->getSliceId());
-			$slice->setId(Model_Base::NEW_ID);
-			$sliceservice->save($slice);
-
+			$slice = $slice->copy();
+			
 			$insert = rex_sql::getInstance();
 			$insert->setTable('article_slice', true);
 			$insert->setValue('clang', $insert->escape($to_clang));
@@ -525,13 +524,6 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 			
 			$re_slice_id = $insert->last_insert_id;
 				
-			$valueservice = Service_Factory::getService('SliceValue');
-			foreach($valueservice->find(array('slice_id' => $article_slice->getSliceId())) as $sliceValue){
-				$sliceValue->setId(Model_Base::NEW_ID);
-				$sliceValue->setSliceId($slice->getId());
-				$valueservice->save($sliceValue);
-			}	
-			
 			$article_slice = $article_slice->getNextSlice();
 		}
 	}
