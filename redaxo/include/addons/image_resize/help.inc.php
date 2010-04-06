@@ -28,9 +28,10 @@
 <p>
 w = width       (max width)<br />
 h = height      (max height)<br />
-c = crop        (cut image part to certain length and height)<br />
+c = crop        (resize image to hight and cut it to max width)<br />
 l = crop 		(offset from left) <br />
 r = crop		(offset from right) <br />
+x = crop        (resize and cut image to fill out certain length and height rectangle)<br />
 a = automatic   (longest side will be used)
 </p>
 
@@ -92,6 +93,11 @@ or <b>index.php?rex_resize=100c__200h__150r__imagefile</b>
 resize inner image part to a width of 100px and a heigt of 200px with an offset of 50px from the left edge<br />
 <b>imageresize/100c__200h__-150o__imagefile</b>
 or <b>index.php?rex_resize=100c__200h__50l__imagefile</b>
+
+<br /><br />
+resize and crop image to a width of 100px and a heigt of 200px<br />
+<b>imageresize/100x__200h__imagefile</b>
+or <b>index.php?rex_resize=100x__200h__imagefile</b>
 
 <br /><br />
 add filter/s: here blur and sepia<br />

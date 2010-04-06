@@ -17,6 +17,7 @@ class Thumbnail{
 
 	const ERRORFILE = '/addons/image_resize/warning.jpg';
 	const QUALITY = 85;
+	const USECACHE = true;
 
 	private $fileName;
 	private $isExternal;
@@ -207,7 +208,8 @@ class Thumbnail{
 			
 		if($width_ratio > $height_ratio){
 			$this->size_width($width);
-		}else{
+		}
+		else{
 			$this->size_height($height);
 		}
 	}
@@ -302,6 +304,38 @@ class Thumbnail{
 			$this->thumb_height = $this->height;
 		}
 	}
+	
+	/**
+	 * Ausschnitt aus dem Bild auf bestimmte größe zuschneiden
+	 *
+	 * @param $width int Breite des Ausschnitts
+	 * @param $height int Hoehe des Ausschnitts
+	 */
+	private function size_autocrop($width, $height) {
+		$this->thumb_width  = (int) $width;
+		$this->thumb_height = (int) $height;
+
+		$width_ratio = $this->width / $this->thumb_width;
+		$height_ratio = $this->height / $this->thumb_height;
+		
+		if ($width_ratio >= 1 || $height_ratio >= 1) {
+			// Es muss an der Breite beschnitten werden
+			if ($width_ratio > $height_ratio) {
+				$this->thumb_width_offset = (int) (round(($this->width - $this->thumb_width * $height_ratio) / 2));
+		  		$this->width              = (int) round($this->thumb_width * $height_ratio);
+			}
+			// es muss an der Höhe beschnitten werden
+			elseif ($width_ratio < $height_ratio) {
+				$this->thumb_height_offset = (int) (round(($this->height - $this->thumb_height * $width_ratio) / 2));
+				$this->height              = (int) round($this->thumb_height * $width_ratio);
+			}
+		}
+		else {
+			$this->thumb_width = $this->width;
+			$this->thumb_height = $this->height;
+		}
+	}
+	
 
 	/**
 	 * Setzt die Höhe und breite des thumbnails
@@ -316,28 +350,28 @@ class Thumbnail{
 	 * @return void
 	 */
 	public function setNewSize($size, $mode, $height, $mode2, $offset, $offsetType){
-		if ($mode == 'w')
-		{
-			if(!empty($mode2) && $mode2 == 'h'){
+		if ($mode == 'w') {
+			if(!empty($mode2) && $mode2 == 'h') {
 				$this->size_both($size, $height);
-			}else{
+			}
+			else {
 				$this->size_width($size);
 			}
-
 		}
-		if ($mode == 'h')
-		{
+		if ($mode == 'h') {
 			$this->size_height($size);
 		}
 
-		if ($mode == 'c')
-		{
+		if ($mode == 'c') {
 			$this->size_crop($size, $height, $offset, $offsetType);
 		}
 
-		if ($mode == 'a')
-		{
+		if ($mode == 'a') {
 			$this->size_auto($size);
+		}
+
+		if ($mode == 'x') {
+			$this->size_autocrop($size, $height);
 		}
 	}
 	
@@ -362,8 +396,8 @@ class Thumbnail{
 	public static function getResizedImage($rex_resize){
 		$cachefile = self::getCacheFileName($rex_resize);
 		
-		if(!file_exists($cachefile)){
-			preg_match('@([0-9]*)([awhc])__(([0-9]*)([h])__)?((\-?[0-9]*)([rlo])__)?(.*)@', $rex_resize, $resize);
+		if (!self::USECACHE || !file_exists($cachefile)){
+			preg_match('@([0-9]*)([awhcx])__(([0-9]*)([h])__)?((\-?[0-9]*)([rlo])__)?(.*)@', $rex_resize, $resize);
 			$size = $resize[1];
 			$mode = $resize[2];
 			$height = $resize[4];
@@ -391,7 +425,7 @@ class Thumbnail{
 	{
 		global $REX;
 
-		$folder = $REX['MEDIAFOLDER'] . '/addons/image_resize/';
+		$folder = $REX['DYNFOLDER'] . '/public/addons/image_resize/';
 
 		$c = 0;
 		$glob = glob($folder .'image_resize__*');
@@ -432,7 +466,7 @@ class Thumbnail{
 	 */
 	private static function getCacheFileName($rex_resize){
 		global $REX;
-		return  $REX['MEDIAFOLDER'].'/addons/image_resize/image_resize__'.str_replace(array('http://', 'https://', '/'), array('', '', '_'), $rex_resize);
+		return  $REX['DYNFOLDER'].'/public/addons/image_resize/image_resize__'.str_replace(array('http://', 'https://', '/'), array('', '', '_'), $rex_resize);
 	}
 
 	/**
