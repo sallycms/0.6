@@ -62,7 +62,7 @@ $REX['USE_MD5'] = "false"; // String: "true"/"false"/"fronted"/"backend"
 // versch. Pfade
 $REX['INCLUDE_PATH']  = realpath($REX['HTDOCS_PATH'].'redaxo/include');
 $REX['FRONTEND_PATH'] = realpath($REX['HTDOCS_PATH']);
-$REX['MEDIAFOLDER']   = realpath($REX['HTDOCS_PATH'].'mediapool');
+$REX['MEDIAFOLDER']   = realpath($REX['HTDOCS_PATH'].'files');
 $REX['DYNFOLDER']     = realpath($REX['HTDOCS_PATH'].'dyn');
 
 // Prefixes
@@ -160,6 +160,5 @@ if(!$REX['SYNC']){
 	
 	$REX['CUR_CLANG']  = Core::getCurrentClang();
 	
-	if (empty($_REQUEST['article_id'])) $REX['ARTICLE_ID'] = $REX['START_ARTICLE_ID'];
-	else $REX['ARTICLE_ID'] = rex_request('article_id','rex-article-id', $REX['NOTFOUND_ARTICLE_ID']);
+	$REX['ARTICLE_ID'] = Core::getCurrentArticleId();
 }

@@ -17,7 +17,7 @@
  */
 
 class Model_Slice extends Model_SliceBase {
-	
+
 	public function addValue($type, $finder, $value = null){
 		$service = Service_Factory::getService('SliceValue');
 		return $service->create(array('slice_id' => $this->getId(), 'type' => $type, 'finder' => $finder, 'value' => $value));

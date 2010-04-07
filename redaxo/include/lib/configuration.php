@@ -25,6 +25,10 @@ class Configuration{
         $this->configuration = &$REX;
     }
 
+	/**
+	 *
+	 * @return Configuration
+	 */
     public static function getInstance(){
         if (!self::$instance) self::$instance = new self();
         return self::$instance;

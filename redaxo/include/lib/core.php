@@ -13,7 +13,8 @@ class Core
 {
 	private static $instance;
 	private $cache;
-	private $curclang;
+	private $curClang;
+	private $curArticleId;
 	private $varTypes;
 
 	private function __construct()
@@ -55,19 +56,34 @@ class Core
 
 	public static function getCurrentClang()
 	{
-		global $REX;
 		
 		$instance = self::getInstance();
-		if(!isset($instance->curclang)){
-			$instance->curclang = rex_request('clang', 'rex-clang-id', $REX['START_CLANG_ID']);
+		if(!isset($instance->curClang)){
+			$instance->curClang = rex_request('clang', 'rex-clang-id', self::config()->get('START_CLANG_ID'));
 		}
-		return $instance->curclang;
+		return $instance->curClang;
+	}
+
+	public static function getCurrentArticleId()
+	{
+		$conf = self::config();
+		
+		$instance = self::getInstance();
+		if(!isset($instance->curArticleId)){
+			
+			if(isset($_REQUEST['article_id'])) {
+				$instance->curArticleId = rex_request('article_id','rex-article-id', $conf->get('NOTFOUND_ARTICLE_ID'));
+			} else {
+				$instance->curArticleId = $conf->get('START_ARTICLE_ID');
+			}
+		}
+		return $instance->curArticleId;
 	}
 
 	public static function getTempDir()
 	{
-		global $REX;
-		return $REX['MEDIAFOLDER'].'/'.$REX['TEMP_PREFIX'];
+		$conf = self::config();
+		return $conf->get('MEDIAFOLDER') . DIRECTORY_SEPARATOR . $conf->get('TEMP_PREFIX');
 	}
 
 	/**
@@ -76,8 +92,8 @@ class Core
 	 * @param $varType Klassenname des Variablentyps 
 	 */
 	public static function registerVarType($varType){
-		global $REX;
-		$REX['VARIABLES'][] = $varType;
+		
+		self::getInstance()->varTypes[] = $varType;
 	}
 	
 	/**
@@ -86,15 +102,20 @@ class Core
 	 * @return array 
 	 */
 	public static function getVarTypes(){
-		global $REX;
-		if(!isset($REX['VARIABLES']))$REX['VARIABLES'] = array(); 
-		foreach ($REX['VARIABLES'] as $idx => $obj) {
+		$instance = self::getInstance();
+
+		if(!isset($instance->varTypes)) $instance->varTypes = array();
+		foreach ($instance->varTypes as $idx => $obj) {
 			if (is_string($obj)) { // Es hat noch kein Autoloading für diese Klasse stattgefunden
 				$obj = new $obj();
-				if(!($obj instanceof rex_var)) throw new Exception('VarType '.self::getInstance()->varTypes[$idx].' is no inheriting Class of rex_var.');
-				$REX['VARIABLES'][$idx] = $obj;
+				if(!($obj instanceof rex_var)) throw new Exception('VarType '.$instance->varTypes[$idx].' is no inheriting Class of rex_var.');
+				$instance->varTypes[$idx] = $obj;
 			}
 		}
-		return $REX['VARIABLES'];
+		return $instance->varTypes;
+	}
+
+	public static function config(){
+		return Configuration::getInstance();
 	}
 }
