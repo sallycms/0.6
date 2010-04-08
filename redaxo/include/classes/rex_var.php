@@ -15,7 +15,7 @@ abstract class rex_var
    * Actionmethode:
    * Zum füllen des sql aus dem $REX_ACTION Array
    */
-  function setACValues(& $sql, $REX_ACTION, $escape = false, $prependTableName = true)
+  function setACValues($sql, $REX_ACTION, $escape = false, $prependTableName = true)
   {
     // nichts tun
   }
@@ -35,7 +35,7 @@ abstract class rex_var
    * Zum füllen des $REX_ACTION Arrays aus der Datenbank (rex_sql)
    * @return REX_ACTION Array
    */
-  function getACDatabaseValues($REX_ACTION, & $sql)
+  function getACDatabaseValues($REX_ACTION, $sql)
   {
     return $REX_ACTION;
   }
@@ -60,7 +60,7 @@ abstract class rex_var
    *
    * FE = Frontend
    */
-  function getFEOutput(& $sql, $content)
+  function getFEOutput($sql, $content)
   {
     return $this->getBEOutput($sql, $content);
   }
@@ -71,7 +71,7 @@ abstract class rex_var
    *
    * BE = Backend
    */
-  function getBEOutput(& $sql, $content)
+  function getBEOutput($sql, $content)
   {
     return $content;
   }
@@ -82,7 +82,7 @@ abstract class rex_var
    *
    * BE = Backend
    */
-  function getBEInput(& $sql, $content)
+  function getBEInput($sql, $content)
   {
     return $this->getBEOutput($sql, $content);
   }
@@ -110,17 +110,18 @@ abstract class rex_var
    * mit MySQL 3.x mit Tabellenprefix angegeben werden muss, da der SQL gleichnamige
    * Spalten unterschiedlicher Tabellen enthält.
    */
-  function getValue(& $sql, $value)
+  function getValue($sql, $value)
   {
     global $REX;
-    return $sql->getValue($REX['TABLE_PREFIX'] . 'article_slice.' . $value);
+	if(!$sql instanceof rex_sql) debug_print_backtrace();
+    //return $sql->getValue($REX['TABLE_PREFIX'] . 'article_slice.' . $value);
   }
   /**
    * setValue Wrapper, da hier immer auf die gleiche Tabelle gearbeitet wird und
    * mit MySQL 3.x mit Tabellenprefix angegeben werden muss, da der SQL gleichnamige
    * Spalten unterschiedlicher Tabellen enth�lt.
    */
-  function setValue(& $sql, $fieldname, $value, $escape = false, $prependTableName = true)
+  function setValue($sql, $fieldname, $value, $escape = false, $prependTableName = true)
   {
     global $REX;
 	 

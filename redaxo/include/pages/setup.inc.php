@@ -256,8 +256,6 @@ if ($checkmodus == 1)
     $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'generated'.DIRECTORY_SEPARATOR.'articles',
     $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'generated'.DIRECTORY_SEPARATOR.'templates',
     $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'generated'.DIRECTORY_SEPARATOR.'files',
-    $REX['DYNFOLDER'].DIRECTORY_SEPARATOR.'internal',
-    $REX['DYNFOLDER'].DIRECTORY_SEPARATOR.'public',
     $REX['MEDIAFOLDER'],
     getImportDir()
   );

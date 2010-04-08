@@ -376,6 +376,7 @@ class rex_article
 			$slices[$sliceId]['ID']           = $sliceId;
 			$slices[$sliceId]['Previous']     = $previousSliceID;
 			$slices[$sliceId]['CType']        = $this->CONT->getValue($REX['TABLE_PREFIX'].'article_slice.ctype');
+			$slices[$sliceId]['sliceId']      = $this->CONT->getValue($REX['TABLE_PREFIX'].'article_slice.slice_id');
 			$slices[$sliceId]['ModuleInput']  = $this->CONT->getValue($REX['TABLE_PREFIX'].'module.eingabe');
 			$slices[$sliceId]['ModuleOutput'] = $this->CONT->getValue($REX['TABLE_PREFIX'].'module.ausgabe');
 			$slices[$sliceId]['ModuleID']     = $this->CONT->getValue($REX['TABLE_PREFIX'].'module.id');
@@ -404,7 +405,8 @@ class rex_article
 		$sliceContent = $slice['ModuleOutput'];
 		// TODO: abhängigkeit zu CONT auflösen
 		$this->CONT->counter = $slice['Counter'];
-		$sliceContent = $this->replaceObjectVars($this->CONT, $sliceContent);
+
+		$sliceContent = $this->replaceObjectVars($slice['sliceId'], $sliceContent);
 		
 		// --------------- EP: SLICE_SHOW
 		$sliceContent = $this->triggerSliceShowEP($sliceContent, $slice);
@@ -728,7 +730,7 @@ class rex_article
          }
       }
 
-      $dummysql = new rex_sql();
+/*     $dummysql = new rex_sql();
 
       // Den Dummy mit allen Feldern aus rex_article_slice füllen
       $slice_fields = new rex_sql();
@@ -746,8 +748,8 @@ class rex_article
           default             : $def_value = '';
         }
         $dummysql->setValue($REX['TABLE_PREFIX']. 'article_slice.'. $fieldname, $def_value);
-      }
-      $slice_content = $this->replaceVars($dummysql,$slice_content);
+      }*/
+      $slice_content = $this->replaceVars(0, $slice_content);
     }
     return $slice_content;
   }
@@ -805,33 +807,37 @@ class rex_article
          //-->
       </script>';
 
-    $slice_content = $this->replaceVars($this->CONT, $slice_content);
+	$slice_id = $this->CONT->getValue($REX['TABLE_PREFIX'].'article_slice.slice_id');
+
+	$slice_content = $this->replaceVars($slice_id, $slice_content);
     return $slice_content;
   }
 
   // ----- Modulvariablen werden ersetzt
-  function replaceVars(&$sql, $content, $forceMode = null)
+  function replaceVars($slice_id, $content, $forceMode = null)
   {
-    $content = $this->replaceObjectVars($sql,$content);
+    $content = $this->replaceObjectVars($slice_id,$content);
     $content = $this->replaceCommonVars($content, $forceMode);
     return $content;
   }
 
   // ----- REX_VAR Ersetzungen
-  function replaceObjectVars(&$sql,$content, $forceMode = null)
+  function replaceObjectVars($slice_id, $content, $forceMode = null)
   {
     global $REX;
 
     $tmp = '';
-    $sliceId = $sql->getValue($REX['TABLE_PREFIX'].'article_slice.id');
     $mode    = $forceMode === null ? $this->mode : $forceMode;
+
+	$artslice = OOArticleSlice::_getSliceWhere('slice_id = $slice_id');
+
 
     foreach(Core::getVarTypes() as $idx => $var)
     {
       if ($mode == 'edit')
       {
-        if (($this->function == 'add' && $sliceId == '0') ||
-            ($this->function == 'edit' && $sliceId == $this->slice_id))
+        if (($this->function == 'add' && $slice_id == '0') ||
+            ($this->function == 'edit' && $artslice && $artslice->getId() == $this->slice_id))
         {
           if (isset($REX['ACTION']['SAVE']) && $REX['ACTION']['SAVE'] === false)
           {
@@ -840,22 +846,21 @@ class rex_article
             // Dann die Werte manuell aus dem Post übernehmen
             // und anschließend die Werte wieder zurücksetzen,
             // damit die nächsten Slices wieder die Werte aus der DB verwenden
-            $var->setACValues($sql,$REX['ACTION']);
-            $tmp = $var->getBEInput($sql,$content);
-            $sql->flushValues();
+            $var->setACValues($slice_id, $REX['ACTION']);
+            $tmp = $var->getBEInput($slice_id, $content);
           }
           else
           {
             // Slice normal parsen
-            $tmp = $var->getBEInput($sql,$content);
+            $tmp = $var->getBEInput($slice_id, $content);
           }
         }else
         {
-          $tmp = $var->getBEOutput($sql,$content);
+          $tmp = $var->getBEOutput($slice_id, $content);
         }
       }else
       {
-        $tmp = $var->getFEOutput($sql,$content);
+        $tmp = $var->getFEOutput($slice_id, $content);
       }
 
       // Rückgabewert nur auswerten wenn auch einer vorhanden ist

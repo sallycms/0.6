@@ -193,7 +193,6 @@ class OOArticleSlice
 		$slice_content_file = $REX['INCLUDE_PATH'].'/generated/articles/'.$this->getId().'.slice';
 		if (!file_exists($slice_content_file)) {
 			$slice_content = $this->getSlice();
-			$slice_content = self::replaceLinks($slice_content);
 			if (rex_put_file_contents($slice_content_file, $slice_content) === FALSE)
 			{
 				return $I18N->msg('slice_could_not_be_generated')." ".$I18N->msg('check_rights_in_directory').$REX['INCLUDE_PATH']."/generated/articles/";
@@ -380,48 +379,44 @@ class OOArticleSlice
 	}
 
 	// ---- Artikelweite globale variablen werden ersetzt
-	private function replaceCommonVars($content)
-	{
+	private function replaceCommonVars($content) {
 		global $REX;
 
 		static $user_id = null;
 		static $user_login = null;
 
 		// UserId gibts nur im Backend
-		if($user_id === null)
-		{
-			if(isset($REX['USER']))
-			{
+		if($user_id === null) {
+			if(isset($REX['USER'])) {
 				$user_id = $REX['USER']->getValue('user_id');
 				$user_login = $REX['USER']->getValue('login');
-			}else
-			{
+			}else {
 				$user_id = '';
 				$user_login = '';
 			}
 		}
 
-		static $search = array(
-       'REX_ARTICLE_ID',
-       'REX_CATEGORY_ID',
-       'REX_CLANG_ID',
-       'REX_TEMPLATE_ID',
-       'REX_USER_ID',
-       'REX_USER_LOGIN'
-       );
-		
-       $article = $this->getArticle();
-       
-       $replace = array(
-       $article->getId(),
-       $article->getCategoryId(),
-       $article->getClang(),
-       $article->getTemplateId(),
-       $user_id,
-       $user_login
-       );
+		$article = $this->getArticle();
 
-       return str_replace($search, $replace,$content);
+		static $search = array(
+		'REX_ARTICLE_ID',
+		'REX_CATEGORY_ID',
+		'REX_CLANG_ID',
+		'REX_TEMPLATE_ID',
+		'REX_USER_ID',
+		'REX_USER_LOGIN'
+		);
+
+		$replace = array(
+				$article->getId(),
+				$article->getCategoryId(),
+				$article->getClang(),
+				$article->getTemplateId(),
+				$user_id,
+				$user_login
+		);
+
+		return str_replace($search, $replace,$content);
 	}
 
 

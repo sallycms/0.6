@@ -36,11 +36,8 @@ class rex_var_media extends rex_var
 		return $REX_ACTION;
 	}
 
-	function getACDatabaseValues($REX_ACTION, & $sql)
+	function getACDatabaseValues($REX_ACTION, $slice_id)
 	{
-			
-		$slice_id = $this->getValue($sql, 'slice_id');
-
 		$values = Service_Factory::getService('SliceValue')->find(array('slice_id' => $slice_id, 'type' => 'REX_MEDIA'));
 		foreach($values as $value)
 		{
@@ -56,11 +53,11 @@ class rex_var_media extends rex_var
 		return $REX_ACTION;
 	}
 
-	function setACValues(& $sql, $REX_ACTION, $escape = false, $prependTableName = true)
+	function setACValues($slice_id, $REX_ACTION, $escape = false, $prependTableName = true)
 	{
-		global $REX;
+		//global $REX;
 
-		$slice_id = $sql->getValue('slice_id');
+		//$slice_id = $sql->getValue('slice_id');
 		$slice = Service_Factory::getService('Slice')->findById($slice_id);
 		if(isset($REX_ACTION['REX_MEDIA'])){
 			foreach($REX_ACTION['REX_MEDIA'] as $key => $value){
@@ -76,27 +73,27 @@ class rex_var_media extends rex_var
 
 	// --------------------------------- Output
 
-	function getBEInput(& $sql, $content)
+	function getBEInput($slice_id, $content)
 	{
-		$content = $this->matchMediaButton($sql, $content);
-		$content = $this->matchMediaListButton($sql, $content);
-		$content = $this->getOutput($sql, $content);
+		$content = $this->matchMediaButton($slice_id, $content);
+		$content = $this->matchMediaListButton($slice_id, $content);
+		$content = $this->getOutput($slice_id, $content);
 		return $content;
 	}
 
-	function getBEOutput(& $sql, $content)
+	function getBEOutput($slice_id, $content)
 	{
-		$content = $this->getOutput($sql, $content);
+		$content = $this->getOutput($slice_id, $content);
 		return $content;
 	}
 
 	/**
 	 * Ersetzt die Value Platzhalter
 	 */
-	function getOutput(& $sql, $content)
+	function getOutput($slice_id, $content)
 	{
-		$content = $this->matchMedia($sql, $content);
-		$content = $this->matchMediaList($sql, $content);
+		$content = $this->matchMedia($slice_id, $content);
+		$content = $this->matchMediaList($slice_id, $content);
 		return $content;
 	}
 
@@ -127,7 +124,7 @@ class rex_var_media extends rex_var
 	/**
 	 * MediaButton für die Eingabe
 	 */
-	function matchMediaButton(& $sql, $content)
+	function matchMediaButton($slice_id, $content)
 	{
 		$vars = array (
       		'REX_FILE_BUTTON',
@@ -155,7 +152,7 @@ class rex_var_media extends rex_var
 	/**
 	 * MediaListButton für die Eingabe
 	 */
-	function matchMediaListButton(& $sql, $content)
+	function matchMediaListButton($slice_id, $content)
 	{
 		$vars = array (
       		'REX_FILELIST_BUTTON',
@@ -169,7 +166,6 @@ class rex_var_media extends rex_var
       				list ($param_str, $args) = $match;
       				list ($id, $args) = $this->extractArg('id', $args, 0);
 
-      				$slice_id = $this->getValue($sql, 'slice_id');
       				$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, str_replace('_BUTTON', '', $var), $id);
       				if($value){
       					$value = $value->getValue();
@@ -196,7 +192,7 @@ class rex_var_media extends rex_var
 	/**
 	 * Wert für die Ausgabe
 	 */
-	function matchMedia(& $sql, $content)
+	function matchMedia($slice_id, $content)
 	{
 		$vars = array (
       		'REX_FILE',
@@ -210,7 +206,6 @@ class rex_var_media extends rex_var
       				list ($param_str, $args) = $match;
       				list ($id, $args) = $this->extractArg('id', $args, 0);
 
-      				$slice_id = $this->getValue($sql, 'slice_id');
       				$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_MEDIA', $id);
       				if($value){
       					$value = $value->getValue();
@@ -244,7 +239,7 @@ class rex_var_media extends rex_var
 	/**
 	 * Wert für die Ausgabe
 	 */
-	function matchMediaList(& $sql, $content)
+	function matchMediaList($slice_id, $content)
 	{
 		$vars = array (
       		'REX_FILELIST',
@@ -258,7 +253,6 @@ class rex_var_media extends rex_var
       				list ($param_str, $args) = $match;
       				list ($id, $args) = $this->extractArg('id', $args, 0);
 
-      				$slice_id = $this->getValue($sql, 'slice_id');
       				$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_MEDIALIST', $id);
       				if($value){
       					$value = $value->getValue();

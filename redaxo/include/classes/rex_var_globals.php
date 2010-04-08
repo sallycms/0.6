@@ -35,7 +35,7 @@ class rex_var_globals extends rex_var
     }
 
     // Variablen hier einfuegen, damit sie in einer
-    // Aktion abgefragt werden k�nnen
+    // Aktion abgefragt werden können
     $REX_ACTION['ARTICLE_ID'] = rex_request('article_id', 'int');
     $REX_ACTION['CLANG_ID'] = rex_request('clang', 'int');
     $REX_ACTION['CTYPE_ID'] = rex_request('ctype', 'int');
@@ -44,34 +44,40 @@ class rex_var_globals extends rex_var
     return $REX_ACTION;
   }
 
-  function getACDatabaseValues($REX_ACTION, & $sql)
+  function getACDatabaseValues($REX_ACTION, $slice_id)
   {
+
+	$artslice = OOArticleSlice::_getSliceWhere('slice_id = $slice_id');
+	$slice = Service_Factory::getService('Slice')->findById($slice_id);
+
     // Variablen hier einfuegen, damit sie in einer
-    // Aktion abgefragt werden k�nnen
-    $REX_ACTION['ARTICLE_ID'] = $this->getValue($sql, 'article_id');
-    $REX_ACTION['CLANG_ID'] = $this->getValue($sql, 'clang');
-    $REX_ACTION['CTYPE_ID'] = $this->getValue($sql, 'ctype');
-    $REX_ACTION['MODULE_ID'] = $this->getValue($sql, 'modultyp_id');
-    $REX_ACTION['SLICE_ID'] = $this->getValue($sql, 'id');
+    // Aktion abgefragt werden können
+	if($artslice && $slice){
+		$REX_ACTION['ARTICLE_ID'] = $artslice->getArticleId();
+		$REX_ACTION['CLANG_ID'] = $artslice->getClang();
+		$REX_ACTION['CTYPE_ID'] = $artslice->getCtype();
+		$REX_ACTION['MODULE_ID'] = $slice->getModuleId();
+		$REX_ACTION['SLICE_ID'] = $artslice->getId();
+	}
 
     return $REX_ACTION;
   }
 
-  function setACValues(& $sql, $REX_ACTION, $escape = false, $prependTableName = true)
+  function setACValues($slice_id, $REX_ACTION, $escape = false, $prependTableName = true)
   {
-    $this->setValue($sql, 'id', $REX_ACTION['SLICE_ID'], $escape, $prependTableName);
-    $this->setValue($sql, 'ctype', $REX_ACTION['CTYPE_ID'], $escape, $prependTableName);
-    $this->setValue($sql, 'modultyp_id', $REX_ACTION['MODULE_ID'], $escape, $prependTableName);
+//    $this->setValue($sql, 'id', $REX_ACTION['SLICE_ID'], $escape, $prependTableName);
+//    $this->setValue($sql, 'ctype', $REX_ACTION['CTYPE_ID'], $escape, $prependTableName);
+//    $this->setValue($sql, 'modultyp_id', $REX_ACTION['MODULE_ID'], $escape, $prependTableName);
   }
 
   // --------------------------------- Output
 
-  function getBEOutput(& $sql, $content)
+  function getBEOutput($slice_id, $content)
   {
     // Modulabhängige Globale Variablen ersetzen
-    $content = str_replace('REX_MODULE_ID', $this->getValue($sql, 'modultyp_id'), $content);
-    $content = str_replace('REX_SLICE_ID', $this->getValue($sql, 'id'), $content);
-    $content = str_replace('REX_CTYPE_ID', $this->getValue($sql, 'ctype'), $content);
+    //$content = str_replace('REX_MODULE_ID', $this->getValue($sql, 'modultyp_id'), $content);
+    //$content = str_replace('REX_SLICE_ID', $this->getValue($sql, 'id'), $content);
+    //$content = str_replace('REX_CTYPE_ID', $this->getValue($sql, 'ctype'), $content);
 
     return $content;
   }

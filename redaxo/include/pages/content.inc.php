@@ -196,11 +196,11 @@ if ($article->getRows() == 1)
 
 							if ($function == 'edit') {
 								$ooslice = OOArticleSlice::getArticleSliceById($slice_id);
-								$slice = Service_Factory::getService('Slice')->findById($ooslice->getSliceId());
-								$slice->flushValues();
+								$realslice = Service_Factory::getService('Slice')->findById($ooslice->getSliceId());
+								$realslice->flushValues();
 								unset($ooslice);
 								$newsql->setWhere('id = '.$slice_id);
-								$newsql->setValue('slice_id', $slice->getId());
+								$newsql->setValue('slice_id', $realslice->getId());
 							}
 							elseif ($function == 'add') {
 								$realslice = Service_Factory::getService('Slice')->create(array('module_id' => $module_id));
@@ -217,7 +217,7 @@ if ($article->getRows() == 1)
 
 							// ****************** SPEICHERN FALLS NÖTIG
 							foreach (Core::getVarTypes() as $obj) {
-								$obj->setACValues($newsql, $REX_ACTION, true, false);
+								$obj->setACValues($realslice->getId(), $REX_ACTION, true, false);
 							}
 
 							if ($function == 'edit') {

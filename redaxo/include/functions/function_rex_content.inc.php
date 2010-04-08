@@ -132,6 +132,7 @@ function rex_deleteSlice($slice_id)
 			$sql->setQuery('UPDATE #_article_slice SET re_article_slice_id = '.$article_slice->getReId().' WHERE id = '.$nextslice->getId(), '#_');
 		}
 
+		Service_Factory::getService('SliceValue')->delete(array('slice_id' => $article_slice->getSliceId()));
 		Service_Factory::getService('Slice')->delete(array('id' => $article_slice->getSliceId()));
 		
 		$sql->setQuery('DELETE FROM #_article_slice WHERE id = '.$slice_id, '#_');

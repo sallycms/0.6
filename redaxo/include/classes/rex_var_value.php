@@ -31,9 +31,8 @@ class rex_var_value extends rex_var
 		return $REX_ACTION;
 	}
 
-	function getACDatabaseValues($REX_ACTION, & $sql)
+	function getACDatabaseValues($REX_ACTION, $slice_id)
 	{
-		$slice_id = $this->getValue($sql, 'slice_id');
 		$values = Service_Factory::getService('SliceValue')->find(array('slice_id' => $slice_id, 'type' => 'REX_VALUE'));
 
 		foreach($values as $value)
@@ -46,11 +45,11 @@ class rex_var_value extends rex_var
 		return $REX_ACTION;
 	}
 
-	function setACValues(& $sql, $REX_ACTION, $escape = false, $prependTableName = true)
+	function setACValues($slice_id, $REX_ACTION, $escape = false, $prependTableName = true)
 	{
-		global $REX;
+		//global $REX;
 
-		$slice_id = $sql->getValue('slice_id');
+		//$slice_id = $sql->getValue('slice_id');
 		$slice = Service_Factory::getService('Slice')->findById($slice_id);
 		if(isset($REX_ACTION['REX_VALUE'])){
 			foreach($REX_ACTION['REX_VALUE'] as $key => $value){
@@ -63,11 +62,10 @@ class rex_var_value extends rex_var
 
 	// --------------------------------- Output
 
-	function getBEOutput(& $sql, $content)
+	function getBEOutput($slice_id, $content)
 	{
-		$content = $this->getOutput($sql, $content, true);
+		$content = $this->getOutput($slice_id, $content, true);
 
-		$slice_id = $this->getValue($sql, 'slice_id');
 		$php_content = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_PHP', '');
 		if($php_content){
 			$php_content->getValue();
@@ -80,10 +78,9 @@ class rex_var_value extends rex_var
 		return $content;
 	}
 
-	function getBEInput(& $sql, $content)
+	function getBEInput($slice_id, $content)
 	{
 		$content = $this->getOutput($sql, $content);
-		$slice_id = $this->getValue($sql, 'slice_id');
 		$php_content = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_PHP', '');
 		if($php_content){
 			$php_content = $php_content->getValue();
@@ -95,10 +92,9 @@ class rex_var_value extends rex_var
 		return $content;
 	}
 
-	function getFEOutput(& $sql, $content)
+	function getFEOutput($slice_id, $content)
 	{
-		$content = $this->getOutput($sql, $content, true);
-		$slice_id = $this->getValue($sql, 'slice_id');
+		$content = $this->getOutput($slice_id, $content, true);
 		$php_content = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_PHP', '');
 		if($php_content){
 			$php_content = $php_content->getValue();
@@ -110,14 +106,13 @@ class rex_var_value extends rex_var
 		return $content;
 	}
 
-	function getOutput(& $sql, $content, $nl2br = false)
+	function getOutput($slice_id, $content, $nl2br = false)
 	{
-		$content = $this->matchValue($sql, $content, $nl2br);
-		$content = $this->matchHtmlValue($sql, $content);
-		$content = $this->matchIsValue($sql, $content);
-		$content = $this->matchPhpValue($sql, $content);
+		$content = $this->matchValue($slice_id, $content, $nl2br);
+		$content = $this->matchHtmlValue($slice_id, $content);
+		$content = $this->matchIsValue($slice_id, $content);
+		$content = $this->matchPhpValue($slice_id, $content);
 
-		$slice_id = $this->getValue($sql, 'slice_id');
 		$html_content = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_HTML', '');
 		if($html_content){
 			$html_content = $html_content->getValue();
@@ -134,7 +129,7 @@ class rex_var_value extends rex_var
 	/**
 	 * Wert für die Ausgabe
 	 */
-	private function _matchValue(& $sql, $content, $var, $escape = false, $nl2br = false, $stripPHP = false, $booleanize = false)
+	private function _matchValue($slice_id, $content, $var, $escape = false, $nl2br = false, $stripPHP = false, $booleanize = false)
 	{
 		$matches = $this->getVarParams($content, $var);
 
@@ -144,7 +139,6 @@ class rex_var_value extends rex_var
 			list ($param_str, $args) = $match;
 			list ($id, $args) = $this->extractArg('id', $args, 0);
 
-			$slice_id = $this->getValue($sql, 'slice_id');
 			$replace = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_VALUE', $id);
 
 			if($replace){
@@ -183,23 +177,23 @@ class rex_var_value extends rex_var
 		return $content;
 	}
 
-	function matchValue(& $sql, $content, $nl2br = false)
+	function matchValue($slice_id, $content, $nl2br = false)
 	{
-		return $this->_matchValue($sql, $content, 'REX_VALUE', true, $nl2br);
+		return $this->_matchValue($slice_id, $content, 'REX_VALUE', true, $nl2br);
 	}
 
-	private function matchHtmlValue(& $sql, $content)
+	private function matchHtmlValue($slice_id, $content)
 	{
-		return $this->_matchValue($sql, $content, 'REX_HTML_VALUE', false, false, true);
+		return $this->_matchValue($slice_id, $content, 'REX_HTML_VALUE', false, false, true);
 	}
 
-	private function matchPhpValue(& $sql, $content)
+	private function matchPhpValue($slice_id, $content)
 	{
-		return $this->_matchValue($sql, $content, 'REX_PHP_VALUE', false, false, false);
+		return $this->_matchValue($slice_id, $content, 'REX_PHP_VALUE', false, false, false);
 	}
 
-	private function matchIsValue(& $sql, $content)
+	private function matchIsValue($slice_id, $content)
 	{
-		return $this->_matchValue($sql, $content, 'REX_IS_VALUE', false, false, false, true);
+		return $this->_matchValue($slice_id, $content, 'REX_IS_VALUE', false, false, false, true);
 	}
 }

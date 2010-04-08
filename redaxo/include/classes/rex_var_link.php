@@ -32,11 +32,9 @@ class rex_var_link extends rex_var
 		return $REX_ACTION;
 	}
 
-	function getACDatabaseValues($REX_ACTION, & $sql)
+	function getACDatabaseValues($REX_ACTION, $slice_id)
 	{
 			
-		$slice_id = $sql->getValue('slice_id');
-
 		$values = Service_Factory::getService('SliceValue')->find(array('slice_id' => $slice_id, 'type' => 'REX_LINK'));
 		foreach($values as $value)
 		{
@@ -53,12 +51,12 @@ class rex_var_link extends rex_var
 			
 	}
 
-	function setACValues(& $sql, $REX_ACTION, $escape = false, $prependTableName = true)
+	function setACValues($slice_id, $REX_ACTION, $escape = false, $prependTableName = true)
 	{
 			
-		global $REX;
+		//global $REX;
 
-		$slice_id = $sql->getValue('slice_id');
+		//$slice_id = $sql->getValue('slice_id');
 		$slice = Service_Factory::getService('Slice')->findById($slice_id);
 		if(isset($REX_ACTION['REX_LINK'])){
 			foreach($REX_ACTION['REX_LINK'] as $key => $value){
@@ -74,25 +72,25 @@ class rex_var_link extends rex_var
 
 	// --------------------------------- Output
 
-	function getBEOutput(& $sql, $content)
+	function getBEOutput($slice_id, $content)
 	{
-		return $this->getOutput($sql, $content);
+		return $this->getOutput($slice_id, $content);
 	}
 
-	function getBEInput(& $sql, $content)
+	function getBEInput($slice_id, $content)
 	{
-		$content = $this->getOutput($sql, $content);
-		$content = $this->matchLinkButton($sql, $content);
-		$content = $this->matchLinkListButton($sql, $content);
+		$content = $this->getOutput($slice_id, $content);
+		$content = $this->matchLinkButton($slice_id, $content);
+		$content = $this->matchLinkListButton($slice_id, $content);
 
 		return $content;
 	}
 
-	function getOutput(& $sql, $content)
+	function getOutput($slice_id, $content)
 	{
-		$content = $this->matchLinkList($sql, $content);
-		$content = $this->matchLink($sql, $content);
-		$content = $this->matchLinkId($sql, $content);
+		$content = $this->matchLinkList($slice_id, $content);
+		$content = $this->matchLink($slice_id, $content);
+		$content = $this->matchLinkId($slice_id, $content);
 
 		return $content;
 	}
@@ -115,7 +113,7 @@ class rex_var_link extends rex_var
 	/**
 	 * Button für die Eingabe
 	 */
-	function matchLinkButton(& $sql, $content)
+	function matchLinkButton($slice_id, $content)
 	{
 		global $REX;
 
@@ -134,7 +132,6 @@ class rex_var_link extends rex_var
 			list ($param_str, $args) = $match;
 			list ($id, $args) = $this->extractArg('id', $args, 0);
 
-			$slice_id = $this->getValue($sql, 'slice_id');
 			$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_LINK', $id);
 			if($value){
 				$value = $value->getValue();
@@ -157,7 +154,7 @@ class rex_var_link extends rex_var
 	/**
 	 * Button für die Eingabe
 	 */
-	function matchLinkListButton(& $sql, $content)
+	function matchLinkListButton($slice_id, $content)
 	{
 		$var = 'REX_LINKLIST_BUTTON';
 		$matches = $this->getVarParams($content, $var);
@@ -168,7 +165,6 @@ class rex_var_link extends rex_var
 
 			list ($category, $args) = $this->extractArg('category', $args, 0);
 
-			$slice_id = $this->getValue($sql, 'slice_id');
 			$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_LINKLIST', $id);
 			if($value){
 				$value = $value->getValue();
@@ -187,7 +183,7 @@ class rex_var_link extends rex_var
 	/**
 	 * Wert für die Ausgabe
 	 */
-	function matchLink(& $sql, $content)
+	function matchLink($slice_id, $content)
 	{
 		$var = 'REX_LINK';
 		$matches = $this->getVarParams($content, $var);
@@ -196,7 +192,6 @@ class rex_var_link extends rex_var
 			list ($param_str, $args) = $match;
 			list ($id, $args) = $this->extractArg('id', $args, 0);
 
-			$slice_id = $this->getValue($sql, 'slice_id');
 			$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_LINK', $id);
 			if($value){
 				$value = $value->getValue();
@@ -218,7 +213,7 @@ class rex_var_link extends rex_var
 	/**
 	 * Wert für die Ausgabe
 	 */
-	function matchLinkId(& $sql, $content)
+	function matchLinkId($slice_id, $content)
 	{
 		$var = 'REX_LINK_ID';
 		$matches = $this->getVarParams($content, $var);
@@ -227,7 +222,6 @@ class rex_var_link extends rex_var
 			list ($param_str, $args) = $match;
 			list ($id, $args) = $this->extractArg('id', $args, 0);
 
-			$slice_id = $this->getValue($sql, 'slice_id');
 			$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_LINK', $id);
 			if($value){
 				$value = $value->getValue();
@@ -245,7 +239,7 @@ class rex_var_link extends rex_var
 	/**
 	 * Wert für die Ausgabe
 	 */
-	function matchLinkList(& $sql, $content)
+	function matchLinkList($slice_id, $content)
 	{
 		$var = 'REX_LINKLIST';
 		$matches = $this->getVarParams($content, $var);
@@ -254,7 +248,6 @@ class rex_var_link extends rex_var
 			list ($param_str, $args) = $match;
 			list ($id, $args) = $this->extractArg('id', $args, 0);
 
-			$slice_id = $this->getValue($sql, 'slice_id');
 			$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_LINKLIST', $id);
 			if($value){
 				$value = $value->getValue();
