@@ -829,7 +829,7 @@ class rex_article
     $tmp = '';
     $mode    = $forceMode === null ? $this->mode : $forceMode;
 
-	$artslice = OOArticleSlice::_getSliceWhere('slice_id = $slice_id');
+	$artslice = OOArticleSlice::_getSliceWhere('slice_id = '. $slice_id);
 
 
     foreach(Core::getVarTypes() as $idx => $var)

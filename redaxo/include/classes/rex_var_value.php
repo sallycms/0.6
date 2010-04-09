@@ -80,7 +80,7 @@ class rex_var_value extends rex_var
 
 	function getBEInput($slice_id, $content)
 	{
-		$content = $this->getOutput($sql, $content);
+		$content = $this->getOutput($slice_id, $content);
 		$php_content = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_PHP', '');
 		if($php_content){
 			$php_content = $php_content->getValue();
