@@ -18,6 +18,11 @@
 class rex_var_media extends rex_var
 {
 	// --------------------------------- Actions
+	
+	const MEDIA = 'REX_MEDIA';
+	const MEDIALIST = 'REX_MEDIALIST';
+	const FILE = 'REX_FILE';
+	const FILELIST = 'REX_FILELIST';
 
 	function getACRequestValues($REX_ACTION)
 	{
@@ -166,7 +171,7 @@ class rex_var_media extends rex_var
       				list ($param_str, $args) = $match;
       				list ($id, $args) = $this->extractArg('id', $args, 0);
 
-      				$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, str_replace('_BUTTON', '', $var), $id);
+      				$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, self::MEDIALIST, $id);
       				if($value){
       					$value = $value->getValue();
       				}else{
@@ -195,8 +200,8 @@ class rex_var_media extends rex_var
 	function matchMedia($slice_id, $content)
 	{
 		$vars = array (
-      		'REX_FILE',
-      		'REX_MEDIA'
+      		self::FILE,
+      		self::MEDIA
       		);
       		foreach ($vars as $var)
       		{
@@ -206,7 +211,7 @@ class rex_var_media extends rex_var
       				list ($param_str, $args) = $match;
       				list ($id, $args) = $this->extractArg('id', $args, 0);
 
-      				$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_MEDIA', $id);
+      				$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, self::MEDIA, $id);
       				if($value){
       					$value = $value->getValue();
       				}else{
@@ -242,8 +247,8 @@ class rex_var_media extends rex_var
 	function matchMediaList($slice_id, $content)
 	{
 		$vars = array (
-      		'REX_FILELIST',
-      		'REX_MEDIALIST'
+      		self::FILELIST,
+      		self::MEDIALIST
       		);
       		foreach ($vars as $var)
       		{
@@ -253,7 +258,7 @@ class rex_var_media extends rex_var
       				list ($param_str, $args) = $match;
       				list ($id, $args) = $this->extractArg('id', $args, 0);
 
-      				$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_MEDIALIST', $id);
+      				$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, self::MEDIALIST, $id);
       				if($value){
       					$value = $value->getValue();
       				}else{
