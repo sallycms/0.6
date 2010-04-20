@@ -91,23 +91,33 @@ function rex_setup_import($import_sql, $import_archiv = null)
   return $err_msg;
 }
 
-function rex_setup_is_writable($items)
-{
-  global $REX;
-  $res = array();
+function rex_setup_is_dir_writable($items) {
+	global $REX;
+	$res = array();
 
-  foreach($items as $item)
-  {
-    $is_writable = _rex_is_writable($item);
+	foreach ($items as $item) {
+		if (!file_exists($item)) mkdir($item, $REX['DIRPERM']);
+		$is_writable = _rex_is_writable($item);
 
-    // 0 => kein Fehler
-    if($is_writable != 0)
-    {
-      $res[$is_writable][] = $item;
-    }
-  }
+		// 0 => kein Fehler
+		if($is_writable != 0) $res[$is_writable][] = $item;
+	}
 
-  return $res;
+	return $res;
+}
+
+function rex_setup_is_file_writable($items) {
+	global $REX;
+	$res = array();
+
+	foreach ($items as $item) {
+		$is_writable = _rex_is_writable($item);
+
+		// 0 => kein Fehler
+		if($is_writable != 0) $res[$is_writable][] = $item;
+	}
+
+	return $res;
 }
 
 // -------------------------- System AddOns prüfen
@@ -248,22 +258,29 @@ if ($checkmodus == 1)
 
   // -------------------------- SCHREIBRECHTE
   $WRITEABLES = array (
-    $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'master.inc.php',
-    $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'addons.inc.php',
-    $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'plugins.inc.php',
-    $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'clang.inc.php',
     $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'generated',
     $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'generated'.DIRECTORY_SEPARATOR.'articles',
     $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'generated'.DIRECTORY_SEPARATOR.'templates',
     $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'generated'.DIRECTORY_SEPARATOR.'files',
     $REX['MEDIAFOLDER'],
+    $REX['MEDIAFOLDER'].DIRECTORY_SEPARATOR.'image_resize',
     getImportDir()
   );
 
   foreach($REX['SYSTEM_ADDONS'] as $system_addon)
     $WRITEABLES[] = $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'addons'.DIRECTORY_SEPARATOR. $system_addon;
 
-  $res = rex_setup_is_writable($WRITEABLES);
+  $res = rex_setup_is_dir_writable($WRITEABLES);
+    
+  $WRITEABLES = array (
+    $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'master.inc.php',
+    $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'addons.inc.php',
+    $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'plugins.inc.php',
+    $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'clang.inc.php',
+    $REX['MEDIAFOLDER'] .DIRECTORY_SEPARATOR.'_readme.txt'
+  );
+    
+  $res = array_merge($res, rex_setup_is_file_writable($WRITEABLES));
   if(count($res) > 0)
   {
     $MSG['err'] .= '<li>';
