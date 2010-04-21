@@ -177,14 +177,12 @@ class OOArticleSlice
 	 */
 	public function getSlice()
 	{
-		$art = new rex_article();
-		$art->setArticleId($this->getArticleId());
-		$art->setClang($this->getClang());
-		$art->getSlice = $this->getId();
-		$art->setSliceRevision($this->_revision);
-		$content = $art->getArticle();
+		$slice = Service_Factory::getService('Slice')->findById($this->getSliceId());
+		$content = $slice->getOutput();
+		
 		$content = self::replaceLinks($content);
 		$content = $this->replaceCommonVars($content);
+		$content = $this->replaceGlobals($content);
 		return $content;
 	}
 
@@ -378,6 +376,17 @@ class OOArticleSlice
 		return null;
 	}
 
+	private function replaceGlobals($content){
+	    // Articleslice abhängige Globale Variablen ersetzen
+	    $slice = Service_Factory::getService('Slice')->findById($this->getSliceId());
+		
+    	$content = str_replace('REX_MODULE_ID', $slice->getModuleId(), $content);
+	    $content = str_replace('REX_SLICE_ID', $this->getId(), $content);
+    	$content = str_replace('REX_CTYPE_ID', $this->getCtype(), $content);
+
+    	return $content;
+	}
+	
 	// ---- Artikelweite globale variablen werden ersetzt
 	private function replaceCommonVars($content) {
 		global $REX;

@@ -23,7 +23,7 @@ class rex_var_article extends rex_var
     return $this->matchArticle($content, true);
   }
 
-  function getBEOutput(& $sql, $content)
+  function getBEOutput($slice_id, $content)
   {
     return $this->matchArticle($content);
   }
@@ -51,7 +51,7 @@ class rex_var_article extends rex_var
   }
   
   /**
-   * Wert für die Ausgabe
+   * Wert fÃ¼r die Ausgabe
    */
   function matchArticle($content, $replaceInTemplate = false)
   {
@@ -97,8 +97,8 @@ class rex_var_article extends rex_var
         {
           if(OOArticle::hasValue($field))
           {
-	        	// bezeichner wählen, der keine variablen
-	          // aus modulen/templates überschreibt
+	        	// bezeichner wÃ¤hlen, der keine variablen
+	          // aus modulen/templates Ã¼berschreibt
 	          $varname = '$__rex_art';
 	          $tpl = '<?php
 	          '. $varname .' = OOArticle::getArticleById('. $article_id .', '. $clang .');
@@ -109,8 +109,8 @@ class rex_var_article extends rex_var
         // REX_ARTICLE[id=5] kompletten artikel mit gegebener artikel id einbinden
         else
         {
-	        // bezeichner wählen, der keine variablen
-	        // aus modulen/templates überschreibt
+	        // bezeichner wÃ¤hlen, der keine variablen
+	        // aus modulen/templates Ã¼berschreibt
 	        $varname = '$__rex_art';
 	        $tpl = '<?php
 	        '. $varname .' = new rex_article();

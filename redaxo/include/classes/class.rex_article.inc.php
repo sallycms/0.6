@@ -858,9 +858,6 @@ class rex_article
         {
           $tmp = $var->getBEOutput($slice_id, $content);
         }
-      }else
-      {
-        $tmp = $var->getFEOutput($slice_id, $content);
       }
 
       // Rückgabewert nur auswerten wenn auch einer vorhanden ist

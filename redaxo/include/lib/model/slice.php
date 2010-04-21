@@ -67,5 +67,13 @@ class Model_Slice extends Model_SliceBase {
 		}
 		return $clone;	
 	}
+	
+	public function getOutput(){
+		$output = $this->getModule()->getOutput();
+		foreach(Core::getVarTypes() as $idx => $var){
+			$output = $var->getFEOutput($this->getId(), $output);
+		}
+		return $output;
+	}
 
 }
