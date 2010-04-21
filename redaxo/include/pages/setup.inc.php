@@ -2,7 +2,7 @@
 
 /**
  * Direkter Aufruf, um zu testen, ob der Ordner redaxo/include
- * erreichbar ist. Dies darf aus Sicherheitsgr�nden nicht m�glich sein!
+ * erreichbar ist. Dies darf aus Sicherheitsgründen nicht möglich sein!
  */
 if (!isset($REX))
 {
@@ -277,7 +277,6 @@ if ($checkmodus == 1)
     $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'addons.inc.php',
     $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'plugins.inc.php',
     $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'clang.inc.php',
-    $REX['MEDIAFOLDER'] .DIRECTORY_SEPARATOR.'_readme.txt'
   );
     
   $res = array_merge($res, rex_setup_is_file_writable($WRITEABLES));
@@ -548,6 +547,8 @@ if ($checkmodus == 3 && $send == 1)
     $REX['TABLE_PREFIX'] .'module',
     $REX['TABLE_PREFIX'] .'template',
     $REX['TABLE_PREFIX'] .'user',
+    $REX['TABLE_PREFIX'] .'slice',
+    $REX['TABLE_PREFIX'] .'slice_value'
   );
 
   if ($dbanlegen == 4)
