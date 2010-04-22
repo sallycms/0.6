@@ -6,6 +6,8 @@
  * @version svn:$Id$
  */
  
+$accesskey = 1;
+
 $popups_arr = array('linkmap', 'mediapool');
 $page_title = htmlspecialchars($REX['SERVERNAME']);
 
