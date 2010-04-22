@@ -16,7 +16,7 @@ if (!isset($page_name)) {
 }
   
 if (!empty($page_name)) {
-	$page_title .= ' $ndash; '.htmlspecialchars($page_name);
+	$page_title .= ' &ndash; '.htmlspecialchars($page_name);
 }
 
 $body_id  = str_replace('_', '-', $REX['PAGE']);
