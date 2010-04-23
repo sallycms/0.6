@@ -15,7 +15,7 @@
  * @author zozi@webvariants.de
  *
  */
-class DB_PDO_Persistence implements Iterator{
+class DB_PDO_Persistence implements sly_DB_Persistence{
     const DONT_CHANGE     = -1;
     const THROW_EXCEPTION = 1;
     const RETURN_FALSE    = 2;
