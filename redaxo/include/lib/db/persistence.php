@@ -6,6 +6,8 @@ interface sly_DB_Persistence extends Iterator{
 	 * 
 	 * @param string $table
 	 * @param array $values array('column' => $value,...) 
+	 * 
+	 * @return int affected rows
 	 */
 	public function insert($table, $values);
 	
@@ -28,6 +30,8 @@ interface sly_DB_Persistence extends Iterator{
 	 * @param unknown_type $limit
 	 * @param unknown_type $having
 	 * @param unknown_type $joins
+	 * 
+	 * @return boolean
 	 */
 	public function select($table, $select = '*', $where = null, $group = null, $order = null, $limit = null, $having = null, $joins = null);
 	
