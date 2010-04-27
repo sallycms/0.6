@@ -50,13 +50,7 @@ if ($REX['PAGE_NO_NAVI']) {
 	<link rel="stylesheet" href="media/css_ie_lte_6.css" type="text/css" media="screen, projection, print" />
 	<![endif]-->
 	<script src="media/jquery.min.js" type="text/javascript"></script>
-	<script src="media/standard.js" type="text/javascript"></script>
-	<script type="text/javascript">
-	<!--
-	var redaxo = true;
-	jQuery.noConflict();
-	//-->
-	</script>
+	<script src="media/standard.min.js" type="text/javascript"></script>
 	<?= rex_register_extension_point('PAGE_HEADER', '') ?>
 </head>
 <body <?= $bodyAttr ?>>
