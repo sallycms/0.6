@@ -1,17 +1,16 @@
 <?php
 
+define('IS_SALLY', true);
+
 /**
- *
  * @package redaxo4
- * @version svn:$Id$
  */
 
-// ----- caching start f�r output filter
 ob_start();
 ob_implicit_flush(0);
 
 // ----------------- MAGIC QUOTES CHECK
-require './include/functions/function_rex_mquotes.inc.php';
+require 'include/functions/function_rex_mquotes.inc.php';
 
 // ----- REX UNSET
 unset($REX);
@@ -36,8 +35,8 @@ $REX['PAGES'] = array();
 $REX['PAGE'] = '';
 
 // ----------------- SETUP
-$REX['USER'] = NULL;
-$REX['LOGIN'] = NULL;
+$REX['USER']  = null;
+$REX['LOGIN'] = null;
 
 if ($REX['SETUP'])
 {

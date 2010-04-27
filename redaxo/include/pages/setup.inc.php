@@ -4,26 +4,11 @@
  * Direkter Aufruf, um zu testen, ob der Ordner redaxo/include
  * erreichbar ist. Dies darf aus Sicherheitsgründen nicht möglich sein!
  */
-if (!isset($REX))
-{
-  echo '<html>
-          <title></title>
-          <head>
-            <script src="../../js/standard.js" type="text/javascript"></script>
-            <script type="text/javascript">
-              var needle = new parent.getObj("security_warning");
-              var span = needle.obj;
-              span.style.display="";
-              var needle = new parent.getObj("nextstep");
-              var span = needle.obj;
-              span.style.display="none";
-            </script>
-          </head>
-          <body></body>
-        </html>';
-  exit();
-}
 
+if (!defined('IS_SALLY')) {
+	require $REX['INCLUDE_PATH'].'/views/setup/direct.phtml';
+	exit();
+}
 
 /**
  *

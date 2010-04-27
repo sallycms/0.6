@@ -1,5 +1,7 @@
 <?php
 
+define('IS_SALLY', true);
+
 /**
  * @package redaxo4
  * @version svn:$Id$
