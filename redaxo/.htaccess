@@ -4,4 +4,4 @@ RewriteEngine On
 RewriteRule ^imageresize/(.*)$ index.php?rex_resize=$1 [L]
 
 # Backend-Assets
-RewriteRule ^images/([a-z0-9_-]+)/(.*?)$ ../dyn/public/addons/$1/images/$2 [LSA]
+RewriteRule ^images/([a-z0-9_-]+)/(.*?)$ ../dyn/public/addons/$1/images/$2 [L]
