@@ -91,7 +91,7 @@ class Thumbnail{
 		}
 
 		// Transparenz erhalten
-		self::keepTransparent($this->imgthumb);
+		$this->keepTransparent();
 		imagecopyresampled($this->imgthumb, $this->imgsrc, 0, 0, $this->thumb_width_offset, $this->thumb_height_offset, $this->thumb_width, $this->thumb_height, $this->width, $this->height);
 	}
 
@@ -108,26 +108,25 @@ class Thumbnail{
 	/**
 	 * Sorgt dafür, dass Bilder transparent bleiben
 	 *  
-	 * @param imagesrc $destImage Das Thumbnail
 	 * @return void
 	 */
-	private static function keepTransparent($destImage)
+private function keepTransparent()
 	{
-		if (self::getFileExtensionStatic($destImage) == 'PNG')
+		if ($this->getFileExtension() == 'PNG')
 		{
-			imagealphablending($destImage, false);
-			imagesavealpha($destImage, true);
+			imagealphablending($this->imgthumb, false);
+			imagesavealpha($this->imgthumb, true);
 		}
-		else if (self::getFileExtensionStatic($destImage) == 'GIF')
+		else if ($this->getFileExtension() == 'GIF')
 		{
-			$colorTransparent = imagecolortransparent($this->img['src']);
-			imagepalettecopy($this->img['src'], $destImage);
+			$colorTransparent = imagecolortransparent($this->imgsrc);
+			imagepalettecopy($this->imgsrc, $this->imgthumb);
 			if($colorTransparent>0)
 			{
-				imagefill($destImage, 0, 0, $colorTransparent);
-				imagecolortransparent($destImage, $colorTransparent);
+				imagefill($this->imgthumb, 0, 0, $colorTransparent);
+				imagecolortransparent($this->imgthumb, $colorTransparent);
 			}
-			imagetruecolortopalette($destImage, true, 256);
+			imagetruecolortopalette($this->imgthumb, true, 256);
 		}
 	}
 
