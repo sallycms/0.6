@@ -231,7 +231,7 @@ class DB_PDO_Persistence implements sly_DB_Persistence{
 	protected function error() {
 		$message   = 'Es trat ein Datenbank-Fehler auf: ';
 		
-		throw new DB_Exception($message.'Fehlercode: '. $this->getErrno() .' '.$this->getError());
+		throw new DB_PDO_Exception($message.'Fehlercode: '. $this->getErrno() .' '.$this->getError());
 	}
     
 	/**

@@ -10,4 +10,4 @@
  */
  
  
-class DB_PDO_Exception extends DB_Exception{}
+class DB_PDO_Exception extends sly_DB_Exception{}

@@ -10,4 +10,4 @@
  */
  
  
- class DB_Exception extends Exception{}
+ class sly_DB_Exception extends Exception{}
