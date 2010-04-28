@@ -110,23 +110,47 @@ class Thumbnail{
 	 *  
 	 * @return void
 	 */
-private function keepTransparent()
+	private function keepTransparent()
 	{
-		if ($this->getFileExtension() == 'PNG')
+		if ($this->getFileExtension() == 'PNG' || $this->getFileExtension() == 'GIF')
 		{
-			imagealphablending($this->imgthumb, false);
-			imagesavealpha($this->imgthumb, true);
-		}
-		else if ($this->getFileExtension() == 'GIF')
-		{
-			$colorTransparent = imagecolortransparent($this->imgsrc);
-			imagepalettecopy($this->imgsrc, $this->imgthumb);
-			if($colorTransparent>0)
+			
+			if ($this->getFileExtension() == 'GIF')
 			{
-				imagefill($this->imgthumb, 0, 0, $colorTransparent);
-				imagecolortransparent($this->imgthumb, $colorTransparent);
+				imagepalettecopy($this->imgsrc, $this->imgthumb);
 			}
-			imagetruecolortopalette($this->imgthumb, true, 256);
+			
+			$colorTransparent = imagecolortransparent($this->imgsrc);
+						
+			if ($colorTransparent  >= 0) {
+				// Get the original image's transparent color's RGB values
+				$trnprt_color = imagecolorsforindex($image,  $colorTransparent);
+				
+				// Allocate the same color in the new image resource
+        		$colorTransparent  = imagecolorallocate($this->imgthumb, $colorTransparent['red'], $colorTransparent['green'], $colorTransparent['blue']);
+   
+				// Completely fill the background of the new image with allocated color.
+				imagefill($this->imgthumb, 0, 0, $colorTransparent);
+   
+				// Set the background color for new image to transparent
+				imagecolortransparent($this->imgthumb, $colorTransparent);
+				
+			}elseif ($this->getFileExtension() == 'PNG'){
+				imagealphablending($this->imgthumb, false);
+				
+				// Create a new transparent color for image
+        		$color = imagecolorallocatealpha($this->imgthumb, 0, 0, 0, 127);
+        		
+        		// Completely fill the background of the new image with allocated color.
+        		imagefill($this->imgthumb, 0, 0, $color);
+        		
+				imagesavealpha($this->imgthumb, true);
+			}
+		
+			if ($this->getFileExtension() == 'GIF')
+			{
+				imagetruecolortopalette($this->imgthumb, true, 256);
+			}
 		}
 	}
 
@@ -139,12 +163,7 @@ private function keepTransparent()
 	public function generateImage($file)
 	{
 		global $REX;
-		if ($this->getFileExtension() == 'GIF' && !$this->gifsupport)
-		{
-			// --- kein caching -> gif ausgeben
-			$this->send();
-		}
-
+		
 		$this->resampleImage();
 		$this->applyFilters();
 		$fileext = strtoupper($this->getFileExtension());
@@ -454,7 +473,7 @@ private function keepTransparent()
 	 * @return string Die File Extension einer Datei
 	 */
 	private static function getFileExtensionStatic($fileName){
-		return substr(strrchr($fileName, "."), 1);
+		return strtoupper(substr(strrchr($fileName, "."), 1));
 	}
 
 	/**
