@@ -16,10 +16,6 @@
  *
  */
 class DB_PDO_Persistence implements sly_DB_Persistence{
-    const DONT_CHANGE     = -1;
-    const THROW_EXCEPTION = 1;
-    const RETURN_FALSE    = 2;
-	
     const LOG_UNKNOWN = -1;
 	const LOG_ERROR   = -2;
 	
@@ -27,7 +23,6 @@ class DB_PDO_Persistence implements sly_DB_Persistence{
 	private $statement = null;
 	private $currentRow = null;
 	private $transRunning = false; 
-	private $errorMode = self::THROW_EXCEPTION;
 	
 	private function __construct(){
 		$this->connection = DB_PDO_Connection::getInstance()->getConnection();
@@ -37,9 +32,7 @@ class DB_PDO_Persistence implements sly_DB_Persistence{
 		return new self();
 	}
 	
-	protected function query($query, $data = array(), $forceMode = self::THROW_EXCEPTION){
-		
-		$oldMode = $this->setErrorMode($forceMode);
+	protected function query($query, $data = array()){
 		
 		try{
 			$start      = microtime(true);
@@ -47,27 +40,17 @@ class DB_PDO_Persistence implements sly_DB_Persistence{
 			$this->statement = $this->connection->prepare($query);
 			if($this->statement->execute($data) === false){
 				$time = microtime(true) - $start;
-                $info = $this->statement->errorInfo();
-                $this->stmt = null;
-                $this->setErrorMode($oldMode);
                 self::log($query, $time, self::LOG_ERROR);
-                return $this->error(false, $info);
+                $this->error();
 			}
 			
 			$time = microtime(true) - $start;
-			$this->setErrorMode($oldMode);
 			self::log($query, $time, $this->affectedRows());
 			
-			return true;
-			
 		}catch(PDOException $e){
-			$this->setErrorMode($oldMode);
-			$this->statement = null;
-			$this->currentRow = null;
-			
 			$time = microtime(true) - $start;
 			self::log($query, $time, self::LOG_ERROR);
-            return $this->error(false);
+            $this->error();
 		}
 		return true;
 	} 
@@ -167,10 +150,11 @@ class DB_PDO_Persistence implements sly_DB_Persistence{
      * Diese Methode startet eine neue Transaktion. Allerdings nur, wenn
      * $enableSwitch auf true gesetzt ist.
      */
-    public function startTransaction($enableSwitch = true, $force = false) {
-        if ($enableSwitch && (!$this->transRunning || $force)) {
+    public function startTransaction($force = false) {
+        if (!$this->connecton->transRunning() || $force) {
             try {
                 $this->connection->beginTransaction();
+                $this->connection->setTransRunning(true);
                 return true;
             }
             catch (PDOException $e) {
@@ -178,6 +162,7 @@ class DB_PDO_Persistence implements sly_DB_Persistence{
                     if ($force) {
                         $this->connection->commit();
                         $this->connection->beginTransaction();
+                        $this->connection->setTransRunning(true);
                         return true;
                     }
 
@@ -196,16 +181,14 @@ class DB_PDO_Persistence implements sly_DB_Persistence{
      * Diese Methode beendet eine laufende Transaktion. Allerdings nur, wenn
      * $enableSwitch auf true gesetzt ist.
      */
-    public function doCommit($enableSwitch = true) {
-        if ($enableSwitch) {
-            try {
-                $this->connection->commit();
-                $this->transRunning = false;
-                return true;
-            } catch (PDOException $e) {
-                return false;
-            }
-        }
+    public function doCommit() {
+		try {
+			$this->connection->commit();
+			$this->connection->setTransRunning(false);
+			return true;
+		} catch (PDOException $e) {
+			return false;
+		}
     }
     
 	/**
@@ -214,71 +197,49 @@ class DB_PDO_Persistence implements sly_DB_Persistence{
      * Diese Methode beendet eine laufende Transaktion. Allerdings nur, wenn
      * $enableSwitch auf true gesetzt ist.
      */
-    public function doRollBack($enableSwitch = true) {
-        if ($enableSwitch) {
-            try {
-                $this->connection->rollBack();
-                $this->transRunning = false;
-                return true;
-            } catch (PDOException $e) {
-                return false;
-            }
-        }
+	public function doRollBack() {
+		try {
+			$this->connection->rollBack();
+			$this->connection->setTransRunning(false);
+			return true;
+		} catch (PDOException $e) {
+        	return false;
+		}
     }
     
-	public function cleanEndTransaction($useTransaction, $mode, $e, $wrapperClass = '') {
+	public function cleanEndTransaction($e) {
         $this->doRollBack($useTransaction);
-        $this->setErrorMode($mode);
+        $this->connection->setTransRunning(false);
 
         // Exceptions, die nicht von SQL-Problemen herrühren (z.B. InputExceptions),
         // leiten wir weiter nach außen.
 
-        if ($e instanceof Exception && (!$useTransaction || !($e instanceof DB_PDO_Exception))) {
+        if ($e instanceof Exception && !($e instanceof DB_PDO_Exception)) {
             throw $e;
         }
 
         // Exceptions, die von SQL-Problemen herrühren, verpacken wir als
         // neue Exception im entsprechenden Applikationskontext.
 
-        if (!empty($wrapperClass) && $e instanceof DB_PDO_Exception) {
-            $exception = new $wrapperClass('Es trat ein Datenbank-Fehler auf.');
-            throw $exception;
-        }
+        $this->error();
     }
     
     // =========================================================================
     // ERROR UND LOGGING
     // =========================================================================
     
-	public function setErrorMode($errorMode) {
-        $oldMode = $this->errorMode;
-
-        if (in_array($errorMode, array(self::THROW_EXCEPTION, self::RETURN_FALSE))) {
-            $this->errorMode = $errorMode;
-        }
-
-        return $oldMode;
-    }
-	
-	protected function error($returnValue, $errorInfo = null) {
-        if ($this->errorMode == self::THROW_EXCEPTION) {
-            $message   = 'Es trat ein Datenbank-Fehler auf: ';
-            $errorInfo = $errorInfo === null ? $this->errorInfo() : $errorInfo;
-
-            if ($errorInfo[0] != 0 && isset($errorInfo[2])) {
-                throw new DB_Exception($message.$errorInfo[2]);
-            }
-        }
-
-        return $returnValue;
-    }
+	protected function error() {
+		$message   = 'Es trat ein Datenbank-Fehler auf: ';
+		
+		throw new DB_Exception($message.'Fehlercode: '. $this->getErrno() .' '.$this->getError());
+	}
     
 	/**
      * Gibt die letzte Fehlermeldung zurück.
      *
      * @return string  die letzte Fehlermeldung
      */
-    public function getError() {
+    protected function getError() {
         if (!$this->statement) {
             return '';
         }
@@ -292,7 +253,7 @@ class DB_PDO_Persistence implements sly_DB_Persistence{
      *
      * @return int  der letzte Fehlercode oder -1, falls ein Fehler auftrat
      */
-    public function getErrno() {
+    protected function getErrno() {
         return $this->statement ? $this->statement->errorCode() : -1;
     }
 

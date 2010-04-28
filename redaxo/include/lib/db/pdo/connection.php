@@ -20,7 +20,7 @@ class DB_PDO_Connection {
 	private static $instance;
 	
 	private $connection;
-	private $statement; 
+	private $transrunning = false; 
 	
 	private function __construct(){
 		
@@ -45,6 +45,14 @@ class DB_PDO_Connection {
 	public function getConnection(){
 		return $this->connection;
 	} 
+	
+	public function transRunning(){
+		return $this->transrunning; 
+	}
+	
+	public function setTransRunning($bool){
+		$this->transrunning = $bool; 
+	}
 	
 	/**
 	 *  
