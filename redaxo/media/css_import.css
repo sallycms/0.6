@@ -1,12 +1,4 @@
-/**
- * CSS Datei des Backends
- * @package redaxo4
- * @version svn:$Id$
- */
-
-
-@import url('css_basic.css');
-@import url('css_navigation.css');
-@import url('css_form.css');
-@import url('css_component.css');
-
+@include 'css_basic.css';
+@include 'css_navigation.css';
+@include 'css_form.css';
+@include 'css_component.css';
