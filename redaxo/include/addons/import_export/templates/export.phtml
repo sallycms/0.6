@@ -1,0 +1,91 @@
+<div class="sly-content">
+	<?
+
+	// Meldungen ausgeben
+
+	if (!empty($info))    print rex_info($info);
+	if (!empty($warning)) print rex_warning($warning);
+
+	// Intro-Text
+
+	print '<p>'.$I18N->msg('im_export_intro_export').'</p>';
+
+	// Formular erzeugen
+
+	$form = new sly_Form('index.php', 'POST', $I18N->msg('im_export_export'), '', 'export');
+	$form->setEncType('multipart/form-data');
+	$form->addHiddenValue('page', 'import_export');
+	$form->addHiddenValue('function', 'export');
+
+	$options = array(
+		'sql'   => $I18N->msg('im_export_database_export'),
+		'files' => $I18N->msg('im_export_file_export')
+	);
+
+	$contents = new sly_Form_Select_Radio('type', 'Export-Typ', array($type => 1), $options);
+	$filename = new sly_Form_Input_Text('filename', $I18N->msg('im_export_filename'), $filename);
+	$filename->setHelpText('Geben Sie den Dateinamen ohne Endung (.sql) an.');
+
+	// Verzeichnis-Auswahl erzeugen
+
+	$root         = $REX['INCLUDE_PATH'].'/../../';
+	$directories  = sly_A1_Helper::readSubFolders($root);
+	$ignore       = array('.hg', 'dyn', '.externalToolBuilders');
+	$dirs         = array();
+	$explanations = array(
+		'assets' => 'Designelemente wie CSS- oder JS-Code für das Frontend',
+		'files'  => 'Dateien des Medienpools',
+		'redaxo' => 'Basis-Code der Website mit allen AddOns und PlugIns'
+	);
+
+	foreach ($directories as $dir) {
+		if (in_array($dir, $ignore)) {
+			continue;
+		}
+		
+		$origDir = $dir;
+		
+		if (isset($explanations[$dir])) {
+			$dir .= ' ('.$explanations[$dir].')';
+		}
+		
+		$dirs[$origDir] = $dir;
+	}
+
+	$root   = new sly_Form_Select_Checkbox('directories', 'Verzeichnisse', array(), $dirs);
+	$format = new sly_Form_Select_Radio('download', 'Download', array(), array(
+		0 => $I18N->msg('im_export_save_on_server'),
+		1 => $I18N->msg('im_export_download_as_file')
+	));
+
+	// Formular fertigstellen und ausgeben
+
+	$form->addElements(array($contents, $root));
+	$form->beginFieldset('Downloadoptionen');
+	$form->addElements(array($format, $filename));
+	$form->getSubmitButton()->setAttribute('value', $I18N->msg('im_export_db_export'));
+	$form->setResetButton(null);
+	$form->render();
+
+	?>
+</div>
+
+<script type="text/javascript">
+jQuery(function($) {
+	var form           = $('form#export');
+	var directoriesDiv = $('label[for=directories]', form).parents('div.rex-form-row');
+	
+	if ($('input[name=type]:checked', form).val() == 'sql') {
+		directoriesDiv.hide();
+	}
+	
+	$('input[name=type]', form).change(function() {
+		if ($(this).val() == 'files') {
+			directoriesDiv.show();
+		}
+		else {
+			directoriesDiv.hide();
+		}
+	});
+});
+</script>
