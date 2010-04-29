@@ -18,8 +18,8 @@ class sly_Form_Textarea extends sly_Form_Input_Base
 		$this->addClass('rex-form-textarea');
 	}
 
-	public function render($redaxo)
+	public function render()
 	{
-		return $this->renderFilename($redaxo, 'element_textarea.phtml');
+		return $this->renderFilename('form/textarea.phtml');
 	}
 }
