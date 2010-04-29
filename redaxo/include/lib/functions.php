@@ -85,3 +85,130 @@ function sly_html($string)
 {
 	return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 }
+
+/**
+ * Schlüsselbasiertes Mergen
+ *
+ * Gibt es hierfür eine PHP-interne Alternative?
+ *
+ * @param  array $array1  das erste Array
+ * @param  array $array2  das zweite Array
+ * @return array          das Array mit den Werten aus beiden Arrays
+ */
+function sly_merge($array1, $array2)
+{
+	$result = $array1;
+	foreach ($array2 as $key => $value) {
+		if (!in_array($key, array_keys($result),true)) $result[$key] = $value;
+	}
+	return $result;
+}
+
+/**
+ * Hilfsfunktion: Ersetzen von Werten in Array
+ *
+ * Sucht in einem Array nach Elementen und ersetzt jedes
+ * Vorkommen durch einen neuen Wert.
+ *
+ * @param  array $array        das Such-Array
+ * @param  mixed $needle       der zu suchende Wert
+ * @param  mixed $replacement  der Ersetzungswert
+ * @return array               das resultierende Array
+ */
+function sly_arrayReplace($array, $needle, $replacement)
+{
+	$i = array_search($needle, $array);
+	if ($i === false) return $array;
+	$array[$i] = $replacement;
+	return sly_arrayReplace($array, $needle, $replacement);
+}
+
+/**
+ * Hilfsfunktion: Löschen von Werten aus einem Array
+ *
+ * Sucht in einem Array nach Elementen und löscht jedes
+ * Vorkommen.
+ *
+ * @param  array $array   das Such-Array
+ * @param  mixed $needle  der zu suchende Wert
+ * @return array          das resultierende Array
+ */
+function sly_arrayDelete($array, $needle)
+{
+	$i = array_search($needle, $array);
+	if ($i === false) return $array;
+	unset($array[$i]);
+	return sly_arrayDelete($array, $needle);
+}
+
+/**
+ * Hilfsfunktion: Anwenden eines Prädikats auf ein Array
+ *
+ * Gibt true zurück, wenn das Prädikat auf mindestens ein
+ * Element des Arrays zutrifft.
+ *
+ * @param  string $predicate  das Prädikat (Funktionsname als String)
+ * @param  array  $array      das Such-Array
+ * @return bool               true, wenn das Prädikat mindestens 1x zutrifft
+ */
+function sly_arrayAny($predicate, $array)
+{
+	foreach ($array as $element) if ($predicate($element)) return true;
+	return false;
+}
+
+/**
+ * Hilfsfunktion: Anwenden eines Prädikats auf ein Array
+ *
+ * Gibt true zurück, wenn das Prädikat auf mindestens einen
+ * Schlüssel des Arrays zutrifft.
+ *
+ * @param  string $predicate  das Prädikat (Funktionsname als String)
+ * @param  array  $array      das Such-Array
+ * @return bool               true, wenn das Prädikat mindestens 1x zutrifft
+ */
+function sly_arrayAnyKey($predicate, $array)
+{
+	return sly_arrayAny($predicate, array_keys($array));
+}
+
+/**
+ * Macht aus einem Skalar ein Array
+ *
+ * @param  mixed $element  das Element
+ * @return array           leeres Array für $element = null, einelementiges
+ *                         Array für $element = Skalar, sonst direkt $element
+ */
+function sly_makeArray($element)
+{
+	if ($element === null)  return array();
+	if (is_array($element)) return $element;
+	return array($element);
+}
+
+/**
+ * Text übersetzen
+ *
+ * @param  string $index  der zu übersetzende Begriff
+ * @return string         die Übersetzung
+ */
+function t($index)
+{
+	if (class_exists('WV9_Language')) {
+		$wv9 = WV9_Language::getInstance();
+		return $wv9->translate($index);
+	}
+	
+	return $index;
+}
+
+/**
+ * Text übersetzen und auf HTML vorbereiten
+ *
+ * @param  string $index  der zu übersetzende Begriff
+ * @return string         die Übersetzung, direkt mit htmlspecialchars() behandelt
+ */
+function ht($index)
+{
+	return sly_html(t($index));
+}
