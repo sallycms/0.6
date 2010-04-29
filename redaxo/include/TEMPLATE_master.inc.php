@@ -10,7 +10,7 @@
 
 // Setupservicestatus - if everything ok -> false; if problem set to true;
 $REX['SETUP'] = true;
-$REX['SERVER'] = "redaxo.de";
+$REX['SERVER'] = "sallycms.de";
 $REX['SERVERNAME'] = "webvariants Projekt";
 $REX['VERSION'] = "4";
 $REX['SUBVERSION'] = "2";
