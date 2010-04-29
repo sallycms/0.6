@@ -1,0 +1,56 @@
+<div class="rex-area rex-mab-10">
+	<h3 class="rex-hl2">SallyCMS <?php echo $REX['VERSION'].'.'.$REX['SUBVERSION'].'.'.$REX['MINORVERSION'] ?></h3>
+
+	<div class="rex-area-content">
+		<p class="rex-tx1">
+			<strong>Das webvariants-Team</strong>, <a href="mailto:info@webvariants.de">info@webvariants</a><br />
+			Kernentwicklung<br />
+			webvariants GbR, <a href="http://www.webvariants.de/" class="sly-blank">www.webvariants.de</a>
+		</p>
+	</div>
+</div>
+
+<div class="rex-area">
+	<table class="rex-table sly-addonlist" summary="">
+		<thead><tr>
+			<th class="rex-icon">&nbsp;</th>
+			<th><?= $I18N->msg('credits_name') ?></th>
+			<th><?= $I18N->msg('credits_version') ?></th>
+			<th><?= $I18N->msg('credits_author') ?></th>
+			<th><?= $I18N->msg('credits_supportpage') ?></th>
+		</tr></thead>
+		<tbody>
+
+		<?php
+
+		foreach (OOAddon::getRegisteredAddons() as $addon) {
+			$isActive    = OOAddon::isActivated($addon);
+			$isInstalled = OOAddon::isInstalled($addon);
+			$version     = OOAddon::getVersion($addon);
+			$icon        = OOAddon::getIcon($addon);
+			$author      = OOAddon::getAuthor($addon);
+			$supportPage = OOAddon::getSupportPage($addon);
+			
+			$type = 'addon';
+			include $REX['INCLUDE_PATH'].'/views/credits/row.phtml';
+			
+			if ($isActive) {
+				$type = 'plugin';
+				
+				foreach (OOPlugin::getAvailablePlugins($addon) as $plugin) {
+					$isActive    = OOPlugin::isActivated($addon, $plugin);
+					$isInstalled = OOPlugin::isInstalled($addon, $plugin);
+					$version     = OOPlugin::getVersion($addon, $plugin);
+					$icon        = OOPlugin::getIcon($addon, $plugin);
+					$author      = OOPlugin::getAuthor($addon, $plugin);
+					$supportPage = OOPlugin::getSupportPage($addon, $plugin);
+					
+					include $REX['INCLUDE_PATH'].'/views/credits/row.phtml';
+				}
+			}
+		}
+
+		?>
+		</tbody>
+	</table>
+</div>

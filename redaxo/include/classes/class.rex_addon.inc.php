@@ -114,7 +114,16 @@
 	 */
 	public static function getVersion($addon, $default = null)
 	{
-		return self::getProperty($addon, 'version', $default);
+		global $REX;
+		
+		$version     = self::getProperty($addon, 'version', null);
+		$versionFile = $REX['INCLUDE_PATH'].'/addons/'.$addon.'/version';
+		
+		if ($version === null && file_exists($versionFile)) {
+			$version = file_get_contents($versionFile);
+		}
+		
+		return $version === null ? $default : $version;
 	}
 
 	/**
@@ -175,5 +184,34 @@
 	{
 		$rexAddon = rex_addon::create($addon);
 		return isset($rexAddon->data[$property][$rexAddon->name]) ? $rexAddon->data[$property][$rexAddon->name] : $default;
+	}
+	
+	public static function getIcon($addon)
+	{
+		global $REX;
+		
+		$manager   = new rex_addonManager();
+		$directory = $manager->publicFolder($addon);
+		
+		if (!empty($REX['ADDON']['icon'][$addon])) {
+			$icon = $REX['ADDON']['icon'][$addon];
+		}
+		elseif (file_exists($directory.'/images/icon.png')) {
+			$icon = 'images/'.$addon.'/icon.png';
+		}
+		elseif (file_exists($directory.'/images/icon.gif')) {
+			$icon = 'images/'.$addon.'/icon.gif';
+		}
+		elseif (file_exists('include/addons/'.$addon.'/images/icon.png')) {
+			$icon = 'include/addons/'.$addon.'/images/icon.png';
+		}
+		elseif (file_exists('include/addons/'.$addon.'/images/icon.gif')) {
+			$icon = 'include/addons/'.$addon.'/images/icon.gif';
+		}
+		else {
+			$icon = false;
+		}
+		
+		return $icon;
 	}
 }

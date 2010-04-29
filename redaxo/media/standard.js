@@ -358,6 +358,10 @@ jQuery(function($) {
 		$('#media_method').val('updatecat_selectedmedia');
 	});
 	
+	// Links in neuem Fenster öffnen
+	
+	$('a.sly-blank').attr('target', '_blank');
+	
 	// ------------------ Preview fuer REX_MEDIA_BUTTONS, REX_MEDIALIST_BUTTONS
 	
 	function rexShowMediaPreview() {
