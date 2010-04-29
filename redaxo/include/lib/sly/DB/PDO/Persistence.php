@@ -787,7 +787,7 @@ class DB_PDO_Persistence implements sly_DB_Persistence{
 		return new self();
 	}
 	
-	protected function query($query, $data = array()){
+	public function query($query, $data = array()){
 		
 		try{
 			$start      = microtime(true);
