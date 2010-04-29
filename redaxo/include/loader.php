@@ -49,13 +49,13 @@ function __autoload($className) {
 	
 	$className = str_replace('sly_', '', $className);
 	
-	if(file_exists($REX['INCLUDE_PATH'].'/classes/'.strtolower($className).'.php')) {
-        require_once $REX['INCLUDE_PATH'].'/classes/'.strtolower($className).'.php';
-    }
-    elseif (isset($classes[$className])) {
+	if (file_exists($REX['INCLUDE_PATH'].'/classes/'.strtolower($className).'.php')) {
+		require_once $REX['INCLUDE_PATH'].'/classes/'.strtolower($className).'.php';
+	}
+	elseif (isset($classes[$className])) {
 		require_once $REX['INCLUDE_PATH'].'/classes/class.'.$classes[$className].'.inc.php';
 	}
-	elseif(file_exists($REX['INCLUDE_PATH'].'/lib/'.strtolower(str_replace('_', '/', $className)).'.php')){
+	elseif (file_exists($REX['INCLUDE_PATH'].'/lib/'.strtolower(str_replace('_', '/', $className)).'.php')){
 		require_once $REX['INCLUDE_PATH'].'/lib/'.strtolower(str_replace('_', '/', $className)).'.php';
 	}
 	else {
@@ -63,8 +63,9 @@ function __autoload($className) {
 	}
 }
 
-// Funktionen
+require_once $REX['INCLUDE_PATH'].'/lib/functions.php';
 
+// Funktionen
 
 require_once $REX['INCLUDE_PATH'].'/functions/function_rex_globals.inc.php';
 require_once $REX['INCLUDE_PATH'].'/functions/function_rex_client_cache.inc.php';

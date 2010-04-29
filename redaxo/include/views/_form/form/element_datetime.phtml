@@ -1,0 +1,100 @@
+<?
+global $I18N;
+
+$name     = $this->getAttribute('name');
+$id       = $this->getAttribute('id');
+$baseDate = mktime(0, 0, 0, 12, 15);
+$minYear  = 1970; // Und es machte Booom im UNIX-Universum...
+$maxYear  = date('Y') + 20;
+$value    = strtotime($this->attributes['value']);
+
+if ($value === false) {
+	$value = time();
+}
+
+$getdate    = getdate($value);
+$curYear    = $getdate['year'];
+$curMonth   = $getdate['mon'];
+$curDay     = $getdate['mday'];
+$curHour    = $getdate['hours'];
+$curMinute  = $getdate['minutes'];
+$dateformat = $I18N->msg('dateformat');
+
+if (date('Y', $value) > $maxYear) $maxYear = date('Y', $value);
+if (date('Y', $value) < $minYear) $minYear = date('Y', $value);
+
+// JavaScript-Version
+
+$formatJS = $dateformat;
+$formatJS = str_replace(
+	array('%a', '%A', '%d', '%e', '%j', '%b', '%B', '%h', '%m', '%y', '%Y'),
+	array('D',  'DD', 'dd', 'd',  'oo', 'M',  'MM', 'M',  'mm', 'y',  'yy'),
+	$formatJS);
+
+$attrs['class'] = 'rex-form-text';
+$attrs['type']  = 'text';
+$attrs['name']  = wv_html($name).'_date';
+$attrs['id']    = $attrs['name'];
+$attrs['value'] = strftime($dateformat, $value);
+print '<input '.WV_HTML::buildAttributeString($attrs).' />';
+
+if (!WV_Registry::getTemp('devutils_datatypes_datetime_datepicker', false)) {
+	print '<script type="text/javascript" src="include/addons/developer_utils/js/jquery.ui.datepicker.js"></script>';
+	if($this->withTime()){
+		print '<script type="text/javascript" src="include/addons/developer_utils/js/jquery.ui.core.js"></script>';
+		print '<script type="text/javascript" src="include/addons/developer_utils/js/jquery.ui.slider.js"></script>';
+		print '<script type="text/javascript" src="include/addons/developer_utils/js/jquery.timepicker.js"></script>';
+	}
+	
+	$locale = $I18N->msg('htmllang');
+	
+	if ($locale != 'en') {
+		$filename = 'include/addons/developer_utils/js/datepicker.i18n/'.$locale.'.js';
+		if (file_exists($filename)) {
+			print '<script type="text/javascript" src="'.$filename.'"></script>';
+		}
+	}
+	
+	WV_Registry::setTemp('devutils_datatypes_datetime_datepicker', true);
+}
+?>
+
+<script type="text/javascript">
+<? if ($this->withTime()): ?>
+jQuery(function($) {
+	$('#<?= wv_html($name) ?>_date').datetime({
+		dateFormat: '<?= addslashes($formatJS) ?>',
+		// Sicherstellen, dass die Datumsangabe auch ohne korrektes Locale auf PHP-Seite
+		// richtig geparst werden kann.
+		userLang: '<?= $locale ?>'
+	});
+});
+<? else: ?>
+jQuery(function($) {
+	$('#<?= wv_html($name) ?>_date').datepicker({
+		dateFormat: '<?= addslashes($formatJS) ?>',
+		// Sicherstellen, dass die Datumsangabe auch ohne korrektes Locale auf PHP-Seite
+		// richtig geparst werden kann.
+	});
+});
+<? endif ?>
+</script>
+
+&nbsp;&nbsp;um&nbsp;&nbsp;
+
+<select name="<?= wv_html($name) ?>_hour" size="1" style="width:40px">
+	<? for ($i = 0; $i <= 23; ++$i): ?>
+	<option value="<?= $i ?>"<?= $i == $curHour ? ' selected="selected"' : '' ?>><?= str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
+	<? endfor ?>
+</select>
+:
+<select name="<?= wv_html($name) ?>_minute" size="1" style="width:40px">
+	<? for ($i = 0; $i < 60; $i += 10): ?>
+	<option value="<?= $i ?>"<?= $i == $curMinute ? ' selected="selected"' : '' ?>><?= str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
+	<? endfor ?>
+</select>
+
+&nbsp;&nbsp;Uhr&nbsp;&nbsp;(setze auf:
+	<a href="javascript:;" onclick="wv.DateTime.setTo('<?= wv_html($name) ?>', <?= $minYear ?>, 1, 1, 0, 0)">min</a>,
+	<a href="javascript:;" onclick="wv.DateTime.setTo('<?= wv_html($name) ?>', <?= $curYear ?>, <?= $curMonth ?>, <?= $curDay ?>, <?= $curHour ?>, <?= $curMinute ?>)">jetzt</a>,
+	<a href="javascript:;" onclick="wv.DateTime.setTo('<?= wv_html($name) ?>', <?= $maxYear ?>, 12, 31, 23, 50)">max</a>)

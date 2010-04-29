@@ -35,3 +35,13 @@ table.sly-addonlist tr {
 		cursor: help;
 	}
 }
+
+div.sly-content {
+	clear: left;
+	margin-top: -10px;
+	
+	> p {
+		margin-bottom: 1em;
+		line-height: 15px;
+	}
+}

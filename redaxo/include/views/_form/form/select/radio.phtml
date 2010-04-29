@@ -1,0 +1,18 @@
+<span style="display:block;padding-left:155px;line-height:18px">
+<?
+$selected = reset(array_keys($this->attributes['value']));
+$this->addStyle('vertical-align:middle');
+$elementID = $this->attributes['id'];
+
+foreach ($this->values as $key => $value) {
+	$sel  = (is_array($selected) && in_array($key, $selected)) || (!is_array($selected) && $key == $selected) ? ' checked="checked"' : '';
+	$key  = htmlspecialchars($key);
+	$name = htmlspecialchars($this->attributes['name']);
+	$id   = 'autogen_'.$elementID.'_'.$key.'_id';
+	
+	print '<input type="radio" value="'.$key.'" id="'.$id.'" name="'.$name.'"'.$sel.' class="rex-chckbx" style="'.$this->attributes['style'].'" /> ';
+	print '<label for="'.$id.'" style="float:none;display:inline">'.htmlspecialchars($value).'</label><br />';
+	print "\n";
+}
+?>
+</span>

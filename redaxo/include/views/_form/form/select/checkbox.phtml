@@ -1,0 +1,25 @@
+<span style="display:block;padding-left:155px;line-height:18px" id="<?= sly_html($this->attributes['id']) ?>">
+<?
+$selected     = $this->attributes['value'];
+//$selectedKeys = is_array($selected) ? array_keys($selected) : array();
+$elementID    = $this->attributes['id'];
+
+$this->addStyle('vertical-align:middle');
+
+foreach ($this->values as $key => $value) {
+	$sel  = (is_array($selected) && in_array($key, $selected)) || (!is_array($selected) && $key == $selected) ? ' checked="checked"' : '';
+	$key  = sly_html($key);
+	$name = sly_html($this->attributes['name']);
+	$id   = 'autogen_'.$elementID.'_'.$key.'_id';
+	
+	print '<input type="checkbox" value="'.$key.'" id="'.$id.'" name="'.$name.'[]"'.$sel.' class="rex-chckbx" style="'.$this->attributes['style'].'" /> ';
+	print '<label for="'.$id.'" style="float:none;display:inline;padding: 0 5px">'.sly_html($value).'</label><br />';
+	print "\n";
+}
+?>
+</span>
+
+<span style="display:block;padding-left:155px;margin:0.5em 0 0" class="rex-form-notice">
+	<a href="javascript:;" onclick="jQuery('span#<?= addslashes($this->attributes['id']) ?> input[type=checkbox]').attr('checked', 'checked')">alle auswählen</a> |
+	<a href="javascript:;" onclick="jQuery('span#<?= addslashes($this->attributes['id']) ?> input[type=checkbox]').attr('checked', '')">nichts auswählen</a>
+</span>
