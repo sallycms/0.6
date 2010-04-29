@@ -1,5 +1,7 @@
 <?php
 
+$dynDirectory = '../../../dyn/internal/sally/';
+
 /**
  * Production Mode
  *
@@ -19,7 +21,7 @@
  * Also, in production mode, errors are disabled and any modules which change
  * the output will not be available - like the Typography module. 
  */
-define('SCAFFOLD_PRODUCTION', !file_exists('../../include/TEMPLATE_master.inc.php'));
+define('SCAFFOLD_PRODUCTION', !file_exists($dynDirectory.'scaffold.debug'));
 
 /**
  * Document Root
@@ -51,7 +53,7 @@ $config['system'] = './';
  *
  * You will probably set this if you're using Scaffold within another framework.
  */
-$config['cache'] = '../../../dyn/internal/sally/css-cache/';
+$config['cache'] = $dynDirectory;
 
 /**
  * Cache Lifetime
