@@ -30,7 +30,7 @@ abstract class sly_Form_Input_Base extends sly_Form_ElementBase implements sly_F
 		$name = $this->attributes['name'];
 		
 		if (isset($_POST[$name]) && strlen($_POST[$name]) > 0) {
-			$this->attributes['value'] = wv_post($name, 'string');
+			$this->attributes['value'] = sly_post($name, 'string');
 		}
 		
 		$attributeString = $this->getAttributeString();

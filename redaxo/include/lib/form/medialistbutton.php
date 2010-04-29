@@ -24,7 +24,7 @@ class sly_Form_MediaListButton extends sly_Form_ElementBase implements sly_Form_
 		$this->javascriptID = $javascriptID;
 	}
 	
-	public function render($version)
+	public function render()
 	{
 		// Prüfen, ob das Formular bereits abgeschickt und noch einmal angezeigt
 		// werden soll. Falls ja, übernehmen wir den Wert aus den POST-Daten.
@@ -32,9 +32,9 @@ class sly_Form_MediaListButton extends sly_Form_ElementBase implements sly_Form_
 		$name = $this->attributes['name'];
 		
 		if (isset($_POST[$name]) && strlen($_POST[$name]) > 0) {
-			$this->attributes['value'] = wv_postArray($name, 'string');
+			$this->attributes['value'] = sly_postArray($name, 'string');
 		}
 		
-		return $this->renderFilename($version, 'element_rexmedialistbutton.phtml');
+		return $this->renderFilename('form/medialistbutton.phtml');
 	}
 }

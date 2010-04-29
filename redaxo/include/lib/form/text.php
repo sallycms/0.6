@@ -22,16 +22,10 @@ class sly_Form_Text extends sly_Form_ElementBase implements sly_Form_IElement
 		$this->isHTML  = false;
 	}
 	
-	public function render($redaxo)
+	public function render()
 	{
-		if ($redaxo == 41) {
-			$this->setAttribute('style', 'line-height:16px');
-		}
-		elseif ($redaxo == 42) {
-			$this->setAttribute('style', 'line-height:21px');
-		}
-		
-		$content = $this->isHTML ? $this->content : nl2br(wv_html($this->content));
+		$this->setAttribute('style', 'line-height:21px');
+		$content = $this->isHTML ? $this->content : nl2br(sly_html($this->content));
 		return '<span '.$this->getAttributeString().'>'.$content.'</span>';
 	}
 	

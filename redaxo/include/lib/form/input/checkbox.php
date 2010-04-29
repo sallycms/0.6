@@ -21,25 +21,16 @@ class sly_Form_Input_Checkbox extends sly_Form_Input_Base
 		$this->setAttribute('type', 'checkbox');
 	}
 
-	public function render($redaxo)
+	public function render()
 	{
-		$lineHeight = 10;
-
-		if ($redaxo == 41) {
-			$this->addClass('rex-chckbx');
-			$this->addStyle('vertical-align:text-bottom');
-			$lineHeight = 18;
-		}
-		elseif ($redaxo == 42) {
-			$this->addStyle('vertical-align:middle');
-			$lineHeight = 21;
-		}
-
+		$this->addStyle('vertical-align:middle');
+		
+		$lineHeight      = 21;
 		$attributeString = $this->getAttributeString();
 		
 		return 
 			'<input '.$attributeString.' /> '.
-			'<label class="inline" style="line-height:'.$lineHeight.'px" for="'.$this->attributes['id'].'">'.wv_html($this->description).'</label>';
+			'<label class="inline" style="line-height:'.$lineHeight.'px" for="'.$this->attributes['id'].'">'.sly_html($this->description).'</label>';
 	}
 
 	public function setChecked($checked)

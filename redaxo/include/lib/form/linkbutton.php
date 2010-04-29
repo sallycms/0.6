@@ -24,7 +24,7 @@ class sly_Form_LinkButton extends sly_Form_Element_Base implements sly_Form_IEle
 		$this->javascriptID = $javascriptID;
 	}
 	
-	public function render($version)
+	public function render()
 	{
 		// Prüfen, ob das Formular bereits abgeschickt und noch einmal angezeigt
 		// werden soll. Falls ja, übernehmen wir den Wert aus den POST-Daten.
@@ -32,9 +32,9 @@ class sly_Form_LinkButton extends sly_Form_Element_Base implements sly_Form_IEle
 		$name = $this->attributes['name'];
 		
 		if (isset($_POST[$name]) && strlen($_POST[$name]) > 0) {
-			$this->attributes['value'] = wv_post($name, 'int', 0);
+			$this->attributes['value'] = sly_post($name, 'int', 0);
 		}
 		
-		return $this->renderFilename($version, 'element_rexlinkbutton.phtml');
+		return $this->renderFilename('form/linkbutton.phtml');
 	}
 }
