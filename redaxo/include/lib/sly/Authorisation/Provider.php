@@ -2,6 +2,6 @@
 
 interface sly_Authorisation_Provider {
 
-	public function hasPermission($userId, $operation, $objectId = null);
+	public function hasPermission($userId, $operation, $permission, $objectId = null);
 
 }
