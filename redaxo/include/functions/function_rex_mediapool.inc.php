@@ -396,7 +396,10 @@ function rex_mediapool_Mediaform($form_title, $button_title, $rex_file_category,
 		$ftitle = '';
 	}
 
-	$add_file = '';
+	$add_file  = '';
+	$maxPOST   = rex_ini_get('post_max_size');
+	$maxUpload = rex_ini_get('upload_max_filesize');
+	$maxSize   = min(array($maxPOST, $maxUpload));
 	
 	if ($file_chooser) {
 		$devInfos = '';
@@ -406,7 +409,7 @@ function rex_mediapool_Mediaform($form_title, $button_title, $rex_file_category,
 '<span class="rex-form-notice">
 	'.$I18N->msg('phpini_settings').':<br />
 	'.((rex_ini_get('file_uploads') == 0) ? '<span>'.$I18N->msg('pool_upload').':</span> <em>'.$I18N->msg('pool_upload_disabled').'</em><br />' : '').'
-	<span>'.$I18N->msg('pool_max_uploadsize').':</span> '.OOMedia::_getFormattedSize(rex_ini_get('upload_max_filesize')).'<br />
+	<span>'.$I18N->msg('pool_max_uploadsize').':</span> '.OOMedia::_getFormattedSize($maxSize).'<br />
 	<span>'.$I18N->msg('pool_max_uploadtime').':</span> '.rex_ini_get('max_input_time').'s
 </span>';
 		}
@@ -415,6 +418,7 @@ function rex_mediapool_Mediaform($form_title, $button_title, $rex_file_category,
 <div class="rex-form-row">
 	<p class="rex-form-file">
 		<label for="file_new">'.$I18N->msg('pool_file_file').'</label>
+		<input type="hidden" name="MAX_FILE_SIZE" value="'.$maxSize.'" />
 		<input class="rex-form-file" type="file" id="file_new" name="file_new" size="30" />
 		'.$devInfos.'
 	</p>
@@ -429,13 +433,10 @@ function rex_mediapool_Mediaform($form_title, $button_title, $rex_file_category,
 
 	$s .= '
 <div class="rex-form" id="rex-form-mediapool-other">
-	<form action="index.php" method="post" enctype="multipart/form-data">
+	<form action="index.php?page=mediapool&amp;subpage='.$subpage.'&amp;media_method=add_file" method="post" enctype="multipart/form-data">
 		<fieldset class="rex-form-col-1">
 			<legend>'.$form_title.'</legend>
 			<div class="rex-form-wrapper">
-				<input type="hidden" name="page" value="mediapool" />
-				<input type="hidden" name="media_method" value="add_file" />
-				<input type="hidden" name="subpage" value="'.$subpage.'" />
 
 				<div class="rex-form-row">
 					<p class="rex-form-text">

@@ -68,7 +68,7 @@ if ($media_method == 'add_file')
 
   }else
   {
-    $warning = $I18N->msg('pool_file_not_found');
+    $warning = $I18N->msg('pool_file_not_found').'. Vielleicht war sie zu groﬂ?';
   }
 }
 
