@@ -38,6 +38,7 @@ if ($REX['PAGE_NO_NAVI']) {
 	<meta http-equiv="Content-Type" content="text/html; charset=<?= $I18N->msg('htmlcharset') ?>" />
 	<meta http-equiv="Content-Language" content="<?= $I18N->msg('htmllang') ?>" />
 	<link rel="stylesheet" type="text/css" href="media/css_import.css" media="screen, projection, print" />
+	<link rel="stylesheet" type="text/css" href="css/import_export/backend.css?scaffold" media="screen, projection, print" />
 	<!--[if lte IE 7]>
 	<link rel="stylesheet" href="media/css_ie_lte_7.css" type="text/css" media="screen, projection, print" />
 	<![endif]-->
