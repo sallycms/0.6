@@ -485,59 +485,58 @@ if($PERMALL && $media_method == 'updatecat_selectedmedia')
   }
 }
 
-if($PERMALL && $media_method == 'delete_selectedmedia')
-{
+if ($PERMALL && $media_method == 'delete_selectedmedia') {
 	$selectedmedia = rex_post("selectedmedia","array");
-  if(count($selectedmedia)>0)
-  {
-  	
-  	$warning = array();
-  	$info = array();
-  	
-    foreach($selectedmedia as $file_id)
-    {
+	
+	if (!empty($selectedmedia)) {
+		$warning = array();
+		$info    = array();
+
+		foreach ($selectedmedia as $file_id) {
 			$media = OOMedia::getMediaById($file_id);
-			if ($media)
-			{
-			 $file_name = $media->getFileName();
-			 if ($PERMALL || $REX['USER']->hasPerm('media['.$media->getCategoryId().']'))
-			 {
-			   $articleUsesMedia = $media->isInUse();
-			   if($articleUsesMedia === false)
-			   {
-			     if($media->delete() !== FALSE)
-			     {
-			       $info[] = $I18N->msg('pool_file_deleted');
-			     }else
-			     {
-			       $warning[] = $I18N->msg('pool_file_delete_error_1', $file_name);
-			     }
-			     $subpage = "";
-			   }else
-			   {
-			   	 $tmp = $I18N->msg('pool_file_delete_error_1', $file_name).' '.$I18N->msg('pool_file_delete_error_2').'<br />';
-			     $tmp .= '<ul>';
-			     foreach($articleUsesMedia as $art_arr)
-			     {
-			       $aid = $art_arr['article_id'];
-			       $clang = $art_arr['clang'];
-			       $ooa = OOArticle::getArticleById($aid, $clang);
-			       $name = $ooa->getName();
-			       $tmp .= '<li><a href="javascript:openPage(\'index.php?page=content&amp;article_id='. $aid .'&amp;mode=edit&amp;clang='. $clang .'\')">'. $name .'</a></li>';
-			     }
-			     $tmp .= '</ul>';
-					 $warning[] = $tmp;
-			   }
-			 }else
-			 {
-			   $warning[] = $I18N->msg('no_permission');
-			 }
-			}else
-			{
-			 $warning[] = $I18N->msg('pool_file_not_found');
+			
+			if ($media) {
+				$file_name = $media->getFileName();
+				
+				if ($PERMALL || $REX['USER']->hasPerm('media['.$media->getCategoryId().']')) {
+					$usages = $media->isInUse();
+					
+					if ($usages === false) {
+						if ($media->delete() !== false) {
+							$info[] = $I18N->msg('pool_file_deleted');
+						}
+						else {
+							$warning[] = $I18N->msg('pool_file_delete_error_1', $file_name);
+						}
+						
+						$subpage = '';
+					}
+					else {
+						$tmp  = $I18N->msg('pool_file_delete_error_1', $file_name).' '.$I18N->msg('pool_file_delete_error_2').'<br />';
+						$tmp .= '<ul>';
+						
+						foreach ($usages as $usage) {
+							if (!empty($usage['link'])) {
+								$tmp .= '<li><a href="javascript:openPage(\''.htmlspecialchars($usage['link']).'\')">'.htmlspecialchars($usage['title']).'</a></li>';
+							}
+							else {
+								$tmp .= '<li>'.htmlspecialchars($usage['title']).'</li>';
+							}
+						}
+						
+						$tmp .= '</ul>';
+						$warning[] = $tmp;
+					}
+				}
+				else {
+					$warning[] = $I18N->msg('no_permission');
+				}
 			}
-    }
-  }
+			else {
+				$warning[] = $I18N->msg('pool_file_not_found');
+			}
+		}
+	}
 }
 
 

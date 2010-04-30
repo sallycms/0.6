@@ -644,42 +644,37 @@ class OOMedia
 	{
 		global $REX;
 
-		$sql = new rex_sql();
+		$sql      = new rex_sql();
 		$filename = addslashes($this->getFileName());
+		$prefix   = $REX['TABLE_PREFIX'];
+		$query    =
+			'SELECT s.article_id, s.clang FROM '.$prefix.'slice_value sv, '.$prefix.'article_slice s, '.$prefix.'article a '.
+			'WHERE sv.slice_id = s.slice_id AND a.id = s.article_id AND a.clang = s.clang AND ('.
+			'(type = "'.rex_var_media::MEDIALIST.'" AND (value LIKE "'.$filename.',%" OR value LIKE "%,'.$filename.',%" OR value LIKE "%,'.$filename.'")) OR '.
+			'(type <> "'.rex_var_media::MEDIALIST.'" AND value LIKE "%'.$filename.'%")'.
+			') GROUP BY s.article_id, s.clang';
 
-		$values = array();
-		for ($i = 1; $i < 21; $i++)
-		{
-			$values[] = 'value'.$i.' LIKE "%'.$filename.'%"';
+		$res    = $sql->getArray($query);
+		$usages = array();
+		
+		foreach ($res as $row) {
+			$article = OOArticle::getArticleById($row['article_id'], $row['clang']);
+			
+			$usages[] = array(
+				'title' => $article->getName(),
+				'type'  => 'rex-article',
+				'id'    => (int) $row['article_id'],
+				'clang' => (int) $row['clang'],
+				'link'  => 'index.php?page=content&article_id='.$row['article_id'].'&mode=edit&clang='.$row['clang']
+			);
 		}
+		
+		$usages = rex_register_extension_point('SLY_OOMEDIA_IS_IN_USE', $usages, array(
+			'filename' => $this->getFileName(),
+			'media'    => $this
+		));
 
-		$files = array();
-		$filelists = array();
-		for ($i = 1; $i < 11; $i++)
-		{
-			$files[] = 'file'.$i.'="'.$filename.'"';
-			$filelists[] = '(filelist'.$i.' LIKE "'.$filename.',%" OR filelist'.$i.' LIKE "%,'.$filename.',%" OR filelist'.$i.' LIKE "%,'.$filename.'" ) ';
-		}
-
-		$where = '';
-		$where .= implode(' OR ', $files).' OR ';
-		$where .= implode(' OR ', $filelists) .' OR ';
-		$where .= implode(' OR ', $values);
-		$query = 'SELECT DISTINCT article_id, clang FROM '.$REX['TABLE_PREFIX'].'article_slice WHERE '. $where;
-
-		// ----- EXTENSION POINT
-		$query = rex_register_extension_point('OOMEDIA_IS_IN_USE_QUERY', $query,
-		array(
-        'filename' => $this->getFileName(),
-        'media' => $this,
-		)
-		);
-
-		$res = $sql->getArray($query);
-		if($sql->getRows() > 0)
-		return $res;
-
-		return FALSE;
+		return empty($usages) ? false : $usages;
 	}
 
 	/**
