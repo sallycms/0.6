@@ -9,20 +9,28 @@ class sly_A1_Import_Database
 	protected $charset;
 	protected $queries;
 	
-	public function __construct($filename)
+	public function __construct()
 	{
-		$this->filename                = $filename;
-		$this->content                 = '';
-		$this->prefix                  = '';
-		$this->charset                 = '';
-		$this->queries                 = array();
-		$this->returnValues['state']   = false;
-		$this->returnValues['message'] = '';
+		$this->reset();
 	}
 	
-	public function import()
+	protected function reset($filename = '')
+	{
+		$this->returnValues['state']   = false;
+		$this->returnValues['message'] = '';
+		
+		$this->content  = '';
+		$this->prefix   = '';
+		$this->charset  = '';
+		$this->queries  = array();
+		$this->filename = $filename;
+	}
+	
+	public function import($filename)
 	{
 		global $REX, $I18N;
+		
+		$this->reset($filename);
 		
 		// Vorbedingungen abtesten
 		

@@ -1,0 +1,28 @@
+table#dumps {
+	td.rex-col-c, td.rex-col-d {
+		width: 85px;
+		text-align: center;
+		
+		a {
+			padding-left: 20px;
+			background-position: left 50%;
+			background-repeat: no-repeat;
+		}
+	}
+	
+	td.rex-col-b span {
+		padding-left: 5px;
+		color: #777;
+		font-size: 11px;
+	}
+	
+	td.rex-col-c a {
+		background-image: url("../../images/import_export/database_import.png");
+		color: green;
+	}
+	
+	td.rex-col-d a {
+		background-image: url("../../images/import_export/database_delete.png");
+		color: red;
+	}
+}

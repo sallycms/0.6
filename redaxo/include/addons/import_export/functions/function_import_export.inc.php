@@ -19,8 +19,8 @@ if ($REX['REDAXO'] && !isset($I18N)) {
  */
 function rex_a1_import_db($filename)
 {
-	$importer = new sly_A1_Import_Database($filename);
-	return $importer->import();
+	$importer = new sly_A1_Import_Database();
+	return $importer->import($filename);
 }
 
 /**
@@ -34,47 +34,6 @@ function rex_a1_import_db($filename)
  */
 function rex_a1_import_files($filename)
 {
-  global $REX, $I18N;
-
-  $return = array ();
-  $return['state'] = false;
-
-  if ($filename == '' || substr($filename, -7, 7) != ".tar.gz")
-  {
-    $return['message'] = $I18N->msg("im_export_no_import_file_chosen")."<br />";
-    return $return;
-  }
-
-  // Ordner /files komplett leeren
-  rex_deleteFiles($REX['INCLUDE_PATH']."/../../files");
-
-  $tar = new rex_tar;
-
-  // ----- EXTENSION POINT
-  $tar = rex_register_extension_point('A1_BEFORE_FILE_IMPORT', $tar);
-
-  $tar->openTAR($filename);
-  if (!$tar->extractTar())
-  {
-    $msg = $I18N->msg('im_export_problem_when_extracting').'<br />';
-    if (count($tar->message) > 0)
-    {
-      $msg .= $I18N->msg('im_export_create_dirs_manually').'<br />';
-      foreach($tar->message as $_message)
-      {
-        $msg .= rex_absPath($_message).'<br />';
-      }
-    }
-  }
-  else
-  {
-    $msg = $I18N->msg('im_export_file_imported').'<br />';
-  }
-
-  // ----- EXTENSION POINT
-  $tar = rex_register_extension_point('A1_AFTER_FILE_IMPORT', $tar);
-
-  $return['state'] = true;
-  $return['message'] = $msg;
-  return $return;
+	$importer = new sly_A1_Import_Files();
+	return $importer->import($filename);
 }
