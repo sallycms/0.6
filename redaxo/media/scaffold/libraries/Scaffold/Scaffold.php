@@ -193,6 +193,9 @@ class Scaffold extends Scaffold_Utils
 	
 					$request = Scaffold::find_file($file, false, true);
 					
+					// webvariants-Patch: Entferne alle führenden "../", um nicht aus dem Cache-Verzeichnis zu fliegen.
+					$cached_file = preg_replace('#(\.\.[/\\\\])+#', '', $cached_file);
+					
 					/**
 					 * While not in production, we want to to always recache, so we'll fake the time
 					 */

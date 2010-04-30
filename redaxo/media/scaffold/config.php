@@ -53,7 +53,7 @@ $config['system'] = './';
  *
  * You will probably set this if you're using Scaffold within another framework.
  */
-$config['cache'] = $dynDirectory;
+$config['cache'] = $dynDirectory.'/css-cache/';
 
 /**
  * Cache Lifetime

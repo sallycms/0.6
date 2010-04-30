@@ -1,7 +1,20 @@
 RewriteEngine On
 
 # Imageresize
+# ===========
+
 RewriteRule ^imageresize/(.*)$ index.php?rex_resize=$1 [L]
 
 # Backend-Assets
-RewriteRule ^images/([a-z0-9_-]+)/(.*?)$ ../dyn/public/addons/$1/images/$2 [L]
+# ==============
+
+# CSS mit filemame.css?scaffold durch Scaffold schleusen
+
+RewriteCond %{QUERY_STRING} ^scaffold$
+RewriteRule ^css/(.+?)/(.+?)\.css$ media/scaffold/index.php?f=../../../dyn/public/addons/$1/css/$2.css [L]
+
+# Normale Asset-Regeln
+
+RewriteRule ^images/(.+?)/(.*?)$ ../dyn/public/addons/$1/images/$2 [L]
+RewriteRule ^css/(.+?)/(.+?)$    ../dyn/public/addons/$1/css/$2 [L]
+RewriteRule ^js/(.+?)/(.+?)$     ../dyn/public/addons/$1/js/$2 [L]
