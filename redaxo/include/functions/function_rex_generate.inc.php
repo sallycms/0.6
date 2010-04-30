@@ -353,8 +353,7 @@ function rex_deleteDir($file, $delete_folders = false, $isRecursion = false)
 {
 	$state = true;
 	$level = $isRecursion ? -1 : error_reporting(0);
-
-	$file = rtrim($file, DIRECTORY_SEPARATOR);
+	$file  = rtrim($file, '/\\');
 
 	if (file_exists($file)) {
 		if (is_dir($file)) {
@@ -366,11 +365,20 @@ function rex_deleteDir($file, $delete_folders = false, $isRecursion = false)
 			}
 
 			while ($filename = readdir($handle)) {
-				if ($filename == '.' || $filename == '..' || $filename == '.svn') {
+				if ($filename == '.' || $filename == '..') {
 					continue;
 				}
+				
+				$full = $file.DIRECTORY_SEPARATOR.$filename;
+				
+				// Auch wenn wir beim rekursiven Aufruf eine einzelne Datei löschen
+				// würden, sparen wir uns den Aufwand und erledigen es gleich mit.
 
-				if (!rex_deleteDir($file.DIRECTORY_SEPARATOR.$filename, $delete_folders, true)) {
+				if (is_dir($full) && !rex_deleteDir($full, $delete_folders, true)) {
+					$state = false;
+				}
+				
+				if (is_file($full) && !unlink($full)) {
 					$state = false;
 				}
 			}
@@ -384,11 +392,9 @@ function rex_deleteDir($file, $delete_folders = false, $isRecursion = false)
 
 			// Ordner auch löschen?
 			
-			if ($delete_folders) {
-				if (!rmdir($file)) {
-					if (!$isRecursion) error_reporting($level);
-					return false;
-				}
+			if ($delete_folders && !rmdir($file)) {
+				if (!$isRecursion) error_reporting($level);
+				return false;
 			}
 		}
 		else {
@@ -417,43 +423,35 @@ function rex_deleteDir($file, $delete_folders = false, $isRecursion = false)
  * @param  string $file  Pfad zum Ordner
  * @return bool          true bei Erfolg, sonst false
  */
-function rex_deleteFiles($file)
+function rex_deleteFiles($directory)
 {
-	$file  = rtrim($file, DIRECTORY_SEPARATOR);
-	$level = error_reporting(0);
+	$directory = rtrim($directory, '/\\');
+	$level     = error_reporting(0);
+	$status    = true;
 
-	if (file_exists($file)) {
-		if (is_dir($file)) {
-			$handle = opendir($file);
-			
-			if (!$handle) {
-				error_reporting($level);
-				return false;
-			}
-
-			while ($filename = readdir($handle)) {
-				if ($filename == '.' || $filename == '..') {
-					continue;
-				}
-
-				if (!unlink($file)) {
-					error_reporting($level);
-					return false;
-				}
-			}
-			
-			closedir($handle);     
-		}
-	}
-	else {
-		// Datei/Ordner existiert nicht
+	if (is_dir($directory)) {
+		$handle = opendir($directory);
 		
-		error_reporting($level);
-		return false;
+		if (!$handle) {
+			error_reporting($level);
+			return false;
+		}
+
+		while ($filename = readdir($handle)) {
+			if ($filename == '.' || $filename == '..') {
+				continue;
+			}
+
+			if (is_file($directory.'/'.$filename) && !unlink($directory.'/'.$filename)) {
+				$status = false;
+			}
+		}
+		
+		closedir($handle);     
 	}
 
 	error_reporting($level);
-	return true;
+	return $status;
 }
 
 /**
