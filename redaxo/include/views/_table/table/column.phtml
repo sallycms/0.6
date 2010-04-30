@@ -1,0 +1,36 @@
+<?
+
+$isRexIcon = isset($this->htmlAttributes['class']) && strpos($this->htmlAttributes['class'], 'rex-icon') !== false;
+$link      = '';
+
+if (!$isRexIcon && $table->isSorting() && !$table->hasDragAndDrop() && !empty($this->sortkey)) {
+	$params = array_map('stripslashes', $_GET);
+	unset($params['sortby'], $params['direction']);
+
+	$params['sortby'] = $this->sortkey;
+	
+	switch ($this->direction) {
+		case 'asc':
+			$params['direction'] = 'desc';
+			$link = ' <a href="index.php?'.http_build_query($params, '', '&amp;').'"><img src="include/addons/developer_utils/images/ascending.gif" alt="" title="Aufsteigend sortiert" /></a>';
+			break;
+		case 'desc':
+			$params['direction'] = 'asc';
+			$link = ' <a href="index.php?'.http_build_query($params, '', '&amp;').'"><img src="include/addons/developer_utils/images/descending.gif" alt="" title="Absteigend sortiert" /></a>';
+			break;
+		case 'none':
+		default:
+			$params['direction'] = 'asc';
+			$link = ' <a href="index.php?'.http_build_query($params, '', '&amp;').'"><img src="include/addons/developer_utils/images/nosort.gif" alt="" title="Keine Sortierung" /></a>';
+			break;
+	}
+	
+	if (!isset($this->htmlAttributes['class'])) {
+		$this->htmlAttributes['class'] = '';
+	}
+	
+	$this->htmlAttributes['class'] .= ' has-sort-icon';
+}
+
+?>
+<th <?= sly_HTML::buildAttributeString($this->htmlAttributes) ?>><?= $this->content.$link ?></th>

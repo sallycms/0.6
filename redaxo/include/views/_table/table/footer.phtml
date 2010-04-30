@@ -1,0 +1,14 @@
+<?
+if ($this->isEmpty) {
+	print '<tr><td class="center" colspan="'.count($this->columns).'">'.sly_html($this->emptyNotice).'</td></tr>';
+}
+
+print '</tbody></table>';
+print $this->surroundingHTML;
+
+$hasSearch = $this->hasSearch();
+$hasPager  = $this->hasPager();
+
+if ((self::isDragAndDropMode() && ($hasSearch || $hasPager)) || ($this->enableDragAndDrop && !$hasSearch && !$hasPager)) {
+	sly_HTML::onDOMReady('$("#'.$this->id.'").dropAndDrop('.$this->dragAndDropHandler.');');
+}
