@@ -7,7 +7,7 @@
  * If set to false, Scaffold will make your CSS
  * human-readable with nice indentation.
  */
-$config['compress'] = false;
+$config['compress'] = true;
 
 /**
  * Compression Options
@@ -17,7 +17,7 @@ $config['compress'] = false;
 /**
  * Keep the comments inside the CSS
  */
-$config['preserve_comments'] = true;
+$config['preserve_comments'] = false;
 
 /**
  * You can limit line-lengths of your CSS.
