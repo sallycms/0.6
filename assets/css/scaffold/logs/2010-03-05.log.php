@@ -1,0 +1,10 @@
+2010-03-05 08:39:10 +00:00 --- Error: Missing constant - text_color
+2010-03-05 09:53:21 +00:00 --- Error: Missing constant - text_color
+2010-03-05 09:53:41 +00:00 --- Error: Missing constant - text_color
+2010-03-05 09:54:18 +00:00 --- Error: Missing constant - text_color
+2010-03-05 09:56:19 +00:00 --- Error: Missing constant - text_color
+2010-03-05 10:06:42 +00:00 --- Error: Missing constant - text_color
+2010-03-05 10:16:12 +00:00 --- Error: Missing constant - text_color
+2010-03-05 13:13:37 +00:00 --- Error: Missing constant - page_width_start
+2010-03-05 13:18:45 +00:00 --- Error: Missing constant - page_width_start
+2010-03-05 13:19:04 +00:00 --- Error: Missing constant - page_width_start

@@ -1,0 +1,6 @@
+RewriteEngine On
+
+RewriteCond   %{REQUEST_FILENAME}  -f
+RewriteCond   %{REQUEST_URI}       \.css$
+RewriteCond   %{REQUEST_URI}       !wym_styles.css$
+RewriteRule   ^(.+)$               scaffold/index.php?f=%{REQUEST_URI}&%{QUERY_STRING}
