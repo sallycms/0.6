@@ -45,7 +45,7 @@ class sly_A1_Import_Database
 
 		$filesize = filesize($filename);
 		$msg      = rex_register_extension_point('SLY_A1_BEFORE_DB_IMPORT', $msg, array(
-			'content'  => $conts,
+			'content'  => $this->content,
 			'filename' => $filename,
 			'filesize' => $filesize
 		));
@@ -59,7 +59,7 @@ class sly_A1_Import_Database
 			return $this->returnValues;
 		}
 
-		$msg .= $I18N->msg('im_export_database_imported').'. '.$I18N->msg('im_export_entry_count', count($lines)).'<br />';
+		$msg .= $I18N->msg('im_export_database_imported').'. '.$I18N->msg('im_export_entry_count', count($this->queries)).'<br />';
 
 		// User-Tabelle ggf. anlegen, falls nicht vorhanden
 		
@@ -91,6 +91,8 @@ class sly_A1_Import_Database
 			$this->checkPrefix();
 			$this->checkCharset();
 			$this->replacePrefix();
+			
+			return true;
 		}
 		catch (Exception $e) {
 			return false;
@@ -228,9 +230,9 @@ class sly_A1_Import_Database
 	protected function regenerateCache($msg)
 	{
 		$msg = rex_register_extension_point('A1_AFTER_DB_IMPORT', $msg, array(
-			'content'  => $conts,
-			'filename' => $filename,
-			'filesize' => $filesize
+			'content'  => $this->content,
+			'filename' => $this->filename,
+			'filesize' => strlen($this->content)
 		));
 		
 		$this->returnValues['state'] = true;

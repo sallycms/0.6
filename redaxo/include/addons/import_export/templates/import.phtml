@@ -22,6 +22,8 @@
 	$table->addColumn(new sly_Table_Column('Optionen', 'auto', '', array('colspan' => 2)));
 	$table->addColumn(new sly_Table_Column('Datum', '150px'));
 	$table->addColumn(new sly_Table_Column('Größe', '80px'));
+	$table->setIsEmpty(empty($dumps));
+	$table->setEmptyNotice('Es sind keine Datenbank-Backups vorhanden.');
 	$table->renderHeader();
 	
 	foreach ($dumps as $dump) {
@@ -34,12 +36,12 @@
 		<tr>
 			<td class="rex-col-a rex-icon"><img src="images/import_export/database.png" alt="" /></td>
 			<td class="rex-col-b">
-				<a href="<?= $baseURL ?>download" title="<?= sly_html($dump) ?>"><?= $info['filename'] ?></a>
+				<a href="<?= $baseURL ?>download" title="<?= sly_html($dump) ?>"><?= sly_html($info['filename']) ?></a>
 				<? if (!empty($info['description'])): ?>
 				<span>(<?= sly_html($info['description']) ?>)</span>
 				<? endif ?>
 			</td>
-			<td class="rex-col-c"><a href="<?= $baseURL ?>import">einspielen</a></td>
+			<td class="rex-col-c"><a href="<?= $baseURL ?>dbimport">einspielen</a></td>
 			<td class="rex-col-d"><a href="<?= $baseURL ?>delete">löschen</a></td>
 			<td class="rex-col-e"><?= strftime('%d.%m.%Y um %H:%M Uhr', $info['date']) ?></td>
 			<td class="rex-col-f"><?= sly_String::formatFilesize($info['size']) ?></td>
@@ -51,31 +53,3 @@
 
 	?>
 </div>
-
-<script type="text/javascript">
-jQuery(function($) {
-	var form           = $('form#export');
-	var directoriesDiv = $('label[for=directories]', form).parents('div.rex-form-row');
-	
-	if ($('input[name=type]:checked', form).val() == 'sql') {
-		directoriesDiv.hide();
-	}
-	
-	$('input[name=type]', form).change(function() {
-		if ($(this).val() == 'files') {
-			directoriesDiv.show();
-		}
-		else {
-			directoriesDiv.hide();
-		}
-	});
-});
-</script>
-
-
-
-
-
-
-
-

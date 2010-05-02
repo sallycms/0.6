@@ -1,105 +1,50 @@
 <?php
 
-@set_time_limit(0);
-
 $info     = '';
 $warning  = '';
 $function = rex_request('function', 'string');
-$impname  = rex_request('impname', 'string');
+$filename = rex_request('file', 'string');
+$baseDir  = getImportDir().'/';
 
-if ($impname != '')
-{
-  $impname = str_replace("/", "", $impname);
-
-  if ($function == "dbimport" && substr($impname, -4, 4) != ".sql")
-    $impname = "";
-  elseif ($function == "fileimport" && substr($impname, -7, 7) != ".tar.gz")
-    $impname = "";
+if (!empty($filename)) {
+	$filename = str_replace('/', '', $filename);
+	$fileInfo = sly_A1_Helper::getFileInfo($baseDir.$filename);
+	
+	if (!$fileInfo['exists']) {
+		$warning  = 'Die ausgewählte Datei existiert nicht.';
+		$filename = '';
+		$function = '';
+	}
+	elseif ($function == 'dbimport' && $fileInfo['type'] != 'sql') {
+		$filename = '';
+		$function = '';
+	}
+	elseif ($function == 'fileimport' && $fileInfo['type'] != 'tar') {
+		$filename = '';
+		$function = '';
+	}
 }
 
-if ($function == "delete")
-{
-  // ------------------------------ FUNC DELETE
-  if (unlink(getImportDir().'/'.$impname));
-  $info = $I18N->msg("im_export_file_deleted");
+$importer = null;
+
+// Funktionen abarbeiten
+
+if ($function == 'delete') {
+	if (unlink($baseDir.$filename)) $info = $I18N->msg('im_export_file_deleted');
+	else $warning = 'Die Datei könnte nicht gelöscht werden.';
 }
-elseif ($function == "dbimport")
-{
-  // ------------------------------ FUNC DBIMPORT
-
-  // noch checken das nicht alle tabellen geloescht werden
-  // install/temp.sql aendern
-  if (isset ($_FILES['FORM']) && $_FILES['FORM']['size']['importfile'] < 1 && $impname == "")
-  {
-    $warning = $I18N->msg("im_export_no_import_file_chosen_or_wrong_version")."<br>";
-  }
-  else
-  {
-    if ($impname != "")
-    {
-      $file_temp = getImportDir().'/'.$impname;
-    }
-    else
-    {
-      $file_temp = getImportDir().'/temp.sql';
-    }
-
-    if ($impname != "" || @ move_uploaded_file($_FILES['FORM']['tmp_name']['importfile'], $file_temp))
-    {
-      $state = rex_a1_import_db($file_temp);
-      $info = $state['message'];
-
-      // temp datei löschen
-      if ($impname == "")
-      {
-        @ unlink($file_temp);
-      }
-    }
-    else
-    {
-      $warning = $I18N->msg("im_export_file_could_not_be_uploaded")." ".$I18N->msg("im_export_you_have_no_write_permission_in", "addons/import_export/files/")." <br>";
-    }
-  }
-
+elseif ($function == 'dbimport') {
+	$importer = new sly_A1_Import_Database();
 }
-elseif ($function == "fileimport")
-{
-  // ------------------------------ FUNC FILEIMPORT
+elseif ($function == 'fileimport') {
+	$importer = new sly_A1_Import_Files();
+}
 
-  if (isset($_FILES['FORM']) && $_FILES['FORM']['size']['importfile'] < 1 && $impname == "")
-  {
-    $warning = $I18N->msg("im_export_no_import_file_chosen")."<br/>";
-  }
-  else
-  {
-    if ($impname == "")
-    {
-      $file_temp = getImportDir().'/temp.tar.gz';
-    }
-    else
-    {
-      $file_temp = getImportDir().'/'.$impname;
-    }
-    if ($impname != "" || @move_uploaded_file($_FILES['FORM']['tmp_name']['importfile'], $file_temp))
-    {
-      $return = rex_a1_import_files($file_temp);
-			if($return['state'])
-      	$info = $return['message'];
-			else
-				$warning = $return['message'];
+if ($importer) {
+	$retval = $importer->import($baseDir.$filename);
 
-      // temp datei löschen
-      if ($impname == "")
-      {
-        @ unlink($file_temp);
-      }
-    }
-    else
-    {
-      $warning = $I18N->msg("im_export_file_could_not_be_uploaded")." ".$I18N->msg("im_export_you_have_no_write_permission_in", "addons/import_export/files/")." <br>";
-    }
-  }
-
+	if ($retval['state']) $info = $retval['message'];
+	else $warning = $retval['message'];
 }
 
 // View anzeigen
