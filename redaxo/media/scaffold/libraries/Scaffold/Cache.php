@@ -29,6 +29,8 @@ final class Scaffold_Cache
 	 * @var boolan
 	 */
 	private static $frozen = false;
+	
+	private static $cacheFile = 'dyn/internal/sally/css-cache/mtimes.txt';
 
 	/**
 	 * Sets up the cache path
@@ -160,7 +162,24 @@ final class Scaffold_Cache
 		# Set its parmissions
 		chmod($target, 0777);
 		touch($target, time());
+			
+		# Update cache list
 		
+		clearstatcache();
+		
+		$lines = file_exists(self::$cacheFile) ? file(self::$cacheFile) : array();
+		$fp    = fopen(self::$cacheFile, 'w');
+		$file  = $_GET['wv_f']; // der einzige Wert, der bereits in der cache.php bekannt ist
+		
+		fwrite($fp, $file.':'.time()."\n");
+		
+		foreach ($lines as $line) {
+			list($f, $mtime) = explode(':', $line);
+			if ($f == $file) continue;
+			fwrite($fp, $line);
+		}
+		
+		fclose($fp);
 		return true;
 	}
 
