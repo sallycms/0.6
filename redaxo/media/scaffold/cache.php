@@ -37,6 +37,6 @@ include 'index.php';
 // Da in der remove()-Methode des Caches nur der Hash der angeforderten Datei
 // ankommt, können wir die Liste dort leider nicht aufräumen.
 
-if (count($caches) > 50) {
+if (isset($caches) && count($caches) > 50) {
 	unlink($cacheFile);
 }
