@@ -371,7 +371,7 @@ class Scaffold extends Scaffold_Utils
 			
 			self::add_include_path($module);
 			
-			if( $controller = Scaffold::find_file($name.'.php', false, true) )
+			if( $controller = Scaffold::find_file($name.'.php', SCAFFOLD_SYSPATH.'modules'.DIRECTORY_SEPARATOR.$name, true) )
 			{
 				require_once($controller);
 				self::$modules[$name] = new $name;

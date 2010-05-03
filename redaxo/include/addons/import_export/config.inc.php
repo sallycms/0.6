@@ -2,6 +2,17 @@
 
 if ($REX['REDAXO']) {
 	$I18N->appendFile($REX['INCLUDE_PATH'].'/addons/import_export/lang/');
+	
+	if (is_object($REX['USER'])) {
+		$REX['PERM'][] = 'import_export[export]';
+		$REX['PERM'][] = 'import_export[import]';
+	
+		$REX['ADDON']['import_export']['SUBPAGES'] = array(array('', $I18N->msg('im_export_export')));
+		
+		if ($REX['USER']->hasPerm('import_export[import]') || $REX['USER']->isAdmin()) {
+			$REX['ADDON']['import_export']['SUBPAGES'][] = array('import', $I18N->msg('im_export_import'));
+		}
+	}
 }
 
 $REX['ADDON']['rxid']['import_export']        = '1';
@@ -14,16 +25,7 @@ $REX['ADDON']['supportpage']['import_export'] = 'www.webvariants.de';
 
 // Menü aufbauen
 
-if ($REX['REDAXO'] && is_object($REX['USER'])) {
-	$REX['PERM'][] = 'import_export[export]';
-	$REX['PERM'][] = 'import_export[import]';
 
-	$REX['ADDON']['import_export']['SUBPAGES'] = array(array('', $I18N->msg('im_export_export')));
-	
-	if ($REX['USER']->hasPerm('import_export[import]') || $REX['USER']->isAdmin()) {
-		$REX['ADDON']['import_export']['SUBPAGES'][] = array('import', $I18N->msg('im_export_import'));
-	}
-}
 
 // Autoloading initialisieren
 
