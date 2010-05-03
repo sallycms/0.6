@@ -3,6 +3,7 @@
  */
 
 var redaxo = true;
+var sally  = true;
 jQuery.noConflict();
 
 (function($) {
