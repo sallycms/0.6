@@ -219,6 +219,11 @@ class Thumbnail{
 	 * @return void
 	 */
 	private function size_both($width, $height){
+		if($this->width < $width && $this->height < $height){
+			$this->thumb_width  =  $this->width;
+			$this->thumb_height =  $this->height;
+			return;
+		}
 		$this->thumb_width  = (int) $width;
 		$this->thumb_height = (int) $height;
 		$width_ratio = $this->width / $this->thumb_width;
