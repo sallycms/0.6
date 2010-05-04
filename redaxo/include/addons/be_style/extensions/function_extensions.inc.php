@@ -8,13 +8,10 @@
  */
 function rex_be_add_page($params)
 {
-  if(rex_extension_is_registered('BE_STYLE_PAGE_CONTENT'))
-  {
-    global $REX;
-    
-    $mypage = 'be_style';
-    $REX['ADDON']['name'][$mypage] = 'Backend Style';
-  }
+	if (rex_extension_is_registered('BE_STYLE_PAGE_CONTENT')) {
+		global $REX;
+		$REX['ADDON']['name']['be_style'] = 'Backend Style';
+	}
 }
 
 /**
@@ -24,9 +21,7 @@ function rex_be_add_page($params)
  */
 function rex_be_style_css_add($params)
 {
-  $addon = "be_style";
-  foreach(OOPlugin::getAvailablePlugins($addon) as $plugin)
-  {
-    echo "\n".'<link rel="stylesheet" type="text/css" href="../dyn/public/addons/'.$addon.'/plugins/'.$plugin.'/css_main.css" media="screen, projection, print" />';
-  }
+	foreach (OOPlugin::getAvailablePlugins('be_style') as $plugin) {
+		echo "\n".'<link rel="stylesheet" type="text/css" href="scaffold/be_style/'.$plugin.'/css_main.css" media="screen, projection, print" />';
+	}
 }
