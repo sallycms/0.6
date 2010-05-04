@@ -376,6 +376,16 @@ class rex_addonManager extends rex_baseManager
 		global $REX;
 		return Configuration::getInstance()->get('DYNFOLDER') . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'addons' . DIRECTORY_SEPARATOR . $addonName;
 	}
+
+	public function internalFolder($addonName)
+	{
+		$folder = Core::config()->get('DYNFOLDER') . DIRECTORY_SEPARATOR . 'internal' . DIRECTORY_SEPARATOR . 'addons' . DIRECTORY_SEPARATOR . $addonName;
+		if(!file_exists($folder)){
+			mkdir($folder, Core::config()->get('DIRPERM'), true);
+		}
+		
+		return $folder;
+	}
 }
 
 /**
