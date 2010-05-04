@@ -34,25 +34,13 @@ if ($REX['SETUP']) {
 $REX['ARTICLE'] = new rex_article();
 $REX['ARTICLE']->setCLang(Core::getCurrentClang());
 
-if ($REX['ARTICLE']->setArticleId($REX['ARTICLE_ID'])) {
+if ($REX['ARTICLE']->setArticleId(Core::getCurrentArticleId())) {
 	print $REX['ARTICLE']->getArticleTemplate();
 }
 else {
 	print 'Kein Startartikel selektiert. Bitte setze ihn im <a href="redaxo/index.php">Backend</a>.';
 	$REX['STATS'] = 0;
 }
-
-//try{
-	$service = Service_Factory::getService('Slice');
-	$slice = $service->create(array('namespace' => 'article', 'fk_id' => '1', 'module_id' => '3'));
-
-	$value = $slice->AddValue('file', '1', 'tada');
-	$data2 = $service->findById(1);
-
-	unset($service);
-//}catch(Exception $e){
-//		
-//}
 
 $content = ob_get_clean();
 
