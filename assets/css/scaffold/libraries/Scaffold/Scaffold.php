@@ -190,8 +190,11 @@ class Scaffold extends Scaffold_Utils
 					{
 						$cached_file = $file;
 					}
-					
+	
 					$request = Scaffold::find_file($file, false, true);
+					
+					// webvariants-Patch: Entferne alle führenden "../", um nicht aus dem Cache-Verzeichnis zu fliegen.
+					$cached_file = preg_replace('#(\.\.[/\\\\])+#', '', $cached_file);
 					
 					/**
 					 * While not in production, we want to to always recache, so we'll fake the time
@@ -368,7 +371,7 @@ class Scaffold extends Scaffold_Utils
 			
 			self::add_include_path($module);
 			
-			if( $controller = Scaffold::find_file($name.'.php', SCAFFOLD_SYSPATH.'modules'.DIRECTORY_SEPARATOR.$name, true) )
+			if( $controller = Scaffold::find_file($name.'.php', false, true) )
 			{
 				require_once($controller);
 				self::$modules[$name] = new $name;
@@ -843,11 +846,13 @@ class Scaffold extends Scaffold_Utils
 	public static function find_file($filename, $directory = '', $required = FALSE)
 	{		
 		# Search path
-		if(!$directory) $directory = $_SERVER['DOCUMENT_ROOT'];
-		
 		$search = $directory.DIRECTORY_SEPARATOR.$filename;
 		
-		if(file_exists($search))
+		if(file_exists($filename))
+		{
+			return self::$find_file_paths[$filename] = $filename;
+		}
+		elseif(file_exists($search))
 		{
 			return self::$find_file_paths[$search] = realpath($search);
 		}

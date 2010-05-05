@@ -1,5 +1,17 @@
 <?php
 
+$dynDirectory = realpath(dirname(__FILE__).'/../../../dyn/internal/sally/');
+$dynDirectory = rtrim($dynDirectory, '/\\').'/';
+
+// Wir wechseln in das Basis-Verzeichnis dieses Projekts.
+
+$projectBase = realpath(dirname(__FILE__).'/../../../');
+$projectBase = rtrim($projectBase, '/\\').'/';
+chdir($projectBase);
+
+$dynDirectory = realpath($projectBase.'dyn/internal/sally/');
+$dynDirectory = rtrim($dynDirectory, '/\\').'/';
+
 /**
  * Production Mode
  *
@@ -19,7 +31,7 @@
  * Also, in production mode, errors are disabled and any modules which change
  * the output will not be available - like the Typography module. 
  */
-define('SCAFFOLD_PRODUCTION',false);
+define('SCAFFOLD_PRODUCTION', false);
 
 /**
  * Document Root
@@ -39,7 +51,7 @@ $config['document_root'] = $_SERVER['DOCUMENT_ROOT'];
  * an absolute file path, or even relative to the document root and Scaffold
  * will take care of the rest. 
  */
-$config['system'] = './';
+$config['system'] = $projectBase.'assets/css/scaffold/';
 
 /**
  * Cache Folder
@@ -51,7 +63,7 @@ $config['system'] = './';
  *
  * You will probably set this if you're using Scaffold within another framework.
  */
-$config['cache'] = './cache/';
+$config['cache'] = $dynDirectory.'/css-cache/';
 
 /**
  * Cache Lifetime
