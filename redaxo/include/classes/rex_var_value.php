@@ -33,14 +33,14 @@ class rex_var_value extends rex_var
 
 	function getACDatabaseValues($REX_ACTION, $slice_id)
 	{
-		$values = Service_Factory::getService('SliceValue')->find(array('slice_id' => $slice_id, 'type' => 'REX_VALUE'));
+		$values = sly_Service_Factory::getService('SliceValue')->find(array('slice_id' => $slice_id, 'type' => 'REX_VALUE'));
 
 		foreach($values as $value)
 		{
 			$REX_ACTION['REX_VALUE'][$value->getFinder()] = $value->getValue();
 		}
-		$REX_ACTION['REX_PHP'] = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_PHP', '');
-		$REX_ACTION['REX_HTML'] = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_HTML', '');
+		$REX_ACTION['REX_PHP'] = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_PHP', '');
+		$REX_ACTION['REX_HTML'] = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_HTML', '');
 
 		return $REX_ACTION;
 	}
@@ -50,7 +50,7 @@ class rex_var_value extends rex_var
 		//global $REX;
 
 		//$slice_id = $sql->getValue('slice_id');
-		$slice = Service_Factory::getService('Slice')->findById($slice_id);
+		$slice = sly_Service_Factory::getService('Slice')->findById($slice_id);
 		if(isset($REX_ACTION['REX_VALUE'])){
 			foreach($REX_ACTION['REX_VALUE'] as $key => $value){
 				$slice->addValue('REX_VALUE', $key, $value);
@@ -66,7 +66,7 @@ class rex_var_value extends rex_var
 	{
 		$content = $this->getOutput($slice_id, $content, true);
 
-		$php_content = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_PHP', '');
+		$php_content = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_PHP', '');
 		if($php_content){
 			$php_content->getValue();
 			if($php_content){
@@ -81,7 +81,7 @@ class rex_var_value extends rex_var
 	function getBEInput($slice_id, $content)
 	{
 		$content = $this->getOutput($slice_id, $content);
-		$php_content = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_PHP', '');
+		$php_content = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_PHP', '');
 		if($php_content){
 			$php_content = $php_content->getValue();
 			if(!$php_content){
@@ -95,7 +95,7 @@ class rex_var_value extends rex_var
 	function getFEOutput($slice_id, $content)
 	{
 		$content = $this->getOutput($slice_id, $content, true);
-		$php_content = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_PHP', '');
+		$php_content = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_PHP', '');
 		if($php_content){
 			$php_content = $php_content->getValue();
 			if(!$php_content){
@@ -113,7 +113,7 @@ class rex_var_value extends rex_var
 		$content = $this->matchIsValue($slice_id, $content);
 		$content = $this->matchPhpValue($slice_id, $content);
 
-		$html_content = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_HTML', '');
+		$html_content = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_HTML', '');
 		if($html_content){
 			$html_content = $html_content->getValue();
 			if(!$html_content){
@@ -139,7 +139,7 @@ class rex_var_value extends rex_var
 			list ($param_str, $args) = $match;
 			list ($id, $args) = $this->extractArg('id', $args, 0);
 
-			$replace = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_VALUE', $id);
+			$replace = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_VALUE', $id);
 
 			if($replace){
 				$replace = $replace->getValue();

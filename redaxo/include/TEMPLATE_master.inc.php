@@ -113,7 +113,6 @@ $REX['EXTPERM'][] = 'moveCategory[]';
 $REX['EXTPERM'][] = 'publishArticle[]';
 $REX['EXTPERM'][] = 'publishCategory[]';
 $REX['EXTPERM'][] = 'article2startpage[]';
-$REX['EXTPERM'][] = 'accesskeys[]';
 
 // ----- extras
 $REX['EXTRAPERM'] = array();
@@ -128,18 +127,18 @@ if(!isset($REX['SYNC'])) $REX['SYNC'] = false;
 
 if(!$REX['SYNC']){
 	// ----- standard variables
-	Core::registerVarType('rex_var_globals');
-	Core::registerVarType('rex_var_article');
-	Core::registerVarType('rex_var_category');
-	Core::registerVarType('rex_var_template');
-	Core::registerVarType('rex_var_value');
-	Core::registerVarType('rex_var_link');
-	Core::registerVarType('rex_var_media');
+	sly_Core::registerVarType('rex_var_globals');
+	sly_Core::registerVarType('rex_var_article');
+	sly_Core::registerVarType('rex_var_category');
+	sly_Core::registerVarType('rex_var_template');
+	sly_Core::registerVarType('rex_var_value');
+	sly_Core::registerVarType('rex_var_link');
+	sly_Core::registerVarType('rex_var_media');
 
 	// ----- SET CLANG
 	include_once $REX['INCLUDE_PATH'].'/clang.inc.php';
 	
-	$REX['CUR_CLANG']  = Core::getCurrentClang();
+	$REX['CUR_CLANG']  = sly_Core::getCurrentClang();
 	
-	$REX['ARTICLE_ID'] = Core::getCurrentArticleId();
+	$REX['ARTICLE_ID'] = sly_Core::getCurrentArticleId();
 }

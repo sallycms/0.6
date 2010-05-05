@@ -15,7 +15,7 @@
  * @author zozi@webvariants.de
  *
  */
-class DB_PDO_Persistence implements sly_DB_Persistence{
+class sly_DB_PDO_Persistence implements sly_DB_Persistence{
     const LOG_UNKNOWN = -1;
 	const LOG_ERROR   = -2;
 	
@@ -56,7 +56,7 @@ class DB_PDO_Persistence implements sly_DB_Persistence{
 	} 
 	
 	public function insert($table, $values) {
-		$sql = new DB_PDO_SQLBuilder($this->connection, self::getPrefix().$table);
+		$sql = new sly_DB_PDO_SQLBuilder($this->connection, self::getPrefix().$table);
 		$sql->insert($values);
         $this->query($sql->to_s(), $sql->bind_values());
         
@@ -64,7 +64,7 @@ class DB_PDO_Persistence implements sly_DB_Persistence{
     }
 	
     public function update($table, $newValues, $where = null){
-    	$sql = new DB_PDO_SQLBuilder($this->connection, self::getPrefix().$table);
+    	$sql = new sly_DB_PDO_SQLBuilder($this->connection, self::getPrefix().$table);
     	$sql->update($newValues);
     	$sql->where($where);
     	$this->query($sql->to_s(), $sql->bind_values());
@@ -73,7 +73,7 @@ class DB_PDO_Persistence implements sly_DB_Persistence{
     }
     
     public function select($table, $select = '*', $where = null, $group = null, $order = null, $limit = null, $having = null, $joins = null) {
-		$sql = new DB_PDO_SQLBuilder($this->connection, self::getPrefix().$table);
+		$sql = new sly_DB_PDO_SQLBuilder($this->connection, self::getPrefix().$table);
 		$sql->select($select);
 		if($where) $sql->where($where);
 		if($group) $sql->group($group);
@@ -93,7 +93,7 @@ class DB_PDO_Persistence implements sly_DB_Persistence{
      * @return int affected rows
      */
     public function delete($table, $where = null){
-    	$sql = new DB_PDO_SQLBuilder($this->connection, self::getPrefix().$table);
+    	$sql = new sly_DB_PDO_SQLBuilder($this->connection, self::getPrefix().$table);
     	$sql->delete($where);
     	$this->query($sql->to_s(), $sql->bind_values());
     	
@@ -231,7 +231,7 @@ class DB_PDO_Persistence implements sly_DB_Persistence{
 	protected function error() {
 		$message   = 'Es trat ein Datenbank-Fehler auf: ';
 		
-		throw new DB_PDO_Exception($message.'Fehlercode: '. $this->getErrno() .' '.$this->getError(), $this->getErrno());
+		throw new sly_DB_PDO_Exception($message.'Fehlercode: '. $this->getErrno() .' '.$this->getError(), $this->getErrno());
 	}
     
 	/**

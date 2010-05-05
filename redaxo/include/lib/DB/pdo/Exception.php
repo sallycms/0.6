@@ -8,16 +8,6 @@
  * http://www.opensource.org/licenses/mit-license.php
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
-
-/**
- * Business Model Klasse für Module
- * 
- * @author zozi@webvariants.de
- *
- */
-
-class Model_Module extends Model_ModuleBase {
-	
-	
-	
-}
+ 
+ 
+class sly_DB_PDO_Exception extends sly_DB_Exception{}

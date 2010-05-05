@@ -20,7 +20,7 @@ $REX['ADDON']['author']['fscache']      = 'Christian Zozmann';
 $REX['ADDON']['supportpage']['fscache'] = 'www.webvariants.de';
 
 include_once(FILECACHE_PATH.'classes/filecache.class.php');
-Core::getInstance()->setCache(new FileCache());
+sly_Core::getInstance()->setCache(new FileCache());
 
 rex_register_extension('ALL_GENERATED', array('FileCache', 'flushstatic'));
 ?>

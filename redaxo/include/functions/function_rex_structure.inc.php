@@ -287,7 +287,7 @@ function rex_editCategory($categoryID, $clang, $data)
 		'data'   => $data,
 	));
 	
-	Core::cache()->delete('category', $categoryID.'_'.$clang);
+	sly_Core::cache()->delete('category', $categoryID.'_'.$clang);
 	return array(true, $message);
 }
 
@@ -350,7 +350,7 @@ function rex_deleteCategoryReorganized($categoryID)
 	
 	// Kinder neu positionieren
 	
-	$cache = Core::cache();
+	$cache = sly_Core::cache();
 
 	foreach ($instances as $clang => $data) {
 		$sql->setQuery(
@@ -426,7 +426,7 @@ function rex_categoryStatus($categoryID, $clang, $newStatus = null)
 				'status' => $newStatus
 			));
 			
-			$cache = Core::cache();
+			$cache = sly_Core::cache();
 			$cache->delete('category', $categoryID.'_'.$clang);
 			$cache->delete('clist', $re_id.'_'.$clang);
 		}
@@ -553,7 +553,7 @@ function rex_addArticle($data)
 	$records     = array();
 	$sqlTemplate = '(%d,%d,"%s","%s",%d,"%s",%d,%d,"%s",%d,%d,%d,%d,%d,"%s","%s",%d)';
 	$createTime  = time();
-	$cache       = Core::cache();
+	$cache       = sly_Core::cache();
 	
 	foreach (array_keys($REX['CLANG']) as $clangID) {
 		$records[] = sprintf($sqlTemplate,
@@ -724,7 +724,7 @@ function rex_editArticle($articleID, $clang, $data)
 		));
 	}
 	
-	$cache = Core::cache();
+	$cache = sly_Core::cache();
 	$cache->delete('article', $articleID.'_'.$clang);
 	$cache->delete('alist', $data['category_id'].'_'.$clang);
 
@@ -764,7 +764,7 @@ function rex_deleteArticleReorganized($articleID)
 	}
 
 	$return = rex_deleteArticle($articleID);
-	$cache  = Core::cache();
+	$cache  = sly_Core::cache();
 	$sql    = new rex_sql();
 
 	foreach ($data as $clang => $article) {
@@ -827,7 +827,7 @@ function rex_articleStatus($articleID, $clang, $newStatus = null)
 		$sql->addGlobalUpdateFields();
 
 		if ($sql->update()) {
-			Core::cache()->delete('article', $articleID.'_'.$clang);
+			sly_Core::cache()->delete('article', $articleID.'_'.$clang);
 			
 			$success = true;
 			$message = rex_register_extension_point('ART_STATUS', $I18N->msg('article_status_updated'), array(

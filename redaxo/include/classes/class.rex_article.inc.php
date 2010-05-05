@@ -59,7 +59,7 @@ class rex_article
     $this->ARTICLE = null;
         
     if($clang === null)
-      $clang = Core::getCurrentClang();
+      $clang = sly_Core::getCurrentClang();
 
     $this->setClang($clang);
 
@@ -97,7 +97,7 @@ class rex_article
   function setClang($value)
   {
     global $REX;
-    if (!isset($REX['CLANG'][$value]) || empty($REX['CLANG'][$value])) $value = Core::getCurrentClang();
+    if (!isset($REX['CLANG'][$value]) || empty($REX['CLANG'][$value])) $value = sly_Core::getCurrentClang();
     $this->clang = $value;
     $this->slices = array();
   }
@@ -439,7 +439,7 @@ class rex_article
 		if (empty($moduleSelect)) {
 			global $REX, $I18N;
 			
-			$moduleService = Service_Factory::getService('Module');
+			$moduleService = sly_Service_Factory::getService('Module');
 			$modules = $moduleService->find(null, null, 'name');
 			
 			$template_ctypes = rex_getAttributes('ctype', $this->template_attributes, array ());
@@ -569,13 +569,13 @@ class rex_article
 			// nach klick auf den Übernehmen button,
 			// die POST werte übernehmen
 			if (rex_var::isEditEvent()) {
-				foreach (Core::getVarTypes() as $obj) $REX_ACTION = $obj->getACRequestValues($REX_ACTION);
+				foreach (sly_Core::getVarTypes() as $obj) $REX_ACTION = $obj->getACRequestValues($REX_ACTION);
 			}
 			// Sonst die Werte aus der DB holen
 			// (1. Aufruf via Editieren Link)
 			else {
 				// TODO: Abhängigkeit von CONT aufheben.
-				foreach (Core::getVarTypes() as $obj) $REX_ACTION = $obj->getACDatabaseValues($REX_ACTION, $this->CONT);
+				foreach (sly_Core::getVarTypes() as $obj) $REX_ACTION = $obj->getACDatabaseValues($REX_ACTION, $this->CONT);
 			}
 			
 			if     ($this->function == 'edit')   $modebit = '2'; // pre-action and edit
@@ -591,12 +591,12 @@ class rex_article
 				$iaction = $ga->getValue('preview');
 				
 				// ****************** VARIABLEN ERSETZEN
-				foreach (Core::getVarTypes() as $obj) $iaction = $obj->getACOutput($REX_ACTION, $iaction);
+				foreach (sly_Core::getVarTypes() as $obj) $iaction = $obj->getACOutput($REX_ACTION, $iaction);
 				eval('?>'.$iaction);
 				
 				// ****************** SPEICHERN FALLS NOETIG
 				// TODO: abhängigkeit zu CONT auflösen
-				foreach (Core::getVarTypes() as $obj) $obj->setACValues($this->CONT, $REX_ACTION);
+				foreach (sly_Core::getVarTypes() as $obj) $obj->setACValues($this->CONT, $REX_ACTION);
 				
 				$ga->next();
 			}
@@ -656,7 +656,7 @@ class rex_article
   {
     global $REX,$I18N;
 
-	$moduleService = Service_Factory::getService('Module');
+	$moduleService = sly_Service_Factory::getService('Module');
 	$module = $moduleService->findById($module_id); 
     if (!$module)
     {
@@ -832,7 +832,7 @@ class rex_article
 	$artslice = OOArticleSlice::_getSliceWhere('slice_id = '. $slice_id);
 
 
-    foreach(Core::getVarTypes() as $idx => $var)
+    foreach(sly_Core::getVarTypes() as $idx => $var)
     {
       if ($mode == 'edit')
       {

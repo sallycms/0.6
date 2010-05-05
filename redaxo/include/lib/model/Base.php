@@ -15,7 +15,7 @@
  * @author zozi@webvariants.de
  *
  */
-abstract class Model_Base {
+abstract class sly_Model_Base {
 	
 	const NEW_ID = -1;
 	

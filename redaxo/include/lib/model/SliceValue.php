@@ -10,12 +10,12 @@
  */
 
 /**
- * DB Model Klasse für Slice Values 
+ * Business Model Klasse für Slice Values 
  * 
  * @author zozi@webvariants.de
  *
  */
-class Model_SliceValueBase extends Model_Base{
+class sly_Model_SliceValue extends Model_Base{
 
 	protected $slice_id;
 	protected $type;
@@ -39,5 +39,4 @@ class Model_SliceValueBase extends Model_Base{
     public function getValue(){	return $this->value; }
     
     public function setValue($value){ $this->value = $value; }
-
 }

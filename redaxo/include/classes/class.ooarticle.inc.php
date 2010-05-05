@@ -21,14 +21,14 @@ class OOArticle extends OORedaxo
 		$article_id = (int) $article_id;
 
 		if ($clang === false) {
-			$clang = Core::getCurrentClang();
+			$clang = sly_Core::getCurrentClang();
 		}
 
 		$clang     = (int) $clang;
 		$namespace = $OOCategory ? 'category' : 'article';
 
 		$key       = $article_id.'_'.$clang;
-		$obj       = Core::cache()->get($namespace, $key, null);
+		$obj       = sly_Core::cache()->get($namespace, $key, null);
 
 		if ($obj === null) {
 			$article = rex_sql::fetch('*', 'article', 'id = '.$article_id.' AND clang = '.$clang);
@@ -38,7 +38,7 @@ class OOArticle extends OORedaxo
 				$obj   = new $class($article, $clang);
 
 				
-				Core::cache()->set($namespace, $key, $obj);
+				sly_Core::cache()->set($namespace, $key, $obj);
 			}
 		}
 		return $obj;
@@ -69,7 +69,7 @@ class OOArticle extends OORedaxo
 		global $REX;
 
 		if ($clang === false) {
-			$clang = Core::getCurrentClang();
+			$clang = sly_Core::getCurrentClang();
 		}
 		
 		$category_id = (int) $category_id;
@@ -77,7 +77,7 @@ class OOArticle extends OORedaxo
 
 		$namespace = 'alist';
 		$key       = $category_id.'_'.$clang.'_'.($ignore_offlines ? 1 : 0);
-		$alist     = Core::cache()->get($namespace, $key, null);
+		$alist     = sly_Core::cache()->get($namespace, $key, null);
 	
 		if ($alist === null) {
 			$where = 're_id = '.$category_id.' AND clang = '.$clang.($ignore_offlines ? ' AND status = 1' : '');
@@ -88,7 +88,7 @@ class OOArticle extends OORedaxo
 				array_unshift($alist, $category_id);
 			}
 
-			Core::cache()->set($namespace, $key, $alist);
+			sly_Core::cache()->set($namespace, $key, $alist);
 		}
 
 		$artlist = array();
@@ -137,7 +137,7 @@ class OOArticle extends OORedaxo
 	{
 		global $REX;
 		
-		if (Core::cache()->get('article', $articleId.'_'.Core::getCurrentClang(), null) !== null) {
+		if (sly_Core::cache()->get('article', $articleId.'_'.sly_Core::getCurrentClang(), null) !== null) {
 			return true;
 		}
 		

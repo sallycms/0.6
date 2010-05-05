@@ -43,7 +43,7 @@ function rex_deleteCacheArticle($id, $clang = null)
 {
 	global $REX;
 	
-	$cache = Core::cache();
+	$cache = sly_Core::cache();
 
 	foreach (array_keys($REX['CLANG']) as $_clang) {
 		if ($clang !== null && $clang != $_clang) {

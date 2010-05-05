@@ -161,7 +161,7 @@ if ($article->getRows() == 1)
 					$REX_ACTION         = array();
 					$REX_ACTION['SAVE'] = true;
 
-					foreach (Core::getVarTypes() as $idx => $obj) {
+					foreach (sly_Core::getVarTypes() as $idx => $obj) {
 						$REX_ACTION = $obj->getACRequestValues($REX_ACTION);
 					}
 
@@ -196,14 +196,14 @@ if ($article->getRows() == 1)
 
 							if ($function == 'edit') {
 								$ooslice = OOArticleSlice::getArticleSliceById($slice_id);
-								$realslice = Service_Factory::getService('Slice')->findById($ooslice->getSliceId());
+								$realslice = sly_Service_Factory::getService('Slice')->findById($ooslice->getSliceId());
 								$realslice->flushValues();
 								unset($ooslice);
 								$newsql->setWhere('id = '.$slice_id);
 								$newsql->setValue('slice_id', $realslice->getId());
 							}
 							elseif ($function == 'add') {
-								$realslice = Service_Factory::getService('Slice')->create(array('module_id' => $module_id));
+								$realslice = sly_Service_Factory::getService('Slice')->create(array('module_id' => $module_id));
 								
 								$newsql->setValue('slice_id', $realslice->getId());
 								
@@ -216,7 +216,7 @@ if ($article->getRows() == 1)
 							}
 
 							// ****************** SPEICHERN FALLS NÖTIG
-							foreach (Core::getVarTypes() as $obj) {
+							foreach (sly_Core::getVarTypes() as $obj) {
 								$obj->setACValues($realslice->getId(), $REX_ACTION, true, false);
 							}
 

@@ -10,17 +10,17 @@
  */
 
 /**
- * DB Model Klasse für Slices
+ * DB Model Klasse für Module
  * 
  * @author zozi@webvariants.de
  *
  */
-class Service_Slice extends Service_Base{
+class sly_Service_Module extends sly_Service_Base{
 
-	protected $tablename = 'slice';
-	
+	protected $tablename = 'module';
+
 	protected function makeObject(array $params){
-		return new Model_Slice($params);
+		return new sly_Model_Module($params);
 	}
 
 }

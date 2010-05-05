@@ -48,7 +48,7 @@ class rex_var_globals extends rex_var
   {
 
 	$artslice = OOArticleSlice::_getSliceWhere('slice_id = $slice_id');
-	$slice = Service_Factory::getService('Slice')->findById($slice_id);
+	$slice = sly_Service_Factory::getService('Slice')->findById($slice_id);
 
     // Variablen hier einfuegen, damit sie in einer
     // Aktion abgefragt werden können

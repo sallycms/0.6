@@ -10,7 +10,7 @@
  * 
  * @package ActiveRecord
  */
-class DB_PDO_Expression
+class sly_DB_PDO_Expression
 {
 	const ParameterMarker = '?';
 

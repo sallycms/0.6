@@ -374,14 +374,14 @@ class rex_addonManager extends rex_baseManager
 	public function publicFolder($addonName)
 	{
 		global $REX;
-		return Configuration::getInstance()->get('DYNFOLDER') . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'addons' . DIRECTORY_SEPARATOR . $addonName;
+		return sly_Core::config()->get('DYNFOLDER') . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'addons' . DIRECTORY_SEPARATOR . $addonName;
 	}
 
 	public function internalFolder($addonName)
 	{
-		$folder = Core::config()->get('DYNFOLDER') . DIRECTORY_SEPARATOR . 'internal' . DIRECTORY_SEPARATOR . 'addons' . DIRECTORY_SEPARATOR . $addonName;
+		$folder = sly_Core::config()->get('DYNFOLDER') . DIRECTORY_SEPARATOR . 'internal' . DIRECTORY_SEPARATOR . 'addons' . DIRECTORY_SEPARATOR . $addonName;
 		if(!file_exists($folder)){
-			mkdir($folder, Core::config()->get('DIRPERM'), true);
+			mkdir($folder, sly_Core::config()->get('DIRPERM'), true);
 		}
 		
 		return $folder;
@@ -490,6 +490,6 @@ class rex_pluginManager extends rex_baseManager
 	public function publicFolder($pluginName)
 	{
 		global $REX;
-		return Configuration::getInstance()->get('DYNFOLDER') . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'addons' . DIRECTORY_SEPARATOR . $this->addonName . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . $pluginName;
+		return sly_Core::config()->get('DYNFOLDER') . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'addons' . DIRECTORY_SEPARATOR . $this->addonName . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . $pluginName;
 	}
 }

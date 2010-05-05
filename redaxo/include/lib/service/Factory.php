@@ -9,7 +9,7 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
  
- abstract class Service_Factory {
+ abstract class sly_Service_Factory {
   	
   	private static $services = array();
   	
@@ -18,14 +18,14 @@
   	 *  
   	 * @param string $modelName
   	 * 
-  	 * @return Service_Base an implementation of Service_Base
+  	 * @return sly_Service_Base an implementation of sly_Service_Base
   	 */
   	public static function getService($modelName){
   		if(!isset(self::$services[$modelName])){
-  			$serviceName = 'Service_'.$modelName;
+  			$serviceName = 'sly_Service_'.$modelName;
   			$service = new $serviceName();
-  			if(!$service instanceof Service_Base){
-  				throw new Exception('Service '.$serviceName.' is no inheriting Class of Service_Base.');
+  			if(!$service instanceof sly_Service_Base){
+  				throw new Exception('sly_Service '.$serviceName.' is no inheriting Class of Service_Base.');
   			}
   			self::$services[$modelName] = $service;
   		}

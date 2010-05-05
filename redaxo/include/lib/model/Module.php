@@ -15,9 +15,9 @@
  * @author zozi@webvariants.de
  *
  */
- 
-class Model_ModuleBase extends Model_Base{
 
+class sly_Model_Module extends sly_Model_Base {
+	
 	protected $name;
 	protected $category_id;
 	protected $eingabe;
@@ -45,5 +45,6 @@ class Model_ModuleBase extends Model_Base{
 	public function setAttributes($attributes){ $this->attributes = $attributes; }
 	public function getRevision(){ return $this->revision; }
 	public function setRevision($revision){ $this->revision = $revision; }
+	
 	
 }

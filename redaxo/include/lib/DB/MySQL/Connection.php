@@ -12,7 +12,7 @@
  *
  */
 
-class DB_MySQL_Connection{
+class sly_DB_MySQL_Connection{
 
 	private $connection;
 	

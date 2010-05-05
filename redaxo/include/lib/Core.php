@@ -9,7 +9,7 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
-class Core
+class sly_Core
 {
 	private static $instance;
 	private $cache;
@@ -115,7 +115,11 @@ class Core
 		return $instance->varTypes;
 	}
 
+	/**
+	 * 
+	 * @return sly_Configuration
+	 */
 	public static function config(){
-		return Configuration::getInstance();
+		return sly_Configuration::getInstance();
 	}
 }

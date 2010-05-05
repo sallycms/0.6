@@ -42,7 +42,7 @@ class ModuleController extends Controller {
 			$mod['attributes'] = '';
 			$mod['revision'] = 0;
 
-			$service = Service_Factory::getService('Module');
+			$service = sly_Service_Factory::getService('Module');
 			$service->create($mod);
 			print rex_info($I18N->msg('module_added'));
 			$this->listModules();
@@ -66,7 +66,7 @@ class ModuleController extends Controller {
 		}
 		$params = array();
 
-		$service = Service_Factory::getService('Module');
+		$service = sly_Service_Factory::getService('Module');
 		$module = $service->findById($module_id);
 
 		$save = rex_post('save', 'bool', false);
@@ -124,7 +124,7 @@ class ModuleController extends Controller {
 			}
 		}
 
-		$service = Service_Factory::getService('Module');
+		$service = sly_Service_Factory::getService('Module');
 		$module = $service->findById($modul_id);
 
 		$params['func'] = 'edit';
@@ -152,7 +152,7 @@ class ModuleController extends Controller {
 		print rex_info($action->delete($I18N->msg('action_deleted_from_modul')));
 
 
-		$service = Service_Factory::getService('Module');
+		$service = sly_Service_Factory::getService('Module');
 		$module = $service->findById($modul_id);
 
 		$params['func'] = 'edit';
@@ -210,7 +210,7 @@ class ModuleController extends Controller {
 				print rex_warning($I18N->msg("module_cannot_be_deleted",$modulname).$warning_block);
 			} else
 			{
-				$service = Service_Factory::getService('Module');
+				$service = sly_Service_Factory::getService('Module');
 				$service->delete(array('id' => $modul_id));
 				$del->setQuery("DELETE FROM ".$REX['TABLE_PREFIX']."module_action WHERE module_id='$modul_id'");
 

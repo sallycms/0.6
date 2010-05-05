@@ -29,19 +29,19 @@ class OOCategory extends OORedaxo {
 
 		$cat_parent_id = (int) $cat_parent_id;
 	
-		if($clang === false) { $clang = Core::getCurrentClang(); }
+		if($clang === false) { $clang = sly_Core::getCurrentClang(); }
 		$clang = (int) $clang;
 		
 		$namespace = 'clist';
 		$key   = $cat_parent_id.'_'.$clang;
-		$clist = Core::cache()->get($namespace, $key, null);
+		$clist = sly_Core::cache()->get($namespace, $key, null);
 	
 		if($clist === null) {
 			$clist = array();
 			
 			$clist = rex_sql::getArrayEx('SELECT id FROM #_article WHERE startpage = 1 AND re_id = '.$cat_parent_id.' AND clang = '.$clang.' ORDER BY catprior,name', '#_');
 			
-			Core::cache()->set($namespace, $key, $clist);
+			sly_Core::cache()->set($namespace, $key, $clist);
 		}
 		
 		$catlist = array();

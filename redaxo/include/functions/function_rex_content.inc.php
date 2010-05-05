@@ -132,8 +132,8 @@ function rex_deleteSlice($slice_id)
 			$sql->setQuery('UPDATE #_article_slice SET re_article_slice_id = '.$article_slice->getReId().' WHERE id = '.$nextslice->getId(), '#_');
 		}
 
-		Service_Factory::getService('SliceValue')->delete(array('slice_id' => $article_slice->getSliceId()));
-		Service_Factory::getService('Slice')->delete(array('id' => $article_slice->getSliceId()));
+		sly_Service_Factory::getService('SliceValue')->delete(array('slice_id' => $article_slice->getSliceId()));
+		sly_Service_Factory::getService('Slice')->delete(array('id' => $article_slice->getSliceId()));
 		
 		$sql->setQuery('DELETE FROM #_article_slice WHERE id = '.$slice_id, '#_');
 		return $sql->getRows() == 1;
@@ -205,7 +205,7 @@ function rex_execPreSaveAction($module_id, $function, $REX_ACTION)
 		$iaction = $ga->getValue('presave');
 
 		// *********************** WERTE ERSETZEN
-		foreach (Core::getVarTypes() as $obj) {
+		foreach (sly_Core::getVarTypes() as $obj) {
 			$iaction = $obj->getACOutput($REX_ACTION, $iaction);
 		}
 
@@ -251,7 +251,7 @@ function rex_execPostSaveAction($module_id, $function, $REX_ACTION)
 		$iaction = $ga->getValue('postsave');
 
 		// ***************** WERTE ERSETZEN UND POSTACTION AUSFÃœHREN
-		foreach (Core::getVarTypes() as $obj) {
+		foreach (sly_Core::getVarTypes() as $obj) {
 			$iaction = $obj->getACOutput($REX_ACTION, $iaction);
 		}
 
@@ -469,7 +469,7 @@ function rex_copyMeta($from_id, $to_id, $from_clang = 0, $to_clang = 0, $params 
 
 		$update->update();
 
-		Core::cache()->delete('article', $to_id.'_'.$to_clang);
+		sly_Core::cache()->delete('article', $to_id.'_'.$to_clang);
 		return true;
 	}
 	
@@ -503,9 +503,9 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 	$article_slice = OOArticleSlice::_getSliceWhere('article_id = '.$from_id.' AND clang = '.$from_clang.' AND re_article_slice_id = 0');
 	$re_slice_id = 0;
 	while($article_slice){
-		$sliceservice = Service_Factory::getService('Slice');
+		$sliceservice = sly_Service_Factory::getService('Slice');
 		$slice = $sliceservice->findById($article_slice->getSliceId());
-		$slice = $slice->copy();
+		$slice = $sliceservice->copy($slice);
 			
 		$insert = new rex_sql();
 		$insert->setTable('article_slice', true);
@@ -611,7 +611,7 @@ function rex_copyArticle($id, $to_cat_id)
 				        'template_id' => $art_sql->getValue('template_id'),
 			      	)
     			);
-    			Core::cache()->delete('alist', $to_cat_id);
+    			sly_Core::cache()->delete('alist', $to_cat_id);
     			
     			
 				$art_sql->flush();
@@ -693,7 +693,7 @@ function rex_moveArticle($id, $from_cat_id, $to_cat_id)
 				rex_newArtPrio($from_cat_id, $clang, 1, 0);
 				
 				// Cache aufrÃ¤umen
-				$cache = Core::getInstance()->cache();
+				$cache = sly_Core::getInstance()->cache();
 				
 				$cache->delete('article', $id.'_'.$clang);
 				$cache->delete('alist', $from_cat_id.'_'.$clang);
@@ -847,7 +847,7 @@ function rex_newCatPrio($re_id, $clang, $new_prio, $old_prio)
 			'pid'
 		);
 
-		Core::getInstance()->cache()->delete('clist', $re_id.'_'.$clang);
+		sly_Core::getInstance()->cache()->delete('clist', $re_id.'_'.$clang);
 	}
 }
 
@@ -884,6 +884,6 @@ function rex_newArtPrio($re_id, $clang, $new_prio, $old_prio)
 			'pid'
 		);
 
-		Core::getInstance()->cache()->delete('alist', $re_id.'_'.$clang);
+		sly_Core::getInstance()->cache()->delete('alist', $re_id.'_'.$clang);
 	}
 }

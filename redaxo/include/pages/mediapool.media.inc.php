@@ -111,7 +111,7 @@ if ($subpage=='detail' && rex_post('btn_delete', 'string'))
       {
         if($media->delete() !== FALSE)
         {
-          Core::cache()->delete('media', $file_id);
+          sly_Core::cache()->delete('media', $file_id);
           
           $info = $I18N->msg('pool_file_deleted');
         }else
@@ -166,7 +166,7 @@ if ($subpage=="detail" && rex_post('btn_update', 'string')){
       
       $return = rex_mediapool_updateMedia($_FILES['file_new'],$FILEINFOS,$REX['USER']->getValue("login"));
       
-		Core::cache()->delete('media', $FILEINFOS["file_id"]);
+		sly_Core::cache()->delete('media', $FILEINFOS["file_id"]);
       
       $info = $return['msg'];
 	

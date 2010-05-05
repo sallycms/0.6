@@ -64,14 +64,14 @@ class OOArticleSlice
 	 */
 	public static function getArticleSliceById($an_id, $clang = false, $revision = 0)
 	{
-		if ($clang === false) $clang = Core::getCurrentClang();
+		if ($clang === false) $clang = sly_Core::getCurrentClang();
 		$namespace = 'slice';
 		$key = $an_id;
 
-		$obj = Core::cache()->get($namespace, $key, null);
+		$obj = sly_Core::cache()->get($namespace, $key, null);
 		if ($obj === null) {
 			$obj = self::_getSliceWhere('id='. $an_id .' AND clang='. $clang.' and revision='.$revision);
-			Core::cache()->set($namespace, $key, $obj);
+			sly_Core::cache()->set($namespace, $key, $obj);
 		}
 		return $obj;
 	}
@@ -91,7 +91,7 @@ class OOArticleSlice
 		global $REX;
 
 		if ($clang === false)
-		$clang = Core::getCurrentClang();
+		$clang = sly_Core::getCurrentClang();
 
 		return self::_getSliceWhere('a.article_id='. $an_article_id .' AND
                                           a.clang='. $clang .' AND
@@ -118,7 +118,7 @@ class OOArticleSlice
 		global $REX;
 
 		if ($clang === false)
-		$clang = Core::getCurrentClang();
+		$clang = sly_Core::getCurrentClang();
 
 		return self::_getSliceWhere('a.article_id='. $an_article_id .' AND
                                           a.clang='. $clang .' AND
@@ -146,7 +146,7 @@ class OOArticleSlice
 		global $REX;
 
 		if ($clang === false)
-		$clang = Core::getCurrentClang();
+		$clang = sly_Core::getCurrentClang();
 
 		return self::_getSliceWhere('article_id='. $an_article_id .' AND clang='. $clang .' AND modultyp_id='. $a_moduletype_id .' AND revision='.$revision, array());
 	}
@@ -177,7 +177,7 @@ class OOArticleSlice
 	 */
 	public function getSlice()
 	{
-		$slice = Service_Factory::getService('Slice')->findById($this->getSliceId());
+		$slice = sly_Service_Factory::getService('Slice')->findById($this->getSliceId());
 		$content = $slice->getOutput();
 		
 		$content = self::replaceLinks($content);
@@ -294,7 +294,7 @@ class OOArticleSlice
 
 	public function getValue($index)
 	{
-		$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_VALUE', $index);
+		$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_VALUE', $index);
 		if($value){
 			return $value->getValue();
 		}
@@ -304,7 +304,7 @@ class OOArticleSlice
 
 	public function getLink($index)
 	{
-		$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_LINK', $index);
+		$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_LINK', $index);
 		if($value){
 			return $value->getValue();
 		}
@@ -322,7 +322,7 @@ class OOArticleSlice
 
 	public function getLinkList($index)
 	{
-		$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_LINKLIST', $index);
+		$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_LINKLIST', $index);
 		if($value){
 			return $value->getValue();
 		}
@@ -332,7 +332,7 @@ class OOArticleSlice
 
 	public function getMedia($index)
 	{
-		$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_MEDIA', $index);
+		$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_MEDIA', $index);
 		if($value){
 			return $value->getValue();
 		}
@@ -348,7 +348,7 @@ class OOArticleSlice
 
 	public function getMediaList($index)
 	{
-		$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_MEDIALIST', $index);
+		$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_MEDIALIST', $index);
 		if($value){
 			return $value->getValue();
 		}
@@ -358,7 +358,7 @@ class OOArticleSlice
 
 	public function getHtml()
 	{
-		$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_HTML', $index);
+		$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_HTML', $index);
 		if($value){
 			return $value->getValue();
 		}
@@ -368,7 +368,7 @@ class OOArticleSlice
 
 	public function getPhp()
 	{
-		$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_PHP', $index);
+		$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_PHP', $index);
 		if($value){
 			return $value->getValue();
 		}
@@ -378,7 +378,7 @@ class OOArticleSlice
 
 	private function replaceGlobals($content){
 	    // Articleslice abhängige Globale Variablen ersetzen
-	    $slice = Service_Factory::getService('Slice')->findById($this->getSliceId());
+	    $slice = sly_Service_Factory::getService('Slice')->findById($this->getSliceId());
 		
     	$content = str_replace('REX_MODULE_ID', $slice->getModuleId(), $content);
 	    $content = str_replace('REX_SLICE_ID', $this->getId(), $content);

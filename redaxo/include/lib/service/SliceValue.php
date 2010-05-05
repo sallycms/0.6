@@ -15,12 +15,12 @@
  * @author zozi@webvariants.de
  *
  */
-class Service_SliceValue extends Service_Base{
+class sly_Service_SliceValue extends sly_Service_Base{
 
 	protected $tablename = 'slice_value';
 	
 	protected function makeObject(array $params){
-		return new Model_SliceValue($params);
+		return new sly_Model_SliceValue($params);
 	}
 	
 	public function findBySliceTypeFinder($slice_id, $type, $finder){

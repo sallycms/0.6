@@ -15,7 +15,7 @@
  * @author zozi@webvariants.de
  *
  */
-class DB_PDO_Connection {
+class sly_DB_PDO_Connection {
 	
 	private static $instance;
 	
@@ -24,7 +24,7 @@ class DB_PDO_Connection {
 	
 	private function __construct(){
 		
-		$conf = Configuration::getInstance()->get('DB/1');
+		$conf = sly_Core::config()->get('DB/1');
 		$connString     = $this->getConnectionString($conf);
         $this->connection = new PDO($connString, $conf['LOGIN'], $conf['PSW']);
 	}

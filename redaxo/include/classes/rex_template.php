@@ -90,7 +90,7 @@ class rex_template
 			$templateFile = self::getFilePath($this->getId());
 
 			$content = $sql->getValue('content');
-			foreach(Core::getVarTypes() as $idx => $var)
+			foreach(sly_Core::getVarTypes() as $idx => $var)
 			{
 				$content = $var->getTemplate($content);
 			}

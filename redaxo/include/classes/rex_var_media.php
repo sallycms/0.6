@@ -43,13 +43,13 @@ class rex_var_media extends rex_var
 
 	function getACDatabaseValues($REX_ACTION, $slice_id)
 	{
-		$values = Service_Factory::getService('SliceValue')->find(array('slice_id' => $slice_id, 'type' => 'REX_MEDIA'));
+		$values = sly_Service_Factory::getService('SliceValue')->find(array('slice_id' => $slice_id, 'type' => 'REX_MEDIA'));
 		foreach($values as $value)
 		{
 			$REX_ACTION['REX_MEDIA'][$value->getFinder()] = $value->getValue();
 		}
 
-		$values = Service_Factory::getService('SliceValue')->find(array('slice_id' => $slice_id, 'type' => 'REX_MEDIALIST'));
+		$values = sly_Service_Factory::getService('SliceValue')->find(array('slice_id' => $slice_id, 'type' => 'REX_MEDIALIST'));
 		foreach($values as $value)
 		{
 			$REX_ACTION['REX_MEDIALIST'][$value->getFinder()] = $value->getValue();
@@ -63,7 +63,7 @@ class rex_var_media extends rex_var
 		//global $REX;
 
 		//$slice_id = $sql->getValue('slice_id');
-		$slice = Service_Factory::getService('Slice')->findById($slice_id);
+		$slice = sly_Service_Factory::getService('Slice')->findById($slice_id);
 		if(isset($REX_ACTION['REX_MEDIA'])){
 			foreach($REX_ACTION['REX_MEDIA'] as $key => $value){
 				$slice->addValue('REX_MEDIA', $key, $value);
@@ -171,7 +171,7 @@ class rex_var_media extends rex_var
       				list ($param_str, $args) = $match;
       				list ($id, $args) = $this->extractArg('id', $args, 0);
 
-      				$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, self::MEDIALIST, $id);
+      				$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, self::MEDIALIST, $id);
       				if($value){
       					$value = $value->getValue();
       				}else{
@@ -211,7 +211,7 @@ class rex_var_media extends rex_var
       				list ($param_str, $args) = $match;
       				list ($id, $args) = $this->extractArg('id', $args, 0);
 
-      				$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, self::MEDIA, $id);
+      				$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, self::MEDIA, $id);
       				if($value){
       					$value = $value->getValue();
       				}else{
@@ -258,7 +258,7 @@ class rex_var_media extends rex_var
       				list ($param_str, $args) = $match;
       				list ($id, $args) = $this->extractArg('id', $args, 0);
 
-      				$value = Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, self::MEDIALIST, $id);
+      				$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, self::MEDIALIST, $id);
       				if($value){
       					$value = $value->getValue();
       				}else{

@@ -15,7 +15,7 @@
  * @author zozi@webvariants.de
  *
  */
-class Configuration{
+class sly_Configuration{
 
     private $configuration;
     private static $instance;
@@ -27,7 +27,7 @@ class Configuration{
 
 	/**
 	 *
-	 * @return Configuration
+	 * @return sly_Configuration
 	 */
     public static function getInstance(){
         if (!self::$instance) self::$instance = new self();

@@ -74,7 +74,7 @@ function rex_getUrl($id = 0, $clang = false, $name = 'NoName', $params = '', $di
 	$clang     = (int) $clang;
 
 	if ($id <= 0) {
-		$id = Core::getCurrentArticleId();
+		$id = sly_Core::getCurrentArticleId();
 	}
 
 	// Wenn eine rexExtension vorhanden ist, immer die clang mitgeben!

@@ -518,7 +518,7 @@ function rex_is_frontend()
  */
 function rex_cur_clang()
 {
-	return (int) Core::getCurrentClang();
+	return (int) sly_Core::getCurrentClang();
 }
 
 function rex_get_clang($clang = false, $default = -1)
@@ -530,7 +530,7 @@ function rex_get_clang($clang = false, $default = -1)
 	}
 	
 	if (!isset($REX['CLANG'][$clang])) {
-		$clang = Core::getCurrentClang();
+		$clang = sly_Core::getCurrentClang();
 	}
 	
 	return (int) $clang;

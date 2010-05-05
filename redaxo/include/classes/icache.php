@@ -15,7 +15,7 @@
  * können speziell angepasste Cache-Implementierungen sinnvoll sein.
  *
  * Das Cache-Addon muss seine ICache Implementierung über
- * Core::getInstance()->setCache($cache);
+ * sly_Core::getInstance()->setCache($cache);
  * registrieren.
  */
 interface ICache {

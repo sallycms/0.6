@@ -16,10 +16,18 @@
  *
  */
 
-class Model_Slice extends Model_SliceBase {
+class sly_Model_Slice extends sly_Model_Base {
 
+	protected $module_id;
+	
+    protected $_attributes = array('module_id' => 'int');
+    
+    public function getModuleId(){ return $this->module_id; }
+    
+    public function setModuleId($module_id){ $this->module_id = $module_id; }
+	
 	public function addValue($type, $finder, $value = null){
-		$service = Service_Factory::getService('SliceValue');
+		$service = sly_Service_Factory::getService('SliceValue');
 		return $service->create(array('slice_id' => $this->getId(), 'type' => $type, 'finder' => $finder, 'value' => $value));
 	}
 	
@@ -31,13 +39,13 @@ class Model_Slice extends Model_SliceBase {
 	 * @return Model_SliceValue
 	 */
 	public function getValue($type, $finder){
-		$service = Service_Factory::getService('SliceValue');
+		$service = sly_Service_Factory::getService('SliceValue');
 		$sliceValue = $service->findBySliceTypeFinder(array('slice_id' => $this->getId(), 'type' => $type, 'finder' => $finder));
 		return $sliceValue; 
 	}
 	
 	public function flushValues(){
-		$service = Service_Factory::getService('SliceValue');
+		$service = sly_Service_Factory::getService('SliceValue');
 		return $service->delete(array('slice_id' => $this->getId()));
 	}
 
@@ -46,26 +54,8 @@ class Model_Slice extends Model_SliceBase {
 	 * @return Model_Module
 	 */
 	public function getModule(){
-		$moduleService = Service_Factory::getService('Module');
+		$moduleService = sly_Service_Factory::getService('Module');
 		return $moduleService->findById($this->getModuleId());
-	}
-	
-	/**
-	 * Kopiert einen Slice und seine Values 
-	 * 
-	 * @return Model_Slice
-	 */
-	public function copy(){
-		$sliceservice = Service_Factory::getService('Slice');
-		$valueservice = Service_Factory::getService('SliceValue');
-		$clone = $sliceservice->create(array('module_id' => $this->getModuleId()));
-		
-		foreach($valueservice->find(array('slice_id' => $this->getId())) as $sliceValue){
-			$sliceValue->setId(Model_Base::NEW_ID);
-			$sliceValue->setSliceId($clone->getId());
-			$valueservice->save($sliceValue);
-		}
-		return $clone;	
 	}
 	
 	public function getOutput(){

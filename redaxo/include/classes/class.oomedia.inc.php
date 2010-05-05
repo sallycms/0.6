@@ -87,7 +87,7 @@ class OOMedia
 		}
 
 		$key = $id;
-		$media = Core::cache()->get('media', $key, null);
+		$media = sly_Core::cache()->get('media', $key, null);
 
 		if($media === null){
 
@@ -122,7 +122,7 @@ class OOMedia
 
 	      	$media->$var_name = $result[$fieldName];
 	      }
-	      Core::cache()->set('media', $key, $media);
+	      sly_Core::cache()->set('media', $key, $media);
 		}
 
 		return $media;
