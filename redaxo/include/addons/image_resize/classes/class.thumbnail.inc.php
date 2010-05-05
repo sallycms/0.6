@@ -435,7 +435,7 @@ class Thumbnail{
 			$offsetType = $resize[8];
 			$imagefile = $resize[9];
 			if(empty($imagefile)){
-				$this->sendError();
+				self::sendError();
 			}
 			$thumb = new Thumbnail($imagefile);
 			$thumb->setNewSize($size, $mode, $height, $mode2, $offset, $offsetType);
