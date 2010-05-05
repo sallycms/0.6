@@ -489,7 +489,6 @@ function rex_copyMeta($from_id, $to_id, $from_clang = 0, $to_clang = 0, $params 
 function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from_re_sliceid = 0, $revision = 0)
 {
 	global $REX;
-
 	$from_clang      = (int) $from_clang;
 	$to_clang        = (int) $to_clang;
 	$from_id         = (int) $from_id;
@@ -501,32 +500,27 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 		return false;
 	}
 
-	$ctypes = rex_sql::getArrayEx('SELECT DISTINCT ctype FROM #_article_slice WHERE article_id = '.$from_id. ' AND clang = '.$from_clang, '#_');
-	foreach($ctypes as $ctype){
-		$article_slice = OOArticleSlice::getFirstSliceForCtype($ctype, $from_id, $from_clang);
-		$re_slice_id = 0;
-		
-		while($article_slice){
-			$sliceservice = Service_Factory::getService('Slice');
-			$slice = $sliceservice->findById($article_slice->getSliceId());
-			$slice = $slice->copy();
+	$article_slice = OOArticleSlice::_getSliceWhere('article_id = '.$from_id.' AND clang = '.$from_clang.' AND re_article_slice_id = 0');
+	$re_slice_id = 0;
+	while($article_slice){
+		$sliceservice = Service_Factory::getService('Slice');
+		$slice = $sliceservice->findById($article_slice->getSliceId());
+		$slice = $slice->copy();
 			
-			$insert = rex_sql::getInstance();
-			$insert->setTable('article_slice', true);
-			$insert->setValue('clang', $insert->escape($to_clang));
-			$insert->setValue('ctype', $insert->escape($ctype));
-			$insert->setValue('re_article_slice_id', $insert->escape($re_slice_id));
-			$insert->setValue('slice_id', $insert->escape($slice->getId()));
-			$insert->setValue('article_id', $insert->escape($to_id));
-			$insert->setValue('modultyp_id', $insert->escape($slice->getModuleId()));
-			$insert->setValue('revision', 0);
-			$insert->addGlobalCreateFields();
-			$insert->insert();
-			
-			$re_slice_id = $insert->last_insert_id;
+		$insert = new rex_sql();
+		$insert->setTable('article_slice', true);
+		$insert->setValue('clang', $insert->escape($to_clang));
+		$insert->setValue('ctype', $insert->escape($article_slice->getCtype()));
+		$insert->setValue('re_article_slice_id', $insert->escape($re_slice_id));
+		$insert->setValue('slice_id', $insert->escape($slice->getId()));
+		$insert->setValue('article_id', $insert->escape($to_id));
+		$insert->setValue('modultyp_id', $insert->escape($slice->getModuleId()));
+		$insert->setValue('revision', 0);
+		$insert->addGlobalCreateFields();
+		$insert->insert();
+		$re_slice_id = $insert->last_insert_id;
 				
-			$article_slice = $article_slice->getNextSlice();
-		}
+		$article_slice = $article_slice->getNextSlice();
 	}
 	
 	rex_deleteCacheArticleContent($to_id, $to_clang);
@@ -701,9 +695,9 @@ function rex_moveArticle($id, $from_cat_id, $to_cat_id)
 				// Cache aufrÃ¤umen
 				$cache = Core::getInstance()->cache();
 				
-				$cache->delete('article_'.$id.'_'.$clang);
-				$cache->delete('alist_'.$from_cat_id.'_'.$clang);
-				$cache->delete('alist_'.$to_cat_id.'_'.$clang);
+				$cache->delete('article', $id.'_'.$clang);
+				$cache->delete('alist', $from_cat_id.'_'.$clang);
+				$cache->delete('alist', $to_cat_id.'_'.$clang);
 			}
 			else {
 				return false;

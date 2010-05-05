@@ -245,6 +245,9 @@ class Thumbnail{
 	 */
 	private function size_height($size)
 	{
+		if($this->height < $size){
+			$size = $this->height;
+		}
 		// --- height
 		$this->thumb_height = (int) $size;
 		// siehe http://forum.redaxo.de/ftopic9292.html
@@ -262,6 +265,9 @@ class Thumbnail{
 	 */
 	private function size_width($size)
 	{
+		if($this->width < $size){
+			$size = $this->width;
+		}
 		// --- width
 		$this->thumb_width  = (int) $size;
 		$this->thumb_height = (int) ($this->thumb_width / $this->width * $this->height);
@@ -428,6 +434,9 @@ class Thumbnail{
 			$offset = $resize[7];
 			$offsetType = $resize[8];
 			$imagefile = $resize[9];
+			if(empty($imagefile)){
+				$this->sendError();
+			}
 			$thumb = new Thumbnail($imagefile);
 			$thumb->setNewSize($size, $mode, $height, $mode2, $offset, $offsetType);
 			$thumb->addFilters();

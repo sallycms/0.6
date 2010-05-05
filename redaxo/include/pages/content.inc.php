@@ -296,175 +296,176 @@ if ($article->getRows() == 1)
 		}
 		
 		// END: Slice add/edit/delete
-		// START: Slice move up/down
-		
-		if ($function == 'moveup' || $function == 'movedown') {
-			if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveSlice[]')) {
-				// Modul und Rechte vorhanden?
-
-				$module_id = rex_slice_module_exists($slice_id, $clang);
-				
-				if ($module_id == -1) {
-					// MODUL IST NICHT VORHANDEN
-					$warning  = $I18N->msg('module_not_found');
-					$slice_id = '';
-					$function = '';
-				}
-				else {
-					// RECHTE AM MODUL ?
-					if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('module['.$module_id.']') || $REX['USER']->hasPerm('module[0]')) {
-						list($success, $message) = rex_moveSlice($slice_id, $clang, $function);
-
-						if ($success) {
-							$info = $message;
-						}
-						else {
-							$warning = $message;
-						}
+		if($mode == 'meta'){
+			// START: Slice move up/down
+			
+			if ($function == 'moveup' || $function == 'movedown') {
+				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveSlice[]')) {
+					// Modul und Rechte vorhanden?
+	
+					$module_id = rex_slice_module_exists($slice_id, $clang);
+					
+					if ($module_id == -1) {
+						// MODUL IST NICHT VORHANDEN
+						$warning  = $I18N->msg('module_not_found');
+						$slice_id = '';
+						$function = '';
 					}
 					else {
-						$warning = $I18N->msg('no_rights_to_this_function');
+						// RECHTE AM MODUL ?
+						if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('module['.$module_id.']') || $REX['USER']->hasPerm('module[0]')) {
+							list($success, $message) = rex_moveSlice($slice_id, $clang, $function);
+	
+							if ($success) {
+								$info = $message;
+							}
+							else {
+								$warning = $message;
+							}
+						}
+						else {
+							$warning = $I18N->msg('no_rights_to_this_function');
+						}
+					}
+				}
+				else {
+					$warning = $I18N->msg('no_rights_to_this_function');
+				}
+			}
+			
+			// END: Slice move up/down
+			// START: ARTICLE2STARTARTICLE
+			
+			if (rex_post('article2startpage', 'string')) {
+				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('article2startpage[]')) {
+					if (rex_article2startpage($article_id)) {
+						$info = $I18N->msg('content_tostartarticle_ok');
+						while (ob_get_level()) ob_end_clean();
+						header('Location: index.php?page=content&mode=meta&clang='.$clang.'&ctype='.$ctype.'&article_id='.$article_id.'&info='.urlencode($info));
+						exit;
+					}
+					else {
+						$warning = $I18N->msg('content_tostartarticle_failed');
 					}
 				}
 			}
-			else {
-				$warning = $I18N->msg('no_rights_to_this_function');
-			}
-		}
-		
-		// END: Slice move up/down
-		// START: ARTICLE2STARTARTICLE
-		
-		if (rex_post('article2startpage', 'string')) {
-			if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('article2startpage[]')) {
-				if (rex_article2startpage($article_id)) {
-					$info = $I18N->msg('content_tostartarticle_ok');
-					while (ob_get_level()) ob_end_clean();
-					header('Location: index.php?page=content&mode=meta&clang='.$clang.'&ctype='.$ctype.'&article_id='.$article_id.'&info='.urlencode($info));
-					exit;
-				}
-				else {
-					$warning = $I18N->msg('content_tostartarticle_failed');
-				}
-			}
-		}
-		
-		// END: ARTICLE2STARTARTICLE
-		// START: COPY LANG CONTENT
-		
-		if (rex_post('copycontent', 'string')) {
-			if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('copyContent[]')) {
-				$clang_a = rex_post('clang_a', 'rex-clang-id');
-				$clang_b = rex_post('clang_b', 'rex-clang-id');
-
-				if (rex_copyContent($article_id, $article_id, $clang_a, $clang_b)) {
-					$info = $I18N->msg('content_contentcopy');
-				}
-				else {
-					$warning = $I18N->msg('content_errorcopy');
-				}
-			}
-		}
-		
-		// END: COPY LANG CONTENT
-		// START: MOVE ARTICLE
-		
-		if (rex_post('movearticle', 'string') && $category_id != $article_id) {
-			$category_id_new = rex_post('category_id_new', 'rex-category-id');
 			
-			if ($REX['USER']->isAdmin() || ($REX['USER']->hasPerm('moveArticle[]') && ($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('csw['.$category_id_new.']')))) {
-				if (rex_moveArticle($article_id, $category_id, $category_id_new)) {
-					$info = $I18N->msg('content_articlemoved');
-					while (ob_get_level()) ob_end_clean();
-					header('Location: index.php?page=content&article_id='.$article_id.'&mode=meta&clang='.$clang.'&ctype='.$ctype.'&info='.urlencode($info));
-					exit;
-				}
-				else {
-					$warning = $I18N->msg('content_errormovearticle');
-				}
-			}
-			else {
-				$warning = $I18N->msg('no_rights_to_this_function');
-			}
-		}
-		
-		// END: MOVE ARTICLE
-		// START: COPY ARTICLE
-		
-		if (rex_post('copyarticle', 'string')) {
-			$category_copy_id_new = rex_post('category_copy_id_new', 'rex-category-id');
+			// END: ARTICLE2STARTARTICLE
+			// START: COPY LANG CONTENT
 			
-			if ($REX['USER']->isAdmin() || ($REX['USER']->hasPerm('copyArticle[]') && ($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('csw['.$category_copy_id_new.']')))) {
-				if (($new_id = rex_copyArticle($article_id, $category_copy_id_new)) !== false) {
-					$info = $I18N->msg('content_articlecopied');
-					while (ob_get_level()) ob_end_clean();
-					header('Location: index.php?page=content&article_id='.$new_id.'&mode=meta&clang='.$clang.'&ctype='.$ctype.'&info='.urlencode($info));
-					exit;
-				}
-				else {
-					$warning = $I18N->msg('content_errorcopyarticle');
+			if (rex_post('copycontent', 'string')) {
+				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('copyContent[]')) {
+					$clang_a = rex_post('clang_a', 'rex-clang-id');
+					$clang_b = rex_post('clang_b', 'rex-clang-id');
+	
+					if (rex_copyContent($article_id, $article_id, $clang_a, $clang_b)) {
+						$info = $I18N->msg('content_contentcopy');
+					}
+					else {
+						$warning = $I18N->msg('content_errorcopy');
+					}
 				}
 			}
-			else {
-				$warning = $I18N->msg('no_rights_to_this_function');
-			}
-		}
-		
-		// END: COPY ARTICLE
-		// START: MOVE CATEGORY
-		
-		if (rex_post('movecategory', 'string')) {
-			$category_id_new = rex_post('category_id_new', 'rex-category-id');
 			
-			if ($REX['USER']->isAdmin() || ($REX['USER']->hasPerm('moveCategory[]') && (($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('csw['.$category_id.']')) && ($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('csw['.$category_id_new.']'))))) {
-				if ($category_id != $category_id_new && rex_moveCategory($category_id, $category_id_new)) {
-					$info = $I18N->msg('category_moved');
-					while (ob_get_level()) ob_end_clean();
-					header('Location: index.php?page=content&article_id='.$category_id.'&mode=meta&clang='.$clang.'&ctype='.$ctype.'&info='.urlencode($info));
-					exit;
-				}
-				else {
-					$warning = $I18N->msg('content_error_movecategory');
-				}
-			}
-			else {
-				$warning = $I18N->msg('no_rights_to_this_function');
-			}
-		}
-		
-		// END: MOVE CATEGORY
-		// START: SAVE METADATA
-		
-		if (rex_post('savemeta', 'string')) {
-			$meta_article_name = rex_post('meta_article_name', 'string');
-
-			$meta_sql = new rex_sql();
-			$meta_sql->setTable('article', true);
-			$meta_sql->setWhere('id = '.$article_id.' AND clang = '.$clang);
-			$meta_sql->setValue('name', $meta_article_name);
-			$meta_sql->addGlobalUpdateFields();
-
-			if ($meta_sql->update()) {
-				$article->setQuery('SELECT * FROM '.$REX['TABLE_PREFIX'].'article WHERE id = '.$article_id.' AND clang = '.$clang);
+			// END: COPY LANG CONTENT
+			// START: MOVE ARTICLE
+			
+			if (rex_post('movearticle', 'string') && $category_id != $article_id) {
+				$category_id_new = rex_post('category_id_new', 'rex-category-id');
 				
-				$info     = $I18N->msg('metadata_updated');
-				$meta_sql = null;
-
-				rex_deleteCacheArticle($article_id, $clang);
-
-				$info = rex_register_extension_point('ART_META_UPDATED', $info, array(
-					'id'    => $article_id,
-					'clang' => $clang,
-					'name'  => $meta_article_name,
-				));
+				if ($REX['USER']->isAdmin() || ($REX['USER']->hasPerm('moveArticle[]') && ($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('csw['.$category_id_new.']')))) {
+					if (rex_moveArticle($article_id, $category_id, $category_id_new)) {
+						$info = $I18N->msg('content_articlemoved');
+						while (ob_get_level()) ob_end_clean();
+						header('Location: index.php?page=content&article_id='.$article_id.'&mode=meta&clang='.$clang.'&ctype='.$ctype.'&info='.urlencode($info));
+						exit;
+					}
+					else {
+						$warning = $I18N->msg('content_errormovearticle');
+					}
+				}
+				else {
+					$warning = $I18N->msg('no_rights_to_this_function');
+				}
 			}
-			else {
-				$meta_sql = null;
-				$warning  = $meta_sql->getError();
+			
+			// END: MOVE ARTICLE
+			// START: COPY ARTICLE
+			
+			if (rex_post('copyarticle', 'string')) {
+				$category_copy_id_new = rex_post('category_copy_id_new', 'rex-category-id');
+				
+				if ($REX['USER']->isAdmin() || ($REX['USER']->hasPerm('copyArticle[]') && ($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('csw['.$category_copy_id_new.']')))) {
+					if (($new_id = rex_copyArticle($article_id, $category_copy_id_new)) !== false) {
+						$info = $I18N->msg('content_articlecopied');
+						while (ob_get_level()) ob_end_clean();
+						header('Location: index.php?page=content&article_id='.$new_id.'&mode=meta&clang='.$clang.'&ctype='.$ctype.'&info='.urlencode($info));
+						exit;
+					}
+					else {
+						$warning = $I18N->msg('content_errorcopyarticle');
+					}
+				}
+				else {
+					$warning = $I18N->msg('no_rights_to_this_function');
+				}
 			}
+			
+			// END: COPY ARTICLE
+			// START: MOVE CATEGORY
+			
+			if (rex_post('movecategory', 'string')) {
+				$category_id_new = rex_post('category_id_new', 'rex-category-id');
+				
+				if ($REX['USER']->isAdmin() || ($REX['USER']->hasPerm('moveCategory[]') && (($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('csw['.$category_id.']')) && ($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('csw['.$category_id_new.']'))))) {
+					if ($category_id != $category_id_new && rex_moveCategory($category_id, $category_id_new)) {
+						$info = $I18N->msg('category_moved');
+						while (ob_get_level()) ob_end_clean();
+						header('Location: index.php?page=content&article_id='.$category_id.'&mode=meta&clang='.$clang.'&ctype='.$ctype.'&info='.urlencode($info));
+						exit;
+					}
+					else {
+						$warning = $I18N->msg('content_error_movecategory');
+					}
+				}
+				else {
+					$warning = $I18N->msg('no_rights_to_this_function');
+				}
+			}
+			
+			// END: MOVE CATEGORY
+			// START: SAVE METADATA
+			
+			if (rex_post('savemeta', 'string')) {
+				$meta_article_name = rex_post('meta_article_name', 'string');
+	
+				$meta_sql = new rex_sql();
+				$meta_sql->setTable('article', true);
+				$meta_sql->setWhere('id = '.$article_id.' AND clang = '.$clang);
+				$meta_sql->setValue('name', $meta_article_name);
+				$meta_sql->addGlobalUpdateFields();
+	
+				if ($meta_sql->update()) {
+					$article->setQuery('SELECT * FROM '.$REX['TABLE_PREFIX'].'article WHERE id = '.$article_id.' AND clang = '.$clang);
+					
+					$info     = $I18N->msg('metadata_updated');
+					$meta_sql = null;
+	
+					rex_deleteCacheArticle($article_id, $clang);
+				}
+				else {
+					$meta_sql = null;
+					$warning  = $meta_sql->getError();
+				}
+			}
+			
+			$info = rex_register_extension_point('ART_META_UPDATED', $info, array(
+				'id'    => $article_id,
+				'clang' => $clang,
+			));
+			
+			// END: SAVE METADATA
 		}
-		
-		// END: SAVE METADATA
 		// START: CONTENT HEAD MENUE
 		
 		$num_ctypes = count($REX['CTYPE']);

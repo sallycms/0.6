@@ -191,7 +191,8 @@ function rex_mediapool_updateMedia($fileData, &$fileInfos, $userlogin = null)
 	$msg     = '';
 	$updated = false;
 	$level   = error_reporting(0);
-
+	$return['ok'] = false;
+	
 	if (!empty($_FILES['file_new']['name']) && $_FILES['file_new']['name'] != 'none') {
 		$filename = $_FILES['file_new']['tmp_name'];
 		$filetype = $_FILES['file_new']['type'];
@@ -214,7 +215,11 @@ function rex_mediapool_updateMedia($fileData, &$fileInfos, $userlogin = null)
 				}
 				
 				chmod($REX['MEDIAFOLDER'].'/'.$fileInfos['filename'], $REX['FILEPERM']);
+				if(class_exists('Thumbnail')){
+					Thumbnail::deleteCache($fileInfos['filename']);
+				}
 				$updated = true;
+				$return['ok'] = true;
 			}
 			else {
 				$return['msg'] = $I18N->msg('pool_file_upload_error');
@@ -230,14 +235,11 @@ function rex_mediapool_updateMedia($fileData, &$fileInfos, $userlogin = null)
 	$sql->addGlobalUpdateFields();
 	$sql->update();
 
-	$return['ok'] = false;
-	
 	if (!isset($return['msg'])) {
 		$return['msg']      = $I18N->msg('pool_file_infos_updated');
 		$return['filename'] = $fileInfos['filename'];
 		$return['filetype'] = $fileInfos['filetype'];
 		$return['file_id']  = $fileInfos['file_id'];
-		$return['ok']       = true;
 	}
 
 	return $return;

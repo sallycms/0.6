@@ -170,11 +170,14 @@ if ($subpage=="detail" && rex_post('btn_update', 'string')){
       
       $info = $return['msg'];
 	
-      if($return["ok"] == 1)
+      if($return["ok"])
       {
         // ----- EXTENSION POINT
          // rex_register_extension_point('MEDIA_UPDATED','',array('id' => $file_id, 'type' => $FILEINFOS["filetype"], 'filename' => $FILEINFOS["filename"] ));
          rex_register_extension_point('MEDIA_UPDATED','', $return);
+         $info = $return['msg'];
+      }else{
+      	$warning = $return['msg'];
       }
     }else
     {
@@ -272,7 +275,7 @@ if ($subpage == "detail")
     {
       if ($ffiletype_ii)
       {
-        $opener_link .= '<a href="javascript:insertImage(\''. $encoded_fname .'\',\''.$gf->getValue('title').'\');">'.$I18N->msg('pool_image_get').'</a> | ';
+        $opener_link .= '<a href="javascript:insertImage(\''. $encoded_fname .'\',\''.$media->getTitle().'\');">'.$I18N->msg('pool_image_get').'</a> | ';
       }
     }
     elseif($opener_input_field == 'TINY')
