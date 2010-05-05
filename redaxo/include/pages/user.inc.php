@@ -245,7 +245,7 @@ for ($i=0;$i<$sqlmodule->getRows();$i++)
 $userperm_module = rex_request('userperm_module', 'array');
 
 
-// extrarechte - von den addons übergeben
+// extrarechte - von den addons ï¿½bergeben
 $sel_extra = new rex_select;
 $sel_extra->setMultiple(1);
 $sel_extra->setStyle('class="rex-form-select"');
@@ -322,7 +322,7 @@ if ($FUNC_UPDATE != '' || $FUNC_APPLY != '')
     $gp->setQuery("select * from ".$REX['TABLE_PREFIX']."article where id='$ccat' and clang=0");
     if ($gp->getRows()==1)
     {
-      // Alle Eltern-Kategorien im Pfad bis zu ausgewählten, mit
+      // Alle Eltern-Kategorien im Pfad bis zu ausgewï¿½hlten, mit
       // Lesendem zugriff versehen, damit man an die aktuelle Kategorie drann kommt
       foreach (explode('|',$gp->getValue('path')) as $a)
         if ($a!='')$userperm_cat_read[$a] = $a;
@@ -370,7 +370,7 @@ if ($FUNC_UPDATE != '' || $FUNC_APPLY != '')
 
 } elseif ($FUNC_DELETE != '')
 {
-  // man kann sich selbst nicht löschen..
+  // man kann sich selbst nicht lï¿½schen..
   if ($REX['USER']->getValue("user_id") != $user_id)
   {
     $deleteuser = new rex_sql;
@@ -446,7 +446,7 @@ if ($FUNC_UPDATE != '' || $FUNC_APPLY != '')
       $gp->setQuery("select * from ".$REX['TABLE_PREFIX']."article where id='$ccat' and clang=0");
       if ($gp->getRows()==1)
       {
-        // Alle Eltern-Kategorien im Pfad bis zu ausgewählten, mit
+        // Alle Eltern-Kategorien im Pfad bis zu ausgewï¿½hlten, mit
         // Lesendem zugriff versehen, damit man an die aktuelle Kategorie drann kommt
         foreach (explode('|',$gp->getValue('path')) as $a)
           if ($a!='')$userperm_cat_read[$a] = $a;
@@ -546,8 +546,8 @@ if ($FUNC_ADD != "" || $user_id > 0)
     $form_label = $I18N->msg('edit_user');
     $add_hidden = '<input type="hidden" name="user_id" value="'.$user_id.'" />';
     $add_submit = '<div class="rex-form-row">
-						<p class="rex-form-col-a"><input type="submit" class="rex-form-submit" name="FUNC_UPDATE" value="'.$I18N->msg('user_save').'" '. rex_accesskey($I18N->msg('user_save'), $REX['ACKEY']['SAVE']) .' /></p>
-						<p class="rex-form-col-b"><input type="submit" class="rex-form-submit" name="FUNC_APPLY" value="'.$I18N->msg('user_apply').'" '. rex_accesskey($I18N->msg('user_apply'), $REX['ACKEY']['APPLY']) .' /></p>
+						<p class="rex-form-col-a"><input type="submit" class="rex-form-submit" name="FUNC_UPDATE" value="'.$I18N->msg('user_save').'" /></p>
+						<p class="rex-form-col-b"><input type="submit" class="rex-form-submit" name="FUNC_APPLY" value="'.$I18N->msg('user_apply').'" /></p>
 					</div>';
 		$add_user_class = ' rex-form-read';
     $add_user_login = '<span class="rex-form-read" id="userlogin">'. htmlspecialchars($sql->getValue($REX['TABLE_PREFIX'].'user.login')) .'</span>';
@@ -671,7 +671,7 @@ if ($FUNC_ADD != "" || $user_id > 0)
     $add_hidden = '<input type="hidden" name="FUNC_ADD" value="1" />';
     $add_submit = '<div class="rex-form-row">
 						<p class="rex-form-submit">
-						<input type="submit" class="rex-form-submit" name="function" value="'.$I18N->msg("add_user").'" '. rex_accesskey($I18N->msg('add_user'), $REX['ACKEY']['SAVE']) .' />
+						<input type="submit" class="rex-form-submit" name="function" value="'.$I18N->msg("add_user").'" />
 						</p>
 					</div>';
     $add_admin_chkbox = '<input class="rex-form-checkbox" type="checkbox" id="useradmin" name="useradmin" value="1" '.$adminchecked.' />';
@@ -886,7 +886,7 @@ if (isset($SHOW) and $SHOW)
   $list->addTableColumnGroup(array(40, '5%', '*', 153, 153, 153));
 
   $tdIcon = '<span class="rex-i-element rex-i-user"><span class="rex-i-element-text">###name###</span></span>';
-  $thIcon = '<a class="rex-i-element rex-i-user-add" href="'. $list->getUrl(array('FUNC_ADD' => '1')) .'"'. rex_accesskey($I18N->msg('create_user'), $REX['ACKEY']['ADD']) .'><span class="rex-i-element-text">'. $I18N->msg('create_user') .'</span></a>';
+  $thIcon = '<a class="rex-i-element rex-i-user-add" href="'. $list->getUrl(array('FUNC_ADD' => '1')) .'"><span class="rex-i-element-text">'. $I18N->msg('create_user') .'</span></a>';
   $list->addColumn($thIcon, $tdIcon, 0, array('<th class="rex-icon">###VALUE###</th>','<td class="rex-icon">###VALUE###</td>'));
   $list->setColumnParams($thIcon, array('user_id' => '###user_id###'));
 

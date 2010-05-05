@@ -636,7 +636,7 @@ if ($article->getRows() == 1)
 			print '
 						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-submit">
-								<input class="rex-form-submit" type="submit" name="savemeta" value="'.$I18N->msg('update_metadata').'"'.rex_accesskey($I18N->msg('update_metadata'), $REX['ACKEY']['SAVE']).rex_tabindex().' />
+								<input class="rex-form-submit" type="submit" name="savemeta" value="'.$I18N->msg('update_metadata').'" />
 							</p>
 						</div>
 						

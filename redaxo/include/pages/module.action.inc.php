@@ -175,7 +175,7 @@ if ($function == "add" or $function == "edit")
 
     // PreView action macht nur beim edit Sinn da,
     // - beim Delete kommt keine View
-    // - beim Add sind noch keine Werte vorhanden, welche man verarbeiten könnte
+    // - beim Add sind noch keine Werte vorhanden, welche man verarbeiten kï¿½nnte
     $options = array(
       2 => $ASTATUS[1] .' - '.$I18N->msg('action_event_edit')
     );
@@ -215,7 +215,7 @@ if ($function == "add" or $function == "edit")
 
     $btn_update = '';
     if ($function != 'add')
-      $btn_update = '<input type="submit" class="rex-form-submit rex-form-submit-2" name="goon" value="' . $I18N->msg('save_action_and_continue') . '"'. rex_accesskey($I18N->msg('save_action_and_continue'), $REX['ACKEY']['APPLY']) .' />';
+      $btn_update = '<input type="submit" class="rex-form-submit rex-form-submit-2" name="goon" value="' . $I18N->msg('save_action_and_continue') . '" />';
 
     if ($info != '')
       echo rex_info($info);
@@ -321,7 +321,7 @@ if ($function == "add" or $function == "edit")
            	<div class="rex-form-wrapper">
     		      <div class="rex-form-row">
 			    			<p class="rex-form-col-a rex-form-submit">
-			    				<input class="rex-form-submit" type="submit" value="' . $I18N->msg('save_action_and_quit') . '"'. rex_accesskey($I18N->msg('save_action_and_quit'), $REX['ACKEY']['SAVE']) .' />
+			    				<input class="rex-form-submit" type="submit" value="' . $I18N->msg('save_action_and_quit') . '" />
 		    				' . $btn_update . '
 			    			</p>
 			    		</div>
@@ -360,7 +360,7 @@ if ($OUT)
       </colgroup>
       <thead>
         <tr>
-          <th class="rex-icon"><a class="rex-i-element rex-i-action-add" href="index.php?page=module&amp;subpage=actions&amp;function=add"'. rex_accesskey($I18N->msg('action_create'), $REX['ACKEY']['ADD']) .'><span class="rex-i-element-text">' . $I18N->msg('action_create') . '</span></a></th>
+          <th class="rex-icon"><a class="rex-i-element rex-i-action-add" href="index.php?page=module&amp;subpage=actions&amp;function=add"><span class="rex-i-element-text">' . $I18N->msg('action_create') . '</span></a></th>
           <th class="rex-small">ID</th>
           <th>' . $I18N->msg('action_name') . '</th>
           <th>Preview-Event(s)</th>

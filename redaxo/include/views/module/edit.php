@@ -19,7 +19,7 @@ if ($func == 'edit'){
 
 $btn_update = '';
 if ($func == 'edit'){
-	$btn_update = '<input type="submit" class="rex-form-submit rex-form-submit-2" name="goon" value="'.$I18N->msg("save_module_and_continue").'"'. rex_accesskey($I18N->msg('save_module_and_continue'), $REX['ACKEY']['APPLY']) .' />';
+	$btn_update = '<input type="submit" class="rex-form-submit rex-form-submit-2" name="goon" value="'.$I18N->msg("save_module_and_continue").'" />';
 	
 }
 
@@ -60,9 +60,8 @@ if ($func == 'edit'){
 		<div class="rex-form-wrapper">
 			<div class="rex-form-row">
 				<p class="rex-form-col-a rex-form-submit">
-					<input class="rex-form-submit" type="submit" 
-						value="<?= $I18N->msg("save_module_and_quit") ?>"<?=  rex_accesskey($I18N->msg('save_module_and_quit'),
-$REX['ACKEY']['SAVE']) ?> /> <?= $btn_update ?>
+					<input class="rex-form-submit" type="submit" value="<?= $I18N->msg("save_module_and_quit") ?>" />
+					<?= $btn_update ?>
 				</p>
 </div>
 </div>

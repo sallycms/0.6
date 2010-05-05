@@ -167,7 +167,7 @@ else
         <div class="rex-form-wrapper">
           <div class="rex-form-row">
 						<p class="rex-form-col-a rex-form-submit">
-            	<input class="rex-form-submit" type="submit" name="upd_profile_button" value="'.$I18N->msg('profile_save').'" '. rex_accesskey($I18N->msg('user_save'), $REX['ACKEY']['SAVE']) .' />
+            	<input class="rex-form-submit" type="submit" name="upd_profile_button" value="'.$I18N->msg('profile_save').'" />
             </p>
           </div>
         </div>

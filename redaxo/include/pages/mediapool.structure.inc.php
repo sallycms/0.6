@@ -131,7 +131,7 @@ if ($PERMALL)
           </colgroup>
           <thead>
             <tr>
-              <th class="rex-icon"><a class="rex-i-element rex-i-mediapool-category-add" href="'. $link . $cat_id .'&amp;media_method=add_cat"'. rex_accesskey($I18N->msg('pool_kat_create'), $REX['ACKEY']['ADD']) .'><span class="rex-i-element-text">'. $I18N->msg('pool_kat_create') .'</span></a></th>
+              <th class="rex-icon"><a class="rex-i-element rex-i-mediapool-category-add" href="'. $link . $cat_id .'&amp;media_method=add_cat"><span class="rex-i-element-text">'. $I18N->msg('pool_kat_create') .'</span></a></th>
               <th class="rex-small">ID</th>
               <th>'. $I18N->msg('pool_kat_name') .'</th>
               <th colspan="2">'. $I18N->msg('pool_kat_function') .'</th>
@@ -150,7 +150,7 @@ if ($PERMALL)
           <input class="rex-form-text" type="text" size="10" id="rex-form-field-name" name="catname" value="" />
         </td>
         <td colspan="2">
-          <input type="submit" class="rex-form-submit" value="'. $I18N->msg('pool_kat_create'). '"'. rex_accesskey($I18N->msg('pool_kat_create'), $REX['ACKEY']['SAVE']) .' />
+          <input type="submit" class="rex-form-submit" value="'. $I18N->msg('pool_kat_create'). '" />
         </td>
       </tr>
     ';
@@ -172,7 +172,7 @@ if ($PERMALL)
             <input class="rex-form-text" type="text" id="rex-form-field-name" name="cat_name" value="'. htmlspecialchars($OOCat->getName()) .'" />
           </td>
           <td colspan="2">
-            <input type="submit" class="rex-form-submit" value="'. $I18N->msg('pool_kat_update'). '"'. rex_accesskey($I18N->msg('pool_kat_update'), $REX['ACKEY']['SAVE']) .' />
+            <input type="submit" class="rex-form-submit" value="'. $I18N->msg('pool_kat_update'). '" />
           </td>
         </tr>
       ';

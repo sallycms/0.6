@@ -84,8 +84,8 @@ if ($function == "add" or $function == "edit")
       }
     }
 
-    // Daten wieder in den Rohzustand versetzen, da für serialize()/unserialize()
-    // keine Zeichen escaped werden dürfen
+    // Daten wieder in den Rohzustand versetzen, da fï¿½r serialize()/unserialize()
+    // keine Zeichen escaped werden dï¿½rfen
     for($i=1;$i<count($ctypes)+1;$i++)
     {
       $ctypes[$i] = stripslashes($ctypes[$i]);
@@ -179,7 +179,7 @@ if ($function == "add" or $function == "edit")
 
     $ctypes_out = '';
     $i = 1;
-    $ctypes[] = ""; // Extra, fŸr Neue Spalte
+    $ctypes[] = ""; // Extra, fï¿½r Neue Spalte
     
     if (is_array($ctypes)) {
       foreach ($ctypes as $id => $name) 
@@ -286,7 +286,7 @@ if ($function == "add" or $function == "edit")
             </div>
         </fieldset>
 
-        <!-- DIV nötig fuer JQuery slideIn -->
+        <!-- DIV nï¿½tig fuer JQuery slideIn -->
         <div id="rex-form-template-ctype">
         <fieldset class="rex-form-col-1">
           <legend>'.$I18N->msg("content_types").' [ctypes]</legend>
@@ -301,8 +301,8 @@ if ($function == "add" or $function == "edit")
           <div class="rex-form-wrapper">
             <div class="rex-form-row">
               <p class="rex-form-col-a rex-form-submit">
-                <input class="rex-form-submit" type="submit" value="' . $I18N->msg("save_template_and_quit") . '"'. rex_accesskey($I18N->msg('save_template_and_quit'), $REX['ACKEY']['SAVE']) .' />
-                <input class="rex-form-submit rex-form-submit-2" type="submit" name="goon" value="' . $I18N->msg("save_template_and_continue") . '"'. rex_accesskey($I18N->msg('save_template_and_continue'), $REX['ACKEY']['APPLY']) .' />
+                <input class="rex-form-submit" type="submit" value="' . $I18N->msg("save_template_and_quit") . '" />
+                <input class="rex-form-submit rex-form-submit-2" type="submit" name="goon" value="' . $I18N->msg("save_template_and_continue") . '" />
               </p>
             </div>
           </div>
@@ -346,7 +346,7 @@ if ($OUT)
   $list->addTableColumnGroup(array(40, 40, '*', 153, 153));
 
   $tdIcon = '<span class="rex-i-element rex-i-template"><span class="rex-i-element-text">###name###</span></span>';
-  $thIcon = '<a class="rex-i-element rex-i-template-add" href="'. $list->getUrl(array('function' => 'add')) .'"'. rex_accesskey($I18N->msg('create_template'), $REX['ACKEY']['ADD']) .'><span class="rex-i-element-text">'.$I18N->msg('create_template').'</span></a>';
+  $thIcon = '<a class="rex-i-element rex-i-template-add" href="'. $list->getUrl(array('function' => 'add')) .'"><span class="rex-i-element-text">'.$I18N->msg('create_template').'</span></a>';
   $list->addColumn($thIcon, $tdIcon, 0, array('<th class="rex-icon">###VALUE###</th>','<td class="rex-icon">###VALUE###</td>'));
   $list->setColumnParams($thIcon, array('function' => 'edit', 'template_id' => '###id###'));
 

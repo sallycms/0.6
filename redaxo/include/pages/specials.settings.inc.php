@@ -293,7 +293,7 @@ echo '
 							
 								<div class="rex-form-row">
 									<p class="rex-form-col-a rex-form-submit">
-										<input type="submit" class="rex-form-submit" name="sendit" value="'.$I18N->msg("specials_update").'"'. rex_accesskey($I18N->msg('specials_update'), $REX['ACKEY']['SAVE']) .' />
+										<input type="submit" class="rex-form-submit" name="sendit" value="'.$I18N->msg("specials_update").'" />
 									</p>
 								</div>
 								

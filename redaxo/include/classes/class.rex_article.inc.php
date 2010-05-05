@@ -702,7 +702,7 @@ class rex_article
              <div class="rex-form-wrapper">              
               <div class="rex-form-row">
                 <p class="rex-form-col-a rex-form-submit">
-                  <input class="rex-form-submit" type="submit" name="btn_save" value="'. $I18N->msg('add_block') .'"'. rex_accesskey($I18N->msg('add_block'), $REX['ACKEY']['SAVE']) .' />
+                  <input class="rex-form-submit" type="submit" name="btn_save" value="'. $I18N->msg('add_block') .'" />
                 </p>
               </div>
             </div>
@@ -791,8 +791,8 @@ class rex_article
           <div class="rex-form-wrapper">
             <div class="rex-form-row">
               <p class="rex-form-col-a rex-form-submit">
-                <input class="rex-form-submit" type="submit" value="'.$I18N->msg('save_block').'" name="btn_save" '. rex_accesskey($I18N->msg('save_block'), $REX['ACKEY']['SAVE']) .' />
-                <input class="rex-form-submit rex-form-submit-2" type="submit" value="'.$I18N->msg('update_block').'" name="btn_update" '. rex_accesskey($I18N->msg('update_block'), $REX['ACKEY']['APPLY']) .' />
+                <input class="rex-form-submit" type="submit" value="'.$I18N->msg('save_block').'" name="btn_save" />
+                <input class="rex-form-submit rex-form-submit-2" type="submit" value="'.$I18N->msg('update_block').'" name="btn_update" />
               </p>
             </div>
           </div>

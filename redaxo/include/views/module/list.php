@@ -17,7 +17,7 @@ $list->addTableAttribute('summary', $I18N->msg('module_summary'));
 $list->addTableColumnGroup(array(40, 40, '*', 153));
 
 $tdIcon = '<span class="rex-i-element rex-i-module"><span class="rex-i-element-text">###name###</span></span>';
-$thIcon = '<a class="rex-i-element rex-i-module-add" href="'. $list->getUrl(array('func' => 'add')) .'"'. rex_accesskey($I18N->msg('create_module'), $REX['ACKEY']['ADD']) .'><span class="rex-i-element-text">'.$I18N->msg('create_module').'</span></a>';
+$thIcon = '<a class="rex-i-element rex-i-module-add" href="'. $list->getUrl(array('func' => 'add')) .'"><span class="rex-i-element-text">'.$I18N->msg('create_module').'</span></a>';
 $list->addColumn($thIcon, $tdIcon, 0, array('<th class="rex-icon">###VALUE###</th>','<td class="rex-icon">###VALUE###</td>'));
 $list->setColumnParams($thIcon, array('func' => 'edit', 'modul_id' => '###id###'));
 

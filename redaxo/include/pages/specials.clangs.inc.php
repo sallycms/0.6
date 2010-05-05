@@ -113,7 +113,7 @@ echo '
       </colgroup>
       <thead>
         <tr>
-          <th class="rex-small"><a class="rex-i-element rex-i-clang-add" href="index.php?page=specials&amp;subpage=lang&amp;func=addclang#clang"'. rex_accesskey($I18N->msg('clang_add'), $REX['ACKEY']['ADD']) .'><span class="rex-i-element-text">'.$I18N->msg('clang_add').'</span></a></th>
+          <th class="rex-small"><a class="rex-i-element rex-i-clang-add" href="index.php?page=specials&amp;subpage=lang&amp;func=addclang#clang"><span class="rex-i-element-text">'.$I18N->msg('clang_add').'</span></a></th>
           <th class="rex-small">ID</th>
           <th>'.$I18N->msg('clang_name').'</th>
           <th>'.$I18N->msg('clang_function').'</th>
@@ -131,7 +131,7 @@ if ($func == 'addclang')
           <td class="rex-small"><span class="rex-i-element rex-i-clang"><span class="rex-i-element-text">'.htmlspecialchars($clang_name).'</span></span></td>
           <td class="rex-small">'.$sel->get().'</td>
           <td><input class="rex-form-text" type="text" id="rex-form-clang-name" name="clang_name" value="'.htmlspecialchars($clang_name).'" /></td>
-          <td><input class="rex-form-submit" type="submit" name="add_clang_save" value="'.$I18N->msg('clang_add').'"'. rex_accesskey($I18N->msg('clang_add'), $REX['ACKEY']['SAVE']) .' /></td>
+          <td><input class="rex-form-submit" type="submit" name="add_clang_save" value="'.$I18N->msg('clang_add').'" /></td>
         </tr>
       ';
 }
@@ -155,7 +155,7 @@ foreach ($REX['CLANG'] as $lang_id => $lang)
             <td class="rex-small"><span class="rex-i-element rex-i-clang"><span class="rex-i-element-text">'.htmlspecialchars($clang_name).'</span></span></td>
             '.$add_td.'
             <td><input class="rex-form-text" type="text" id="rex-form-clang-name" name="clang_name" value="'.htmlspecialchars($lang).'" /></td>
-            <td><input class="rex-form-submit" type="submit" name="edit_clang_save" value="'.$I18N->msg('clang_update').'"'. rex_accesskey($I18N->msg('clang_update'), $REX['ACKEY']['SAVE']) .' /></td>
+            <td><input class="rex-form-submit" type="submit" name="edit_clang_save" value="'.$I18N->msg('clang_update').'" /></td>
           </tr>';
 
   }

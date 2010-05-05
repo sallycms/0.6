@@ -6,7 +6,6 @@
  * @version svn:$Id$
  */
  
-$accesskey = 1;
 
 $popups_arr = array('linkmap', 'mediapool');
 $page_title = htmlspecialchars($REX['SERVERNAME']);
@@ -114,7 +113,6 @@ if ($REX['USER'] && !$REX["PAGE_NO_NAVI"])
         	$item['subpages'] = $REX['PAGES'][$pageKey]['SUBPAGES'];
         }        
         
-        $item['extra'] = rex_accesskey($pageArr[0], $accesskey++);
         $item['tabindex'] = rex_tabindex(false);
         
         if(isset($pageArr['NAVI']) && is_array($pageArr['NAVI']))
@@ -131,11 +129,6 @@ if ($REX['USER'] && !$REX["PAGE_NO_NAVI"])
         else 
           $item['href'] = 'index.php?page='.$pageKey;
           
-        if(isset ($REX['ACKEY']['ADDON'][$pageKey]))
-          $item['extra'] = rex_accesskey($name, $REX['ACKEY']['ADDON'][$pageKey]);
-        else 
-          $item['extra'] = rex_accesskey($pageArr[0], $accesskey++);
-
         $item['subpages'] = array();
         if(isset($REX['ADDON'][$pageKey]['SUBPAGES']))
         	$item['subpages'] = $REX['ADDON'][$pageKey]['SUBPAGES'];
@@ -171,8 +164,6 @@ if ($REX['USER'] && !$REX["PAGE_NO_NAVI"])
         
       $class = $item['class'] != '' ? ' class="'. $item['class'] .'"' : '';
       unset($item['class']);
-      $extra = $item['extra'];
-      unset($item['extra']);
       $id = $item['id'];
       unset($item['id']);
       $p = $item['page'];
@@ -187,7 +178,7 @@ if ($REX['USER'] && !$REX["PAGE_NO_NAVI"])
       foreach($item as $tag => $value)
         $tags .= ' '. $tag .'="'. $value .'"';
       
-      echo '<li'. $class .' id="'. $id .'"><a'. $class . $tags . $extra .'>'. $pageTitle .'</a>';
+      echo '<li'. $class .' id="'. $id .'"><a'. $class . $tags . '>'. $pageTitle .'</a>';
 
 			// ***** Subnavi
       if(count($subpages)>0)
@@ -209,7 +200,7 @@ if ($REX['USER'] && !$REX["PAGE_NO_NAVI"])
      			$tags = '';
     		  foreach($subitem as $tag => $value)
 		        $tags .= ' '. $tag .'="'. $value .'"';
-	        echo '<li'. $class .' id="'. $id .'"><a'. $class . $tags . $extra .'>'. $sp[1] .'</a></li>';
+	        echo '<li'. $class .' id="'. $id .'"><a'. $class . $tags . '>'. $sp[1] .'</a></li>';
 		      $subfirst = FALSE;
 	      }
 	      echo '</ul>';

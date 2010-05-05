@@ -96,25 +96,6 @@ $REX['DB']['1']['PSW'] = "develop";
 $REX['DB']['1']['NAME'] = "webvariants_";
 $REX['DB']['1']['PERSISTENT'] = false;
 
-// ----------------- DB2 - if necessary
-$REX['DB']['2']['HOST'] = "";
-$REX['DB']['2']['LOGIN'] = "";
-$REX['DB']['2']['PSW'] = "";
-$REX['DB']['2']['NAME'] = "";
-$REX['DB']['2']['PERSISTENT'] = false;
-
-// ----------------- Accesskeys
-$REX['ACKEY']['SAVE'] = 's';
-$REX['ACKEY']['APPLY'] = 'x';
-$REX['ACKEY']['DELETE'] = 'd';
-$REX['ACKEY']['ADD'] = 'a';
-// Wenn 2 Add Aktionen auf einer Seite sind (z.b. Struktur)
-$REX['ACKEY']['ADD_2'] = 'y';
-$REX['ACKEY']['LOGOUT'] = 'l';
-
-// ------ Accesskeys for Addons
-// $REX['ACKEY']['ADDON']['metainfo'] = 'm';
-
 // ----------------- REX PERMS
 
 // ----- allgemein

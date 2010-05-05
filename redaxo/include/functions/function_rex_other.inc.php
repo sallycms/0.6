@@ -276,16 +276,6 @@ function rex_message_block($message, $cssClass, $sorroundTag)
 	return implode('', $return);
 }
 
-function rex_accesskey($title, $key)
-{
-	global $REX;
-
-	if ($REX['USER']->hasPerm('accesskeys[]')) {
-		return ' accesskey="'.$key.'" title="'.htmlspecialchars($title).' ['.$key.']"';
-	}
-
-	return ' title="'.$title.'"';
-}
 
 function rex_ini_get($val)
 {
