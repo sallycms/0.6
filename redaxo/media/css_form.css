@@ -274,8 +274,8 @@ div.rex-form {
 
 /*	Bspl.: div.rex-area-col-2 -> System : Einstellungen */
 
-div.rex-area-col-2, div.rex-form {
-	fieldset.rex-form-col-1 div.rex-form-row {
+div.rex-area-col-2 fieldset.rex-form-col-1, div.rex-form fieldset.rex-form-col-2 {
+	div.rex-form-row {
 		div.rex-form-checkboxes-wrapper,
 		div.rex-form-radios-wrapper,
 		p.rex-form-label-right label,
