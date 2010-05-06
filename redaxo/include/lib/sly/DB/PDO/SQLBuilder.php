@@ -678,6 +678,6 @@ abstract class sly_DB_PDO_SQLBuilder
 		return $sql;
 	}
 	
-	private abstract function build_limit($sql, $limit, $offset);
+	protected abstract function build_limit($sql, $limit, $offset);
 }
 ?>
