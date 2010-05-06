@@ -271,25 +271,24 @@ class sly_Controller_Setup extends sly_Controller_Base
 				}
 
 				if (empty($error)) {
-					$findUser = new rex_sql();
-					$findUser->setQuery('SELECT user_id FROM '.$SLY['TABLE_PREFIX'].'user WHERE login = "'.mysql_real_escape_string($adminUser).'" LIMIT 1');
+					$user = $pdo->fetch('user', 'user_id', array('login' => $adminUser));
 
-					if ($findUser->getRows() > 0) {
+					if ($user) {
 						$error = $I18N->msg('setup_042');
 					}
 					else {
 						$adminPass = call_user_func($SLY['PSWFUNC'], $adminPass);
-
-						$user = new rex_sql();
-						$user->setTable($SLY['TABLE_PREFIX'].'user');
-						$user->setValue('name', 'Administrator');
-						$user->setValue('login', mysql_real_escape_string($adminUser));
-						$user->setValue('psw', mysql_real_escape_string($adminPass));
-						$user->setValue('rights', '#admin[]#');
-						$user->addGlobalCreateFields('setup');
-						$user->setValue('status', '1');
+						$affected  = $pdo->insert('user', array(
+							'name'       => 'Administrator',
+							'login'      => $adminUser,
+							'psw'        => $adminPass,
+							'rights'     => '#admin[]#',
+							'createdate' => time(),
+							'createuser' => 'setup',
+							'status'     => 1
+						));
 						
-						if (!$user->insert()) {
+						if ($affected == 0) {
 							$error = $I18N->msg('setup_043');
 						}
 					}
