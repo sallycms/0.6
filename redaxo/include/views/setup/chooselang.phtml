@@ -1,0 +1,31 @@
+<?php
+
+global $SLY;
+
+$this->title('SETUP: SPRACHAUSWAHL');
+
+?>
+<h2 class="rex-hl2">Bitte w&auml;hlen Sie eine Sprache aus.</h2>
+<div class="rex-area-content">
+	<ul class="rex-setup-language">
+	<?
+
+	$langpath = $SLY['INCLUDE_PATH'].'/lang';
+
+	foreach ($SLY['LANGUAGES'] as $l) {
+		$isUTF8 = substr($l, -4) == 'utf8';
+		$i18n   = rex_create_lang($l, $langpath, false);
+		$label  = $i18n->msg('lang');
+		
+		if ($isUTF8) $label .= ' (UTF-8)';
+		
+		print '<li><a href="index.php?func=license&amp;lang='.urlencode($l).'">'.$label.'</a></li>';
+	}
+
+	unset($i18n);
+	
+	?>
+	</ul>
+</div>
+
+<? $this->footer(); ?>

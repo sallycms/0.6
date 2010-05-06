@@ -1,0 +1,124 @@
+<?php
+
+global $SLY, $I18N;
+
+$this->title($I18N->msg('setup_step2'));
+
+?>
+<h2 class="rex-hl2"><?= $I18N->msg('setup_023') ?></h2>
+
+<div class="rex-form" id="rex-form-setup-step-2">
+	<form action="index.php" method="post">
+		<fieldset class="rex-form-col-1">
+			<? $this->printHiddens('config') ?>
+			<?php
+
+			if (!empty($this->warning)) print rex_warning($this->warning);
+
+			$pwdFunctions = '';
+			
+			foreach (array('md5', 'sha1') as $algo) {
+				$algoText = $I18N->msg('setup_'.$algo.'_encryption');
+				$selected = $algo == $pwdFunction ? ' selected="selected"' : '';
+
+				$pwdFunctions .= '<option value="'.$algo.'"'.$selected.'>'.$algoText.'</option>';
+			}
+
+			?>
+			<legend><?= $I18N->msg('setup_0201') ?></legend>
+
+			<div class="rex-form-wrapper">
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-text">
+						<label for="server"><?= $I18N->msg('setup_024') ?>:</label>
+						<input class="rex-form-text" type="text" id="server" name="server" value="<?= sly_html($server) ?>" />
+					</p>
+				</div>
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-text">
+						<label for="servername"><?= $I18N->msg('setup_025') ?>:</label>
+						<input class="rex-form-text" type="text" id="servername" name="servername" value="<?= sly_html($serverName) ?>" />
+					</p>
+				</div>
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-text">
+						<label for="error_email"><?= $I18N->msg('setup_026') ?>:</label>
+						<input class="rex-form-text" type="text" id="error_email" name="error_email" value="<?= sly_html($errorEMail) ?>" />
+					</p>
+				</div>
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-select">
+						<label for="pwd_func"><?= $I18N->msg('setup_encryption') ?>:</label>
+						<select class="rex-form-select" id="pwd_func" name="pwd_func">
+						<?= $pwdFunctions ?>
+						</select>
+					</p>
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset class="rex-form-col-1">
+			<legend><?= $I18N->msg('setup_0202') ?></legend>
+			
+			<div class="rex-form-wrapper">
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-text">
+						<label for="mysql_host">MySQL-Host:</label>
+						<input class="rex-form-text" type="text" id="mysql_host" name="mysql_host" value="<?= sly_html($mysqlHost) ?>" />
+					</p>
+				</div>
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-text">
+						<label for="mysql_user">MySQL-Login:</label>
+						<input class="rex-form-text" type="text" id="mysql_user" name="mysql_user" value="<?= sly_html($mysqlUser) ?>" />
+					</p>
+				</div>
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-text">
+						<label for="mysql_pass"><?= $I18N->msg('setup_028') ?>:</label>
+						<input class="rex-form-text" type="text" id="mysql_pass" name="mysql_pass" value="<?= sly_html($mysqlPass) ?>" />
+					</p>
+				</div>
+				
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-text">
+						<label for="mysql_name"><?= $I18N->msg('setup_027') ?>:</label>
+						<input class="rex-form-text" type="text" id="mysql_name" name="mysql_name" value="<?= sly_html($mysqlName) ?>" />
+					</p>
+				</div>
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-checkbox">
+						<label for="create_db"><?= $I18N->msg('setup_create_db') ?>:</label>
+						<input class="rex-form-checkbox" type="checkbox" id="create_db" name="create_db" value="1" />
+					</p>
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset class="rex-form-col-1">
+			<div class="rex-form-wrapper">
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-submit">
+						<input class="rex-form-submit" type="submit" name="sly-submit" value="<?= $I18N->msg('setup_029') ?>" />
+					</p>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+</div>
+
+<script type="text/javascript">
+<!--
+jQuery(function($) {
+	$('#server').focus();
+});
+//-->
+</script>
+
+<? $this->footer(); ?>
