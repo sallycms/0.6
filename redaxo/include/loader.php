@@ -47,16 +47,14 @@ function __autoload($className) {
 		'rex_sql'                           => 'rex_sql',
 	);
 	
-	$className = str_replace('sly_', '', $className);
-	
 	if (file_exists($REX['INCLUDE_PATH'].'/classes/'.strtolower($className).'.php')) {
 		require_once $REX['INCLUDE_PATH'].'/classes/'.strtolower($className).'.php';
 	}
 	elseif (isset($classes[$className])) {
 		require_once $REX['INCLUDE_PATH'].'/classes/class.'.$classes[$className].'.inc.php';
 	}
-	elseif (file_exists($REX['INCLUDE_PATH'].'/lib/'.strtolower(str_replace('_', '/', $className)).'.php')){
-		require_once $REX['INCLUDE_PATH'].'/lib/'.strtolower(str_replace('_', '/', $className)).'.php';
+	elseif (file_exists($REX['INCLUDE_PATH'].'/lib/'.str_replace('_', '/', $className).'.php')){
+		require_once $REX['INCLUDE_PATH'].'/lib/'.str_replace('_', '/', $className).'.php';
 	}
 	else {
 		rex_register_extension_point('__AUTOLOAD', $className);

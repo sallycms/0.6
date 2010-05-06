@@ -31,13 +31,13 @@ function _sly_a1_autoload($className)
 {
 	$class   = $className['subject'];
 	$classes = array(
-		'A1_PEAR'            => 'class.pear.php',
-		'A1_Archive_Tar'     => 'class.tar.php',
-		'A1_Helper'          => 'class.helper.php',
-		'A1_Import_Database' => 'class.import.database.php',
-		'A1_Export_Database' => 'class.export.database.php',
-		'A1_Import_Files'    => 'class.import.files.php',
-		'A1_Export_Files'    => 'class.export.files.php'
+		'sly_A1_PEAR'            => 'class.pear.php',
+		'sly_A1_Archive_Tar'     => 'class.tar.php',
+		'sly_A1_Helper'          => 'class.helper.php',
+		'sly_A1_Import_Database' => 'class.import.database.php',
+		'sly_A1_Export_Database' => 'class.export.database.php',
+		'sly_A1_Import_Files'    => 'class.import.files.php',
+		'sly_A1_Export_Files'    => 'class.export.files.php'
 	);
 	
 	if (isset($classes[$class])) {
