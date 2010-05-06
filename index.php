@@ -14,10 +14,13 @@ ob_implicit_flush(0);
 // Globale Variablen vorbereiten
 require_once 'redaxo/include/functions/function_rex_mquotes.inc.php';
 
-// $REX vorbereiten
-unset($REX);
+// $SLY vorbereiten
+
+unset($SLY, $REX);
+
 $REX['REDAXO']      = false; // Backend = true, Frontend = false
 $REX['HTDOCS_PATH'] = './';
+$SLY = &$REX;
 
 // Core laden
 require_once 'redaxo/include/master.inc.php';
