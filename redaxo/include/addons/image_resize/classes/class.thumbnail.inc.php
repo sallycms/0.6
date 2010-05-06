@@ -508,21 +508,24 @@ class Thumbnail{
 	 * @param timestamp $lastModified wann wurde das Bild zuletzt modifiziert?
 	 * @return void
 	 */
-	private static function sendImage($fileName, $lastModified = null){
-		if (!$lastModified)	$lastModified = time();
-		$lastModified = gmdate('r', $lastModified);
+	private static function sendImage($fileName){
 
 		while(ob_get_level()) ob_end_clean();
+
+		$etag = md5($fileName.filectime($fileName));
+		
+		if ( isset($_SERVER['HTTP_IF_NONE_MATCH']) ) {
+			if ( $_SERVER['HTTP_IF_NONE_MATCH'] == $etag ) {
+				header('HTTP/1.0 304 Not Modified');
+				exit();
+			}
+		}
 		
 		header('Content-Type: image/' . self::getFileExtensionStatic($fileName));
-		header('Last-Modified: ' . $lastModified);
-		header('Cache-Control: public');
-
-		if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $lastModified)
-		{
-			header('HTTP/1.1 304 Not Modified');
-			exit();
-		}
+		header('ETag: '.$etag);
+		header('Cache-Control: ');
+		header('Pragma: ');
+						
 		readfile($fileName);
 		exit();
 	}
