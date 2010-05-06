@@ -16,16 +16,16 @@
  *
  */
 class sly_DB_PDO_Persistence implements sly_DB_Persistence{
-    const LOG_UNKNOWN = -1;
+	const LOG_UNKNOWN = -1;
 	const LOG_ERROR   = -2;
 	
-	private $connection = null;
-	private $statement = null;
-	private $currentRow = null;
+	private $connection  = null;
+	private $statement    = null;
+	private $currentRow   = null;
 	private $transRunning = false; 
 	
-	private function __construct(){
-		$this->connection = DB_PDO_Connection::getInstance()->getConnection();
+	private function __construct() {
+		$this->connection = sly_DB_PDO_Connection::getInstance()->getConnection();
 	}
 	
 	public static function getInstance(){
