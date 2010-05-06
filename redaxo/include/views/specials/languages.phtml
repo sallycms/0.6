@@ -1,5 +1,7 @@
 <?php
 
+global $REX, $SLY, $I18N;
+
 /**
  * Verwaltung der Content Sprachen
  * @package redaxo4
@@ -96,7 +98,7 @@ if ($func == 'addclang' || $func == 'editclang')
         <fieldset>
           <legend>'.$legend.'</legend>
           <input type="hidden" name="page" value="specials" />
-          <input type="hidden" name="subpage" value="lang" />
+          <input type="hidden" name="subpage" value="languages" />
           <input type="hidden" name="clang_id" value="'.$clang_id.'" />
       ';
 }
@@ -113,7 +115,7 @@ echo '
       </colgroup>
       <thead>
         <tr>
-          <th class="rex-small"><a class="rex-i-element rex-i-clang-add" href="index.php?page=specials&amp;subpage=lang&amp;func=addclang#clang"><span class="rex-i-element-text">'.$I18N->msg('clang_add').'</span></a></th>
+          <th class="rex-small"><a class="rex-i-element rex-i-clang-add" href="index.php?page=specials&amp;subpage=languages&amp;func=addclang#clang"><span class="rex-i-element-text">'.$I18N->msg('clang_add').'</span></a></th>
           <th class="rex-small">ID</th>
           <th>'.$I18N->msg('clang_name').'</th>
           <th>'.$I18N->msg('clang_function').'</th>
@@ -145,7 +147,7 @@ foreach ($REX['CLANG'] as $lang_id => $lang)
   if($lang_id == 0)
    $delLink = '<span class="rex-strike">'. $delLink .'</span>';
   else
-    $delLink = '<a href="index.php?page=specials&amp;subpage=lang&amp;func=deleteclang&amp;clang_id='.$lang_id.'" onclick="return confirm(\''.$I18N->msg('delete').' ?\')">'. $delLink .'</a>';
+    $delLink = '<a href="index.php?page=specials&amp;subpage=languages&amp;func=deleteclang&amp;clang_id='.$lang_id.'" onclick="return confirm(\''.$I18N->msg('delete').' ?\')">'. $delLink .'</a>';
     
   // Edit form
   if ($func == "editclang" && $clang_id == $lang_id)
@@ -161,7 +163,7 @@ foreach ($REX['CLANG'] as $lang_id => $lang)
   }
   else
   {
-    $editLink = 'index.php?page=specials&amp;subpage=lang&amp;func=editclang&amp;clang_id='.$lang_id.'#clang';
+    $editLink = 'index.php?page=specials&amp;subpage=languages&amp;func=editclang&amp;clang_id='.$lang_id.'#clang';
     
     echo '
           <tr>

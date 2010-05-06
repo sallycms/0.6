@@ -7,7 +7,7 @@ if (!empty($this->info))    print rex_info($this->info);
 
 $sel_lang = new rex_select();
 $sel_lang->setStyle('class="rex-form-select"');
-$sel_lang->setName('neu_lang');
+$sel_lang->setName('backend_locale');
 $sel_lang->setId('rex-form-lang');
 $sel_lang->setSize(1);
 $sel_lang->setSelected($SLY['LANG']);
@@ -19,7 +19,7 @@ foreach ($SLY['LOCALES'] as $l) {
 $sel_mod_rewrite = new rex_select();
 $sel_mod_rewrite->setSize(1);
 $sel_mod_rewrite->setStyle('class="rex-form-select"');
-$sel_mod_rewrite->setName('neu_modrewrite');
+$sel_mod_rewrite->setName('mod_rewrite');
 $sel_mod_rewrite->setId('rex-form-mod-rewrite');
 $sel_mod_rewrite->setSelected($SLY['MOD_REWRITE'] === false ? 'FALSE' : 'TRUE');
 
@@ -67,14 +67,14 @@ $sel_mod_rewrite->addOption('deaktiviert', 'FALSE');
 						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-text">
 								<label for="rex-form-server">$SLY['SERVER']</label>
-								<input class="rex-form-text" type="text" id="rex-form-server" name="neu_SERVER" value="<?= sly_html($SLY['SERVER']) ?>" />
+								<input class="rex-form-text" type="text" id="rex-form-server" name="server" value="<?= sly_html($SLY['SERVER']) ?>" />
 							</p>
 						</div>
 
 						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-text">
 								<label for="rex-form-servername">$SLY['SERVERNAME']</label>
-								<input class="rex-form-text" type="text" id="rex-form-servername" name="neu_SERVERNAME" value="<?= sly_html($SLY['SERVERNAME']) ?>" />
+								<input class="rex-form-text" type="text" id="rex-form-servername" name="servername" value="<?= sly_html($SLY['SERVERNAME']) ?>" />
 							</p>
 						</div>
 
@@ -99,28 +99,28 @@ $sel_mod_rewrite->addOption('deaktiviert', 'FALSE');
 						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-text">
 								<label for="rex-form-error-email">$SLY['ERROR_EMAIL']</label>
-								<input class="rex-form-text" type="text" id="rex-form-error-email" name="neu_error_emailaddress" value="<?= sly_html($SLY['ERROR_EMAIL']) ?>" />
+								<input class="rex-form-text" type="text" id="rex-form-error-email" name="error_email" value="<?= sly_html($SLY['ERROR_EMAIL']) ?>" />
 							</p>
 						</div>
 
 						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-text">
 								<label for="rex-form-startarticle-id">$SLY['START_ARTICLE_ID']</label>
-								<input class="rex-form-text" type="text" id="rex-form-startarticle-id" name="neu_startartikel" value="<?= sly_html($SLY['START_ARTICLE_ID']) ?>" />
+								<input class="rex-form-text" type="text" id="rex-form-startarticle-id" name="start_article" value="<?= sly_html($SLY['START_ARTICLE_ID']) ?>" />
 							</p>
 						</div>
 
 						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-text">
 								<label for="rex-form-notfound-article-id">$SLY['NOTFOUND_ARTICLE_ID']</label>
-								<input class="rex-form-text" type="text" id="rex-form-notfound-article-id" name="neu_notfoundartikel" value="<?= sly_html($SLY['NOTFOUND_ARTICLE_ID']) ?>" />
+								<input class="rex-form-text" type="text" id="rex-form-notfound-article-id" name="notfound_article" value="<?= sly_html($SLY['NOTFOUND_ARTICLE_ID']) ?>" />
 							</p>
 						</div>
 
 						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-text">
 								<label for="rex-form-default-template-id">$SLY['DEFAULT_TEMPLATE_ID']</label>
-								<input class="rex-form-text" type="text" id="rex-form-default-template-id" name="neu_defaulttemplateid" value="<?= sly_html($SLY['DEFAULT_TEMPLATE_ID']) ?>" />
+								<input class="rex-form-text" type="text" id="rex-form-default-template-id" name="default_template_id" value="<?= sly_html($SLY['DEFAULT_TEMPLATE_ID']) ?>" />
 							</p>
 						</div>
 
