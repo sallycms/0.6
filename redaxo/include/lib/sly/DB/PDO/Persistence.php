@@ -25,7 +25,7 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
 	private $transRunning = false; 
 	
 	private function __construct() {
-		$this->connection = sly_DB_PDO_Connection::getInstance()->getConnection();
+		$this->connection = sly_DB_PDO_Connection::getInstance();
 	}
 	
 	public static function getInstance(){
@@ -422,7 +422,7 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
 		try{
 			$start = microtime(true);
 			$this->statement = null;
-			$this->statement = $this->connection->prepare($query);
+			$this->statement = $this->connection->getConnection()->prepare($query);
 			if($this->statement->execute($data) === false){
 				$time = microtime(true) - $start;
                 self::log($query, $time, self::LOG_ERROR);
@@ -457,13 +457,14 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
     	return $this->affectedRows();
     }
     
-    public function select($table, $select = '*', $where = null, $group = null, $order = null, $limit = null, $having = null, $joins = null) {
+    public function select($table, $select = '*', $where = null, $group = null, $order = null, $offset = null, $limit = null, $having = null, $joins = null) {
 		$sql = $this->connection->getSQLbuilder(self::getPrefix().$table);
 		$sql->select($select);
 		if($where) $sql->where($where);
 		if($group) $sql->group($group);
 		if($having) $sql->having($having);
 		if($order) $sql->order($order);
+		if($offset) $sql->offset($offset);
 		if($limit) $sql->limit($limit);
 		if($joins) $sql->joins($joins);
 		
@@ -486,7 +487,7 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
     }
     
     public function lastId() {
-		return intval($this->connection->lastInsertId());
+		return intval($this->connection->getConnection()->lastInsertId());
     }
     
     private function affectedRows() {
@@ -499,7 +500,7 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
     }
 	 
 	public function fetch($table, $select = '*', $where = null, $order = null) {
-		$this->select($table, $select, $where, null, $order, 1);
+		$this->select($table, $select, $where, null, $order, null, 1);
 		$this->next();
 		return $this->current();
     }
