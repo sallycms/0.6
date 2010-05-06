@@ -359,6 +359,21 @@ jQuery(function($) {
 		$('#media_method').val('updatecat_selectedmedia');
 	});
 	
+	// Lösch-Links in Tabellen
+
+	$('table.rex-table').delegate('a.sly-delete', 'click', function() {
+		var table    = $(this).parents('table');
+		var question = table.attr('rel');
+		
+		if (!question) {
+			question = 'Löschen?';
+		}
+		
+		if (!confirm(question)) {
+			return false;
+		}
+	});
+	
 	// Links in neuem Fenster öffnen
 	
 	$('a.sly-blank').attr('target', '_blank');

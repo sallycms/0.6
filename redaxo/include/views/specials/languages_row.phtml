@@ -1,0 +1,39 @@
+<?php
+
+$editID  = sly_request('clang_id', 'int');
+$add_td  = '';
+$add_td  = '';
+$delLink = $I18N->msg('clang_delete');
+
+if ($clangID == 0) {
+	$delLink = '<span class="rex-strike">'.$delLink.'</span>';
+}
+else {
+	$delLink = '<a href="index.php?page=specials&amp;subpage=languages&amp;func=delete&amp;clang_id='.$clangID.'" class="sly-delete">'.$delLink.'</a>';
+}
+
+// Edit form
+if ($this->func == 'edit' && $editID == $clangID) {
+	$name = sly_post('clang_name', 'string', $clangName);
+	
+	?>
+	<tr class="sly-active">
+		<td class="rex-small"><span class="rex-i-element rex-i-clang"><span class="rex-i-element-text"><?= sly_html($name) ?></span></span></td>
+		<td class="rex-small"><?= sly_html($clangID) ?></td>
+		<td><input class="rex-form-text" type="text" name="clang_name" value="<?= sly_html($name) ?>" /></td>
+		<td><input class="rex-form-submit" type="submit" name="sly-submit" value="<?= $I18N->msg('clang_update') ?>" /></td>
+	</tr>
+	<?php
+}
+else {
+	$editLink = 'index.php?page=specials&amp;subpage=languages&amp;func=edit&amp;clang_id='.$clangID.'#clang';
+	
+	?>
+	<tr>
+		<td class="rex-small"><a class="rex-i-element rex-i-clang" href="<?= $editLink ?>"><span class="rex-i-element-text"><?= sly_html($clangName) ?></span></a></td>
+		<td class="rex-small"><?= sly_html($clangID) ?></td>
+		<td><a href="<?= $editLink ?>"><?= sly_html($clangName) ?></a></td>
+		<td><?= $delLink ?></td>
+	</tr>
+	<?php
+}

@@ -74,7 +74,7 @@ abstract class sly_Controller_Base
 		extract($paramsHtuG50hNCdikAvf7CZ1F);
 
 		ob_start();
-		require_once $SLY['INCLUDE_PATH'].DIRECTORY_SEPARATOR.$filenameHtuG50hNCdikAvf7CZ1F;
+		include $SLY['INCLUDE_PATH'].DIRECTORY_SEPARATOR.$filenameHtuG50hNCdikAvf7CZ1F;
 		print ob_get_clean();
 	}
 	
