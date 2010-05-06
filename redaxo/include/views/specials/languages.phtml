@@ -1,6 +1,6 @@
 <?php
 
-global $REX, $SLY, $I18N;
+global $SLY, $I18N;
 
 if (!empty($this->warning)) print rex_warning($this->warning);
 if (!empty($this->info))    print rex_info($this->info);
@@ -48,7 +48,7 @@ if (!empty($this->info))    print rex_info($this->info);
 				$sel->setId('rex-form-clang-id');
 				$sel->setSize(1);
 
-				foreach (array_diff(range(0, 14), array_keys($REX['CLANG'])) as $clang) {
+				foreach (array_diff(range(0, 14), array_keys($SLY['CLANG'])) as $clang) {
 					$sel->addOption($clang, $clang);
 				}
 				
