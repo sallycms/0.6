@@ -121,6 +121,7 @@ function rex_addCategory($parentID, $data)
 			/*  updateuser */ $sql->escape($REX['USER']->getValue('login')),
 			/*    revision */ 0
 		);
+		Core::cache()->delete('clist', $parentID.'_'.$clangID);
 	}
 	
 	$sql->setQuery('INSERT INTO '.$REX['TABLE_PREFIX'].'article (id,re_id,name,'.

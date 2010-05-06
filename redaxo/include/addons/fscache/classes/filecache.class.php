@@ -11,36 +11,24 @@
 
 class FileCache implements ICache{
 	
-	private $cachepath;
+	const NAMESPACE = 'corecache';
+	
 	private $cache;
 	
 	public function __construct(){
-		$this->cachepath = FILECACHE_PATH.'generated/';
-		$this->cache = array();
-		
+		$this->cache = WV_DeveloperUtils::getCache();
 	}
 	
 	public function set($namespace, $key, $value){
-		if(!array_key_exists($namespace, $this->cache))
-			$this->readFile($namespace);
-		$this->cache[$namespace][$key] = serialize($value);
-		$this->writeFile($namespace);
+		$this->cache->set(self::NAMESPACE.'.'.$namespace, $key, $value);
 	}
 	
 	public function get($namespace, $key, $default){
-		if(!array_key_exists($namespace, $this->cache))
-			$this->readFile($namespace);
-		if(isset($this->cache[$namespace][$key])){
-			return unserialize($this->cache[$namespace][$key]);
-		}
-		return $default;
+		return $this->cache->get(self::NAMESPACE.'.'.$namespace, $key, $default);
 	}
 	
 	public function delete($namespace, $key){
-		if(!array_key_exists($namespace, $this->cache))
-			$this->readFile($namespace);
-		unset($this->cache[$namespace][$key]);
-		$this->writeFile($namespace);
+		$this->cache->delete(self::NAMESPACE.'.'.$namespace, $key);
 	}
 	
 	public function flush(){
@@ -48,49 +36,7 @@ class FileCache implements ICache{
 	}
 	
 	public static function flushstatic(){
-		rex_deleteDir(FILECACHE_PATH.DIRECTORY_SEPARATOR .'generated', false);
+		$cache = WV_DeveloperUtils::getCache();
+		$cache->flush(self::NAMESPACE, true);
 	}
-		
-	/**
-	 * serialisiert einen string, für die performance 
-	 * auch als json string falls PHP5 vorhanden ist
-	 * @param $content mixed object
-	 * @return encoded string
-	 */
-	function cache_encode($content){
-		global $REX;
-		if(function_exists('json_encode') && strpos($REX['LANG'], 'utf8')){
-			return json_encode($content);
-		}else{
-			return serialize($content);
-		}
-	}
-	
-	/**
-	 * deserialisiert einen string, für die performance
-	 * auch von json string falls PHP5 vorhanden ist
-	 * @param $content encoded string
-	 * @return mixed decoded object
-	 */
-	function cache_decode($content){
-		global $REX;
-		if(!empty($content)) return array();
-		if(function_exists('json_decode') && strpos($REX['LANG'], 'utf8')){
-			return json_decode($content, true);
-		}else{
-			return unserialize($content);
-		}
-	}
-		
-	private function readFile($varname){
-		$cacheFile = $this->cachepath.$varname.'.cache';
-		if (file_exists($cacheFile)){ 
-			$this->cache[$varname] = $this->cache_decode(file_get_contents($cacheFile));
-		}
-	}
-	
-	private function writeFile($varname){
-		$cacheFile = $this->cachepath.$varname.'.cache';
-		file_put_contents($cacheFile, $this->cache_encode($this->cache[$varname]));
-	}	
 }
