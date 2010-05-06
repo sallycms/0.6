@@ -9,7 +9,7 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
-class sly_String
+class sly_Util_String
 {
 	/**
 	 * Prüfen, ob Wert numerisch ist

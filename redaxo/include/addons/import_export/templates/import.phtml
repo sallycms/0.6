@@ -44,7 +44,7 @@
 			<td class="rex-col-c"><a href="<?= $baseURL ?>dbimport">einspielen</a></td>
 			<td class="rex-col-d"><a href="<?= $baseURL ?>delete">löschen</a></td>
 			<td class="rex-col-e"><?= strftime('%d.%m.%Y um %H:%M Uhr', $info['date']) ?></td>
-			<td class="rex-col-f"><?= sly_String::formatFilesize($info['size']) ?></td>
+			<td class="rex-col-f"><?= sly_Util_String::formatFilesize($info['size']) ?></td>
 		</tr>
 		<?
 	}

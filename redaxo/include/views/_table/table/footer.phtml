@@ -10,5 +10,5 @@ $hasSearch = $this->hasSearch();
 $hasPager  = $this->hasPager();
 
 if ((self::isDragAndDropMode() && ($hasSearch || $hasPager)) || ($this->enableDragAndDrop && !$hasSearch && !$hasPager)) {
-	sly_HTML::onDOMReady('$("#'.$this->id.'").dropAndDrop('.$this->dragAndDropHandler.');');
+	sly_Util_HTML::onDOMReady('$("#'.$this->id.'").dropAndDrop('.$this->dragAndDropHandler.');');
 }

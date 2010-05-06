@@ -9,7 +9,7 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
-class sly_Pager
+class sly_Util_Pager
 {
 	const FIRST_ACTIVE   = -1;
 	const FIRST_INACTIVE = -2;

@@ -9,7 +9,7 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
-class sly_HTML
+class sly_Util_HTML
 {
 	public static function buildAttributeString($attributes)
 	{
