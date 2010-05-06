@@ -67,6 +67,7 @@ if ($SLY['SETUP'])
 	
 	$SLY['PAGES']["setup"] = array($I18N->msg('setup'),0,1);
 	$SLY['PAGE'] = "setup";
+	$_REQUEST['page'] = 'setup';
 
 }else
 {
