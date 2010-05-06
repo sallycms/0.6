@@ -311,13 +311,6 @@ div.rex-form-login div.rex-form-row {
 	p.rex-form-password input {
 		width: 100px;
 	}
-
-	/*	Submit */
-
-	p input.rex-form-submit {
-		width: auto;
-		margin-left: 10px;
-	}
 }
 
 /*	Struktur : Metainfo */

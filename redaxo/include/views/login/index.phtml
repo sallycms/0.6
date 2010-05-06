@@ -1,0 +1,72 @@
+<?php
+
+if ($rex_user_loginmessage != '') {
+	print rex_warning($rex_user_loginmessage);
+}
+
+?>
+<!-- *** OUTPUT OF LOGIN-FORM - START *** -->
+
+
+<div class="rex-form">
+	<form action="index.php" method="post" id="loginformular">
+		<fieldset class="rex-form-col-1">
+			<legend>Login</legend>
+			<div class="rex-form-wrapper">
+				<input type="hidden" name="javascript" value="0" id="javascript" />
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-text">
+						<label for="rex-form-login"><?= $I18N->msg('login_name') ?>:</label>
+						<input type="text" value="<?= sly_html(sly_post('rex_user_login', 'string')) ?>" id="rex-form-login" name="rex_user_login" />
+					</p>
+				</div>
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-password">
+						<label for="REX_UPSW"><?= $I18N->msg('password') ?>:</label>
+						<input class="rex-form-password" type="password" name="rex_user_psw" id="REX_UPSW" />
+					</p>
+				</div>
+				<div class="rex-form-row last">
+					<p class="rex-form-col-a rex-form-submit">
+						<input class="rex-form-submit rex-form-text" type="submit" value="<?= $I18N->msg('login') ?>" />
+					</p>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+</div>
+
+<script type="text/javascript">
+<!--
+jQuery(function($) {
+	$('#rex-form-login').focus();
+	$('#javascript').val('1');
+	
+	<? if (!empty($rex_user_loginmessage)): ?>
+	var time_el = $('div.rex-message p span strong');
+	
+	if (time_el.length == 1) {
+		function disableLogin() {
+			var nextTime = parseInt(time_el.html(), 10) - 1;
+			
+			time_el.html(nextTime + '');
+			
+			if (nextTime > 0) {
+				setTimeout(disableLogin, 1000);
+			} else {
+				$('div.rex-message p span').html('<?= htmlspecialchars($I18N->msg('login_welcome')) ?>');
+				$('#loginformular input:not(:hidden)').attr('disabled', '');
+				$('#rex-form-login').focus();
+			}
+		};
+		
+		$('#loginformular input:not(:hidden)').attr('disabled', 'disabled');
+		setTimeout(disableLogin, 1000);
+	}
+	<? endif ?>
+});
+//-->
+</script>
+
+<!-- *** OUTPUT OF LOGIN-FORM - END *** -->
