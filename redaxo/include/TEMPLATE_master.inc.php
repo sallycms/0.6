@@ -62,8 +62,9 @@ $REX['USE_MD5'] = "false"; // String: "true"/"false"/"fronted"/"backend"
 // versch. Pfade
 $REX['INCLUDE_PATH']  = realpath($REX['HTDOCS_PATH'].'redaxo/include');
 $REX['FRONTEND_PATH'] = realpath($REX['HTDOCS_PATH']);
-$REX['MEDIAFOLDER']   = realpath($REX['HTDOCS_PATH'].'files');
-$REX['DYNFOLDER']     = realpath($REX['HTDOCS_PATH'].'dyn');
+$REX['DATAFOLDER']    = realpath($REX['HTDOCS_PATH'].'data');
+$REX['MEDIAFOLDER']   = realpath($REX['HTDOCS_PATH'].'data/files');
+$REX['DYNFOLDER']     = realpath($REX['HTDOCS_PATH'].'data/dyn');
 
 // Prefixes
 $REX['TABLE_PREFIX']  = 'rex_';
@@ -139,6 +140,5 @@ if(!$REX['SYNC']){
 	include_once $REX['INCLUDE_PATH'].'/clang.inc.php';
 	
 	$REX['CUR_CLANG']  = sly_Core::getCurrentClang();
-	
 	$REX['ARTICLE_ID'] = sly_Core::getCurrentArticleId();
 }
