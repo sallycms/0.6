@@ -63,7 +63,7 @@ $REX['USE_MD5'] = "false"; // String: "true"/"false"/"fronted"/"backend"
 $REX['INCLUDE_PATH']  = realpath($REX['HTDOCS_PATH'].'redaxo/include');
 $REX['FRONTEND_PATH'] = realpath($REX['HTDOCS_PATH']);
 $REX['DATAFOLDER']    = realpath($REX['HTDOCS_PATH'].'data');
-$REX['MEDIAFOLDER']   = realpath($REX['HTDOCS_PATH'].'data/files');
+$REX['MEDIAFOLDER']   = realpath($REX['HTDOCS_PATH'].'data/mediapool');
 $REX['DYNFOLDER']     = realpath($REX['HTDOCS_PATH'].'data/dyn');
 
 // Prefixes
