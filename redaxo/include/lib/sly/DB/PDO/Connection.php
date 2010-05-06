@@ -87,11 +87,11 @@ class sly_DB_PDO_Connection {
 	private $conf;
 	private $transrunning = false; 
 	
-	private function __construct(){
-		
+	private function __construct()
+	{
 		$this->conf = sly_Core::config()->get('DB/1');
-		$connString     = $this->getConnectionString();
-        $this->connection = new PDO($connString, $conf['LOGIN'], $conf['PSW']);
+		$connString = $this->getConnectionString();
+		$this->connection = new PDO($connString, $this->conf['LOGIN'], $this->conf['PSW']);
 	}
 	
 	/**
