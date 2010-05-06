@@ -108,10 +108,73 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
         return $this->statement ? $this->statement->rowCount() : 0;
     }
     
- 	private static function getPrefix() {
-        global $REX;
-        return $REX['TABLE_PREFIX'];
+ 	 private static function getPrefix() {
+        global $SLY;
+        return $SLY['TABLE_PREFIX'];
     }
+	 
+	 /**
+	 * Hilfsmethode für genau eine Zeile
+	 *
+	 * Diese Methode dient dazu, genau eine Zeile zu holen. Sie gibt im
+	 * Erfolgsfall kein true, sondern die geholte Zeile zurück, wodurch ein
+	 * Aufruf von row() entfällt. Sollte das Ergebnis nur eine Spalte haben, so
+	 * wird direkt dieser Wert zurückgeliefert (und kein Array mit einem
+	 * Element).
+	 *
+	 * @param  string $what              Spalten, die geholt werden sollen
+	 * @param  string $from              Tabelle, aus der gelesen werden soll
+	 * @param  string $where             WHERE-Kriterium
+	 * @param  array  $data              die zu verwendenden Daten
+	 * @param  bool   $includeSlyPrefix  wenn true, wird $SLY['TABLE_PREFIX'] vor den Tabellennamen gesetzt
+	 * @return mixed                     false im Falle eines Fehlers, sonst mixed oder ein Array (je nach Spaltenanzahl)
+	 */
+	public function fetch($what, $from, $where = '1', $data = array(), $includeSlyPrefix = true)
+	{
+		if ($includeSlyPrefix) {
+			$tables = explode(',', $from);
+			$from   = array();
+			foreach ($tables as $table) $from[] = self::getPrefix().trim($table);
+			$from = join(',', $from);
+		}
+		
+		// Daten vorbereiten
+		
+		$data  = sly_makeArray($data);
+		$query = sprintf('SELECT %s FROM %s WHERE %s LIMIT 1', $what, $from, $where);
+		
+		// Statement vorbereiten
+		
+		try {
+			$this->statement = $this->connection->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+			
+			if ($this->statement->execute($data) === false) {
+				return $this->error();
+			}
+			
+			$result = $this->statement->fetch(PDO::FETCH_ASSOC);
+			$this->statement->closeCursor();
+			
+			// Ein nicht gefundener Datensatz ist KEIN Fehler!
+			
+			if ($result === false) {
+				return false;
+			}
+			
+			// Erfolg. Wir geben entweder den einen Wert zurück, den er gibt,
+			// oder das komplette Array.
+
+			if (count($result) == 1) {
+				$ret = array_values($result);
+				return $ret[0];
+			}
+			
+			return $result;
+		}
+		catch (PDOException $e) {
+			return $this->error();
+		}
+	}
     
     // =========================================================================
     // Locks
@@ -214,7 +277,7 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
         // Exceptions, die nicht von SQL-Problemen herrühren (z.B. InputExceptions),
         // leiten wir weiter nach außen.
 
-        if ($e instanceof Exception && !($e instanceof DB_PDO_Exception)) {
+        if ($e instanceof Exception && !($e instanceof sly_DB_PDO_Exception)) {
             throw $e;
         }
 
