@@ -15,7 +15,7 @@
 
 class Thumbnail{
 
-	const ERRORFILE = '/addons/image_resize/warning.jpg';
+	const ERRORFILE = '/public/image_resize/warning.jpg';
 	const QUALITY = 85;
 	const USECACHE = true;
 
@@ -102,7 +102,7 @@ class Thumbnail{
 	 */
 	private function sendError(){
 		global $REX;
-		self::sendImage($REX['DYNFOLDER'].'/public'.self::ERRORFILE);
+		self::sendImage($REX['DYNFOLDER'].self::ERRORFILE);
 	}
 
 	/**
@@ -457,7 +457,7 @@ class Thumbnail{
 	{
 		global $REX;
 
-		$folder = $REX['DYNFOLDER'] . '/public/addons/image_resize/';
+		$folder = $REX['DYNFOLDER'].'/public/image_resize/';
 
 		$c = 0;
 		$glob = glob($folder .'image_resize__*');
@@ -498,7 +498,7 @@ class Thumbnail{
 	 */
 	private static function getCacheFileName($rex_resize){
 		global $REX;
-		return  $REX['DYNFOLDER'].'/public/addons/image_resize/image_resize__'.str_replace(array('http://', 'https://', '/'), array('', '', '_'), $rex_resize);
+		return $REX['DYNFOLDER'].'/public/image_resize/image_resize__'.str_replace(array('http://', 'https://', '/'), array('', '', '_'), $rex_resize);
 	}
 
 	/**

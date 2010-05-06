@@ -52,6 +52,17 @@ class sly_Controller_Setup extends sly_Controller_Base
 		}
 
 		$errorMsg = $this->checkDirsAndFiles();
+		
+		// Verzeichnisse schützen
+		
+		$protected = array('../develop', '../data/dyn/internal');
+		$htaccess  = 'include/.htaccess';
+		
+		foreach ($protected as $directory) {
+			if (is_dir($directory) && !file_exists($directory.'/.htaccess') && !copy($htaccess, $directory.'/.htaccess')) {
+				$errors[] = 'Vezeichnis '.realpath($directory).' konnte nicht gegen HTTP-Zugriffe geschützt werden.';
+			}
+		}
 
 		if ($errorMsg !== true) {
 			$errors[] = $errorMsg;
@@ -355,12 +366,11 @@ class sly_Controller_Setup extends sly_Controller_Base
 			$SLY['INCLUDE_PATH'].$s.'generated'.$s.'articles',
 			$SLY['INCLUDE_PATH'].$s.'generated'.$s.'templates',
 			$SLY['INCLUDE_PATH'].$s.'generated'.$s.'files',
+			$SLY['DATAFOLDER'],
 			$SLY['MEDIAFOLDER'],
 			$SLY['DYNFOLDER'],
 			$SLY['DYNFOLDER'].$s.'public',
-			$SLY['DYNFOLDER'].$s.'public'.$s.'addons',
-			$SLY['DYNFOLDER'].$s.'internal',
-			$SLY['DYNFOLDER'].$s.'internal'.$s.'addons'
+			$SLY['DYNFOLDER'].$s.'internal'
 		);
 
 		foreach ($SLY['SYSTEM_ADDONS'] as $system_addon) {

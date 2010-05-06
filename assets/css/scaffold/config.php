@@ -1,6 +1,6 @@
 <?php
 
-$dynDirectory = realpath(dirname(__FILE__).'/../../../dyn/internal/sally/');
+$dynDirectory = realpath(dirname(__FILE__).'/../../../data/dyn/internal/sally/');
 $dynDirectory = rtrim($dynDirectory, '/\\').'/';
 
 // Wir wechseln in das Basis-Verzeichnis dieses Projekts.
@@ -9,7 +9,7 @@ $projectBase = realpath(dirname(__FILE__).'/../../../');
 $projectBase = rtrim($projectBase, '/\\').'/';
 chdir($projectBase);
 
-$dynDirectory = realpath($projectBase.'dyn/internal/sally/');
+$dynDirectory = realpath($projectBase.'data/dyn/internal/sally/');
 $dynDirectory = rtrim($dynDirectory, '/\\').'/';
 
 /**

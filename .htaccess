@@ -7,7 +7,6 @@
 #expiresbytype text/css "access plus 7 days"
 #expiresbytype text/javascript "access plus 7 days"
 
-
 RewriteEngine On
 # RewriteBase /
 
@@ -18,9 +17,11 @@ RewriteRule ^([0-9]*)-([0-9]*)- index.php?article_id=$1&clang=$2&%{QUERY_STRING}
 RewriteRule ^([0-9]*)- index.php?article_id=$1&%{QUERY_STRING}
 
 #Image Resize
+
 RewriteCond %{REQUEST_URI} ^/imageresize/(.*)
-RewriteCond %{DOCUMENT_ROOT}/dyn/public/addons/image_resize/image_resize__$1 -f
-RewriteRule ^imageresize/(.*)$ dyn/public/addons/image_resize/image_resize__$1 [L]
+RewriteCond %{DOCUMENT_ROOT}/data/dyn/public/image_resize/image_resize__$1 -f
+RewriteRule ^imageresize/(.*)$ data/dyn/public/image_resize/image_resize__$1 [L]
+
 RewriteRule ^imageresize/(.*)$ index.php?rex_resize=$1 [L]
 
 # Deployer-AddOn
