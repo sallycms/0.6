@@ -1,0 +1,152 @@
+<?php
+
+global $SLY, $I18N;
+
+if (!empty($this->warning)) print rex_warning($this->warning);
+if (!empty($this->info))    print rex_info($this->info);
+
+$sel_lang = new rex_select();
+$sel_lang->setStyle('class="rex-form-select"');
+$sel_lang->setName('neu_lang');
+$sel_lang->setId('rex-form-lang');
+$sel_lang->setSize(1);
+$sel_lang->setSelected($SLY['LANG']);
+
+foreach ($SLY['LOCALES'] as $l) {
+	$sel_lang->addOption($l, $l);
+}
+
+$sel_mod_rewrite = new rex_select();
+$sel_mod_rewrite->setSize(1);
+$sel_mod_rewrite->setStyle('class="rex-form-select"');
+$sel_mod_rewrite->setName('neu_modrewrite');
+$sel_mod_rewrite->setId('rex-form-mod-rewrite');
+$sel_mod_rewrite->setSelected($SLY['MOD_REWRITE'] === false ? 'FALSE' : 'TRUE');
+
+$sel_mod_rewrite->addOption('aktiviert', 'TRUE');
+$sel_mod_rewrite->addOption('deaktiviert', 'FALSE');
+
+?>
+
+<div class="rex-form" id="rex-form-system-setup">
+	<form action="index.php" method="post">
+		<input type="hidden" name="page" value="specials" />
+		<input type="hidden" name="func" value="update" />
+
+		<div class="rex-area-col-2">
+			<div class="rex-area-col-a">
+
+				<h3 class="rex-hl2"><?= $I18N->msg('specials_features') ?></h3>
+
+				<div class="rex-area-content">
+					<h4 class="rex-hl3"><?= $I18N->msg('delete_cache') ?></h4>
+					<p class="rex-tx1"><?= $I18N->msg('delete_cache_description') ?></p>
+					<p class="rex-button"><a class="rex-button" href="index.php?page=specials&amp;func=clearcache"><?= $I18N->msg('delete_cache') ?></a></p>
+
+					<h4 class="rex-hl3"><?= $I18N->msg('setup') ?></h4>
+					<p class="rex-tx1"><?= $I18N->msg('setup_text') ?></p>
+					<p class="rex-button"><a class="rex-button" href="index.php?page=specials&amp;func=setup" onclick="return confirm(\'<?= $I18N->msg('setup') ?>?\');"><?= $I18N->msg('setup') ?></a></p>
+
+					<h4 class="rex-hl3"><?= $I18N->msg('version') ?></h4>
+					<p class="rex-tx1">REDAXO <?= $SLY['VERSION'] ?>.<?= $SLY['SUBVERSION'] ?>.<?= $SLY['MINORVERSION'] ?></p>
+
+					<h4 class="rex-hl3"><?= $I18N->msg('database') ?></h4>
+					<p class="rex-tx1"><?= $I18N->msg('name') ?>: <?= sly_html($SLY['DB']['1']['NAME']) ?><br /><?= $I18N->msg('host') ?>: <?= sly_html($SLY['DB']['1']['HOST']) ?></p>
+				</div>
+			</div>
+
+			<div class="rex-area-col-b">
+				<h3 class="rex-hl2"><?= $I18N->msg('specials_settings') ?></h3>
+
+				<div class="rex-area-content">
+
+					<fieldset class="rex-form-col-1">
+					<legend><?= $I18N->msg('general_info_header') ?></legend>
+
+					<div class="rex-form-wrapper">
+						<div class="rex-form-row">
+							<p class="rex-form-col-a rex-form-text">
+								<label for="rex-form-server">$SLY['SERVER']</label>
+								<input class="rex-form-text" type="text" id="rex-form-server" name="neu_SERVER" value="<?= sly_html($SLY['SERVER']) ?>" />
+							</p>
+						</div>
+
+						<div class="rex-form-row">
+							<p class="rex-form-col-a rex-form-text">
+								<label for="rex-form-servername">$SLY['SERVERNAME']</label>
+								<input class="rex-form-text" type="text" id="rex-form-servername" name="neu_SERVERNAME" value="<?= sly_html($SLY['SERVERNAME']) ?>" />
+							</p>
+						</div>
+
+						<div class="rex-form-row">
+							<p class="rex-form-col-a rex-form-read">
+								<label for="rex_include_path">$SLY['INCLUDE_PATH']</label>
+								<span class="rex-form-read" id="rex_include_path" title=" <?= $SLY['INCLUDE_PATH']  ?>">
+								<?
+								$tmp = $SLY['INCLUDE_PATH'];
+								
+								// Mitte entfernen, wenn zu lang
+								
+								if (strlen($SLY['INCLUDE_PATH']) > 24) {
+									$tmp = substr($tmp, 0, 8).'&hellip;'.substr($tmp, strlen($tmp) - 10);
+								}
+
+								print $tmp;
+								?></span>
+							</p>
+						</div>
+
+						<div class="rex-form-row">
+							<p class="rex-form-col-a rex-form-text">
+								<label for="rex-form-error-email">$SLY['ERROR_EMAIL']</label>
+								<input class="rex-form-text" type="text" id="rex-form-error-email" name="neu_error_emailaddress" value="<?= sly_html($SLY['ERROR_EMAIL']) ?>" />
+							</p>
+						</div>
+
+						<div class="rex-form-row">
+							<p class="rex-form-col-a rex-form-text">
+								<label for="rex-form-startarticle-id">$SLY['START_ARTICLE_ID']</label>
+								<input class="rex-form-text" type="text" id="rex-form-startarticle-id" name="neu_startartikel" value="<?= sly_html($SLY['START_ARTICLE_ID']) ?>" />
+							</p>
+						</div>
+
+						<div class="rex-form-row">
+							<p class="rex-form-col-a rex-form-text">
+								<label for="rex-form-notfound-article-id">$SLY['NOTFOUND_ARTICLE_ID']</label>
+								<input class="rex-form-text" type="text" id="rex-form-notfound-article-id" name="neu_notfoundartikel" value="<?= sly_html($SLY['NOTFOUND_ARTICLE_ID']) ?>" />
+							</p>
+						</div>
+
+						<div class="rex-form-row">
+							<p class="rex-form-col-a rex-form-text">
+								<label for="rex-form-default-template-id">$SLY['DEFAULT_TEMPLATE_ID']</label>
+								<input class="rex-form-text" type="text" id="rex-form-default-template-id" name="neu_defaulttemplateid" value="<?= sly_html($SLY['DEFAULT_TEMPLATE_ID']) ?>" />
+							</p>
+						</div>
+
+						<div class="rex-form-row">
+							<p class="rex-form-col-a rex-form-select">
+								<label for="rex-form-lang">$SLY['LANG']</label>
+								<?= $sel_lang->get() ?>
+							</p>
+						</div>
+
+						<div class="rex-form-row">
+							<p class="rex-form-col-a rex-form-select">
+								<label for="rex-form-mod-rewrite">$SLY['MOD_REWRITE']</label>
+								<?= $sel_mod_rewrite->get() ?>
+							</p>
+						</div>
+
+						<div class="rex-form-row">
+							<p class="rex-form-col-a rex-form-submit">
+								<input type="submit" class="rex-form-submit" name="sendit" value="<?= $I18N->msg('specials_update') ?>" />
+							</p>
+						</div>
+					</div>
+					</fieldset>
+				</div> <!-- Ende rex-area-content //-->
+			</div> <!-- Ende rex-area-col-b //-->
+		</div> <!-- Ende rex-area-col-2 //-->
+	</form>
+</div>

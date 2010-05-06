@@ -232,6 +232,7 @@ if ($controller !== null) {
 		$controller->dispatch();
 	}
 	catch (sly_Authorisation_Exception $e1) {
+		rex_title('Sicherheitsverletzung');
 		print rex_warning($e1->getMessage());
 		
 		if (!isset($SLY['USER']) || ($SLY['USER'] === null)){
@@ -239,6 +240,7 @@ if ($controller !== null) {
 		}
 	}
 	catch (sly_Controller_Exception $e2) {
+		rex_title('Controller-Fehler');
 		print rex_warning($e2->getMessage());
 	}
 	
