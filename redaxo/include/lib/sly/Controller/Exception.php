@@ -8,6 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
-class PermissionException extends Exception{
+class sly_Controller_Exception extends Exception
+{
 
 }

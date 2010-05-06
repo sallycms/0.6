@@ -223,23 +223,28 @@ if($SLY['PAGES'][strtolower($SLY['PAGE'])][2] == 1)
 rex_register_extension_point( 'PAGE_CHECKED', $SLY['PAGE'], array('pages' => $SLY['PAGES']));
 
 // Gewünschte Seite einbinden
-$controller = Controller::factory();
+$controller = sly_Controller_Base::factory();
 
-if($controller !== null) {
-    require $SLY['INCLUDE_PATH'].'/layout/top.php';
-    try{
-        $controller->dispatch();
-    }catch(PermissionException $e1){
-        print rex_warning($e1->getMessage());
-        if(!isset($SLY['USER']) || ($SLY['USER'] === null)){
-            require $SLY['INCLUDE_PATH'].'/pages/login.inc.php';
-        }
-    }catch(ControllerException $e2){
-        print rex_warning($e2->getMessage());
-    }
-    require $SLY['INCLUDE_PATH'].'/layout/bottom.php';
+if ($controller !== null) {
+	require $SLY['INCLUDE_PATH'].'/layout/top.php';
+	
+	try{
+		$controller->dispatch();
+	}
+	catch (sly_Authorisation_Exception $e1) {
+		print rex_warning($e1->getMessage());
+		
+		if (!isset($SLY['USER']) || ($SLY['USER'] === null)){
+			require $SLY['INCLUDE_PATH'].'/pages/login.inc.php';
+		}
+	}
+	catch (sly_Controller_Exception $e2) {
+		print rex_warning($e2->getMessage());
+	}
+	
+	require $SLY['INCLUDE_PATH'].'/layout/bottom.php';
 }
-elseif(isset($SLY['PAGES'][$SLY['PAGE']]['PATH']) && $SLY['PAGES'][$SLY['PAGE']]['PATH'] != "")
+elseif (isset($SLY['PAGES'][$SLY['PAGE']]['PATH']) && $SLY['PAGES'][$SLY['PAGE']]['PATH'] != "")
 {
 	// If page has a new/overwritten path
 	require $SLY['PAGES'][$SLY['PAGE']]['PATH'];
