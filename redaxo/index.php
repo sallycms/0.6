@@ -139,7 +139,7 @@ if($SLY['USER'])
 	  $SLY['PAGES']["module"] = array($I18N->msg("modules"),0,1,'SUBPAGES'=>array(array('',$I18N->msg("modules")),array('actions',$I18N->msg("actions"))));
 	  $SLY['PAGES']["user"] = array($I18N->msg("user"),0,1);
 	  $SLY['PAGES']["addon"] = array($I18N->msg("addon"),0,1);
-	  $SLY['PAGES']["specials"] = array($I18N->msg("specials"),0,1,'SUBPAGES'=>array(array('',$I18N->msg("main_preferences")),array('lang',$I18N->msg("languages"))));
+	  $SLY['PAGES']["specials"] = array($I18N->msg("specials"),0,1,'SUBPAGES'=>array(array('',$I18N->msg("main_preferences")),array('languages',$I18N->msg("languages"))));
 	}
 }
 
