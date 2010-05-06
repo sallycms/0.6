@@ -1,11 +1,11 @@
 <?php
 
-$dynDirectory = realpath(dirname(__FILE__).'/../../../dyn/internal/sally/');
+$dynDirectory = realpath(dirname(__FILE__).'/../../../../dyn/internal/sally/');
 $dynDirectory = rtrim($dynDirectory, '/\\').'/';
 
 // Wir wechseln in das Basis-Verzeichnis dieses Projekts.
 
-$projectBase = realpath(dirname(__FILE__).'/../../../');
+$projectBase = realpath(dirname(__FILE__).'/../../../../');
 $projectBase = rtrim($projectBase, '/\\').'/';
 chdir($projectBase);
 
@@ -51,7 +51,7 @@ $config['document_root'] = $_SERVER['DOCUMENT_ROOT'];
  * an absolute file path, or even relative to the document root and Scaffold
  * will take care of the rest. 
  */
-$config['system'] = $projectBase.'redaxo/media/scaffold/';
+$config['system'] = $projectBase.'redaxo/include/lib/Scaffold/';
 
 /**
  * Cache Folder

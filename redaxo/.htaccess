@@ -16,9 +16,9 @@ RewriteRule ^scaffold/(.+?)/(.+?)\.js$                        ../dyn/public/addo
 RewriteRule ^images/(.+?)/(.+?)/(.*?)$         ../dyn/public/addons/$1/plugins/$2/images/$3 [L]
 RewriteRule ^css/(.+?)/(.+?)/(.+?)$            ../dyn/public/addons/$1/plugins/$2/css/$3 [L]
 RewriteRule ^js/(.+?)/(.+?)/(.+?)$             ../dyn/public/addons/$1/plugins/$2/js/$3 [L]
-RewriteRule ^scaffold/(.+?)/(.+?)/(.+?)\.css$  media/scaffold/cache.php?f=dyn/public/addons/$1/plugins/$2/css/$3.css [L]
+RewriteRule ^scaffold/(.+?)/(.+?)/(.+?)\.css$  media/cache.php?f=dyn/public/addons/$1/plugins/$2/css/$3.css [L]
 
 RewriteRule ^images/(.+?)/(.*?)$         ../dyn/public/addons/$1/images/$2 [L]
 RewriteRule ^css/(.+?)/(.+?)$            ../dyn/public/addons/$1/css/$2 [L]
 RewriteRule ^js/(.+?)/(.+?)$             ../dyn/public/addons/$1/js/$2 [L]
-RewriteRule ^scaffold/(.+?)/(.+?)\.css$  media/scaffold/cache.php?f=dyn/public/addons/$1/css/$2.css [L]
+RewriteRule ^scaffold/(.+?)/(.+?)\.css$  media/cache.php?f=dyn/public/addons/$1/css/$2.css [L]
