@@ -228,7 +228,7 @@ $controller = sly_Controller_Base::factory();
 if ($controller !== null) {
 	require $SLY['INCLUDE_PATH'].'/layout/top.php';
 	
-	try{
+	try {
 		$controller->dispatch();
 	}
 	catch (sly_Authorisation_Exception $e1) {
@@ -242,6 +242,10 @@ if ($controller !== null) {
 	catch (sly_Controller_Exception $e2) {
 		rex_title('Controller-Fehler');
 		print rex_warning($e2->getMessage());
+	}
+	catch (Exception $e3) {
+		rex_title('Ausnahme');
+		print rex_warning('Es ist eine unerwartete Ausnahme aufgetreten: '.$e3->getMessage());
 	}
 	
 	require $SLY['INCLUDE_PATH'].'/layout/bottom.php';
