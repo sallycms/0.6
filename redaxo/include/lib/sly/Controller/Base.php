@@ -23,10 +23,10 @@ abstract class sly_Controller_Base
 		$this->action = rex_request(self::ACTIONPARAM, 'string', 'index');
 	}
 
-	public static function factory()
+	public static function factory($forcePage = null, $forceSubpage = null)
 	{
-		$page    = sly_request(self::PAGEPARAM,    'string', self::DEFAULTPAGE);
-		$subpage = sly_request(self::SUBPAGEPARAM, 'string', '');
+		$page    = $forcePage === null    ? sly_request(self::PAGEPARAM, 'string', self::DEFAULTPAGE) : $forcePage;
+		$subpage = $forceSubpage === null ? sly_request(self::SUBPAGEPARAM, 'string', '')             : $forceSubpage;
 		$name    = 'sly_Controller_'.strtoupper(substr($page, 0, 1)).substr($page, 1);
 		
 		if (!empty($subpage)) {

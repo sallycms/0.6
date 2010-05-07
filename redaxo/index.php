@@ -224,7 +224,7 @@ if($SLY['PAGES'][strtolower($SLY['PAGE'])][2] == 1)
 rex_register_extension_point( 'PAGE_CHECKED', $SLY['PAGE'], array('pages' => $SLY['PAGES']));
 
 // Gewünschte Seite einbinden
-$controller = sly_Controller_Base::factory();
+$controller = sly_Controller_Base::factory($SLY['USER'] ? null : 'login', $SLY['USER'] ? null : 'index');
 
 if ($controller !== null) {
 	require $SLY['INCLUDE_PATH'].'/layout/top.php';
