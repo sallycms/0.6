@@ -8,7 +8,7 @@ $add_td  = '';
 $delLink = $I18N->msg('clang_delete');
 
 if ($clangID == 0) {
-	$delLink = '<span class="rex-strike">'.$delLink.'</span>';
+	$delLink = '<span class="sly-strike">'.$delLink.'</span>';
 }
 else {
 	$delLink = '<a href="index.php?page=specials&amp;subpage=languages&amp;func=delete&amp;clang_id='.$clangID.'" class="sly-delete">'.$delLink.'</a>';
@@ -20,10 +20,10 @@ if ($this->func == 'edit' && $editID == $clangID) {
 	
 	?>
 	<tr class="sly-active">
-		<td class="rex-small"><span class="rex-i-element rex-i-clang"><span class="rex-i-element-text"><?= sly_html($name) ?></span></span></td>
-		<td class="rex-small"><?= sly_html($clangID) ?></td>
-		<td><input class="rex-form-text" type="text" name="clang_name" value="<?= sly_html($name) ?>" /></td>
-		<td><input class="rex-form-submit" type="submit" name="sly-submit" value="<?= $I18N->msg('clang_update') ?>" /></td>
+		<td class="sly-col-a sly-icon"><img src="media/language.png" alt="" class="sly-icon" /></td>
+		<td class="sly-col-b"><?= sly_html($clangID) ?></td>
+		<td class="sly-col-c"><input class="sly-form-text" type="text" name="clang_name" value="<?= sly_html($name) ?>" /></td>
+		<td class="sly-col-d"><input class="sly-form-submit" type="submit" name="sly-submit" value="<?= $I18N->msg('clang_update') ?>" /></td>
 	</tr>
 	<?php
 }
@@ -32,10 +32,10 @@ else {
 	
 	?>
 	<tr>
-		<td class="rex-small"><a class="rex-i-element rex-i-clang" href="<?= $editLink ?>"><span class="rex-i-element-text"><?= sly_html($clangName) ?></span></a></td>
-		<td class="rex-small"><?= sly_html($clangID) ?></td>
-		<td><a href="<?= $editLink ?>"><?= sly_html($clangName) ?></a></td>
-		<td><?= $delLink ?></td>
+		<td class="sly-col-a sly-icon"><a href="<?= $editLink ?>"><img src="media/language.png" alt="" class="sly-icon" /></a></td>
+		<td class="sly-col-b"><?= sly_html($clangID) ?></td>
+		<td class="sly-col-c"><a href="<?= $editLink ?>"><?= sly_html($clangName) ?></a></td>
+		<td class="sly-col-d"><?= $delLink ?></td>
 	</tr>
 	<?php
 }

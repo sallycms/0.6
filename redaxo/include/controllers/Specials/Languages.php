@@ -5,10 +5,11 @@ class sly_Controller_Specials_Languages extends sly_Controller_Base
 	// for now just copy those two fields and the init() method, until
 	// I find a nice way to generalize it into. --xrstf
 	
-	protected $warning = '';
-	protected $info    = '';
-	protected $func    = '';
-	protected $id      = '';
+	protected $warning   = '';
+	protected $info      = '';
+	protected $func      = '';
+	protected $id        = '';
+	protected $languages = array();
 	
 	public function init()
 	{
@@ -20,6 +21,9 @@ class sly_Controller_Specials_Languages extends sly_Controller_Base
 		);
 		
 		rex_title($I18N->msg('specials'), $subline);
+		
+		$languageService = sly_Service_Factory::getService('Language');
+		$this->languages = $languageService->find(null, null, 'id');
 	}
 	
 	public function index()

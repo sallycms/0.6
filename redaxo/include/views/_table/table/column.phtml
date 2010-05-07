@@ -1,6 +1,10 @@
 <?
 
-$isRexIcon = isset($this->htmlAttributes['class']) && strpos($this->htmlAttributes['class'], 'rex-icon') !== false;
+if (!isset($this->htmlAttributes['class'])) {
+	$this->htmlAttributes['class'] = '';
+}
+
+$isRexIcon = strpos($this->htmlAttributes['class'], 'rex-icon') !== false;
 $link      = '';
 
 if (!$isRexIcon && $table->isSorting() && !$table->hasDragAndDrop() && !empty($this->sortkey)) {
@@ -25,12 +29,10 @@ if (!$isRexIcon && $table->isSorting() && !$table->hasDragAndDrop() && !empty($t
 			break;
 	}
 	
-	if (!isset($this->htmlAttributes['class'])) {
-		$this->htmlAttributes['class'] = '';
-	}
-	
 	$this->htmlAttributes['class'] .= ' has-sort-icon';
 }
+
+$this->htmlAttributes['class'] .= ' sly-col-'.chr(97 + $index);
 
 ?>
 <th <?= sly_Util_HTML::buildAttributeString($this->htmlAttributes) ?>><?= $this->content.$link ?></th>

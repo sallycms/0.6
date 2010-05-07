@@ -59,12 +59,12 @@ print $this->surroundingHTML;
 
 ?>
 
-<table id="<?= $this->id ?>" class="rex-table" style="margin-bottom:1em;clear:both">
+<table id="<?= $this->id ?>" class="rex-table">
 	<thead>
 		<tr class="nodrop nodrag">
 			<?
-			foreach ($this->columns as $col) {
-				$col->render($this);
+			foreach ($this->columns as $idx => $col) {
+				$col->render($this, $idx);
 			}
 			?>
 		</tr>

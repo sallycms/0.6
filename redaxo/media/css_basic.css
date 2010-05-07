@@ -1,6 +1,14 @@
 +global-reset;
 +html5-reset;
 
+@constants {
+	background:         #FFF;
+	menu_link:          #FFF;
+	link_color:         #F2353A;
+	link_color_offline: #A00;
+	link_color_online:  #3EC94A;
+}
+
 /* zusätzlicher Reset-Code */
 
 body {
@@ -10,7 +18,7 @@ body {
 html, body, div, span, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote,
 pre,a, abbr, acronym, address, code,del, dfn, em, img, q, dl, dt, dd, ol, ul,
 li, fieldset, form, label, legend,table, caption, tbody, tfoot, thead, tr, th, td {
-	font-family: Arial, Verdana, sans-serif;
+	font-family: Verdana, Arial, sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6, th {
@@ -25,7 +33,7 @@ h1, h2, h3, h4, h5, h6, th {
 	width: 0px !important;
 	height: 0px !important;
 	overflow: hidden !important;
-	background-color: #FFF !important;
+	background-color: $background !important;
 }
 
 /* Standard */
@@ -58,7 +66,7 @@ li {
 	width: 0px !important;
 	height: 0px !important;
 	overflow: hidden !important;
-	background-color: #FFF !important;
+	background-color: $background !important;
 }
 
 .rex-rvrs {
@@ -181,8 +189,8 @@ div#rex-navi-paginate ul li.rex-navi-paginate-page a.rex-active {
 
 /*	Weiss */
 
-div#rex-navi-logout  { p a, a   { color: #fff; } }
-div#rex-navi-main ul { li, li a { color: #fff; } }
+div#rex-navi-logout  { p a, a   { color: $menu_link; } }
+div#rex-navi-main ul { li, li a { color: $menu_link; } }
 
 table.rex-table caption {
 	color: #9C9A96;
@@ -191,7 +199,7 @@ table.rex-table caption {
 /*	Rot */
 
 a {
-	color: #F2353A;
+	color: $link_color;
 }
 
 .rex-warning,
@@ -201,7 +209,7 @@ div.rex-warning-block {
 
 .rex-offline,
 div#rex-linkmap ul li a.rex-offline {
-	color: #A00;
+	color: $link_color_offline;
 }
 
 /*	Gruen */
@@ -215,7 +223,7 @@ div.rex-info-block a {
 .rex-ok,
 .rex-online,
 div#rex-linkmap ul li a.rex-online {
-	color: #3EC94A;
+	color: $link_color_online;
 }
 
 .rex-tx3 {
@@ -487,8 +495,6 @@ div.rex-navi-slice ul li a.rex-slice-move {
 	&article           { background-image: url(../media/document.gif);      }
 	&article-add       { background-image: url(../media/document_plus.gif); }
 	&article-startpage { background-image: url(../media/liste.gif);         }
-	&clang             { background-image: url(../media/flag.gif);          }
-	&clang-add         { background-image: url(../media/flag_plus.gif);     }
 	&metainfo          { background-image: url(../media/metainfo.gif);      }
 	&metainfo-add      { background-image: url(../media/metainfo_plus.gif); }
 	&module            { background-image: url(../media/modul.gif);         }
@@ -578,12 +584,13 @@ div.rex-form-content-editmode {
 /*	Seitenstruktur */
 
 body {
-	margin: 8px;
+	margin: 8px auto;
+	width: 1000px;
 }
 
 div#rex-website {
 	position: relative;
-	width: 770px;
+	width: 1000px;
 	font-size: .625em;
 }
 

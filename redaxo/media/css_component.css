@@ -181,7 +181,7 @@ table.rex-table {
 	}
 }
 
-div#rex-form- {
+div#rex-form-, div#sly-form- {
 	&-structure-article,
 	&-structure-category,
 	&-system-language,
@@ -190,6 +190,7 @@ div#rex-form- {
 		table.rex-table {
 			th, td                   { vertical-align: middle; }
 			th.rex-icon, td.rex-icon { padding-bottom: 6px;    }
+			th.sly-icon, td.sly-icon { padding-bottom: 6px;    }
 		}
 	}
 }
@@ -200,14 +201,14 @@ body#rex-page-module table.rex-table caption {
 
 /*	real width = border + padding + width */
 
-table.rex-table {
+table.rex-table, table.sly-table {
 	th, td {
-		&.rex-icon, &.rex-small {
+		&.rex-icon, &.rex-small, &.sly-icon, &.sly-small {
 			width: 29px;
 			text-align: center;
 		}
 		
-		&.rex-icon {
+		&.rex-icon, &.sly-icon {
 			padding-top: 6px;
 			padding-bottom: 0;
 		}
