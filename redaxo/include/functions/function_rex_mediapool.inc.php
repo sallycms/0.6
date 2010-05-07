@@ -191,7 +191,7 @@ function rex_mediapool_updateMedia($fileData, &$fileInfos, $userlogin = null)
 	$msg     = '';
 	$updated = false;
 	$level   = error_reporting(0);
-	$return['ok'] = false;
+	$return['ok'] = true;
 	
 	if (!empty($_FILES['file_new']['name']) && $_FILES['file_new']['name'] != 'none') {
 		$filename = $_FILES['file_new']['tmp_name'];
@@ -215,18 +215,21 @@ function rex_mediapool_updateMedia($fileData, &$fileInfos, $userlogin = null)
 				}
 				
 				chmod($REX['MEDIAFOLDER'].'/'.$fileInfos['filename'], $REX['FILEPERM']);
-				if(class_exists('Thumbnail')){
+				
+				if (class_exists('Thumbnail')){
 					Thumbnail::deleteCache($fileInfos['filename']);
 				}
+				
 				$updated = true;
-				$return['ok'] = true;
 			}
 			else {
 				$return['msg'] = $I18N->msg('pool_file_upload_error');
+				$return['ok']  = false;
 			}
 		}
 		else {
 			$return['msg'] = $I18N->msg('pool_file_upload_errortype');
+			$return['ok']  = false;
 		}
 	}
 	
