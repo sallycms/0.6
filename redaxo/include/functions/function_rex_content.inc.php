@@ -602,13 +602,13 @@ function rex_copyArticle($id, $to_cat_id)
     			rex_register_extension_point('ART_ADDED', '',
 			      	array (
 				        'id' => $new_id,
-				        'clang' => $clang,
-				        'status' => $art_sql->getValue('status'),
-				        'name' => $art_sql->getValue('name'),
-				        're_id' => $art_sql->getValue('re_id'),
-				        'prior' => $art_sql->getValue('prior'),
-				        'path' => $art_sql->getValue('path'),
-				        'template_id' => $art_sql->getValue('template_id'),
+				        'clang'  => $clang,
+				        'status' => 0,
+				        'name'   => $from_data['name'],
+				        're_id'  => $to_cat_id,
+				        'prior'  => 9999999,
+				        'path'   => $path,
+				        'template_id' => $from_data['template_id'],
 			      	)
     			);
     			sly_Core::cache()->delete('alist', $to_cat_id);
@@ -626,7 +626,7 @@ function rex_copyArticle($id, $to_cat_id)
 	}
 
 	// Caches des Artikels löschen, in allen Sprachen
-	rex_deleteCacheArticle($id);
+	//rex_deleteCacheArticle($id);
 
 	// Caches der Kategorien löschen, da sich darin befindliche Artikel geändert haben
 	rex_deleteCacheArticle($to_cat_id);
