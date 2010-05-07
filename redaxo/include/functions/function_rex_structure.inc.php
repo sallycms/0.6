@@ -699,7 +699,7 @@ function rex_editArticle($articleID, $clang, $data)
 		
 		$message = rex_register_extension_point('ART_UPDATED', $I18N->msg('article_updated'), array(
 			'id'          => $articleID,
-			'article'     => clone $newData,
+			'article'     => clone $article,
 			'article_old' => clone $oldData,
 			'status'      => (int) $oldData->getValue('status'),
 			'name'        => $data['name'],
