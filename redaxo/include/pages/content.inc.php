@@ -89,14 +89,10 @@ if ($article->getRows() == 1)
 
 	// ----- Request Parameter
 	
-	$mode     = rex_request('mode', 'string');
+	$mode     = rex_request('mode', 'string', 'edit');
 	$function = rex_request('function', 'string');
 	$warning  = rex_request('warning', 'string');
 	$info     = rex_request('info', 'string');
-
-	if ($mode != 'meta') {
-		$mode = 'edit';
-	}
 
 	// ----- Sprachenblock
 	
@@ -483,8 +479,8 @@ if ($article->getRows() == 1)
 				}
 
 				$val = rex_translate($val);
-				$s  .= '<a href="index.php?page=content&amp;clang='.$clang.'&amp;ctype='.$key.'&amp;category_id='.$category_id.'&amp;article_id='.$article_id.'"'.$class.''.rex_tabindex().'>'.$val.'</a>';
-
+				$s  .= '<a href="index.php?page=content&amp;article_id='.$article_id.'&amp;clang='.$clang.'&amp;ctype='.$key.'&amp;mode=edit"'.$class.''.rex_tabindex().'>'.$val.'</a>';
+				
 				$listElements[] = $s;
 			}
 
