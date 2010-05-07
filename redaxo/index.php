@@ -223,11 +223,14 @@ if($SLY['PAGES'][strtolower($SLY['PAGE'])][2] == 1)
 // page variable validated
 rex_register_extension_point( 'PAGE_CHECKED', $SLY['PAGE'], array('pages' => $SLY['PAGES']));
 
+// View laden
+$view = sly_View::factory();
+
 // Gewünschte Seite einbinden
 $controller = sly_Controller_Base::factory($SLY['USER'] ? null : 'login', $SLY['USER'] ? null : 'index');
 
 if ($controller !== null) {
-	require $SLY['INCLUDE_PATH'].'/layout/top.php';
+	$view->openBuffer();
 	
 	try {
 		$controller->dispatch();
@@ -235,10 +238,6 @@ if ($controller !== null) {
 	catch (sly_Authorisation_Exception $e1) {
 		rex_title('Sicherheitsverletzung');
 		print rex_warning($e1->getMessage());
-		
-		if (!isset($SLY['USER']) || ($SLY['USER'] === null)){
-			require $SLY['INCLUDE_PATH'].'/pages/login.inc.php';
-		}
 	}
 	catch (sly_Controller_Exception $e2) {
 		rex_title('Controller-Fehler');
@@ -249,25 +248,24 @@ if ($controller !== null) {
 		print rex_warning('Es ist eine unerwartete Ausnahme aufgetreten: '.$e3->getMessage());
 	}
 	
-	require $SLY['INCLUDE_PATH'].'/layout/bottom.php';
+	$view->closeBuffer();
+	$CONTENT = $view->render();
 }
-elseif (isset($SLY['PAGES'][$SLY['PAGE']]['PATH']) && $SLY['PAGES'][$SLY['PAGE']]['PATH'] != "")
-{
+elseif (isset($SLY['PAGES'][$SLY['PAGE']]['PATH']) && $SLY['PAGES'][$SLY['PAGE']]['PATH'] != "") {
 	// If page has a new/overwritten path
 	require $SLY['PAGES'][$SLY['PAGE']]['PATH'];
-
-}elseif($SLY['PAGES'][strtolower($SLY['PAGE'])][1])
-{
-  // Addon Page
-  require $SLY['INCLUDE_PATH'].'/addons/'. $SLY['PAGE'] .'/pages/index.inc.php';
-	
-}else
-{
-	// Core Page
-	require $SLY['INCLUDE_PATH'].'/layout/top.php';
-	require $SLY['INCLUDE_PATH'].'/pages/'. $SLY['PAGE'] .'.inc.php';
-	require $SLY['INCLUDE_PATH'].'/layout/bottom.php';
+	$CONTENT = ob_get_clean();
+}
+elseif ($SLY['PAGES'][strtolower($SLY['PAGE'])][1]) {
+	// Addon Page
+	require $SLY['INCLUDE_PATH'].'/addons/'. $SLY['PAGE'] .'/pages/index.inc.php';
+	$CONTENT = ob_get_clean();
+}
+else { // Core Page
+	$view->openBuffer();
+	require $SLY['INCLUDE_PATH'].'/pages/'.$SLY['PAGE'].'.inc.php';
+	$view->closeBuffer();
+	$CONTENT = $view->render();
 }
 
-$CONTENT = ob_get_clean();
-rex_send_article(null, $CONTENT, 'backend', TRUE);
+rex_send_article(null, $CONTENT, 'backend', true);
