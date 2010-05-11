@@ -3,7 +3,9 @@
 function getImportDir()
 {
 	global $REX;
-	return $REX['INCLUDE_PATH'].'/addons/import_export/backup';
+	$dir = $REX['DATAFOLDER'].'/import_export';
+	if (!is_dir($dir) && !@mkdir($dir, 0777)) throw new Exception('Konnte Backup-Verzeichnis '.$dir.' nicht anlegen.');
+	return $dir;
 }
 
 function compareFiles($file_a, $file_b)

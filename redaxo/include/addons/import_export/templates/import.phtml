@@ -12,7 +12,7 @@
 
 	// Formular erzeugen
 
-	$baseDir = $REX['INCLUDE_PATH'].'/addons/import_export/backup';
+	$baseDir = $REX['DATAFOLDER'].'/import_export';
 	$dumps   = sly_A1_Helper::getDatabaseDumps($baseDir);
 	$tars    = sly_A1_Helper::getFileArchives($baseDir);
 	
