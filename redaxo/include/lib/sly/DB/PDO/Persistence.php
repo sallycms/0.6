@@ -486,6 +486,27 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
     	return $this->affectedRows();
     }
     
+	public function listTables($find = null)
+	{
+		$sql = $this->connection->getSQLbuilder('');
+		$sql->list_tables();
+		$this->query($sql->to_s(), $sql->bind_values());
+		
+		$tables = array();
+		
+		foreach ($this as $row) {
+			$tables[] = reset(array_values($row));
+		}
+		
+		$this->currentRow = null;
+		
+		if (is_string($find)) {
+			return in_array($find, $tables);
+		}
+		
+		return $tables;
+	}
+    
     public function lastId() {
 		return intval($this->connection->getConnection()->lastInsertId());
     }
@@ -502,8 +523,30 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
 	public function fetch($table, $select = '*', $where = null, $order = null) {
 		$this->select($table, $select, $where, null, $order, null, 1);
 		$this->next();
-		return $this->current();
+		$data = $this->current();
+		$this->currentRow = null;
+		return $data;
     }
+	 
+	public function magicFetch($table, $select = '*', $where = null, $order = null)
+	{
+		$this->select($table, $select, $where, null, $order, null, 1);
+		$this->next();
+		$data = $this->current();
+		
+		$this->currentRow = null;
+		
+		if ($data === false) {
+			return false;
+		}
+		
+		if (count($data) == 1) {
+			$ret = array_values($data);
+			return $ret[0];
+		}
+		
+		return $data;
+	}
     
     // =========================================================================
     // Locks

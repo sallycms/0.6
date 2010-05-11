@@ -232,7 +232,7 @@ class sly_Controller_Setup extends sly_Controller_Base
 		// Wenn kein Fehler aufgetreten ist, aber auch etwas geändert wurde, prüfen
 		// wir, ob dadurch alle benötigten Tabellen erzeugt wurden.
 
-		if (empty($error) && !empty($dbInitFunction)) {
+		if (empty($error)) {
 			$existingTables = array();
 
 			foreach (rex_sql::showTables() as $tblname) {
@@ -251,7 +251,7 @@ class sly_Controller_Setup extends sly_Controller_Base
 			$this->createuser();
 		}
 		else {
-			$this->warning = $error;
+			$this->warning = empty($dbInitFunction) ? '' : $error;
 			$this->render('views/setup/initdb.phtml', array(
 				'dbInitFunction'  => $dbInitFunction,
 				'dbInitFunctions' => array('setup', 'nop', 'drop')
@@ -264,7 +264,7 @@ class sly_Controller_Setup extends sly_Controller_Base
 		global $SLY, $I18N;
 		
 		$pdo         = sly_DB_PDO_Persistence::getInstance();
-		$usersExist  = $pdo->fetch('user', 'user_id') !== false;
+		$usersExist  = $pdo->listTables($SLY['TABLE_PREFIX'].'user') && $pdo->magicFetch('user', 'user_id') !== false;
 		$createAdmin = !sly_post('no_admin', 'boolean', false);
 		$adminUser   = sly_post('admin_user', 'string');
 		$adminPass   = sly_post('admin_pass', 'string');
@@ -282,10 +282,10 @@ class sly_Controller_Setup extends sly_Controller_Base
 				}
 
 				if (empty($error)) {
-					$user = $pdo->fetch('user', 'user_id', array('login' => $adminUser));
-
-					if ($user) {
-						$error = $I18N->msg('setup_042');
+					$userOK = $pdo->listTables($SLY['TABLE_PREFIX'].'user') && $pdo->fetch('user', 'user_id', array('login' => $adminUser)) > 0;
+					
+					if ($userOK) {
+						$error = $I18N->msg('setup_042'); // Dieses Login existiert schon!
 					}
 					else {
 						$adminPass = call_user_func($SLY['PSWFUNC'], $adminPass);

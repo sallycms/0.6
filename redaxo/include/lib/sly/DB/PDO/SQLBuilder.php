@@ -159,6 +159,12 @@ class sly_DB_PDO_SQLBuilder
 		return $this;
 	}
 
+	public function list_tables()
+	{
+		$this->operation = 'LIST_TABLES';
+		return $this;
+	}
+
 	/**
 	 * Reverses an order clause.
 	 */
@@ -679,5 +685,6 @@ abstract class sly_DB_PDO_SQLBuilder
 	}
 	
 	protected abstract function build_limit($sql, $offset, $limit);
+	protected abstract function build_list_tables();
 }
 ?>

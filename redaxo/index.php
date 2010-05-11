@@ -227,7 +227,8 @@ rex_register_extension_point( 'PAGE_CHECKED', $SLY['PAGE'], array('pages' => $SL
 $view = sly_View::factory();
 
 // Gewünschte Seite einbinden
-$controller = sly_Controller_Base::factory($SLY['USER'] ? null : 'login', $SLY['USER'] ? null : 'index');
+$forceLogin = !$SLY['SETUP'] && !$SLY['USER'];
+$controller = sly_Controller_Base::factory($forceLogin ? 'login' : null, $forceLogin ? 'index' : null);
 
 if ($controller !== null) {
 	$view->openBuffer();

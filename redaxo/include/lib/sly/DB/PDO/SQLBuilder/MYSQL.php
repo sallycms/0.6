@@ -10,4 +10,9 @@ class sly_DB_PDO_SQLBuilder_MYSQL extends sly_DB_PDO_SQLBuilder
 		
 		return "$sql LIMIT $offset, $limit";
 	}
+	
+	public function build_list_tables()
+	{
+		return 'SHOW TABLES';
+	}
 }

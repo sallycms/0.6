@@ -10,4 +10,9 @@ class sly_DB_PDO_SQLBuilder_OCI extends sly_DB_PDO_SQLBuilder{
 			"WHERE rownum <= $stop) WHERE ar_rnum__ > $offset";
 	}
 	
+	public function build_list_tables()
+	{
+		// http://www.orafaq.com/forum/t/127009/0/
+		return 'SELECT * FROM user_tables';
+	}
 }
