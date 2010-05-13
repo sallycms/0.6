@@ -46,4 +46,17 @@ class sly_Configuration{
 		
 		return $res;
 	}
+
+	public function has($path)
+	{
+		$path = explode('/', $path);
+		$res  = self::$instance->configuration;
+		
+		foreach ($path as $step){
+			if (!array_key_exists($step, $res)) return false;
+			$res = $res[$step];
+		}
+		
+		return !empty($res);
+	}
 }

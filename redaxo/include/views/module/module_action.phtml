@@ -9,6 +9,16 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
+global $REX;
+
+$form = new sly_Form('POST', 'index.php', $I18N->msg('action_add'));
+$form->addHiddenValue(sly_Controller_BASE::PAGEPARAM, 'module');
+$form->addHiddenValue(sly_Controller_Base::ACTIONPARAM, 'add_action');
+$form->addHiddenValue('save', 1);
+$form->addHiddenValue('id', $module->getId());
+
+$form->render();
+
 ?>
 
 <div class="rex-form rex-form-module-editmode">
@@ -18,8 +28,7 @@
       $gaa = new rex_sql;
       $gaa->setQuery("SELECT * FROM ".$REX['TABLE_PREFIX']."action ORDER BY name");
 
-      if ($gaa->getRows()>0)
-      {
+      if ($gaa->getRows() > 0) {
         $gma = new rex_sql;
         $gma->setQuery("SELECT * FROM ".$REX['TABLE_PREFIX']."module_action, ".$REX['TABLE_PREFIX']."action WHERE ".$REX['TABLE_PREFIX']."module_action.action_id=".$REX['TABLE_PREFIX']."action.id and ".$REX['TABLE_PREFIX']."module_action.module_id='$modul_id'");
 				
@@ -93,7 +102,7 @@
         }
 
 ?>
-		<?= $actions ?>
+	
 		<fieldset class="rex-form-col-1">
           <legend><?= $I18N->msg('action_add') ?></legend>
       		<div class="rex-form-wrapper">
