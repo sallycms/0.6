@@ -44,4 +44,51 @@ div.sly-content {
 		margin-bottom: 1em;
 		line-height: 15px;
 	}
+	
+	div.rex-form {
+		margin-bottom: 1em;
+	}
+}
+
+/* Sprites */
+
+.sly-sprite {
+	background-image: url(sprites.png);
+	background-repeat: no-repeat;
+
+	&.sly-module     { background-position: 0 0; }
+	&.sly-module-add { background-position: 0 -16px; }
+}
+
+img.sly-sprite {
+	height: 16px;
+	width: 16px;
+}
+
+span.sly-sprite {
+	height: 20px;
+	width: 20px;
+	text-align: left;
+	float: left;
+	text-indent: -999em;
+	display: block;
+}
+
+a.sly-action {
+	background-image: url(sprites.png);
+	background-position: left 50%;
+	background-repeat: no-repeat;
+	padding: 1px 0 1px 20px;
+
+	&.sly-delete { color: red; background-position: 0 -32px; }
+}
+
+.sly-center {
+	text-align: center;
+}
+
+#rex-page-module form#module .rex-form-row {
+	label        { width: 100px;       }
+	textarea     { width: 600px;       }
+	input#submit { margin-left: 110px; }
 }
