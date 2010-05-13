@@ -1,6 +1,6 @@
 <? $id = $this->id ? ' id="'.sly_html($this->id).'"' : ''; ?>
 <? $enc = $this->enctype ? ' enctype="'.sly_html($this->enctype).'"' : ''; ?>
-<div class="rex-addon-output-v2" style="margin-bottom:1em">
+<div class="rex-addon-output-v2">
 	<div class="rex-form">
 		<form method="<?= strtolower($this->method) ?>" action="<?= sly_html($this->action) ?>"<?= $id.$enc ?>>
 			<? foreach ($this->fieldsets as $i => $fieldset): ?>
