@@ -54,7 +54,7 @@ class sly_Loader
 			$shortClass = strlen($className) > strlen($prefix) ? substr($className, strlen($prefix)) : $className;
 			$file       = str_replace('_', DIRECTORY_SEPARATOR, $shortClass).'.php';
 			$fullPath   = $path.DIRECTORY_SEPARATOR.$file;
-			
+var_dump($fullPath);
 			if (is_file($fullPath)) {
 				$found = true;
 				break;
