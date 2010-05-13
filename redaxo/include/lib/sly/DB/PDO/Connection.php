@@ -221,7 +221,7 @@ class DB_PDO_Connection {
  * @author zozi@webvariants.de
  *
  */
-class DB_PDO_Connection {
+class sly_DB_PDO_Connection {
 	
 	private static $instance;
 	
