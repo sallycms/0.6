@@ -12,7 +12,7 @@ $lastMTime = empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? 0 : strtotime($_SERVER[
 
 if ($lastMTime > 0 && $lastMTime <= time()) {
 	$file      = (string) $_GET['f'];
-	$cacheFile = $projectBase.'data/dyn/internal/sally/css-cache/mtimes.txt';
+	$cacheFile = $projectBase.'dyn/internal/sally/css-cache/mtimes.txt';
 	$caches    = file_exists($cacheFile) ? file($cacheFile) : array();
 	$now       = time();
 	$lifetime  = 3600;

@@ -1,7 +1,5 @@
 <?php
 
-global $rex_user_loginmessage;
-
 if ($rex_user_loginmessage != '') {
 	print rex_warning($rex_user_loginmessage);
 }
@@ -9,7 +7,8 @@ if ($rex_user_loginmessage != '') {
 ?>
 <!-- *** OUTPUT OF LOGIN-FORM - START *** -->
 
-<div class="rex-form rex-form-login">
+
+<div class="rex-form">
 	<form action="index.php" method="post" id="loginformular">
 		<fieldset class="rex-form-col-1">
 			<legend>Login</legend>

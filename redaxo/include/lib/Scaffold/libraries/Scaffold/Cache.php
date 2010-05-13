@@ -30,7 +30,7 @@ final class Scaffold_Cache
 	 */
 	private static $frozen = false;
 	
-	private static $cacheFile = 'data/dyn/internal/sally/css-cache/mtimes.txt';
+	private static $cacheFile = 'dyn/internal/sally/css-cache/mtimes.txt';
 
 	/**
 	 * Sets up the cache path

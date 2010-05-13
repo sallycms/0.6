@@ -34,29 +34,13 @@ class sly_Configuration{
         return self::$instance;
     }
 
-	public function get($path)
-	{
-		$path = explode('/', $path);
-		$res  = self::$instance->configuration;
-		
-		foreach ($path as $step){
-			if (!array_key_exists($step, $res)) break;
-			$res = $res[$step];
-		}
-		
-		return $res;
-	}
-
-	public function has($path)
-	{
-		$path = explode('/', $path);
-		$res  = self::$instance->configuration;
-		
-		foreach ($path as $step){
-			if (!array_key_exists($step, $res)) return false;
-			$res = $res[$step];
-		}
-		
-		return !empty($res);
-	}
+    public function get($path){
+    	$path = explode('/', $path);
+        $res = self::$instance->configuration;
+        foreach($path as $step){
+        	if(!isset($res[$step])) break;
+            $res = $res[$step];
+        }
+        return $res;
+    }
 }

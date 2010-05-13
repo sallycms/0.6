@@ -1,11 +1,11 @@
 <?php
 
-$dynDirectory = realpath(dirname(__FILE__).'/../../../data/dyn/internal/sally/');
+$dynDirectory = realpath(dirname(__FILE__).'/../../../../data/dyn/internal/sally/');
 $dynDirectory = rtrim($dynDirectory, '/\\').'/';
 
 // Wir wechseln in das Basis-Verzeichnis dieses Projekts.
 
-$projectBase = realpath(dirname(__FILE__).'/../../../');
+$projectBase = realpath(dirname(__FILE__).'/../../../../');
 $projectBase = rtrim($projectBase, '/\\').'/';
 chdir($projectBase);
 
@@ -31,7 +31,7 @@ $dynDirectory = rtrim($dynDirectory, '/\\').'/';
  * Also, in production mode, errors are disabled and any modules which change
  * the output will not be available - like the Typography module. 
  */
-define('SCAFFOLD_PRODUCTION', false);
+define('SCAFFOLD_PRODUCTION', !file_exists($dynDirectory.'scaffold.debug'));
 
 /**
  * Document Root
@@ -51,7 +51,7 @@ $config['document_root'] = $_SERVER['DOCUMENT_ROOT'];
  * an absolute file path, or even relative to the document root and Scaffold
  * will take care of the rest. 
  */
-$config['system'] = $projectBase.'assets/css/scaffold/';
+$config['system'] = $projectBase.'redaxo/include/lib/Scaffold/';
 
 /**
  * Cache Folder
@@ -114,7 +114,7 @@ $config['enable_log'] = false;
  * 2 = message
  * 3 = debug
  */
-$config['error_threshold'] = 1;
+$config['error_threshold'] = 0;
 
 /**
  * Use PHP compression
@@ -125,14 +125,15 @@ $config['error_threshold'] = 1;
  *
  * Set this from 1-9, with 9 being the highest compression, and false being no compression.
  */
-$config['gzip_compression'] = true;<?php
+$config['gzip_compression'] = false;
+<?php
 
-$dynDirectory = realpath(dirname(__FILE__).'/../../../dyn/internal/sally/');
+$dynDirectory = realpath(dirname(__FILE__).'/../../../../dyn/internal/sally/');
 $dynDirectory = rtrim($dynDirectory, '/\\').'/';
 
 // Wir wechseln in das Basis-Verzeichnis dieses Projekts.
 
-$projectBase = realpath(dirname(__FILE__).'/../../../');
+$projectBase = realpath(dirname(__FILE__).'/../../../../');
 $projectBase = rtrim($projectBase, '/\\').'/';
 chdir($projectBase);
 
@@ -158,7 +159,7 @@ $dynDirectory = rtrim($dynDirectory, '/\\').'/';
  * Also, in production mode, errors are disabled and any modules which change
  * the output will not be available - like the Typography module. 
  */
-define('SCAFFOLD_PRODUCTION', false);
+define('SCAFFOLD_PRODUCTION', !file_exists($dynDirectory.'scaffold.debug'));
 
 /**
  * Document Root
@@ -178,7 +179,7 @@ $config['document_root'] = $_SERVER['DOCUMENT_ROOT'];
  * an absolute file path, or even relative to the document root and Scaffold
  * will take care of the rest. 
  */
-$config['system'] = $projectBase.'assets/css/scaffold/';
+$config['system'] = $projectBase.'redaxo/include/lib/Scaffold/';
 
 /**
  * Cache Folder
@@ -241,7 +242,7 @@ $config['enable_log'] = false;
  * 2 = message
  * 3 = debug
  */
-$config['error_threshold'] = 1;
+$config['error_threshold'] = 0;
 
 /**
  * Use PHP compression
@@ -252,4 +253,4 @@ $config['error_threshold'] = 1;
  *
  * Set this from 1-9, with 9 being the highest compression, and false being no compression.
  */
-$config['gzip_compression'] = true;
+$config['gzip_compression'] = false;

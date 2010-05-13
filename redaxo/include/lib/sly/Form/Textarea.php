@@ -13,7 +13,7 @@ class sly_Form_Textarea extends sly_Form_Input_Base
 {
 	public function __construct($name, $label, $value, $id = null)
 	{
-		$allowed = array('value', 'name', 'id', 'disabled', 'class', 'maxlength', 'readonly', 'style', 'rows', 'cols', 'wrap');
+		$allowed = array('value', 'name', 'id', 'disabled', 'class', 'maxlength', 'readonly', 'style', 'rows', 'cols');
 		parent::__construct($name, $label, $value, $id, $allowed);
 		$this->addClass('rex-form-textarea');
 	}

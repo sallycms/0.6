@@ -38,3 +38,37 @@ RewriteRule ^(assets/scrollbox/.*)$          gzip.php?file=$1
 RewriteRule ^(assets/morecss/.*\.[css|js])$  gzip.php?file=$1
 RewriteRule ^(assets/mediaplayer/.*\.js)$    gzip.php?file=$1
 RewriteRule ^(assets/css/.*\.css)$           gzip.php?file=$1
+# Turn on Expires and set default to 0
+#ExpiresActive On
+#expiresbytype image/gif "access plus 7 days"
+#expiresbytype image/png "access plus 7 days"
+#expiresbytype image/jpeg "access plus 7 days"
+#expiresbytype image/jpg "access plus 7 days"
+#expiresbytype text/css "access plus 7 days"
+#expiresbytype text/javascript "access plus 7 days"
+
+
+RewriteEngine On
+# RewriteBase /
+
+# RewriteCond %{HTTP_HOST} ^example\.de$
+# RewriteRule ^(.*)$ http://www.example.de/$1 [R=301,L]
+
+RewriteRule ^([0-9]*)-([0-9]*)- index.php?article_id=$1&clang=$2&%{QUERY_STRING}
+RewriteRule ^([0-9]*)- index.php?article_id=$1&%{QUERY_STRING}
+
+#Image Resize
+RewriteCond %{REQUEST_URI} ^/imageresize/(.*)
+RewriteCond %{DOCUMENT_ROOT}/dyn/public/addons/image_resize/image_resize__$1 -f
+RewriteRule ^imageresize/(.*)$ dyn/public/addons/image_resize/image_resize__$1 [L]
+RewriteRule ^imageresize/(.*)$ index.php?rex_resize=$1 [L]
+
+# Deployer-AddOn
+RewriteRule ^files/(tmp_|css|js)/t[0-9]+_(.+)$ files/$1/$2 [L]
+
+# Komprimierung fuer statischen Content
+RewriteRule ^(files/js/.*\.js)$ 					gzip.php?file=$1
+RewriteRule ^(files/scrollbox/.*)$ 				gzip.php?file=$1
+RewriteRule ^(files/morecss/.*\.[css|js])$ 	gzip.php?file=$1
+RewriteRule ^(files/mediaplayer/.*\.js)$	 	gzip.php?file=$1
+RewriteRule ^(files/css/.*\.css)$ 				gzip.php?file=$1

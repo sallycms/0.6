@@ -24,12 +24,17 @@ class sly_Form_Select_DropDown extends sly_Form_Select_Base implements sly_Form_
 
 	public function render()
 	{
-		return $this->renderFilename('form/select/dropdown.phtml');
+		return $this->renderFilename('element_select.phtml');
 	}
 
 	public function getOuterClass()
 	{
-		$this->addOuterClass('rex-form-select');
+		switch ($redaxo) {
+			case 42:
+				$this->addOuterClass('rex-form-select');
+				break;
+		}
+
 		return $this->outerClass;
 	}
 }

@@ -37,7 +37,7 @@ class sly_Table_Column
 		$this->content = $content;
 	}
 	
-	public function render(sly_Table $table, $index)
+	public function render(sly_Table $table)
 	{
 		global $REX;
 		

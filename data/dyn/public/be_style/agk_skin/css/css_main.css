@@ -46,14 +46,19 @@ div.rex-content-header ul li a.rex-active {
 
 /*	Schriftarten */
 
-body, input, textarea, select, div#rex-navi-paginate ul li.rex-navi-paginate-page a span {
+body,
+input,
+textarea,
+select,
+div#rex-navi-paginate ul li.rex-navi-paginate-page a span {
 	font-family: Arial, Verdana, sans-serif;
 }
+
 
 /*	Schriftgrößen */
 
 div#rex-website {
-	font-size: 0.75em;
+	font-size: .75em;
 }
 
 div#rex-title h1 {
@@ -255,6 +260,8 @@ a.rex-back {
 	&article           { background-image: url(document.gif);      }
 	&article-add       { background-image: url(document_plus.gif); }
 	&article-startpage { background-image: url(startpage.gif);     }
+	&clang             { background-image: url(clang.gif);         }
+	&clang-add         { background-image: url(clang_plus.gif);    }
 	&metainfo          { background-image: url(metainfo.gif);      }
 	&metainfo-add      { background-image: url(metainfo_plus.gif); }
 	&module            { background-image: url(module.gif);        }
@@ -563,6 +570,11 @@ body#rex-page-import-export div {
 	height: 0px !important;
 	overflow: hidden !important;
 	background-color: #FFF !important;
+}
+
+.rex-i-clang,
+.rex-i-clang-add {
+	width: 21px;
 }
 
 /*	Formulare */
