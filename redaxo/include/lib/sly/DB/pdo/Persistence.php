@@ -15,24 +15,25 @@
  * @author zozi@webvariants.de
  *
  */
-class sly_DB_PDO_Persistence implements sly_DB_Persistence{
-	const LOG_UNKNOWN = -1;
+class DB_PDO_Persistence implements sly_DB_Persistence{
+    const LOG_UNKNOWN = -1;
 	const LOG_ERROR   = -2;
 	
-	private $connection  = null;
-	private $statement    = null;
-	private $currentRow   = null;
+	private $connection = null;
+	private $statement = null;
+	private $currentRow = null;
 	private $transRunning = false; 
 	
-	private function __construct() {
-		$this->connection = sly_DB_PDO_Connection::getInstance()->getConnection();
+	private function __construct(){
+		$this->connection = DB_PDO_Connection::getInstance()->getConnection();
+		$this->helper = DB_PDO_Connection::getInstance()->getHelper();
 	}
 	
 	public static function getInstance(){
 		return new self();
 	}
 	
-	protected function query($query, $data = array()){
+	public function query($query, $data = array()){
 		
 		try{
 			$start      = microtime(true);
@@ -56,7 +57,7 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
 	} 
 	
 	public function insert($table, $values) {
-		$sql = new sly_DB_PDO_SQLBuilder($this->connection, self::getPrefix().$table);
+		$sql = new DB_PDO_SQLBuilder($this->connection, self::getPrefix().$table, $this->helper);
 		$sql->insert($values);
         $this->query($sql->to_s(), $sql->bind_values());
         
@@ -64,7 +65,7 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
     }
 	
     public function update($table, $newValues, $where = null){
-    	$sql = new sly_DB_PDO_SQLBuilder($this->connection, self::getPrefix().$table);
+    	$sql = new DB_PDO_SQLBuilder($this->connection, self::getPrefix().$table, $this->helper);
     	$sql->update($newValues);
     	$sql->where($where);
     	$this->query($sql->to_s(), $sql->bind_values());
@@ -72,15 +73,16 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
     	return $this->affectedRows();
     }
     
-    public function select($table, $select = '*', $where = null, $group = null, $order = null, $limit = null, $having = null, $joins = null) {
-		$sql = new sly_DB_PDO_SQLBuilder($this->connection, self::getPrefix().$table);
+    public function select($table, $select = '*', $where = null, $group = null, $order = null, $limit = null, $offset = null, $having = null, $joins = null) {
+		$sql = new DB_PDO_SQLBuilder($this->connection, self::getPrefix().$table, $this->helper);
 		$sql->select($select);
-		if($where) $sql->where($where);
-		if($group) $sql->group($group);
+		if($where)  $sql->where($where);
+		if($group)  $sql->group($group);
 		if($having) $sql->having($having);
-		if($order) $sql->order($order);
-		if($limit) $sql->limit($limit);
-		if($joins) $sql->joins($joins);
+		if($order)  $sql->order($order);
+		if($limit)  $sql->limit($limit);
+		if($offset) $sql->offset($offset);
+		if($joins)  $sql->joins($joins);
 		
     	return $this->query($sql->to_s(), $sql->bind_values());
     }
@@ -92,13 +94,30 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
      * @param $where a hash (columnname => value ...)
      * @return int affected rows
      */
-    public function delete($table, $where = null){
-    	$sql = new sly_DB_PDO_SQLBuilder($this->connection, self::getPrefix().$table);
-    	$sql->delete($where);
-    	$this->query($sql->to_s(), $sql->bind_values());
+	public function delete($table, $where = null){
+		$sql = new DB_PDO_SQLBuilder($this->connection, self::getPrefix().$table, $this->helper);
+		$sql->delete($where);
+		$this->query($sql->to_s(), $sql->bind_values());
     	
-    	return $this->affectedRows();
+		return $this->affectedRows();
+	}
+    
+   /**
+    * Hilfsfunktion um eine Zeile zu bekommen
+    * 
+    * @param string $table
+    * @param string $select
+    * @param array $where
+    * @param int $order
+    * 
+    * @return array row
+    */
+	public function fetch($table, $select = '*', $where = null, $order = null) {
+		$this->select($table, $select, $where, null, $order, 1);
+		$this->next();
+		return $this->current();
     }
+    
     
     public function lastId() {
 		return intval($this->connection->lastInsertId());
@@ -108,73 +127,10 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
         return $this->statement ? $this->statement->rowCount() : 0;
     }
     
- 	 private static function getPrefix() {
-        global $SLY;
-        return $SLY['TABLE_PREFIX'];
+ 	private static function getPrefix() {
+        global $REX;
+        return $REX['TABLE_PREFIX'];
     }
-	 
-	 /**
-	 * Hilfsmethode für genau eine Zeile
-	 *
-	 * Diese Methode dient dazu, genau eine Zeile zu holen. Sie gibt im
-	 * Erfolgsfall kein true, sondern die geholte Zeile zurück, wodurch ein
-	 * Aufruf von row() entfällt. Sollte das Ergebnis nur eine Spalte haben, so
-	 * wird direkt dieser Wert zurückgeliefert (und kein Array mit einem
-	 * Element).
-	 *
-	 * @param  string $what              Spalten, die geholt werden sollen
-	 * @param  string $from              Tabelle, aus der gelesen werden soll
-	 * @param  string $where             WHERE-Kriterium
-	 * @param  array  $data              die zu verwendenden Daten
-	 * @param  bool   $includeSlyPrefix  wenn true, wird $SLY['TABLE_PREFIX'] vor den Tabellennamen gesetzt
-	 * @return mixed                     false im Falle eines Fehlers, sonst mixed oder ein Array (je nach Spaltenanzahl)
-	 */
-	public function fetch($what, $from, $where = '1', $data = array(), $includeSlyPrefix = true)
-	{
-		if ($includeSlyPrefix) {
-			$tables = explode(',', $from);
-			$from   = array();
-			foreach ($tables as $table) $from[] = self::getPrefix().trim($table);
-			$from = join(',', $from);
-		}
-		
-		// Daten vorbereiten
-		
-		$data  = sly_makeArray($data);
-		$query = sprintf('SELECT %s FROM %s WHERE %s LIMIT 1', $what, $from, $where);
-		
-		// Statement vorbereiten
-		
-		try {
-			$this->statement = $this->connection->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-			
-			if ($this->statement->execute($data) === false) {
-				return $this->error();
-			}
-			
-			$result = $this->statement->fetch(PDO::FETCH_ASSOC);
-			$this->statement->closeCursor();
-			
-			// Ein nicht gefundener Datensatz ist KEIN Fehler!
-			
-			if ($result === false) {
-				return false;
-			}
-			
-			// Erfolg. Wir geben entweder den einen Wert zurück, den er gibt,
-			// oder das komplette Array.
-
-			if (count($result) == 1) {
-				$ret = array_values($result);
-				return $ret[0];
-			}
-			
-			return $result;
-		}
-		catch (PDOException $e) {
-			return $this->error();
-		}
-	}
     
     // =========================================================================
     // Locks
@@ -277,7 +233,7 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
         // Exceptions, die nicht von SQL-Problemen herrühren (z.B. InputExceptions),
         // leiten wir weiter nach außen.
 
-        if ($e instanceof Exception && !($e instanceof sly_DB_PDO_Exception)) {
+        if ($e instanceof Exception && !($e instanceof DB_PDO_Exception)) {
             throw $e;
         }
 
@@ -294,7 +250,7 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
 	protected function error() {
 		$message   = 'Es trat ein Datenbank-Fehler auf: ';
 		
-		throw new sly_DB_PDO_Exception($message.'Fehlercode: '. $this->getErrno() .' '.$this->getError(), $this->getErrno());
+		throw new DB_PDO_Exception($message.'Fehlercode: '. $this->getErrno() .' '.$this->getError(), $this->getErrno());
 	}
     
 	/**
