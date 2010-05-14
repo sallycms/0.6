@@ -194,12 +194,12 @@ if ($REX['USER'] && !$REX["PAGE_NO_NAVI"])
         		$class .= ' rex-navi-first';
         	if($p == $REX["PAGE"] && $subpage == $sp[0]) 
 		        $class .= ' rex-active';
-     			$class = $class != '' ? ' class="'. $class .'"' : '';
-     			$subitem = array();
-     			$subitem['href'] = 'index.php?page='.$p.'&amp;subpage='.$sp[0];
-     			$tags = '';
-    		  foreach($subitem as $tag => $value)
-		        $tags .= ' '. $tag .'="'. $value .'"';
+     		$class = $class != '' ? ' class="'. $class .'"' : '';
+     		$subitem = array();
+     		$subitem['href'] = 'index.php?page='.$p.'&amp;subpage='.$sp[0];
+     		$tags = '';
+    		foreach($subitem as $tag => $value)
+				$tags .= ' '. $tag .'="'. $value .'"';
 	        echo '<li'. $class .' id="'. $id .'"><a'. $class . $tags . '>'. $sp[1] .'</a></li>';
 		      $subfirst = FALSE;
 	      }

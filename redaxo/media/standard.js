@@ -339,6 +339,44 @@ jQuery.noConflict();
 	checkInput = function(id) {
 		$('#' + id).attr('checked', 'checked');
 	};
+
+	// ------------------ Preview fuer REX_MEDIA_BUTTONS, REX_MEDIALIST_BUTTONS
+
+	rexShowMediaPreview = function() {
+		var value;
+
+		if ($(this).hasClass('rex-widget-media')) {
+			value = $('input[type=text]', this).val();
+		}
+		else {
+			value = $('select option:selected', this).text();
+		}
+
+		var div = $('.rex-media-preview', this);
+		var url = '../index.php?rex_resize=246a__' + value;
+
+		if (value && value.length != 0 && $.inArray(extension, imageExtensions)) {
+			// img tag nur einmalig einfügen, ggf erzeugen wenn nicht vorhanden
+			var img = $('img', div);
+
+			if (img.length == 0) {
+				div.html('<img />');
+				img = $('img', div);
+			}
+
+			img.attr('src', url);
+
+			// warten bis der layer komplett ausgeblendet ist
+
+			if (div.css('height') == 'auto') {
+				div.fadeIn('normal');
+			}
+		}
+		else {
+			div.slideUp('fast');
+		}
+	};
+
 })(jQuery);
 
 jQuery(function($) {
@@ -378,44 +416,7 @@ jQuery(function($) {
 	
 	$('a.sly-blank').attr('target', '_blank');
 	
-	// ------------------ Preview fuer REX_MEDIA_BUTTONS, REX_MEDIALIST_BUTTONS
-	
-	function rexShowMediaPreview() {
-		var value;
-		
-		if ($(this).hasClass('rex-widget-media')) {
-			value = $('input[type=text]', this).val();
-		}
-		else {
-			value = $('select option:selected', this).text();
-		}
-
-		var div = $('.rex-media-preview', this);
-		var url = '../index.php?rex_resize=246a__' + value;
-		
-		if (value && value.length != 0 && $.inArray(extension, imageExtensions)) {
-			// img tag nur einmalig einfügen, ggf erzeugen wenn nicht vorhanden
-			var img = $('img', div);
-			
-			if (img.length == 0) {
-				div.html('<img />');
-				img = $('img', div);
-			}
-			
-			img.attr('src', url);
-
-			// warten bis der layer komplett ausgeblendet ist
-			
-			if (div.css('height') == 'auto') {
-				div.fadeIn('normal');
-			}
-		}
-		else {
-			div.slideUp('fast');
-		}
-	};
-
-	// Medialist-Preview neu anzeigen, beim Wechsel der Auswahl
+   // Medialist-Preview neu anzeigen, beim Wechsel der Auswahl
 	
 	$('.rex-widget-medialist.rex-widget-preview').click(rexShowMediaPreview);
 
@@ -428,4 +429,8 @@ jQuery(function($) {
 				div.slideUp('normal');
 			}
 		});
+	$('#rex-navi-page-mediapool a').click(function(){
+		newPoolWindow('index.php?page=mediapool');
+		return false;
+	});
 });
