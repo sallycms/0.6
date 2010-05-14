@@ -32,7 +32,7 @@ class sly_DB_PDO_SQLBuilder
 	 * @return SQLBuilder
 	 * @throws ActiveRecordException if connection was invalid
 	 */
-	public function __construct($connection, $table)
+	public function __construct(PDO $connection, $table)
 	{
 		$this->connection	= $connection;
 		$this->table		= $table;

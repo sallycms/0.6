@@ -105,7 +105,7 @@ class sly_DB_PDO_Connection {
 	
     public function getSQLbuilder($table){
     	$classname = 'sly_DB_PDO_SQLBuilder_'.strtoupper($this->conf['DRIVER']);
-        return new $classname($this, $table); 
+        return new $classname($this->connection, $table);
     }
     
     /**
