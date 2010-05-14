@@ -33,14 +33,14 @@ abstract class sly_Service_AddOn_Base
 		require $filename;
 	}
 	
-	abstract public function install($addonName);         // Installieren
-	abstract public function uninstall($addonName);       // Deinstallieren
-	abstract public function activate($addonName);        // Aktivieren
-	abstract public function deactivate($addonName);      // Deaktivieren
-	abstract public function delete($addonName);          // Löschen
-	abstract public function generateConfig();            // Config-Datei neu generieren (z. B. addons.inc.php)
+	abstract public function install($addonName);    // Installieren
+	abstract public function uninstall($addonName);  // Deinstallieren
+	abstract public function activate($addonName);   // Aktivieren
+	abstract public function deactive($addonName);   // Deaktivieren
+	abstract public function delete($addonName);     // Löschen
+	abstract public function generateConfig();       // Config-Datei neu generieren (z. B. addons.inc.php)
+	
+	abstract public function baseFolder($addonName);      // redaxo/include/addons/foo
 	abstract public function publicFolder($addonName);    // data/dyn/public/foo
 	abstract public function internalFolder($addonName);  // data/dyn/internal/foo
-	
-	abstract protected function baseFolder($addonName);   // redaxo/include/addons/foo
 }

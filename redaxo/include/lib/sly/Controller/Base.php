@@ -11,10 +11,10 @@
 
 abstract class sly_Controller_Base
 {
-	const PAGEPARAM = 'page';
+	const PAGEPARAM    = 'page';
 	const SUBPAGEPARAM = 'subpage';
-	const ACTIONPARAM = 'func';
-	const DEFAULTPAGE = 'structure';
+	const ACTIONPARAM  = 'func';
+	const DEFAULTPAGE  = 'structure';
 
 	protected $action;
 
