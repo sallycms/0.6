@@ -668,7 +668,7 @@ abstract class sly_DB_PDO_SQLBuilder
 			$sql .= " ORDER BY $this->order";
 
 		if ($this->limit || $this->offset)
-			$sql = $this->build_limit($sql,$this->offset,$this->limit);
+			$sql = $this->build_limit($sql, $this->offset, $this->limit);
 
 		return $sql;
 	}
@@ -684,7 +684,7 @@ abstract class sly_DB_PDO_SQLBuilder
 		return $sql;
 	}
 	
-	protected abstract function build_limit($sql, $offset, $limit);
+	protected abstract function build_limit($sql, $offset = 0, $limit = -1);
 	protected abstract function build_list_tables();
 }
 ?>

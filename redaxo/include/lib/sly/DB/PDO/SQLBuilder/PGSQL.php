@@ -1,9 +1,11 @@
 <?php
 class sly_DB_PDO_SQLBuilder_PGSQL extends sly_DB_PDO_SQLBuilder{
 	
-	public function build_limit($sql, $offset, $limit)
+	public function build_limit($sql, $offset = 0, $limit = -1)
 	{
-		return $sql . ' LIMIT ' . intval($limit) . ' OFFSET ' . intval($offset);
+		$limit = intval($limit);
+		$limit = $limit > 0 ? $limit : 'ALL';
+		return $sql . ' LIMIT ' . $limit . ' OFFSET ' . intval($offset);
 	}
 	
 	public function build_list_tables()

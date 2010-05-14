@@ -22,7 +22,6 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
 	private $connection  = null;
 	private $statement    = null;
 	private $currentRow   = null;
-	private $transRunning = false; 
 	
 	private function __construct() {
 		$this->connection = sly_DB_PDO_Connection::getInstance();
@@ -421,6 +420,7 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
 		
 		try{
 			$start = microtime(true);
+			$this->currentRow = null;
 			$this->statement = null;
 			$this->statement = $this->connection->getConnection()->prepare($query);
 			if($this->statement->execute($data) === false){
@@ -498,8 +498,6 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
 			$tables[] = reset(array_values($row));
 		}
 		
-		$this->currentRow = null;
-		
 		if (is_string($find)) {
 			return in_array($find, $tables);
 		}
@@ -524,7 +522,7 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
 		$this->select($table, $select, $where, null, $order, null, 1);
 		$this->next();
 		$data = $this->current();
-		$this->currentRow = null;
+		
 		return $data;
     }
 	 

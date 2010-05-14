@@ -1,13 +1,24 @@
 <?php
 class sly_DB_PDO_SQLBuilder_OCI extends sly_DB_PDO_SQLBuilder{
 	
-	public function build_limit($sql, $offset, $limit)
+	public function build_limit($sql, $offset = 0, $limit = -1)
 	{
 		$offset = intval($offset);
-		$stop = $offset + intval($limit);
-		return 
-			"SELECT * FROM (SELECT a.*, rownum ar_rnum__ FROM ($sql) a " .
-			"WHERE rownum <= $stop) WHERE ar_rnum__ > $offset";
+		$limit  = intval($limit);
+
+		//http://www.oracle.com/technology/oramag/oracle/06-sep/o56asktom.html
+
+		if($limit > 0 && $offset == 0){
+			$sql = 'select * from ('.$sql.') where ROWNUM <= '.$limit;
+		}elseif($limit < 0 && $offset > 0){
+			$sql = 'select * from ('.$sql.') where ROWNUM > '.$offset;
+		}else{
+			$sql = 'select * from ( select /*+ FIRST_ROWS(n) */  a.*, ROWNUM rnum'
+					.' from ('.$sql.') a where ROWNUM <= '.($limit + $offset).' )'
+					.' where rnum  >= '.$offset;
+		}
+
+		return $sql;
 	}
 	
 	public function build_list_tables()

@@ -60,11 +60,12 @@ $REX['USE_LAST_MODIFIED'] = "false"; // String: "true"/"false"/"fronted"/"backen
 $REX['USE_MD5'] = "false"; // String: "true"/"false"/"fronted"/"backend"
 
 // versch. Pfade
-$REX['INCLUDE_PATH']  = realpath($REX['HTDOCS_PATH'].'redaxo/include');
+
 $REX['FRONTEND_PATH'] = realpath($REX['HTDOCS_PATH']);
-$REX['DATAFOLDER']    = realpath($REX['HTDOCS_PATH'].'data');
-$REX['MEDIAFOLDER']   = realpath($REX['HTDOCS_PATH'].'data/mediapool');
-$REX['DYNFOLDER']     = realpath($REX['HTDOCS_PATH'].'data/dyn');
+$REX['INCLUDE_PATH']  = $REX['FRONTEND_PATH'].DIRECTORY_SEPARATOR.'redaxo'.DIRECTORY_SEPARATOR.'include';
+$REX['DATAFOLDER']    = $REX['FRONTEND_PATH'].DIRECTORY_SEPARATOR.'data';
+$REX['MEDIAFOLDER']   = $REX['DATAFOLDER'].DIRECTORY_SEPARATOR.'mediapool';
+$REX['DYNFOLDER']     = $REX['DATAFOLDER'].DIRECTORY_SEPARATOR.'dyn';
 
 // Prefixes
 $REX['TABLE_PREFIX']  = 'rex_';
