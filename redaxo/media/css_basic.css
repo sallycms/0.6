@@ -2041,6 +2041,7 @@ div#rex-website {
 
 body#rex-page-linkmap,
 body#rex-page-mediapool {
+	width: 740px;
 	div#rex-website { width: 100%; }
 }
 
