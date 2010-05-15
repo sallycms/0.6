@@ -3695,7 +3695,7 @@ class DB_PDO_SQLBuilder
 
 		if ($num_args == 1 && is_hash($args[0]))
 		{
-			$e = new DB_PDO_Expression($args[0]);
+			$e = new sly_DB_PDO_Expression($args[0]);
 			$e->set_connection($this->connection);
 			$this->where = $e->to_s();
 			$this->where_values = array_flatten($e->values());
@@ -3709,7 +3709,7 @@ class DB_PDO_SQLBuilder
 			{
 				if (is_array($value))
 				{
-					$e = new DB_PDO_Expression($args[0]);
+					$e = new sly_DB_PDO_Expression($args[0]);
 					$e->set_connection($this->connection);
 					$e->bind_values($values);
 					$this->where = $e->to_s();
@@ -4079,7 +4079,7 @@ abstract class sly_DB_PDO_SQLBuilder
 	protected function build_insert()
 	{
 		$keys = join(',',array_keys($this->data));
-		$e = new DB_PDO_Expression("INSERT INTO $this->table($keys) VALUES(?)",array_values($this->data));
+		$e = new sly_DB_PDO_Expression("INSERT INTO $this->table($keys) VALUES(?)",array_values($this->data));
 		$e->set_connection($this->connection);
 		return $e->to_s();
 	}

@@ -4555,7 +4555,11 @@ class sly_DB_PDO_Persistence implements sly_DB_Persistence{
 	private function __construct() {
 		$this->connection = sly_DB_PDO_Connection::getInstance();
 	}
-	
+
+	/**
+	 *
+	 * @return sly_DB_PDO_Persistence
+	 */
 	public static function getInstance(){
 		return new self();
 	}
