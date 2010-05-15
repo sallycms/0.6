@@ -175,7 +175,7 @@ if ($function == "add" or $function == "edit")
 
     // PreView action macht nur beim edit Sinn da,
     // - beim Delete kommt keine View
-    // - beim Add sind noch keine Werte vorhanden, welche man verarbeiten kï¿½nnte
+    // - beim Add sind noch keine Werte vorhanden, welche man verarbeiten könnte
     $options = array(
       2 => $ASTATUS[1] .' - '.$I18N->msg('action_event_edit')
     );

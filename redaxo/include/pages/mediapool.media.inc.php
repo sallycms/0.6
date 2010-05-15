@@ -36,6 +36,62 @@ if ($rootCats = OOMediaCategory::getRootCategories())
     }
 }
 
+
+function _rex_deleteMediaController(OOMedia $media)
+{
+	global $subpage, $I18N, $REX, $PERMALL;
+	
+	$retval    = array('info' => null, 'warning' => null, 'subpage' => null);
+	$file_name = $media->getFileName();
+	
+	if ($PERMALL || $REX['USER']->hasPerm('media['.$media->getCategoryId().']')) {
+		$usages   = $media->isInUse();
+		$filename = $media->getValue('filename');
+		
+		if ($usages === false) {
+			if ($media->delete() !== false) {
+				_rex_deleteFileCache($filename);
+				$retval['info'] = $I18N->msg('pool_file_deleted');
+			}
+			else {
+				$retval['warning'] = $I18N->msg('pool_file_delete_error_1', $file_name);
+			}
+			
+			$retval['subpage'] = '';
+		}
+		else {
+			$tmp   = array();
+			$tmp[] = $I18N->msg('pool_file_delete_error_1', $file_name).'. '.$I18N->msg('pool_file_delete_error_2').':<br />';
+			$tmp[] = '<ul>';
+			
+			foreach ($usages as $usage) {
+				if (!empty($usage['link'])) {
+					$tmp[] = '<li><a href="javascript:openPage(\''.htmlspecialchars($usage['link']).'\')">'.htmlspecialchars($usage['title']).'</a></li>';
+				}
+				else {
+					$tmp[] = '<li>'.htmlspecialchars($usage['title']).'</li>';
+				}
+			}
+			
+			$tmp[] = '</ul>';
+			$retval['warning'] = implode("\n", $tmp);
+		}
+	}
+	else {
+		$retval['warning'] = $I18N->msg('no_permission');
+	}
+	
+	return $retval;
+}
+
+function _rex_deleteFileCache($filename)
+{
+	global $REX;
+	
+	$path = $REX['MEDIAFOLDER'].'/addons/image_resize/image_resize__**__'.$filename;
+	foreach (glob($path) as $file) unlink($file);
+}
+
 // ----- EXTENSION POINT
 echo rex_register_extension_point('PAGE_MEDIAPOOL_HEADER', '',
   array(
@@ -97,55 +153,20 @@ $cat_out = rex_register_extension_point('MEDIA_LIST_TOOLBAR', $cat_out,
 
 // *************************************** Subpage: Detail
 
-if ($subpage=='detail' && rex_post('btn_delete', 'string'))
-{
-  $media = OOMedia::getMediaById($file_id);
+if ($subpage=='detail' && rex_post('btn_delete', 'string')) {
+	$media = OOMedia::getMediaById($file_id);
 
-  if ($media)
-  {
-    $file_name = $media->getFileName();
-    if ($PERMALL || $REX['USER']->hasPerm('media['.$media->getCategoryId().']'))
-    {
-      $articleUsesMedia = $media->isInUse();
-      if($articleUsesMedia === false)
-      {
-        if($media->delete() !== FALSE)
-        {
-          sly_Core::cache()->delete('media', $file_id);
-          
-          $info = $I18N->msg('pool_file_deleted');
-        }else
-        {
-          $warning = $I18N->msg('pool_file_delete_error_1', $file_name);
-        }
-        $subpage = "";
-      }else
-      {
-        $warning = array();
-        $warning[] = $I18N->msg('pool_file_delete_error_1', $file_name).' '.
-                     $I18N->msg('pool_file_delete_error_2').'<br />';
-        $warning[] = '<ul>';
-        foreach($articleUsesMedia as $art_arr)
-        {
-          $aid = $art_arr['article_id'];
-          $clang = $art_arr['clang'];
-          $ooa = OOArticle::getArticleById($aid, $clang);
-          $name = $ooa->getName();
-          $warning[] ='<li><a href="javascript:openPage(\'index.php?page=content&amp;article_id='. $aid .'&amp;mode=edit&amp;clang='. $clang .'\')">'. $name .'</a></li>';
-        }
-        $warning[] = '</ul>';
-        $subpage = '';
-
-      }
-    }else
-    {
-      $warning = $I18N->msg('no_permission');
-    }
-  }else
-  {
-    $warning = $I18N->msg('pool_file_not_found');
-    $subpage = "";
-  }
+	if ($media) {
+		$retval = _rex_deleteMediaController($media);
+		
+		if ($retval['info'] !== null)    $info    = $retval['info'];
+		if ($retval['warning'] !== null) $warning = $retval['warning'];
+		if ($retval['subpage'] !== null) $subpage = $retval['subpage'];
+	}
+	else {
+		$warning = $I18N->msg('pool_file_not_found');
+		$subpage = '';
+	}
 }
 
 if ($subpage=="detail" && rex_post('btn_update', 'string')){
@@ -165,6 +186,7 @@ if ($subpage=="detail" && rex_post('btn_update', 'string')){
       $FILEINFOS["filename"] = $gf->getValue('filename');
       
       $return = rex_mediapool_updateMedia($_FILES['file_new'],$FILEINFOS,$REX['USER']->getValue("login"));
+		_rex_deleteFileCache($FILEINFOS["filename"]);
       
 		sly_Core::cache()->delete('media', $FILEINFOS["file_id"]);
       
@@ -205,6 +227,7 @@ if ($subpage == "detail")
     $ffiletype = $media->getType();
     $ffile_size = $media->getSize();
     $ffile_size = $media->getFormattedSize();
+    $ffile_update = $media->getUpdateDate();
     $rex_file_category = $media->getCategoryId();
 
     $encoded_fname = urlencode($fname);
@@ -242,14 +265,14 @@ if ($subpage == "detail")
           <span class="rex-form-read" id="fwidth">'. $fwidth .' px / '. $fheight .' px</span>
         </p>
       </div>';
-      $imgn = '../files/'. $encoded_fname .'" width="'. $rfwidth;
+      $imgn = '../files/'. $encoded_fname .'?t='.$ffile_update.'" width="'. $rfwidth;
 
       if (!file_exists($REX['INCLUDE_PATH'].'/../../files/'. $fname))
       {
         $imgn = 'media/mime-error.gif';
       }else if ($thumbs && $thumbsresize && $rfwidth>199)
       {
-        $imgn = '../index.php?rex_resize=200a__'. $encoded_fname;
+        $imgn = '../index.php?rex_resize=200a__'. $encoded_fname.'&amp;t='.$ffile_update;
       }
 
       $add_image = '<div class="rex-mediapool-detail-image">
@@ -275,7 +298,7 @@ if ($subpage == "detail")
     {
       if ($ffiletype_ii)
       {
-        $opener_link .= '<a href="javascript:insertImage(\''. $encoded_fname .'\',\''.$media->getTitle().'\');">'.$I18N->msg('pool_image_get').'</a> | ';
+        $opener_link .= '<a href="javascript:insertImage(\''. $encoded_fname .'\',\''.htmlspecialchars($ftitle).'\');">'.$I18N->msg('pool_image_get').'</a> | ';
       }
     }
     elseif($opener_input_field == 'TINY')
@@ -499,46 +522,19 @@ if ($PERMALL && $media_method == 'delete_selectedmedia') {
 			$media = OOMedia::getMediaById($file_id);
 			
 			if ($media) {
-				$file_name = $media->getFileName();
+				$retval = _rex_deleteMediaController($media);
 				
-				if ($PERMALL || $REX['USER']->hasPerm('media['.$media->getCategoryId().']')) {
-					$usages = $media->isInUse();
-					
-					if ($usages === false) {
-						if ($media->delete() !== false) {
-							$info[] = $I18N->msg('pool_file_deleted');
-						}
-						else {
-							$warning[] = $I18N->msg('pool_file_delete_error_1', $file_name);
-						}
-						
-						$subpage = '';
-					}
-					else {
-						$tmp  = $I18N->msg('pool_file_delete_error_1', $file_name).' '.$I18N->msg('pool_file_delete_error_2').'<br />';
-						$tmp .= '<ul>';
-						
-						foreach ($usages as $usage) {
-							if (!empty($usage['link'])) {
-								$tmp .= '<li><a href="javascript:openPage(\''.htmlspecialchars($usage['link']).'\')">'.htmlspecialchars($usage['title']).'</a></li>';
-							}
-							else {
-								$tmp .= '<li>'.htmlspecialchars($usage['title']).'</li>';
-							}
-						}
-						
-						$tmp .= '</ul>';
-						$warning[] = $tmp;
-					}
-				}
-				else {
-					$warning[] = $I18N->msg('no_permission');
-				}
+				if ($retval['info'] !== null)    $info[]    = $retval['info'];
+				if ($retval['warning'] !== null) $warning[] = $retval['warning'];
+				if ($retval['subpage'] !== null) $subpage   = $retval['subpage'];
 			}
 			else {
 				$warning[] = $I18N->msg('pool_file_not_found');
 			}
 		}
+		
+		$warning = implode("<br />\n", $warning);
+		$info    = implode("<br />\n", $info);
 	}
 }
 
@@ -568,7 +564,7 @@ if ($subpage == '')
   if(is_array($warning))
   {
     if(count($warning)>0)
-	    echo rex_warning_block(implode('<br />', $warning));
+      echo rex_warning_block(implode('<br />', $warning));
     $warning = '';
   }else if($warning != '')
   {
@@ -686,6 +682,7 @@ if ($subpage == '')
     $file_title = $media->getTitle();
     $file_type = $media->getValue('filetype');
     $file_size = $media->getValue('filesize');
+    $file_update = $media->getUpdateDate();
     $file_stamp = $media->getUpdateDate('%a %d. %B %Y');
     $file_updateuser = $media->getUpdateUser();
 
@@ -732,8 +729,8 @@ if ($subpage == '')
 
       if (OOMedia::_isImage($file_name) && $thumbs)
       {
-        $thumbnail = '<img src="../files/'.$encoded_file_name.'" width="80" alt="'. $alt .'" title="'. $alt .'" />';
-        if ($thumbsresize) $thumbnail = '<img src="../index.php?rex_resize=80a__'.$encoded_file_name.'" alt="'. $alt .'" title="'. $alt .'" />';
+        $thumbnail = '<img src="../files/'.$encoded_file_name.'?t='.$file_update.'" width="80" alt="'. $alt .'" title="'. $alt .'" />';
+        if ($thumbsresize) $thumbnail = '<img src="../index.php?rex_resize=80a__'.$encoded_file_name.'&amp;t='.$file_update.'" alt="'. $alt .'" title="'. $alt .'" />';
       }
     }
 
