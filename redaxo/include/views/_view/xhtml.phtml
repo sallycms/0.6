@@ -23,7 +23,6 @@ if ($config->get('PAGE_NO_NAVI')) {
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?= $I18N->msg('htmllang') ?>" lang="<?= $I18N->msg('htmllang') ?>">
 <head>
 	<? $this->renderView('views/_view/xhtml/head.phtml') ?>
-	<?= rex_register_extension_point('PAGE_HEADER', '') ?>
 </head>
 <body <?= $bodyAttr ?>>
 	<div id="rex-website">
