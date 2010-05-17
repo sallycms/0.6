@@ -465,6 +465,7 @@ class Thumbnail{
 		{
 			foreach ($glob as $var)
 			{
+				// if file empty, clear complete cache. if cachefile endswith file, clear this cachefile
 				if ($filename == '' || $filename != '' && $filename == substr($var,strlen($filename) * -1))
 				{
 					unlink($var);
