@@ -1,35 +1,40 @@
-# Turn on Expires and set default to 0
-#ExpiresActive On
-#expiresbytype image/gif "access plus 7 days"
-#expiresbytype image/png "access plus 7 days"
-#expiresbytype image/jpeg "access plus 7 days"
-#expiresbytype image/jpg "access plus 7 days"
-#expiresbytype text/css "access plus 7 days"
-#expiresbytype text/javascript "access plus 7 days"
+# Expires-Header
+# ExpiresActive On
+# expiresbytype image/gif "access plus 7 days"
+# expiresbytype image/png "access plus 7 days"
+# expiresbytype image/jpeg "access plus 7 days"
+# expiresbytype image/jpg "access plus 7 days"
+# expiresbytype text/css "access plus 7 days"
+# expiresbytype text/javascript "access plus 7 days"
 
 RewriteEngine On
 # RewriteBase /
 
+# Single-Domain
 # RewriteCond %{HTTP_HOST} ^example\.de$
 # RewriteRule ^(.*)$ http://www.example.de/$1 [R=301,L]
 
+# REDAXO-Rewrites (X-Y-Artikel.html)
 RewriteRule ^([0-9]*)-([0-9]*)- index.php?article_id=$1&clang=$2&%{QUERY_STRING}
 RewriteRule ^([0-9]*)- index.php?article_id=$1&%{QUERY_STRING}
 
-#Image Resize
-
+# Image Resize
 RewriteCond %{REQUEST_URI} ^/imageresize/(.*)
 RewriteCond %{DOCUMENT_ROOT}/data/dyn/public/image_resize/image_resize__$1 -f
 RewriteRule ^imageresize/(.*)$ data/dyn/public/image_resize/image_resize__$1 [L]
 
 RewriteRule ^imageresize/(.*)$ index.php?rex_resize=$1 [L]
 
-# Deployer-AddOn
-RewriteRule ^files/(tmp_|css|js)/t[0-9]+_(.+)$ files/$1/$2 [L]
+# Deployer-AddOn (< 2.0)
+# RewriteRule ^files/(tmp_|css|js)/t[0-9]+_(.+)$ gzip.php?file=files/$1/$2&forever=1 [L]
+
+# Deployer-AddOn (>= 2.0)
+RewriteRule ^assets/js/([0-9a-f]{6})\.[0-9a-f]+\.min\.js$   gzip.php?file=dyn/public/deployer/compressed_$1.js&forever=1 [L]
+RewriteRule ^assets/css/([0-9a-f]{6})\.[0-9a-f]+\.min\.css$ gzip.php?file=dyn/public/deployer/compressed_$1.css&forever=1 [L]
 
 # Komprimierung fuer statischen Content
-RewriteRule ^(files/js/.*\.js)$ 					gzip.php?file=$1
-RewriteRule ^(files/scrollbox/.*)$ 				gzip.php?file=$1
-RewriteRule ^(files/morecss/.*\.[css|js])$ 	gzip.php?file=$1
-RewriteRule ^(files/mediaplayer/.*\.js)$	 	gzip.php?file=$1
-RewriteRule ^(files/css/.*\.css)$ 				gzip.php?file=$1
+RewriteRule ^(assets/js/.*\.js)$             gzip.php?file=$1
+RewriteRule ^(assets/scrollbox/.*)$          gzip.php?file=$1
+RewriteRule ^(assets/morecss/.*\.[css|js])$  gzip.php?file=$1
+RewriteRule ^(assets/mediaplayer/.*\.js)$    gzip.php?file=$1
+RewriteRule ^(assets/css/.*\.css)$           gzip.php?file=$1
