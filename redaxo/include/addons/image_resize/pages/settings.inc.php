@@ -20,16 +20,7 @@ if ($func == 'update') {
 	$max_filters     = sly_request('max_filters', 'int');
 	$max_resizekb    = sly_request('max_resizekb', 'int');
 	$max_resizepixel = sly_request('max_resizepixel', 'int');
-	$jpg_quality     = sly_request('jpg_quality', 'int');
-	
-	if     ($jpg_quality > 100) $jpg_quality = 100;
-	elseif ($jpg_quality < 0)   $jpg_quality = 0;
-
-	$REX['ADDON']['image_resize']['max_cachefiles']  = $max_cachefiles;
-	$REX['ADDON']['image_resize']['max_filters']     = $max_filters;
-	$REX['ADDON']['image_resize']['max_resizekb']    = $max_resizekb;
-	$REX['ADDON']['image_resize']['max_resizepixel'] = $max_resizepixel;
-	$REX['ADDON']['image_resize']['jpg_quality']     = $jpg_quality;
+	$jpg_quality     = min(abs(sly_request('jpg_quality', 'int')), 100);
 
 	$content = '$REX[\'ADDON\'][\'image_resize\'][\'max_cachefiles\']  = '.$max_cachefiles.';
 $REX[\'ADDON\'][\'image_resize\'][\'max_filters\']     = '.$max_filters.';
@@ -39,6 +30,7 @@ $REX[\'ADDON\'][\'image_resize\'][\'jpg_quality\']     = '.$jpg_quality.';';
 
 	if (rex_replace_dynamic_contents($configFile, $content) !== false) {
 		print rex_info($I18N->msg('iresize_config_saved'));
+		include $configFile; // Werte für das Formular neu einlesen
 	}
 	else {
 		print rex_warning($I18N->msg('iresize_config_not_saved'));
