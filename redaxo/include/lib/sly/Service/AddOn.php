@@ -298,7 +298,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		return rex_call_func(array($I18N, 'msg'), $args, false);
 	}
 
-	protected function generateConfig()
+	public function generateConfig()
 	{
 		return rex_generateAddons($this->data);
 	}
