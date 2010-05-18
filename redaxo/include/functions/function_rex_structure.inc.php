@@ -695,7 +695,7 @@ function rex_editArticle($articleID, $clang, $data)
 	
 	if ($hasOldExtensions) {
 		$article = new rex_sql();
-		$article->setQuery('SELECT * FROM #_article WHERE id = '.$articleID.' AND clang = '.$clangID, '#_');
+		$article->setQuery('SELECT * FROM #_article WHERE id = '.$articleID.' AND clang = '.$clang, '#_');
 		
 		$message = rex_register_extension_point('ART_UPDATED', $I18N->msg('article_updated'), array(
 			'id'          => $articleID,
