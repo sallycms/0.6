@@ -248,7 +248,13 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	protected function dynFolder($type, $addonName)
 	{
 		$config = sly_Core::config();
-		$dir    = $config->get('DYNFOLDER').DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.$addonName;
+		$dir    = $config->get('DYNFOLDER').DIRECTORY_SEPARATOR.$type;
+		
+		if (!is_dir($config->get('DYNFOLDER').DIRECTORY_SEPARATOR.$type)) {
+			mkdir($dir, $config->get('DIRPERM'), true);
+		}
+		
+		$dir .= DIRECTORY_SEPARATOR.$addonName;
 		
 		if (!is_dir($dir)) {
 			mkdir($dir, $config->get('DIRPERM'), true);
