@@ -42,7 +42,8 @@ $REX['ADDON']['image_resize']['jpg_quality'] = 75;
 /* benutzerdefinierte Konf. einbinden */
 $internal   = sly_Service_Factory::getService('AddOn')->internalFolder($mypage);
 $configFile = $internal.'/config.inc.php';
-if (file_exists($configFile)) include $configFile;
+if (!file_exists($configFile)) copy(dirname(__FILE__).'/example.config.inc.php', $configFile);
+include $configFile;
 
 /* API einbinden */
 require_once $REX['INCLUDE_PATH'].'/addons/image_resize/classes/class.thumbnail.inc.php';

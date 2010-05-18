@@ -8,7 +8,6 @@
  * @author jan.kristinus[at]yakmara[dot]de Jan Kristinus
  *
  * @package redaxo4
- * @version svn:$Id$
  */
 
 $func        = sly_request('func', 'string');
@@ -66,41 +65,42 @@ if (!is_writable($configFile)) {
 						<div class="rex-form-row rex-form-element-v2">
 							<p class="rex-form-text">
 								<label for="max_cachefiles"><?= $I18N->msg('iresize_max_cache_files') ?></label>
-								<input class="rex-form-text" type="text" id="max_cachefiles" name="max_cachefiles" value="'. htmlspecialchars($REX['ADDON']['image_resize']['max_cachefiles']).'" />
+								<input class="rex-form-text" type="text" id="max_cachefiles" name="max_cachefiles" value="<?= sly_html($REX['ADDON']['image_resize']['max_cachefiles']) ?>" />
 							</p>
 						</div>
 
 						<div class="rex-form-row rex-form-element-v2">
 							<p class="rex-form-text">
-								<label for="max_filters">'. $I18N->msg('iresize_max_filters') .'</label>
-								<input class="rex-form-text" type="text" id="max_filters" name="max_filters" value="'. htmlspecialchars($REX['ADDON']['image_resize']['max_filters']).'" />
+								<label for="max_filters"><?= $I18N->msg('iresize_max_filters') ?></label>
+								<input class="rex-form-text" type="text" id="max_filters" name="max_filters" value="<?= sly_html($REX['ADDON']['image_resize']['max_filters']) ?>" />
 							</p>
 						</div>
 
 						<div class="rex-form-row rex-form-element-v2">
-						<p class="rex-form-text">
-						<label for="max_resizekb">'. $I18N->msg('iresize_max_resizekb') .'</label>
-						<input class="rex-form-text" type="text" id="max_resizekb" name="max_resizekb" value="'. htmlspecialchars($REX['ADDON']['image_resize']['max_resizekb']).'" />
-						</p>
+							<p class="rex-form-text">
+								<label for="max_resizekb"><?= $I18N->msg('iresize_max_resizekb') ?></label>
+								<input class="rex-form-text" type="text" id="max_resizekb" name="max_resizekb" value="<?= sly_html($REX['ADDON']['image_resize']['max_resizekb']) ?>" />
+							</p>
 						</div>
 
 						<div class="rex-form-row rex-form-element-v2">
-						<p class="rex-form-text">
-						<label for="max_resizepixel">'. $I18N->msg('iresize_max_resizepx') .'</label>
-						<input class="rex-form-text" type="text" id="max_resizepixel" name="max_resizepixel" value="'. htmlspecialchars($REX['ADDON']['image_resize']['max_resizepixel']).'" />
-						</p>
+							<p class="rex-form-text">
+								<label for="max_resizepixel"><?= $I18N->msg('iresize_max_resizepx') ?></label>
+								<input class="rex-form-text" type="text" id="max_resizepixel" name="max_resizepixel" value="<?= sly_html($REX['ADDON']['image_resize']['max_resizepixel']) ?>" />
+							</p>
 						</div>
 
 						<div class="rex-form-row rex-form-element-v2">
-						<p class="rex-form-text">
-						<label for="jpg_quality">'. $I18N->msg('iresize_jpg_quality') .' [0-100]</label>
-						<input class="rex-form-text" type="text" id="jpg_quality" name="jpg_quality" value="'. htmlspecialchars($REX['ADDON']['image_resize']['jpg_quality']).'" />
-						</p>
+							<p class="rex-form-text">
+								<label for="jpg_quality"><?= $I18N->msg('iresize_jpg_quality') ?> [0-100]</label>
+								<input class="rex-form-text" type="text" id="jpg_quality" name="jpg_quality" value="<?= sly_html($REX['ADDON']['image_resize']['jpg_quality']) ?>" />
+							</p>
 						</div>
+						
 						<div class="rex-form-row rex-form-element-v2">
-						<p class="rex-form-submit">
-						<input type="submit" class="rex-form-submit" name="sendit" value="'.$I18N->msg('update').'" />
-						</p>
+							<p class="rex-form-submit">
+								<input type="submit" class="rex-form-submit" name="sendit" value="<?= $I18N->msg('update') ?>" />
+							</p>
 						</div>
 					</div>
 				</fieldset>
