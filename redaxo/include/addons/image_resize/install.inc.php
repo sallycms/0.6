@@ -12,19 +12,26 @@
  * @version svn:$Id$
  */
 
-$error = '';
+$error   = '';
+$service = sly_Service_Factory::getService('AddOn');
 
 if (!extension_loaded('gd')) {
-  $error = 'GD-LIB-extension not available! See <a href="http://www.php.net/gd">http://www.php.net/gd</a>';
+	$error = 'GD-LIB-extension not available! See <a href="http://www.php.net/gd">http://www.php.net/gd</a>';
 }
 
 if (empty($error)) {
-	$file = $REX['INCLUDE_PATH'] .'/addons/image_resize/config.inc.php';
+	$folder = $service->internalFolder('image_resize');
+	
+	if (!file_exists($folder.'/config.inc.php')) {
+		copy(dirname(__FILE__).'/example.config.inc.php', $folder.'/config.inc.php');
+	}
+	
+	$file = $folder.'/config.inc.php';
 	if (($state = rex_is_writable($file)) !== true) $error = $state;
 }
 
 if (empty($error)) {
-	$file = $REX['INCLUDE_PATH'] .'/generated/files';
+	$file = $service->publicFolder('image_resize');
 	if (($state = rex_is_writable($file)) !== true) $error = $state;
 }
 

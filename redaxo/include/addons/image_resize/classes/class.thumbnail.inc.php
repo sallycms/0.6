@@ -15,7 +15,7 @@
 
 class Thumbnail
 {
-	const ERRORFILE = '/public/image_resize/warning.jpg';
+	const ERRORFILE = 'warning.jpg';
 	const QUALITY   = 85;
 	const USECACHE  = true;
 
@@ -40,7 +40,7 @@ class Thumbnail
 		$this->isExternal = strpos($imgfile, 'http') === 0;
 		$this->filters    = array();
 
-		if (!$this->isExternal){
+		if (!$this->isExternal) {
 			$this->fileName = $REX['MEDIAFOLDER'].'/'.$this->fileName;
 		}
 
@@ -77,11 +77,11 @@ class Thumbnail
 			$this->thumb_height = $this->height;
 		}
 
-		if (function_exists('ImageCreateTrueColor')) {
-			$this->imgthumb = @ImageCreateTrueColor($this->thumb_width, $this->thumb_height);
+		if (function_exists('imagecreatetruecolor')) {
+			$this->imgthumb = @imagecreatetruecolor($this->thumb_width, $this->thumb_height);
 		}
 		else {
-			$this->imgthumb = @ImageCreate($this->thumb_width, $this->thumb_height);
+			$this->imgthumb = @imagecreate($this->thumb_width, $this->thumb_height);
 		}
 
 		if (!$this->imgthumb) {
@@ -101,8 +101,9 @@ class Thumbnail
 	 */
 	private function sendError()
 	{
-		global $REX;
-		self::sendImage($REX['DYNFOLDER'].self::ERRORFILE);
+		$service = sly_Service_Factory::getService('AddOn');
+		$folder  = $service->publicFolder('image_resize');
+		self::sendImage($folder.'/'.self::ERRORFILE);
 	}
 
 	/**
@@ -126,23 +127,22 @@ class Thumbnail
 				$trnprt_color = imagecolorsforindex($image,  $colorTransparent);
 
 				// Allocate the same color in the new image resource
-        	$colorTransparent = imagecolorallocate($this->imgthumb, $colorTransparent['red'], $colorTransparent['green'], $colorTransparent['blue']);
+				$colorTransparent = imagecolorallocate($this->imgthumb, $colorTransparent['red'], $colorTransparent['green'], $colorTransparent['blue']);
 
 				// Completely fill the background of the new image with allocated color.
 				imagefill($this->imgthumb, 0, 0, $colorTransparent);
 
 				// Set the background color for new image to transparent
 				imagecolortransparent($this->imgthumb, $colorTransparent);
-
 			}
 			elseif ($ext == 'png') {
 				imagealphablending($this->imgthumb, false);
 
 				// Create a new transparent color for image
-        	$color = imagecolorallocatealpha($this->imgthumb, 0, 0, 0, 127);
+				$color = imagecolorallocatealpha($this->imgthumb, 0, 0, 0, 127);
 
-        	// Completely fill the background of the new image with allocated color.
-        	imagefill($this->imgthumb, 0, 0, $color);
+				// Completely fill the background of the new image with allocated color.
+				imagefill($this->imgthumb, 0, 0, $color);
 
 				imagesavealpha($this->imgthumb, true);
 			}
@@ -161,8 +161,6 @@ class Thumbnail
 	 */
 	public function generateImage($file)
 	{
-		global $REX;
-
 		$this->resampleImage();
 		$this->applyFilters();
 		$fileext = strtoupper($this->getFileExtension());
@@ -180,7 +178,10 @@ class Thumbnail
 			imageWBMP($this->imgthumb, $file);
 		}
 
-		if ($file) @chmod($file, $REX['FILEPERM']);
+		if ($file) {
+			$perm = sly_Core::config()->get('FILEPERM');
+			@chmod($file, $perm);
+		}
 	}
 
 	/**
@@ -190,11 +191,11 @@ class Thumbnail
 	 */
 	private function applyFilters()
 	{
-		global $REX;
+		$includePath = sly_Core::config()->get('INCLUDE_PATH');
 
 		foreach ($this->filters as $filter) {
 			$filter = preg_replace('#[^a-z0-9_]#i', '', $filter);
-			$file   = $REX['INCLUDE_PATH'].'/addons/image_resize/filters/filter.'.$filter.'.inc.php';
+			$file   = $includePath.'/addons/image_resize/filters/filter.'.$filter.'.inc.php';
 			$fname  = 'image_resize_'.$filter;
 
 			if (file_exists($file))      require_once $file;
@@ -346,12 +347,12 @@ class Thumbnail
 		if ($width_ratio >= 1 || $height_ratio >= 1) {
 			// Es muss an der Breite beschnitten werden
 			if ($width_ratio > $height_ratio) {
-				$this->thumb_width_offset = (int) (round(($this->width - $this->thumb_width * $height_ratio) / 2));
+				$this->thumb_width_offset = (int) round(($this->width - $this->thumb_width * $height_ratio) / 2);
 		  		$this->width              = (int) round($this->thumb_width * $height_ratio);
 			}
 			// es muss an der Höhe beschnitten werden
 			elseif ($width_ratio < $height_ratio) {
-				$this->thumb_height_offset = (int) (round(($this->height - $this->thumb_height * $width_ratio) / 2));
+				$this->thumb_height_offset = (int) round(($this->height - $this->thumb_height * $width_ratio) / 2);
 				$this->height              = (int) round($this->thumb_height * $width_ratio);
 			}
 		}
@@ -419,7 +420,7 @@ class Thumbnail
 				self::sendError();
 			}
 
-			$thumb = new Thumbnail($imagefile);
+			$thumb = new self($imagefile);
 			$thumb->setNewSize($size, $mode, $height, $mode2, $offset, $offsetType);
 			$thumb->addFilters();
 			$thumb->generateImage($cachefile);
@@ -437,11 +438,10 @@ class Thumbnail
 	 */
 	public static function deleteCache($filename = '')
 	{
-		global $REX;
-
-		$folder = $REX['DYNFOLDER'].'/public/image_resize/';
-		$c      = 0;
-		$files  = glob($folder.'image_resize__*');
+		$service = sly_Service_Factory::getService('AddOn');
+		$folder  = $service->publicFolder('image_resize');
+		$c       = 0;
+		$files   = glob($folder.'/cache__*');
 
 		if ($files) {
 			if (empty($filename)) {
@@ -458,6 +458,14 @@ class Thumbnail
 		}
 
 		return $c;
+	}
+	
+	/**
+	 * @return int
+	 */
+	public static function mediaUpdated($params)
+	{
+		return self::deleteCache($params['filename']);
 	}
 
 	/**
@@ -485,8 +493,9 @@ class Thumbnail
 	 */
 	private static function getCacheFileName($rex_resize)
 	{
-		global $REX;
-		return $REX['DYNFOLDER'].'/public/image_resize/image_resize__'.str_replace(array('http://', 'https://', '/'), array('', '', '_'), $rex_resize);
+		$service = sly_Service_Factory::getService('AddOn');
+		$folder  = $service->publicFolder('image_resize');
+		return $folder.'/cache__'.str_replace(array('http://', 'https://', '/'), array('', '', '_'), $rex_resize);
 	}
 
 	/**
