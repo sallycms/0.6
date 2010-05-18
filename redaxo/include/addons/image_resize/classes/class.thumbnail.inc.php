@@ -27,9 +27,9 @@ class Thumbnail{
 	private $width;
 	private	$height;
 	private	$thumb_width;
-	private	$thump_height;
+	private	$thumb_height;
 	private	$thumb_width_offset;
-	private	$thump_height_offset;
+	private	$thumb_height_offset;
 	private	$quality;
 
 	public function __construct($imgfile){
@@ -52,7 +52,7 @@ class Thumbnail{
 		$this->width = imagesx($this->imgsrc);
 		$this->height = imagesy($this->imgsrc);
 		$this->thumb_width_offset = 0;
-		$this->thump_height_offset = 0;
+		$this->thumb_height_offset = 0;
 		$quality = self::QUALITY;
 		if(isset($REX['ADDON']['image_resize']['jpg_quality']))
 			$this->quality = $REX['ADDON']['image_resize']['jpg_quality'];
@@ -69,10 +69,10 @@ class Thumbnail{
 		// Originalbild selbst sehr klein und wuerde via resize vergroessert
 		// => Das Originalbild ausliefern
 		if($this->thumb_width > $this->width &&
-		$this->thump_height > $this->height)
+		$this->thumb_height > $this->height)
 		{
 			$this->thumb_width = $this->width;
-			$this->thump_height = $this->height;
+			$this->thumb_height = $this->height;
 		}
 
 		if (function_exists('ImageCreateTrueColor'))
