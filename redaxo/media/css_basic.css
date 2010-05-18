@@ -18,12 +18,34 @@ body {
 input,
 textarea,
 select {
-	font-size: 1em;
+	font-size: 100%;
+	margin: 0;
+	outline: 0 none;
+	padding: 0;
+	vertical-align: baseline;
 }
 
-html, body, div, span, object, iframe,h1, h2, h3, h4, h5, h6, p, blockquote,
-pre,a, abbr, acronym, address, code,del, dfn, em, img, q, dl, dt, dd, ol, ul,
-li, fieldset, form, label, legend,table, caption, tbody, tfoot, thead, tr, th, td {
+:focus {
+	outline:0 none;
+}
+ins {
+	text-decoration:none;
+}
+del {
+	text-decoration:line-through;
+}
+table {
+	border-collapse:collapse;
+	border-spacing:0;
+}
+a {
+	text-decoration:none;
+}
+img, iframe {
+	vertical-align:bottom;
+}
+
+body, input, textarea, select {
 	font-family: Verdana, Arial, sans-serif;
 }
 
@@ -43,6 +65,16 @@ h1, h2, h3, h4, h5, h6, th {
 }
 
 /* Standard */
+
+body {
+	background-color: #FFFFFF;
+	color: #000000;
+	font-size: 100.01%;
+	font-weight: normal;
+	line-height: 1;
+	position: relative;
+	text-align: left;
+}
 
 body, div,
 h1, h2, h3, h4, h5, h6, p,
