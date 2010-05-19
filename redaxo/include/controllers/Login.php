@@ -4,6 +4,11 @@ class sly_Controller_Login extends sly_Controller_Base
 {
 	protected $func = '';
 	
+	public function __construct()
+	{
+		$this->action = 'index';
+	}
+	
 	public function init()
 	{
 		rex_title('Login');
