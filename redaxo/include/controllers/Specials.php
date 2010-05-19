@@ -115,6 +115,7 @@ class sly_Controller_Specials extends sly_Controller_Base
 		}
 		else {
 			$this->warning = $I18N->msg('setup_error2');
+			
 		}
 		
 		$this->index();

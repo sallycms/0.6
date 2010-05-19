@@ -370,7 +370,9 @@ class sly_Controller_Setup extends sly_Controller_Base
 			$SLY['MEDIAFOLDER'],
 			$SLY['DYNFOLDER'],
 			$SLY['DYNFOLDER'].$s.'public',
-			$SLY['DYNFOLDER'].$s.'internal'
+			$SLY['DYNFOLDER'].$s.'internal',
+			$SLY['DYNFOLDER'].$s.'internal'.$s.'sally',
+			$SLY['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'css-cache'
 		);
 
 		foreach ($SLY['SYSTEM_ADDONS'] as $system_addon) {
@@ -507,8 +509,7 @@ class sly_Controller_Setup extends sly_Controller_Base
 
 	public function checkPermission()
 	{
-		global $REX;
-		return !empty($REX['USER']);
+		return true;
 	}
 }
 <?php
