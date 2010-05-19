@@ -54,14 +54,25 @@ class sly_Core
 		return self::getInstance()->cache;
 	}
 
+
+	public static function setCurrentClang($clangId)
+	{
+		self::getInstance()->curClang = $clangId;
+	}
+
 	public static function getCurrentClang()
 	{
-		
 		$instance = self::getInstance();
-		if(!isset($instance->curClang)){
+		if(!isset($instance->curClang))
+		{
 			$instance->curClang = rex_request('clang', 'rex-clang-id', self::config()->get('START_CLANG_ID'));
 		}
 		return $instance->curClang;
+	}
+
+	public static function setCurrentArticleId($articleId)
+	{
+		self::getInstance()->curArticleId = $articleId;
 	}
 
 	public static function getCurrentArticleId()
@@ -69,11 +80,14 @@ class sly_Core
 		$conf = self::config();
 		
 		$instance = self::getInstance();
-		if(!isset($instance->curArticleId)){
-			
-			if(isset($_REQUEST['article_id'])) {
+		if(!isset($instance->curArticleId))
+		{
+			if(isset($_REQUEST['article_id']))
+			{
 				$instance->curArticleId = rex_request('article_id','rex-article-id', $conf->get('NOTFOUND_ARTICLE_ID'));
-			} else {
+			}
+			else
+			{
 				$instance->curArticleId = $conf->get('START_ARTICLE_ID');
 			}
 		}
@@ -91,7 +105,8 @@ class sly_Core
 	 * Aus Kompatiblitätsgründen in das bekloppte globale $REX array
 	 * @param $varType Klassenname des Variablentyps 
 	 */
-	public static function registerVarType($varType){
+	public static function registerVarType($varType)
+	{
 		
 		self::getInstance()->varTypes[] = $varType;
 	}
@@ -101,7 +116,8 @@ class sly_Core
 	 * 
 	 * @return array 
 	 */
-	public static function getVarTypes(){
+	public static function getVarTypes()
+	{
 		$instance = self::getInstance();
 
 		if(!isset($instance->varTypes)) $instance->varTypes = array();
@@ -119,7 +135,8 @@ class sly_Core
 	 * 
 	 * @return sly_Configuration
 	 */
-	public static function config(){
+	public static function config()
+	{
 		return sly_Configuration::getInstance();
 	}
 }

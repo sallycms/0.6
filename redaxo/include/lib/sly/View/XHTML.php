@@ -130,7 +130,7 @@ class sly_View_XHTML extends sly_View_Base
 		?>
 <html <?= 'xmlns="http://www.w3.org/1999/xhtml"' ?>>
 <head>
-	<title><?= wv_html($title) ?></title>
+	<title><?= sly_html($title) ?></title>
 	<?php
 		$lines = array();
 		
@@ -223,13 +223,13 @@ class sly_View_XHTML extends sly_View_Base
 		
 		if (!empty($metas)) {
 			foreach ($metas as $name => $content) {
-				$lines[] = '<meta name="'.$name.'" content="'.wv_html($content).'" />';
+				$lines[] = '<meta name="'.$name.'" content="'.sly_html($content).'" />';
 			}
 		}
 		
 		if (!empty($httpmetas)) {
 			foreach ($httpmetas as $name => $content) {
-				$lines[] = '<meta http-equiv="'.$name.'" content="'.wv_html($content).'" />';
+				$lines[] = '<meta http-equiv="'.$name.'" content="'.sly_html($content).'" />';
 			}
 		}
 		
