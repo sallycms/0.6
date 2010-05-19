@@ -94,14 +94,14 @@ foreach ($areas as $topic => $naviList) {
 			foreach ($subpages as $sp) {
 				$class = '';
 				$id    = 'rex-navi-'.$p.'-subpage-'.$sp[0];
-				$href  = 'index.php?page='.$p.'&amp;subpage='.$sp[0];
+				$href  = 'index.php?page='.$p.'&subpage='.$sp[0];
 				
 				if ($subfirst)                            $class .= ' rex-navi-first';
 				if ($p == $curPage && $subpage == $sp[0]) $class .= ' rex-active';
 				
 				$liAttr = sly_Util_HTML::buildAttributeString(array('class' => $class, 'id' => $id));
 				$aAttr  = sly_Util_HTML::buildAttributeString(array('class' => $class, 'href' => $href));
-		
+				
 				print '<li '.$liAttr.'><a '.$aAttr.'>'.$sp[1].'</a></li>';
 				$subfirst = false;
 			}
