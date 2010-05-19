@@ -92,3 +92,16 @@ a.sly-action {
 	textarea     { width: 600px;       }
 	input#submit { margin-left: 110px; }
 }
+
+#rex-page-module table#actions span {
+	&.sly-mode-add { background-color: green; color: white; }
+	&.sly-mode-edit { background-color: yellow; }
+	&.sly-mode-delete { background-color: red; color: white; }
+	
+	&.sly-mode { &-add, &-edit, &-delete {
+		padding: 2px 4px;
+		font-size: 11px;
+		font-weight: bold;
+		border: 1px solid black;
+	} }
+}

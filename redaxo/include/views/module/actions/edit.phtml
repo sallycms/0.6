@@ -1,0 +1,80 @@
+<?php
+/*
+ * Copyright (c) 2009, webvariants GbR, http://www.webvariants.de
+ *
+ * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
+ * beiliegenden LICENSE Datei und unter:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ * http://de.wikipedia.org/wiki/MIT-Lizenz
+ */
+
+$modes   = array('preview', 'presave', 'postsave');
+$modeMap = array(1 => 1, 2 => 2, 4 => 4);
+$options = array(
+	1 => 'ADD - '.$I18N->msg('action_event_add'),
+	2 => 'EDIT - '.$I18N->msg('action_event_edit'),
+	4 => 'DELETE - '.$I18N->msg('action_event_delete')
+);
+
+// Legende ermitteln
+
+if ($this->func == 'edit') {
+	$legend = $I18N->msg('action_edit').' [ID = '.$action->getId().']';
+}
+else {
+	$legend = $I18N->msg('action_create');
+}
+
+// Formular vorbereiten
+
+$form = new sly_Form('index.php', 'POST', $legend, '', 'action');
+$form->addHiddenValue(sly_Controller_Base::PAGEPARAM,    'module');
+$form->addHiddenValue(sly_Controller_Base::SUBPAGEPARAM, 'actions');
+$form->addHiddenValue(sly_Controller_Base::ACTIONPARAM,  $this->func);
+$form->addHiddenValue('save', 1);
+
+if ($this->func == 'edit') {
+	$form->addHiddenValue('id', $action->getId());
+}
+
+// Felder erzeugen
+
+$name = new sly_Form_Input_Text('name', $I18N->msg('module_name'), $action ? $action->getName() : '');
+$form->add($name);
+
+foreach ($modes as $mode) {
+	$form->beginFieldset(ucfirst($mode).'-Action ['.$I18N->msg('action_mode_'.$mode).']');
+	
+	// Preview-Action macht nur beim Edit Sinn, da
+	// - beim Delete kein View kommt und
+	// - beim Add noch keine Werte vorhanden sind, welche man verarbeiten könnte.
+	
+	$opts   = $mode == 'preview' ? array(2 => $options[2]) : $options;
+	$input  = new sly_Form_Textarea($mode.'_action', $I18N->msg('input'), $action ? $action->getInput($mode) : '');
+	$status = new sly_Form_Select_DropDown($mode.'_status', $I18N->msg('action_event'), $action ? $action->getMode($mode, $modeMap) : array(), $opts);
+
+	$input->setAttribute('rows', 20);
+	$input->setAttribute('cols', 6);
+	$input->setAttribute('wrap', 'off');
+	$input->setHelpText($I18N->msg('action_hint'));
+	
+	$status->setSize(count($opts));
+	$status->setHelpText($I18N->msg('ctrl'));
+
+	$form->addElements(array($input, $status));
+}
+
+$form->getSubmitButton()->setAttribute('value', $I18N->msg('save_action_and_quit'));
+
+// Übernehmen-Button erzeugen
+
+if ($this->func == 'edit') {
+	$applyButton = new sly_Form_Input_Button('apply', 'goon', $I18N->msg('save_action_and_continue'));
+	$applyButton->setAttribute('type', 'submit');
+	$form->setApplyButton($applyButton);
+}
+
+// Und raus damit!
+
+$form->render();

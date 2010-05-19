@@ -139,10 +139,10 @@ class sly_Controller_Module extends sly_Controller_Base
 				$errormsg[] = '<li><a href="index.php?page=content&amp;article_id='.$aID.'&amp;clang='.$clangID.'&amp;ctype='.$usage['ctype'].'">'.sly_html($label).'</a></li>';
 			}
 
-			$modulName = sly_html($module->getName());
-			$warning   = '<ul>'.implode("\n", $errormsg).'</ul>';
+			$moduleName = sly_html($module->getName());
+			$warning    = '<ul>'.implode("\n", $errormsg).'</ul>';
 			
-			print rex_warning($I18N->msg('module_cannot_be_deleted', $modulName).$warning);
+			print rex_warning($I18N->msg('module_cannot_be_deleted', $moduleName).$warning);
 			return false;
 		}
 		
