@@ -112,6 +112,7 @@ class sly_Loader
 }
 
 sly_Loader::addLoadPath($REX['INCLUDE_PATH'].'/lib');
+sly_Loader::addLoadPath($REX['INCLUDE_PATH'].'/lib/sfYaml');
 sly_Loader::addLoadPath($REX['INCLUDE_PATH'].'/controllers', 'sly_Controller_');
 sly_Loader::register();
 
