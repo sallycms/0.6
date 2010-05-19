@@ -1,12 +1,13 @@
 <?php
 
+global $rex_user_loginmessage;
+
 if ($rex_user_loginmessage != '') {
 	print rex_warning($rex_user_loginmessage);
 }
 
 ?>
 <!-- *** OUTPUT OF LOGIN-FORM - START *** -->
-
 
 <div class="rex-form rex-form-login">
 	<form action="index.php" method="post" id="loginformular">
