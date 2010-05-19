@@ -137,16 +137,16 @@ function rex_get_subtitle($subline, $attr = '')
 			// Auf der aktiven Seite den Link nicht anzeigen
 			if ($active) {
 				$link       = empty($link) ? '' : '&amp;subpage='.$link;
-				$format     = '<a href="?page='.$cur_page.'%s%s"%s'.rex_tabindex().' class="rex-active">%s</a>';
+				$format     = '<a href="?page='.$cur_page.'%s%s"%s class="rex-active">%s</a>';
 				$subtitle[] = sprintf($format, $link, $params, $attr, $label);
 			}
 			elseif (empty($link)) {
-				$format     = '<a href="?page='.$cur_page.'%s"%s'.rex_tabindex().'>%s</a>';
+				$format     = '<a href="?page='.$cur_page.'%s"%s>%s</a>';
 				$subtitle[] = sprintf($format, $params, $attr, $label);
 			}
 			else {
 				$link       = empty($link) ? '' : '&amp;subpage='.$link;
-				$format     = '<a href="?page='.$cur_page.'%s%s"%s'.rex_tabindex().'>%s</a>';
+				$format     = '<a href="?page='.$cur_page.'%s%s"%s>%s</a>';
 				$subtitle[] = sprintf($format, $link, $params, $attr, $label);
 			}
 		}
