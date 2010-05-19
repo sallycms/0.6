@@ -60,7 +60,7 @@ class sly_Model_Slice extends sly_Model_Base {
 	
 	public function getOutput(){
 		$output = $this->getModule()->getOutput();
-		foreach(Core::getVarTypes() as $idx => $var){
+		foreach(sly_Core::getVarTypes() as $idx => $var){
 			$output = $var->getFEOutput($this->getId(), $output);
 		}
 		return $output;

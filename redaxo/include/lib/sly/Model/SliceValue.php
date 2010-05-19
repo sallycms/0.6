@@ -15,7 +15,7 @@
  * @author zozi@webvariants.de
  *
  */
-class sly_Model_SliceValue extends Model_Base{
+class sly_Model_SliceValue extends sly_Model_Base{
 
 	protected $slice_id;
 	protected $type;
