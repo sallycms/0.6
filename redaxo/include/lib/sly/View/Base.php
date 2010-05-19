@@ -3,6 +3,12 @@
 abstract class sly_View_Base
 {
 	protected $content = '';
+	protected $cssCode         = '';
+	protected $javaScriptCode  = '';
+	protected $cssFiles        = array();
+	protected $javaScriptFiles = array();
+	protected $feedCode        = '';
+	protected $feedFiles       = array();
 	
 	public function openBuffer()
 	{
@@ -42,5 +48,49 @@ abstract class sly_View_Base
 		ob_start();
 		include $SLY['INCLUDE_PATH'].DIRECTORY_SEPARATOR.$filenameHtuG50hNCdikAvf7CZ1F;
 		print ob_get_clean();
+	}
+
+	public function setTitle($title)
+	{
+		$this->title = trim($title);
+	}
+
+	public function setSubtitle($subtitle)
+	{
+		$this->subtitle = trim($subtitle);
+	}
+
+	public function addFeed($feed)
+	{
+		$this->feedCode .= "\n$feed";
+	}
+
+	public static function addFeedFile($feedFile, $type = '')
+	{
+		if (!in_array($type, array('rss', 'rss1', 'rss2', 'atom'))) {
+			$type = 'feed';
+		}
+
+		$this->feedFiles[$type] = $feedFile;
+	}
+
+	public function addCSS($css)
+	{
+		$this->cssCode .= "\n$css";
+	}
+
+	public function addCSSFile($cssFile)
+	{
+		$this->cssFiles[] = $cssFile;
+	}
+
+	public function addJavaScript($javascript)
+	{
+		$this->javaScriptCode .= "\n$javascript";
+	}
+
+	public function addJavaScriptFile($javascriptFile)
+	{
+		$this->javaScriptFiles[] = $javascriptFile;
 	}
 }

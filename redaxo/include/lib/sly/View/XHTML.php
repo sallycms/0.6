@@ -9,12 +9,7 @@ class sly_View_XHTML extends sly_View_Base
 	protected $params          = array();
 	protected $header          = '';
 	protected $isPluggedIn     = false;
-	protected $cssCode         = '';
-	protected $javaScriptCode  = '';
-	protected $cssFiles        = array();
-	protected $javaScriptFiles = array();
-	protected $feedCode        = '';
-	protected $feedFiles       = array();
+
 	
 	public function __construct()
 	{
@@ -25,16 +20,6 @@ class sly_View_XHTML extends sly_View_Base
 		$this->addJavaScriptFile('media/standard.min.js');
 		
 		$this->charset = $I18N->msg('htmlcharset');
-	}
-	
-	public function setTitle($title)
-	{
-		$this->title = trim($title);
-	}
-	
-	public function setSubtitle($subtitle)
-	{
-		$this->subtitle = trim($subtitle);
 	}
 	
 	public function render()
@@ -52,27 +37,6 @@ class sly_View_XHTML extends sly_View_Base
 	 * The array may have various parameters:
 	 * $params['title'] (Mandatory)
 	 * 		The title of the current html-page.
-	 * 
-	 * $params['cssFiles'] (Optional)
-	 * 		2 dimensional associative array of CSS files (complete site-relative path required).
-	 * 		usage-example for filling this array:
-	 * 			$params['cssFiles']['all'][] = PATH_CSS.'StyleGuide.css';
-	 *			$params['cssFiles']['all'][] = PATH_CSS.'Table.css';
-	 *			$params['cssFiles']['screen'][] = self::PATH_CSS.'main.css';
-	 *			$params['cssFiles']['IF ie'][] = self::PATH_CSS.'iehacks.css';
-	 *
-	 * $params['inlineStyles'] (Optional)
-	 * 		Inline CSS styles. Some css code that is loaded with the site.
-	 *
-	 * $params['jsFiles'] (Optional)
-	 *      2 dimensional associative array of JS files (complete site-relative path required).
-	 * 		usage-example for filling this array:
-	 * 			$params['jsFiles']['all'][] = 'files/js/prototype.js';
-	 *			$params['jsFiles']['IF ie'][] = 'files/js/ie_hacks.js';
-	 * 			$params['jsFiles']['dynamic'][] = 'files/dir/dynamicJS.php'; // This will never be compressed by the deployer
-	 * 
-	 * $params['js'] (Optional)
-	 * 		Inline js code. JavaScript code that is loaded with the site.
 	 * 
 	 * $params['links']['MoreCSS'] (Optional)
 	 * 		Array of MoreCSS-files if MoreCSS is used in this project. The MoreCSS-files are no normal CSS files
@@ -264,40 +228,6 @@ class sly_View_XHTML extends sly_View_Base
 		self::printRealHeader(self::$params);
 		print $content;
 		print "\n</body>\n</html>";
-	}
-	
-	public function addCSS($css)
-	{
-		$this->cssCode .= "\n$css";
-	}
-	
-	public function addJavaScript($javascript)
-	{
-		$this->javaScriptCode .= "\n$javascript";
-	}
-
-	public function addFeed($feed)
-	{
-		$this->feedCode .= "\n$feed";
-	}
-	
-	public function addCSSFile($cssFile)
-	{
-		$this->cssFiles[] = $cssFile;
-	}
-	
-	public function addJavaScriptFile($javascriptFile)
-	{
-		$this->javaScriptFiles[] = $javascriptFile;
-	}
-	
-	public static function addFeedFile($feedFile, $type = '')
-	{
-		if (!in_array($type, array('rss', 'rss1', 'rss2', 'atom'))) {
-			$type = 'feed';
-		}
-		
-		$this->feedFiles[$type] = $feedFile;
 	}
 	
 	public static function handleOutputFilter($params)
