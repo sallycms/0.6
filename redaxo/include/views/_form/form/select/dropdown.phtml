@@ -12,7 +12,7 @@ print '<select '.$this->getAttributeString('value').'>';
 
 foreach ($this->values as $key => $value) {
 	$sel = (is_array($selected) && in_array($key, $selected)) || (!is_array($selected) && $key == $selected) ? ' selected="selected"' : '';
-	print '<option value="'.wv_html($key).'"'.$sel.'>'.wv_html($value).'</option>';
+	print '<option value="'.sly_html($key).'"'.$sel.'>'.sly_html($value).'</option>';
 }
 
 print '</select>';
