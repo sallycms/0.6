@@ -159,7 +159,8 @@ class sly_Controller_Module_Actions extends sly_Controller_Base
 
 	public function checkPermission()
 	{
-		return true;
+		global $REX;
+		return isset($REX['USER']) && $REX['USER']->isAdmin();
 	}
 
 	protected function listActions()
