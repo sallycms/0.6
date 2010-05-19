@@ -271,6 +271,14 @@ function rex_editCategory($categoryID, $clang, $data)
 				'SET catprior = '.$newPrio.' '.
 				'WHERE id = '.$categoryID.' AND clang = '.$clang
 			);
+
+			$sql->setQuery('SELECT id FROM '.$REX['TABLE_PREFIX'].'article WHERE re_id = "'.$parentID.'" AND clang ="'.$clang.'" AND catprior != 0');
+			for ($i=0; $i < $sql->getRows(); $i++)
+			{
+				sly_Core::cache()->delete('category', $sql->getValue('id').'_'.$clang);
+				$sql->next();
+			}
+           	sly_Core::cache()->delete('clist', $parentID.'_'.$clang);
 		}
 	}
 	
@@ -688,6 +696,14 @@ function rex_editArticle($articleID, $clang, $data)
 				'UPDATE #_article SET prior = '.$newPrio.' '.
 				'WHERE id = '.$articleID.' AND clang = '.$clang, '#_'
 			);
+
+			$sql->setQuery('SELECT id FROM '.$REX['TABLE_PREFIX'].'article WHERE re_id = "'.$parentID.'" AND clang ="'.$clang.'" AND catprior = 0');
+			for ($i=0; $i < $sql->getRows(); $i++)
+			{
+				sly_Core::cache()->delete('article', $sql->getValue('id').'_'.$clang);
+				$sql->next();
+			}
+			sly_Core::cache()->delete('alist', $parentID.'_'.$clang);
 		}
 	}
 
