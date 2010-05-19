@@ -37,7 +37,7 @@ class sly_Service_Action extends sly_Service_Base
 			/* table  */ 'module m',
 			/* select */ 'm.id',
 			/* where  */ array('a.id' => $action->getId()),
-			/* group  */ null,
+			/* group  */ 'm.id', // Actions können mehrmals an ein Modul gebunden werden!
 			/* ...    */ null, null, null, null,
 			/* joins  */ 'LEFT JOIN '.$prefix.'module_action ma ON ma.module_id = m.id '.
 			             'LEFT JOIN '.$prefix.'action a ON ma.action_id = a.id'
