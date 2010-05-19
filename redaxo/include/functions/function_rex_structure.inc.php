@@ -687,7 +687,7 @@ function rex_editArticle($articleID, $clang, $data)
 			$sql->setQuery(
 				'UPDATE #_article SET prior = prior '.$relation.' 1 '.
 				'WHERE prior BETWEEN '.$a.' AND '.$b.' '.
-				'AND (re_id = '.$parentID.' AND catprior = 0) OR id = '.$parentID.' AND clang = '.$clang, '#_'
+				'AND ((re_id = '.$parentID.' AND catprior = 0) OR id = '.$parentID.') AND clang = '.$clang, '#_'
 			);
 			
 			// Eigene neue Position speichern
@@ -787,8 +787,9 @@ function rex_deleteArticleReorganized($articleID)
 	foreach ($data as $clang => $article) {
 		$sql->setQuery(
 			'UPDATE #_article SET prior = prior - 1 '.
-			'WHERE re_id = '.$article['re_id'].' AND prior > '.$article['prior'].' '.
-			'AND catprior = 0 AND clang = '.$clang, '#_'
+			'WHERE prior > '.$article['prior'].' '.
+			'AND ((re_id = '.$article['re_id'].' AND catprior = 0) OR id = '.$article['re_id'].') '.
+			'AND clang = '.$clang, '#_'
 		);
 
 		$return = rex_register_extension_point('ART_DELETED', $return, array(

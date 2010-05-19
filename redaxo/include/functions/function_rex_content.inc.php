@@ -329,8 +329,8 @@ function rex_article2startpage($neu_id)
 	}
 
 	// Diese Felder werden von den beiden Artikeln ausgetauscht.
-
-	$params = array('id', 'path', 'prior', 'catname', 'startpage', 'catprior', 'status', 're_id');
+	
+	$params = array('id', 'path', 'catname', 'startpage', 'catprior', 'status', 're_id');
 
 	// cat felder sammeln.
 	// Ist speziell für das Metainfo-AddOn enthalten, um dessen Daten gleich mit zu kopieren.
