@@ -302,91 +302,96 @@ function rex_article2startpage($neu_id)
 	$GAID   = array();
 
 	// neuer Startartikel
-	
+
 	$neu = rex_sql::fetch('path, re_id', 'article', 'id = '.$neu_id.' AND startpage = 0 AND clang = 0 AND re_id <> 0');
-	
+
 	if ($neu === false) {
 		return false;
 	}
-	
+
 	$neu_path   = $neu['path'];
 	$neu_cat_id = (int) $neu['re_id'];
 
 	// in oberster Kategorie? -> return
 	// (Ist bereits oben im SQL-Query mit dem "re_id <> 0" enthalten.)
-	
+
 //	if ($neu_cat_id == 0) {
 //		return false;
 //	}
 
 	// alter Startartikel
-	
+
 	$alt_id   = (int) $neu_cat_id;
-	$alt_path = rex_sql::fetch('path', 'article', 'id = '.$neu_cat_id.' AND startpage = 1 AND clang = 0');
-	
-	if ($alt_path === false) {
+	$alt = rex_sql::fetch('path', 'article', 'id = '.$alt_id.' AND startpage = 1 AND clang = 0');
+
+	if ($alt === false) {
 		return false;
 	}
-	
+
 	// Diese Felder werden von den beiden Artikeln ausgetauscht.
-	
+
 	$params = array('id', 'path', 'prior', 'catname', 'startpage', 'catprior', 'status', 're_id');
 
 	// cat felder sammeln.
-	// Ist speziell fÃ¼r das Metainfo-AddOn enthalten, um dessen Daten gleich mit zu kopieren.
-	
+	// Ist speziell für das Metainfo-AddOn enthalten, um dessen Daten gleich mit zu kopieren.
+
 	if (rex_addon::isAvailable('metainfo')) {
 		$db_fields = OORedaxo::getClassVars();
-		
+
 		foreach ($db_fields as $field) {
 			if (substr($field, 0, 4) == 'cat_') {
 				$params[] = $field;
 			}
 		}
 	}
-	
+
 	$paramsToSelect = implode(',', $params);
-	
+
 	$alt = new rex_sql();
 	$neu = new rex_sql();
 
 	foreach (array_keys($REX['CLANG']) as $clang) {
 		$data = rex_sql::getArrayEx(
 			'SELECT '.$paramsToSelect.' FROM #_article '.
-			'WHERE id IN ('.$neu_cat_id.','.$neu_id.') AND startpage = 1 and clang = '.$clang,
+			'WHERE id IN ('.$neu_cat_id.','.$neu_id.') AND clang = '.$clang,
 			'#_'
 		);
-		
 		// alten Startartikel updaten
-		
+
 		$alt->setTable('article', true);
 		$alt->setWhere('id = '.$alt_id.' AND clang = '.$clang);
 		$alt->setValue('re_id', $neu_id);
 
 		// neuen Startartikel updaten
-	
+
 		$neu->setTable('article', true);
 		$neu->setWhere('id = '.$neu_id.' AND clang = '.$clang);
 		$neu->setValue('re_id', $data[$neu_cat_id]['re_id']);
 
 		// Austauschen der definierten Paramater
-		
+
 		foreach ($params as $param) {
 			if ($param == 'id' || $param == 're_id') {
 				continue;
 			}
-			
+
 			$alt->setValue($param, $alt->escape($data[$neu_id][$param]));
 			$neu->setValue($param, $neu->escape($data[$neu_cat_id][$param]));
 		}
-		
+
 		$alt->update();
 		$neu->update();
-		
+
 		$alt->flush();
 		$neu->flush();
+
+		$cache = sly_Core::cache();
+       	$cache->delete('article', $neu_id.'_'.$clang);
+		$cache->delete('category', $alt_id.'_'.$clang);
+		$cache->delete('alist', $alt_id.'_'.$clang);
+		$cache->delete('clist', $data[$neu_cat_id]['re_id'].'_'.$clang);
 	}
-	
+
 	$alt = null;
 	$neu = null;
 	unset($alt, $neu);
@@ -396,23 +401,14 @@ function rex_article2startpage($neu_id)
 
 	$update   = new rex_sql();
 	$articles = rex_sql::getArrayEx('SELECT id FROM #_article WHERE path LIKE "%|'.$alt_id.'|%"', '#_');
-	
-	$update->setQuery('UPDATE #_article SET re_id = '.$neu_id.' WHERE re_id = '.$alt_id, '#_'); // re_id = X enthÃ¤lt path LIKE "%|X|%".
+
+	$update->setQuery('UPDATE #_article SET re_id = '.$neu_id.' WHERE re_id = '.$alt_id, '#_'); // re_id = X enthält path LIKE "%|X|%".
 	$update->setQuery('UPDATE #_article SET path = REPLACE(path, "|'.$alt_id.'|", "|'.$neu_id.'|") WHERE path LIKE "%|'.$alt_id.'|%"', '#_');
 
-	$articles[] = $neu_id;
-	$articles[] = $alt_id;
-	
-	$articles = array_unique($articles);
-
-	foreach ($articles as $articleID) {
-		rex_deleteCacheArticle($articleID);
-	}
-	
 	$update = null;
 	unset($update);
 
-	return true;
+  	return true;
 }
 
 /**
