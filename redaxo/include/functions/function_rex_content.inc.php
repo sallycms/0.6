@@ -794,6 +794,11 @@ function rex_moveCategory($from_cat, $to_cat)
 				$up->setValue('catprior', $catprior + 1);
 				$up->update();
 				$up->flush();
+
+				// Cache aufräumen
+				$cache = sly_Core::cache();
+				$cache->delete('category', $from_cat.'_'.$clang);
+				$cache->delete('clist', $to_cat.'_'.$clang);
 			}
 
 			// generiere Artikel neu - ohne neue Inhaltsgenerierung
