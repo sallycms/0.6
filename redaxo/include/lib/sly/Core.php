@@ -16,6 +16,7 @@ class sly_Core
 	private $curClang;
 	private $curArticleId;
 	private $varTypes;
+	private $layout;
 
 	private function __construct()
 	{
@@ -25,7 +26,7 @@ class sly_Core
 	/**
 	 * Gibt die Instanz des Core Objekts als Singleton zurück
 	 *
-	 * @return Core  Die singleton Core Instanz
+	 * @return sly_Core  Die singleton Core Instanz
 	 */
 	public static function getInstance()
 	{
@@ -138,5 +139,19 @@ class sly_Core
 	public static function config()
 	{
 		return sly_Configuration::getInstance();
+	}
+
+	
+	public static function getLayout($type = 'XHTML'){
+		$instance = self::getInstance();
+		//FIXME: layout type kann bloss einmal pro request angegeben werden,
+		// reicht eigentlich auch
+		// eventuell könnte man das in der config oder in index.php angeben
+		if (!isset($instance->layout)) {
+			$className = 'sly_View_'.$type;
+			$instance->layout = new $className();
+		}
+
+		return $instance->layout;
 	}
 }
