@@ -21,7 +21,7 @@ $REX['ADDON']['requires']['fscache']    = array('developer_utils');
 
 if(class_exists('WV_DeveloperUtils')){
 	include_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'filecache.class.php');
-	Core::getInstance()->setCache(new FileCache());
+	sly_Core::getInstance()->setCache(new FileCache());
 	rex_register_extension('ALL_GENERATED', array('FileCache', 'flushstatic'));
 }
 ?><?php
