@@ -13,13 +13,13 @@ class sly_Controller_Setup extends sly_Controller_Base
 
 	public function index()
 	{
-		global $SLY;
+		$languages = sly_Core::config()->get('LANGUAGES');
 
 		// wenn nur eine Sprache -> direkte Weiterleitung
 
-		if (count($SLY['LANGUAGES']) == 1) {
+		if (count($languages) == 1) {
 			header('HTTP/1.1 301 Moved Permanently');
-			header('Location: index.php?subpage=license&lang='.urlencode(key($SLY['LANGUAGES'])));
+			header('Location: index.php?subpage=license&lang='.urlencode(key($languages)));
 			exit();
 		}
 
@@ -33,7 +33,7 @@ class sly_Controller_Setup extends sly_Controller_Base
 
 	public function fsperms()
 	{
-		global $I18N, $SLY;
+		global $I18N;
 
 		$errors = array();
 
@@ -73,108 +73,90 @@ class sly_Controller_Setup extends sly_Controller_Base
 
 	public function config()
 	{
-		global $SLY, $I18N;
+		global $I18N;
 
+		$config = sly_Core::config()->get(false);
 		$isSent = isset($_POST['sly-submit']);
 
 		if ($isSent) {
-			$master_file = $SLY['INCLUDE_PATH'].'/master.inc.php';
-			$cont        = file_get_contents($master_file);
+			$masterFile = $config['INCLUDE_PATH'].'/config/sally.yaml';
+			$oldData    = sly_Configuration::load($masterFile);
+			$createDB   = sly_post('create_db', 'boolean', false);
 
-			$server      = addcslashes(sly_post('server', 'string'), '"');
-			$serverName  = addcslashes(sly_post('servername', 'string'), '"');
-			$errorEMail  = addcslashes(sly_post('error_email', 'string'), '"');
-			$pwdFunction = addcslashes(sly_post('pwd_func', 'string', 'sha1'), '"');
-			$mysqlHost   = addcslashes(sly_post('mysql_host', 'string'), '"');
-			$mysqlUser   = addcslashes(sly_post('mysql_user', 'string'), '"');
-			$mysqlPass   = addcslashes(sly_post('mysql_pass', 'string'), '"');
-			$mysqlName   = addcslashes(sly_post('mysql_name', 'string'), '"');
-			$createDB    = sly_post('create_db', 'boolean', false);
+			$oldData['SERVER']               = sly_post('server', 'string');
+			$oldData['SERVERNAME']           = sly_post('servername', 'string');
+			$oldData['LANG']                 = $this->lang;
+			$oldData['INSTNAME']             = 'sly'.date('YmdHis');
+			$oldData['ERROR_EMAIL']          = sly_post('error_email', 'string');
+			$oldData['PSWFUNC']              = sly_post('pwd_func', 'string');
+			$oldData['DATABASE']['HOST']     = sly_post('mysql_host', 'string');
+			$oldData['DATABASE']['LOGIN']    = sly_post('mysql_user', 'string');
+			$oldData['DATABASE']['PASSWORD'] = sly_post('mysql_pass', 'string');
+			$oldData['DATABASE']['NAME']     = sly_post('mysql_name', 'string');
+			
+			sly_Core::config()->appendArray($oldData);
+			
+			$config = sly_Core::config()->get(false);
+			$dumper = new sfYamlDumper();
 
-			$cont = preg_replace("#(REX\['SERVER'\].?=.?\")[^\"]*#i",               '$1'.$server, $cont);
-			$cont = preg_replace("#(REX\['SERVERNAME'\].?=.?\")[^\"]*#i",           '$1'.$serverName, $cont);
-			$cont = preg_replace("#(REX\['LANG'\].?=.?\")[^\"]*#i",                 '$1'.$this->lang, $cont);
-			$cont = preg_replace("#(REX\['INSTNAME'\].?=.?\")[^\"]*#i",             '$1'.'sly'.date('YmdHis'), $cont);
-			$cont = preg_replace("#(REX\['ERROR_EMAIL'\].?=.?\")[^\"]*#i",          '$1'.$errorEMail, $cont);
-			$cont = preg_replace("#(REX\['PSWFUNC'\].?=.?\")[^\"]*#i",              '$1'.$pwdFunction, $cont);
-			$cont = preg_replace("#(REX\['DB'\]\['1'\]\['HOST'\].?=.?\")[^\"]*#i",  '$1'.$mysqlHost, $cont);
-			$cont = preg_replace("#(REX\['DB'\]\['1'\]\['LOGIN'\].?=.?\")[^\"]*#i", '$1'.$mysqlUser, $cont);
-			$cont = preg_replace("#(REX\['DB'\]\['1'\]\['PSW'\].?=.?\")[^\"]*#i",   '$1'.$mysqlPass, $cont);
-			$cont = preg_replace("#(REX\['DB'\]\['1'\]\['NAME'\].?=.?\")[^\"]*#i",  '$1'.$mysqlName, $cont);
-
-			if (file_put_contents($master_file, $cont) === false) {
+			if (file_put_contents($masterFile, $dumper->dump($oldData, 2)) === false) {
 				$this->warning = $I18N->msg('setup_020', '<b>', '</b>');
 			}
 			else {
+				sly_Configuration::clearCache();
+				
 				// Datenbank-Zugriff
 
-				$err = rex_sql::checkDbConnection($mysqlHost, $mysqlUser, $mysqlPass, $mysqlName, $createDB);
+				extract($oldData['DATABASE'], EXTR_SKIP);
+				$err = rex_sql::checkDbConnection($HOST, $LOGIN, $PASSWORD, $NAME, $createDB);
 
 				if ($err !== true) {
 					$this->warning = $err;
 				}
 				else {
-					$SLY['DB']['1']['HOST']  = $mysqlHost;
-					$SLY['DB']['1']['LOGIN'] = $mysqlUser;
-					$SLY['DB']['1']['PSW']   = $mysqlPass;
-					$SLY['DB']['1']['NAME']  = $mysqlName;
-
 					unset($_POST['sly-submit']);
 					$this->initdb();
 					return;
 				}
 			}
 		}
-		else {
-			// Allgemeine Infos
-
-			$server      = $SLY['SERVER'];
-			$serverName  = $SLY['SERVERNAME'];
-			$errorEMail  = $SLY['ERROR_EMAIL'];
-			$pwdFunction = $SLY['PSWFUNC'];
-
-			// DB-Infos
-
-			$mysqlHost = $SLY['DB']['1']['HOST'];
-			$mysqlUser = $SLY['DB']['1']['LOGIN'];
-			$mysqlPass = $SLY['DB']['1']['PSW'];
-			$mysqlName = $SLY['DB']['1']['NAME'];
-		}
 
 		$this->render('views/setup/config.phtml', array(
-			'server'      => $server,
-			'serverName'  => $serverName,
-			'errorEMail'  => $errorEMail,
-			'pwdFunction' => $pwdFunction,
-			'mysqlHost'   => $mysqlHost,
-			'mysqlUser'   => $mysqlUser,
-			'mysqlPass'   => $mysqlPass,
-			'mysqlName'   => $mysqlName
+			'server'      => $config['SERVER'],
+			'serverName'  => $config['SERVERNAME'],
+			'errorEMail'  => $config['ERROR_EMAIL'],
+			'pwdFunction' => $config['PSWFUNC'],
+			'mysqlHost'   => $config['DATABASE']['HOST'],
+			'mysqlUser'   => $config['DATABASE']['LOGIN'],
+			'mysqlPass'   => $config['DATABASE']['PASSWORD'],
+			'mysqlName'   => $config['DATABASE']['NAME']
 		));
 	}
 
 	public function initdb()
 	{
-		global $SLY, $I18N;
+		global $I18N;
 
+		$config         = sly_Core::config()->get(false);
+		$prefix         = $config['TABLE_PREFIX'];
 		$error          = '';
 		$dbInitFunction = sly_post('db_init_function', 'string', '');
 
 		// nenötigte Tabellen prüfen
 
 		$requiredTables = array (
-			$SLY['TABLE_PREFIX'].'action',
-			$SLY['TABLE_PREFIX'].'article',
-			$SLY['TABLE_PREFIX'].'article_slice',
-			$SLY['TABLE_PREFIX'].'clang',
-			$SLY['TABLE_PREFIX'].'file',
-			$SLY['TABLE_PREFIX'].'file_category',
-			$SLY['TABLE_PREFIX'].'module_action',
-			$SLY['TABLE_PREFIX'].'module',
-			$SLY['TABLE_PREFIX'].'template',
-			$SLY['TABLE_PREFIX'].'user',
-			$SLY['TABLE_PREFIX'].'slice',
-			$SLY['TABLE_PREFIX'].'slice_value'
+			$prefix.'action',
+			$prefix.'article',
+			$prefix.'article_slice',
+			$prefix.'clang',
+			$prefix.'file',
+			$prefix.'file_category',
+			$prefix.'module_action',
+			$prefix.'module',
+			$prefix.'template',
+			$prefix.'user',
+			$prefix.'slice',
+			$prefix.'slice_value'
 		);
 
 		switch ($dbInitFunction) {
@@ -195,7 +177,7 @@ class sly_Controller_Setup extends sly_Controller_Base
 
 			case 'setup': // leere Datenbank neu einrichten
 
-				$installScript = $SLY['INCLUDE_PATH'].'/install/sally4_2.sql';
+				$installScript = $config['INCLUDE_PATH'].'/install/sally4_2.sql';
 
 				if (empty($error)) $error = $this->setupImport($installScript);
 				if (empty($error)) $error = $this->setupAddOns($dbInitFunction == 'drop');
@@ -236,7 +218,7 @@ class sly_Controller_Setup extends sly_Controller_Base
 			$existingTables = array();
 
 			foreach (rex_sql::showTables() as $tblname) {
-				if (substr($tblname, 0, strlen($SLY['TABLE_PREFIX'])) == $SLY['TABLE_PREFIX']) {
+				if (substr($tblname, 0, strlen($prefix)) == $prefix) {
 					$existingTables[] = $tblname;
 				}
 			}
@@ -261,10 +243,12 @@ class sly_Controller_Setup extends sly_Controller_Base
 	
 	public function createuser()
 	{
-		global $SLY, $I18N;
+		global $I18N;
 		
+		$config      = sly_Core::config()->get(false);
+		$prefix      = $config['TABLE_PREFIX'];
 		$pdo         = sly_DB_Persistence::getInstance();
-		$usersExist  = $pdo->listTables($SLY['TABLE_PREFIX'].'user') && $pdo->magicFetch('user', 'user_id') !== false;
+		$usersExist  = $pdo->listTables($prefix.'user') && $pdo->magicFetch('user', 'user_id') !== false;
 		$createAdmin = !sly_post('no_admin', 'boolean', false);
 		$adminUser   = sly_post('admin_user', 'string');
 		$adminPass   = sly_post('admin_pass', 'string');
@@ -282,13 +266,13 @@ class sly_Controller_Setup extends sly_Controller_Base
 				}
 
 				if (empty($error)) {
-					$userOK = $pdo->listTables($SLY['TABLE_PREFIX'].'user') && $pdo->fetch('user', 'user_id', array('login' => $adminUser)) > 0;
+					$userOK = $pdo->listTables($prefix.'user') && $pdo->fetch('user', 'user_id', array('login' => $adminUser)) > 0;
 					
 					if ($userOK) {
 						$error = $I18N->msg('setup_042'); // Dieses Login existiert schon!
 					}
 					else {
-						$adminPass = call_user_func($SLY['PSWFUNC'], $adminPass);
+						$adminPass = call_user_func($config['PSWFUNC'], $adminPass);
 						$affected  = $pdo->insert('user', array(
 							'name'       => 'Administrator',
 							'login'      => $adminUser,
@@ -326,13 +310,18 @@ class sly_Controller_Setup extends sly_Controller_Base
 	
 	public function finish()
 	{
-		global $SLY, $I18N;
+		global $I18N;
 		
-		$master_file = $SLY['INCLUDE_PATH'].'/master.inc.php';
-		$cont        = file_get_contents($master_file);
-		$cont        = preg_replace("#^(\\\$REX\['SETUP'\].?=.?)[^;]*#m", '$1false', $cont);
+		$config     = sly_Core::config()->get(false);
+		$prefix     = $config['TABLE_PREFIX'];
+		$masterFile = $config['INCLUDE_PATH'].'/config/sally.yaml';
+		$oldData    = sly_Configuration::load($masterFile);
+		$dumper     = new sfYamlDumper();
+		
+		$oldData['SETUP'] = false;
 
-		if (file_put_contents($master_file, $cont)) {
+		if (file_put_contents($masterFile, $dumper->dump($oldData, 2))) {
+			sly_Configuration::clearCache();
 			$this->warning = '';
 		}
 		else {
@@ -372,7 +361,8 @@ class sly_Controller_Setup extends sly_Controller_Base
 			$SLY['DYNFOLDER'].$s.'public',
 			$SLY['DYNFOLDER'].$s.'internal',
 			$SLY['DYNFOLDER'].$s.'internal'.$s.'sally',
-			$SLY['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'css-cache'
+			$SLY['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'css-cache',
+			$SLY['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'yaml-cache'
 		);
 
 		foreach ($SLY['SYSTEM_ADDONS'] as $system_addon) {
@@ -382,10 +372,10 @@ class sly_Controller_Setup extends sly_Controller_Base
 		$res = $this->isWritable($writables, true);
 
 		$writables = array(
-			$SLY['INCLUDE_PATH'].$s.'master.inc.php',
-			$SLY['INCLUDE_PATH'].$s.'addons.inc.php',
-			$SLY['INCLUDE_PATH'].$s.'plugins.inc.php',
-			$SLY['INCLUDE_PATH'].$s.'clang.inc.php'
+			$SLY['INCLUDE_PATH'].$s.'config'.$s.'sally.yaml',
+			$SLY['INCLUDE_PATH'].$s.'config'.$s.'addons.yaml',
+			$SLY['INCLUDE_PATH'].$s.'config'.$s.'plugins.yaml',
+			$SLY['INCLUDE_PATH'].$s.'config'.$s.'clang.yaml'
 		);
 
 		$res = array_merge($res, $this->isWritable($writables, false));

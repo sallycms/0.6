@@ -56,6 +56,13 @@ class sly_Configuration implements ArrayAccess
 		
 		return $config;
 	}
+	
+	public static function clearCache()
+	{
+		global $SLY;
+		$cacheDir = $SLY['DYNFOLDER'].'/internal/sally/yaml-cache';
+		if (is_dir($cacheDir)) array_map('unlink', glob($cacheDir.'/*'));
+	}
 
 	/**
 	 * @return sly_Configuration
