@@ -1,12 +1,3 @@
-# Expires-Header
-# ExpiresActive On
-# expiresbytype image/gif "access plus 7 days"
-# expiresbytype image/png "access plus 7 days"
-# expiresbytype image/jpeg "access plus 7 days"
-# expiresbytype image/jpg "access plus 7 days"
-# expiresbytype text/css "access plus 7 days"
-# expiresbytype text/javascript "access plus 7 days"
-
 RewriteEngine On
 # RewriteBase /
 
@@ -33,11 +24,7 @@ RewriteRule ^assets/js/([0-9a-f]{6})\.[0-9a-f]+\.min\.js$   gzip.php?file=dyn/pu
 RewriteRule ^assets/css/([0-9a-f]{6})\.[0-9a-f]+\.min\.css$ gzip.php?file=dyn/public/deployer/compressed_$1.css&forever=1 [L]
 
 # Komprimierung fuer statischen Content
-RewriteRule ^(assets/js/.*\.js)$             gzip.php?file=$1
-RewriteRule ^(assets/scrollbox/.*)$          gzip.php?file=$1
-RewriteRule ^(assets/morecss/.*\.[css|js])$  gzip.php?file=$1
-RewriteRule ^(assets/mediaplayer/.*\.js)$    gzip.php?file=$1
-RewriteRule ^(assets/css/.*\.css)$           gzip.php?file=$1
+RewriteRule ^(assets/.*\.(css|js))$  gzip.php?file=$1
 # Turn on Expires and set default to 0
 #ExpiresActive On
 #expiresbytype image/gif "access plus 7 days"
