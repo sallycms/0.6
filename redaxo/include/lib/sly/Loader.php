@@ -62,26 +62,6 @@ class sly_Loader
 			return $fullPath;
 		}
 		
-		// Fallback auf alte REDAXO-Klassen
-		
-		static $classes = array(
-			'OOAddon'         => 'ooaddon',
-			'OOArticle'       => 'ooarticle',
-			'OOCategory'      => 'oocategory',
-			'OOMedia'         => 'oomedia',
-			'OOMediaCategory' => 'oomediacategory',
-			'OOPlugin'        => 'ooplugin',
-			'OORedaxo'        => 'ooredaxo'
-		);
-		
-		if (file_exists($SLY['INCLUDE_PATH'].'/classes/'.strtolower($className).'.php')) {
-			include_once $SLY['INCLUDE_PATH'].'/classes/'.strtolower($className).'.php';
-		}
-		elseif (isset($classes[$className])) {
-			include_once $SLY['INCLUDE_PATH'].'/classes/class.'.$classes[$className].'.inc.php';
-		}
-		else {
-			rex_register_extension_point('__AUTOLOAD', $className);
-		}
+		rex_register_extension_point('__AUTOLOAD', $className);
 	}
 }
