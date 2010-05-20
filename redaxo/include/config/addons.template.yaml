@@ -1,0 +1,2 @@
+install: { be_style: 1 }
+status: { be_style: 1 }
