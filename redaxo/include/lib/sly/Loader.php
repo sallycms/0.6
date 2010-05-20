@@ -65,32 +65,13 @@ class sly_Loader
 		// Fallback auf alte REDAXO-Klassen
 		
 		static $classes = array(
-			'OOAddon'                           => 'ooaddon',
-			'OOArticle'                         => 'ooarticle',
-			'OOCategory'                        => 'oocategory',
-			'OOMedia'                           => 'oomedia',
-			'OOMediaCategory'                   => 'oomediacategory',
-			'OOPlugin'                          => 'ooplugin',
-			'OORedaxo'                          => 'ooredaxo',
-			'rex_addon'                         => 'rex_addon',
-			'rex_article'                       => 'rex_article',
-			'rex_form'                          => 'rex_form',
-			'rex_form_element'                  => 'rex_form',
-			'rex_form_control_element'          => 'rex_form',
-			'rex_form_select_element'           => 'rex_form',
-			'rex_form_options_element'          => 'rex_form',
-			'rex_form_checkbox_element'         => 'rex_form',
-			'rex_form_radio_element'            => 'rex_form',
-			'rex_form_widget_media_element'     => 'rex_form',
-			'rex_form_widget_medialist_element' => 'rex_form',
-			'rex_form_widget_linkmap_element'   => 'rex_form',
-			'rex_login_sql'                     => 'rex_login',
-			'rex_login'                         => 'rex_login',
-			'rex_backend_login'                 => 'rex_login',
-			'rex_navigation'                    => 'rex_navigation',
-			'rex_select'                        => 'rex_select',
-			'rex_category_select'               => 'rex_select',
-			'rex_sql'                           => 'rex_sql',
+			'OOAddon'         => 'ooaddon',
+			'OOArticle'       => 'ooarticle',
+			'OOCategory'      => 'oocategory',
+			'OOMedia'         => 'oomedia',
+			'OOMediaCategory' => 'oomediacategory',
+			'OOPlugin'        => 'ooplugin',
+			'OORedaxo'        => 'ooredaxo'
 		);
 		
 		if (file_exists($SLY['INCLUDE_PATH'].'/classes/'.strtolower($className).'.php')) {
