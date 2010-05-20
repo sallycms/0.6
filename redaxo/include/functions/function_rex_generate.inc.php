@@ -323,7 +323,7 @@ function _rex_deleteArticle($id)
 		// => löschen erlaubt
 		
 		if ($return['state'] === true) {
-			//rex_deleteCacheArticle($id);
+			rex_deleteCacheArticle($id);
 			
 			$sql = new rex_sql();
 			$sql->setQuery('DELETE FROM #_article WHERE id = '.$id, '#_');
