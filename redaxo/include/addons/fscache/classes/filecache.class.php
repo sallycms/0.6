@@ -50,7 +50,7 @@ class FileCache implements ICache{
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
-class FileCache implements ICache{
+class FileCache implements sly_ICache{
 	
 	const MY_NAMESPACE = 'corecache';
 	

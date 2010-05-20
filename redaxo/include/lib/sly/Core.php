@@ -20,7 +20,7 @@ class sly_Core
 
 	private function __construct()
 	{
-		$this->cache = new RedaxoCache();
+		$this->cache = new sly_RedaxoCache();
 	}
 
 	/**
@@ -38,9 +38,9 @@ class sly_Core
 	 * Hook Methode für Addons um einen Cache an Redaxo anzumelden,
 	 * der sich um das Metadatencaching kümmert.
 	 *
-	 * @param ICache  $cache  Implementierung des Cache.
+	 * @param sly_ICache  $cache  Implementierung des Cache.
 	 */
-	public static function setCache(ICache $cache)
+	public static function setCache(sly_ICache $cache)
 	{
 		self::getInstance()->cache->setPersistence($cache);
 	}

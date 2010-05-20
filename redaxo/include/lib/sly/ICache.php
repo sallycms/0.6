@@ -18,7 +18,7 @@
  * sly_Core::getInstance()->setCache($cache);
  * registrieren.
  */
-interface ICache {
+interface sly_ICache {
 
 	/**
 	 * Setzt einen Wert in den Redaxo Cache

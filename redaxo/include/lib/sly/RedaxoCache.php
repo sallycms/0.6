@@ -10,11 +10,10 @@
 */
 
 /**
- * Dies ist eine Platzhalterimplementierung für ICache
- * Sie ist stabil.   
- * 
+ * Dies ist eine Platzhalterimplementierung für sly_ICache
+ * Sie ist stabil.
  */
-class RedaxoCache implements ICache {
+class sly_RedaxoCache implements sly_ICache {
 	
 	private $cache;
 	private $persistence;
@@ -23,7 +22,7 @@ class RedaxoCache implements ICache {
 		$this->flush();
     }
     
-    public function setPersistence(ICache $cache){
+    public function setPersistence(sly_ICache $cache){
     	$this->persistence = $cache;
     }
 
