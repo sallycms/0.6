@@ -232,7 +232,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		return $this->extend('POST', 'DELETE', $plugin, $state);
 	}
 	
-	protected function baseFolder($plugin)
+	public function baseFolder($plugin)
 	{
 		list($addon, $pluginName) = $plugin;
 		return rex_plugins_folder($addon, $pluginName);

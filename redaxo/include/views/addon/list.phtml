@@ -1,0 +1,120 @@
+<?php
+
+if (!empty($info))    print rex_info($info);
+if (!empty($warning)) print rex_warning($warning);
+
+?>
+<table class="rex-table">
+	<colgroup>
+		<col width="40" />
+		<col width="*"/>
+		<col width="130" />
+		<col width="130" />
+		<col width="130" />
+		<col width="153" />
+	</colgroup>
+		<thead>
+			<tr>
+				<th class="rex-icon rex-col-a">&nbsp;</th>
+				<th class="rex-col-b"><?= $I18N->msg('addon_hname') ?></th>
+				<th class="rex-col-c"><?= $I18N->msg('addon_hinstall') ?></th>
+				<th class="rex-col-d"><?= $I18N->msg('addon_hactive') ?></th>
+				<th class="rex-col-e" colspan="2"><?= $I18N->msg('addon_hdelete') ?></th>
+			</tr>
+		</thead>
+	<tbody>
+	
+	<?php
+	
+	$addonList = $addons->getRegisteredAddOns();
+
+	foreach ($addonList as $addon) {
+		$base       = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;func=';
+		$pluginList = $plugins->getRegisteredPlugins($addon);
+
+		if ($addons->isSystemAddon($addon)) {
+			$delete = $I18N->msg('addon_systemaddon');
+		}
+		else {
+			$delete = '<a href="'.$base.'delete" class="sly-delete">'.$I18N->msg('addon_delete').'</a>';
+		}
+
+		if ($addons->isInstalled($addon)) {
+			$install = $I18N->msg('addon_yes').' - <a href="'.$base.'install">'.$I18N->msg('addon_reinstall').'</a>';
+			
+			if (!empty($pluginList)) {
+				$uninstall = $I18N->msg('plugin_plugins_installed');
+				$delete    = $uninstall;
+			}
+			else {
+				$uninstall = '<a href="'.$base.'uninstall" onclick="return confirm(\''.sly_html($I18N->msg('addon_uninstall_question', $addon)).'\');">'.$I18N->msg('addon_uninstall').'</a>';
+			}
+		}
+		else {
+			$install   = $I18N->msg('addon_no').' - <a href="'.$base.'install">'.$I18N->msg('addon_install').'</a>';
+			$uninstall = $I18N->msg('addon_notinstalled');
+		}
+
+		if ($addons->isActivated($addon)) {
+			$status = $I18N->msg('addon_yes').' - <a href="'.$base.'deactivate">'.$I18N->msg('addon_deactivate').'</a>';
+		}
+		elseif ($addons->isInstalled($addon)) {
+			$status = $I18N->msg('addon_no').' - <a href="'.$base.'activate">'.$I18N->msg('addon_activate').'</a>';
+		}
+		else {
+			$status = $I18N->msg('addon_notinstalled');
+		}
+
+		?>
+		<tr class="rex-addon">
+			<td class="rex-icon rex-col-a"><span class="rex-i-element rex-i-addon"><span class="rex-i-element-text"><?= sly_html($addon) ?></span></span></td>
+			<td class="rex-col-b"><?= sly_html($addon) ?> [<a href="index.php?page=addon&amp;subpage=help&amp;addon=<?= urlencode($addon) ?>">?</a>]</td>
+			<td class="rex-col-c"><?= $install ?></td>
+			<td class="rex-col-d"><?= $status ?></td>
+			<td class="rex-col-e"><?= $uninstall ?></td>
+			<td class="rex-col-f"><?= $delete ?></td>
+		</tr>
+		<?php
+
+		if ($addons->isAvailable($addon)) {
+			foreach ($pluginList as $plugin) {
+				$comp   = array($addon, $plugin);
+				$base   = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;plugin='.urlencode($plugin).'&amp;func=';
+				$delete = '<a href="'.$base.'delete" class="sly-delete">'.$I18N->msg('addon_delete').'</a>';
+
+				if ($plugins->isInstalled($comp)) {
+					$install   = $I18N->msg('addon_yes').' - <a href="'.$base.'install">'.$I18N->msg('addon_reinstall').'</a>';
+					$uninstall = '<a href="'. $base .'uninstall" onclick="return confirm(\''.htmlspecialchars($I18N->msg('plugin_uninstall_question', $addon)).'\');">'.$I18N->msg('addon_uninstall').'</a>';
+				}
+				else {
+					$install   = $I18N->msg('addon_no').' - <a href="'.$base.'install">'.$I18N->msg('addon_install').'</a>';
+					$uninstall = $I18N->msg('addon_notinstalled');
+				}
+
+				if ($plugins->isActivated($comp)) {
+					$status = $I18N->msg('addon_yes').' - <a href="'.$base.'deactivate">'.$I18N->msg('addon_deactivate').'</a>';
+				}
+				elseif ($plugins->isInstalled($comp)) {
+					$status = $I18N->msg('addon_no').' - <a href="'.$base.'activate">'.$I18N->msg('addon_activate').'</a>';
+				}
+				else {
+					$status = $I18N->msg('addon_notinstalled');
+				}
+
+				?>
+				<tr class="rex-plugin">
+					<td class="rex-icon rex-col-a"><span class="rex-i-element rex-i-plugin"><span class="rex-i-element-text"><?= sly_html($plugin) ?></span></span></td>
+					<td class="rex-col-b"><?= sly_html($plugin) ?> [<a href="index.php?page=addon&amp;subpage=help&amp;addon=<?= urlencode($addon) ?>&amp;plugin=<?= urlencode($plugin) ?>">?</a>]</td>
+					<td class="rex-col-c"><?= $install ?></td>
+					<td class="rex-col-d"><?= $status ?></td>
+					<td class="rex-col-e"><?= $uninstall ?></td>
+					<td class="rex-col-f"><?= $delete ?></td>
+				</tr>
+				<?php
+			}
+		}
+	}
+	
+	?>
+	</tbody>
+</table>

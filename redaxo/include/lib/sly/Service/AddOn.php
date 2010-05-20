@@ -230,7 +230,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		return $this->extend('POST', 'DELETE', $addonName, $state);
 	}
 	
-	protected function baseFolder($addonName)
+	public function baseFolder($addonName)
 	{
 		return rex_addons_folder($addonName);
 	}

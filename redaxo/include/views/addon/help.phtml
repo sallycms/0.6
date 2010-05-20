@@ -1,0 +1,31 @@
+<?php
+
+$service     = $plugin ? $plugins : $addons;
+$component   = $plugin ? array($addon, $plugin) : $addon;
+$helpfile    = $service->baseFolder($component).'/help.inc.php';
+$version     = $service->getVersion($component);
+$author      = $service->getAuthor($component);
+$supportPage = $service->getSupportPage($component);
+$name        = $plugin ? $addon.' / '.$plugin : $addon;
+$credits     = $I18N->msg('credits_name').': <span>'.sly_html($name).'</span><br />';
+
+if ($version)     $credits .= $I18N->msg('credits_version').': <span>'.sly_html($version).'</span><br />';
+if ($author)      $credits .= $I18N->msg('credits_author').': <span>'.sly_html($author).'</span><br />';
+if ($supportPage) $credits .= $I18N->msg('credits_supportpage').': <span><a href="http://'.$supportPage.'" class="sly-blank">'.sly_html($supportPage).'</a></span><br />';
+
+?>
+<div class="rex-area">
+	<h3 class="rex-hl2"><?= $I18N->msg('addon_help').' '.sly_html($name) ?></h3>
+	<div class="rex-area-content">
+		<? if (!is_file($helpfile)): ?>
+		<p><?= $I18N->msg('addon_no_help_file') ?></p>
+		<? else: ?>
+		<? include $helpfile ?>
+		<? endif ?>
+		<br />
+		<p id="rex-addon-credits"><?= $credits ?></p>
+	</div>
+	<div class="rex-area-footer">
+		<p><a href="JavaScript:history.back();"><?= $I18N->msg('addon_back') ?></a></p>
+	</div>
+</div>
