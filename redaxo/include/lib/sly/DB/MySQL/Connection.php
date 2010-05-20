@@ -18,22 +18,22 @@ class sly_DB_MySQL_Connection{
 	
 	private static $instances = array();
 		
-	private function __construct($DBID){
-		
-		global $REX;
-		
+	private function __construct()
+	{
+		$config = sly_Core::config();
+		$db     = $config->get('DATABASE');
 		$this->connection = null;
 		
 		$level = error_reporting(0);
-		$this->connection = mysql_connect($REX['DB'][$DBID]['HOST'], $REX['DB'][$DBID]['LOGIN'], $REX['DB'][$DBID]['PSW']);
+		$this->connection = mysql_connect($db['HOST'], $db['LOGIN'], $db['PASSWORD']);
 
-		if (!mysql_select_db($REX['DB'][$DBID]['NAME'], $this->connection)) {
-			exit('<span style="color:red;font-family:verdana,arial;font-size:11px;">Es konnte keine Verbindung zur Datenbank hergestellt werden. | Bitte kontaktieren Sie <a href=mailto:'.$REX['ERROR_EMAIL'].'>'.$REX['ERROR_EMAIL'].'</a>. | Danke!</span>');
+		if (!mysql_select_db($db['NAME'], $this->connection)) {
+			exit('<span style="color:red;font-family:verdana,arial;font-size:11px;">Es konnte keine Verbindung zur Datenbank hergestellt werden. | Bitte kontaktieren Sie <a href=mailto:'.$SLY['ERROR_EMAIL'].'>'.$SLY['ERROR_EMAIL'].'</a>. | Danke!</span>');
 		}
 				
 		error_reporting($level);
 		
-		if (empty($REX['REX_SQL_INIT_'.$DBID])) {
+		if (!$config->has('REX_SQL_INIT')) {
 			// ggf. Strict Mode abschalten
 			
 			mysql_query('SET SQL_MODE = ""', $this->connection);
@@ -43,9 +43,9 @@ class sly_DB_MySQL_Connection{
 //			if (rex_lang_is_utf8()) {
 //				$this->setQuery('SET NAMES utf8');
 //			}
+
+			$config->set('REX_SQL_INIT', true);
 		}
-		
-		$REX['REX_SQL_INIT_'.$DBID] = true;
 	}
 	
 	public static function factory($DBID = 1){

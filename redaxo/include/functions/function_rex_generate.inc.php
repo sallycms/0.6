@@ -527,16 +527,16 @@ function rex_copyDir($srcdir, $dstdir, $startdir = '')
  */
 function rex_deleteCLang($clang)
 {
-	global $REX;
+	global $SLY;
 	
 	$clang = (int) $clang;
 
-	if ($clang == 0 || !isset($REX['CLANG'][$clang])) {
+	if ($clang == 0 || !isset($SLY['CLANG'][$clang])) {
 		return false;
 	}
 
-	$clangName = $REX['CLANG'][$clang];
-	unset($REX['CLANG'][$clang]);
+	$clangName = $SLY['CLANG'][$clang];
+	unset($SLY['CLANG'][$clang]);
 
 	$del = new rex_sql();
 	$del->setQuery('DELETE FROM #_article WHERE clang = '.$clang, '#_');
@@ -546,7 +546,7 @@ function rex_deleteCLang($clang)
 
 	rex_register_extension_point('CLANG_DELETED','', array(
 		'id'   => $clang,
-		'name' => $clangName,
+		'name' => $clangName
 	));
 
 	rex_generateAll();
@@ -562,21 +562,17 @@ function rex_deleteCLang($clang)
  */
 function rex_addCLang($id, $name)
 {
-	global $REX;
+	global $SLY;
 	
 	$id = (int) $id;
 
-	if (isset($REX['CLANG'][$id])) {
+	if (isset($SLY['CLANG'][$id])) {
 		return false;
 	}
 
-	$REX['CLANG'][$id] = $name;
+	$SLY['CLANG'][$id] = $name;
 	
-	$file = $REX['INCLUDE_PATH'].'/clang.inc.php';
-	$sql  = new rex_sql();
-	
-	rex_replace_dynamic_contents($file, '$REX[\'CLANG\'] = '.var_export($REX['CLANG'], true).";\n");
-
+	$sql = new rex_sql();
 	$sql->setQuery(
 		'INSERT INTO #_article (id,re_id,name,catname,catprior,attributes,'.
 			'startpage,prior,path,status,createdate,updatedate,template_id,clang,createuser,'.
@@ -586,9 +582,10 @@ function rex_addCLang($id, $name)
 				'FROM #_article WHERE clang = 0', '#_'
 	);
 
-	$sql->setQuery('INSERT INTO '.$REX['TABLE_PREFIX'].'clang (id,name,revision) VALUES ('.$id.', "'.$sql->escape($name).'", 0)');
+	$sql->setQuery('INSERT INTO '.$SLY['TABLE_PREFIX'].'clang (id,name,revision) VALUES ('.$id.', "'.$sql->escape($name).'", 0)');
 	unset($sql);
 	
+	rex_generateClang($SLY['CLANG']);
 	rex_register_extension_point('CLANG_ADDED', '', array('id' => $id, 'name' => $name));
 	return true;
 }
@@ -602,21 +599,19 @@ function rex_addCLang($id, $name)
  */
 function rex_editCLang($id, $name)
 {
-	global $REX;
+	global $SLY;
 	
 	$id = (int) $id;
 
-	if (!isset($REX['CLANG'][$id])) {
+	if (!isset($SLY['CLANG'][$id])) {
 		return false;
 	}
 
-	$REX['CLANG'][$id] = $name;
-	$file = $REX['INCLUDE_PATH'].'/clang.inc.php';
-	rex_replace_dynamic_contents($file, '$REX[\'CLANG\'] = '.var_export($REX['CLANG'], true).";\n");
+	$SLY['CLANG'][$id] = $name;
 
 	$edit = new rex_sql();
-	$edit->setQuery('UPDATE '.$REX['TABLE_PREFIX'].'clang SET name = "'.$edit->escape($name).'" WHERE id = '.$id);
-	unset($edit);
+	$edit->setQuery('UPDATE '.$SLY['TABLE_PREFIX'].'clang SET name = "'.$edit->escape($name).'" WHERE id = '.$id);
+	rex_generateClang($SLY['CLANG']);
 
 	rex_register_extension_point('CLANG_UPDATED', '', array('id' => $id, 'name' => $name));
 	return true;
@@ -630,9 +625,7 @@ function rex_editCLang($id, $name)
  */
 function rex_generateAddons($addons)
 {
-	global $REX;
 	natsort($addons);
-
 	$content = array();
 	
 	foreach ($addons as $addon) {
@@ -645,21 +638,16 @@ function rex_generateAddons($addons)
 		}
 
 		foreach (array('install', 'status') as $prop) {
-			$content[] = sprintf("\$REX['ADDON']['%s']['%s'] = %d;",
-				$prop, $addon, OOAddon::getProperty($addon, $prop)
-			);
-		}    
+			$content[$prop][$addon] = (int) OOAddon::getProperty($addon, $prop);
+		}
 	}
 
-	// Da dieser Funktion mehrfach pro Request aufgerufen werden kann,
-	// hier die Caches löschen.
+	$config  = sly_Core::config();
+	$file    = $config->get('INCLUDE_PATH').'/config/addons.yaml';
+	$dumper  = new sfYamlDumper();
+	$content = $dumper->dump($content, 1);
 	
-	clearstatcache();
-
-	$content = implode("\n", $content)."\n";
-	$file    = $REX['INCLUDE_PATH'].'/addons.inc.php';
-	
-	if (rex_replace_dynamic_contents($file, $content) === false) {
+	if (file_put_contents($file, $content) === false) {
 		return 'Datei "'.$file.'" hat keine Schreibrechte.';
 	}
 	
@@ -674,8 +662,7 @@ function rex_generateAddons($addons)
  */
 function rex_generatePlugins($plugins)
 {
-	global $REX;
-
+	natsort($plugins);
 	$content = array();
 	
 	foreach ($plugins as $addon => $_plugins) {
@@ -689,21 +676,17 @@ function rex_generatePlugins($plugins)
 			}
 
 			foreach (array('install', 'status') as $prop) {
-				$content[] = sprintf("\$REX['ADDON']['plugins']['%s']['%s']['%s'] = %d;",
-					$addon, $prop, $plugin, OOPlugin::getProperty($addon, $plugin, $prop)
-				);
+				$content[$addon][$prop][$plugin] = (int) OOPlugin::getProperty($addon, $plugin, $prop);
 			}
 		}
 	}
 
-	// Da dieser Funktion öfter pro request aufgerufen werden kann,
-	// hier die caches löschen
-	clearstatcache();
-
-	$content = implode(PHP_EOL, $content).PHP_EOL;
-	$file    = $REX['INCLUDE_PATH'].'/plugins.inc.php';
+	$config  = sly_Core::config();
+	$file    = $config->get('INCLUDE_PATH').'/config/plugins.yaml';
+	$dumper  = new sfYamlDumper();
+	$content = $dumper->dump($content, 3);
 	
-	if (rex_replace_dynamic_contents($file, $content) === false) {
+	if (file_put_contents($file, $content) === false) {
 		return 'Datei "'.$file.'" hat keine Schreibrechte.';
 	}
 	
@@ -715,18 +698,22 @@ function rex_generatePlugins($plugins)
  * 
  * @return mixed  true bei Erfolg, sonst eine Fehlermeldung
  */
-function rex_generateClang()
+function rex_generateClang($data = null)
 {
-	global $REX;
+	global $SLY;
 
-	$data = rex_sql::getArrayEx('SELECT id,name FROM #_clang ORDER BY id', '#_');
-	$REX['CLANG'] = $data === false ? array() : $data;
-
-	$content = '$REX[\'CLANG\'] = '.var_export($REX['CLANG'], true).";\n";
-	$file    = $REX['INCLUDE_PATH'].'/clang.inc.php';
+	$data = $data === null ? rex_sql::getArrayEx('SELECT id,name FROM #_clang ORDER BY id', '#_') : $data;
 	
-	if (rex_replace_dynamic_contents($file, $content) === false) {
-		return 'Datei "'.$file.'" hat keine Schreibrechte';
+	$SLY['CLANG'] = $data === false ? array() : $data;
+	sly_Core::config()->set('CLANG', $SLY['CLANG']);
+
+	$config  = sly_Core::config();
+	$file    = $config->get('INCLUDE_PATH').'/config/clang.yaml';
+	$dumper  = new sfYamlDumper();
+	$content = $dumper->dump($SLY['CLANG'], 1);
+	
+	if (file_put_contents($file, $content) === false) {
+		return 'Datei "'.$file.'" hat keine Schreibrechte.';
 	}
 	
 	return true;

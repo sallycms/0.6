@@ -1,15 +1,5 @@
 <?php
 
-$filename = $REX['INCLUDE_PATH'].'/addons/developer_utils/classes/class.querylogger.php';
-
-if (file_exists($filename)) {
-	require_once $REX['INCLUDE_PATH'].'/addons/developer_utils/classes/class.querylogger.php';
-	$filename = $REX['MEDIAFOLDER'].'/'.$REX['TEMP_PREFIX'].'/eh.querylogging';
-	if (file_exists($filename)) _WV_QueryLogger::enableLogging(file_get_contents($filename));
-}
-
-unset($filename);
-
 /**
  * Klasse zur Verbindung und Interatkion mit der Datenbank
  * @version svn:$Id$
@@ -39,15 +29,15 @@ class rex_sql
 	public $error; // Fehlertext
 	public $errno; // Fehlernummer
 	
-	private static $identifiers = array(1 => null, 2 => null);
+	private static $ident = null;
 
-	public function __construct($DBID = 1)
+	public function __construct()
 	{
 		global $REX;
 
 		$this->debug      = false;
 		$this->identifier = null;
-		$this->selectDB($DBID);
+		$this->selectDB(1);
 		$this->flush();
 	}
 
@@ -56,8 +46,8 @@ class rex_sql
 	 */
 	public function selectDB($DBID, $forceReconnect = false)
 	{
-		$this->identifier = sly_DB_MySQL_Connection::factory($DBID)->getConnection();
-		$this->DBID       = $DBID;
+		$this->identifier = sly_DB_MySQL_Connection::factory()->getConnection();
+		$this->DBID       = 1;
 	}
 
 	/**
@@ -844,13 +834,14 @@ class rex_sql
 
 	public static function showTables($dbID = 1)
 	{
-		global $REX;
+		global $SLY;
 
-		$sql = new self($dbID);
+		$sql = new self(1);
 		$sql->setQuery('SHOW TABLES');
 
+		$config = sly_Core::config();
 		$tables = array();
-		$dbName = $REX['DB'][$dbID]['NAME'];
+		$dbName = $config->get('DATABASE/NAME');
 		
 		while ($sql->hasNext()) {
 			$tables[] = $sql->getValue('Tables_in_'.$dbName);
@@ -863,7 +854,7 @@ class rex_sql
 
 	public static function showColumns($table, $dbID = 1)
 	{
-		$sql = new self($dbID);
+		$sql = new self(1);
 		$sql->setQuery('SHOW COLUMNS FROM `'.$table.'`');
 
 		$columns = array();
@@ -900,7 +891,7 @@ class rex_sql
 	{
 		static $instances = array();
 		
-		$dbID = (int) $dbID;
+		$dbID = 1;
 
 		if (!empty($instances[$dbID])) {
 			$instances[$dbID]->flush();
@@ -966,24 +957,14 @@ class rex_sql
 	 */
 	public static function disconnect($dbID = 1)
 	{
-		global $REX;
+		$db = sly_Core::config()->get('DATABASE');
 
-		// Alle Connections schließen
-		
-		if ($dbID === null) {
-			foreach ($REX['DB'] as $dbID => $dbSettings) {
-				self::disconnect($dbID);
-			}
-
-			return;
-		}
-
-		if (!$REX['DB'][$dbID]['PERSISTENT']) {
-			$db = self::getInstance($dbID, false);
+		if (!$db['PERSISTENT']) {
+			$db = self::getInstance(1, false);
 
 			if (self::isValid($db) && is_resource($db->identifier)) {
 				mysql_close($db->identifier);
-				self::$identifiers[$dbID] = null;
+				self::$ident = null;
 			}
 		}
 	}

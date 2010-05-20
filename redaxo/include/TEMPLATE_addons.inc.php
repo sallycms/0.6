@@ -1,41 +1,23 @@
 <?php
 
-/**
- * Addonlist
- * @package redaxo4
- * @version svn:$Id$
- */
+$config->appendFile($SLY['INCLUDE_PATH'].'/config/addons.yaml', 'ADDON');
+$config->appendFile($SLY['INCLUDE_PATH'].'/config/plugins.yaml', 'ADDON/plugins');
+$SLY['ADDON'] = $config->get('ADDON');
 
-// ----------------- addons
-unset($REX['ADDON']);
-$REX['ADDON'] = array();
+foreach (OOAddon::getAvailableAddons() as $addonName) {
+	$addonConfig = rex_addons_folder($addonName).'config.inc.php';
+	
+	if (file_exists($addonConfig)) {
+		require_once $addonConfig;
+	}
 
-// ----------------- DONT EDIT BELOW THIS
-// --- DYN
-$REX['ADDON']['install']['be_style'] = '1';
-$REX['ADDON']['status']['be_style'] = '1';
-// --- /DYN
-// ----------------- /DONT EDIT BELOW THIS
-
-require $REX['INCLUDE_PATH']. '/plugins.inc.php';
-
-foreach(OOAddon::getAvailableAddons() as $addonName)
-{
-  $addonConfig = rex_addons_folder($addonName). 'config.inc.php';
-  if(file_exists($addonConfig))
-  {
-    require_once $addonConfig;
-  }
-  
-  foreach(OOPlugin::getAvailablePlugins($addonName) as $pluginName)
-  {
-    $pluginConfig = rex_plugins_folder($addonName, $pluginName). 'config.inc.php';
-    if(file_exists($pluginConfig))
-    {
-      rex_pluginManager::addon2plugin($addonName, $pluginName, $pluginConfig);
-    }
-  }
+	foreach (OOPlugin::getAvailablePlugins($addonName) as $pluginName) {
+		$pluginConfig = rex_plugins_folder($addonName, $pluginName).'config.inc.php';
+		
+		if (file_exists($pluginConfig)) {
+			rex_pluginManager::addon2plugin($addonName, $pluginName, $pluginConfig);
+		}
+	}
 }
 
-// ----- all addons configs included
 rex_register_extension_point('ADDONS_INCLUDED');

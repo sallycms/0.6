@@ -231,9 +231,9 @@ class sly_DB_PDO_Connection {
 	
 	private function __construct()
 	{
-		$this->conf = sly_Core::config()->get('DB/1');
+		$this->conf = sly_Core::config()->get('DATABASE');
 		$connString = $this->getConnectionString();
-		$this->connection = new PDO($connString, $this->conf['LOGIN'], $this->conf['PSW']);
+		$this->connection = new PDO($connString, $this->conf['LOGIN'], $this->conf['PASSWORD']);
 	}
 	
 	/**

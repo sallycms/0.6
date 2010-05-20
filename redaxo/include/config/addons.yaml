@@ -1,0 +1,2 @@
+install: { be_search: 1, be_style: 1, fscache: 1, image_resize: 1, import_export: 1, phpmailer: 0, rbac: 0, textile: 0, tinymce: 0 }
+status: { be_search: 1, be_style: 1, fscache: 1, image_resize: 1, import_export: 1, phpmailer: 0, rbac: 0, textile: 0, tinymce: 0 }

@@ -300,7 +300,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 
 	protected function generateConfig()
 	{
-		return rex_generateAddons($this->data);
+		return rex_generateAddons(array_keys($this->data['install']));
 	}
 	
 	public function isAvailable($addonName)

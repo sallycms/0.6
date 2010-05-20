@@ -154,4 +154,9 @@ class sly_Core
 
 		return $instance->layout;
 	}
+	
+	public static function isBackend()
+	{
+		return self::config()->get('SALLY');
+	}
 }
