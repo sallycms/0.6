@@ -1,8 +1,6 @@
 syntax:glob
-redaxo/include/addons.inc.php
-redaxo/include/master.inc.php
-redaxo/include/plugins.inc.php
 data/dyn/*
 redaxo/include/addons/fscache/generated/*
 redaxo/include/addons/error_handler/data/phperror.log
 redaxo/include/generated/*
+glob:redaxo/include/config/*
