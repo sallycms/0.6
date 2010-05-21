@@ -124,7 +124,8 @@ class sly_Layout_XHTML extends sly_Layout
 		$this->cssFiles =  rex_register_extension_point('HEADER_CSS_FILES', $this->cssFiles);
 
 		foreach ($this->cssFiles as $group => $medias) {
-
+			$isConditional = false;
+			
 			if (strtoupper(substr($group, 0, 3)) == 'IF ') {
 				print '<!--[if '.strtoupper(substr($group, 3)).']>';
 				$isConditional = true;
