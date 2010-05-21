@@ -1,6 +1,6 @@
 <?php
 
-class sly_Controller_Addon_Help extends sly_Controller_Base
+class sly_Controller_Addon_Help extends sly_Controller_Sally
 {
 	protected $func    = '';
 	protected $addons  = null;
@@ -12,8 +12,7 @@ class sly_Controller_Addon_Help extends sly_Controller_Base
 	
 	public function init()
 	{
-		global $I18N;
-		rex_title($I18N->msg('addon'));
+		rex_title(t('addon'));
 		print '<div class="sly-content">';
 		
 		$this->addons  = sly_Service_Factory::getService('AddOn');

@@ -16,7 +16,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 {
 	public function __construct()
 	{
-		$this->data       = sly_Core::config()->get('ADDON');
+		$this->addons       = rex_read_addons_folder();
 		$this->i18nPrefix = 'addon_';
 	}
 	
@@ -409,7 +409,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	 */
 	public function getRegisteredAddons()
 	{
-		return array_keys($this->data['install']);
+		return $this->addons;
 	}
 
 	/**

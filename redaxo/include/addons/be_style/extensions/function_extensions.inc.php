@@ -22,6 +22,7 @@ function rex_be_add_page($params)
 function rex_be_style_css_add($params)
 {
 	foreach (OOPlugin::getAvailablePlugins('be_style') as $plugin) {
-		echo "\n".'<link rel="stylesheet" type="text/css" href="scaffold/be_style/'.$plugin.'/css_main.css" media="screen, projection, print" />';
+		$layout = sly_Core::getLayout();
+		$layout->addCssfile('scaffold/be_style/'.$plugin.'/css_main.css');
 	}
 }

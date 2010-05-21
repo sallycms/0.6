@@ -14,6 +14,7 @@
  */
 abstract class sly_Service_AddOn_Base
 {
+	protected $addons;
 	protected $data;
 	protected $i18nPrefix;
 	
