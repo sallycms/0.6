@@ -382,6 +382,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		}
 
 		$this->data[$property][$addonName] = $value;
+		sly_Core::config()->set('ADDON', $this->data);
 		return $value;
 	}
 	
@@ -395,6 +396,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	 */
 	public function getProperty($addonName, $property, $default = null)
 	{
+		$this->data = sly_Core::config()->get('ADDON');
 		return isset($this->data[$property][$addonName]) ? $this->data[$property][$addonName] : $default;
 	}
 

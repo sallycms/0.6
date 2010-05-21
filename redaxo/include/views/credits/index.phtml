@@ -27,14 +27,17 @@ include_once $REX['INCLUDE_PATH'].'/functions/function_rex_addons.inc.php';
 		<tbody>
 
 		<?php
+		
+		$addons  = sly_Service_Factory::getService('AddOn');
+		$plugins = sly_Service_Factory::getService('Plugin');
 
-		foreach (OOAddon::getRegisteredAddons() as $addon) {
-			$isActive    = OOAddon::isActivated($addon);
-			$isInstalled = OOAddon::isInstalled($addon);
-			$version     = OOAddon::getVersion($addon);
-			$icon        = OOAddon::getIcon($addon);
-			$author      = OOAddon::getAuthor($addon);
-			$supportPage = OOAddon::getSupportPage($addon);
+		foreach ($addons->getRegisteredAddons() as $addon) {
+			$isActive    = $addons->isActivated($addon);
+			$isInstalled = $addons->isInstalled($addon);
+			$version     = $addons->getVersion($addon);
+			$icon        = $addons->getIcon($addon);
+			$author      = $addons->getAuthor($addon);
+			$supportPage = $addons->getSupportPage($addon);
 			
 			$type = 'addon';
 			include $REX['INCLUDE_PATH'].'/views/credits/row.phtml';
@@ -42,13 +45,13 @@ include_once $REX['INCLUDE_PATH'].'/functions/function_rex_addons.inc.php';
 			if ($isActive) {
 				$type = 'plugin';
 				
-				foreach (OOPlugin::getAvailablePlugins($addon) as $plugin) {
-					$isActive    = OOPlugin::isActivated($addon, $plugin);
-					$isInstalled = OOPlugin::isInstalled($addon, $plugin);
-					$version     = OOPlugin::getVersion($addon, $plugin);
-					$icon        = OOPlugin::getIcon($addon, $plugin);
-					$author      = OOPlugin::getAuthor($addon, $plugin);
-					$supportPage = OOPlugin::getSupportPage($addon, $plugin);
+				foreach ($plugins->getAvailablePlugins($addon) as $plugin) {
+					$isActive    = $plugins->isActivated(array($addon, $plugin));
+					$isInstalled = $plugins->isInstalled(array($addon, $plugin));
+					$version     = $plugins->getVersion(array($addon, $plugin));
+					$icon        = $plugins->getIcon(array($addon, $plugin));
+					$author      = $plugins->getAuthor(array($addon, $plugin));
+					$supportPage = $plugins->getSupportPage(array($addon, $plugin));
 					
 					include $REX['INCLUDE_PATH'].'/views/credits/row.phtml';
 				}
