@@ -24,44 +24,55 @@ class sly_Configuration implements ArrayAccess
 
 	private function __construct($filename)
 	{
-		global $SLY;
-		
 		$this->filename = $filename;
 		$this->config   = new ArrayObject(self::load($filename));
 	}
 	
-	public static function load($filename)
+	protected static function findLocalStorage($filename)
 	{
-		global $SLY;
+		global $REX;
 		
 		if (!file_exists($filename)) {
 			throw new Exception('Konfigurationsdatei '.$filename.' konnte nicht gefunden werden.');
 		}
 		
-		$cacheDir = $SLY['DYNFOLDER'].'/internal/sally/yaml-cache';
-		if (!is_dir($cacheDir)) @mkdir($cacheDir, 0775, true);
-		if (!is_dir($cacheDir)) throw new Exception('Cache-Verzeichnis '.$cacheDir.' konnte nicht erzeugt werden.');
+		$filename     = str_replace('\\', '/', realpath($filename));                // "/var/www/web01/redaxo/include/addon/config.yaml"
+		$projectBase  = str_replace('\\', '/', realpath($REX['FRONTEND_PATH']));    // "/var/www/web01"
+		$relativeFile = str_replace($projectBase.'/', '', $filename);               // "redaxo/include/addon/config.yaml"
+		$localDir     = $REX['DYNFOLDER'].'/internal/sally/config';
+		$localFile    = $localDir.'/'.str_replace('/', '_', $relativeFile).'.php';  // "/data/dyn/../redaxo_include_addon_config.yaml"
 		
-		$file      = realpath($filename);
-		$mtime     = filemtime($file);
-		$cacheFile = $cacheDir.'/'.substr(md5($file), 0, 10).'.php';
+		if (!is_dir($localDir) && !mkdir($localDir, $REX['DIRPERM'], true)) {
+			throw new Exception('Cache-Verzeichnis '.$localDir.' konnte nicht erzeugt werden.');
+		}
 		
-		if (!file_exists($cacheFile) || $mtime > filemtime($cacheFile)) {
-			$config = sfYaml::load($file);
-			file_put_contents($cacheFile, '<?php $config = '.var_export($config, true).';');
+		return array('local' => $localFile, 'const' => $filename);
+	}
+	
+	public static function load($filename)
+	{
+		$store    = self::findLocalStorage($filename);
+		$const    = $store['const'];
+		$local    = $store['local'];
+		$hasLocal = file_exists($local);
+		
+		if (!$hasLocal || filemtime($const) > filemtime($local)) {
+			$config = sfYaml::load($const);
+			file_put_contents($local, '<?php $config = '.var_export($config, true).';');
 		}
 		else {
-			include $cacheFile;
+			include $local;
 		}
 		
 		return $config;
 	}
 	
-	public static function clearCache()
+	public function save()
 	{
-		global $SLY;
-		$cacheDir = $SLY['DYNFOLDER'].'/internal/sally/yaml-cache';
-		if (is_dir($cacheDir)) array_map('unlink', glob($cacheDir.'/*'));
+		$store = self::findLocalStorage($this->filename);
+		$local = $store['local'];
+		$code  = '<?php $config = '.var_export($this->config->getArrayCopy(), true).';';
+		return file_put_contents($local, $code) > 0;
 	}
 
 	/**
@@ -69,10 +80,10 @@ class sly_Configuration implements ArrayAccess
 	 */
 	public static function getInstance($filename = null)
 	{
-		global $SLY;
+		global $REX;
 		
 		if (!is_string($filename)) {
-			$filename = $SLY['INCLUDE_PATH'].'/config/sally.yaml';
+			$filename = $REX['INCLUDE_PATH'].'/config/sally.yaml';
 		}
 		
 		if (!self::$instances[$filename]) self::$instances[$filename] = new self($filename);

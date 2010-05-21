@@ -103,7 +103,7 @@ class sly_Controller_Setup extends sly_Controller_Sally
 				$this->warning = $I18N->msg('setup_020', '<b>', '</b>');
 			}
 			else {
-				sly_Configuration::clearCache();
+				sly_Core::config()->save();
 				
 				// Datenbank-Zugriff
 
@@ -321,7 +321,7 @@ class sly_Controller_Setup extends sly_Controller_Sally
 		$oldData['SETUP'] = false;
 
 		if (file_put_contents($masterFile, $dumper->dump($oldData, 2))) {
-			sly_Configuration::clearCache();
+			sly_Core::config()->save();
 			$this->warning = '';
 		}
 		else {
