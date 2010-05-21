@@ -1,0 +1,25 @@
+<?php
+
+$config = sly_Core::config();
+
+?>
+
+<div id="rex-website">
+	<div id="rex-header">
+		<p class="rex-header-top">
+			<a href="../" onclick="window.open(this.href);"><?= sly_html($config->get('SERVERNAME')) ?></a>
+		</p>
+	</div>
+	<div id="rex-navi-logout">
+		<? $this->renderView('views/layout/sally_navi_logout.phtml') ?>
+	</div>
+	<div id="rex-navi-main">
+		<?
+		if ($config->get('USER') && !$config->get('PAGE_NO_NAVI')) {
+			$this->renderView('views/layout/sally_navi_main.phtml');
+		}
+		?>
+	</div>
+	<div id="rex-wrapper">
+		<div id="rex-wrapper2">
+			

@@ -34,12 +34,13 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		$this->addHttpMeta('Content-Type', 'text/html charset='.t('htmlcharset'));
 	}
 
-	public function render()
-	{
-		ob_start();
-		$this->printHeader();
-		$this->renderView('views/layout/sally.phtml');
-		$this->printFooter();
-		return ob_get_clean();
-	}
+	public function printHeader() {
+        parent::printHeader();
+		$this->renderView('views/layout/sally_top.phtml');
+    }
+
+	public function printFooter() {
+		$this->renderView('views/layout/sally_bottom.phtml');
+        parent::printFooter();
+    }
 }

@@ -1,12 +1,14 @@
 <?php
 
-// versch. Pfade (nicht realpath() anwenden, da nicht alle Verzeichnisse immer existieren)
+// wir gehen davon aus, dass $SLY['HTDOCS_PATH'] existiert. Das ist
+// eine Annahme die den code hier schneller macht und vertretbar ist
+// wer das falsch setzt hat es verdient, dass das script nicht läuft
 
-$SLY['INCLUDE_PATH']  = preg_replace('#[/\\\\][/\\\\]#i', DIRECTORY_SEPARATOR, $SLY['HTDOCS_PATH'].'redaxo/include');
-$SLY['FRONTEND_PATH'] = preg_replace('#[/\\\\][/\\\\]#i', DIRECTORY_SEPARATOR, $SLY['HTDOCS_PATH']);
-$SLY['DATAFOLDER']    = preg_replace('#[/\\\\][/\\\\]#i', DIRECTORY_SEPARATOR, $SLY['HTDOCS_PATH'].'data');
-$SLY['MEDIAFOLDER']   = preg_replace('#[/\\\\][/\\\\]#i', DIRECTORY_SEPARATOR, $SLY['HTDOCS_PATH'].'data/mediapool');
-$SLY['DYNFOLDER']     = preg_replace('#[/\\\\][/\\\\]#i', DIRECTORY_SEPARATOR, $SLY['HTDOCS_PATH'].'data/dyn');
+$SLY['FRONTEND_PATH'] = realpath($SLY['HTDOCS_PATH']);
+$SLY['INCLUDE_PATH']  = $SLY['FRONTEND_PATH'].DIRECTORY_SEPARATOR.'redaxo'.DIRECTORY_SEPARATOR.'include';
+$SLY['DATAFOLDER']    = $SLY['FRONTEND_PATH'].DIRECTORY_SEPARATOR.'data';
+$SLY['MEDIAFOLDER']   = $SLY['DATAFOLDER'].DIRECTORY_SEPARATOR.'mediapool';
+$SLY['DYNFOLDER']     = $SLY['DATAFOLDER'].DIRECTORY_SEPARATOR.'dyn';
 
 // Loader initialisieren
 
@@ -34,9 +36,13 @@ if (empty($SLY['SYNC'])){
 	sly_Core::registerVarType('rex_var_media');
 
 	// Sprachen laden
-	$config->appendFile($SLY['INCLUDE_PATH'].'/config/clang.yaml', 'CLANG');
-	$SLY['CLANG'] = $config->get('CLANG');
-	
-	$SLY['CUR_CLANG']  = sly_Core::getCurrentClang();
+	$clangs = sly_Service_Factory::getService('Language')->find(null, null, 'id');
+	foreach($clangs as $clang){
+		$SLY['CLANG'][$clang->getId()] = $clang->getName();
+	}
+	unset($clangs);
+
+
+  	$SLY['CUR_CLANG']  = sly_Core::getCurrentClang();
 	$SLY['ARTICLE_ID'] = sly_Core::getCurrentArticleId();
 }

@@ -1,4 +1,4 @@
-SETUP: true
+SETUP: false
 SERVER: sallycms.de
 SERVERNAME: webvariants-Projekt
 VERSION: 0
@@ -33,7 +33,7 @@ DATABASE:
   HOST: localhost
   LOGIN: develop
   PASSWORD: develop
-  NAME: webvariants_
+  NAME: webvariants_sally_base
   PERSISTENT: false
 PERM: [mediapool]
 EXTPERM: [advancedMode, moveSlice, copyContent, moveArticle, copyArticle, moveCategory, publishArticle, publishCategory, article2startpage]

@@ -18,10 +18,6 @@ function rex_generateAll()
 
 	rex_deleteDir($REX['INCLUDE_PATH'].'/generated', false);
 
-	if (($MSG = rex_generateClang()) !== true) {
-		return $MSG;
-	}
-
 	$MSG = $I18N->msg('delete_cache_message');
 	$MSG = rex_register_extension_point('ALL_GENERATED', $MSG);
 
@@ -585,7 +581,6 @@ function rex_addCLang($id, $name)
 	$sql->setQuery('INSERT INTO '.$SLY['TABLE_PREFIX'].'clang (id,name,revision) VALUES ('.$id.', "'.$sql->escape($name).'", 0)');
 	unset($sql);
 	
-	rex_generateClang($SLY['CLANG']);
 	rex_register_extension_point('CLANG_ADDED', '', array('id' => $id, 'name' => $name));
 	return true;
 }
@@ -611,7 +606,6 @@ function rex_editCLang($id, $name)
 
 	$edit = new rex_sql();
 	$edit->setQuery('UPDATE '.$SLY['TABLE_PREFIX'].'clang SET name = "'.$edit->escape($name).'" WHERE id = '.$id);
-	rex_generateClang($SLY['CLANG']);
 
 	rex_register_extension_point('CLANG_UPDATED', '', array('id' => $id, 'name' => $name));
 	return true;
@@ -684,32 +678,6 @@ function rex_generatePlugins($plugins)
 	$file    = $config->get('INCLUDE_PATH').'/config/plugins.yaml';
 	$dumper  = new sfYamlDumper();
 	$content = $dumper->dump($content, 3);
-	
-	if (file_put_contents($file, $content) === false) {
-		return 'Datei "'.$file.'" hat keine Schreibrechte.';
-	}
-	
-	return true;
-}
-
-/**
- * Schreibt Spracheigenschaften in die Datei include/clang.inc.php
- * 
- * @return mixed  true bei Erfolg, sonst eine Fehlermeldung
- */
-function rex_generateClang($data = null)
-{
-	global $SLY;
-
-	$data = $data === null ? rex_sql::getArrayEx('SELECT id,name FROM #_clang ORDER BY id', '#_') : $data;
-	
-	$SLY['CLANG'] = $data === false ? array() : $data;
-	sly_Core::config()->set('CLANG', $SLY['CLANG']);
-
-	$config  = sly_Core::config();
-	$file    = $config->get('INCLUDE_PATH').'/config/clang.yaml';
-	$dumper  = new sfYamlDumper();
-	$content = $dumper->dump($SLY['CLANG'], 1);
 	
 	if (file_put_contents($file, $content) === false) {
 		return 'Datei "'.$file.'" hat keine Schreibrechte.';

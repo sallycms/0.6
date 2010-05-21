@@ -42,7 +42,7 @@ class sly_Configuration implements ArrayAccess
 		$localDir     = $REX['DYNFOLDER'].'/internal/sally/config';
 		$localFile    = $localDir.'/'.str_replace('/', '_', $relativeFile).'.php';  // "/data/dyn/../redaxo_include_addon_config.yaml"
 		
-		if (!is_dir($localDir) && !mkdir($localDir, $REX['DIRPERM'], true)) {
+		if (!is_dir($localDir) && !mkdir($localDir, '0755', true)) {
 			throw new Exception('Cache-Verzeichnis '.$localDir.' konnte nicht erzeugt werden.');
 		}
 		
