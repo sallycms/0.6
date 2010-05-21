@@ -1,6 +1,6 @@
 <?php
 
-class sly_Controller_Addon extends sly_Controller_Base
+class sly_Controller_Addon extends sly_Controller_Sally
 {
 	protected $func    = '';
 	protected $addons  = null;
