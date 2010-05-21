@@ -57,7 +57,7 @@ class sly_Layout_XHTML extends sly_Layout
 	}
 
 	public function addJavaScriptFile($javascriptFile, $group = 'default') {
-		$this->javaScriptFiles[] = $javascriptFile;
+		$this->javaScriptFiles[$group][] = $javascriptFile;
 	}
 
 	public function setBodyAttr($name, $value) {
@@ -85,26 +85,26 @@ class sly_Layout_XHTML extends sly_Layout
 	protected function printFeedFiles() {
 		foreach ($this->feedFiles as $type => $file) {
 			
-			$link = '<link rel="alternate" type="application/';
-			if ($type != 'atom') $link .= 'rss';
+			$link = "<link rel=\"alternate\" type=\"application/";
+			if ($type != 'atom') $link .= "rss";
 			else $link .= $type;
-			$link .= '+xml" title="';
+			$link .= "+xml\" title=\"";
 			switch ($type) {
 				case 'rss1':
-					$link .= 'RSS-Feed 1.0';
+					$link .= "RSS-Feed 1.0";
 					break;
 				case 'rss2':
-					$link .= 'RSS-Feed 2.0';
+					$link .= "RSS-Feed 2.0";
 					break;
 				case 'atom':
-					$link .= 'Atom-Feed';
+					$link .= "Atom-Feed";
 					break;
 					
 				default:
-					$link .= 'RSS-Feed';
+					$link .= "RSS-Feed";
 					break;
 			}
-			$link .= '" href="'.$file.'" />';
+			$link .= "\" href=\"".$file."\" />\n";
 			
 			print $link;
 		}
@@ -115,7 +115,7 @@ class sly_Layout_XHTML extends sly_Layout
 		$this->cssCode =  rex_register_extension_point('HEADER_CSS', $this->cssCode);
 
 		if (!empty($this->cssCode)) {
-			print '<style type="text/css">'.trim($this->cssCode).'</style>';
+			print "<style type=\"text/css\">\n".trim($this->cssCode)."\n</style>\n";
 		}
 	}
 
@@ -127,17 +127,17 @@ class sly_Layout_XHTML extends sly_Layout
 			$isConditional = false;
 			
 			if (strtoupper(substr($group, 0, 3)) == 'IF ') {
-				print '<!--[if '.strtoupper(substr($group, 3)).']>';
+				print "<!--[if ".strtoupper(substr($group, 3))."]>\n";
 				$isConditional = true;
 			}
 
 			foreach($medias as $media => $files){
 				foreach ($files as $file) {
-					print '<link rel="stylesheet" type="text/css" href="'.$file['src'].'" media="'.$media.'" />';
+					print "<link rel=\"stylesheet\" type=\"text/css\" href=\"".$file['src']."\" media=\"".$media."\" />\n";
 				}
 			}
 			
-			if ($isConditional) print '<![endif]-->';
+			if ($isConditional) print "<![endif]-->\n";
 		}
 	}
 
@@ -147,11 +147,11 @@ class sly_Layout_XHTML extends sly_Layout
 		$this->javaScriptCode =  rex_register_extension_point('HEADER_JAVASCRIPT', $this->javaScriptCode);
 
 		if (!empty($this->javaScriptCode)) {
-			print '<script type="text/javascript">'
-				.'/* <![CDATA[ */'
+			print '<script type="text/javascript">
+				/* <![CDATA[ */'
 				.trim($this->javaScriptCode)
-				.'/* ]]> */'
-				.'</script>';
+				.'/* ]]> */
+				</script>';
 		}
 	}
 
@@ -159,8 +159,10 @@ class sly_Layout_XHTML extends sly_Layout
 
 		$this->javaScriptFiles =  rex_register_extension_point('HEADER_JAVASCRIPT_FILES', $this->javaScriptFiles);
 
-		foreach ($this->javaScriptFiles as $file) {
-			print '<script type="text/javascript" src="'.$file.'"></script>';
+		foreach ($this->javaScriptFiles as $files) {
+			foreach($files as $file){
+				print "<script type=\"text/javascript\" src=\"".$file."\"></script>\n";
+			}
 		}
 	}
 
@@ -172,19 +174,19 @@ class sly_Layout_XHTML extends sly_Layout
 
 	protected function printMetas() {
 		foreach ($this->metas as $name => $content) {
-			print '<meta name="'.$name.'" content="'.sly_html($content).'" />';
+			print "<meta name=\"".$name."\" content=\"".sly_html($content)."\" />\n";
 		}
 	}
 
 	protected function printHttpMetas(){
 		foreach($this->httpMetas as $name => $content) {
-			print '<meta http-equiv="'.sly_html($name).'" content="'.sly_html($content).'" />';
+			print "<meta http-equiv=\"".sly_html($name)."\" content=\"".sly_html($content)."\" />\n";
 		}
 	}
 
 	protected function printLinks() {
 		foreach ($this->links as $rel => $href) {
-			print '<link rel="'.$rel.'" href="'.$href.'" />';
+			print "<link rel=\"".$rel."\" href=\"".$href."\" />\n";
 		}
 	}
 

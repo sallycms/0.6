@@ -239,6 +239,7 @@ else {
 	// View laden
 	$layout = sly_Core::getLayout('Sally');
 	$layout->openBuffer();
+	$layout->appendToTitle(t($SLY['PAGE']));
 
 	if (isset($SLY['PAGES'][$SLY['PAGE']]['PATH']) && $SLY['PAGES'][$SLY['PAGE']]['PATH'] != "") {
 		// If page has a new/overwritten path
