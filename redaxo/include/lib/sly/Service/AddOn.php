@@ -16,7 +16,8 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 {
 	public function __construct()
 	{
-		$this->addons       = rex_read_addons_folder();
+		$this->addons     = rex_read_addons_folder();
+		$this->data       = sly_Core::config()->get('ADDON');
 		$this->i18nPrefix = 'addon_';
 	}
 	

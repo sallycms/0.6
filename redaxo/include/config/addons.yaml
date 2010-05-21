@@ -1,2 +1,2 @@
-install: { be_search: 1, be_style: 1, fscache: 1, image_resize: 1 }
-status: { be_search: 0, be_style: 1, fscache: 0, image_resize: 1 }
+install: { be_search: 1, be_style: 1, fscache: 1, image_resize: 1, rbac: 1 }
+status: { be_search: 1, be_style: 1, fscache: 0, image_resize: 1, rbac: 1 }

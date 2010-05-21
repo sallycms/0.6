@@ -133,7 +133,6 @@ if($SLY['USER'])
 
 // ----- INCLUDE ADDONS
 include_once $SLY['INCLUDE_PATH'].'/addons.inc.php';
-$config->appendArray($SLY['ADDON'], 'ADDON');
 
 // ----- Prepare AddOn Pages
 if($SLY['USER'])
