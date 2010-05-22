@@ -69,9 +69,9 @@ class sly_Controller_Specials extends sly_Controller_Base
 		// Standard-Artikel
 		
 		$sql = sly_DB_PDO_Persistence::getInstance();
-		$id  = $sql->fetch('id', 'template', 'id = ?', $defaultTemplateID);
+		$id  = $sql->fetch('template', 'id', array('id' => $defaultTemplateID));
 
-		if ($id === false && $defaultTemplateID != 0) {
+		if ($id === null && $defaultTemplateID != 0) {
 			$this->warning .= $I18N->msg('settings_invalid_default_template').'<br />';
 		}
 		else {
