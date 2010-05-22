@@ -23,13 +23,13 @@ abstract class sly_Controller_Base
 		$this->action = rex_request(self::ACTIONPARAM, 'string', 'index');
 	}
 
-	public static function factory()
+	public static function factory($forcePage = null, $forceSubpage = null)
 	{
-		$page    = sly_request(self::PAGEPARAM,    'string', self::DEFAULTPAGE);
-		$subpage = sly_request(self::SUBPAGEPARAM, 'string', '');
+		$page    = $forcePage === null    ? sly_request(self::PAGEPARAM, 'string', self::DEFAULTPAGE) : $forcePage;
+		$subpage = $forceSubpage === null ? strtolower(sly_request(self::SUBPAGEPARAM, 'string', '')) : $forceSubpage;
 		$name    = 'sly_Controller_'.strtoupper(substr($page, 0, 1)).substr($page, 1);
 		
-		if (!empty($subpage)) {
+		if (!empty($subpage) && $subpage != 'index') {
 			$name .= '_'.strtoupper(substr($subpage, 0, 1)).substr($subpage, 1);
 		}
 
@@ -74,7 +74,7 @@ abstract class sly_Controller_Base
 		extract($paramsHtuG50hNCdikAvf7CZ1F);
 
 		ob_start();
-		require_once $SLY['INCLUDE_PATH'].DIRECTORY_SEPARATOR.$filenameHtuG50hNCdikAvf7CZ1F;
+		include $SLY['INCLUDE_PATH'].DIRECTORY_SEPARATOR.$filenameHtuG50hNCdikAvf7CZ1F;
 		print ob_get_clean();
 	}
 	

@@ -9,123 +9,52 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
-global $REX;
+////////////////////////////////////////////////////////////
+// Gebundene Actions anzeigen
 
-$form = new sly_Form('POST', 'index.php', $I18N->msg('action_add'));
+$base   = 'index.php?page=module&amp;func=';
+$thIcon = '<img class="sly-icon sly-sprite sly-module-action" alt="" src="media/empty.png" title="'.$I18N->msg('action').'" />';
+$table  = new sly_Table('module_actions');
+
+$table->addColumn(new sly_Table_Column($thIcon, '', '', array('class' => 'rex-icon')));
+$table->addColumn(new sly_Table_Column($I18N->msg('action_name')));
+$table->addColumn(new sly_Table_Column($I18N->msg('action_functions'), '80px'));
+$table->renderHeader();
+
+foreach ($actions as $primaryID => $action) {
+	?>
+	<tr>
+		<td class="sly-col-a sly-icon">
+			<a href="<?= $base ?>edit&amp;subpage=actions&amp;id=<?= $action->getId() ?>">
+				<img src="media/empty.png" class="sly-icon sly-sprite sly-module-action" alt="" title="<?= sly_html($action->getName()) ?>" />
+			</a>
+		</td>
+		<td class="sly-col-b"><a href="<?= $base ?>edit&amp;subpage=actions&amp;id=<?= $action->getId() ?>"><?= sly_html($action->getName()) ?></a></td>
+		<td class="sly-col-c"><a class="sly-action sly-delete" href="<?= $base ?>delete_action&amp;id=<?= $module->getId() ?>&amp;pid=<?= $primaryID ?>">Löschen</a></td>
+	</tr>
+	<?
+}
+
+$table->renderFooter();
+
+////////////////////////////////////////////////////////////
+// Formular zum Hinzufügen einer neuen Action
+
+$form = new sly_Form('index.php', 'POST', $I18N->msg('action_add'));
 $form->addHiddenValue(sly_Controller_BASE::PAGEPARAM, 'module');
 $form->addHiddenValue(sly_Controller_Base::ACTIONPARAM, 'add_action');
 $form->addHiddenValue('save', 1);
 $form->addHiddenValue('id', $module->getId());
 
+$service = sly_Service_Factory::getService('Action');
+$actions = array();
+
+foreach ($service->find() as $action) {
+	$actions[$action->getId()] = $action->getName();
+}
+
+$select = new sly_Form_Select_DropDown('action_id', $I18N->msg('action'), array(), $actions);
+$select->setMultiple(false);
+
+$form->add($select);
 $form->render();
-
-?>
-
-<div class="rex-form rex-form-module-editmode">
-	<form action="index.php" method="post">
-
-<?php 
-      $gaa = new rex_sql;
-      $gaa->setQuery("SELECT * FROM ".$REX['TABLE_PREFIX']."action ORDER BY name");
-
-      if ($gaa->getRows() > 0) {
-        $gma = new rex_sql;
-        $gma->setQuery("SELECT * FROM ".$REX['TABLE_PREFIX']."module_action, ".$REX['TABLE_PREFIX']."action WHERE ".$REX['TABLE_PREFIX']."module_action.action_id=".$REX['TABLE_PREFIX']."action.id and ".$REX['TABLE_PREFIX']."module_action.module_id='$modul_id'");
-				
-				$add_header = '';
-				$add_col = '';
-				if ($REX['USER']->hasPerm('advancedMode[]'))
-				{
-					$add_header = '<th class="rex-small">'.$I18N->msg('header_id').'</th>';
-					$add_col = '<col width="40" />';
-				}
-				
-        $actions = '';
-        for ($i=0; $i<$gma->getRows(); $i++)
-        {
-          $iaction_id = $gma->getValue($REX['TABLE_PREFIX'].'module_action.id');
-          $action_id = $gma->getValue($REX['TABLE_PREFIX'].'module_action.action_id');
-          $action_edit_url = 'index.php?page=module&amp;subpage=actions&amp;action_id='.$action_id.'&amp;function=edit';
-          $action_name = rex_translate($gma->getValue('name'));
-
-          $actions .= '<tr>
-          	<td class="rex-icon"><a class="rex-i-element rex-i-action" href="'. $action_edit_url .'"><span class="rex-i-element-text">' . htmlspecialchars($action_name) . '</span></a></td>';
-          	
-					if ($REX['USER']->hasPerm('advancedMode[]'))
-					{
-             $actions .= '<td class="rex-small">' . $gma->getValue("id") . '</td>';
-          }
-          	
-          $actions .= '<td><a href="'. $action_edit_url .'">'. $action_name .'</a></td>
-          	<td><a href="index.php?page=module&amp;modul_id='.$modul_id.'&amp;func=delete_action&amp;function=edit&amp;iaction_id='.$iaction_id.'" onclick="return confirm(\''.$I18N->msg('delete').' ?\')">'.$I18N->msg('action_delete').'</a></td>
-          </tr>';
-
-          $gma->next();
-        }
-
-        if($actions !='')
-        {
-          $actions = '
-  					<table class="rex-table" summary="'.$I18N->msg('actions_added_summary').'">
-  						<caption>'.$I18N->msg('actions_added_caption').'</caption>
-    					<colgroup>
-      				<col width="40" />
-      				'.$add_col.'
-      				<col width="*" />
-      				<col width="153" />
-    					</colgroup>
-    					<thead>
-      					<tr>
-        					<th class="rex-icon">&nbsp;</th>
-        					'.$add_header.'
-        					<th>' . $I18N->msg('action_name') . '</th>
-        					<th>' . $I18N->msg('action_functions') . '</th>
-      					</tr>
-    					</thead>
-    				<tbody>
-              '. $actions .'
-            </tbody>
-            </table>
-          ';
-        }
-
-        $gaa_sel = new rex_select();
-        $gaa_sel->setName('action_id');
-        $gaa_sel->setId('action_id');
-        $gaa_sel->setSize(1);
-        $gaa_sel->setStyle('class="rex-form-select"');
-
-        for ($i=0; $i<$gaa->getRows(); $i++)
-        {
-          $gaa_sel->addOption(rex_translate($gaa->getValue('name'), null, false),$gaa->getValue('id'));
-          $gaa->next();
-        }
-
-?>
-	
-		<fieldset class="rex-form-col-1">
-          <legend><?= $I18N->msg('action_add') ?></legend>
-      		<div class="rex-form-wrapper">
-      			<input type="hidden" name="page" value="module" />
-      			<input type="hidden" name="modul_id" value="<?= $modul_id ?>" />
-				<input type="hidden" name="func" value="add_action" />
-				<input type="hidden" name="save" value="1" />
-						
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-select">
-								<label for="action_id"><?= $I18N->msg('action') ?></label>
-								<?= $gaa_sel->get() ?>
-					  	</p>
-					  </div>
-					  
-						<div class="rex-form-row">
-					  	<p class="rex-form-col-a rex-form-submit">
-								<input class="rex-form-submit" type="submit" value="<?= $I18N->msg('action_add') ?>" name="add_action" />
-					  	</p>
-					  </div>
-				  </div>
-        </fieldset>
-<?php 
-      }
-?>
-</form></div>

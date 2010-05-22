@@ -29,14 +29,14 @@ class sly_Service_Module extends sly_Service_Model_Base
 		
 		// Aktionen löschen
 		
-		$pdo = sly_DB_PDO_Persistence::getInstance();
+		$pdo = sly_DB_Persistence::getInstance();
 		$pdo->delete('module_action', array('module_id' => $module->getId()));
 	}
 	
 	public function findUsages(sly_Model_Module $module)
 	{
 		$prefix = sly_Core::config()->get('TABLE_PREFIX');
-		$pdo    = sly_DB_PDO_Persistence::getInstance();
+		$pdo    = sly_DB_Persistence::getInstance();
 		$usages = array();
 		
 		if ($module->getId() == sly_Model_Base::NEW_ID) {
@@ -58,5 +58,46 @@ class sly_Service_Module extends sly_Service_Model_Base
 		}
 		
 		return $usages;
+	}
+	
+	public function attachAction(sly_Model_Module $module, sly_Model_Action $action)
+	{
+		$pdo    = sly_DB_Persistence::getInstance();
+		$usages = array();
+		
+		if ($module->getId() == sly_Model_Base::NEW_ID || $action->getId() == sly_Model_Base::NEW_ID) {
+			return false;
+		}
+		
+		return $pdo->insert('module_action', array(
+			'module_id' => $module->getId(),
+			'action_id' => $action->getId(),
+			'revision'  => 0
+		)) > 0;
+	}
+	
+	public function detachActionById($id)
+	{
+		$pdo = sly_DB_Persistence::getInstance();
+		return $pdo->delete('module_action', array('id' => (int) $id)) > 0;
+	}
+	
+	public function getAttachedActions(sly_Model_Module $module)
+	{
+		$pdo     = sly_DB_Persistence::getInstance();
+		$actions = array();
+		$service = sly_Service_Factory::getService('Action');
+		
+		if ($module->getId() == sly_Model_Base::NEW_ID) {
+			return array();
+		}
+		
+		$pdo->select('module_action', 'id, action_id', array('module_id' => $module->getId()), null, 'id');
+		
+		foreach ($pdo as $row) {
+			$actions[$row['id']] = $service->findById($row['action_id']);
+		}
+		
+		return $actions;
 	}
 }

@@ -18,22 +18,22 @@ sly_Loader::addLoadPath($REX['INCLUDE_PATH'].'/layout', 'sly_Layout_');
 sly_Loader::addLoadPath($SLY['INCLUDE_PATH'].'/lib/rex/oo', 'OO');
 sly_Loader::register();
 
-require_once $SLY['INCLUDE_PATH'].'/lib/functions.php';
+require_once $REX['INCLUDE_PATH'].'/lib/functions.php';
 
 // Funktionen
 
-require_once $SLY['INCLUDE_PATH'].'/functions/function_rex_globals.inc.php';
-require_once $SLY['INCLUDE_PATH'].'/functions/function_rex_client_cache.inc.php';
-require_once $SLY['INCLUDE_PATH'].'/functions/function_rex_url.inc.php';
-require_once $SLY['INCLUDE_PATH'].'/functions/function_rex_extension.inc.php';
-require_once $SLY['INCLUDE_PATH'].'/functions/function_rex_addons.inc.php';
-require_once $SLY['INCLUDE_PATH'].'/functions/function_rex_plugins.inc.php';
-require_once $SLY['INCLUDE_PATH'].'/functions/function_rex_other.inc.php';
+require_once $REX['INCLUDE_PATH'].'/functions/function_rex_globals.inc.php';
+require_once $REX['INCLUDE_PATH'].'/functions/function_rex_client_cache.inc.php';
+require_once $REX['INCLUDE_PATH'].'/functions/function_rex_url.inc.php';
+require_once $REX['INCLUDE_PATH'].'/functions/function_rex_extension.inc.php';
+require_once $REX['INCLUDE_PATH'].'/functions/function_rex_addons.inc.php';
+require_once $REX['INCLUDE_PATH'].'/functions/function_rex_plugins.inc.php';
+require_once $REX['INCLUDE_PATH'].'/functions/function_rex_other.inc.php';
 
-if ($SLY['SALLY']) {
-	require_once $SLY['INCLUDE_PATH'].'/functions/function_rex_time.inc.php';
-	require_once $SLY['INCLUDE_PATH'].'/functions/function_rex_title.inc.php';
-	require_once $SLY['INCLUDE_PATH'].'/functions/function_rex_generate.inc.php';
-	require_once $SLY['INCLUDE_PATH'].'/functions/function_rex_mediapool.inc.php';
-	require_once $SLY['INCLUDE_PATH'].'/functions/function_rex_structure.inc.php';
+if ($REX['REDAXO']) {
+	require_once $REX['INCLUDE_PATH'].'/functions/function_rex_time.inc.php';
+	require_once $REX['INCLUDE_PATH'].'/functions/function_rex_title.inc.php';
+	require_once $REX['INCLUDE_PATH'].'/functions/function_rex_generate.inc.php';
+	require_once $REX['INCLUDE_PATH'].'/functions/function_rex_mediapool.inc.php';
+	require_once $REX['INCLUDE_PATH'].'/functions/function_rex_structure.inc.php';
 }

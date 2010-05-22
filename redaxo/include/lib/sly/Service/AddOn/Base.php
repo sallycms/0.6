@@ -31,7 +31,7 @@ abstract class sly_Service_AddOn_Base
 	protected function req($filename, $addonName)
 	{
 		global $REX, $SLY, $I18N; // Nötig damit im Addon verfügbar
-
+		
 		try {
 			require $filename;
 		}
@@ -39,7 +39,7 @@ abstract class sly_Service_AddOn_Base
 			$REX['ADDON']['installmsg'][$addonName] =
 				'Es ist eine unerwartete Ausnahme während der Installation aufgetreten: '.$e->getMessage();
 		}
-
+		
 		// Synchronisation mit sly_Configuration
 		sly_Core::config()->set('ADDON', $REX['ADDON']);
 	}

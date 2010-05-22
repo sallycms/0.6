@@ -165,9 +165,4 @@ class sly_Core
 	{
 		return self::config()->get('SALLY');
 	}
-	
-	public static function isBackend()
-	{
-		return self::config()->get('SALLY');
-	}
 }

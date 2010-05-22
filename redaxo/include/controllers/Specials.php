@@ -68,7 +68,7 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		
 		// Standard-Artikel
 		
-		$sql = sly_DB_PDO_Persistence::getInstance();
+		$sql = sly_DB_Persistence::getInstance();
 		$id  = $sql->fetch('template', 'id', array('id' => $defaultTemplateID));
 
 		if ($id === null && $defaultTemplateID != 0) {
@@ -108,7 +108,7 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		
 		$master_file = $SLY['INCLUDE_PATH'].'/master.inc.php';
 		$cont        = file_get_contents($master_file);
-		$cont        = preg_replace("#^(\\\$REX\['SETUP'\].?=.?)[^;]*#", '$1true', $cont);
+		$cont        = preg_replace("#^(\\\$REX\['SETUP'\].?=.?)[^;]*#m", '$1true', $cont);
 		
 		if (file_put_contents($master_file, $cont) !== false) {
 			$this->info = $I18N->msg('setup_error1', '<a href="index.php">', '</a>');
@@ -123,6 +123,7 @@ class sly_Controller_Specials extends sly_Controller_Sally
 	
 	public function checkPermission()
 	{
-		return true;
+		global $REX;
+		return !empty($REX['USER']);
 	}
 }

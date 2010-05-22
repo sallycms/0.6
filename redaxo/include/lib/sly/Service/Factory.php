@@ -24,9 +24,9 @@
   		if(!isset(self::$services[$modelName])){
   			$serviceName = 'sly_Service_'.$modelName;
   			$service = new $serviceName();
-  			if(!$service instanceof sly_Service_Base){
-  				throw new Exception('sly_Service '.$serviceName.' is no inheriting Class of Service_Base.');
-  			}
+//  			if(!$service instanceof sly_Service_Base){
+//  				throw new Exception('sly_Service '.$serviceName.' is no inheriting Class of Service_Base.');
+//  			}
   			self::$services[$modelName] = $service;
   		}
   		return self::$services[$modelName];

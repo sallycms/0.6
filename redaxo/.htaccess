@@ -22,27 +22,3 @@ RewriteRule ^images/(.+?)/(.*?)$         ../data/dyn/public/$1/images/$2 [L]
 RewriteRule ^css/(.+?)/(.+?)$            ../data/dyn/public/$1/css/$2 [L]
 RewriteRule ^js/(.+?)/(.+?)$             ../data/dyn/public/$1/js/$2 [L]
 RewriteRule ^scaffold/(.+?)/(.+?)\.css$  media/cache.php?f=data/dyn/public/$1/css/$2.css [L]
-RewriteEngine On
-
-# Imageresize
-
-RewriteRule ^imageresize/(.*)$  index.php?rex_resize=$1 [L]
-
-# Backend-Assets
-
-# Hilfsregeln, um von Scaffold-Dateien direkt auf Assets zugreifen zu können
-
-RewriteRule ^scaffold/(.+?)/(.+?)/(.+?)\.(jpg|png|gif|jpeg)$  ../dyn/public/addons/$1/plugins/$2/images/$3.$4 [L]
-RewriteRule ^scaffold/(.+?)/(.+?)/(.+?)\.js$                  ../dyn/public/addons/$1/plugins/$2/js/$3.js [L]
-RewriteRule ^scaffold/(.+?)/(.+?)\.(jpg|png|gif|jpeg)$        ../dyn/public/addons/$1/images/$2.$3 [L]
-RewriteRule ^scaffold/(.+?)/(.+?)\.js$                        ../dyn/public/addons/$1/images/$2.js [L]
-
-RewriteRule ^images/(.+?)/(.+?)/(.*?)$         ../dyn/public/addons/$1/plugins/$2/images/$3 [L]
-RewriteRule ^css/(.+?)/(.+?)/(.+?)$            ../dyn/public/addons/$1/plugins/$2/css/$3 [L]
-RewriteRule ^js/(.+?)/(.+?)/(.+?)$             ../dyn/public/addons/$1/plugins/$2/js/$3 [L]
-RewriteRule ^scaffold/(.+?)/(.+?)/(.+?)\.css$  media/cache.php?f=dyn/public/addons/$1/plugins/$2/css/$3.css [L]
-
-RewriteRule ^images/(.+?)/(.*?)$         ../dyn/public/addons/$1/images/$2 [L]
-RewriteRule ^css/(.+?)/(.+?)$            ../dyn/public/addons/$1/css/$2 [L]
-RewriteRule ^js/(.+?)/(.+?)$             ../dyn/public/addons/$1/js/$2 [L]
-RewriteRule ^scaffold/(.+?)/(.+?)\.css$  media/cache.php?f=dyn/public/addons/$1/css/$2.css [L]

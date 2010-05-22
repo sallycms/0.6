@@ -75,15 +75,14 @@ class sly_Controller_Module extends sly_Controller_Sally
 			return false;
 		}
 		
-		$save = sly_post('save', 'boolean', false);
+		$save    = sly_post('save', 'boolean', false);
+		$service = sly_Service_Factory::getService('Module');
 		
 		if ($save) {
 			$module->setName(sly_post('name', 'string', ''));
 			$module->setInput(sly_post('input', 'string', ''));
 			$module->setOutput(sly_post('output', 'string', ''));
-			
-			$service = sly_Service_Factory::getService('Module');
-			$module  = $service->save($module);
+			$module = $service->save($module);
 
 			print rex_info($I18N->msg('module_updated').' | '.$I18N->msg('articles_updated'));
 
@@ -95,13 +94,12 @@ class sly_Controller_Module extends sly_Controller_Sally
 			}
 		}
 
-		$params     = array('module' => $module);
-		$actions    = sly_Service_Factory::getService('Action')->find(null, null, 'name', null, null);
+		$params     = array('module' => $module, 'actions' => $service->getAttachedActions($module));
 		$this->func = 'edit';
 		
 		$this->render('views/module/edit.phtml', $params);
 		
-		if (!empty($actions)) {
+		if (!empty($params['actions'])) {
 			$this->render('views/module/module_action.phtml', $params);
 		}
 		
@@ -140,10 +138,10 @@ class sly_Controller_Module extends sly_Controller_Sally
 				$errormsg[] = '<li><a href="index.php?page=content&amp;article_id='.$aID.'&amp;clang='.$clangID.'&amp;ctype='.$usage['ctype'].'">'.sly_html($label).'</a></li>';
 			}
 
-			$modulName = sly_html($module->getName());
-			$warning   = '<ul>'.implode("\n", $errormsg).'</ul>';
+			$moduleName = sly_html($module->getName());
+			$warning    = '<ul>'.implode("\n", $errormsg).'</ul>';
 			
-			print rex_warning($I18N->msg('module_cannot_be_deleted', $modulName).$warning);
+			print rex_warning($I18N->msg('module_cannot_be_deleted', $moduleName).$warning);
 			return false;
 		}
 		
@@ -153,10 +151,48 @@ class sly_Controller_Module extends sly_Controller_Sally
 		$this->listModules();
 		return true;
 	}
+	
+	public function add_action()
+	{
+		global $I18N;
+
+		$module   = $this->getModule();
+		$service  = sly_Service_Factory::getService('Module');
+		$save     = rex_post('save', 'boolean', false);
+		$actionID = sly_post('action_id', 'rex-action-id');
+		
+		if ($save && $actionID) {
+			$action = sly_Service_Factory::getService('Action')->findById($actionID);
+			$service->attachAction($module, $action);
+			print rex_info($I18N->msg('action_taken'));
+		}
+
+		unset($_POST['save']);
+		$this->edit();
+	}
+
+	public function delete_action()
+	{
+		global $I18N;
+		
+		$pid     = sly_get('pid', 'int', 0);
+		$service = sly_Service_Factory::getService('Module');
+		
+		if ($service->detachActionById($pid)) {
+			print rex_info($I18N->msg('action_deleted_from_module'));
+		}
+		else {
+			print rex_warning('Fehler beim Löschen der Verknüpfung.');
+		}
+
+		unset($_POST['save']);
+		$this->edit();
+	}
 
 	public function checkPermission()
 	{
-		return true;
+		global $REX;
+		return isset($REX['USER']) && $REX['USER']->isAdmin();
 	}
 
 	protected function listModules()

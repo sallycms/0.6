@@ -251,10 +251,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		$config = sly_Core::config();
 		$dir    = $config->get('DYNFOLDER').DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.$addonName;
 		
-		if (!is_dir($dir)) {
-			mkdir($dir, $config->get('DIRPERM'), true);
-		}
-		
+		if (!is_dir($dir)) mkdir($dir, $config->get('DIRPERM'), true);
 		return $dir;
 	}
 	
@@ -299,7 +296,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		return rex_call_func(array($I18N, 'msg'), $args, false);
 	}
 
-	protected function generateConfig()
+	public function generateConfig()
 	{
 		return rex_generateAddons(array_keys($this->data['install']));
 	}
