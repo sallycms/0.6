@@ -1,6 +1,6 @@
 <?php
 
-class sly_Controller_Specials_Languages extends sly_Controller_Base
+class sly_Controller_Specials_Languages extends sly_Controller_Sally
 {
 	// for now just copy those two fields and the init() method, until
 	// I find a nice way to generalize it into. --xrstf
@@ -19,7 +19,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Base
 		
 		rex_title($I18N->msg('specials'), $subline);
 	}
-	
+
 	public function index()
 	{
 		$this->render('views/specials/languages.phtml');

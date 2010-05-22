@@ -1,6 +1,6 @@
 <?php
 
-class sly_Controller_Specials extends sly_Controller_Base
+class sly_Controller_Specials extends sly_Controller_Sally
 {
 	protected $warning;
 	protected $info;
@@ -16,7 +16,7 @@ class sly_Controller_Specials extends sly_Controller_Base
 		
 		rex_title($I18N->msg('specials'), $subline);
 	}
-	
+
 	public function index()
 	{
 		$this->render('views/specials/index.phtml');

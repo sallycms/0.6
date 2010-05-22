@@ -9,13 +9,15 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
 */
 
-abstract class sly_Controller_Layout
+abstract class sly_Controller_Sally extends sly_Controller_Base
 {
-	protected function init()
+	public function dispatch()
 	{
+		$layout = sly_Core::getLayout('Sally');
+		
+		$layout->openBuffer();
+		parent::dispatch();
+		$layout->closeBuffer();
+		return $layout->render();
    	}
-
-	protected function teardown()
-	{
-	}
 }

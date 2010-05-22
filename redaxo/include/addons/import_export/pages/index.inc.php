@@ -8,7 +8,6 @@ include_once $REX['INCLUDE_PATH'].'/addons/import_export/functions/function_impo
 
 // Head erzeugen
 
-require $REX['INCLUDE_PATH'].'/layout/top.php';
 rex_title($I18N->msg('im_export_importexport'), $REX['ADDON']['import_export']['SUBPAGES']);
 
 // Script einbinden
@@ -31,4 +30,3 @@ else {
 
 // Footer erzeugen
 
-require $REX['INCLUDE_PATH'].'/layout/bottom.php';

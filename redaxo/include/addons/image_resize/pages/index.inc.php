@@ -1,6 +1,5 @@
 <?php
 
-require $REX['INCLUDE_PATH'].'/layout/top.php';
 rex_title('Image Resize', $REX['ADDON']['image_resize']['SUBPAGES']);
 
 $subpage = sly_request('subpage', 'string');
@@ -13,4 +12,3 @@ if ($subpage == 'clear_cache') {
 
 if ($subpage != 'settings') $subpage = 'overview';
 require $REX['INCLUDE_PATH'].'/addons/image_resize/pages/'.$subpage.'.inc.php';
-require $REX['INCLUDE_PATH'].'/layout/bottom.php';

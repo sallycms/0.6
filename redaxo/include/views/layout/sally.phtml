@@ -1,0 +1,62 @@
+<?php
+
+global $I18N;
+
+$config = sly_Core::config();
+
+?>
+
+<div id="rex-website">
+	<div id="rex-header">
+		<p class="rex-header-top">
+			<a href="../" onclick="window.open(this.href);"><?= sly_html($config->get('SERVERNAME')) ?></a>
+		</p>
+	</div>
+	<div id="rex-navi-logout">
+		<? $this->renderView('views/layout/sally_navi_logout.phtml') ?>
+	</div>
+	<div id="rex-navi-main">
+		<?
+		if ($config->get('USER') && !$config->get('PAGE_NO_NAVI')) {
+			$this->renderView('views/layout/sally_navi_main.phtml');
+		}
+		?>
+	</div>
+	<div id="rex-wrapper">
+		<div id="rex-wrapper2">
+			<?= $this->content ?>
+			<!-- wegen dem bescheuerten rex_title hier ein schließendes div -->
+			</div>
+		</div>
+	</div>
+
+
+	<div id="rex-footer">
+		<div id="rex-navi-footer">
+			<ul>
+				<li class="rex-navi-first">
+					<a href="#rex-header">&#94;</a>
+				</li>
+				<li>
+					<a href="http://www.webvariants.de/" class="sly-blank">webvariants.de</a>
+				</li>
+				<li>
+					<a href="http://www.sallycms.de/" class="sly-blank">sallycms.de</a>
+				</li>
+				<? if ($config->get('USER')): ?>
+				<li>
+					<a href="index.php?page=credits"><?= $I18N->msg('credits') ?></a>
+				</li>
+				<? endif ?>
+			</ul>
+			<p id="rex-scripttime"><!--DYN--><?= rex_showScriptTime() ?> Sek | <?= rex_formatter::format(time(), 'strftime', 'date'); ?><!--/DYN--></p>
+		</div>
+	</div>
+
+	<div id="rex-extra"></div>
+	<div id="rex-redaxo-link">
+		<p>
+			<a href="./">Wohin verlinke ich?</a>
+		</p>
+	</div>
+</div>

@@ -1,6 +1,6 @@
 <?php
 
-class sly_Controller_Module_Actions extends sly_Controller_Base
+class sly_Controller_Module_Actions extends sly_Controller_Sally
 {
 	protected $func = '';
 	
@@ -8,10 +8,13 @@ class sly_Controller_Module_Actions extends sly_Controller_Base
 	{
 		global $I18N;
 		
-		rex_title($I18N->msg('modules').': '.$I18N->msg('actions'), array(
-			array('',        $I18N->msg('modules')),
-			array('actions', $I18N->msg('actions'))
+		rex_title(t('modules').': '.t('actions'), array(
+			array('',        t('modules')),
+			array('actions', t('actions'))
 		));
+
+		$layout = sly_Core::getLayout();
+		$layout->appendToTitle(t('modules').': '.t('actions'));
 
 		print '<div class="sly-content">';
 	}

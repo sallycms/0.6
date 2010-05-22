@@ -1,6 +1,6 @@
 <?php
 
-class sly_Controller_Credits extends sly_Controller_Base
+class sly_Controller_Credits extends sly_Controller_Sally
 {
 	protected $func = '';
 	

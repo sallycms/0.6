@@ -213,18 +213,14 @@ if($SLY['PAGES'][strtolower($SLY['PAGE'])][2] == 1)
 $config->appendArray($SLY);
 rex_register_extension_point( 'PAGE_CHECKED', $SLY['PAGE'], array('pages' => $SLY['PAGES']));
 
-// View laden
-$view = sly_View::factory();
 
 // Gewünschte Seite einbinden
 $forceLogin = !$SLY['SETUP'] && !$SLY['USER'];
 $controller = sly_Controller_Base::factory($forceLogin ? 'login' : null, $forceLogin ? 'index' : null);
 
 if ($controller !== null) {
-	$view->openBuffer();
-	
 	try {
-		$controller->dispatch();
+		$CONTENT = $controller->dispatch();
 	}
 	catch (sly_Authorisation_Exception $e1) {
 		rex_title('Sicherheitsverletzung');
@@ -238,27 +234,26 @@ if ($controller !== null) {
 		rex_title('Ausnahme');
 		print rex_warning('Es ist eine unerwartete Ausnahme aufgetreten: '.$e3->getMessage());
 	}
-	
-	$view->closeBuffer();
-	$CONTENT = $view->render();
 }
-elseif (isset($SLY['PAGES'][$SLY['PAGE']]['PATH']) && $SLY['PAGES'][$SLY['PAGE']]['PATH'] != "") {
-	// If page has a new/overwritten path
-	require $SLY['PAGES'][$SLY['PAGE']]['PATH'];
-	$CONTENT = ob_get_clean();
-}
-elseif ($SLY['PAGES'][strtolower($SLY['PAGE'])][1]) {
-	// Addon Page
-	require $SLY['INCLUDE_PATH'].'/addons/'. $SLY['PAGE'] .'/pages/index.inc.php';
-	$CONTENT = ob_get_clean();
-}
-else { // Core Page
-	$view->openBuffer();
-	require $SLY['INCLUDE_PATH'].'/pages/'.$SLY['PAGE'].'.inc.php';
-	$view->closeBuffer();
-	$CONTENT = $view->render();
-}
+else {
+	// View laden
+	$layout = sly_Core::getLayout('Sally');
+	$layout->openBuffer();
 
+	if (isset($SLY['PAGES'][$SLY['PAGE']]['PATH']) && $SLY['PAGES'][$SLY['PAGE']]['PATH'] != "") {
+		// If page has a new/overwritten path
+		require $SLY['PAGES'][$SLY['PAGE']]['PATH'];
+	}
+	elseif ($SLY['PAGES'][strtolower($SLY['PAGE'])][1]) {
+		// Addon Page
+		require $SLY['INCLUDE_PATH'].'/addons/'. $SLY['PAGE'] .'/pages/index.inc.php';
+	}
+	else { // Core Page
+		require $SLY['INCLUDE_PATH'].'/pages/'.$SLY['PAGE'].'.inc.php';
+	}
+	$layout->closeBuffer();
+	$CONTENT = $layout->render();
+}
 rex_send_article(null, $CONTENT, 'backend', true);
 <?php
 

@@ -1,6 +1,6 @@
 <?php
 
-class sly_Controller_Setup extends sly_Controller_Base
+class sly_Controller_Setup extends sly_Controller_Sally
 {
 	protected $warning;
 	protected $info;

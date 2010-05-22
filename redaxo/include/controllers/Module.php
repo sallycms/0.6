@@ -1,19 +1,20 @@
 <?php
 
-class sly_Controller_Module extends sly_Controller_Base
+class sly_Controller_Module extends sly_Controller_Sally
 {
 	protected $func = '';
 	
 	public function init()
 	{
-		global $I18N;
-		
-		rex_title($I18N->msg('modules'), array(
-			array('',        $I18N->msg('modules')),
-			array('actions', $I18N->msg('actions'))
+		rex_title(t('modules'), array(
+			array('',        t('modules')),
+			array('actions', t('actions'))
 		));
 
-		print '<div class="sly-content">';
+		$layout = sly_Core::getLayout();
+		$layout->appendToTitle(t('modules'));
+
+      	print '<div class="sly-content">';
 	}
 	
 	public function teardown()

@@ -141,14 +141,20 @@ class sly_Core
 		return sly_Configuration::getInstance();
 	}
 
-	
+	/**
+	 * gibt ein sly_Layout Instanz zurück
+	 *
+	 * @param string $type
+	 * @return sly_Layout
+	 */
 	public static function getLayout($type = 'XHTML'){
 		$instance = self::getInstance();
+		
 		//FIXME: layout type kann bloss einmal pro request angegeben werden,
 		// reicht eigentlich auch
 		// eventuell könnte man das in der config oder in index.php angeben
 		if (!isset($instance->layout)) {
-			$className = 'sly_View_'.$type;
+			$className = 'sly_Layout_'.$type;
 			$instance->layout = new $className();
 		}
 
