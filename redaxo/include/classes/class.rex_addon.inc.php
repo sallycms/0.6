@@ -2,137 +2,95 @@
 
 /**
  * Basisklasse für Addons/Plugins
- *
- * @package redaxo4
- * @version svn:$Id$
  */
-
- class rex_addon
+class rex_addon
 {
-	private $data;
-	private $name;
 	private static $instances;
 	
 	/**
-	 * Privater rex_addon Konstruktor.
-	 * Erstellen von Objekten dieser Klasse ist nicht erlaubt!
-	 *
-	 * @param string|array $namespace Namensraum des rex-Addons
+	 * Konstruktor
 	 */
-	private function __construct($namespace)
+	private function __construct()
 	{
-		global $REX;
-
-		// plugin?
-		if(is_array($namespace))
-		{
-			if(!isset($namespace[0]) || !isset($namespace[1]) ||
-			!is_string($namespace[0]) || !is_string($namespace[1]))
-			{
-				trigger_error('Unexpected namespace format!', E_USER_ERROR);
-			}
-
-			$addon = $namespace[0];
-			$plugin = $namespace[1];
-			$this->data = &$REX['ADDON']['plugins'][$addon];
-			$this->name = $plugin;
-		}
-		// addon?
-		else
-		{
-			$this->data =& $REX['ADDON'];
-			$this->name = $namespace;
-		}
+		/* deprecated + alle Methoden sind Proxies -> empty */
 	}
 
 	/**
 	 * Erstellt ein rex-Addon aus dem Namespace $namespace.
 	 *
-	 * @param string|array $namespace Namensraum des rex-Addons
+	 * @deprecated  sly_Service_AddOn oder sly_Service_Plugin nutzen
 	 *
-	 * @return rex_addon Zum namespace erstellte rex-Addon instanz
+	 * @param  string|array $namespace  Namespace des rex-Addons
+	 * @return rex_addon                Zum Namespace erstellte rex-Addon Instanz
 	 */
 	public static function create($namespace)
 	{
-		$nsString = $namespace;
-		if(is_array($namespace))
-		{
-			$nsString = implode('/', $namespace);
-		}
-
-		if(!isset(self::$instances[$nsString]))
-		{
-			self::$instances[$nsString] = new self($namespace);
-		}
-
-		return self::$instances[$nsString];
+		if (!self::$instance) self::$instance = new self();
+		return self::$instance;
 	}
 
 	/**
-	 * Pr�ft ob das rex-Addon verfügbar ist, also installiert und aktiviert.
+	 * Prüft ob das rex-Addon verfügbar ist, also installiert und aktiviert.
 	 *
-	 * @param string|array $addon Name des Addons
+	 * @deprecated  sly_Service_AddOn oder sly_Service_Plugin nutzen
 	 *
-	 * @return boolean TRUE, wenn das rex-Addon verfügbar ist, sonst FALSE
+	 * @param  string|array $addon  Name des Addons oder array(addon, plugin) für ein Plugin
+	 * @return boolean              true, wenn das rex-Addon verfügbar ist, sonst false
 	 */
 	public static function isAvailable($addon)
 	{
-		return self::isInstalled($addon) && rex_addon::isActivated($addon);
+		return self::isInstalled($addon) && self::isActivated($addon);
 	}
 
 	/**
-	 * Pr�ft ob das rex-Addon aktiviert ist.
+	 * Prüft ob das rex-Addon aktiviert ist.
 	 *
-	 * @param string|array $addon Name des Addons
+	 * @deprecated  sly_Service_AddOn oder sly_Service_Plugin nutzen
 	 *
-	 * @return boolean TRUE, wenn das rex-Addon aktiviert ist, sonst FALSE
+	 * @param  string|array $addon  Name des Addons oder array(addon, plugin) für ein Plugin
+	 * @return boolean              true, wenn das rex-Addon aktiviert ist, sonst false
 	 */
 	public static function isActivated($addon)
 	{
-		return (bool)self::getProperty($addon, 'status', false) == true;
+		return (boolean) self::getProperty($addon, 'status', false) == true;
 	}
 
 	/**
-	 * Pr�ft ob das rex-Addon installiert ist.
+	 * Prüft ob das rex-Addon installiert ist.
 	 *
-	 * @param string|array $addon Name des Addons
+	 * @deprecated  sly_Service_AddOn oder sly_Service_Plugin nutzen
 	 *
-	 * @return boolean TRUE, wenn das rex-Addon installiert ist, sonst FALSE
+	 * @param  string|array $addon  Name des Addons oder array(addon, plugin) für ein Plugin
+	 * @return boolean              true, wenn das rex-Addon installiert ist, sonst false
 	 */
 	public static function isInstalled($addon)
 	{
-		return (bool)self::getProperty($addon, 'install', false) == true;
+		return (boolean) self::getProperty($addon, 'install', false) == true;
 	}
 
 	/**
 	 * Gibt die Version des rex-Addons zurück.
 	 *
-	 * @param string|array $addon Name des Addons
-	 * @param mixed $default Rückgabewert, falls keine Version gefunden wurde
+	 * @deprecated  sly_Service_AddOn oder sly_Service_Plugin nutzen
 	 *
-	 * @return string Versionsnummer des Addons
+	 * @param  string|array $addon    Name des Addons oder array(addon, plugin) für ein Plugin
+	 * @param  mixed        $default  Rückgabewert, falls keine Version gefunden wurde
+	 * @return string                 Version des Addons
 	 */
 	public static function getVersion($addon, $default = null)
 	{
-		global $REX;
-		
-		$version     = self::getProperty($addon, 'version', null);
-		$versionFile = $REX['INCLUDE_PATH'].'/addons/'.$addon.'/version';
-		
-		if ($version === null && file_exists($versionFile)) {
-			$version = file_get_contents($versionFile);
-		}
-		
-		return $version === null ? $default : $version;
+		$service = sly_Service_Factory::getService(is_array($addon) ? 'Plugin' : 'AddOn');
+		return $service->setProperty($addon, $property, $value);
 	}
 
 	/**
 	 * Gibt den Autor des rex-Addons zur�ck.
 	 *
-	 * @param string|array $addon Name des Addons
-	 * @param mixed $default R�ckgabewert, falls kein Autor gefunden wurde
+	 * @deprecated  sly_Service_AddOn oder sly_Service_Plugin nutzen
 	 *
-	 * @return string Autor des Addons
+	 * @param  string|array $addon    Name des Addons oder array(addon, plugin) für ein Plugin
+	 * @param  mixed        $default  Rückgabewert, falls kein Autor gefunden wurde
+	 * @return string                 Autor des Addons
 	 */
 	public static function getAuthor($addon, $default = null)
 	{
@@ -142,76 +100,46 @@
 	/**
 	 * Gibt die Support-Adresse des rex-Addons zur�ck.
 	 *
-	 * @param string|array $addon Name des Addons
-	 * @param mixed $default R�ckgabewert, falls keine Support-Adresse gefunden wurde
+	 * @deprecated  sly_Service_AddOn oder sly_Service_Plugin nutzen
 	 *
-	 * @return string Versionsnummer des Addons
+	 * @param  string|array $addon    Name des Addons oder array(addon, plugin) für ein Plugin
+	 * @param  mixed        $default  Rückgabewert, falls keine Support-Adresse gefunden wurde
+	 * @return string                 Support-Adresse des Addons
 	 */
 	public static function getSupportPage($addon, $default = null)
 	{
-		return rex_addon::getProperty($addon, 'supportpage', $default);
+		return self::getProperty($addon, 'supportpage', $default);
 	}
 
 	/**
 	 * Setzt eine Eigenschaft des rex-Addons.
 	 *
-	 * @param string|array $addon Name des Addons
-	 * @param string $property Name der Eigenschaft
-	 * @param mixed $property Wert der Eigenschaft
+	 * @deprecated  sly_Service_AddOn oder sly_Service_Plugin nutzen
 	 *
-	 * @return string Versionsnummer des Addons
+	 * @param  string|array $addon     Name des Addons oder array(addon, plugin) für ein Plugin
+	 * @param  string       $property  Name der Eigenschaft
+	 * @param  mixed        $property  Wert der Eigenschaft
+	 * @return mixed                   der gesetzte Wert
 	 */
 	public static function setProperty($addon, $property, $value)
 	{
-		$rexAddon = rex_addon::create($addon);
-
-		if(!isset($rexAddon->data[$property]))
-		$rexAddon->data[$property] = array();
-
-		$rexAddon->data[$property][$rexAddon->name] = $value;
+		$service = sly_Service_Factory::getService(is_array($addon) ? 'Plugin' : 'AddOn');
+		return $service->setProperty($addon, $property, $value);
 	}
 
 	/**
 	 * Gibt eine Eigenschaft des rex-Addons zur�ck.
 	 *
-	 * @param string|array $addon Name des Addons
-	 * @param string $property Name der Eigenschaft
-	 * @param mixed $default R�ckgabewert, falls die Eigenschaft nicht gefunden wurde
+	 * @deprecated  sly_Service_AddOn oder sly_Service_Plugin nutzen
 	 *
-	 * @return string Wert der Eigenschaft des Addons
+	 * @param  string|array $addon     Name des Addons oder array(addon, plugin) für ein Plugin
+	 * @param  string       $property  Name der Eigenschaft
+	 * @param  mixed        $default   Rückgabewert, falls die Eigenschaft nicht gefunden wurde
+	 * @return string                  Wert der Eigenschaft des Addons
 	 */
 	public static function getProperty($addon, $property, $default = null)
 	{
-		$rexAddon = rex_addon::create($addon);
-		return isset($rexAddon->data[$property][$rexAddon->name]) ? $rexAddon->data[$property][$rexAddon->name] : $default;
-	}
-	
-	public static function getIcon($addon)
-	{
-		global $REX;
-		
-		$manager   = new rex_addonManager();
-		$directory = $manager->publicFolder($addon);
-		
-		if (!empty($REX['ADDON']['icon'][$addon])) {
-			$icon = $REX['ADDON']['icon'][$addon];
-		}
-		elseif (file_exists($directory.'/images/icon.png')) {
-			$icon = 'images/'.$addon.'/icon.png';
-		}
-		elseif (file_exists($directory.'/images/icon.gif')) {
-			$icon = 'images/'.$addon.'/icon.gif';
-		}
-		elseif (file_exists('include/addons/'.$addon.'/images/icon.png')) {
-			$icon = 'include/addons/'.$addon.'/images/icon.png';
-		}
-		elseif (file_exists('include/addons/'.$addon.'/images/icon.gif')) {
-			$icon = 'include/addons/'.$addon.'/images/icon.gif';
-		}
-		else {
-			$icon = false;
-		}
-		
-		return $icon;
+		$service = sly_Service_Factory::getService(is_array($addon) ? 'Plugin' : 'AddOn');
+		return $service->getProperty($addon, $property, $default);
 	}
 }

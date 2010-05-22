@@ -2,15 +2,14 @@
 
 /**
  * Klasse zum prüfen ob Plugins installiert/aktiviert sind
+ *
  * @package redaxo4
- * @version svn:$Id$
  */
 
 class OOPlugin extends rex_addon
 {
 	/**
-	 * @override
-	 * @see redaxo/include/classes/rex_addon#isAvailable($addon)
+	 * @deprecated
 	 */
 	public static function isAvailable($addon, $plugin, $default = null)
 	{
@@ -18,8 +17,7 @@ class OOPlugin extends rex_addon
 	}
 
 	/**
-	 * @override
-	 * @see redaxo/include/classes/rex_addon#isActivated($addon)
+	 * @deprecated
 	 */
 	public static function isActivated($addon, $plugin, $default = null)
 	{
@@ -27,8 +25,7 @@ class OOPlugin extends rex_addon
 	}
 
 	/**
-	 * @override
-	 * @see redaxo/include/classes/rex_addon#isInstalled($addon)
+	 * @deprecated
 	 */
 	public static function isInstalled($addon, $plugin, $default = null)
 	{
@@ -36,8 +33,7 @@ class OOPlugin extends rex_addon
 	}
 
 	/**
-	 * @override
-	 * @see redaxo/include/classes/rex_addon#getSupportPage($addon, $default)
+	 * @deprecated
 	 */
 	public static function getSupportPage($addon, $plugin, $default = null)
 	{
@@ -45,8 +41,7 @@ class OOPlugin extends rex_addon
 	}
 
 	/**
-	 * @override
-	 * @see redaxo/include/classes/rex_addon#getVersion($addon, $default)
+	 * @deprecated
 	 */
 	public static function getVersion($addon, $plugin, $default = null)
 	{
@@ -54,8 +49,7 @@ class OOPlugin extends rex_addon
 	}
 
 	/**
-	 * @override
-	 * @see redaxo/include/classes/rex_addon#getAuthor($addon, $default)
+	 * @deprecated
 	 */
 	public static function getAuthor($addon, $plugin, $default = null)
 	{
@@ -63,8 +57,7 @@ class OOPlugin extends rex_addon
 	}
 
 	/**
-	 * @override
-	 * @see redaxo/include/classes/rex_addon#getProperty($addon, $property, $default)
+	 * @deprecated
 	 */
 	public static function getProperty($addon, $plugin, $property, $default = null)
 	{
@@ -72,8 +65,7 @@ class OOPlugin extends rex_addon
 	}
 
 	/**
-	 * @override
-	 * @see redaxo/include/classes/rex_addon#setProperty($addon, $property, $value)
+	 * @deprecated
 	 */
 	public static function setProperty($addon, $plugin, $property, $value)
 	{
@@ -83,67 +75,42 @@ class OOPlugin extends rex_addon
 	/**
 	 * Gibt ein Array aller verfügbaren Plugins zurück.
 	 *
-	 * @param string $addon Name des Addons
+	 * @deprecated  sly_Service_Plugin benutzen
 	 *
-	 * @return array Array aller verfügbaren Plugins
+	 * @param  string $addon  Name des Addons
+	 * @return array          Array aller verfügbaren Plugins
 	 */
 	public static function getAvailablePlugins($addon)
 	{
-		$avail = array();
-		foreach(OOPlugin::getRegisteredPlugins($addon) as $plugin)
-		{
-			if(OOPlugin::isAvailable($addon, $plugin))
-			{
-				$avail[] = $plugin;
-			}
-		}
-
-		return $avail;
+		return sly_Service_Factory::getService('Plugin')->getAvailablePlugins($addon);
 	}
 
 
 	/**
 	 * Gibt ein Array aller installierten Plugins zurück.
 	 *
-	 * @param string $addon Name des Addons
+	 * @deprecated  sly_Service_Plugin benutzen
 	 *
-	 * @return array Array aller registrierten Plugins
+	 * @param  string $addon  Name des Addons
+	 * @return array          Array aller registrierten Plugins
 	 */
 	public static function getInstalledPlugins($addon)
 	{
-		$avail = array();
-		foreach(OOPlugin::getRegisteredPlugins($addon) as $plugin)
-		{
-			if(OOPlugin::isInstalled($addon, $plugin))
-			{
-				$avail[] = $plugin;
-			}
-		}
-
-		return $avail;
+		return sly_Service_Factory::getService('Plugin')->getInstalledPlugins($addon);
 	}
 
 	/**
-	 * Gibt ein Array aller registrierten Plugins zur�ck.
-	 * Ein Plugin ist registriert, wenn es dem System bekannt ist (plugins.inc.php).
+	 * Gibt ein Array aller registrierten Plugins zurück.
 	 *
-	 * @param string $addon Name des Addons
+	 * Ein Plugin ist registriert, wenn es dem System bekannt ist (plugins.yaml).
 	 *
-	 * @return array Array aller registrierten Plugins
+	 * @deprecated  sly_Service_Plugin benutzen
+	 *
+	 * @param  string $addon  Name des Addons
+	 * @return array          Array aller registrierten Plugins
 	 */
 	public static function getRegisteredPlugins($addon)
 	{
-		global $REX;
-
-		$plugins = array();
-		if(isset($REX['ADDON']) && is_array($REX['ADDON']) &&
-		isset($REX['ADDON']['plugins']) && is_array($REX['ADDON']['plugins']) &&
-		isset($REX['ADDON']['plugins'][$addon]) && is_array($REX['ADDON']['plugins'][$addon]) &&
-		isset($REX['ADDON']['plugins'][$addon]['install']) && is_array($REX['ADDON']['plugins'][$addon]['install']))
-		{
-			$plugins = array_keys($REX['ADDON']['plugins'][$addon]['install']);
-		}
-
-		return $plugins;
+		return sly_Service_Factory::getService('Plugin')->getRegisteredPlugins($addon);
 	}
 }

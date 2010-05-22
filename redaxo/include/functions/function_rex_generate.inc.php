@@ -662,7 +662,6 @@ function rex_generateAddons($addons)
  */
 function rex_generatePlugins($plugins)
 {
-	natsort($plugins);
 	$content = array();
 	
 	foreach ($plugins as $addon => $_plugins) {

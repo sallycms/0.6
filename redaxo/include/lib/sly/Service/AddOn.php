@@ -40,7 +40,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 
 		if ($state) {
 			if (is_readable($installFile)) {
-				$this->req($installFile);
+				$this->req($installFile, $addonName);
 
 				$hasError = $config->has('ADDON/installmsg/'.$addonName);
 
@@ -57,7 +57,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 				else {
 					if (is_readable($configFile)) {
 						if (!$this->isActivated($addonName)) {
-							$this->req($configFile);
+							$this->req($configFile, $addonName);
 						}
 					}
 					else {
@@ -112,11 +112,12 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		$addonDir       = $this->baseFolder($addonName);
 		$uninstallFile  = $addonDir.'uninstall.inc.php';
 		$uninstallSQL   = $addonDir.'uninstall.sql';
+		$config         = sly_Core::config();
 		
 		$state = $this->extend('PRE', 'UNINSTALL', $addonName, true);
 
 		if (is_readable($uninstallFile)) {
-			$this->req($uninstallFile);
+			$this->req($uninstallFile, $addonName);
 			
 			$hasError = $config->has('ADDON/installmsg/'.$addonName);
 
@@ -142,7 +143,6 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 				}
 
 				if ($state === true) {
-					// regenerate Addons file
 					$state = $this->generateConfig();
 				}
 			}
@@ -292,7 +292,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	{
 		global $I18N;
 
-		$args     = func_get_args();
+		$args    = func_get_args();
 		$args[0] = $this->i18nPrefix.$args[0];
 
 		return rex_call_func(array($I18N, 'msg'), $args, false);
@@ -340,7 +340,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		return $this->getProperty($addonName, 'supportpage', $default);
 	}
 	
-	public static function getIcon($addonName)
+	public function getIcon($addonName)
 	{
 		$directory = $this->publicFolder($addonName);
 		$base      = $this->baseFolder($addonName);
@@ -367,28 +367,97 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		return $icon;
 	}
 	
+	/**
+	 * Setzt eine Eigenschaft des Addons.
+	 *
+	 * @param  string $addon     Name des Addons
+	 * @param  string $property  Name der Eigenschaft
+	 * @param  mixed  $property  Wert der Eigenschaft
+	 * @return mixed             der gesetzte Wert
+	 */
 	public function setProperty($addonName, $property, $value)
 	{
-		$rexAddon = rex_addon::create($addonName);
-
-		if (!isset($rexAddon->data[$property])) {
-			$rexAddon->data[$property] = array();
+		if (!isset($this->data[$property])) {
+			$this->data[$property] = array();
 		}
 
-		$rexAddon->data[$property][$rexAddon->name] = $value;
+		$this->data[$property][$addonName] = $value;
+		return $value;
 	}
 	
 	/**
 	 * Gibt eine Eigenschaft des AddOns zurück.
 	 *
-	 * @param  string|array $addonName  Name des Addons
-	 * @param  string       $property   Name der Eigenschaft
-	 * @param  mixed        $default    Rückgabewert, falls die Eigenschaft nicht gefunden wurde
-	 * @return string                   Wert der Eigenschaft des Addons
+	 * @param  string $addonName  Name des Addons
+	 * @param  string $property   Name der Eigenschaft
+	 * @param  mixed  $default    Rückgabewert, falls die Eigenschaft nicht gefunden wurde
+	 * @return string             Wert der Eigenschaft des Addons
 	 */
 	public function getProperty($addonName, $property, $default = null)
 	{
-		$rexAddon = rex_addon::create($addonName);
-		return isset($rexAddon->data[$property][$rexAddon->name]) ? $rexAddon->data[$property][$rexAddon->name] : $default;
+		return isset($this->data[$property][$addonName]) ? $this->data[$property][$addonName] : $default;
+	}
+
+	/**
+	 * Gibt ein Array aller registrierten Addons zurück.
+	 *
+	 * Ein Addon ist registriert, wenn es dem System bekannt ist (addons.yaml).
+	 *
+	 * @return array  Array aller registrierten Addons
+	 */
+	public function getRegisteredAddons()
+	{
+		return array_keys($this->data['install']);
+	}
+
+	/**
+	 * Gibt ein Array von verfügbaren Addons zurück.
+	 *
+	 * Ein Addon ist verfügbar, wenn es installiert und aktiviert ist.
+	 *
+	 * @return array  Array der verfügbaren Addons
+	 */
+	public function getAvailableAddons()
+	{
+		$avail = array();
+		
+		foreach ($this->getRegisteredAddons() as $addonName) {
+			if ($this->isAvailable($addonName)) $avail[] = $addonName;
+		}
+		
+		return $avail;
+	}
+	
+	/**
+	 * Prüft, ob ein System-Addon vorliegt
+	 *
+	 * @param  string $addonName  Name des Addons
+	 * @return boolean            true, wenn es sich um ein System-Addon handelt, sonst false
+	 */
+	public function isSystemAddon($addonName)
+	{
+		$systemAddOns = sly_Core::config()->get('SYSTEM_ADDONS');
+		return in_array($addonName, $systemAddOns);
+	}
+	
+	public function getConfig($addonName)
+	{
+		$configFile   = $this->baseFolder($addonName).'/config.yaml';
+		$internalFile = $this->internalFolder($addonName).'/config.yaml';
+		
+		if (!file_exists($configFile) && !file_exists($internalFile)) {
+			return null;
+		}
+		
+		if (file_exists($configFile)) {
+			$config = sly_Configuration::getInstance($configFile);
+		}
+		
+		if (file_exists($internalFile)) {
+			if ($config) $config->appendFile($internalFile);
+			else $config = sly_Configuration::getInstance($internalFile);
+		}
+		
+		return $config;
 	}
 }

@@ -192,7 +192,7 @@ if ($subpage == '')
     if (count(array_diff($PLUGINS[$addon], OOPlugin::getRegisteredPlugins($addon))) > 0 ||
         count(array_diff(OOPlugin::getRegisteredPlugins($addon), $PLUGINS[$addon])) > 0)
     {
-      if (($state = rex_generateplugins($PLUGINS)) !== true)
+      if (($state = rex_generatePlugins($PLUGINS)) !== true)
       {
         $warning .= $state;
         break;
