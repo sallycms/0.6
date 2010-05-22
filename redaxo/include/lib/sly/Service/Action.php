@@ -14,7 +14,7 @@
  * 
  * @author christoph@webvariants.de
  */
-class sly_Service_Action extends sly_Service_Base
+class sly_Service_Action extends sly_Service_Model_Base
 {
 	protected $tablename = 'action';
 

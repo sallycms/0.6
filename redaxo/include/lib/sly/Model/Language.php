@@ -12,7 +12,7 @@
 /**
  * @author christoph@webvariants.de
  */
-class sly_Language extends sly_Model_Base
+class sly_Model_Language extends sly_Model_Base
 {
 	protected $name        = '';
 	protected $_attributes = array('name' => 'string');

@@ -14,7 +14,7 @@
  * 
  * @author zozi@webvariants.de
  */
-class sly_Service_Module extends sly_Service_Base
+class sly_Service_Module extends sly_Service_Model_Base
 {
 	protected $tablename = 'module';
 

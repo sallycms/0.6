@@ -10,17 +10,13 @@
 */
 abstract class sly_Controller_Ajax extends sly_Controller_Base{
 	
-    public function dispatch() {
-        if (!method_exists($this, $this->action)) {
-            throw new ControllerException('HTTP 404: Methode '. $this->action .' in '. get_class($this) .' nicht gefunden!');
-        }
-
-        if($this->checkPermission() !== true){
-            throw new PermissionException('HTTP 403: Zugriff auf '. $this->action .' in '. get_class($this) .' nicht gestattet!');
-        }
+	protected function init()
+	{
 		while(ob_get_level()) ob_end_clean();
-        $method = $this->action;
-        $this->$method();
+	}
+
+	protected function teardown()
+	{
 		exit;
-    }
+	}
 }

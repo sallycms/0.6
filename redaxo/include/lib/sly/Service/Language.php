@@ -12,13 +12,13 @@
 /**
  * @author christoph@webvariants.de
  */
-class sly_Service_Language extends sly_Service_Base
+class sly_Service_Language extends sly_Service_Model_Base
 {
 	protected $tablename = 'clang';
 	
 	protected function makeObject(array $params)
 	{
-		return new sly_Language($params);
+		return new sly_Model_Language($params);
 	}
 	
 	public function add($name)

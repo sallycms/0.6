@@ -9,7 +9,7 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
-abstract class sly_Service_Base
+abstract class sly_Service_Model_Base
 {
 	protected $tablename;
 
@@ -28,7 +28,7 @@ abstract class sly_Service_Base
 
 	public function save(sly_Model_Base $model)
 	{
-		$persistence = sly_DB_PDO_Persistence::getInstance();
+		$persistence = sly_DB_Persistence::getInstance();
 
 		if ($model->getId() == sly_Model_Base::NEW_ID) {
 			$data = $model->toHash();
@@ -53,7 +53,7 @@ abstract class sly_Service_Base
 	public function find($where = null, $group = null, $order = null, $limit = null, $having = null)
 	{
 		$return      = array();
-		$persistence = sly_DB_PDO_Persistence::getInstance();
+		$persistence = sly_DB_Persistence::getInstance();
 		$persistence->select($this->getTableName(), '*', $where, $group, $order, $limit, $having);
 		
 		foreach ($persistence as $row) {
@@ -65,7 +65,7 @@ abstract class sly_Service_Base
 
 	public function delete($where)
 	{
-		$persistence = sly_DB_PDO_Persistence::getInstance();
+		$persistence = sly_DB_Persistence::getInstance();
 		return $persistence->delete($this->getTableName(), $where);
 	}
 }
