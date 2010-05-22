@@ -258,30 +258,18 @@ rex_send_article(null, $CONTENT, 'backend', true);
 <?php
 
 define('IS_SALLY', true);
-
-/**
- * @package redaxo4
- */
-
 ob_start();
 ob_implicit_flush(0);
 
-// ----------------- MAGIC QUOTES CHECK
 require 'include/functions/function_rex_mquotes.inc.php';
 
-// ----- REX UNSET
-unset($REX, $SLY);
+unset($SLY);
 
-// Flag ob Inhalte mit Redaxo aufgerufen oder
-// von der Webseite aus
-// Kann wichtig für die Darstellung sein
-// Sollte immer true bleiben
-
-$REX['REDAXO'] = true;
-$SLY = &$REX;
-
-// setzte pfad und includiere klassen und funktionen
+$SLY['REDAXO']      = true;
+$SLY['SALLY']       = true;
 $SLY['HTDOCS_PATH'] = '../';
+$REX = &$SLY;
+
 require 'include/master.inc.php';
 
 // ----- addon/normal page path
@@ -296,7 +284,7 @@ $SLY['PAGE'] = '';
 $SLY['USER']  = null;
 $SLY['LOGIN'] = null;
 
-if ($SLY['SETUP'])
+if ($config->get('SETUP'))
 {
 	// ----------------- SET SETUP LANG
 	$SLY['LANG'] = '';
@@ -401,6 +389,7 @@ if($SLY['USER'])
 
 // ----- INCLUDE ADDONS
 include_once $SLY['INCLUDE_PATH'].'/addons.inc.php';
+$config->appendArray($SLY['ADDON'], 'ADDON');
 
 // ----- Prepare AddOn Pages
 if($SLY['USER'])
@@ -476,7 +465,8 @@ if($SLY['PAGES'][strtolower($SLY['PAGE'])][2] == 1)
 	$SLY["PAGE_NO_NAVI"] = 0;
 
 // ----- EXTENSION POINT
-// page variable validated
+
+$config->appendArray($SLY);
 rex_register_extension_point( 'PAGE_CHECKED', $SLY['PAGE'], array('pages' => $SLY['PAGES']));
 
 // Gewünschte Seite einbinden

@@ -3,4 +3,4 @@ data/dyn/*
 redaxo/include/addons/fscache/generated/*
 redaxo/include/addons/error_handler/data/phperror.log
 redaxo/include/generated/*
-glob:redaxo/include/config/*
+redaxo/include/config/*
