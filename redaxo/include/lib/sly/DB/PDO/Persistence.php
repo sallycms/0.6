@@ -23,12 +23,8 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
 	private $statement    = null;
 	private $currentRow   = null;
 	
-	private function __construct() {
+	protected function __construct() {
 		$this->connection = sly_DB_PDO_Connection::getInstance();
-	}
-	
-	public static function getInstance(){
-		return new self();
 	}
 	
 	protected function query($query, $data = array()){
