@@ -35,9 +35,9 @@ if ($REX['SETUP']) {
 // Aktuellen Artikel finden und ausgeben
 
 $REX['ARTICLE'] = new rex_article();
-$REX['ARTICLE']->setCLang(Core::getCurrentClang());
+$REX['ARTICLE']->setCLang(sly_Core::getCurrentClang());
 
-if ($REX['ARTICLE']->setArticleId(Core::getCurrentArticleId())) {
+if ($REX['ARTICLE']->setArticleId(sly_Core::getCurrentArticleId())) {
 	print $REX['ARTICLE']->getArticleTemplate();
 }
 else {

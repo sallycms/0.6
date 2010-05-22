@@ -263,7 +263,7 @@ class sly_Controller_Setup extends sly_Controller_Base
 	{
 		global $SLY, $I18N;
 		
-		$pdo         = sly_DB_PDO_Persistence::getInstance();
+		$pdo         = sly_DB_Persistence::getInstance();
 		$usersExist  = $pdo->listTables($SLY['TABLE_PREFIX'].'user') && $pdo->magicFetch('user', 'user_id') !== false;
 		$createAdmin = !sly_post('no_admin', 'boolean', false);
 		$adminUser   = sly_post('admin_user', 'string');
@@ -507,6 +507,7 @@ class sly_Controller_Setup extends sly_Controller_Base
 
 	public function checkPermission()
 	{
-		return true;
+		global $REX;
+		return !empty($REX['USER']);
 	}
 }

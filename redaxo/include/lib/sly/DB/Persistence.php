@@ -1,5 +1,13 @@
 <?php
-interface sly_DB_Persistence extends Iterator{
+abstract class sly_DB_Persistence implements Iterator{
+
+	/**
+	 *
+	 * @return sly_DB_Persistence
+	 */
+	public static function getInstance(){
+		return new sly_DB_PDO_Persistence();
+   	}
 
 	/**
 	 * Führt einen query auf der Datenbank aus, der Query kann 
@@ -8,7 +16,7 @@ interface sly_DB_Persistence extends Iterator{
 	 * @param string $query
 	 * @param array $data
 	 */
-	public function query($query, $data = array());
+	abstract public function query($query, $data = array());
 	
 	/**
 	 * inserts a data set into the database
@@ -18,7 +26,7 @@ interface sly_DB_Persistence extends Iterator{
 	 * 
 	 * @return int affected rows
 	 */
-	public function insert($table, $values);
+	abstract public function insert($table, $values);
 	
 	/**
 	 * updates data sets in database
@@ -27,7 +35,7 @@ interface sly_DB_Persistence extends Iterator{
 	 * @param array $newValues array('column' => $value,...) 
 	 * @param array $where array('column' => $value,...) 
 	 */
-	public function update($table, $newValues, $where = null);
+	abstract public function update($table, $newValues, $where = null);
 	
 	/**
 	 * 
@@ -42,14 +50,14 @@ interface sly_DB_Persistence extends Iterator{
 	 * 
 	 * @return boolean
 	 */
-	public function select($table, $select = '*', $where = null, $group = null, $order = null, $limit = null, $having = null, $joins = null);
+	abstract public function select($table, $select = '*', $where = null, $group = null, $order = null, $limit = null, $having = null, $joins = null);
 	
 	/**
 	 * 
 	 * @param string $table
 	 * @param array $where array('column' => $value,...) 
 	 */
-	public function delete($table, $where = null);
+	abstract public function delete($table, $where = null);
 	
 	/**
      * Hilfsfunktion um eine Zeile zu bekommen
@@ -61,5 +69,5 @@ interface sly_DB_Persistence extends Iterator{
      * 
      * @return array row
      */
-	public function fetch($table, $select = '*', $where = null, $order = null);
+	abstract public function fetch($table, $select = '*', $where = null, $order = null);
 }

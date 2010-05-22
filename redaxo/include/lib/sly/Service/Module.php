@@ -29,14 +29,14 @@ class sly_Service_Module extends sly_Service_Base
 		
 		// Aktionen löschen
 		
-		$pdo = sly_DB_PDO_Persistence::getInstance();
+		$pdo = sly_DB_Persistence::getInstance();
 		$pdo->delete('module_action', array('module_id' => $module->getId()));
 	}
 	
 	public function findUsages(sly_Model_Module $module)
 	{
 		$prefix = sly_Core::config()->get('TABLE_PREFIX');
-		$pdo    = sly_DB_PDO_Persistence::getInstance();
+		$pdo    = sly_DB_Persistence::getInstance();
 		$usages = array();
 		
 		if ($module->getId() == sly_Model_Base::NEW_ID) {

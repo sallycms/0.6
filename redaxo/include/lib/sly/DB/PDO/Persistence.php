@@ -15,7 +15,7 @@
  * @author zozi@webvariants.de
  *
  */
-class sly_DB_PDO_Persistence implements sly_DB_Persistence{
+class sly_DB_PDO_Persistence extends sly_DB_Persistence{
 	const LOG_UNKNOWN = -1;
 	const LOG_ERROR   = -2;
 	

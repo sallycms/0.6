@@ -68,7 +68,7 @@ class sly_Controller_Specials extends sly_Controller_Base
 		
 		// Standard-Artikel
 		
-		$sql = sly_DB_PDO_Persistence::getInstance();
+		$sql = sly_DB_Persistence::getInstance();
 		$id  = $sql->fetch('id', 'template', 'id = ?', $defaultTemplateID);
 
 		if ($id === false && $defaultTemplateID != 0) {
@@ -122,6 +122,7 @@ class sly_Controller_Specials extends sly_Controller_Base
 	
 	public function checkPermission()
 	{
-		return true;
+		global $REX;
+		return !empty($REX['USER']);
 	}
 }
