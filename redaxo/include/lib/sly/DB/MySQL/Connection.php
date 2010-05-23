@@ -28,7 +28,7 @@ class sly_DB_MySQL_Connection{
 		$this->connection = mysql_connect($db['HOST'], $db['LOGIN'], $db['PASSWORD']);
 
 		if (!mysql_select_db($db['NAME'], $this->connection)) {
-			exit('<span style="color:red;font-family:verdana,arial;font-size:11px;">Es konnte keine Verbindung zur Datenbank hergestellt werden. | Bitte kontaktieren Sie <a href=mailto:'.$SLY['ERROR_EMAIL'].'>'.$SLY['ERROR_EMAIL'].'</a>. | Danke!</span>');
+			exit('<span style="color:red;font-family:verdana,arial;font-size:11px;">Es konnte keine Verbindung zur Datenbank hergestellt werden. | Bitte kontaktieren Sie <a href=mailto:'.$REX['ERROR_EMAIL'].'>'.$REX['ERROR_EMAIL'].'</a>. | Danke!</span>');
 		}
 				
 		error_reporting($level);

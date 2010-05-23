@@ -60,7 +60,7 @@ abstract class sly_Controller_Base
 
 	protected function render($filename, $params = array())
 	{
-		global $SLY, $I18N;
+		global $REX, $I18N;
 		
 		// Die Parameternamen $params und $filename sind zu kurz, als dass
 		// man sie zuverlässig nutzen könnte. Wenn $params durch extract()
@@ -74,7 +74,7 @@ abstract class sly_Controller_Base
 		extract($paramsHtuG50hNCdikAvf7CZ1F);
 
 		ob_start();
-		include $SLY['INCLUDE_PATH'].DIRECTORY_SEPARATOR.$filenameHtuG50hNCdikAvf7CZ1F;
+		include $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.$filenameHtuG50hNCdikAvf7CZ1F;
 		print ob_get_clean();
 	}
 	

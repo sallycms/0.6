@@ -9,13 +9,13 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
-require_once $SLY['INCLUDE_PATH'].'/lib/sly/Loader.php';
+require_once $REX['INCLUDE_PATH'].'/lib/sly/Loader.php';
 
-sly_Loader::addLoadPath($SLY['INCLUDE_PATH'].'/lib');
-sly_Loader::addLoadPath($SLY['INCLUDE_PATH'].'/lib/sfYaml');
-sly_Loader::addLoadPath($SLY['INCLUDE_PATH'].'/controllers', 'sly_Controller_');
+sly_Loader::addLoadPath($REX['INCLUDE_PATH'].'/lib');
+sly_Loader::addLoadPath($REX['INCLUDE_PATH'].'/lib/sfYaml');
+sly_Loader::addLoadPath($REX['INCLUDE_PATH'].'/controllers', 'sly_Controller_');
 sly_Loader::addLoadPath($REX['INCLUDE_PATH'].'/layout', 'sly_Layout_');
-sly_Loader::addLoadPath($SLY['INCLUDE_PATH'].'/lib/rex/oo', 'OO');
+sly_Loader::addLoadPath($REX['INCLUDE_PATH'].'/lib/rex/oo', 'OO');
 sly_Loader::register();
 
 require_once $REX['INCLUDE_PATH'].'/lib/functions.php';

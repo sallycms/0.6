@@ -523,16 +523,16 @@ function rex_copyDir($srcdir, $dstdir, $startdir = '')
  */
 function rex_deleteCLang($clang)
 {
-	global $SLY;
+	global $REX;
 	
 	$clang = (int) $clang;
 
-	if ($clang == 0 || !isset($SLY['CLANG'][$clang])) {
+	if ($clang == 0 || !isset($REX['CLANG'][$clang])) {
 		return false;
 	}
 
-	$clangName = $SLY['CLANG'][$clang];
-	unset($SLY['CLANG'][$clang]);
+	$clangName = $REX['CLANG'][$clang];
+	unset($REX['CLANG'][$clang]);
 
 	$del = new rex_sql();
 	$del->setQuery('DELETE FROM #_article WHERE clang = '.$clang, '#_');
@@ -558,15 +558,15 @@ function rex_deleteCLang($clang)
  */
 function rex_addCLang($id, $name)
 {
-	global $SLY;
+	global $REX;
 	
 	$id = (int) $id;
 
-	if (isset($SLY['CLANG'][$id])) {
+	if (isset($REX['CLANG'][$id])) {
 		return false;
 	}
 
-	$SLY['CLANG'][$id] = $name;
+	$REX['CLANG'][$id] = $name;
 	
 	$sql = new rex_sql();
 	$sql->setQuery(
@@ -578,7 +578,7 @@ function rex_addCLang($id, $name)
 				'FROM #_article WHERE clang = 0', '#_'
 	);
 
-	$sql->setQuery('INSERT INTO '.$SLY['TABLE_PREFIX'].'clang (id,name,revision) VALUES ('.$id.', "'.$sql->escape($name).'", 0)');
+	$sql->setQuery('INSERT INTO '.$REX['TABLE_PREFIX'].'clang (id,name,revision) VALUES ('.$id.', "'.$sql->escape($name).'", 0)');
 	unset($sql);
 	
 	rex_register_extension_point('CLANG_ADDED', '', array('id' => $id, 'name' => $name));
@@ -594,18 +594,18 @@ function rex_addCLang($id, $name)
  */
 function rex_editCLang($id, $name)
 {
-	global $SLY;
+	global $REX;
 	
 	$id = (int) $id;
 
-	if (!isset($SLY['CLANG'][$id])) {
+	if (!isset($REX['CLANG'][$id])) {
 		return false;
 	}
 
-	$SLY['CLANG'][$id] = $name;
+	$REX['CLANG'][$id] = $name;
 
 	$edit = new rex_sql();
-	$edit->setQuery('UPDATE '.$SLY['TABLE_PREFIX'].'clang SET name = "'.$edit->escape($name).'" WHERE id = '.$id);
+	$edit->setQuery('UPDATE '.$REX['TABLE_PREFIX'].'clang SET name = "'.$edit->escape($name).'" WHERE id = '.$id);
 
 	rex_register_extension_point('CLANG_UPDATED', '', array('id' => $id, 'name' => $name));
 	return true;

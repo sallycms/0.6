@@ -834,8 +834,6 @@ class rex_sql
 
 	public static function showTables($dbID = 1)
 	{
-		global $SLY;
-
 		$sql = new self(1);
 		$sql->setQuery('SHOW TABLES');
 

@@ -125,8 +125,8 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
     }
     
  	private static function getPrefix() {
-        global $SLY;
-        return $SLY['TABLE_PREFIX'];
+        global $REX;
+        return $REX['TABLE_PREFIX'];
     }
 	 
 	public function fetch($table, $select = '*', $where = null, $order = null) {

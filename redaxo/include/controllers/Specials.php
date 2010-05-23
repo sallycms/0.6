@@ -30,7 +30,7 @@ class sly_Controller_Specials extends sly_Controller_Sally
 	
 	public function update()
 	{
-		global $SLY, $I18N;
+		global $REX, $I18N;
 		
 		$startArticle      = sly_post('start_article',       'int');
 		$notFoundArticle   = sly_post('notfound_article',    'int');
@@ -42,15 +42,15 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		$serverName = addcslashes(sly_post('servername', 'string'), '"');
 		$modRewrite = sly_post('mod_rewrite', 'string');
 
-		$SLY['LANG'] = $backendLocale;
-		$master_file = $SLY['INCLUDE_PATH'].'/master.inc.php';
+		$REX['LANG'] = $backendLocale;
+		$master_file = $REX['INCLUDE_PATH'].'/master.inc.php';
 		$cont        = file_get_contents($master_file);
 		
 		// Startartikel
 		
 		if (OOArticle::exists($startArticle)) {
 			$cont = preg_replace("#^(\\\$REX\['START_ARTICLE_ID'\].?=.?)[^;]*#m", '${1}'.$startArticle, $cont);
-			$SLY['START_ARTICLE_ID'] = $startArticle;
+			$REX['START_ARTICLE_ID'] = $startArticle;
 		}
 		else {
 			$this->warning = $I18N->msg('settings_invalid_sitestart_article');
@@ -60,7 +60,7 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		
 		if (OOArticle::exists($notFoundArticle)) {
 			$cont = preg_replace("#^(\\\$REX\['NOTFOUND_ARTICLE_ID'\].?=.?)[^;]*#m", '${1}'.$notFoundArticle, $cont);
-			$SLY['NOTFOUND_ARTICLE_ID'] = $notFoundArticle;
+			$REX['NOTFOUND_ARTICLE_ID'] = $notFoundArticle;
 		}
 		else {
 			$this->warning .= $I18N->msg('settings_invalid_notfound_article').'<br />';
@@ -104,9 +104,9 @@ class sly_Controller_Specials extends sly_Controller_Sally
 	
 	public function setup()
 	{
-		global $SLY, $I18N;
+		global $REX, $I18N;
 		
-		$master_file = $SLY['INCLUDE_PATH'].'/master.inc.php';
+		$master_file = $REX['INCLUDE_PATH'].'/master.inc.php';
 		$cont        = file_get_contents($master_file);
 		$cont        = preg_replace("#^(\\\$REX\['SETUP'\].?=.?)[^;]*#m", '$1true', $cont);
 		

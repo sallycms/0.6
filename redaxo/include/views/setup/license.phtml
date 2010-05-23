@@ -1,10 +1,10 @@
 <?php
 
-global $SLY, $I18N;
+global $REX, $I18N;
 
 $this->title('SETUP: START');
 
-$SLY['LANG'] = $this->lang;
+$REX['LANG'] = $this->lang;
 
 print $I18N->msg('setup_005', '<h2 class="rex-hl2">', '</h2>');
 print '<div class="rex-area-content">';
@@ -12,10 +12,10 @@ print '<div class="rex-area-content">';
 print $I18N->msg('setup_005_1', '<h3 class="rex-hl3">', '</h3>', ' class="rex-ul1"');
 print '<div class="rex-area-scroll">';
 
-$basedir = $SLY['FRONTEND_PATH'];
+$basedir = $REX['FRONTEND_PATH'];
 $license = '<p class="rex-tx1">'.nl2br(file_get_contents($basedir.'/_lizenz.txt')).'</p>';
 
-print strpos($SLY['LANG'], 'utf') === false ? $license : utf8_encode($license);;
+print strpos($REX['LANG'], 'utf') === false ? $license : utf8_encode($license);;
 
 ?>
 	</div>

@@ -38,7 +38,7 @@ class sly_Loader
 	
 	public static function loadClass($className)
 	{
-		global $SLY, $REX; // $REX für Code, der direkt beim Include ausgeführt wird.
+		global $REX; // für Code, der direkt beim Include ausgeführt wird.
 		
 		if (class_exists($className, false)) {
 			return true;

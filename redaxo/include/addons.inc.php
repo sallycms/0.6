@@ -1,9 +1,9 @@
 <?php
 
-$config->appendFile($SLY['INCLUDE_PATH'].'/config/addons.yaml', 'ADDON');
-$config->appendFile($SLY['INCLUDE_PATH'].'/config/plugins.yaml', 'ADDON/plugins');
+$config->appendFile($REX['INCLUDE_PATH'].'/config/addons.yaml', 'ADDON');
+$config->appendFile($REX['INCLUDE_PATH'].'/config/plugins.yaml', 'ADDON/plugins');
 
-$SLY['ADDON']  = $config->get('ADDON');
+$REX['ADDON']  = $config->get('ADDON');
 $addonService  = sly_Service_Factory::getService('AddOn');
 $pluginService = sly_Service_Factory::getService('Plugin');
 

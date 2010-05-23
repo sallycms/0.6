@@ -344,38 +344,38 @@ class sly_Controller_Setup extends sly_Controller_Sally
 
 	protected function checkDirsAndFiles()
 	{
-		global $SLY;
+		global $REX;
 
 		// Schreibrechte
 
 		$s = DIRECTORY_SEPARATOR;
 
 		$writables = array (
-			$SLY['INCLUDE_PATH'].$s.'generated',
-			$SLY['INCLUDE_PATH'].$s.'generated'.$s.'articles',
-			$SLY['INCLUDE_PATH'].$s.'generated'.$s.'templates',
-			$SLY['INCLUDE_PATH'].$s.'generated'.$s.'files',
-			$SLY['DATAFOLDER'],
-			$SLY['MEDIAFOLDER'],
-			$SLY['DYNFOLDER'],
-			$SLY['DYNFOLDER'].$s.'public',
-			$SLY['DYNFOLDER'].$s.'internal',
-			$SLY['DYNFOLDER'].$s.'internal'.$s.'sally',
-			$SLY['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'css-cache',
-			$SLY['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'yaml-cache'
+			$REX['INCLUDE_PATH'].$s.'generated',
+			$REX['INCLUDE_PATH'].$s.'generated'.$s.'articles',
+			$REX['INCLUDE_PATH'].$s.'generated'.$s.'templates',
+			$REX['INCLUDE_PATH'].$s.'generated'.$s.'files',
+			$REX['DATAFOLDER'],
+			$REX['MEDIAFOLDER'],
+			$REX['DYNFOLDER'],
+			$REX['DYNFOLDER'].$s.'public',
+			$REX['DYNFOLDER'].$s.'internal',
+			$REX['DYNFOLDER'].$s.'internal'.$s.'sally',
+			$REX['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'css-cache',
+			$REX['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'yaml-cache'
 		);
 
-		foreach ($SLY['SYSTEM_ADDONS'] as $system_addon) {
-			$writables[] = $SLY['INCLUDE_PATH'].$s.'addons'.$s.$system_addon;
+		foreach ($REX['SYSTEM_ADDONS'] as $system_addon) {
+			$writables[] = $REX['INCLUDE_PATH'].$s.'addons'.$s.$system_addon;
 		}
 
 		$res = $this->isWritable($writables, true);
 
 		$writables = array(
-			$SLY['INCLUDE_PATH'].$s.'config'.$s.'sally.yaml',
-			$SLY['INCLUDE_PATH'].$s.'config'.$s.'addons.yaml',
-			$SLY['INCLUDE_PATH'].$s.'config'.$s.'plugins.yaml',
-			$SLY['INCLUDE_PATH'].$s.'config'.$s.'clang.yaml'
+			$REX['INCLUDE_PATH'].$s.'config'.$s.'sally.yaml',
+			$REX['INCLUDE_PATH'].$s.'config'.$s.'addons.yaml',
+			$REX['INCLUDE_PATH'].$s.'config'.$s.'plugins.yaml',
+			$REX['INCLUDE_PATH'].$s.'config'.$s.'clang.yaml'
 		);
 
 		$res = array_merge($res, $this->isWritable($writables, false));
@@ -408,13 +408,13 @@ class sly_Controller_Setup extends sly_Controller_Sally
 
 	protected function isWritable($elements, $elementsAreDirs)
 	{
-		global $SLY;
+		global $REX;
 
 		$res = array();
 
 		foreach ($elements as $element) {
 			if ($elementsAreDirs && !is_dir($element)) {
-				mkdir($element, $SLY['DIRPERM']);
+				mkdir($element, $REX['DIRPERM']);
 			}
 
 			$writable = _rex_is_writable($element);
@@ -459,12 +459,12 @@ class sly_Controller_Setup extends sly_Controller_Sally
 	 */
 	protected function setupAddOns($uninstallBefore = false, $installDump = true)
 	{
-		global $SLY, $I18N;
+		global $REX, $I18N;
 
 		$addonErr     = '';
 		$addonManager = rex_addonManager::getInstance();
 
-		foreach ($SLY['SYSTEM_ADDONS'] as $systemAddon) {
+		foreach ($REX['SYSTEM_ADDONS'] as $systemAddon) {
 			$state = true;
 
 			if ($state === true && $uninstallBefore && !OOAddon::isInstalled($systemAddon)) {

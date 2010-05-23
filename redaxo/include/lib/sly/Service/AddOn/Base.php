@@ -30,7 +30,7 @@ abstract class sly_Service_AddOn_Base
 
 	protected function req($filename, $addonName)
 	{
-		global $REX, $SLY, $I18N; // Nötig damit im Addon verfügbar
+		global $REX, $I18N; // Nötig damit im Addon verfügbar
 		
 		try {
 			require $filename;
