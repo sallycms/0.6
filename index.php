@@ -1,17 +1,11 @@
 <?php
 
 define('IS_SALLY', true);
-
-/**
- * @package redaxo4
- * @version svn:$Id$
- */
-
 ob_start();
 ob_implicit_flush(0);
 
-
 // Globale Variablen vorbereiten
+
 require_once 'redaxo/include/functions/function_rex_mquotes.inc.php';
 
 // $REX vorbereiten
@@ -19,15 +13,18 @@ require_once 'redaxo/include/functions/function_rex_mquotes.inc.php';
 unset($REX);
 
 $REX['REDAXO']      = false; // Backend = true, Frontend = false
+$REX['SALLY']       = false; // Backend = true, Frontend = false
 $REX['HTDOCS_PATH'] = './';
 
 // Core laden
+
 require_once 'redaxo/include/master.inc.php';
 require_once 'redaxo/include/addons.inc.php';
 
 // Setup?
-if ($REX['SETUP']) {
-	header('Location: redaxo/');
+
+if ($config->get('SETUP')) {
+	header('Location: redaxo/index.php');
 	exit();
 }
 
@@ -45,5 +42,4 @@ else {
 }
 
 $content = ob_get_clean();
-
 rex_send_article($REX['ARTICLE'], $content, 'frontend');
