@@ -4,306 +4,288 @@
  * Klasse zur Erstellung eines HTML-Pulldown-Menues (Select-Box)
  *
  * @package redaxo4
- * @version svn:$Id$
  */
 
-################ Class Select
 class rex_select
 {
-  var $attributes;
-  var $options;
-  var $option_selected;
+	public $attributes;
+	public $options;
+	public $option_selected;
 
-  ################ Konstruktor
-  function rex_select()
-  {
-    $this->init();
-  }
+	public function __construct()
+	{
+		$this->init();
+	}
 
-  ################ init
-  function init()
-  {
-    $this->attributes = array();
-    $this->resetSelected();
-    $this->setName('standard');
-    $this->setSize('5');
-    $this->setMultiple(false);
-  }
+	public function init()
+	{
+		$this->attributes = array();
+		$this->resetSelected();
+		$this->setName('standard');
+		$this->setSize('5');
+		$this->setMultiple(false);
+	}
 
-  function setAttribute($name, $value)
-  {
-  	$this->attributes[$name] = $value;
-  }
+	public function setAttribute($name, $value)
+	{
+		$this->attributes[$name] = $value;
+	}
 
-  function delAttribute($name)
-  {
-  	if($this->hasAttribute($name))
-  	{
-  		unset($this->attributes[$name]);
-  		return true;
-  	}
-  	return false;
-  }
+	/**
+	 * @return boolean
+	 */
+	public function delAttribute($name)
+	{
+		if ($this->hasAttribute($name)) {
+			unset($this->attributes[$name]);
+			return true;
+		}
+		
+		return false;
+	}
 
-  function hasAttribute($name)
-  {
-  	return isset($this->attributes[$name]);
-  }
+	/**
+	 * @return boolean
+	 */
+	public function hasAttribute($name)
+	{
+		return isset($this->attributes[$name]);
+	}
 
-  function getAttribute($name, $default = '')
-  {
-  	if($this->hasAttribute($name))
-  	{
-	  	return $this->attributes[$name];
-  	}
-  	return $default;
-  }
+	/**
+	 * @return mixed
+	 */
+	public function getAttribute($name, $default = '')
+	{
+		if ($this->hasAttribute($name)) {
+			return $this->attributes[$name];
+		}
+		
+		return $default;
+	}
 
-  ############### multiple felder ?
-  function setMultiple($multiple)
-  {
-  	if($multiple)
-  		$this->setAttribute('multiple', 'multiple');
-  	else
-  		$this->delAttribute('multiple');
-  }
+	public function setMultiple($multiple)
+	{
+		if ($multiple) $this->setAttribute('multiple', 'multiple');
+		else $this->delAttribute('multiple');
+	}
 
-  ################ select name
-  function setName($name)
-  {
-  	$this->setAttribute('name', $name);
-  }
+	public function setName($name)
+	{
+		$this->setAttribute('name', $name);
+	}
 
-  ################ select id
-  function setId($id)
-  {
-  	$this->setAttribute('id', $id);
-  }
+	public function setId($id)
+	{
+		$this->setAttribute('id', $id);
+	}
 
-  /**
-  * select style
-  * Es ist moeglich sowohl eine Styleklasse als auch einen Style zu uebergeben.
-  *
-  * Aufrufbeispiel:
-  * $sel_media->setStyle('class="inp100"');
-  * und/oder
-  * $sel_media->setStyle("width:150px;");
-  */
-  function setStyle($style)
-  {
-    if (strpos($style, 'class=') !== false)
-    {
-    	if(preg_match('/class=["\']?([^"\']*)["\']?/i', $style, $matches))
-    	{
-	    	$this->setAttribute('class', $matches[1]);
-    	}
-    }
-    else
-    {
-    	$this->setAttribute('style', $style);
-    }
-  }
+	/**
+	 * select style
+	 * Es ist möglich sowohl eine Styleklasse als auch einen Style zu uebergeben.
+	 *
+	 * Aufrufbeispiel:
+	 * $sel_media->setStyle('class="inp100"');
+	 * und/oder
+	 * $sel_media->setStyle("width:150px;");
+	 */
+	public function setStyle($style)
+	{
+		if (strpos($style, 'class=') !== false) {
+			if (preg_match('/class=["\']?([^"\']*)["\']?/i', $style, $matches)) {
+				$this->setAttribute('class', $matches[1]);
+			}
+		}
+		else {
+			$this->setAttribute('style', $style);
+		}
+	}
 
-  ################ select size
-  function setSize($size)
-  {
-  	$this->setAttribute('size', $size);
-  }
+	public function setSize($size)
+	{
+		$this->setAttribute('size', (int) $size);
+	}
 
-  ################ selected feld - option value uebergeben
-  function setSelected($selected)
-  {
-  	if(is_array($selected))
-  	{
-  		foreach($selected as $sectvalue)
-  		{
-  			$this->setSelected($sectvalue);
-  		}
-  	}
-  	else
-  	{
-	    $this->option_selected[] = htmlspecialchars($selected);
-  	}
-  }
+	public function setSelected($selected)
+	{
+		if (!is_array($selected)) $selected = array($selected);
+		
+		foreach ($selected as $sectvalue) {
+			$this->option_selected[] = htmlspecialchars($sectvalue);
+		}
+	}
 
-  function resetSelected()
-  {
-    $this->option_selected = array ();
-  }
+	public function resetSelected()
+	{
+		$this->option_selected = array();
+	}
 
-  ################ optionen hinzufuegen
-  /**
-   * F�gt eine Option hinzu
-   */
-  function addOption($name, $value, $id = 0, $re_id = 0)
-  {
-    $this->options[$re_id][] = array ($name, $value, $id);
-  }
+	/**
+	 * Fügt eine Option hinzu
+	 */
+	public function addOption($name, $value, $id = 0, $re_id = 0)
+	{
+		$this->options[$re_id][] = array($name, $value, $id);
+	}
 
-  /**
-   * F�gt ein Array von Optionen hinzu, dass eine mehrdimensionale Struktur hat.
-   *
-   * Dim   Wert
-   * 0.    Name
-   * 1.    Value
-   * 2.    Id
-   * 3.    Re_Id
-   * 4.    Selected
-   */
-  function addOptions($options, $useOnlyValues = false)
-  {
-    if(is_array($options) && count($options)>0)
-    {
-      // Hier vorher auf is_array abfragen, da bei Strings auch die Syntax mit [] funktioniert
-      // $ab = "hallo"; $ab[2] -> "l"
-			$grouped = isset($options[0]) && is_array($options[0]) && isset ($options[0][2]) && isset ($options[0][3]);
-      foreach ($options as $key => $option)
-      {
-      	$option = (array) $option;
-        if ($grouped)
-        {
-          $this->addOption($option[0], $option[1], $option[2], $option[3]);
-          if(isset($option[4]))
-          {
-          	$this->setSelected($option[4]);
-          }
-        }
-        else
-        {
-          if($useOnlyValues)
-          {
-            $this->addOption($option[0], $option[0]);
-          }
-          else
-          {
-            if(!isset($option[1]))
-              $option[1] = $key;
+	/**
+	 * Fügt ein Array von Optionen hinzu, dass eine mehrdimensionale Struktur hat.
+	 *
+	 * Dim   Wert
+	 * 0.    Name
+	 * 1.    Value
+	 * 2.    Id
+	 * 3.    Re_Id
+	 * 4.    Selected
+	 *
+	 * @return boolean
+	 */
+	public function addOptions($options, $useOnlyValues = false)
+	{
+		if (!is_array($options) || empty($options)) {
+			return false;
+		}
+		
+		// Hier vorher auf is_array abfragen, da bei Strings auch die Syntax mit [] funktioniert
+		// $ab = "hallo"; $ab[2] -> "l"
+		$grouped = isset($options[0]) && is_array($options[0]) && isset($options[0][2]) && isset($options[0][3]);
+		
+		foreach ($options as $key => $option) {
+			$option = (array) $option;
+			
+			if ($grouped) {
+				$this->addOption($option[0], $option[1], $option[2], $option[3]);
+				
+				if (isset($option[4])) {
+					$this->setSelected($option[4]);
+				}
+			}
+			else {
+				if ($useOnlyValues) {
+					$this->addOption($option[0], $option[0]);
+				}
+				else {
+					if (!isset($option[1])) $option[1] = $key;
+					$this->addOption($option[0], $option[1]);
+				}
+			}
+		}
+		
+		return true;
+	}
 
-            $this->addOption($option[0], $option[1]);
-          }
-        }
-      }
-    }
-  }
+	/**
+	 * Fügt ein Array von Optionen hinzu, dass eine Key/Value Struktur hat.
+	 * Wenn $use_keys mit false, werden die Array-Keys mit den Array-Values überschrieben
+	 */
+	public function addArrayOptions($options, $use_keys = true)
+	{
+		foreach($options as $key => $value) {
+			if (!$use_keys) $key = $value;
+			$this->addOption($value, $key);
+		}
+	}
 
-  /**
-   * F�gt ein Array von Optionen hinzu, dass eine Key/Value Struktur hat.
-   * Wenn $use_keys mit false, werden die Array-Keys mit den Array-Values �berschrieben
-   */
-  function addArrayOptions($options, $use_keys = true)
-  {
-  	foreach($options as $key => $value)
-  	{
-      if(!$use_keys)
-        $key = $value;
+	/**
+	 * Fügt Optionen anhand der �bergeben SQL-Select-Abfrage hinzu.
+	 */
+	public function addSqlOptions($qry)
+	{
+		$sql = new rex_sql();
+		$this->addOptions($sql->getArray($qry, MYSQL_NUM));
+	}
 
-      $this->addOption($value, $key);
-  	}
-  }
+	/**
+	 * Fügt Optionen anhand der �bergeben DBSQL-Select-Abfrage hinzu.
+	 */
+	public function addDBSqlOptions($qry)
+	{
+		$sql = new rex_sql();
+		$this->addOptions($sql->getDBArray($qry, MYSQL_NUM));
+	}
 
-  /**
-   * F�gt Optionen anhand der �bergeben SQL-Select-Abfrage hinzu.
-   */
-  function addSqlOptions($qry)
-  {
-    $sql = new rex_sql;
-    $this->addOptions($sql->getArray($qry, MYSQL_NUM));
-  }
+	/**
+	 * @return string
+	 */
+	public function get()
+	{
+		$attr = array();
+		
+		foreach($this->attributes as $name => $value) {
+			$attr[] = trim($name).'="'.trim($value).'"';
+		}
 
-  /**
-   * F�gt Optionen anhand der �bergeben DBSQL-Select-Abfrage hinzu.
-   */
-  function addDBSqlOptions($qry)
-  {
-    $sql = new rex_sql;
-    $this->addOptions($sql->getDBArray($qry, MYSQL_NUM));
-  }
+		$output = '<select '.implode(' ', $attr).'>';
+		if (is_array($this->options)) $output .= $this->_outGroup(0);
+		$output .= '</select>';
+		
+		return $output;
+	}
 
-  ############### show select
-  function get()
-  {
-  	$attr = '';
-  	foreach($this->attributes as $name => $value)
-  	{
-  		$attr .= ' '. $name .'="'. $value .'"';
-  	}
+	public function show()
+	{
+		print $this->get();
+	}
 
-    $ausgabe = "\n";
-		$ausgabe .= '<select'.$attr.'>'."\n";
+	/**
+	 * @return string
+	 */
+	protected function _outGroup($re_id, $level = 0)
+	{
+		if ($level > 100) {
+			// nur mal so zu Sicherheit .. man weiß nie ;)
+			print 'rex_select->_outGroup overflow @ level 100.';
+			exit;
+		}
 
-    if (is_array($this->options))
-      $ausgabe .= $this->_outGroup(0);
+		$output = '';
+		$group  = $this->_getGroup($re_id);
+		
+		foreach ($group as $option) {
+			list($name, $value, $id) = $option;
+			
+			$output  .= $this->_outOption($name, $value, $level);
+			$subgroup = $this->_getGroup($id, true);
+			
+			if ($subgroup !== false) {
+				$output .= $this->_outGroup($id, $level + 1);
+			}
+		}
+		
+		return $output;
+	}
 
-    $ausgabe .= '</select>'. "\n";
-    return $ausgabe;
-  }
+	/**
+	 * @return string
+	 */
+	protected function _outOption($name, $value, $level = 0)
+	{
+		$name   = sly_html($name);
+		$value  = sly_html($value);
+		$indent = str_repeat('&nbsp;&nbsp;&nbsp;', $level);
 
-  ############### show select
-  function show()
-  {
-  	echo $this->get();
-  }
+		$selected = '';
+		
+		if ($this->option_selected !== null) {
+			$selected = in_array($value, $this->option_selected) ? ' selected="selected"' : '';
+		}
 
-  function _outGroup($re_id, $level = 0)
-  {
+		return '<option value="'.$value.'"'.$selected.'>'.$indent.$name.'</option>';
+	}
 
-    if ($level > 100)
-    {
-      // nur mal so zu sicherheit .. man weiss nie ;)
-      echo "select->_outGroup overflow ($groupname)";
-      exit;
-    }
+	/**
+	 * @return mixed
+	 */
+	protected function _getGroup($re_id, $ignore_main_group = false)
+	{
+		if ($ignore_main_group && $re_id == 0) {
+			return false;
+		}
 
-    $ausgabe = '';
-    $group = $this->_getGroup($re_id);
-    foreach ($group as $option)
-    {
-      $name = $option[0];
-      $value = $option[1];
-      $id = $option[2];
-      $ausgabe .= $this->_outOption($name, $value, $level);
+		foreach ($this->options as $gname => $group) {
+			if ($gname == $re_id) return $group;
+		}
 
-      $subgroup = $this->_getGroup($id, true);
-      if ($subgroup !== false)
-      {
-        $ausgabe .= $this->_outGroup($id, $level +1);
-      }
-    }
-    return $ausgabe;
-  }
-
-  function _outOption($name, $value, $level = 0)
-  {
-    $name = htmlspecialchars($name);
-    $value = htmlspecialchars($value);
-
-    $bsps = '';
-    for ($i = 0; $i < $level; $i ++)
-      $bsps .= '&nbsp;&nbsp;&nbsp;';
-
-    $selected = '';
-    if ($this->option_selected !== null)
-      $selected = in_array($value, $this->option_selected) ? ' selected="selected"' : '';
-
-    return '    <option value="'.$value.'"'.$selected.'>'.$bsps.$name.'</option>'."\n";
-  }
-
-  function _getGroup($re_id, $ignore_main_group = false)
-  {
-
-    if ($ignore_main_group && $re_id == 0)
-    {
-      return false;
-    }
-
-    foreach ($this->options as $gname => $group)
-    {
-      if ($gname == $re_id)
-      {
-        return $group;
-      }
-    }
-
-    return false;
-  }
+		return false;
+	}
 }

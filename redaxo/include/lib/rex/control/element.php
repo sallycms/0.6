@@ -2,124 +2,67 @@
 
 class rex_form_control_element extends rex_form_element
 {
-  var $saveElement;
-  var $applyElement;
-  var $deleteElement;
-  var $resetElelement;
-  var $abortElement;
+	public $saveElement;
+	public $applyElement;
+	public $deleteElement;
+	public $resetElelement;
+	public $abortElement;
+	
+	private $className;
 
-  function rex_form_control_element(&$table, $saveElement = null, $applyElement = null, $deleteElement = null, $resetElement = null, $abortElement = null)
-  {
-    parent::rex_form_element('', $table);
+	public function __construct(&$table, $saveElement = null, $applyElement = null, $deleteElement = null, $resetElement = null, $abortElement = null)
+	{
+		parent::__construct('', $table);
 
-    $this->saveElement = $saveElement;
-    $this->applyElement = $applyElement;
-    $this->deleteElement = $deleteElement;
-    $this->resetElement = $resetElement;
-    $this->abortElement = $abortElement;
-  }
+		$this->saveElement   = $saveElement;
+		$this->applyElement  = $applyElement;
+		$this->deleteElement = $deleteElement;
+		$this->resetElement  = $resetElement;
+		$this->abortElement  = $abortElement;
+	}
 
-  function _get()
-  {
-    $s = '';
-    
-    $class = '';
+	public function _get()
+	{
+		$this->className = '';
+		
+		$s  = $this->prepareElement($this->saveElement,   '');
+		$s .= $this->prepareElement($this->applyElement,  'rex-form-submit-2');
+		$s .= $this->prepareElement($this->deleteElement, 'rex-form-submit-2', 'return confirm(\'Löschen?\');');
+		$s .= $this->prepareElement($this->resetElement,  'rex-form-submit-2', 'return confirm(\'Änderungen verwerfen?\');');
+		$s .= $this->prepareElement($this->abortElement,  'rex-form-submit-2');
 
-    if($this->saveElement)
-    {
-      if(!$this->saveElement->hasAttribute('class'))
-        $this->saveElement->setAttribute('class', 'rex-form-submit');
-			
-			$class = $this->saveElement->formatClass();
-			
-      $s .= $this->saveElement->formatElement();
-    }
+		if (!empty($s)) {
+			$class = empty($this->className) ? '' : ' '.$this->className;
+			$s     = '<p class="rex-form-col-a'.$class.'">'.$s.'</p>';
+		}
 
-    if($this->applyElement)
-    {
-      if(!$this->applyElement->hasAttribute('class'))
-        $this->applyElement->setAttribute('class', 'rex-form-submit rex-form-submit-2');
-			
-			$class = $this->applyElement->formatClass();
+		return $s;
+	}
+	
+	private static function prepareElement($element, $class, $onClick = null)
+	{
+		if (!$element) return '';
+		
+		if (!$element->hasAttribute('class')) {
+			$element->setAttribute('class', 'rex-form-submit '.$class);
+		}
+		
+		if ($onClick && !$element->hasAttribute('onclick')) {
+			$element->setAttribute('onclick', $onClick);
+		}
+		
+		$this->className = $element->formatClass();
+		return $element->formatElement();
+	}
 
-      $s .= $this->applyElement->formatElement();
-    }
+	public static function submitted($element)
+	{
+		return is_object($element) && rex_post($element->getAttribute('name'), 'string') != '';
+	}
 
-    if($this->deleteElement)
-    {
-      if(!$this->deleteElement->hasAttribute('class'))
-        $this->deleteElement->setAttribute('class', 'rex-form-submit rex-form-submit-2');
-
-      if(!$this->deleteElement->hasAttribute('onclick'))
-        $this->deleteElement->setAttribute('onclick', 'return confirm(\'Löschen?\');');
-			
-			$class = $this->deleteElement->formatClass();
-
-      $s .= $this->deleteElement->formatElement();
-    }
-
-    if($this->resetElement)
-    {
-      if(!$this->resetElement->hasAttribute('class'))
-        $this->resetElement->setAttribute('class', 'rex-form-submit rex-form-submit-2');
-
-      if(!$this->resetElement->hasAttribute('onclick'))
-        $this->resetElement->setAttribute('onclick', 'return confirm(\'Änderungen verwerfen?\');');
-			
-			$class = $this->resetElement->formatClass();
-
-      $s .= $this->resetElement->formatElement();
-    }
-
-    if($this->abortElement)
-    {
-      if(!$this->abortElement->hasAttribute('class'))
-        $this->abortElement->setAttribute('class', 'rex-form-submit rex-form-submit-2');
-			
-			$class = $this->abortElement->formatClass();
-
-      $s .= $this->abortElement->formatElement();
-    }
-    
-    if ($s != '')
-    {
-    	if ($class != '')
-    	{
-    		$class = ' '.$class;
-    	}
-    	$s = '<p class="rex-form-col-a'.$class.'">'.$s.'</p>';
-    }
-
-    return $s;
-  }
-
-  function submitted($element)
-  {
-    return is_object($element) && rex_post($element->getAttribute('name'), 'string') != '';
-  }
-
-  function saved()
-  {
-    return $this->submitted($this->saveElement);
-  }
-
-  function applied()
-  {
-    return $this->submitted($this->applyElement);
-  }
-
-  function deleted()
-  {
-    return $this->submitted($this->deleteElement);
-  }
-
-  function resetted()
-  {
-    return $this->submitted($this->resetElement);
-  }
-
-  function aborted()
-  {
-    return $this->submitted($this->abortElement);
-  }
+	public function saved()    { return self::submitted($this->saveElement);   }
+	public function applied()  { return self::submitted($this->applyElement);  }
+	public function deleted()  { return self::submitted($this->deleteElement); }
+	public function resetted() { return self::submitted($this->resetElement);  }
+	public function aborted()  { return self::submitted($this->abortElement);  }
 }
