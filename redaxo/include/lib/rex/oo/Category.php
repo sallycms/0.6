@@ -158,7 +158,7 @@ class OOCategory extends OORedaxo {
 	*/
 	public function getName() { return $this->_catname; }
 	
-	public function &_getCategoryObject($category, $clang = false) {
+	public function _getCategoryObject($category, $clang = false) {
 		if (is_object($category)) {
 			
 			return $category;

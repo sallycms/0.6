@@ -60,7 +60,8 @@ abstract class rex_form_element // seit Sally abstract
 		return preg_replace('/[^a-z\-0-9_]/is','_', $id);
 	}
 
-	protected static function _normalizeName($name)
+	// wird von rex_form aufgerufen -> muss public sein...
+	public static function _normalizeName($name)
 	{
 		return preg_replace('/[^\[\]a-z\-0-9_]/is','_', $name);
 	}

@@ -99,7 +99,7 @@ class rex_list
 		$this->query = $query;
 		$this->sql = new rex_sql();
 		$this->debug = $debug;
-		$this->sql->debugsql =& $this->debug;
+		$this->sql->debugsql = $this->debug;
 		$this->name = $listName;
 		$this->caption = '';
 		$this->rows = 0;
