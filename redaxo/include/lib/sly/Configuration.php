@@ -15,12 +15,13 @@
  * @author zozi@webvariants.de
  *
  */
-class sly_Configuration {
+class sly_Configuration implements ArrayAccess {
 	
 	const STORE_PROJECT       = 1;
 	const STORE_LOCAL         = 2;
 	const STORE_LOCAL_DEFAULT = 3;
 	const STORE_STATIC        = 4;
+	const STORE_TEMP          = 5;
 
 	private $mode              = array();
 	private $loadedConfigFiles = array();
@@ -28,14 +29,16 @@ class sly_Configuration {
 	private $staticConfig;
 	private $localConfig;
 	private $projectConfig;
+	private $tempConfig;
 	
 	private static $instance;
 
 	private function __construct() {
 		global $REX;
 		
-		$this->staticConfig = new sly_Util_Array();
-		$this->localConfig  = new sly_Util_Array();
+		$this->staticConfig  = new sly_Util_Array();
+		$this->localConfig   = new sly_Util_Array();
+		$this->projectConfig = new sly_Util_Array();
 		
 		$this->loadStatic($REX['INCLUDE_PATH'].'/config/sallyStatic.yaml');
 		$this->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yaml');
@@ -155,41 +158,17 @@ class sly_Configuration {
 	}
 
 	public function get($key) {
-		if (empty($key)) {
-			$a1 = $this->staticConfig->getArrayCopy();
-			$a2 = $this->localConfig->getArrayCopy();
-			return array_replace_recursive();
-		}
-		
-		if (strpos($key, '/') === false) {
-			return $this->config[$key];
-		}
-		
-		$path = array_filter(explode('/', $key));
-		$res  = $this->config;
-		
-		foreach ($path as $step) {
-			if (!array_key_exists($step, $res)) break;
-			$res = $res[$step];
-		}
-		
-		return $res;
+		$s = (empty($key) || $this->staticConfig->has($key))  ? $this->staticConfig->get($key)  : array();
+		$l = (empty($key) || $this->localConfig->has($key))   ? $this->localConfig->get($key)   : array();
+		$p = (empty($key) || $this->projectConfig->has($key)) ? $this->projectConfig->get($key) : array();
+		if (!is_array($s)) return $s;
+		if (!is_array($l)) return $l;
+		if (!is_array($p)) return $p;
+		return array_replace_recursive($s, $l, $p);
 	}
 
 	public function has($key) {
-		if (strpos($key, '/') === false) {
-			return $this->config->offsetExists($key);
-		}
-		
-		$path = array_filter(explode('/', $key));
-		$res  = $this->config;
-		
-		foreach ($path as $step){
-			if (!array_key_exists($step, $res)) return false;
-			$res = $res[$step];
-		}
-		
-		return !empty($res);
+		return $this->staticConfig->has($key) || $this->localConfig->has($key) || $this->projectConfig->has($key);
 	}
 	
 	public function setStatic($key, $value) {
@@ -211,18 +190,27 @@ class sly_Configuration {
 	protected function setInternal($key, $value, $mode, $force = false) {
 		if (empty($key) || !is_string($key)) throw new Exception('Key '.$key.' existiert nicht!');
 		if (is_array($value)) throw new Exception('Wert darf kein Array sein. Bitte ArrayObject stattdessen nehmen!');
-		if (empty($mode)) $mode = sly_Configuration::STORE_PROJECT;
+		if (empty($mode)) $mode = self::STORE_PROJECT;
+		
+		if ($mode == self::STORE_TEMP) {
+			 if ($this->getMode($key) != self::STORE_TEMP) {
+			 	return $this->setInternal($key, $value, $this->getMode($key));
+			 }
+			 else {
+			 	return $this->tempConfig->set($key, $value);
+			 }
+		}
 		
 		$this->setMode($key, $mode);
-		if ($mode == sly_Configuration::STORE_STATIC) {
+		if ($mode == self::STORE_STATIC) {
 			return $this->staticConfig->set($key, $value);
 		}
 		
-		if ($mode == sly_Configuration::STORE_LOCAL) {
+		if ($mode == self::STORE_LOCAL) {
 			return $this->localConfig->set($key, $value);
 		}
 		
-		if ($mode == sly_Configuration::STORE_LOCAL_DEFAULT) {
+		if ($mode == self::STORE_LOCAL_DEFAULT) {
 			if ($force || !$this->localConfig->has($key)) {
 				return $this->localConfig->set($key, $value);
 			}
@@ -243,10 +231,7 @@ class sly_Configuration {
 	}
 
 	protected function getMode($key) {
-		if (!array_key_exists($key, $this->mode)) {
-			if (empty($key)) trigger_error('Key '.$key.' existiert nicht!', E_USER_NOTICE);
-			return null;
-		}
+		if (!isset($this->mode[$key])) return null;
 		return $this->mode[$key];
 	}
 	
@@ -264,4 +249,25 @@ class sly_Configuration {
 		$this->flush();
 	}
 	
+	public function offsetExists($index)       { return $this->has($index); }
+	public function offsetGet($index)          { return $this->get($index); }
+	public function offsetSet($index, $newval) {
+		if (strpos($index, '/') === false) trigger_error('Slashes können in Keys auf $REX nicht benutzt werden. ('.$index.')', E_USER_ERROR);
+		
+		if (is_array($newval)) {
+			$this->offsetSetRecursive($index, $newval);
+			return $newval;
+		}
+		else return $this->set($index, $newval, self::STORE_TEMP);
+	}
+	
+	private function offsetSetRecursive($key, $value, $path = '') {
+		if (is_array($value)) {
+			foreach ($value as $k2 => $v2) {
+				$this->offsetSetRecursive($k2, $v2, $key);
+			}
+		}
+		else $this->set($path.'/'.$key, $value, self::STORE_TEMP);
+	}
+	public function offsetUnset($index)        { }
 }
