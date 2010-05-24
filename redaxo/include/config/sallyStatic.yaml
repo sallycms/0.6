@@ -1,0 +1,20 @@
+SETUP: false
+VERSION: 0
+SUBVERSION: 1
+MINORVERSION: 0
+FILEPERM: 0664
+DIRPERM: 0775
+SESSION_DURATION: 3000
+MOD_REWRITE: true
+USE_GZIP: never
+USE_ETAG: never
+USE_LAST_MODIFIED: never
+TABLE_PREFIX: rex_
+TEMP_PREFIX: tmp_
+FRONTEND_FILE: index.php
+RELOGINDELAY: 2
+MAXLOGINS: 50
+START_PAGE: structure
+SYSTEM_ADDONS: [import_export, be_search, image_resize]
+MEDIAPOOL:
+  BLOCKED_EXTENSIONS: [.php, .php3, .php4, .php5, .php6, .phtml, .pl, .asp, .aspx, .cfm, .jsp]

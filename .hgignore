@@ -2,4 +2,3 @@ syntax:glob
 data/dyn/*
 redaxo/include/addons/error_handler/data/phperror.log
 redaxo/include/generated/*
-redaxo/include/config/*

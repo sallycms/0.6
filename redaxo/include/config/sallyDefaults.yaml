@@ -1,33 +1,15 @@
-SETUP: false
 SERVER: sallycms.de
 SERVERNAME: webvariants-Projekt
-VERSION: 0
-SUBVERSION: 1
-MINORVERSION: 0
 ERROR_EMAIL: webadmin@webvariants.de
-FILEPERM: 0664
-DIRPERM: 0775
 INSTNAME: sly20100511212501
-SESSION_DURATION: 3000
 MYSQL_VERSION: null
 START_ARTICLE_ID: 1
 NOTFOUND_ARTICLE_ID: 1
 START_CLANG_ID: 0
 DEFAULT_TEMPLATE_ID: 0
 LANG: de_de_utf8
-MOD_REWRITE: true
-USE_GZIP: never
-USE_ETAG: never
-USE_LAST_MODIFIED: never
 USE_MD5: never
-TABLE_PREFIX: rex_
-TEMP_PREFIX: tmp_
-FRONTEND_FILE: index.php
 PSWFUNC: sha1
-RELOGINDELAY: 2
-MAXLOGINS: 50
-START_PAGE: structure
-SYSTEM_ADDONS: [import_export, be_search, image_resize]
 DATABASE:
   DRIVER: mysql
   HOST: localhost
@@ -38,5 +20,3 @@ DATABASE:
 PERM: [mediapool]
 EXTPERM: [advancedMode, moveSlice, copyContent, moveArticle, copyArticle, moveCategory, publishArticle, publishCategory, article2startpage]
 EXTRAPERM: [editContentOnly]
-MEDIAPOOL:
-  BLOCKED_EXTENSIONS: [.php, .php3, .php4, .php5, .php6, .phtml, .pl, .asp, .aspx, .cfm, .jsp]
