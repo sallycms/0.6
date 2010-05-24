@@ -18,6 +18,7 @@ sly_Loader::addLoadPath($REX['INCLUDE_PATH'].'/layout', 'sly_Layout_');
 sly_Loader::addLoadPath($REX['INCLUDE_PATH'].'/lib/rex/oo', 'OO');
 sly_Loader::register();
 
+require_once $REX['INCLUDE_PATH'].'/lib/compatibility.php';
 require_once $REX['INCLUDE_PATH'].'/lib/functions.php';
 
 // Funktionen
