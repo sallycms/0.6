@@ -165,4 +165,22 @@ class sly_Core
 	{
 		return self::config()->get('SALLY');
 	}
+	
+	/**
+	 * Get persistent registry instance
+	 * 
+	 * @return sly_Registry_Persistent
+	 */
+	public static function getPersistentRegistry() {
+		return sly_Registry_Persistent::getInstance();
+	} 
+
+	/**
+	 * Get temporary registry instance
+	 * 
+	 * @return sly_Registry_Temp
+	 */
+	public static function getTempRegistry() {
+		return sly_Registry_Temp::getInstance();
+	} 
 }
