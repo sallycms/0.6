@@ -30,7 +30,8 @@ if ($lastMTime > 0 && $lastMTime <= time()) {
 	}
 }
 
-$_GET['wv_f'] = $_GET['f']; // Wir brauchen diesen Wert für's Caching...
+// Wir brauchen diesen Wert für's Caching...
+$_GET['wv_f'] = substr(preg_replace('#[\x00-\x1F]#', '', $_GET['f']), 0, 100);
 
 chdir($projectBase.'redaxo/include/lib/Scaffold');
 include 'index.php';
