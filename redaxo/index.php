@@ -16,7 +16,7 @@ unset($REX);
 
 $REX['REDAXO']      = true;
 $REX['SALLY']       = true;
-$REX['HTDOCS_PATH'] = '../';
+$REX['HTDOCS_PATH'] = SLY_IS_TESTING ? SLY_TESTING_ROOT : '../';
 
 require 'include/master.inc.php';
 
@@ -29,7 +29,7 @@ $REX['LOGIN']    = null;
 
 // Setup vorbereiten
 
-if ($config->get('SETUP')) {
+if (!SLY_IS_TESTING && $config->get('SETUP')) {
 	$REX['LANG']      = 'de_de';
 	$REX['LANGUAGES'] = array();
 	
@@ -185,6 +185,10 @@ $REX['PAGE_NO_NAVI'] = $REX['PAGES'][$REX['PAGE']][2] == 1 ? 0 : 1;
 
 $config->appendArray($REX);
 rex_register_extension_point('PAGE_CHECKED', $REX['PAGE'], array('pages' => $REX['PAGES']));
+
+// Im Testmodus verlassen wir das Script jetzt.
+
+if (SLY_IS_TESTING) return;
 
 // Gewünschte Seite einbinden
 

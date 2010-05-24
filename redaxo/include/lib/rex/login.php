@@ -34,7 +34,7 @@ class rex_login
 		$this->cache        = false;
 		$this->login_status = 0; // 0 = noch checken, 1 = ok, -1 = not ok
 		
-		if (!session_id()) session_start();
+		if (!session_id() && !SLY_IS_TESTING) session_start();
 	}
 
 	/**
@@ -264,6 +264,11 @@ class rex_login
 	 */
 	public function getSessionVar($varname, $default = '')
 	{
+		if (SLY_IS_TESTING) {
+			if ($varname == 'UID')   return SLY_TESTING_USER_ID;
+			if ($varname == 'STAMP') return time()-10; // vor 10 Sekunden
+		}
+		
 		if (isset($_SESSION[$this->system_id][$varname])) {
 			return $_SESSION[$this->system_id][$varname];
 		}
