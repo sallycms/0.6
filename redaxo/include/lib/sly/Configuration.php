@@ -183,7 +183,7 @@ class sly_Configuration implements ArrayAccess {
 		return $this->setInternal($key, $value, sly_Configuration::STORE_LOCAL, $force);
 	}
 	
-	public function set($key, $value, $mode = sly_Configuration::STORE_PROJECT) {
+	public function set($key, $value, $mode = self::STORE_PROJECT) {
 		return $this->setInternal($key, $value, $mode);
 	}
 	
@@ -222,9 +222,9 @@ class sly_Configuration implements ArrayAccess {
 	}
 	
 	protected function setMode($key, $mode) {
-		if ($mode == sly_Configuration::STORE_LOCAL_DEFAULT) $mode = sly_Configuration::STORE_LOCAL;
+		if ($mode == self::STORE_LOCAL_DEFAULT) $mode = self::STORE_LOCAL;
 		if (checkMode($key, $mode)) return;
-		if (array_key_exists($key, $this->mode)) {
+		if (isset($this->mode[$key]) && $this->mode[$key] != self::STORE_TEMP) {
 			throw new Exception('Mode für '.$key.' wurde bereits auf '.$this->mode[$key].' gesetzt.');
 		}
 		$this->mode[$key] = $mode;
@@ -236,7 +236,7 @@ class sly_Configuration implements ArrayAccess {
 	}
 	
 	protected function checkMode($key, $mode) {
-		if ($mode == sly_Configuration::STORE_LOCAL_DEFAULT) $mode = sly_Configuration::STORE_LOCAL;
+		if ($mode == self::STORE_LOCAL_DEFAULT) $mode = self::STORE_LOCAL;
 		return !isset($this->mode[$key]) || $this->mode[$key] == $mode;
 	}
 
