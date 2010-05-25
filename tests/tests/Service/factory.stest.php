@@ -16,4 +16,11 @@ class Service_Factory_Test extends Snap_UnitTestCase
 		$this->willThrow('sly_Exception');
 		$service = sly_Service_Factory::getService('FooBar'.uniqid());
 	}
+	
+	public function testGetSingleton()
+	{
+		$a = sly_Service_Factory::getService('AddOn');
+		$b = sly_Service_Factory::getService('AddOn');
+		return $this->assertIdentical($a, $b);
+	}
 }
