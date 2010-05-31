@@ -14,6 +14,8 @@ class sly_Util_Array extends ArrayObject {
 	public function set($key, $value) {
 		if (empty($key)) trigger_error('Key must not be empty!', E_USER_ERROR);
 		
+		
+
 		if (strpos($key, '/') === false) {
 			$this[$key] = $value;
 			return $value;
@@ -23,14 +25,14 @@ class sly_Util_Array extends ArrayObject {
 		// mit Referenzen. Ja, Referenzen sind i.d.R. böse, deshalb werden sie auch
 		// in get() und has() nicht benutzt. Copy-on-Write und so.
 		
-		$path = array_filter(explode('/', $key));
+		$path = explode('/', $key);
 		$res  = $this;
 		
 		foreach ($path as $step) {
+			
 			if (!array_key_exists($step, $res)) $res[$step] = array();
 			$res = &$res[$step];
 		}
-		
 		$res = $value;
 		return $value;
 	}

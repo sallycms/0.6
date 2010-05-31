@@ -21,7 +21,7 @@ if (empty($REX['NOFUNCTIONS'])) {
 // Kernkonfiguration laden
 
 $config = sly_Core::config();
-//$REX    = array_merge($config->get('/'), $REX);
+$REX    = array_merge($config->get(null), $REX);
 
 // Sync?
 

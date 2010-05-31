@@ -1,7 +1,6 @@
 <?php
 
-$config->appendFile($REX['INCLUDE_PATH'].'/config/addons.yaml', 'ADDON');
-$config->appendFile($REX['INCLUDE_PATH'].'/config/plugins.yaml', 'ADDON/plugins');
+$config->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/addonDefaults.yml');
 
 $REX['ADDON']  = $config->get('ADDON');
 $addonService  = sly_Service_Factory::getService('AddOn');

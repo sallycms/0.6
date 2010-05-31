@@ -2,14 +2,13 @@
 
 global $REX, $I18N;
 
-$config     = sly_Core::config();
 $naviSystem = array();
 $naviAddOns = array();
-$curPage    = $config->get('PAGE');
+$curPage    = $REX['PAGE'];
 
 // Subpages vorbereiten
 
-foreach ($config->get('USER')->pages as $pageKey => $pageArr) {
+foreach ($REX['USER']->pages as $pageKey => $pageArr) {
 	$pageKey = strtolower($pageKey);
 
 	if (in_array($pageKey, array('credits', 'profile', 'content', 'linkmap'))) {
@@ -20,7 +19,7 @@ foreach ($config->get('USER')->pages as $pageKey => $pageArr) {
 
 	$item['page']  = $pageKey;
 	$item['id']    = 'rex-navi-page-'.$pageKey;
-	$item['class'] = $pageKey == $config->get('PAGE') ? 'rex-active' : '';
+	$item['class'] = $pageKey == $curPage ? 'rex-active' : '';
 	$subpagesKey   = '';
 
 	if ($pageArr[1] != 1) {

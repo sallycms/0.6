@@ -35,12 +35,13 @@ class sly_Configuration implements ArrayAccess {
 		$this->projectConfig = new sly_Util_Array();
 		
 		$this->loadStatic($REX['INCLUDE_PATH'].'/config/sallyStatic.yaml');
-		//$this->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yaml');
+		$this->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yaml');
 		
-		/*if (file_exists($this->getLocalCacheFile())) {
+		if (file_exists($this->getLocalCacheFile())) {
 			include $this->getLocalCacheFile();
-			$this->localConfig = $config;
-		}*/
+			$this->localConfig = new sly_Util_Array($config);
+
+		}
 		/*
 		 * versucht eine DB verbindung aufzubauen, aber die braucht die konfiguration
 		 * henne <- ei
@@ -110,7 +111,7 @@ class sly_Configuration implements ArrayAccess {
 		if ($this->isCacheValid($filename, $cachefile)) include $cachefile;
 		// konfiguration aus yaml laden
 		else $config = $this->loadYaml($filename, $cachefile);
-		
+
 		// geladene konfiguration in globale konfiguration mergen
 		$this->setRecursive($config, $mode, $force);
 		
@@ -141,9 +142,7 @@ class sly_Configuration implements ArrayAccess {
 	
 	private function setRecursive($config, $mode, $force = false, $path = '') {
 		foreach ($config as $key => $value) {
-			
 			$currentPath = trim($path.'/'.$key, '/');
-			var_dump($currentPath);
 			if (is_array($value)) $this->setRecursive($value, $mode, $force, $currentPath);
 			else $this->setInternal($currentPath, $value, $mode, $force);
 		}
@@ -202,6 +201,8 @@ class sly_Configuration implements ArrayAccess {
 		}
 		
 		$this->setMode($key, $mode);
+		
+		;
 		if ($mode == self::STORE_STATIC) {
 			return $this->staticConfig->set($key, $value);
 		}
@@ -242,11 +243,12 @@ class sly_Configuration implements ArrayAccess {
 	}
 
 	protected function flush() {
-		file_put_contents($this->getLocalCacheFile(), '<?php $config = '.var_export($this->localConfig, true).';');
-		sly_Core::getPersistentRegistry()->set('sly_ProjectConfig', $this->projectConfig);
+		file_put_contents($this->getLocalCacheFile(), '<?php $config = '.var_export($this->localConfig->get(null), true).';');
+		//file_put_contents($this->getLocalCacheFile(), json_encode($this->localConfig));
+		//sly_Core::getPersistentRegistry()->set('sly_ProjectConfig', $this->projectConfig);
 	}
 	
-	private function __destruct() {
+	public function __destruct() {
 		$this->flush();
 	}
 	

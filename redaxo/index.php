@@ -128,7 +128,6 @@ require_once $REX['INCLUDE_PATH'].'/addons.inc.php';
 
 if ($REX['USER']) {
 	// AddOn-Seiten vorbereiten
-	
 	foreach ($REX['ADDON']['status'] as $addon => $status) {
 		if (!$status) continue;
 		
@@ -183,7 +182,7 @@ $REX['PAGE_NO_NAVI'] = $REX['PAGES'][$REX['PAGE']][2] == 1 ? 0 : 1;
 
 // Seite gefunden. AddOns benachrichtigen
 
-$config->appendArray($REX);
+//$config->appendArray($REX);
 rex_register_extension_point('PAGE_CHECKED', $REX['PAGE'], array('pages' => $REX['PAGES']));
 
 // Im Testmodus verlassen wir das Script jetzt.
@@ -191,7 +190,6 @@ rex_register_extension_point('PAGE_CHECKED', $REX['PAGE'], array('pages' => $REX
 if (SLY_IS_TESTING) return;
 
 // Gewünschte Seite einbinden
-
 $forceLogin = !$REX['SETUP'] && !$REX['USER'];
 $controller = sly_Controller_Base::factory($forceLogin ? 'login' : null, $forceLogin ? 'index' : null);
 
