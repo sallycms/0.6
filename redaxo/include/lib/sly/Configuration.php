@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2009, webvariants GbR, http://www.webvariants.de
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
  * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
  * beiliegenden LICENSE Datei und unter:
@@ -9,12 +9,6 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
-/**
- * Ist noch ein wrapper für $REX wird irgendwann mal umgebaut
- * 
- * @author zozi@webvariants.de
- *
- */
 class sly_Configuration implements ArrayAccess {
 	
 	const STORE_PROJECT       = 1;
@@ -41,15 +35,19 @@ class sly_Configuration implements ArrayAccess {
 		$this->projectConfig = new sly_Util_Array();
 		
 		$this->loadStatic($REX['INCLUDE_PATH'].'/config/sallyStatic.yaml');
-		$this->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yaml');
+		//$this->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yaml');
 		
-		if (file_exists($this->getLocalCacheFile())) {
+		/*if (file_exists($this->getLocalCacheFile())) {
 			include $this->getLocalCacheFile();
 			$this->localConfig = $config;
-		}
-		if (sly_Core::getPersistentRegistry()->has('sly_ProjectConfig')) {
-			$this->projectConfig = sly_Core::getPersistentRegistry()->has('sly_ProjectConfig');
-		}
+		}*/
+		/*
+		 * versucht eine DB verbindung aufzubauen, aber die braucht die konfiguration
+		 * henne <- ei
+		 */
+		//if (sly_Core::getPersistentRegistry()->has('sly_ProjectConfig')) {
+		//	$this->projectConfig = sly_Core::getPersistentRegistry()->get('sly_ProjectConfig');
+		//}
 	}
 	
 	protected function getCacheDir() {
@@ -84,13 +82,13 @@ class sly_Configuration implements ArrayAccess {
 	}
 	
 	protected function loadInternal($filename, $mode, $force = false) {
-		if ($mode != self::STORE_LOCAL_DEFAULT || $mode != self::STORE_STATIC) {
+		if ($mode != self::STORE_LOCAL_DEFAULT && $mode != self::STORE_STATIC) {
 			throw new Exception('Konfigurationsdateien können nur mit STORE_STATIC oder STORE_LOCAL_DEFAULT geladen werden.');
 		}
 		if (empty($filename) || !is_string($filename)) throw new Exception('Keine Konfigurationsdatei angegeben.');
 		if (!file_exists($filename)) throw new Exception('Konfigurationsdatei '.$filename.' konnte nicht gefunden werden.');
 		
-		$isStatic = self::STORE_STATIC;
+		$isStatic = $mode == self::STORE_STATIC;
 
 		// force gibt es nur bei STORE_LOCAL_DEFAULT
 		$force = $force && !$isStatic;
@@ -143,8 +141,10 @@ class sly_Configuration implements ArrayAccess {
 	
 	private function setRecursive($config, $mode, $force = false, $path = '') {
 		foreach ($config as $key => $value) {
+			
 			$currentPath = trim($path.'/'.$key, '/');
-			if (is_array($value)) $this->setEntryModesRecursive($value, $mode, $currentPath);
+			var_dump($currentPath);
+			if (is_array($value)) $this->setRecursive($value, $mode, $force, $currentPath);
 			else $this->setInternal($currentPath, $value, $mode, $force);
 		}
 	}
@@ -172,15 +172,15 @@ class sly_Configuration implements ArrayAccess {
 	}
 	
 	public function setStatic($key, $value) {
-		return $this->setInternal($key, $value, sly_Configuration::STORE_STATIC);
+		return $this->setInternal($key, $value, self::STORE_STATIC);
 	}
 
 	public function setLocal($key, $value) {
-		return $this->setInternal($key, $value, sly_Configuration::STORE_LOCAL);
+		return $this->setInternal($key, $value, self::STORE_LOCAL);
 	}
 
 	public function setLocalDefault($key, $value, $force = false) {
-		return $this->setInternal($key, $value, sly_Configuration::STORE_LOCAL, $force);
+		return $this->setInternal($key, $value, self::STORE_LOCAL, $force);
 	}
 	
 	public function set($key, $value, $mode = self::STORE_PROJECT) {
@@ -219,11 +219,12 @@ class sly_Configuration implements ArrayAccess {
 		
 		// case: sly_Configuration::STORE_PROJECT
 		return $this->projectConfig->set($key, $value);
+		
 	}
 	
 	protected function setMode($key, $mode) {
 		if ($mode == self::STORE_LOCAL_DEFAULT) $mode = self::STORE_LOCAL;
-		if (checkMode($key, $mode)) return;
+		if ($this->checkMode($key, $mode)) return;
 		if (isset($this->mode[$key]) && $this->mode[$key] != self::STORE_TEMP) {
 			throw new Exception('Mode für '.$key.' wurde bereits auf '.$this->mode[$key].' gesetzt.');
 		}

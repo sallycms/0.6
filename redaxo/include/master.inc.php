@@ -1,5 +1,7 @@
 <?php
 
+
+
 // wir gehen davon aus, dass $REX['HTDOCS_PATH'] existiert. Das ist
 // eine Annahme die den code hier schneller macht und vertretbar ist
 // wer das falsch setzt hat es verdient, dass das script nicht läuft
@@ -19,9 +21,7 @@ if (empty($REX['NOFUNCTIONS'])) {
 // Kernkonfiguration laden
 
 $config = sly_Core::config();
-$REX    = array_merge($REX, $config->get(null));
-
-$config->appendArray($REX);
+//$REX    = array_merge($config->get('/'), $REX);
 
 // Sync?
 

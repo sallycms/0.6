@@ -103,7 +103,7 @@ class sly_Core
 
 	/**
 	 * API Methode um Variabletypen zu setzen.
-	 * Aus Kompatiblitätsgründen in das bekloppte globale $REX array
+	 *
 	 * @param $varType Klassenname des Variablentyps 
 	 */
 	public static function registerVarType($varType)
