@@ -30,7 +30,7 @@ class sly_Controller_Specials extends sly_Controller_Sally
 	
 	public function update()
 	{
-		global $SLY, $I18N;
+		global $REX, $I18N;
 		
 		$startArticle      = sly_post('start_article',       'int');
 		$notFoundArticle   = sly_post('notfound_article',    'int');
