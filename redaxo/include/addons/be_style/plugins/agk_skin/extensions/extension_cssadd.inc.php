@@ -1,19 +1,13 @@
 <?php
  
 /**
- * Fügt die zusätzlichen zu css_main.css benötigten Stylesheets ein
+ * Fï¿½gt die zusï¿½tzlichen zu css_main.css benï¿½tigten Stylesheets ein
  * 
  * @param $params Extension-Point Parameter
  */
 function rex_be_style_agk_skin_css_add($params)
 {
-  echo '      
-    <!--[if lte IE 7]>
-      <link rel="stylesheet" href="css/be_style/agk_skin/css_ie_lte_7.css" type="text/css" media="screen, projection, print" />
-    <![endif]-->
-  
-    <!--[if lte IE 6]>
-      <link rel="stylesheet" href="css/be_style/agk_skin/css_ie_lte_6.css" type="text/css" media="screen, projection, print" />
-    <![endif]-->';
-
+	$layout = sly_Core::getLayout();
+	$layout->addCSSFile('css/be_style/agk_skin/css_ie_lte_7.css', 'all', 'if lte IE 6');
+	$layout->addCSSFile('css/be_style/agk_skin/css_ie_lte_6.css', 'all', 'if lte IE 6');
 }

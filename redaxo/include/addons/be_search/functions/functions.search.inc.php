@@ -53,10 +53,7 @@ function rex_a256_extensions_handler($params)
  */
 function rex_be_search_css_add($params)
 {
-  $params['subject'] .= "\n  ".
-    '<link rel="stylesheet" type="text/css" href="scaffold/be_search/be_search.css" />';
-  $params['subject'] .= "\n  ".
-    '<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="scaffold/be_search/be_search_ie_lte_7.css" /><![endif]-->';
-  
-  return $params['subject'];
+	$layout = sly_Core::getLayout();
+	$layout->addCSSFile('scaffold/be_search/be_search.css');
+	$layout->addCSSFile('scaffold/be_search/be_search.css', 'all', 'if lte IE 7');
 }
