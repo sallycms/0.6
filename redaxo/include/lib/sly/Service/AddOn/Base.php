@@ -41,7 +41,7 @@ abstract class sly_Service_AddOn_Base
 		}
 		
 		// Synchronisation mit sly_Configuration
-		sly_Core::config()->set('ADDON', $REX['ADDON']);
+		//sly_Core::config()->set('ADDON', $REX['ADDON']);
 	}
 	
 //	abstract public function install($addonName);         // Installieren

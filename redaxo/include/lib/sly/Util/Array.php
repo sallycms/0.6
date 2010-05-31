@@ -12,10 +12,8 @@
 class sly_Util_Array extends ArrayObject {
 	
 	public function set($key, $value) {
-		if (empty($key)) trigger_error('Key must not be empty!', E_USER_ERROR);
+		if (is_null($key) || strlen($key) === 0) trigger_error('Key must not be empty!', E_USER_ERROR);
 		
-		
-
 		if (strpos($key, '/') === false) {
 			$this[$key] = $value;
 			return $value;
@@ -26,6 +24,7 @@ class sly_Util_Array extends ArrayObject {
 		// in get() und has() nicht benutzt. Copy-on-Write und so.
 		
 		$path = explode('/', $key);
+		
 		$res  = $this;
 		
 		foreach ($path as $step) {

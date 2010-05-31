@@ -43,13 +43,13 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 			if (is_readable($installFile)) {
 				$this->req($installFile, $addonName);
 
-				$hasError = $config->has('ADDON/installmsg/'.$addonName);
+				$hasError = $REX['ADDON']['installmsg'][$addonName];
 
-				if ($hasError || !$this->isInstalled($addonName)) {
-					$state = $this->I18N('no_install', $addonName).'<br />';
+				if ($hasError) {
+					$state = t('no_install', $addonName).'<br />';
 					
 					if ($hasError) {
-						$state .= $config->get('ADDON/installmsg/'.$addonName);
+						$state .= $REX['ADDON']['installmsg'][$addonName];
 					}
 					else {
 						$state .= $this->I18N('no_reason');
@@ -62,7 +62,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 						}
 					}
 					else {
-						$state = $this->I18N('config_not_found');
+						$state = t('config_not_found');
 					}
 
 					if ($installDump && $state === true && is_readable($installSQL)) {
@@ -72,15 +72,12 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 							$state = 'Error found in install.sql:<br />'.$state;
 						}
 					}
-					
-					if ($state === true) {
-						// regenerate Addons file
-						$state = $this->generateConfig();
-					}
+
+					$config->set('ADDON/install/'.$addonName, $state, sly_Configuration::STORE_LOCAL);
 				}
 			}
 			else {
-				$state = $this->I18N('install_not_found');
+				$state = t('install_not_found');
 			}
 		}
 		
@@ -90,7 +87,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		
 		if ($state === true && is_dir($filesDir)) {
 			if (!rex_copyDir($filesDir, $this->publicFolder($addonName), $REX['MEDIAFOLDER'])) {
-				$state = $this->I18N('install_cant_copy_files');
+				$state = t('install_cant_copy_files');
 			}
 		}
 		
@@ -181,12 +178,12 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 			$state = $this->extend('PRE', 'ACTIVATE', $addonName, true);
 			
 			if ($state === true) {
-				$this->setProperty($addonName, 'status', 1);
-				$state = $this->generateConfig();
+				$config = sly_Core::config();
+               	$config->set('ADDON/status/'.$addonName, $state, sly_Configuration::STORE_LOCAL);
 			}
 		}
 		else {
-			$state = $this->I18N('no_activation', $addonName);
+			$state = t('no_activation', $addonName);
 		}
 
 		return $this->extend('POST', 'ACTIVATE', $addonName, $state);

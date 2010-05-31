@@ -113,7 +113,7 @@ class sly_Configuration implements ArrayAccess {
 		else $config = $this->loadYaml($filename, $cachefile);
 
 		// geladene konfiguration in globale konfiguration mergen
-		$this->setRecursive($config, $mode, $force);
+		$this->setInternal('/', $config, $mode, $force);
 		
 		$this->loadedConfigFiles[$filename] = true;
 		
@@ -127,27 +127,6 @@ class sly_Configuration implements ArrayAccess {
 		return $config;
 	}
 	
-	/**
-	 * Setzt rekursiv eine menge von Optionen aus einem Konfigurationsarray.
-	 * 
-	 * Achtung!!! - Settings dürfen KEINE Arrays sein, da die Rekursion in 
-	 * sie hineinlaufen würde.
-	 * 
-	 * @param Array  $array  Array mit zu ladenden Konfiguration
-	 * @param int    $mode   Zu setzender Modus für die einzelnen Einträge
-	 */
-	public function setMany($config, $mode) {
-		$this->setRecursive($config, $mode);
-	}
-	
-	private function setRecursive($config, $mode, $force = false, $path = '') {
-		foreach ($config as $key => $value) {
-			$currentPath = trim($path.'/'.$key, '/');
-			if (is_array($value)) $this->setRecursive($value, $mode, $force, $currentPath);
-			else $this->setInternal($currentPath, $value, $mode, $force);
-		}
-	}
-
 	/**
 	 * @return sly_Configuration
 	 */
@@ -187,8 +166,17 @@ class sly_Configuration implements ArrayAccess {
 	}
 	
 	protected function setInternal($key, $value, $mode, $force = false) {
-		if (empty($key) || !is_string($key)) throw new Exception('Key '.$key.' existiert nicht!');
-		if (is_array($value)) throw new Exception('Wert darf kein Array sein. Bitte ArrayObject stattdessen nehmen!');
+		if (is_null($key) || strlen($key) === 0) throw new Exception('Key '.$key.' ist nicht erlaubt!');
+       	if (is_array($value) && !empty($value)){
+			foreach ($value as $ikey => $val) {
+				$currentPath = trim($key.'/'.$ikey, '/');
+				if (is_array($val) && !empty($val)) $this->setInternal($currentPath, $val, $mode, $force);
+				else $this->setInternal($currentPath, $val, $mode, $force);
+			}
+
+			return $value;
+		}
+		
 		if (empty($mode)) $mode = self::STORE_PROJECT;
 		
 		if ($mode == self::STORE_TEMP) {
@@ -202,7 +190,7 @@ class sly_Configuration implements ArrayAccess {
 		
 		$this->setMode($key, $mode);
 		
-		;
+		
 		if ($mode == self::STORE_STATIC) {
 			return $this->staticConfig->set($key, $value);
 		}
@@ -244,7 +232,6 @@ class sly_Configuration implements ArrayAccess {
 
 	protected function flush() {
 		file_put_contents($this->getLocalCacheFile(), '<?php $config = '.var_export($this->localConfig->get(null), true).';');
-		//file_put_contents($this->getLocalCacheFile(), json_encode($this->localConfig));
 		//sly_Core::getPersistentRegistry()->set('sly_ProjectConfig', $this->projectConfig);
 	}
 	

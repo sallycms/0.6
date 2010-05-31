@@ -9,9 +9,9 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
-class FileCache implements sly_ICache{
+class SallyCache implements sly_ICache{
 	
-	const MY_NAMESPACE = 'corecache';
+	const MY_NAMESPACE = 'sallycache';
 	
 	private $cache;
 	
