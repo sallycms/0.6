@@ -9,13 +9,12 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
-class sly_Configuration implements ArrayAccess {
+class sly_Configuration {
 	
 	const STORE_PROJECT       = 1;
 	const STORE_LOCAL         = 2;
 	const STORE_LOCAL_DEFAULT = 3;
 	const STORE_STATIC        = 4;
-	const STORE_TEMP          = 5;
 
 	private $mode              = array();
 	private $loadedConfigFiles = array();
@@ -182,15 +181,6 @@ class sly_Configuration implements ArrayAccess {
 		
 		if (empty($mode)) $mode = self::STORE_PROJECT;
 		
-		if ($mode == self::STORE_TEMP) {
-			 if ($this->getMode($key) != self::STORE_TEMP) {
-			 	return $this->setInternal($key, $value, $this->getMode($key));
-			 }
-			 else {
-			 	return $this->tempConfig->set($key, $value);
-			 }
-		}
-		
 		$this->setMode($key, $mode);
 		
 		
@@ -217,7 +207,7 @@ class sly_Configuration implements ArrayAccess {
 	protected function setMode($key, $mode) {
 		if ($mode == self::STORE_LOCAL_DEFAULT) $mode = self::STORE_LOCAL;
 		if ($this->checkMode($key, $mode)) return;
-		if (isset($this->mode[$key]) && $this->mode[$key] != self::STORE_TEMP) {
+		if (isset($this->mode[$key])) {
 			throw new Exception('Mode für '.$key.' wurde bereits auf '.$this->mode[$key].' gesetzt.');
 		}
 		$this->mode[$key] = $mode;
@@ -241,14 +231,4 @@ class sly_Configuration implements ArrayAccess {
 	public function __destruct() {
 		$this->flush();
 	}
-	
-	public function offsetExists($index)       { return $this->has($index); }
-	public function offsetGet($index)          { return $this->get($index); }
-	public function offsetSet($index, $newval) {
-		if (strpos($index, '/') !== false) trigger_error('Slashes können in Keys auf $REX nicht benutzt werden. ('.$index.')', E_USER_ERROR);
-		
-		return $this->set($index, $newval, self::STORE_TEMP);
-	}
-	
-	public function offsetUnset($index)        { }
 }

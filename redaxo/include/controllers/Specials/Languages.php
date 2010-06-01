@@ -21,13 +21,12 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally
 		);
 		
 		rex_title($I18N->msg('specials'), $subline);
-		
-		$languageService = sly_Service_Factory::getService('Language');
-		$this->languages = $languageService->find(null, null, 'id');
 	}
 
 	public function index()
 	{
+		$languageService = sly_Service_Factory::getService('Language');
+		$this->languages = $languageService->find(null, null, 'id');
 		$this->render('views/specials/languages.phtml');
 	}
 	
@@ -65,13 +64,16 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally
 	{
 		global $REX, $I18N;
 		
-		$this->id = sly_request('clang_id', 'int', -1);
+		$id = sly_request('clang_id', 'int', -1);
 		
 		if (isset($_POST['sly-submit'])) {
 			$clangName = sly_request('clang_name', 'string');
-			
-			if (isset($REX['CLANG'][$this->id])) {
-				rex_editCLang($this->id, $clangName);
+			$languageService = sly_Service_Factory::getService('Language');
+			$clang = $languageService->findById($id);
+			if($clang){
+				$clang->setName($clangName);
+				$languageService->save($clang);
+
 				$this->info = $I18N->msg('clang_edited');
 			}
 		}
