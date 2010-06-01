@@ -19,25 +19,9 @@ $error = '';
 $addonname = 'be_style';
 $pluginname = 'agk_skin';
 
-$ADDONS    = rex_read_addons_folder();
-$PLUGINS   = array();
-foreach($ADDONS as $_addon)
-  $PLUGINS[$_addon] = rex_read_plugins_folder($_addon);
+$pluginService = sly_Service_Factory::getService('Plugin');
+$pluginService->install(array($addonname, $pluginname));
 
-$addonManager = new rex_pluginManager($PLUGINS, $addonname);
-$addonManager->install($pluginname);
-
-// plugin installieren
-if(($instErr = $addonManager->install('agk_skin')) !== true)
-{
-  $error = $instErr;
-}
-
-// plugin aktivieren
-if ($error == '' && ($actErr = $addonManager->activate('agk_skin')) !== true)
-{
-  $error = $actErr;
-}
 
 if ($error != '')
   $REX['ADDON']['installmsg']['be_style'] = $error;

@@ -28,8 +28,7 @@ $config->loadStatic($REX['INCLUDE_PATH'].'/config/sallyStatic.yaml');
 $config->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yaml');
 $config->loadLocalConfig();
 $config->loadProjectConfig();
-$config->set('/', $REX, sly_Configuration::STORE_TEMP);
-$REX = $config;
+$REX = array_merge($REX, $config->get(null));
 // Sync?
 
 if (empty($REX['SYNC'])){

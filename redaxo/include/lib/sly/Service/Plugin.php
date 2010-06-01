@@ -30,7 +30,6 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		global $REX;
 		
 		list ($addon, $pluginName) = $plugin;
-		
 		$pluginDir   = $this->baseFolder($plugin);
 		$installFile = $pluginDir.'install.inc.php';
 		$installSQL  = $pluginDir.'install.sql';
@@ -51,7 +50,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 
 				$hasError = $config->has('ADDON/installmsg/'.$pluginName);
 
-				if ($hasError || !$this->isInstalled($plugin)) {
+				if ($hasError) {
 					$state = $this->I18N('no_install', $pluginName).'<br />';
 					
 					if ($hasError) {
@@ -80,7 +79,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 					}
 					
 					if ($state === true) {
-						$state = $this->generateConfig();
+						$config->set('ADDON/plugins/'.$addon.'/install/'.$pluginName, true);
 					}
 				}
 			}
@@ -102,7 +101,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		$state = $this->extend('POST', 'ASSET_COPY', $plugin, $state);
 
 		if ($state !== true) {
-			$this->setProperty($plugin, 'install', 0);
+			$config->set('ADDON/plugins/'.$addon.'/install/'.$pluginName, false);
 		}
 
 		return $state;
@@ -151,7 +150,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 				}
 
 				if ($state === true) {
-					$state = $this->generateConfig();
+					$config->set('ADDON/plugins/'.$addon.'/install/'.$pluginName, false);
 				}
 			}
 		}
@@ -167,7 +166,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		$state = $this->extend('POST', 'ASSET_DELETE', $plugin, $state);
 
 		if ($state !== true) {
-			$this->setProperty($plugin, 'install', 1);
+			$config->set('ADDON/plugins/'.$addon.'/install/'.$pluginName, true);
 		}
 
 		return $state;
@@ -188,8 +187,9 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 			$state = $this->extend('PRE', 'ACTIVATE', $plugin, true);
 			
 			if ($state === true) {
-				$this->setProperty($plugin, 'status', 1);
-				$state = $this->generateConfig();
+				list($addon, $pluginName) = $plugin;
+				$config = sly_Core::config();
+				$config->set('ADDON/plugins/'.$addon.'/status/'.$pluginName, true);
 			}
 		}
 		else {
@@ -213,8 +213,9 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		$state = $this->extend('PRE', 'DEACTIVATE', $plugin, true);
 		
 		if ($state === true) {
-			$this->setProperty($plugin, 'status', 0);
-			$state = $this->generateConfig();
+			list($addon, $pluginName) = $plugin;
+			$config = sly_Core::config();
+			$config->set('ADDON/plugins/'.$addon.'/status/'.$pluginName, false);
 		}
 
 		return $this->extend('POST', 'DEACTIVATE', $plugin, $state);
@@ -254,8 +255,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		
 		$config = sly_Core::config();
 		$s      = DIRECTORY_SEPARATOR;
-		$dir    = $config->get('DYNFOLDER').$s.$type.$s.$addon.$s.$pluginName;
-		
+		$dir    = SLY_DYNFOLDER.$s.$type.$s.$addon.$s.$pluginName;
 		if (!is_dir($dir)) mkdir($dir, $config->get('DIRPERM'), true);
 		return $dir;
 	}
@@ -302,17 +302,6 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		return rex_call_func(array($I18N, 'msg'), $args, false);
 	}
 
-	public function generateConfig()
-	{
-		$plugins = array();
-		
-		foreach ($this->data as $addon => $list) {
-			$plugins[$addon] = array_keys($list['install']);
-		}
-		
-		return rex_generatePlugins($plugins);
-	}
-	
 	public function isAvailable($plugin)
 	{
 		return $this->isInstalled($plugin) && $this->isActivated($plugin);
@@ -539,8 +528,5 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 			$REX['ADDON']['installmsg'][$pluginName] =
 				'Es ist eine unerwartete Ausnahme während der Installation aufgetreten: '.$e->getMessage();
 		}
-		
-		// Synchronisation mit sly_Configuration
-		sly_Core::config()->set('ADDON', $REX['ADDON']);
 	}
 }

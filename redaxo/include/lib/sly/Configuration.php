@@ -136,18 +136,22 @@ class sly_Configuration implements ArrayAccess {
 		$s = (empty($key) || $this->staticConfig->has($key))  ? $this->staticConfig->get($key)  : array();
 		$l = (empty($key) || $this->localConfig->has($key))   ? $this->localConfig->get($key)   : array();
 		$p = (empty($key) || $this->projectConfig->has($key)) ? $this->projectConfig->get($key) : array();
-		$t = (empty($key) || $this->tempConfig->has($key))    ? $this->tempConfig->get($key)    : array();
-		if (!is_array($t)) return $t;
-		if (!is_array($s)) return $s;
-		if (!is_array($l)) return $l;
 		if (!is_array($p)) return $p;
-		return array_replace_recursive($t, $s, $l, $p);
+		if (!is_array($l)) return $l;
+		if (!is_array($s)) return $s;
+
+		return array_replace_recursive($s, $l, $p);
 	}
 
 	public function has($key) {
 		return $this->staticConfig->has($key) || $this->localConfig->has($key) || $this->projectConfig->has($key);
 	}
-	
+
+	public function remove($key){
+		$this->localConfig->remove($key);
+		$this->projectConfig->remove($key);
+   	}
+
 	protected function setStatic($key, $value) {
 		return $this->setInternal($key, $value, self::STORE_STATIC);
 	}
@@ -241,24 +245,10 @@ class sly_Configuration implements ArrayAccess {
 	public function offsetExists($index)       { return $this->has($index); }
 	public function offsetGet($index)          { return $this->get($index); }
 	public function offsetSet($index, $newval) {
-		var_dump($index);
 		if (strpos($index, '/') !== false) trigger_error('Slashes können in Keys auf $REX nicht benutzt werden. ('.$index.')', E_USER_ERROR);
 		
-		//if (is_array($newval)) {
-		//	$this->offsetSetRecursive($index, $newval);
-		//	return $newval;
-		//}
-		//else
 		return $this->set($index, $newval, self::STORE_TEMP);
 	}
 	
-	private function offsetSetRecursive($key, $value, $path = '') {
-		if (is_array($value)) {
-			foreach ($value as $k2 => $v2) {
-				$this->offsetSetRecursive($k2, $v2, $key);
-			}
-		}
-		else $this->set($path.'/'.$key, $value, self::STORE_TEMP);
-	}
 	public function offsetUnset($index)        { }
 }

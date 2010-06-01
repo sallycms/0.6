@@ -73,7 +73,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 						}
 					}
 
-					$config->set('ADDON/install/'.$addonName, $state, sly_Configuration::STORE_LOCAL);
+					$config->set('ADDON/install/'.$addonName, $state);
 				}
 			}
 			else {
@@ -119,7 +119,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 			
 			$hasError = $config->has('ADDON/installmsg/'.$addonName);
 
-			if ($hasError || $this->isInstalled($addonName)) {
+			if ($hasError) {
 				$state = $this->I18N('no_uninstall', $addonName).'<br />';
 				
 				if ($hasError) {
@@ -141,7 +141,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 				}
 
 				if ($state === true) {
-					$state = $this->generateConfig();
+					$config->set('ADDON/install/'.$addonName, false);
 				}
 			}
 		}
@@ -157,7 +157,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		$state = $this->extend('POST', 'ASSET_DELETE', $addonName, $state);
 
 		if ($state !== true) {
-			$this->setProperty($addonName, 'install', 1);
+			$config->set('ADDON/install/'.$addonName, true);
 		}
 
 		return $state;
@@ -179,7 +179,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 			
 			if ($state === true) {
 				$config = sly_Core::config();
-               	$config->set('ADDON/status/'.$addonName, $state, sly_Configuration::STORE_LOCAL);
+               	$config->set('ADDON/status/'.$addonName, true);
 			}
 		}
 		else {
@@ -203,8 +203,8 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		$state = $this->extend('PRE', 'DEACTIVATE', $addonName, true);
 		
 		if ($state === true) {
-			$this->setProperty($addonName, 'status', 0);
-			$state = $this->generateConfig();
+			$config = sly_Core::config();
+			$config->set('ADDON/status/'.$addonName, false);
 		}
 
 		return $this->extend('POST', 'DEACTIVATE', $addonName, $state);
@@ -246,7 +246,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	protected function dynFolder($type, $addonName)
 	{
 		$config = sly_Core::config();
-		$dir    = $config->get('DYNFOLDER').DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.$addonName;
+		$dir    = SLY_DYNFOLDER.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.$addonName;
 		
 		if (!is_dir($dir)) mkdir($dir, $config->get('DIRPERM'), true);
 		return $dir;
@@ -293,11 +293,6 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		return rex_call_func(array($I18N, 'msg'), $args, false);
 	}
 
-	public function generateConfig()
-	{
-		return rex_generateAddons(array_keys($this->data['install']));
-	}
-	
 	public function isAvailable($addonName)
 	{
 		return $this->isInstalled($addonName) && $this->isActivated($addonName);
@@ -404,7 +399,8 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	 */
 	public function getRegisteredAddons()
 	{
-		return $this->addons;
+		$data = sly_Core::config()->get('ADDON/install');
+		return !empty($data) ? array_keys($data) : array();
 	}
 
 	/**
