@@ -7,7 +7,7 @@
  */
 
 // *************************************** CONFIG
-
+$args = rex_request('args', 'array', array());
 $thumbs = true;
 $thumbsresize = true;
 if (!OOAddon::isAvailable('image_resize')) $thumbsresize = false;
