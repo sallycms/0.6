@@ -12,6 +12,9 @@ $REX['DATAFOLDER']    = $REX['FRONTEND_PATH'].DIRECTORY_SEPARATOR.'data';
 $REX['MEDIAFOLDER']   = $REX['DATAFOLDER'].DIRECTORY_SEPARATOR.'mediapool';
 $REX['DYNFOLDER']     = $REX['DATAFOLDER'].DIRECTORY_SEPARATOR.'dyn';
 
+define('SLY_INCLUDE_PATH', $REX['INCLUDE_PATH']);
+define('SLY_DYNFOLDER',    $REX['DYNFOLDER']);
+
 // Loader initialisieren
 
 if (empty($REX['NOFUNCTIONS'])) {
@@ -21,8 +24,12 @@ if (empty($REX['NOFUNCTIONS'])) {
 // Kernkonfiguration laden
 
 $config = sly_Core::config();
-$REX    = array_merge($config->get(null), $REX);
-
+$config->loadStatic($REX['INCLUDE_PATH'].'/config/sallyStatic.yaml');
+$config->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yaml');
+$config->loadLocalConfig();
+$config->loadProjectConfig();
+$config->set('/', $REX, sly_Configuration::STORE_TEMP);
+$REX = $config;
 // Sync?
 
 if (empty($REX['SYNC'])){
@@ -41,7 +48,6 @@ if (empty($REX['SYNC'])){
 		$REX['CLANG'][$clang->getId()] = $clang->getName();
 	}
 	unset($clangs);
-
 
   	$REX['CUR_CLANG']  = sly_Core::getCurrentClang();
 	$REX['ARTICLE_ID'] = sly_Core::getCurrentArticleId();

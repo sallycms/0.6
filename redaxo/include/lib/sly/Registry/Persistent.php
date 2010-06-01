@@ -18,7 +18,7 @@ class sly_Registry_Persistent implements sly_Registry_Registry {
 	
 	private function __construct() {
 		$this->store  = new sly_Util_Array();
-		$this->pdo    = sly_DB_PDO_Persistence::getInstance();
+		$this->pdo    = sly_DB_Persistence::getInstance();
 		$this->prefix = sly_Core::config()->get('TABLE_PREFIX');
 	}
 	
@@ -28,26 +28,19 @@ class sly_Registry_Persistent implements sly_Registry_Registry {
 	}
 	
 	public function set($key, $value) {
-		$qry = 'REPLACE INTO '.$this->prefix.'registry (`key`, `value`) VALUES (?,?)';
+		$qry = 'REPLACE INTO '.$this->prefix.'registry (`name`, `value`) VALUES (?,?)';
 		$this->pdo->query($qry, array($key, serialize($value)));
 		
 		return $this->store->set($key, $value);
 	}
 	
 	public function get($key) {
-		if (!$this->store->has($key)) {
-			$value = $this->getValue($key);
-			
-			if ($value !== false) {
-				$value = unserialize($value);
-				$this->store->set($key, $value);
-				return $value; // schneller als nochmal get() aufzurufen
-			}
-			
+		if ($this->has($key)) {
+			return $this->store->get($key);
 			// fallthrough -> Fehlerbehandlung durch sly_Util_Array
 		}
 		
-		return $this->store->get($key);
+		return null;
 	}
 	
 	public function has($key) {
@@ -65,11 +58,11 @@ class sly_Registry_Persistent implements sly_Registry_Registry {
 	}
 	
 	public function remove($key) {
-		$this->pdo->query('DELETE FROM '.$this->prefix.'registry WHERE `key` = ?', array($key));
-		return $this->store->remove($key);
+		$this->pdo->delete('registry', array('name' => $key));
+       	return $this->store->remove($key);
 	}
 	
-	protected static function getValue($key) {
-		return $this->pdo->magicFetch('`value`', 'registry', '`key` = ?', array($key));
+	protected function getValue($key) {
+		return $this->pdo->magicFetch('registry', 'value', array('name' => $key));
 	}
 }

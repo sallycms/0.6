@@ -28,32 +28,14 @@ class sly_Configuration implements ArrayAccess {
 	private static $instance;
 
 	private function __construct() {
-		global $REX;
-		
 		$this->staticConfig  = new sly_Util_Array();
 		$this->localConfig   = new sly_Util_Array();
 		$this->projectConfig = new sly_Util_Array();
-		
-		$this->loadStatic($REX['INCLUDE_PATH'].'/config/sallyStatic.yaml');
-		$this->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yaml');
-		
-		if (file_exists($this->getLocalCacheFile())) {
-			include $this->getLocalCacheFile();
-			$this->localConfig = new sly_Util_Array($config);
-
-		}
-		/*
-		 * versucht eine DB verbindung aufzubauen, aber die braucht die konfiguration
-		 * henne <- ei
-		 */
-		//if (sly_Core::getPersistentRegistry()->has('sly_ProjectConfig')) {
-		//	$this->projectConfig = sly_Core::getPersistentRegistry()->get('sly_ProjectConfig');
-		//}
+		$this->tempConfig    = new sly_Util_Array();
 	}
 	
 	protected function getCacheDir() {
-		global $REX;
-		$dir = $REX['DYNFOLDER'].'/internal/sally/config';
+		$dir = SLY_DYNFOLDER.DIRECTORY_SEPARATOR.'internal'.DIRECTORY_SEPARATOR.'sally'.DIRECTORY_SEPARATOR.'config';
 		if (!is_dir($dir) && !mkdir($dir, '0755', true)) {
 			throw new Exception('Cache-Verzeichnis '.$dir.' konnte nicht erzeugt werden.');
 		}
@@ -62,12 +44,12 @@ class sly_Configuration implements ArrayAccess {
 	
 	protected function getCacheFile($filename) {
 		$dir = $this->getCacheDir();
-		$filename = str_replace('\\', '/', realpath($filename));
-		return $dir.'/config_'.str_replace('/', '_', $filename).'.cache.php';
+		//$filename = str_replace('\\', '/', realpath($filename));
+		return $dir.DIRECTORY_SEPARATOR.'config_'.str_replace(DIRECTORY_SEPARATOR, '_', $filename).'.cache.php';
 	}
 	
 	protected function getLocalCacheFile() {
-		return $this->getCacheDir().'/sly_local.cache.php';
+		return $this->getCacheDir().DIRECTORY_SEPARATOR.'sly_local.cache.php';
 	}
 	
 	protected function isCacheValid($origfile, $cachefile) {
@@ -80,6 +62,20 @@ class sly_Configuration implements ArrayAccess {
 	
 	public function loadLocalDefaults($filename, $force = false) {
 		return $this->loadInternal($filename, self::STORE_LOCAL_DEFAULT, $force);
+	}
+
+	public function loadLocalConfig($force = false){
+		$file = $this->getLocalCacheFile();
+		if (file_exists($file)) {
+			include $file;
+			$this->localConfig = new sly_Util_Array($config);
+		}
+	}
+
+	public function loadProjectConfig(){
+		if (sly_Core::getPersistentRegistry()->has('sly_ProjectConfig')) {
+			$this->projectConfig = sly_Core::getPersistentRegistry()->get('sly_ProjectConfig');
+		}
 	}
 	
 	protected function loadInternal($filename, $mode, $force = false) {
@@ -132,6 +128,7 @@ class sly_Configuration implements ArrayAccess {
 	 */
 	public static function getInstance() {
 		if (!self::$instance) self::$instance = new self();
+
 		return self::$instance;
 	}
 
@@ -139,17 +136,19 @@ class sly_Configuration implements ArrayAccess {
 		$s = (empty($key) || $this->staticConfig->has($key))  ? $this->staticConfig->get($key)  : array();
 		$l = (empty($key) || $this->localConfig->has($key))   ? $this->localConfig->get($key)   : array();
 		$p = (empty($key) || $this->projectConfig->has($key)) ? $this->projectConfig->get($key) : array();
+		$t = (empty($key) || $this->tempConfig->has($key))    ? $this->tempConfig->get($key)    : array();
+		if (!is_array($t)) return $t;
 		if (!is_array($s)) return $s;
 		if (!is_array($l)) return $l;
 		if (!is_array($p)) return $p;
-		return array_replace_recursive($s, $l, $p);
+		return array_replace_recursive($t, $s, $l, $p);
 	}
 
 	public function has($key) {
 		return $this->staticConfig->has($key) || $this->localConfig->has($key) || $this->projectConfig->has($key);
 	}
 	
-	public function setStatic($key, $value) {
+	protected function setStatic($key, $value) {
 		return $this->setInternal($key, $value, self::STORE_STATIC);
 	}
 
@@ -232,7 +231,7 @@ class sly_Configuration implements ArrayAccess {
 
 	protected function flush() {
 		file_put_contents($this->getLocalCacheFile(), '<?php $config = '.var_export($this->localConfig->get(null), true).';');
-		//sly_Core::getPersistentRegistry()->set('sly_ProjectConfig', $this->projectConfig);
+		sly_Core::getPersistentRegistry()->set('sly_ProjectConfig', $this->projectConfig);
 	}
 	
 	public function __destruct() {
@@ -242,13 +241,15 @@ class sly_Configuration implements ArrayAccess {
 	public function offsetExists($index)       { return $this->has($index); }
 	public function offsetGet($index)          { return $this->get($index); }
 	public function offsetSet($index, $newval) {
-		if (strpos($index, '/') === false) trigger_error('Slashes können in Keys auf $REX nicht benutzt werden. ('.$index.')', E_USER_ERROR);
+		var_dump($index);
+		if (strpos($index, '/') !== false) trigger_error('Slashes können in Keys auf $REX nicht benutzt werden. ('.$index.')', E_USER_ERROR);
 		
-		if (is_array($newval)) {
-			$this->offsetSetRecursive($index, $newval);
-			return $newval;
-		}
-		else return $this->set($index, $newval, self::STORE_TEMP);
+		//if (is_array($newval)) {
+		//	$this->offsetSetRecursive($index, $newval);
+		//	return $newval;
+		//}
+		//else
+		return $this->set($index, $newval, self::STORE_TEMP);
 	}
 	
 	private function offsetSetRecursive($key, $value, $path = '') {

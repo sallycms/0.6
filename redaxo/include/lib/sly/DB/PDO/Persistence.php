@@ -28,7 +28,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
 	}
 	
 	public function query($query, $data = array()){
-		
+
 		try{
 			$start = microtime(true);
 			$this->currentRow = null;
@@ -125,8 +125,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
     }
     
  	private static function getPrefix() {
-        global $REX;
-        return $REX['TABLE_PREFIX'];
+        return sly_Core::config()->get('TABLE_PREFIX');
     }
 	 
 	public function fetch($table, $select = '*', $where = null, $order = null) {
@@ -142,8 +141,6 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
 		$this->select($table, $select, $where, null, $order, null, 1);
 		$this->next();
 		$data = $this->current();
-		
-		$this->currentRow = null;
 		
 		if ($data === false) {
 			return false;
@@ -274,8 +271,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
     
 	protected function error() {
 		$message   = 'Es trat ein Datenbank-Fehler auf: ';
-		
-		throw new sly_DB_PDO_Exception($message.'Fehlercode: '. $this->getErrno() .' '.$this->getError(), $this->getErrno());
+		throw new sly_DB_PDO_Exception($message.'Fehlercode: '. $this->getErrno() .' '.$this->getError());
 	}
     
 	/**
