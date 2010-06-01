@@ -456,19 +456,11 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 	public function getConfig($plugin)
 	{
 		$configFile   = $this->baseFolder($plugin).'/config.yaml';
-		$internalFile = $this->internalFolder($plugin).'/config.yaml';
-		
-		if (!file_exists($configFile) && !file_exists($internalFile)) {
+
+		if (!file_exists($configFile)) {
 			return null;
-		}
-		
-		if (file_exists($configFile)) {
+		}else {
 			$config = sly_Configuration::getInstance($configFile);
-		}
-		
-		if (file_exists($internalFile)) {
-			if ($config) $config->appendFile($internalFile);
-			else $config = sly_Configuration::getInstance($internalFile);
 		}
 		
 		return $config;

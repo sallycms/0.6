@@ -1,10 +1,9 @@
 <?
 global $REX;
-include_once $REX['INCLUDE_PATH'].'/functions/function_rex_other.inc.php';
-include_once $REX['INCLUDE_PATH'].'/functions/function_rex_addons.inc.php';
+$conf = sly_Core::config();
 ?>
 <div class="rex-area rex-mab-10">
-	<h3 class="rex-hl2">SallyCMS <?php echo $REX['VERSION'].'.'.$REX['SUBVERSION'].'.'.$REX['MINORVERSION'] ?></h3>
+	<h3 class="rex-hl2">SallyCMS <?php echo $conf->get('VERSION').'.'.$conf->get('SUBVERSION').'.'.$conf->get('MINORVERSION') ?></h3>
 
 	<div class="rex-area-content">
 		<p class="rex-tx1">
@@ -32,28 +31,31 @@ include_once $REX['INCLUDE_PATH'].'/functions/function_rex_addons.inc.php';
 		$plugins = sly_Service_Factory::getService('Plugin');
 
 		foreach ($addons->getRegisteredAddons() as $addon) {
-			$isActive    = $addons->isActivated($addon);
-			$isInstalled = $addons->isInstalled($addon);
-			$version     = $addons->getVersion($addon);
-			$icon        = $addons->getIcon($addon);
-			$author      = $addons->getAuthor($addon);
-			$supportPage = $addons->getSupportPage($addon);
+			$params['type']        = 'addon';
+			$params['name']        = $addon;
+			$params['isActive']    = $addons->isActivated($addon);
+			$params['isInstalled'] = $addons->isInstalled($addon);
+			$params['version']     = $addons->getVersion($addon);
+			$params['icon']        = $addons->getIcon($addon);
+			$params['author']      = $addons->getAuthor($addon);
+			$params['supportPage'] = $addons->getSupportPage($addon);
 			
-			$type = 'addon';
-			include $REX['INCLUDE_PATH'].'/views/credits/row.phtml';
+			$this->render('/views/credits/row.phtml', $params);
 			
 			if ($isActive) {
-				$type = 'plugin';
+				$params['type'] = 'plugin';
 				
 				foreach ($plugins->getAvailablePlugins($addon) as $plugin) {
-					$isActive    = $plugins->isActivated(array($addon, $plugin));
-					$isInstalled = $plugins->isInstalled(array($addon, $plugin));
-					$version     = $plugins->getVersion(array($addon, $plugin));
-					$icon        = $plugins->getIcon(array($addon, $plugin));
-					$author      = $plugins->getAuthor(array($addon, $plugin));
-					$supportPage = $plugins->getSupportPage(array($addon, $plugin));
-					
-					include $REX['INCLUDE_PATH'].'/views/credits/row.phtml';
+					$params['type']        = 'plugin';
+					$params['name']        = $plugin;
+					$params['isActive']    = $plugins->isActivated(array($addon, $plugin));
+					$params['isInstalled'] = $plugins->isInstalled(array($addon, $plugin));
+					$params['version']     = $plugins->getVersion(array($addon, $plugin));
+					$params['icon']        = $plugins->getIcon(array($addon, $plugin));
+					$params['author']      = $plugins->getAuthor(array($addon, $plugin));
+					$params['supportPage'] = $plugins->getSupportPage(array($addon, $plugin));
+
+					$this->render('/views/credits/row.phtml', $params);
 				}
 			}
 		}

@@ -1,6 +1,6 @@
 <?
 
-$element = $type == 'addon' ? $addon : $plugin;
+//$element = $type == 'addon' ? $addon : $plugin;
 $class   = $isActive ? 'rex-clr-grn' : 'rex-clr-red';
 $author  = $isActive ? htmlspecialchars($author) : $I18N->msg('credits_addon_inactive');
 
@@ -19,9 +19,9 @@ if (!$icon) {
 ?>
 
 <tr class="rex-<?= $type ?> sly-<?= $type ?> <?= $class ?>">
-	<td class="rex-col-a sly-col-a rex-icon"><img src="<?= $icon ?>" alt="<?= htmlspecialchars($element) ?>" title="<?= htmlspecialchars($element) ?>" /></td>
-	<td class="rex-col-b sly-col-b"><?= htmlspecialchars($element) ?> [<a href="index.php?page=addon&amp;subpage=help&amp;addonname=<?= urlencode($element) ?>">?</a>]</td>
-	<td class="rex-col-c sly-col-c"><?= htmlspecialchars($version) ?></td>
+	<td class="rex-col-a sly-col-a rex-icon"><img src="<?= $icon ?>" alt="<?= sly_html($name) ?>" title="<?= sly_html($name) ?>" /></td>
+	<td class="rex-col-b sly-col-b"><?= sly_html($name) ?> [<a href="index.php?page=addon&amp;subpage=help&amp;addonname=<?= urlencode($element) ?>">?</a>]</td>
+	<td class="rex-col-c sly-col-c"><?= sly_html($version) ?></td>
 	<td class="rex-col-d sly-col-d"><?= $author ?></td>
 	<td class="rex-col-e sly-col-e"><?= $supportPage ?></td>
 </tr>
