@@ -13,13 +13,18 @@ $config = sly_Core::config();
 	<div id="rex-navi-logout">
 		<? $this->renderView('views/layout/sally_navi_logout.phtml') ?>
 	</div>
+	<?php
+	if ($REX['USER'] && !$REX['PAGE_NO_NAVI']):
+	?>
 	<div id="rex-navi-main">
-		<?
-		if ($REX['USER'] && !$REX['PAGE_NO_NAVI']) {
-			$this->renderView('views/layout/sally_navi_main.phtml');
-		}
+		<?php
+		$this->renderView('views/layout/sally_navi_main.phtml');
 		?>
 	</div>
+	<?php
+	endif;
+	?>
+	
 	<div id="rex-wrapper">
 		<div id="rex-wrapper2">
 			
