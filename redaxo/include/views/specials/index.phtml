@@ -2,6 +2,8 @@
 
 global $REX, $I18N;
 
+$config = sly_Core::config();
+
 if (!empty($this->warning)) print rex_warning($this->warning);
 if (!empty($this->info))    print rex_info($this->info);
 
@@ -10,7 +12,7 @@ $sel_lang->setStyle('class="rex-form-select"');
 $sel_lang->setName('backend_locale');
 $sel_lang->setId('rex-form-lang');
 $sel_lang->setSize(1);
-$sel_lang->setSelected($REX['LANG']);
+$sel_lang->setSelected($config->get('LANG'));
 
 foreach ($REX['LOCALES'] as $l) {
 	$sel_lang->addOption($l, $l);
@@ -21,7 +23,7 @@ $sel_mod_rewrite->setSize(1);
 $sel_mod_rewrite->setStyle('class="rex-form-select"');
 $sel_mod_rewrite->setName('mod_rewrite');
 $sel_mod_rewrite->setId('rex-form-mod-rewrite');
-$sel_mod_rewrite->setSelected($REX['MOD_REWRITE'] === false ? 'FALSE' : 'TRUE');
+$sel_mod_rewrite->setSelected($config->get('MOD_REWRITE') === false ? 'FALSE' : 'TRUE');
 
 $sel_mod_rewrite->addOption('aktiviert', 'TRUE');
 $sel_mod_rewrite->addOption('deaktiviert', 'FALSE');
@@ -50,10 +52,10 @@ $sel_mod_rewrite->addOption('deaktiviert', 'FALSE');
 					<p class="rex-button"><a class="rex-button" href="index.php?page=specials&amp;func=setup" onclick="return confirm(\'<?= $I18N->msg('setup') ?>?\');"><?= $I18N->msg('setup') ?></a></p>
 
 					<h4 class="rex-hl3"><?= $I18N->msg('version') ?></h4>
-					<p class="rex-tx1">SallyCMS <?= $REX['VERSION'] ?>.<?= $REX['SUBVERSION'] ?>.<?= $REX['MINORVERSION'] ?></p>
+					<p class="rex-tx1">SallyCMS <?= $config->get('VERSION') ?>.<?= $config->get('SUBVERSION') ?>.<?= $config->get('MINORVERSION') ?></p>
 
 					<h4 class="rex-hl3"><?= $I18N->msg('database') ?></h4>
-					<p class="rex-tx1"><?= $I18N->msg('name') ?>: <?= sly_html($REX['DB']['1']['NAME']) ?><br /><?= $I18N->msg('host') ?>: <?= sly_html($REX['DB']['1']['HOST']) ?></p>
+					<p class="rex-tx1"><?= $I18N->msg('name') ?>: <?= sly_html($config->get('DATABASE/NAME')) ?><br /><?= $I18N->msg('host') ?>: <?= sly_html($config->get('DATABASE/HOST')) ?></p>
 				</div>
 			</div>
 
@@ -69,14 +71,14 @@ $sel_mod_rewrite->addOption('deaktiviert', 'FALSE');
 						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-text">
 								<label for="rex-form-server">$REX['SERVER']</label>
-								<input class="rex-form-text" type="text" id="rex-form-server" name="server" value="<?= sly_html($REX['SERVER']) ?>" />
+								<input class="rex-form-text" type="text" id="rex-form-server" name="server" value="<?= sly_html($config->get('SERVER')) ?>" />
 							</p>
 						</div>
 
 						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-text">
 								<label for="rex-form-servername">$REX['SERVERNAME']</label>
-								<input class="rex-form-text" type="text" id="rex-form-servername" name="servername" value="<?= sly_html($REX['SERVERNAME']) ?>" />
+								<input class="rex-form-text" type="text" id="rex-form-servername" name="servername" value="<?= sly_html($config->get('SERVERNAME')) ?>" />
 							</p>
 						</div>
 
@@ -101,28 +103,28 @@ $sel_mod_rewrite->addOption('deaktiviert', 'FALSE');
 						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-text">
 								<label for="rex-form-error-email">$REX['ERROR_EMAIL']</label>
-								<input class="rex-form-text" type="text" id="rex-form-error-email" name="error_email" value="<?= sly_html($REX['ERROR_EMAIL']) ?>" />
+								<input class="rex-form-text" type="text" id="rex-form-error-email" name="error_email" value="<?= sly_html($config->get('ERROR_EMAIL')) ?>" />
 							</p>
 						</div>
 
 						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-text">
 								<label for="rex-form-startarticle-id">$REX['START_ARTICLE_ID']</label>
-								<input class="rex-form-text" type="text" id="rex-form-startarticle-id" name="start_article" value="<?= sly_html($REX['START_ARTICLE_ID']) ?>" />
+								<input class="rex-form-text" type="text" id="rex-form-startarticle-id" name="start_article" value="<?= sly_html($config->get('START_ARTICLE_ID')) ?>" />
 							</p>
 						</div>
 
 						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-text">
 								<label for="rex-form-notfound-article-id">$REX['NOTFOUND_ARTICLE_ID']</label>
-								<input class="rex-form-text" type="text" id="rex-form-notfound-article-id" name="notfound_article" value="<?= sly_html($REX['NOTFOUND_ARTICLE_ID']) ?>" />
+								<input class="rex-form-text" type="text" id="rex-form-notfound-article-id" name="notfound_article" value="<?= sly_html($config->get('NOTFOUND_ARTICLE_ID')) ?>" />
 							</p>
 						</div>
 
 						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-text">
 								<label for="rex-form-default-template-id">$REX['DEFAULT_TEMPLATE_ID']</label>
-								<input class="rex-form-text" type="text" id="rex-form-default-template-id" name="default_template_id" value="<?= sly_html($REX['DEFAULT_TEMPLATE_ID']) ?>" />
+								<input class="rex-form-text" type="text" id="rex-form-default-template-id" name="default_template_id" value="<?= sly_html($config->get('DEFAULT_TEMPLATE_ID')) ?>" />
 							</p>
 						</div>
 

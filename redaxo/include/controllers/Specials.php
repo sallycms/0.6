@@ -45,9 +45,9 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		
 		// Änderungen speichern
 
-		$conf = sly_Configuration::getInstance($SLY['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'sally.yaml');
-
-		if (OOArticle::exists($startArticle)) {
+		$conf = sly_Core::config();
+		
+       	if (OOArticle::exists($startArticle)) {
 			$conf->set('START_ARTICLE_ID', $startArticle);
 		}
 		else {
@@ -81,17 +81,8 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		$conf->set('SERVERNAME', $serverName);
 		$conf->set('MOD_REWRITE', $modRewrite);
 
-		$conf->save();
+		$this->info = $I18N->msg('info_updated');
 
-       	$this->info = $I18N->msg('info_updated');
-
-		// Zuweisungen für Wiederanzeige
-		
-		$REX['MOD_REWRITE'] = $modRewrite === 'TRUE';
-		$REX['ERROR_EMAIL'] = $errorEMail;
-		$REX['SERVER']      = $server;
-		$REX['SERVERNAME']  = $serverName;
-		
 		$this->index();
 	}
 	

@@ -128,7 +128,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 			
 			$hasError = $config->has('ADDON/installmsg/'.$pluginName);
 
-			if ($hasError || $this->isInstalled($plugin)) {
+			if ($hasError) {
 				$state = $this->I18N('no_uninstall', $pluginName).'<br />';
 				
 				if ($hasError) {
