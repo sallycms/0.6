@@ -13,7 +13,7 @@ class sly_Controller_Setup extends sly_Controller_Sally
 
 	public function index()
 	{
-		$languages = sly_Core::config()->get('LANGUAGES');
+		$languages = $REX['LANGUAGES'];
 
 		// wenn nur eine Sprache -> direkte Weiterleitung
 
@@ -135,10 +135,10 @@ class sly_Controller_Setup extends sly_Controller_Sally
 
 	public function initdb()
 	{
-		global $I18N;
+		global $I18N, $REX;
 
-		$config         = sly_Core::config()->get(false);
-		$prefix         = $config['TABLE_PREFIX'];
+		$config         = sly_Core::config();
+		$prefix         = $config->get('TABLE_PREFIX');
 		$error          = '';
 		$dbInitFunction = sly_post('db_init_function', 'string', '');
 
@@ -177,7 +177,7 @@ class sly_Controller_Setup extends sly_Controller_Sally
 
 			case 'setup': // leere Datenbank neu einrichten
 
-				$installScript = $config['INCLUDE_PATH'].'/install/sally4_2.sql';
+				$installScript = $REX['INCLUDE_PATH'].'/install/sally4_2.sql';
 
 				if (empty($error)) $error = $this->setupImport($installScript);
 				if (empty($error)) $error = $this->setupAddOns($dbInitFunction == 'drop');
@@ -245,8 +245,8 @@ class sly_Controller_Setup extends sly_Controller_Sally
 	{
 		global $I18N;
 		
-		$config      = sly_Core::config()->get(false);
-		$prefix      = $config['TABLE_PREFIX'];
+		$config      = sly_Core::config();
+		$prefix      = $config->get('TABLE_PREFIX');
 		$pdo         = sly_DB_Persistence::getInstance();
 		$usersExist  = $pdo->listTables($prefix.'user') && $pdo->magicFetch('user', 'user_id') !== false;
 		$createAdmin = !sly_post('no_admin', 'boolean', false);
@@ -272,7 +272,7 @@ class sly_Controller_Setup extends sly_Controller_Sally
 						$error = $I18N->msg('setup_042'); // Dieses Login existiert schon!
 					}
 					else {
-						$adminPass = call_user_func($config['PSWFUNC'], $adminPass);
+						$adminPass = call_user_func($config->get('PSWFUNC'), $adminPass);
 						$affected  = $pdo->insert('user', array(
 							'name'       => 'Administrator',
 							'login'      => $adminUser,
@@ -310,11 +310,9 @@ class sly_Controller_Setup extends sly_Controller_Sally
 	
 	public function finish()
 	{
-		global $I18N;
+		global $I18N, $REX;
 		
-		$config     = sly_Core::config()->get(false);
-		$prefix     = $config['TABLE_PREFIX'];
-		$masterFile = $config['INCLUDE_PATH'].'/config/sally.yaml';
+		$masterFile = $REX['INCLUDE_PATH'].'/config/sally.yaml';
 		$oldData    = sly_Configuration::load($masterFile);
 		$dumper     = new sfYamlDumper();
 		
@@ -462,21 +460,21 @@ class sly_Controller_Setup extends sly_Controller_Sally
 		global $REX, $I18N;
 
 		$addonErr     = '';
-		$addonManager = rex_addonManager::getInstance();
+		$addonService = sly_Service_Factory::getService('Addon');
 
 		foreach ($REX['SYSTEM_ADDONS'] as $systemAddon) {
 			$state = true;
 
-			if ($state === true && $uninstallBefore && !OOAddon::isInstalled($systemAddon)) {
-				$state = $addonManager->uninstall($systemAddon);
+			if ($state === true && $uninstallBefore && !$addonService->isInstalled($systemAddon)) {
+				$state = $$addonService->uninstall($systemAddon);
 			}
 
-			if ($state === true && !OOAddon::isInstalled($systemAddon)) {
-				$state = $addonManager->install($systemAddon, $installDump);
+			if ($state === true && !$addonService->isInstalled($systemAddon)) {
+				$state = $addonService->install($systemAddon, $installDump);
 			}
 
-			if ($state === true && !OOAddon::isActivated($systemAddon)) {
-				$state = $addonManager->activate($systemAddon);
+			if ($state === true && !$addonService->isActivated($systemAddon)) {
+				$state = $addonService->activate($systemAddon);
 			}
 
 			if ($state !== true) {

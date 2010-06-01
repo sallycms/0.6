@@ -27,9 +27,10 @@ abstract class sly_Controller_Base
 	{
 		$page    = $forcePage === null    ? sly_request(self::PAGEPARAM, 'string', self::DEFAULTPAGE) : $forcePage;
 		$subpage = $forceSubpage === null ? strtolower(sly_request(self::SUBPAGEPARAM, 'string', '')) : $forceSubpage;
-		$name    = 'sly_Controller_'.strtoupper(substr($page, 0, 1)).substr($page, 1);
-		
-		if (!empty($subpage) && $subpage != 'index') {
+		$name    = 'sly_Controller_'.ucfirst($page);
+
+
+      	if (!empty($subpage) && $subpage != 'index') {
 			$name .= '_'.strtoupper(substr($subpage, 0, 1)).substr($subpage, 1);
 		}
 
