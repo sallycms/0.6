@@ -73,7 +73,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 						}
 					}
 
-					$config->set('ADDON/install/'.$addonName, $state);
+					$this->setProperty($addonName, 'install', true);
 				}
 			}
 			else {
@@ -94,7 +94,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		$state = $this->extend('POST', 'ASSET_COPY', $addonName, $state);
 
 		if ($state !== true) {
-			$this->setProperty($addonName, 'install', 0);
+			$this->setProperty($addonName, 'install', false);
 		}
 
 		return $state;
@@ -141,7 +141,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 				}
 
 				if ($state === true) {
-					$config->set('ADDON/install/'.$addonName, false);
+					$this->setProperty($addonName, 'install', false);
 				}
 			}
 		}
@@ -157,7 +157,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		$state = $this->extend('POST', 'ASSET_DELETE', $addonName, $state);
 
 		if ($state !== true) {
-			$config->set('ADDON/install/'.$addonName, true);
+			$this->setProperty($addonName, 'install', true);
 		}
 
 		return $state;
@@ -179,7 +179,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 			
 			if ($state === true) {
 				$config = sly_Core::config();
-               	$config->set('ADDON/status/'.$addonName, true);
+               	$this->setProperty($addonName, 'status', true);
 			}
 		}
 		else {
@@ -204,7 +204,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		
 		if ($state === true) {
 			$config = sly_Core::config();
-			$config->set('ADDON/status/'.$addonName, false);
+			$this->setProperty($addonName, 'status', false);
 		}
 
 		return $this->extend('POST', 'DEACTIVATE', $addonName, $state);
@@ -367,13 +367,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	 */
 	public function setProperty($addonName, $property, $value)
 	{
-		if (!isset($this->data[$property])) {
-			$this->data[$property] = array();
-		}
-
-		$this->data[$property][$addonName] = $value;
-		sly_Core::config()->set('ADDON', $this->data);
-		return $value;
+		return sly_Core::config()->set('ADDON/'.$property.'/'.$addonName, $value);
 	}
 	
 	/**
@@ -386,8 +380,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	 */
 	public function getProperty($addonName, $property, $default = null)
 	{
-		$this->data = sly_Core::config()->get('ADDON');
-		return isset($this->data[$property][$addonName]) ? $this->data[$property][$addonName] : $default;
+		return sly_Core::config()->has('ADDON/'.$property.'/'.$addonName) ? sly_Core::config()->get('ADDON/'.$property.'/'.$addonName) : $default;
 	}
 
 	/**

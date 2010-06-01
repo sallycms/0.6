@@ -11,7 +11,6 @@
 
 if ($REX['SETUP']) return;
 
-$REX['ADDON']['page']['sallycache']        = 'sallycache';
 $REX['ADDON']['name']['sallycache']        = 'Sally Cache';
 $REX['ADDON']['version']['sallycache']     = file_get_contents(dirname(__FILE__).DIRECTORY_SEPARATOR.'version');
 $REX['ADDON']['author']['sallycache']      = 'Christian Zozmann';
