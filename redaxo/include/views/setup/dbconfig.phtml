@@ -1,0 +1,85 @@
+<?php
+
+global $REX, $I18N;
+
+$this->title($I18N->msg('setup_step2'));
+
+?>
+<h2 class="rex-hl2"><?= $I18N->msg('setup_023') ?></h2>
+
+<div class="rex-form" id="rex-form-setup-step-2">
+	<form action="index.php" method="post">
+		<fieldset class="rex-form-col-1">
+			<? $this->printHiddens('dbconfig') ?>
+			<legend><?= $I18N->msg('setup_0202') ?></legend>
+			
+			<div class="rex-form-wrapper">
+				<div class="rex-form-row">
+					<p>
+						Alles ausser MySQL ist als hoch experimentell anzusehen und dient Testzwecken!
+					</p>
+					<p class="rex-form-col-a rex-form-text">
+						<label for="driver">DatenbankTyp:</label>
+						<select name="driver" id="driver">
+							<option value="mysql">MySQL</option>
+							<option value="pgsql">Postgres</option>
+							<option value="oci">Oracle</option>
+							<option value="sqlite">SQLite</option>
+						</select>
+					</p>
+				</div>
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-text">
+						<label for="host">Host:</label>
+						<input class="rex-form-text" type="text" id="host" name="host" value="<?= sly_html($host) ?>" />
+					</p>
+				</div>
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-text">
+						<label for="user">Login:</label>
+						<input class="rex-form-text" type="text" id="user" name="user" value="<?= sly_html($user) ?>" />
+					</p>
+				</div>
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-text">
+						<label for="pass"><?= $I18N->msg('setup_028') ?>:</label>
+						<input class="rex-form-text" type="text" id="pass" name="pass" value="<?= sly_html($pass) ?>" />
+					</p>
+				</div>
+				
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-text">
+						<label for="dbname"><?= $I18N->msg('setup_027') ?>:</label>
+						<input class="rex-form-text" type="text" id="dbname" name="dbname" value="<?= sly_html($dbname) ?>" />
+					</p>
+				</div>
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-text">
+						<label for="prefix">Tabellen Präfix:</label>
+						<input class="rex-form-text" type="text" id="prefix" name="prefix" value="<?= sly_html($prefix) ?>" />
+					</p>
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset class="rex-form-col-1">
+			<div class="rex-form-wrapper">
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-submit">
+						<input class="rex-form-submit" type="submit" name="sly-submit" value="<?= $I18N->msg('setup_029') ?>" />
+					</p>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+</div>
+
+<script type="text/javascript">
+<!--
+jQuery(function($) {
+	$('#server').focus();
+});
+//-->
+</script>
