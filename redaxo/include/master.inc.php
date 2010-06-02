@@ -27,11 +27,13 @@ $config = sly_Core::config();
 $config->loadStatic($REX['INCLUDE_PATH'].'/config/sallyStatic.yaml');
 $config->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yaml');
 $config->loadLocalConfig();
-$config->loadProjectConfig();
-$REX = array_merge($REX, $config->get(null));
+if (!$config->get('SETUP')) {
+	$config->loadProjectConfig();
+}
+
 // Sync?
 
-if (empty($REX['SYNC'])){
+if (empty($REX['SYNC']) && !$config->get('SETUP')){
 	// ----- standard variables
 	sly_Core::registerVarType('rex_var_globals');
 	sly_Core::registerVarType('rex_var_article');
@@ -51,3 +53,5 @@ if (empty($REX['SYNC'])){
   	$REX['CUR_CLANG']  = sly_Core::getCurrentClang();
 	$REX['ARTICLE_ID'] = sly_Core::getCurrentArticleId();
 }
+
+$REX = array_merge($REX, $config->get(null));

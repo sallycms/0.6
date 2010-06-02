@@ -39,7 +39,7 @@ if (!SLY_IS_TESTING && $config->get('SETUP')) {
 	
 	if ($languages) {
 		foreach ($languages as $language) {
-			$locale = substr($file, 0, -5);
+			$locale = substr(basename($language), 0, -5);
 			$REX['LANGUAGES'][] = $locale;
 			
 			if ($requestLang == $locale) {

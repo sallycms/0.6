@@ -1,18 +1,15 @@
 <?php
 
-class sly_Controller_Setup extends sly_Controller_Sally
-{
+class sly_Controller_Setup extends sly_Controller_Sally {
 	protected $warning;
 	protected $info;
 	protected $lang;
 
-	public function init()
-	{
+	protected function init() {
 		$this->lang = sly_request('lang', 'string');
 	}
 
-	public function index()
-	{
+	public function index()	{
 		$languages = $REX['LANGUAGES'];
 
 		// wenn nur eine Sprache -> direkte Weiterleitung
@@ -26,13 +23,11 @@ class sly_Controller_Setup extends sly_Controller_Sally
 		$this->render('views/setup/chooselang.phtml');
 	}
 
-	public function license()
-	{
+	protected function license() {
 		$this->render('views/setup/license.phtml');
 	}
 
-	public function fsperms()
-	{
+	protected function fsperms() {
 		global $I18N;
 
 		$errors = array();
@@ -71,30 +66,59 @@ class sly_Controller_Setup extends sly_Controller_Sally
 		$this->render('views/setup/fsperms.phtml', array('errors' => $errors));
 	}
 
+	protected function dbconfig() {
+		$config = sly_Core::config();
+		$data = $config->get('DATABASE');
+		$isSent = isset($_POST['sly-submit']);
+		if ($isSent) {
+			$data['TABLE_PREFIX'] = sly_post('prefx', 'string');
+			$data['HOST']         = sly_post('host', 'string');
+			$data['LOGIN']        = sly_post('user', 'string');
+			$data['PASSWORD']     = sly_post('pass', 'string');
+			$data['NAME']         = sly_post('name', 'string');
+			$data['DRIVER']       = sly_post('driver', 'string');
+
+			$check = rex_sql::checkDbConnection($HOST, $LOGIN, $PASSWORD, $NAME);
+			if($check){
+				$config->set('DATABASE', $data, sly_Configuration::STORE_LOCAL);
+				unset($_POST['sly-submit']);
+				$this->initdb();
+				return;
+			}else{
+				$this->warning = $err;
+			}
+		}
+
+		$this->render('views/setup/dbconfig.phtml', array(
+			'host'   => $data['HOST'],
+			'user'   => $data['LOGIN'],
+			'pass'   => $data['PASSWORD'],
+			'dbname' => $data['NAME'],
+			'prefix' => $data['TABLE_PREFIX'],
+			'driver' => $data['DRIVER']
+		));
+	}
+
+
+
 	public function config()
 	{
 		global $I18N;
 
-		$config = sly_Core::config()->get(false);
+		$config = sly_Core::config();
 		$isSent = isset($_POST['sly-submit']);
 
 		if ($isSent) {
-			$masterFile = $config['INCLUDE_PATH'].'/config/sally.yaml';
-			$oldData    = sly_Configuration::load($masterFile);
-			$createDB   = sly_post('create_db', 'boolean', false);
-
+			
 			$oldData['SERVER']               = sly_post('server', 'string');
 			$oldData['SERVERNAME']           = sly_post('servername', 'string');
 			$oldData['LANG']                 = $this->lang;
 			$oldData['INSTNAME']             = 'sly'.date('YmdHis');
 			$oldData['ERROR_EMAIL']          = sly_post('error_email', 'string');
 			$oldData['PSWFUNC']              = sly_post('pwd_func', 'string');
-			$oldData['DATABASE']['HOST']     = sly_post('mysql_host', 'string');
-			$oldData['DATABASE']['LOGIN']    = sly_post('mysql_user', 'string');
-			$oldData['DATABASE']['PASSWORD'] = sly_post('mysql_pass', 'string');
-			$oldData['DATABASE']['NAME']     = sly_post('mysql_name', 'string');
+
 			
-			sly_Core::config()->appendArray($oldData);
+			
 			
 			$config = sly_Core::config()->get(false);
 			$dumper = new sfYamlDumper();
@@ -133,8 +157,7 @@ class sly_Controller_Setup extends sly_Controller_Sally
 		));
 	}
 
-	public function initdb()
-	{
+	public function initdb() {
 		global $I18N, $REX;
 
 		$config         = sly_Core::config();
@@ -241,8 +264,7 @@ class sly_Controller_Setup extends sly_Controller_Sally
 		}
 	}
 	
-	public function createuser()
-	{
+	public function createuser() {
 		global $I18N;
 		
 		$config      = sly_Core::config();
@@ -308,8 +330,7 @@ class sly_Controller_Setup extends sly_Controller_Sally
 		));
 	}
 	
-	public function finish()
-	{
+	public function finish() {
 		global $I18N, $REX;
 		
 		$masterFile = $REX['INCLUDE_PATH'].'/config/sally.yaml';
@@ -329,19 +350,16 @@ class sly_Controller_Setup extends sly_Controller_Sally
 		$this->render('views/setup/finish.phtml');
 	}
 
-	protected function title($title)
-	{
+	protected function title($title) {
 		rex_title($title);
 		print '<div id="rex-setup" class="rex-area">';
 	}
 
-	protected function footer()
-	{
+	protected function teardown()	{
 		print '</div>'; // rex_setup_title() schließen
 	}
 
-	protected function checkDirsAndFiles()
-	{
+	protected function checkDirsAndFiles() {
 		global $REX;
 
 		// Schreibrechte
@@ -368,15 +386,6 @@ class sly_Controller_Setup extends sly_Controller_Sally
 		}
 
 		$res = $this->isWritable($writables, true);
-
-		$writables = array(
-			$REX['INCLUDE_PATH'].$s.'config'.$s.'sally.yaml',
-			$REX['INCLUDE_PATH'].$s.'config'.$s.'addons.yaml',
-			$REX['INCLUDE_PATH'].$s.'config'.$s.'plugins.yaml',
-			$REX['INCLUDE_PATH'].$s.'config'.$s.'clang.yaml'
-		);
-
-		$res = array_merge($res, $this->isWritable($writables, false));
 
 		if (!empty($res)) {
 			$errors = array();
@@ -495,7 +504,7 @@ class sly_Controller_Setup extends sly_Controller_Sally
 		return $addonErr;
 	}
 
-	public function checkPermission()
+	protected function checkPermission()
 	{
 		return true;
 	}

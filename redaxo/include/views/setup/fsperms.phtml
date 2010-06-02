@@ -24,7 +24,7 @@ if (empty($errors)) {
 
 	<div class="rex-area-footer">
 		<p id="nextstep" class="rex-algn-rght">
-			<a href="index.php?page=setup&amp;func=config&amp;lang=<?= urlencode($this->lang) ?>">&raquo; <?= $I18N->msg('setup_017') ?></a>
+			<a href="index.php?page=setup&amp;func=dbconfig&amp;lang=<?= urlencode($this->lang) ?>">&raquo; <?= $I18N->msg('setup_017') ?></a>
 		</p>
 	</div>
 	<?php
@@ -48,6 +48,5 @@ else {
 	<?php
 }
 
-$this->footer();
 
 ?>
