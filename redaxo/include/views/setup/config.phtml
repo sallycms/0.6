@@ -61,47 +61,6 @@ $this->title($I18N->msg('setup_step2'));
 		</fieldset>
 
 		<fieldset class="rex-form-col-1">
-			<legend><?= $I18N->msg('setup_0202') ?></legend>
-			
-			<div class="rex-form-wrapper">
-				<div class="rex-form-row">
-					<p class="rex-form-col-a rex-form-text">
-						<label for="mysql_host">MySQL-Host:</label>
-						<input class="rex-form-text" type="text" id="mysql_host" name="mysql_host" value="<?= sly_html($mysqlHost) ?>" />
-					</p>
-				</div>
-
-				<div class="rex-form-row">
-					<p class="rex-form-col-a rex-form-text">
-						<label for="mysql_user">MySQL-Login:</label>
-						<input class="rex-form-text" type="text" id="mysql_user" name="mysql_user" value="<?= sly_html($mysqlUser) ?>" />
-					</p>
-				</div>
-
-				<div class="rex-form-row">
-					<p class="rex-form-col-a rex-form-text">
-						<label for="mysql_pass"><?= $I18N->msg('setup_028') ?>:</label>
-						<input class="rex-form-text" type="text" id="mysql_pass" name="mysql_pass" value="<?= sly_html($mysqlPass) ?>" />
-					</p>
-				</div>
-				
-				<div class="rex-form-row">
-					<p class="rex-form-col-a rex-form-text">
-						<label for="mysql_name"><?= $I18N->msg('setup_027') ?>:</label>
-						<input class="rex-form-text" type="text" id="mysql_name" name="mysql_name" value="<?= sly_html($mysqlName) ?>" />
-					</p>
-				</div>
-
-				<div class="rex-form-row">
-					<p class="rex-form-col-a rex-form-checkbox">
-						<label for="create_db"><?= $I18N->msg('setup_create_db') ?>:</label>
-						<input class="rex-form-checkbox" type="checkbox" id="create_db" name="create_db" value="1" />
-					</p>
-				</div>
-			</div>
-		</fieldset>
-
-		<fieldset class="rex-form-col-1">
 			<div class="rex-form-wrapper">
 				<div class="rex-form-row">
 					<p class="rex-form-col-a rex-form-submit">

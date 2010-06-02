@@ -75,10 +75,10 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			$data['HOST']         = sly_post('host', 'string');
 			$data['LOGIN']        = sly_post('user', 'string');
 			$data['PASSWORD']     = sly_post('pass', 'string');
-			$data['NAME']         = sly_post('name', 'string');
+			$data['NAME']         = sly_post('dbname', 'string');
 			$data['DRIVER']       = sly_post('driver', 'string');
 
-			$check = rex_sql::checkDbConnection($HOST, $LOGIN, $PASSWORD, $NAME);
+			$check = rex_sql::checkDbConnection($data['HOST'], $data['LOGIN'], $data['PASSWORD'], $data['NAME']);
 			if($check){
 				$config->set('DATABASE', $data, sly_Configuration::STORE_LOCAL);
 				unset($_POST['sly-submit']);
@@ -101,7 +101,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 
 
-	public function config()
+	protected function config()
 	{
 		global $I18N;
 
@@ -157,7 +157,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		));
 	}
 
-	public function initdb() {
+	protected function initdb() {
 		global $I18N, $REX;
 
 		$config         = sly_Core::config();
@@ -253,18 +253,15 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 		if (empty($error)) {
 			unset($_POST['sly-submit']);
-			$this->createuser();
+			$this->config();
 		}
 		else {
 			$this->warning = empty($dbInitFunction) ? '' : $error;
-			$this->render('views/setup/initdb.phtml', array(
-				'dbInitFunction'  => $dbInitFunction,
-				'dbInitFunctions' => array('setup', 'nop', 'drop')
-			));
+			$this->createuser();
 		}
 	}
 	
-	public function createuser() {
+	protected function createuser() {
 		global $I18N;
 		
 		$config      = sly_Core::config();
