@@ -10,6 +10,8 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 	}
 
 	public function index()	{
+		global $REX;
+		
 		$languages = $REX['LANGUAGES'];
 
 		// wenn nur eine Sprache -> direkte Weiterleitung
