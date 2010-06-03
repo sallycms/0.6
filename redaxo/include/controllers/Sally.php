@@ -1,13 +1,13 @@
 <?php
 /*
- * Copyright (c) 2009, webvariants GbR, http://www.webvariants.de
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
  * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
  * beiliegenden LICENSE Datei und unter:
  *
  * http://www.opensource.org/licenses/mit-license.php
  * http://de.wikipedia.org/wiki/MIT-Lizenz
-*/
+ */
 
 abstract class sly_Controller_Sally extends sly_Controller_Base
 {
@@ -19,5 +19,5 @@ abstract class sly_Controller_Sally extends sly_Controller_Base
 		parent::dispatch();
 		$layout->closeBuffer();
 		return $layout->render();
-   	}
+	}
 }

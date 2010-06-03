@@ -1,13 +1,22 @@
 <?php
-abstract class sly_DB_Persistence implements Iterator{
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
+ * beiliegenden LICENSE Datei und unter:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ * http://de.wikipedia.org/wiki/MIT-Lizenz
+ */
 
+abstract class sly_DB_Persistence implements Iterator {
 	/**
 	 *
 	 * @return sly_DB_Persistence
 	 */
 	public static function getInstance(){
 		return new sly_DB_PDO_Persistence();
-   	}
+	}
 
 	/**
 	 * Führt einen query auf der Datenbank aus, der Query kann 
@@ -60,14 +69,14 @@ abstract class sly_DB_Persistence implements Iterator{
 	abstract public function delete($table, $where = null);
 	
 	/**
-     * Hilfsfunktion um eine Zeile zu bekommen
-     * 
-     * @param string $table
-     * @param string $select
-     * @param array $where
-     * @param int $order
-     * 
-     * @return array row
-     */
+	 * Hilfsfunktion um eine Zeile zu bekommen
+	 * 
+	 * @param string $table
+	 * @param string $select
+	 * @param array $where
+	 * @param int $order
+	 * 
+	 * @return array row
+	 */
 	abstract public function fetch($table, $select = '*', $where = null, $order = null);
 }
