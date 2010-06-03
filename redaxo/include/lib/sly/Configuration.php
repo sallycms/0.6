@@ -42,13 +42,14 @@ class sly_Configuration {
 	}
 	
 	protected function getCacheFile($filename) {
-		$dir = $this->getCacheDir();
-		//$filename = str_replace('\\', '/', realpath($filename));
-		return $dir.DIRECTORY_SEPARATOR.'config_'.str_replace(DIRECTORY_SEPARATOR, '_', $filename).'.cache.php';
+		$dir      = $this->getCacheDir();
+		$filename = realpath($filename);
+		$filename = substr($filename, strlen(SLY_BASE) + 1);
+		return $dir.DIRECTORY_SEPARATOR.str_replace(DIRECTORY_SEPARATOR, '_', $filename).'.php';
 	}
 	
 	protected function getLocalCacheFile() {
-		return $this->getCacheDir().DIRECTORY_SEPARATOR.'sly_local.cache.php';
+		return $this->getCacheDir().DIRECTORY_SEPARATOR.'sly_local.php';
 	}
 	
 	protected function isCacheValid($origfile, $cachefile) {
