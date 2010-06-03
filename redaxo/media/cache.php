@@ -8,11 +8,14 @@ if (empty($_GET['f'])) {
 }
 
 $projectBase = rtrim(realpath('../../'), '/\\').'/';
-$lastMTime = empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? 0 : strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']);
+$cacheDir    = $projectBase.'data/dyn/internal/sally/css-cache';
+$lastMTime   = empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? 0 : strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']);
 
 if ($lastMTime > 0 && $lastMTime <= time()) {
+	if (!is_dir($cacheDir)) mkdir($cacheDir, 0777, true);
+	
 	$file      = (string) $_GET['f'];
-	$cacheFile = $projectBase.'data/dyn/internal/sally/css-cache/mtimes.txt';
+	$cacheFile = $cacheDir.'/mtimes.txt';
 	$caches    = file_exists($cacheFile) ? file($cacheFile) : array();
 	$now       = time();
 	$lifetime  = 3600;
