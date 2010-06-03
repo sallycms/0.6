@@ -1,11 +1,8 @@
 <?php
 
-global $REX, $I18N;
-
-$this->title($I18N->msg('setup_step2'));
+$this->title($I18N->msg('setup_step4'));
 
 ?>
-<h2 class="rex-hl2"><?= $I18N->msg('setup_023') ?></h2>
 
 <div class="rex-form" id="rex-form-setup-step-2">
 	<form action="index.php" method="post">
@@ -18,40 +15,40 @@ $this->title($I18N->msg('setup_step2'));
 			$pwdFunctions = '';
 			
 			foreach (array('md5', 'sha1') as $algo) {
-				$algoText = $I18N->msg('setup_'.$algo.'_encryption');
+				$algoText = t('setup_'.$algo.'_encryption');
 				$selected = $algo == $pwdFunction ? ' selected="selected"' : '';
 
 				$pwdFunctions .= '<option value="'.$algo.'"'.$selected.'>'.$algoText.'</option>';
 			}
 
 			?>
-			<legend><?= $I18N->msg('setup_0201') ?></legend>
+			<legend><?= t('setup_0201') ?></legend>
 
 			<div class="rex-form-wrapper">
 				<div class="rex-form-row">
 					<p class="rex-form-col-a rex-form-text">
-						<label for="server"><?= $I18N->msg('setup_024') ?>:</label>
+						<label for="server"><?= t('setup_024') ?>:</label>
 						<input class="rex-form-text" type="text" id="server" name="server" value="<?= sly_html($server) ?>" />
 					</p>
 				</div>
 
 				<div class="rex-form-row">
 					<p class="rex-form-col-a rex-form-text">
-						<label for="servername"><?= $I18N->msg('setup_025') ?>:</label>
+						<label for="servername"><?= t('setup_025') ?>:</label>
 						<input class="rex-form-text" type="text" id="servername" name="servername" value="<?= sly_html($serverName) ?>" />
 					</p>
 				</div>
 
 				<div class="rex-form-row">
 					<p class="rex-form-col-a rex-form-text">
-						<label for="error_email"><?= $I18N->msg('setup_026') ?>:</label>
+						<label for="error_email"><?= t('setup_026') ?>:</label>
 						<input class="rex-form-text" type="text" id="error_email" name="error_email" value="<?= sly_html($errorEMail) ?>" />
 					</p>
 				</div>
 
 				<div class="rex-form-row">
 					<p class="rex-form-col-a rex-form-select">
-						<label for="pwd_func"><?= $I18N->msg('setup_encryption') ?>:</label>
+						<label for="pwd_func"><?= t('setup_encryption') ?>:</label>
 						<select class="rex-form-select" id="pwd_func" name="pwd_func">
 						<?= $pwdFunctions ?>
 						</select>
@@ -64,7 +61,7 @@ $this->title($I18N->msg('setup_step2'));
 			<div class="rex-form-wrapper">
 				<div class="rex-form-row">
 					<p class="rex-form-col-a rex-form-submit">
-						<input class="rex-form-submit" type="submit" name="sly-submit" value="<?= $I18N->msg('setup_029') ?>" />
+						<input class="rex-form-submit" type="submit" name="sly-submit" value="<?= t('setup_049') ?>" />
 					</p>
 				</div>
 			</div>

@@ -84,14 +84,16 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		$data = $config->get('DATABASE');
 		$isSent = isset($_POST['sly-submit']);
 		if ($isSent) {
-			$data['TABLE_PREFIX'] = sly_post('prefx', 'string');
+			$data['TABLE_PREFIX'] = sly_post('prefix', 'string');
 			$data['HOST']         = sly_post('host', 'string');
 			$data['LOGIN']        = sly_post('user', 'string');
 			$data['PASSWORD']     = sly_post('pass', 'string');
 			$data['NAME']         = sly_post('dbname', 'string');
 			$data['DRIVER']       = sly_post('driver', 'string');
 
-			$check = rex_sql::checkDbConnection($data['HOST'], $data['LOGIN'], $data['PASSWORD'], $data['NAME']);
+			$createdb             = sly_post('create_db', 'bool');
+
+			$check = rex_sql::checkDbConnection($data['HOST'], $data['LOGIN'], $data['PASSWORD'], $data['NAME'], $createdb);
 			if($check){
 				$config->set('DATABASE', $data, sly_Configuration::STORE_LOCAL);
 				unset($_POST['sly-submit']);
@@ -122,51 +124,25 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		$isSent = isset($_POST['sly-submit']);
 
 		if ($isSent) {
-			
-			$oldData['SERVER']               = sly_post('server', 'string');
-			$oldData['SERVERNAME']           = sly_post('servername', 'string');
-			$oldData['LANG']                 = $this->lang;
-			$oldData['INSTNAME']             = 'sly'.date('YmdHis');
-			$oldData['ERROR_EMAIL']          = sly_post('error_email', 'string');
-			$oldData['PSWFUNC']              = sly_post('pwd_func', 'string');
+			$config->setLocal('SERVER', sly_post('server', 'string'));
+			$config->setLocal('SERVERNAME', sly_post('servername', 'string'));
+			$config->setLocal('INSTNAME', 'sly'.date('YmdHis'));
+			$config->setLocal('ERROR_EMAIL', sly_post('error_email', 'string'));
+
+			$config->set('LANG', $this->lang);
+			$config->set('PSWFUNC', sly_post('pwd_func', 'string'));
 
 			
-			
-			
-			$config = sly_Core::config()->get(false);
-			$dumper = new sfYamlDumper();
-
-			if (file_put_contents($masterFile, $dumper->dump($oldData, 2)) === false) {
-				$this->warning = $I18N->msg('setup_020', '<b>', '</b>');
-			}
-			else {
-				sly_Core::config()->save();
-				
-				// Datenbank-Zugriff
-
-				extract($oldData['DATABASE'], EXTR_SKIP);
-				$err = rex_sql::checkDbConnection($HOST, $LOGIN, $PASSWORD, $NAME, $createDB);
-
-				if ($err !== true) {
-					$this->warning = $err;
-				}
-				else {
-					unset($_POST['sly-submit']);
-					$this->initdb();
-					return;
-				}
-			}
+			unset($_POST['sly-submit']);
+			$this->createUser();
+			return;
 		}
 
 		$this->render('views/setup/config.phtml', array(
-			'server'      => $config['SERVER'],
-			'serverName'  => $config['SERVERNAME'],
-			'errorEMail'  => $config['ERROR_EMAIL'],
-			'pwdFunction' => $config['PSWFUNC'],
-			'mysqlHost'   => $config['DATABASE']['HOST'],
-			'mysqlUser'   => $config['DATABASE']['LOGIN'],
-			'mysqlPass'   => $config['DATABASE']['PASSWORD'],
-			'mysqlName'   => $config['DATABASE']['NAME']
+			'server'      => $config->get('SERVER'),
+			'serverName'  => $config->get('SERVERNAME'),
+			'errorEMail'  => $config->get('ERROR_EMAIL'),
+			'pwdFunction' => $config->get('PSWFUNC'),
 		));
 	}
 
@@ -174,10 +150,9 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		global $I18N, $REX;
 
 		$config         = sly_Core::config();
-		$prefix         = $config->get('TABLE_PREFIX');
+		$prefix         = $config->get('DATABASE/TABLE_PREFIX');
 		$error          = '';
 		$dbInitFunction = sly_post('db_init_function', 'string', '');
-
 		// nenötigte Tabellen prüfen
 
 		$requiredTables = array (
@@ -192,7 +167,8 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			$prefix.'template',
 			$prefix.'user',
 			$prefix.'slice',
-			$prefix.'slice_value'
+			$prefix.'slice_value',
+			$prefix.'registry'
 		);
 
 		switch ($dbInitFunction) {
@@ -214,7 +190,6 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			case 'setup': // leere Datenbank neu einrichten
 
 				$installScript = $REX['INCLUDE_PATH'].'/install/sally4_2.sql';
-
 				if (empty($error)) $error = $this->setupImport($installScript);
 				if (empty($error)) $error = $this->setupAddOns($dbInitFunction == 'drop');
 
@@ -260,7 +235,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			}
 
 			foreach (array_diff($requiredTables, $existingTables) as $missingTable) {
-				$error .= $I18N->msg('setup_031', $missingTable).'<br />';
+				$error .= t('setup_031', $missingTable).'<br />';
 			}
 		}
 
@@ -270,7 +245,10 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		}
 		else {
 			$this->warning = empty($dbInitFunction) ? '' : $error;
-			$this->createuser();
+			$this->render('views/setup/initdb.phtml', array(
+				'dbInitFunction'  => $dbInitFunction,
+				'dbInitFunctions' => array('setup', 'nop', 'drop')
+			));
 		}
 	}
 	
@@ -278,7 +256,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		global $I18N;
 		
 		$config      = sly_Core::config();
-		$prefix      = $config->get('TABLE_PREFIX');
+		$prefix      = $config->get('DATABASE/TABLE_PREFIX');
 		$pdo         = sly_DB_Persistence::getInstance();
 		$usersExist  = $pdo->listTables($prefix.'user') && $pdo->magicFetch('user', 'user_id') !== false;
 		$createAdmin = !sly_post('no_admin', 'boolean', false);
@@ -342,20 +320,8 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 	
 	public function finish() {
 		global $I18N, $REX;
-		
-		$masterFile = $REX['INCLUDE_PATH'].'/config/sally.yaml';
-		$oldData    = sly_Configuration::load($masterFile);
-		$dumper     = new sfYamlDumper();
-		
-		$oldData['SETUP'] = false;
 
-		if (file_put_contents($masterFile, $dumper->dump($oldData, 2))) {
-			sly_Core::config()->save();
-			$this->warning = '';
-		}
-		else {
-			$this->warning = $I18N->msg('setup_050');
-		}
+		sly_Core::config()->setLocal('SETUP', false);
 		
 		$this->render('views/setup/finish.phtml');
 	}
@@ -485,7 +451,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			$state = true;
 
 			if ($state === true && $uninstallBefore && !$addonService->isInstalled($systemAddon)) {
-				$state = $$addonService->uninstall($systemAddon);
+				$state = $addonService->uninstall($systemAddon);
 			}
 
 			if ($state === true && !$addonService->isInstalled($systemAddon)) {
