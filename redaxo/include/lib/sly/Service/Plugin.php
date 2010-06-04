@@ -16,7 +16,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 {
 	public function __construct()
 	{
-		$this->data       = sly_Core::config()->get('ADDON/plugins');
+		$this->data       = sly_Core::config()->get('ADDON');
 		$this->i18nPrefix = 'plugin_';
 	}
 	
@@ -35,7 +35,6 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		$installSQL  = $pluginDir.'install.sql';
 		$configFile  = $pluginDir.'config.inc.php';
 		$filesDir    = $pluginDir.'files';
-		$config      = sly_Core::config();
 		
 		$state = $this->extend('PRE', 'INSTALL', $plugin, true);
 
@@ -48,7 +47,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 			if (is_readable($installFile)) {
 				$this->mentalGymnasticsInclude($installFile, $plugin);
 
-				$hasError = $config->has('ADDON/installmsg/'.$pluginName);
+				$hasError = $REX['ADDON']['installmsg'][$pluginName];
 
 				if ($hasError) {
 					$state = $this->I18N('no_install', $pluginName).'<br />';
@@ -79,7 +78,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 					}
 					
 					if ($state === true) {
-						$config->set('ADDON/plugins/'.$addon.'/install/'.$pluginName, true);
+						$this->setProperty($plugin, 'install', true);
 					}
 				}
 			}
@@ -101,7 +100,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		$state = $this->extend('POST', 'ASSET_COPY', $plugin, $state);
 
 		if ($state !== true) {
-			$config->set('ADDON/plugins/'.$addon.'/install/'.$pluginName, false);
+			$this->setProperty($plugin, 'install', false);
 		}
 
 		return $state;
@@ -119,7 +118,6 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		$pluginDir      = $this->baseFolder($plugin);
 		$uninstallFile  = $pluginDir.'uninstall.inc.php';
 		$uninstallSQL   = $pluginDir.'uninstall.sql';
-		$config         = sly_Core::config();
 		
 		$state = $this->extend('PRE', 'UNINSTALL', $plugin, true);
 
@@ -150,7 +148,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 				}
 
 				if ($state === true) {
-					$config->set('ADDON/plugins/'.$addon.'/install/'.$pluginName, false);
+					$this->setProperty($plugin, 'install', false);
 				}
 			}
 		}
@@ -166,7 +164,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		$state = $this->extend('POST', 'ASSET_DELETE', $plugin, $state);
 
 		if ($state !== true) {
-			$config->set('ADDON/plugins/'.$addon.'/install/'.$pluginName, true);
+			$this->setProperty($plugin, 'install', true);
 		}
 
 		return $state;
@@ -187,9 +185,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 			$state = $this->extend('PRE', 'ACTIVATE', $plugin, true);
 			
 			if ($state === true) {
-				list($addon, $pluginName) = $plugin;
-				$config = sly_Core::config();
-				$config->set('ADDON/plugins/'.$addon.'/status/'.$pluginName, true);
+				$this->setProperty($plugin, 'status', true);
 			}
 		}
 		else {
@@ -213,9 +209,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		$state = $this->extend('PRE', 'DEACTIVATE', $plugin, true);
 		
 		if ($state === true) {
-			list($addon, $pluginName) = $plugin;
-			$config = sly_Core::config();
-			$config->set('ADDON/plugins/'.$addon.'/status/'.$pluginName, false);
+			$this->setProperty($plugin, 'status', false);
 		}
 
 		return $this->extend('POST', 'DEACTIVATE', $plugin, $state);
@@ -380,13 +374,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 	{
 		list($addon, $pluginName) = $plugin;
 		
-		if (!isset($this->data[$addon][$property])) {
-			$this->data[$addon][$property] = array();
-		}
-
-		$this->data[$addon][$property][$pluginName] = $value;
-		sly_Core::config()->set('ADDON/plugins', $this->data);
-		return $value;
+		return sly_Core::config()->set('ADDON/'.$addon.'/plugins/'.$pluginName.'/'.$property, $value);
 	}
 	
 	/**
@@ -400,8 +388,8 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 	public function getProperty($plugin, $property, $default = null)
 	{
 		list($addon, $pluginName) = $plugin;
-		$this->data = sly_Core::config()->get('ADDON/plugins');
-		return isset($this->data[$addon][$property][$pluginName]) ? $this->data[$addon][$property][$pluginName] : $default;
+
+		return sly_Core::config()->has('ADDON/'.$addon.'/plugins/'.$pluginName.'/'.$property) ? sly_Core::config()->get('ADDON/'.$addon.'/plugins/'.$pluginName.'/'.$property) : $default;
 	}
 
 	/**
@@ -413,7 +401,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 	 */
 	public function getRegisteredPlugins($addon)
 	{
-		return isset($this->data[$addon]) ? array_keys($this->data[$addon]['install']) : array();
+		return isset($this->data[$addon]['plugins']) ? array_keys($this->data[$addon]['plugins']) : array();
 	}
 
 	/**
@@ -451,19 +439,6 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		}
 
 		return $avail;
-	}
-	
-	public function getConfig($plugin)
-	{
-		$configFile   = $this->baseFolder($plugin).'/config.yaml';
-
-		if (!file_exists($configFile)) {
-			return null;
-		}else {
-			$config = sly_Configuration::getInstance($configFile);
-		}
-		
-		return $config;
 	}
 	
 	/**
@@ -521,4 +496,5 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 				'Es ist eine unerwartete Ausnahme während der Installation aufgetreten: '.$e->getMessage();
 		}
 	}
+	
 }

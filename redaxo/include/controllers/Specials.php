@@ -39,8 +39,6 @@ class sly_Controller_Specials extends sly_Controller_Sally
 	
 	public function update()
 	{
-		global $REX, $I18N;
-		
 		$startArticle      = sly_post('start_article',       'int');
 		$notFoundArticle   = sly_post('notfound_article',    'int');
 		$defaultTemplateID = sly_post('default_template_id', 'int');
@@ -60,14 +58,14 @@ class sly_Controller_Specials extends sly_Controller_Sally
 			$conf->set('START_ARTICLE_ID', $startArticle);
 		}
 		else {
-			$this->warning = $I18N->msg('settings_invalid_sitestart_article');
+			$this->warning = t('settings_invalid_sitestart_article');
 		}
 
 		if (OOArticle::exists($notFoundArticle)) {
 			$conf->set('NOTFOUND_ARTICLE_ID', $notFoundArticle);
 		}
 		else {
-			$this->warning .= $I18N->msg('settings_invalid_notfound_article').'<br />';
+			$this->warning .= t('settings_invalid_notfound_article').'<br />';
 		}
 		
 		// Standard-Artikel
@@ -76,7 +74,7 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		$id  = $sql->fetch('template', 'id', array('id' => $defaultTemplateID));
 
 		if ($id === null && $defaultTemplateID != 0) {
-			$this->warning .= $I18N->msg('settings_invalid_default_template').'<br />';
+			$this->warning .= t('settings_invalid_default_template').'<br />';
 		}
 		else {
 			$conf->set('DEFAULT_TEMPLATE_ID', $defaultTemplateID);
@@ -84,13 +82,13 @@ class sly_Controller_Specials extends sly_Controller_Sally
 
 		//Sonstige Einstellungen
 
-		$conf->set('ERROR_EMAIL', strtolower($errorEMail));
+		$conf->setLocal('ERROR_EMAIL', strtolower($errorEMail));
 		$conf->set('LANG', $backendLocale);
-		$conf->set('SERVER', $server);
-		$conf->set('SERVERNAME', $serverName);
+		$conf->setLocal('SERVER', $server);
+		$conf->setLocal('SERVERNAME', $serverName);
 		$conf->set('MOD_REWRITE', $modRewrite);
 
-		$this->info = $I18N->msg('info_updated');
+		$this->info = t('info_updated');
 
 		$this->index();
 	}
@@ -104,10 +102,10 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		$cont        = preg_replace("#^(\\\$REX\['SETUP'\].?=.?)[^;]*#m", '$1true', $cont);
 		
 		if (file_put_contents($master_file, $cont) !== false) {
-			$this->info = $I18N->msg('setup_error1', '<a href="index.php">', '</a>');
+			$this->info = t('setup_error1', '<a href="index.php">', '</a>');
 		}
 		else {
-			$this->warning = $I18N->msg('setup_error2');
+			$this->warning = t('setup_error2');
 			
 		}
 		

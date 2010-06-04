@@ -152,7 +152,7 @@ class sly_Configuration {
 		$this->projectConfig->remove($key);
    	}
 
-	protected function setStatic($key, $value) {
+	public function setStatic($key, $value) {
 		return $this->setInternal($key, $value, self::STORE_STATIC);
 	}
 

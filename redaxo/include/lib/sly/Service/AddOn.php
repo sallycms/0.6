@@ -16,7 +16,6 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 {
 	public function __construct()
 	{
-		$this->addons     = rex_read_addons_folder();
 		$this->data       = sly_Core::config()->get('ADDON');
 		$this->i18nPrefix = 'addon_';
 	}
@@ -30,7 +29,6 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		$installSQL  = $addonDir.'install.sql';
 		$configFile  = $addonDir.'config.inc.php';
 		$filesDir    = $addonDir.'files';
-		$config      = sly_Core::config();
 		
 		$state = $this->extend('PRE', 'INSTALL', $addonName, true);
 
@@ -110,7 +108,6 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		$addonDir       = $this->baseFolder($addonName);
 		$uninstallFile  = $addonDir.'uninstall.inc.php';
 		$uninstallSQL   = $addonDir.'uninstall.sql';
-		$config         = sly_Core::config();
 		
 		$state = $this->extend('PRE', 'UNINSTALL', $addonName, true);
 
@@ -367,7 +364,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	 */
 	public function setProperty($addonName, $property, $value)
 	{
-		return sly_Core::config()->set('ADDON/'.$property.'/'.$addonName, $value);
+		return sly_Core::config()->set('ADDON/'.$addonName.'/'.$property, $value);
 	}
 	
 	/**
@@ -380,7 +377,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	 */
 	public function getProperty($addonName, $property, $default = null)
 	{
-		return sly_Core::config()->has('ADDON/'.$property.'/'.$addonName) ? sly_Core::config()->get('ADDON/'.$property.'/'.$addonName) : $default;
+		return sly_Core::config()->has('ADDON/'.$addonName.'/'.$property) ? sly_Core::config()->get('ADDON/'.$addonName.'/'.$property) : $default;
 	}
 
 	/**
@@ -425,25 +422,5 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		$systemAddOns = sly_Core::config()->get('SYSTEM_ADDONS');
 		return in_array($addonName, $systemAddOns);
 	}
-	
-	public function getConfig($addonName)
-	{
-		$configFile   = $this->baseFolder($addonName).'/config.yaml';
-		$internalFile = $this->internalFolder($addonName).'/config.yaml';
-		
-		if (!file_exists($configFile) && !file_exists($internalFile)) {
-			return null;
-		}
-		
-		if (file_exists($configFile)) {
-			$config = sly_Configuration::getInstance($configFile);
-		}
-		
-		if (file_exists($internalFile)) {
-			if ($config) $config->appendFile($internalFile);
-			else $config = sly_Configuration::getInstance($internalFile);
-		}
-		
-		return $config;
-	}
+
 }

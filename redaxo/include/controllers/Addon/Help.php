@@ -86,7 +86,7 @@ class sly_Controller_Addon_Help extends sly_Controller_Sally
 			$plugins[$addon] = rex_read_plugins_folder($addon);
 		}
 
-		// Vergleiche Addons aus dem Verzeichnis addons/ mit den Einträgen in addons.yaml.
+		//verleiche dateisystem mit konfigurierten 
 		// Wenn ein Addon in der Datei fehlt oder nicht mehr vorhanden ist, ändere den Dateiinhalt.
 		
 		$knownAddons = $this->addons->getRegisteredAddOns();

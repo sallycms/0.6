@@ -18,13 +18,14 @@ abstract class sly_Service_AddOn_Base
 	protected $data;
 	protected $i18nPrefix;
 	
-	protected function deleteHelper($addonNameOrPlugin)
+	protected function deleteHelper($addonORplugin)
 	{
 		$state  = true;
-		$state &= $this->uninstall($addonNameOrPlugin);
-		$state &= rex_deleteDir($this->baseFolder($addonNameOrPlugin), true);
-		$state &= $this->generateConfig();
-
+		$state &= $this->uninstall($addonORplugin);
+		$state &= rex_deleteDir($this->baseFolder($addonORplugin), true);
+		if($state){
+			$this->removeConfig($addonORplugin);
+		}
 		return $state;
 	}
 
@@ -40,7 +41,42 @@ abstract class sly_Service_AddOn_Base
 				'Es ist eine unerwartete Ausnahme während der Installation aufgetreten: '.$e->getMessage();
 		}
 	}
+
+	private function getConfPath($addonORplugin) {
+		if(is_array($addonORplugin)) {
+			list($addon, $plugin) = $addonORplugin;
+			return 'ADDON/'.$addon.'/plugins/'.$plugin;
+		}else {
+			return 'ADDON/'.$addonORplugin;
+		}
+	}
+
+	public function loadConfig($addonORplugin)
+	{
+		$config = sly_Core::config();
+
+		$staticFile   = $this->baseFolder($addonORplugin).'/static.yml';
+		$defaultsFile = $this->internalFolder($addonORplugin).'/config.yml';
+
+		if(file_exists($staticFile)){
+			$data = sfYaml::load($staticFile);
+			$config->setStatic($this->getConfPath($addonORplugin), $data);
+		}
+		if(file_exists($defaultsFile)){
+			$data = sfYaml::load($defaultsFile);
+			$config->setLocalDefault($this->getConfPath($addonORplugin), $data);
+		}
+	}
 	
+	public function add($addonORplugin){
+		$config = sly_Core::config();
+		$config->setLocalDefault($this->getConfPath($addonORplugin).'install', false);
+	}
+
+	public function removeConfig($addonORplugin){
+		$config = sly_Core::config();
+		$config->remove($this->getConfPath($addonORplugin));
+	}
 //	abstract public function install($addonName);         // Installieren
 //	abstract public function uninstall($addonName);       // Deinstallieren
 //	abstract public function activate($addonName);        // Aktivieren

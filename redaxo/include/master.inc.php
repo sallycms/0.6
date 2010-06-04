@@ -32,8 +32,8 @@ if (empty($REX['NOFUNCTIONS'])) {
 // Kernkonfiguration laden
 
 $config = sly_Core::config();
-$config->loadStatic($REX['INCLUDE_PATH'].'/config/sallyStatic.yaml');
-$config->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yaml');
+$config->loadStatic($REX['INCLUDE_PATH'].'/config/sallyStatic.yml');
+$config->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yml');
 $config->loadLocalConfig();
 
 if (!$config->get('SETUP')) {

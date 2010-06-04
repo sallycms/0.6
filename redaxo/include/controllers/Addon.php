@@ -83,12 +83,10 @@ class sly_Controller_Addon extends sly_Controller_Sally
 		$knownAddons = $this->addons->getRegisteredAddOns();
 
 		foreach(array_diff($addons, $knownAddons) as $addon){
-			$config->set('ADDON/install/'.$addon, false);
-			$config->set('ADDON/status/'.$addon, false);
+			$this->addons->add($addon);
 		}
 		foreach(array_diff($knownAddons, $addons) as $addon){
-			$config->remove('ADDON/install/'.$addon);
-			$config->remove('ADDON/status/'.$addon);
+			$this->addons->removeConfig($addon);
 		}
 
 		// dito für Plugins
@@ -97,12 +95,10 @@ class sly_Controller_Addon extends sly_Controller_Sally
 			$knownPlugins = $this->plugins->getRegisteredPlugins($addon);
 			
 			foreach(array_diff($plugins[$addon], $knownPlugins) as $plugin){
-				$config->set('ADDON/plugins/'.$addon.'/install/'.$plugin, false);
-				$config->set('ADDON/plugins/'.$addon.'/status/'.$plugin, false);
+				$this->plugin->add(array($addon, $plugin));
 			}
 			foreach(array_diff($knownPlugins, $plugins[$addon]) as $plugin){
-				$config->remove('ADDON/plugins/'.$addon.'/install/'.$plugin);
-				$config->remove('ADDON/plugins/'.$addon.'/status/'.$plugin);
+				$this->addons->removeConfig(array($addon, $plugin));
 			}
 		}
 	}
