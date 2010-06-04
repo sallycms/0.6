@@ -79,34 +79,36 @@ class sly_Controller_Addon_Help extends sly_Controller_Sally
 	
 	protected function checkForNewComponents()
 	{
-		$addons  = rex_read_addons_folder();
+		$config = sly_Core::config();
+       	$addons  = rex_read_addons_folder();
 		$plugins = array();
-		
+
 		foreach ($addons as $addon) {
 			$plugins[$addon] = rex_read_plugins_folder($addon);
 		}
 
-		//verleiche dateisystem mit konfigurierten 
+		// Vergleiche Addons aus dem Verzeichnis addons/ mit den Einträgen in addons.yaml.
 		// Wenn ein Addon in der Datei fehlt oder nicht mehr vorhanden ist, ändere den Dateiinhalt.
-		
+
 		$knownAddons = $this->addons->getRegisteredAddOns();
-		
-		if (count(array_diff($addons, $knownAddons)) > 0 || count(array_diff($knownAddons, $addons)) > 0) {
-			if (($state = $this->addons->generateConfig()) !== true) {
-				$this->warning .= $state;
-			}
+
+		foreach(array_diff($addons, $knownAddons) as $addon){
+			$this->addons->add($addon);
 		}
-		
+		foreach(array_diff($knownAddons, $addons) as $addon){
+			$this->addons->removeConfig($addon);
+		}
+
 		// dito für Plugins
-		
+
 		foreach ($addons as $addon) {
 			$knownPlugins = $this->plugins->getRegisteredPlugins($addon);
-			
-			if (count(array_diff($plugins[$addon], $knownPlugins)) > 0 || count(array_diff($knownPlugins, $plugins[$addon])) > 0) {
-				if (($state = $this->plugins->generateConfig()) !== true) {
-					$this->warning .= $state;
-					break;
-				}
+
+			foreach(array_diff($plugins[$addon], $knownPlugins) as $plugin){
+				$this->plugin->add(array($addon, $plugin));
+			}
+			foreach(array_diff($knownPlugins, $plugins[$addon]) as $plugin){
+				$this->addons->removeConfig(array($addon, $plugin));
 			}
 		}
 	}
