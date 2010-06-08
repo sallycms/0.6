@@ -100,17 +100,17 @@ else {
 // Core-Seiten initialisieren
 
 if ($REX['USER']) {
-	$REX['PAGES']['profile'] = array($I18N->msg('profile'), 0, 1);
-	$REX['PAGES']['credits'] = array($I18N->msg('credits'), 0, 1);
+	$REX['PAGES']['profile'] = array($I18N->msg('profile'), 0, false);
+	$REX['PAGES']['credits'] = array($I18N->msg('credits'), 0, false);
 
 	if ($REX['USER']->isAdmin() || $REX['USER']->hasStructurePerm()) {
 		$REX['PAGES']['structure'] = array($I18N->msg('structure'), 0, false);
-		$REX['PAGES']['mediapool'] = array($I18N->msg('mediapool'), 0, false, 'NAVI' => array('href' =>'#', 'onclick' => 'openMediaPool()', 'class' => ' rex-popup'));
+		$REX['PAGES']['mediapool'] = array($I18N->msg('mediapool'), 0, true, 'NAVI' => array('href' =>'#', 'onclick' => 'openMediaPool()', 'class' => ' rex-popup'));
 		$REX['PAGES']['linkmap']   = array($I18N->msg('linkmap'), 0, true);
-		$REX['PAGES']['content']   = array($I18N->msg('content'), 0, true);
+		$REX['PAGES']['content']   = array($I18N->msg('content'), 0, false);
 	}
 	elseif ($REX['USER']->hasPerm('mediapool[]')) {
-		$REX['PAGES']['mediapool'] = array($I18N->msg('mediapool'), 0, false, 'NAVI' => array('href' =>'#', 'onclick' => 'openMediaPool()', 'class' => ' rex-popup'));
+		$REX['PAGES']['mediapool'] = array($I18N->msg('mediapool'), 0, true, 'NAVI' => array('href' =>'#', 'onclick' => 'openMediaPool()', 'class' => ' rex-popup'));
 	}
 
 	if ($REX['USER']->isAdmin()) {

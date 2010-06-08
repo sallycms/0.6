@@ -19,7 +19,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
 	const LOG_UNKNOWN = -1;
 	const LOG_ERROR   = -2;
 	
-	private $connection  = null;
+	private $connection   = null;
 	private $statement    = null;
 	private $currentRow   = null;
 	
@@ -33,7 +33,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
 			$start = microtime(true);
 			$this->currentRow = null;
 			$this->statement = null;
-			$this->statement = $this->connection->getConnection()->prepare($query);
+			$this->statement = $this->connection->getPDO()->prepare($query);
 			if($this->statement->execute($data) === false){
 				$time = microtime(true) - $start;
                 self::log($query, $time, self::LOG_ERROR);
@@ -117,7 +117,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
 	}
     
     public function lastId() {
-		return intval($this->connection->getConnection()->lastInsertId());
+		return intval($this->connection->getPDO()->lastInsertId());
     }
     
     private function affectedRows() {
@@ -125,7 +125,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
     }
     
  	private static function getPrefix() {
-        return sly_Core::config()->get('TABLE_PREFIX');
+        return sly_Core::config()->get('DATABASE/TABLE_PREFIX');
     }
 	 
 	public function fetch($table, $select = '*', $where = null, $order = null) {

@@ -21,18 +21,18 @@ class sly_DB_PDO_Connection {
 
 	private $driver;
 
-	private $connection;
+	private $pdo;
 	private $transrunning = false; 
 	
 	private function __construct($driver, $connString, $login, $password)
 	{
 		$this->driver = $driver;
-		$this->connection = new PDO($driver.':'.$connString, $login, $password);
+		$this->pdo = new PDO($driver.':'.$connString, $login, $password);
 	}
 	
 	/**
 	 * 
-	 * @return sly-DB_PDO_Connection instance
+	 * @return sly_DB_PDO_Connection instance
 	 */
 	public static function getInstance($driver, $connString, $login, $password){
         if (!self::$instances[$driver.$connString]) self::$instances[$driver.$connString] = new self($driver, $connString, $login, $password);
@@ -41,22 +41,22 @@ class sly_DB_PDO_Connection {
 	
     public function getSQLbuilder($table){
     	$classname = 'sly_DB_PDO_SQLBuilder_'.strtoupper($this->driver);
-        return new $classname($this->connection, $table);
+        return new $classname($this->pdo, $table);
     }
     
     /**
      * 
      * @return PDO instance
      */
-	public function getConnection(){
-		return $this->connection;
+	public function getPDO(){
+		return $this->pdo;
 	} 
 	
 	public function isTransRunning(){
-		return $this->transrunning; 
+		return $this->transrunning;
 	}
 	
 	public function setTransRunning($bool){
-		$this->transrunning = $bool; 
+		$this->transrunning = $bool;
 	}
 }
