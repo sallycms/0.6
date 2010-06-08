@@ -54,18 +54,10 @@ class rex_sql
 	 * Gibt die DatenbankId der Abfrage (SQL) zurück,
 	 * oder false wenn die Abfrage keine DBID enthält
 	 *
-	 * @param $query Abfrage
+	 * @param $qry Abfrage
 	 */
-	public function getQueryDBID($qry = null)
+	public static function getQueryDBID($qry)
 	{
-		if (!$qry) {
-			if (!isset($this)) { // Nur bei angelegtem Object
-				return null;
-			}
-			
-			$qry = $this->query;
-		}
-
 		$qry = trim($qry);
 
 		if (preg_match('/\(DB([1-9])\)/i', $qry, $matches)) {
