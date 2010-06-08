@@ -47,7 +47,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 			if (is_readable($installFile)) {
 				$this->mentalGymnasticsInclude($installFile, $plugin);
 
-				$hasError = $REX['ADDON']['installmsg'][$pluginName];
+				$hasError = !empty($REX['ADDON']['installmsg'][$pluginName]);
 
 				if ($hasError) {
 					$state = $this->I18N('no_install', $pluginName).'<br />';
