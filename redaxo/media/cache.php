@@ -11,9 +11,9 @@ $projectBase = rtrim(realpath('../../'), '/\\').'/';
 $cacheDir    = $projectBase.'data/dyn/internal/sally/css-cache';
 $lastMTime   = empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? 0 : strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']);
 
+if (!is_dir($cacheDir)) mkdir($cacheDir, 0777, true);
+
 if ($lastMTime > 0 && $lastMTime <= time()) {
-	if (!is_dir($cacheDir)) mkdir($cacheDir, 0777, true);
-	
 	$file      = (string) $_GET['f'];
 	$cacheFile = $cacheDir.'/mtimes.txt';
 	$caches    = file_exists($cacheFile) ? file($cacheFile) : array();
