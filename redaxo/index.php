@@ -127,9 +127,10 @@ if ($REX['USER']) {
 require_once $REX['INCLUDE_PATH'].'/addons.inc.php';
 
 if ($REX['USER']) {
+
+	$addonService  = sly_Service_Factory::getService('AddOn');
 	// AddOn-Seiten vorbereiten
-	foreach ($REX['ADDON']['status'] as $addon => $status) {
-		if (!$status) continue;
+	foreach ($addonService->getAvailableAddons() as $addon) {
 		
 		$perm = '';
 		$name = '';
@@ -141,7 +142,7 @@ if ($REX['USER']) {
 		$link = '<a href="index.php?page='.urlencode($link).'">';
 		
 		if (!empty($name) && (empty($perm) || $REX['USER']->hasPerm($perm) || $REX['USER']->isAdmin())) {
-			$popup = isset($REX['ADDON']['popup'][$addon]) ? 0 : 1;
+			$popup = isset($REX['ADDON'][$addon]['popup']) ? 0 : 1;
 			$REX['PAGES'][strtolower($addon)] = array($name, 1, $popup, $link);
 		}
 	}
@@ -162,7 +163,7 @@ if ($REX['USER']) {
 		$REX['PAGE'] = strtolower($REX['LOGIN']->getStartpage());
 		
 		if (!isset($REX['PAGES'][$REX['PAGE']])) {
-			$REX['PAGE'] = strtolower($REX['START_PAGE']);
+			$REX['PAGE'] = strtolower($config->get('START_PAGE'));
 			
 			if (!isset($REX['PAGES'][$REX['PAGE']])) {
 				$REX['PAGE'] = 'profile';

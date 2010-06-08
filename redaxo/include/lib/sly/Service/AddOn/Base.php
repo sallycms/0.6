@@ -56,7 +56,7 @@ abstract class sly_Service_AddOn_Base
 		$config = sly_Core::config();
 
 		$staticFile   = $this->baseFolder($addonORplugin).'/static.yml';
-		$defaultsFile = $this->internalFolder($addonORplugin).'/config.yml';
+		$defaultsFile = $this->internalFolder($addonORplugin).'/defaults.yml';
 
 		if(file_exists($staticFile)){
 			$data = sfYaml::load($staticFile);
@@ -69,8 +69,7 @@ abstract class sly_Service_AddOn_Base
 	}
 	
 	public function add($addonORplugin){
-		$config = sly_Core::config();
-		$config->setLocalDefault($this->getConfPath($addonORplugin).'install', false);
+		$this->setProperty($addonORplugin, 'install', false);
 	}
 
 	public function removeConfig($addonORplugin){

@@ -22,24 +22,14 @@ if ($func == 'update') {
 	$max_resizepixel = sly_request('max_resizepixel', 'int');
 	$jpg_quality     = min(abs(sly_request('jpg_quality', 'int')), 100);
 
-	$content = '$REX[\'ADDON\'][\'image_resize\'][\'max_cachefiles\']  = '.$max_cachefiles.';
-$REX[\'ADDON\'][\'image_resize\'][\'max_filters\']     = '.$max_filters.';
-$REX[\'ADDON\'][\'image_resize\'][\'max_resizekb\']    = '.$max_resizekb.';
-$REX[\'ADDON\'][\'image_resize\'][\'max_resizepixel\'] = '.$max_resizepixel.';
-$REX[\'ADDON\'][\'image_resize\'][\'jpg_quality\']     = '.$jpg_quality.';';
-
-	if (rex_replace_dynamic_contents($configFile, $content) !== false) {
-		print rex_info($I18N->msg('iresize_config_saved'));
-		include $configFile; // Werte für das Formular neu einlesen
-	}
-	else {
-		print rex_warning($I18N->msg('iresize_config_not_saved'));
-	}
+	$service->setProperty('image_resize', 'max_cachefiles', $max_cachefiles);
+	$service->setProperty('image_resize', 'max_filters', $max_filters);
+	$service->setProperty('image_resize', 'max_resizekb', $max_resizekb);
+	$service->setProperty('image_resize', 'max_resizepixel', $max_resizepixel);
+	$service->setProperty('image_resize', 'jpg_quality', $jpg_quality);
 }
 
-if (!is_writable($configFile)) {
-	print rex_warning($I18N->msg('iresize_config_not_writable', $configFile));
-}
+
 
 ?>
 <div class="rex-addon-output">
@@ -57,35 +47,35 @@ if (!is_writable($configFile)) {
 						<div class="rex-form-row rex-form-element-v2">
 							<p class="rex-form-text">
 								<label for="max_cachefiles"><?= $I18N->msg('iresize_max_cache_files') ?></label>
-								<input class="rex-form-text" type="text" id="max_cachefiles" name="max_cachefiles" value="<?= sly_html($REX['ADDON']['image_resize']['max_cachefiles']) ?>" />
+								<input class="rex-form-text" type="text" id="max_cachefiles" name="max_cachefiles" value="<?= sly_html($service->getProperty('image_resize', 'max_cachefiles')) ?>" />
 							</p>
 						</div>
 
 						<div class="rex-form-row rex-form-element-v2">
 							<p class="rex-form-text">
 								<label for="max_filters"><?= $I18N->msg('iresize_max_filters') ?></label>
-								<input class="rex-form-text" type="text" id="max_filters" name="max_filters" value="<?= sly_html($REX['ADDON']['image_resize']['max_filters']) ?>" />
+								<input class="rex-form-text" type="text" id="max_filters" name="max_filters" value="<?= sly_html($service->getProperty('image_resize', 'max_filters')) ?>" />
 							</p>
 						</div>
 
 						<div class="rex-form-row rex-form-element-v2">
 							<p class="rex-form-text">
 								<label for="max_resizekb"><?= $I18N->msg('iresize_max_resizekb') ?></label>
-								<input class="rex-form-text" type="text" id="max_resizekb" name="max_resizekb" value="<?= sly_html($REX['ADDON']['image_resize']['max_resizekb']) ?>" />
+								<input class="rex-form-text" type="text" id="max_resizekb" name="max_resizekb" value="<?= sly_html($service->getProperty('image_resize', 'max_resizekb')) ?>" />
 							</p>
 						</div>
 
 						<div class="rex-form-row rex-form-element-v2">
 							<p class="rex-form-text">
 								<label for="max_resizepixel"><?= $I18N->msg('iresize_max_resizepx') ?></label>
-								<input class="rex-form-text" type="text" id="max_resizepixel" name="max_resizepixel" value="<?= sly_html($REX['ADDON']['image_resize']['max_resizepixel']) ?>" />
+								<input class="rex-form-text" type="text" id="max_resizepixel" name="max_resizepixel" value="<?= sly_html($service->getProperty('image_resize', 'max_resizepixel')) ?>" />
 							</p>
 						</div>
 
 						<div class="rex-form-row rex-form-element-v2">
 							<p class="rex-form-text">
 								<label for="jpg_quality"><?= $I18N->msg('iresize_jpg_quality') ?> [0-100]</label>
-								<input class="rex-form-text" type="text" id="jpg_quality" name="jpg_quality" value="<?= sly_html($REX['ADDON']['image_resize']['jpg_quality']) ?>" />
+								<input class="rex-form-text" type="text" id="jpg_quality" name="jpg_quality" value="<?= sly_html($service->getProperty('image_resize', 'jpg_quality')) ?>" />
 							</p>
 						</div>
 						

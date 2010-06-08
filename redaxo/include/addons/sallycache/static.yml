@@ -1,0 +1,4 @@
+name: "Sally Cache"
+author: "Christian Zozmann"
+supportpage: "www.webvariants.de"
+requires: ["developer_utils"]

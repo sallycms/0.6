@@ -15,12 +15,6 @@
  * @version svn:$Id$
  */
 
-$mypage = 'agk_skin';
-
-$REX['ADDON']['version'][$mypage] = '1.2';
-$REX['ADDON']['author'][$mypage] = 'Design: Ralph Zumkeller; Umsetzung: Thomas Blum';
-$REX['ADDON']['supportpage'][$mypage] = 'forum.redaxo.de';
-
 if($REX["REDAXO"])
 {
   require_once(dirname(__FILE__). '/extensions/extension_cssadd.inc.php');

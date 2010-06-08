@@ -21,29 +21,7 @@ if (!$REX['REDAXO'] && !$rex_resize) return;
 
 $mypage = 'image_resize';
 
-$REX['ADDON']['rxid'][$mypage]        = '469';
-$REX['ADDON']['page'][$mypage]        = $mypage;
-$REX['ADDON']['name'][$mypage]        = 'Image Resize';
-$REX['ADDON']['perm'][$mypage]        = 'image_resize[]';
-$REX['ADDON']['version'][$mypage]     = file_get_contents(dirname(__FILE__).'/version');
-$REX['ADDON']['author'][$mypage]      = 'Wolfgang Hutteger, Markus Staab, Jan Kristinus, Christian Zozmann, Christoph Mewes';
-$REX['ADDON']['supportpage'][$mypage] = 'forum.redaxo.de, www.webvariants.de';
-
 $REX['PERM'][] = 'image_resize[]';
-
-/* Standard-Konfiguration */
-$REX['ADDON']['image_resize']['default_filters'] = array();
-$REX['ADDON']['image_resize']['max_cachefiles'] = 5;
-$REX['ADDON']['image_resize']['max_filters'] = 5;
-$REX['ADDON']['image_resize']['max_resizekb'] = 1000;
-$REX['ADDON']['image_resize']['max_resizepixel'] = 2000;
-$REX['ADDON']['image_resize']['jpg_quality'] = 75;
-
-/* benutzerdefinierte Konf. einbinden */
-$internal   = sly_Service_Factory::getService('AddOn')->internalFolder($mypage);
-$configFile = $internal.'/config.inc.php';
-if (!file_exists($configFile)) copy(dirname(__FILE__).'/example.config.inc.php', $configFile);
-include $configFile;
 
 /* API einbinden */
 require_once $REX['INCLUDE_PATH'].'/addons/image_resize/classes/class.thumbnail.inc.php';
