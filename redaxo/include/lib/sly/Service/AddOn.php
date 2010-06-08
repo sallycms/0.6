@@ -41,7 +41,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 			if (is_readable($installFile)) {
 				$this->req($installFile, $addonName);
 
-				$hasError = $REX['ADDON']['installmsg'][$addonName];
+				$hasError = !empty($REX['ADDON']['installmsg'][$addonName]);
 
 				if ($hasError) {
 					$state = t('no_install', $addonName).'<br />';
@@ -105,9 +105,10 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	 */
 	public function uninstall($addonName)
 	{
-		$addonDir       = $this->baseFolder($addonName);
-		$uninstallFile  = $addonDir.'uninstall.inc.php';
-		$uninstallSQL   = $addonDir.'uninstall.sql';
+		$addonDir      = $this->baseFolder($addonName);
+		$uninstallFile = $addonDir.'uninstall.inc.php';
+		$uninstallSQL  = $addonDir.'uninstall.sql';
+		$config        = sly_Core::config();
 		
 		$state = $this->extend('PRE', 'UNINSTALL', $addonName, true);
 

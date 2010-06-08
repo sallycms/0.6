@@ -69,8 +69,8 @@ class sly_Controller_Addon extends sly_Controller_Sally
 	
 	protected function checkForNewComponents()
 	{
-		$config = sly_Core::config();
-       	$addons  = rex_read_addons_folder();
+		$config  = sly_Core::config();
+		$addons  = rex_read_addons_folder();
 		$plugins = array();
 		
 		foreach ($addons as $addon) {
