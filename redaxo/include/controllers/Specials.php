@@ -95,18 +95,11 @@ class sly_Controller_Specials extends sly_Controller_Sally
 	
 	public function setup()
 	{
-		global $REX, $I18N;
-		
-		$master_file = $REX['INCLUDE_PATH'].'/master.inc.php';
-		$cont        = file_get_contents($master_file);
-		$cont        = preg_replace("#^(\\\$REX\['SETUP'\].?=.?)[^;]*#m", '$1true', $cont);
-		
-		if (file_put_contents($master_file, $cont) !== false) {
+		try{
+			sly_Core::config()->setLocal('SETUP', true);
 			$this->info = t('setup_error1', '<a href="index.php">', '</a>');
-		}
-		else {
+		}catch(Exception $e){
 			$this->warning = t('setup_error2');
-			
 		}
 		
 		$this->index();
