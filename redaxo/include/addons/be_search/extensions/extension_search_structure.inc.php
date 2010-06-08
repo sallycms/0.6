@@ -74,8 +74,8 @@ function rex_a256_search_structure($params)
         name LIKE "%'. $a256_article_name .'%" OR
         catname LIKE "%'. $a256_article_name .'%"
       )';
-
-    switch(OOAddon::getProperty('be_search', 'searchmode', 'local'))
+	$addonService = sly_Service_Factory::getService('Addon');
+    switch($addonService->getProperty('be_search', 'searchmode', 'local'))
     {
       case 'local':
       {

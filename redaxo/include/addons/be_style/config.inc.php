@@ -15,17 +15,7 @@
 
 if (!$REX["REDAXO"]) return;
 
-$mypage = 'be_style';
-
-/* Addon Parameter */
-$REX['ADDON']['rxid'][$mypage] = '467';
-$REX['ADDON']['page'][$mypage] = $mypage;
-//$REX['ADDON']['perm'][$mypage] = 'be_style[]';
-$REX['ADDON']['version'][$mypage] = '1.2';
-$REX['ADDON']['author'][$mypage] = 'Jan Kristinus, Markus Staab';
-$REX['ADDON']['supportpage'][$mypage] = 'forum.redaxo.de';
-
-require_once $REX['INCLUDE_PATH'].'/addons/'. $mypage .'/extensions/function_extensions.inc.php';
+require_once $REX['INCLUDE_PATH'].'/addons/be_style/extensions/function_extensions.inc.php';
   
 rex_register_extension('PAGE_HEADER', 'rex_be_style_css_add');
 rex_register_extension('ADDONS_INCLUDED', 'rex_be_add_page');

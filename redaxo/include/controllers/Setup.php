@@ -93,9 +93,11 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 			$createdb             = sly_post('create_db', 'bool');
 
-			$check = rex_sql::checkDbConnection($data['HOST'], $data['LOGIN'], $data['PASSWORD'], $data['NAME'], $createdb);
+			$db = sly_DB_Persistence::getInstance();
+
+			$check = $db->checkConnection();
 			if($check){
-				$config->set('DATABASE', $data, sly_Configuration::STORE_LOCAL);
+				$config->setLocal('DATABASE', $data);
 				unset($_POST['sly-submit']);
 				$this->initdb();
 				return;
@@ -179,10 +181,10 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 			case 'drop': // alte DB löschen
 
-				$db = new rex_sql();
+				$db = sly_DB_Persistence::getInstance();
 
 				foreach ($requiredTables as $table) {
-					$db->setQuery('DROP TABLE IF EXISTS `'.$table.'`');
+					$db->query('DROP TABLE IF EXISTS ?', array($table));
 				}
 
 				// kein break;

@@ -15,18 +15,6 @@ if ($REX['REDAXO']) {
 	}
 }
 
-$REX['ADDON']['rxid']['import_export']        = '1';
-$REX['ADDON']['page']['import_export']        = 'import_export';
-$REX['ADDON']['name']['import_export']        = $REX['REDAXO'] ? $I18N->msg('im_export_importexport') : 'Im-/Export';
-$REX['ADDON']['perm']['import_export']        = 'import_export[export]';
-$REX['ADDON']['version']['import_export']     = file_get_contents(dirname(__FILE__).'/version');
-$REX['ADDON']['author']['import_export']      = 'Christoph Mewes, Jan Kristinus';
-$REX['ADDON']['supportpage']['import_export'] = 'www.webvariants.de';
-
-// Menü aufbauen
-
-
-
 // Autoloading initialisieren
 
 function _sly_a1_autoload($className)

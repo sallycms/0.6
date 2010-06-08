@@ -1,0 +1,6 @@
+default_filters: []
+max_cachefiles: 5
+max_filters: 5
+max_resizekb: 1000
+max_resizepixel: 2000
+jpg_quality: 75

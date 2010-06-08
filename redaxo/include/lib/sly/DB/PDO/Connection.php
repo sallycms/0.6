@@ -32,7 +32,7 @@ class sly_DB_PDO_Connection {
 	
 	/**
 	 * 
-	 * @return DB_PDO_Connection instance 
+	 * @return sly-DB_PDO_Connection instance
 	 */
 	public static function getInstance(){
         if (!self::$instance) self::$instance = new self();

@@ -313,6 +313,12 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
             _WV_QueryLogger::log($query, $time, $rows);
         }
     }
+
+	public function checkConnection(){
+		$x = $this->connection->getConnection();
+	
+		return true;
+	}
     
     // =========================================================================
     // ITERATOR-METHODEN

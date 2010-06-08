@@ -95,7 +95,7 @@ class sly_Controller_Addon extends sly_Controller_Sally
 			$knownPlugins = $this->plugins->getRegisteredPlugins($addon);
 			
 			foreach(array_diff($plugins[$addon], $knownPlugins) as $plugin){
-				$this->plugin->add(array($addon, $plugin));
+				$this->plugins->add(array($addon, $plugin));
 			}
 			foreach(array_diff($knownPlugins, $plugins[$addon]) as $plugin){
 				$this->addons->removeConfig(array($addon, $plugin));
