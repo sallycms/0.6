@@ -104,21 +104,21 @@ if ($REX['USER']) {
 	$REX['PAGES']['credits'] = array($I18N->msg('credits'), 0, 1);
 
 	if ($REX['USER']->isAdmin() || $REX['USER']->hasStructurePerm()) {
-		$REX['PAGES']['structure'] = array($I18N->msg('structure'), 0, 1);
-		$REX['PAGES']['mediapool'] = array($I18N->msg('mediapool'), 0, 0, 'NAVI' => array('href' =>'#', 'onclick' => 'openMediaPool()', 'class' => ' rex-popup'));
-		$REX['PAGES']['linkmap']   = array($I18N->msg('linkmap'), 0, 0);
-		$REX['PAGES']['content']   = array($I18N->msg('content'), 0, 1);
+		$REX['PAGES']['structure'] = array($I18N->msg('structure'), 0, false);
+		$REX['PAGES']['mediapool'] = array($I18N->msg('mediapool'), 0, false, 'NAVI' => array('href' =>'#', 'onclick' => 'openMediaPool()', 'class' => ' rex-popup'));
+		$REX['PAGES']['linkmap']   = array($I18N->msg('linkmap'), 0, true);
+		$REX['PAGES']['content']   = array($I18N->msg('content'), 0, true);
 	}
 	elseif ($REX['USER']->hasPerm('mediapool[]')) {
-		$REX['PAGES']['mediapool'] = array($I18N->msg('mediapool'), 0, 0, 'NAVI' => array('href' =>'#', 'onclick' => 'openMediaPool()', 'class' => ' rex-popup'));
+		$REX['PAGES']['mediapool'] = array($I18N->msg('mediapool'), 0, false, 'NAVI' => array('href' =>'#', 'onclick' => 'openMediaPool()', 'class' => ' rex-popup'));
 	}
 
 	if ($REX['USER']->isAdmin()) {
-	  $REX['PAGES']['template'] = array($I18N->msg('template'), 0, 1);
-	  $REX['PAGES']['module']   = array($I18N->msg('modules'), 0, 1, 'SUBPAGES' => array(array('', $I18N->msg('modules')), array('actions', $I18N->msg('actions'))));
-	  $REX['PAGES']['user']     = array($I18N->msg('user'), 0, 1);
-	  $REX['PAGES']['addon']    = array($I18N->msg('addon'), 0, 1);
-	  $REX['PAGES']['specials'] = array($I18N->msg('specials'), 0, 1, 'SUBPAGES' => array(array('', $I18N->msg('main_preferences')), array('languages', $I18N->msg('languages'))));
+	  $REX['PAGES']['template'] = array($I18N->msg('template'), 0, false);
+	  $REX['PAGES']['module']   = array($I18N->msg('modules'), 0, false, 'SUBPAGES' => array(array('', $I18N->msg('modules')), array('actions', $I18N->msg('actions'))));
+	  $REX['PAGES']['user']     = array($I18N->msg('user'), 0, false);
+	  $REX['PAGES']['addon']    = array($I18N->msg('addon'), 0, false);
+	  $REX['PAGES']['specials'] = array($I18N->msg('specials'), 0, false, 'SUBPAGES' => array(array('', $I18N->msg('main_preferences')), array('languages', $I18N->msg('languages'))));
 	}
 }
 
