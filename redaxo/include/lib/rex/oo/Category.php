@@ -186,7 +186,9 @@ class OOCategory extends OORedaxo {
 		return null;
 	}
 	
-	public function hasValue($value) { return parent::hasValue($value, array('cat_')); }
+	public function hasValue($value, $prefixes = array()) {
+		return parent::hasValue($value, array('cat_'));
+	}
 	
 	/*
 	* Static Method: Returns boolean if is category
