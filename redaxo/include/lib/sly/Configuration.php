@@ -10,7 +10,7 @@
  */
 
 class sly_Configuration {
-	
+
 	const STORE_PROJECT       = 1;
 	const STORE_LOCAL         = 2;
 	const STORE_LOCAL_DEFAULT = 3;
@@ -18,12 +18,12 @@ class sly_Configuration {
 
 	private $mode              = array();
 	private $loadedConfigFiles = array();
-	
+
 	private $staticConfig;
 	private $localConfig;
 	private $projectConfig;
 	private $tempConfig;
-	
+
 	private static $instance;
 
 	private function __construct() {
@@ -32,7 +32,7 @@ class sly_Configuration {
 		$this->projectConfig = new sly_Util_Array();
 		$this->tempConfig    = new sly_Util_Array();
 	}
-	
+
 	protected function getCacheDir() {
 		$dir = SLY_DYNFOLDER.DIRECTORY_SEPARATOR.'internal'.DIRECTORY_SEPARATOR.'sally'.DIRECTORY_SEPARATOR.'config';
 		if (!is_dir($dir) && !mkdir($dir, '0755', true)) {
@@ -40,26 +40,26 @@ class sly_Configuration {
 		}
 		return $dir;
 	}
-	
+
 	protected function getCacheFile($filename) {
 		$dir      = $this->getCacheDir();
 		$filename = realpath($filename);
 		$filename = substr($filename, strlen(SLY_BASE) + 1);
 		return $dir.DIRECTORY_SEPARATOR.str_replace(DIRECTORY_SEPARATOR, '_', $filename).'.php';
 	}
-	
+
 	protected function getLocalCacheFile() {
 		return $this->getCacheDir().DIRECTORY_SEPARATOR.'sly_local.php';
 	}
-	
+
 	protected function isCacheValid($origfile, $cachefile) {
 		return file_exists($cachefile) && filemtime($origfile) < filemtime($cachefile);
 	}
-	
+
 	public function loadStatic($filename) {
 		return $this->loadInternal($filename, self::STORE_STATIC);
 	}
-	
+
 	public function loadLocalDefaults($filename, $force = false) {
 		return $this->loadInternal($filename, self::STORE_LOCAL_DEFAULT, $force);
 	}
@@ -77,32 +77,32 @@ class sly_Configuration {
 			$this->projectConfig = sly_Core::getPersistentRegistry()->get('sly_ProjectConfig');
 		}
 	}
-	
+
 	protected function loadInternal($filename, $mode, $force = false) {
 		if ($mode != self::STORE_LOCAL_DEFAULT && $mode != self::STORE_STATIC) {
 			throw new Exception('Konfigurationsdateien können nur mit STORE_STATIC oder STORE_LOCAL_DEFAULT geladen werden.');
 		}
 		if (empty($filename) || !is_string($filename)) throw new Exception('Keine Konfigurationsdatei angegeben.');
 		if (!file_exists($filename)) throw new Exception('Konfigurationsdatei '.$filename.' konnte nicht gefunden werden.');
-		
+
 		$isStatic = $mode == self::STORE_STATIC;
 
 		// force gibt es nur bei STORE_LOCAL_DEFAULT
 		$force = $force && !$isStatic;
-		
+
 		$cachefile = $this->getCacheFile($filename);
-		
+
 		// prüfen ob konfiguration in diesem request bereits geladen wurde
 		if (!$force && isset($this->loadedConfigFiles[$filename])) {
-			// statisch geladene konfigurationsdaten werden innerhalb des requests nicht mehr überschrieben 
+			// statisch geladene konfigurationsdaten werden innerhalb des requests nicht mehr überschrieben
 			if ($isStatic && file_exists($cachefile) && filemtime($filename) > filemtime($cachefile)) {
 				trigger_error('Statische Konfigurationsdatei '.$filename.' wurde bereits in einer anderen Version geladen! Daten wurden nicht überschrieben.', E_USER_WARNING);
 			}
 			return false;
 		}
-		
+
 		$config = array();
-		
+
 		// konfiguration aus cache holen, wenn cache aktuell
 		if ($this->isCacheValid($filename, $cachefile)) include $cachefile;
 		// konfiguration aus yaml laden
@@ -110,19 +110,19 @@ class sly_Configuration {
 
 		// geladene konfiguration in globale konfiguration mergen
 		$this->setInternal('/', $config, $mode, $force);
-		
+
 		$this->loadedConfigFiles[$filename] = true;
-		
+
 		return $config;
 	}
-	
+
 	protected function loadYaml($filename, $cachefile) {
 		if (!file_exists($filename)) throw new Exception('Konfigurationsdatei '.$filename.' konnte nicht gefunden werden.');
 		$config = sfYaml::load($filename);
 		file_put_contents($cachefile, '<?php $config = '.var_export($config, true).';');
 		return $config;
 	}
-	
+
 	/**
 	 * @return sly_Configuration
 	 */
@@ -136,6 +136,7 @@ class sly_Configuration {
 		$s = (empty($key) || $this->staticConfig->has($key))  ? $this->staticConfig->get($key)  : array();
 		$l = (empty($key) || $this->localConfig->has($key))   ? $this->localConfig->get($key)   : array();
 		$p = (empty($key) || $this->projectConfig->has($key)) ? $this->projectConfig->get($key) : array();
+		
 		if (!is_array($p)) return $p;
 		if (!is_array($l)) return $l;
 		if (!is_array($s)) return $s;
@@ -150,7 +151,7 @@ class sly_Configuration {
 	public function remove($key){
 		$this->localConfig->remove($key);
 		$this->projectConfig->remove($key);
-   	}
+	}
 
 	public function setStatic($key, $value) {
 		return $this->setInternal($key, $value, self::STORE_STATIC);
@@ -163,14 +164,17 @@ class sly_Configuration {
 	public function setLocalDefault($key, $value, $force = false) {
 		return $this->setInternal($key, $value, self::STORE_LOCAL, $force);
 	}
-	
+
 	public function set($key, $value, $mode = self::STORE_PROJECT) {
 		return $this->setInternal($key, $value, $mode);
 	}
-	
+
 	protected function setInternal($key, $value, $mode, $force = false) {
-		if (is_null($key) || strlen($key) === 0) throw new Exception('Key '.$key.' ist nicht erlaubt!');
-       	if (is_array($value) && !empty($value)){
+		if (is_null($key) || strlen($key) === 0) {
+			throw new sly_Exception('Key '.$key.' ist nicht erlaubt!');
+		}
+
+		if (is_array($value) && !empty($value)) {
 			foreach ($value as $ikey => $val) {
 				$currentPath = trim($key.'/'.$ikey, '/');
 				if (is_array($val) && !empty($val)) $this->setInternal($currentPath, $val, $mode, $force);
@@ -179,32 +183,28 @@ class sly_Configuration {
 
 			return $value;
 		}
-		
+
 		if (empty($mode)) $mode = self::STORE_PROJECT;
-		
-		$this->setMode($key, $mode);
-		
-		
+
 		if ($mode == self::STORE_STATIC) {
 			return $this->staticConfig->set($key, $value);
 		}
-		
+
 		if ($mode == self::STORE_LOCAL) {
 			return $this->localConfig->set($key, $value);
 		}
-		
+
 		if ($mode == self::STORE_LOCAL_DEFAULT) {
 			if ($force || !$this->localConfig->has($key)) {
 				return $this->localConfig->set($key, $value);
 			}
 			return false;
 		}
-		
+
 		// case: sly_Configuration::STORE_PROJECT
 		return $this->projectConfig->set($key, $value);
-		
 	}
-	
+
 	protected function setMode($key, $mode) {
 		if ($mode == self::STORE_LOCAL_DEFAULT) $mode = self::STORE_LOCAL;
 		if ($this->checkMode($key, $mode)) return;
@@ -218,7 +218,7 @@ class sly_Configuration {
 		if (!isset($this->mode[$key])) return null;
 		return $this->mode[$key];
 	}
-	
+
 	protected function checkMode($key, $mode) {
 		if ($mode == self::STORE_LOCAL_DEFAULT) $mode = self::STORE_LOCAL;
 		return !isset($this->mode[$key]) || $this->mode[$key] == $mode;
@@ -228,7 +228,7 @@ class sly_Configuration {
 		file_put_contents($this->getLocalCacheFile(), '<?php $config = '.var_export($this->localConfig->get(null), true).';');
 		sly_Core::getPersistentRegistry()->set('sly_ProjectConfig', $this->projectConfig);
 	}
-	
+
 	public function __destruct() {
 		$this->flush();
 	}

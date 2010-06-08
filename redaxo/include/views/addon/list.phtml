@@ -27,7 +27,7 @@ if (!empty($warning)) print rex_warning($warning);
 	<?php
 	
 	$addonList = $addons->getRegisteredAddOns();
-
+	
 	foreach ($addonList as $addon) {
 		$base       = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;func=';
 		$pluginList = $plugins->getRegisteredPlugins($addon);

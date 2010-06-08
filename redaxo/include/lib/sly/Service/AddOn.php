@@ -42,7 +42,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 				$this->req($installFile, $addonName);
 
 				$hasError = !empty($REX['ADDON']['installmsg'][$addonName]);
-
+				
 				if ($hasError) {
 					$state = t('no_install', $addonName).'<br />';
 					
@@ -391,7 +391,9 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	public function getRegisteredAddons()
 	{
 		$data = sly_Core::config()->get('ADDON');
-		return !empty($data) ? array_keys($data) : array();
+		$data = !empty($data) ? array_keys($data) : array();
+		natsort($data);
+		return $data;
 	}
 
 	/**

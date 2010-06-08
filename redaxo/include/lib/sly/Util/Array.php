@@ -63,10 +63,11 @@ class sly_Util_Array extends ArrayObject {
 		$res = true;
 		
 		foreach ($path as $step) {
-			if (!is_array($curr) || !array_key_exists($step, $curr)) {
+			if ((!($curr instanceof ArrayObject) && !is_array($curr)) || !array_key_exists($step, $curr)) {
 				$res = false;
 				break;	
 			}
+			
 			$curr = $curr[$step];
 		}
 		
