@@ -131,18 +131,16 @@ if ($REX['USER']) {
 	$addonService  = sly_Service_Factory::getService('AddOn');
 	// AddOn-Seiten vorbereiten
 	foreach ($addonService->getAvailableAddons() as $addon) {
+		$link = '';
+		$perm = $addonService->getProperty($addon, 'perm', '');
+		$page = $addonService->getProperty($addon, 'page', '');
 		
-		$perm = '';
-		$name = '';
-		$link = empty($REX['ADDON']['link'][$addon]) ? $addon : $REX['ADDON']['link'][$addon];
+		if(!empty($page)) $link = '<a href="index.php?page='.urlencode($link).'">';
 		
-		if (isset($REX['ADDON']['perm'][$addon])) $perm = $REX['ADDON']['perm'][$addon];
-		if (isset($REX['ADDON']['name'][$addon])) $name = $REX['ADDON']['name'][$addon];
-		
-		$link = '<a href="index.php?page='.urlencode($link).'">';
-		
-		if (!empty($name) && (empty($perm) || $REX['USER']->hasPerm($perm) || $REX['USER']->isAdmin())) {
-			$popup = isset($REX['ADDON'][$addon]['popup']) ? 0 : 1;
+		if (!empty($link) && (empty($perm) || $REX['USER']->hasPerm($perm) || $REX['USER']->isAdmin())) {
+			$name = $addonService->getProperty($addon, 'name', '');
+			$name = $I18N->msg($name);
+           	$popup = $addonService->getProperty($addon, 'popup', false);
 			$REX['PAGES'][strtolower($addon)] = array($name, 1, $popup, $link);
 		}
 	}
@@ -179,7 +177,8 @@ if ($REX['USER']) {
 	}
 }
 
-$REX['PAGE_NO_NAVI'] = $REX['PAGES'][$REX['PAGE']][2] == 1 ? 0 : 1;
+
+$REX['PAGE_NO_NAVI'] = $REX['PAGES'][$REX['PAGE']][2];
 
 // Seite gefunden. AddOns benachrichtigen
 

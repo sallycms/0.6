@@ -1,5 +1,6 @@
 # addon:image_resize de_de
 
+iresize_image_resize = Image Resize
 iresize_subpage_desc = Popis
 iresize_subpage_config = Konfigurace
 iresize_subpage_clear_cache = smazat Resize-Cache
