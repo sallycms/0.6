@@ -93,16 +93,30 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 			$createdb             = sly_post('create_db', 'bool');
 
-			$db = sly_DB_Persistence::getInstance();
+			$ok = false;
+			try{
+				if($createdb) {
+					if($data['DRIVER'] == 'sqlite') {
+						break;
+					}
 
-			$check = $db->checkConnection();
-			if($check){
+					$db = new sly_DB_PDO_Persistence($data['DRIVER'], 'host='.$data['HOST'], $data['LOGIN'], $data['PASSWORD']);
+					$db->query('CREATE DATABASE '.$data['NAME']);
+				}else{
+					$db = new sly_DB_PDO_Persistence($data['DRIVER'], 'host='.$data['HOST'].';dbname='.$data['NAME'], $data['LOGIN'], $data['PASSWORD']);
+				}
+				$ok = true;
+			}catch(PDOException $e){
+				$ok = false;
+				$this->warning = $e->getMessage();
+			}
+
+
+			if($ok){
 				$config->setLocal('DATABASE', $data);
 				unset($_POST['sly-submit']);
 				$this->initdb();
 				return;
-			}else{
-				$this->warning = $err;
 			}
 		}
 

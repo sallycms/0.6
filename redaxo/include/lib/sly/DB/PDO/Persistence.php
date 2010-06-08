@@ -23,8 +23,8 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
 	private $statement    = null;
 	private $currentRow   = null;
 	
-	protected function __construct() {
-		$this->connection = sly_DB_PDO_Connection::getInstance();
+	public function __construct($driver, $connString, $login, $password) {
+		$this->connection = sly_DB_PDO_Connection::getInstance($driver, $connString, $login, $password);
 	}
 	
 	public function query($query, $data = array()){
@@ -192,7 +192,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
      * $enableSwitch auf true gesetzt ist.
      */
     public function startTransaction($force = false) {
-        if (!$this->connecton->transRunning() || $force) {
+        if (!$this->connecton->isTransRunning() || $force) {
             try {
                 $this->connection->beginTransaction();
                 $this->connection->setTransRunning(true);
@@ -314,12 +314,6 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
         }
     }
 
-	public function checkConnection(){
-		$x = $this->connection->getConnection();
-	
-		return true;
-	}
-    
     // =========================================================================
     // ITERATOR-METHODEN
     // =========================================================================

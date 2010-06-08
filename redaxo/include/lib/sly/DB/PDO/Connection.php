@@ -17,30 +17,30 @@
  */
 class sly_DB_PDO_Connection {
 	
-	private static $instance;
-	
+	private static $instances = array();
+
+	private $driver;
+
 	private $connection;
-	private $conf;
 	private $transrunning = false; 
 	
-	private function __construct()
+	private function __construct($driver, $connString, $login, $password)
 	{
-		$this->conf = sly_Core::config()->get('DATABASE');
-		$connString = $this->getConnectionString();
-		$this->connection = new PDO($connString, $this->conf['LOGIN'], $this->conf['PASSWORD']);
+		$this->driver = $driver;
+		$this->connection = new PDO($driver.':'.$connString, $login, $password);
 	}
 	
 	/**
 	 * 
 	 * @return sly-DB_PDO_Connection instance
 	 */
-	public static function getInstance(){
-        if (!self::$instance) self::$instance = new self();
-        return self::$instance;
+	public static function getInstance($driver, $connString, $login, $password){
+        if (!self::$instances[$driver.$connString]) self::$instances[$driver.$connString] = new self($driver, $connString, $login, $password);
+        return self::$instances[$driver.$connString];
     }
 	
     public function getSQLbuilder($table){
-    	$classname = 'sly_DB_PDO_SQLBuilder_'.strtoupper($this->conf['DRIVER']);
+    	$classname = 'sly_DB_PDO_SQLBuilder_'.strtoupper($this->driver);
         return new $classname($this->connection, $table);
     }
     
@@ -52,20 +52,11 @@ class sly_DB_PDO_Connection {
 		return $this->connection;
 	} 
 	
-	public function transRunning(){
+	public function isTransRunning(){
 		return $this->transrunning; 
 	}
 	
 	public function setTransRunning($bool){
 		$this->transrunning = $bool; 
 	}
-	
-	/**
-	 *  
-	 * @param string Connection string für PDO
-	 */
-	private function getConnectionString(){
-		return sprintf('%s:host=%s;dbname=%s', strtolower($this->conf['DRIVER']), $this->conf['HOST'], $this->conf['NAME']);
-	}
-
 }
