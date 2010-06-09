@@ -36,8 +36,14 @@ $config->loadStatic($REX['INCLUDE_PATH'].'/config/sallyStatic.yml');
 $config->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yml');
 $config->loadLocalConfig();
 
-if (!$config->get('SETUP')) {
+/*
+ * niocht unbedingt die beste lösung, aber praktikabel
+ *
+ */
+try {
 	$config->loadProjectConfig();
+}catch(PDOException $e) {
+	//geht halt nicht
 }
 
 // Sync?

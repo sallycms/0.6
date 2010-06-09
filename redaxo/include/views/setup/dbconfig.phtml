@@ -7,6 +7,9 @@ $this->title(t('setup_step2'));
 	<form action="index.php" method="post">
 		<fieldset class="rex-form-col-1">
 			<? $this->printHiddens('dbconfig') ?>
+			<?php
+				if (!empty($this->warning)) print rex_warning($this->warning);
+			?>
 			<legend><?= t('setup_0202') ?></legend>
 			
 			<div class="rex-form-wrapper">

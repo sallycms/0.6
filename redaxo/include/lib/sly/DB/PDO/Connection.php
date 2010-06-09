@@ -17,55 +17,46 @@
  */
 class sly_DB_PDO_Connection {
 	
-	private static $instance;
-	
-	private $connection;
-	private $conf;
+	private static $instances = array();
+
+	private $driver;
+
+	private $pdo;
 	private $transrunning = false; 
 	
-	private function __construct()
+	private function __construct($driver, $connString, $login, $password)
 	{
-		$this->conf = sly_Core::config()->get('DATABASE');
-		$connString = $this->getConnectionString();
-		$this->connection = new PDO($connString, $this->conf['LOGIN'], $this->conf['PASSWORD']);
+		$this->driver = $driver;
+		$this->pdo = new PDO($driver.':'.$connString, $login, $password);
 	}
 	
 	/**
 	 * 
-	 * @return sly-DB_PDO_Connection instance
+	 * @return sly_DB_PDO_Connection instance
 	 */
-	public static function getInstance(){
-        if (!self::$instance) self::$instance = new self();
-        return self::$instance;
+	public static function getInstance($driver, $connString, $login, $password){
+        if (!self::$instances[$driver.$connString]) self::$instances[$driver.$connString] = new self($driver, $connString, $login, $password);
+        return self::$instances[$driver.$connString];
     }
 	
     public function getSQLbuilder($table){
-    	$classname = 'sly_DB_PDO_SQLBuilder_'.strtoupper($this->conf['DRIVER']);
-        return new $classname($this->connection, $table);
+    	$classname = 'sly_DB_PDO_SQLBuilder_'.strtoupper($this->driver);
+        return new $classname($this->pdo, $table);
     }
     
     /**
      * 
      * @return PDO instance
      */
-	public function getConnection(){
-		return $this->connection;
+	public function getPDO(){
+		return $this->pdo;
 	} 
 	
-	public function transRunning(){
-		return $this->transrunning; 
+	public function isTransRunning(){
+		return $this->transrunning;
 	}
 	
 	public function setTransRunning($bool){
-		$this->transrunning = $bool; 
+		$this->transrunning = $bool;
 	}
-	
-	/**
-	 *  
-	 * @param string Connection string für PDO
-	 */
-	private function getConnectionString(){
-		return sprintf('%s:host=%s;dbname=%s', strtolower($this->conf['DRIVER']), $this->conf['HOST'], $this->conf['NAME']);
-	}
-
 }

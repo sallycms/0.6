@@ -15,7 +15,9 @@ abstract class sly_DB_Persistence implements Iterator {
 	 * @return sly_DB_Persistence
 	 */
 	public static function getInstance(){
-		return new sly_DB_PDO_Persistence();
+		$data = sly_Core::config()->get('DATABASE');
+		$connString = 'host='.$data['HOST'].';dbname='.$data['NAME'];
+       	return new sly_DB_PDO_Persistence($data['DRIVER'], $connString, $data['LOGIN'], $data['PASSWORD']);
 	}
 
 	/**
