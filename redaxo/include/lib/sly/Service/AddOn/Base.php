@@ -56,7 +56,7 @@ abstract class sly_Service_AddOn_Base
 		$config = sly_Core::config();
 
 		$staticFile   = $this->baseFolder($addonORplugin).'/static.yml';
-		$defaultsFile = $this->internalFolder($addonORplugin).'/defaults.yml';
+		$defaultsFile = $this->baseFolder($addonORplugin).'/defaults.yml';
 
 		if(file_exists($staticFile)){
 			$data = sfYaml::load($staticFile);

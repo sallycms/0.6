@@ -12,8 +12,6 @@
 
 $func        = sly_request('func', 'string');
 $service     = sly_Service_Factory::getService('AddOn');
-$internalDir = $service->internalFolder('image_resize');
-$configFile  = $internalDir.'/config.inc.php';
 
 if ($func == 'update') {
 	$max_cachefiles  = sly_request('max_cachefiles', 'int');
