@@ -195,10 +195,12 @@ function sly_makeArray($element)
 function t($index)
 {
 	global $REX;
-	if($REX['REDAXO']){
+	
+	if ($REX['REDAXO']) {
 		global $I18N;
 		return $I18N->msg($index);
-	}else{
+	}
+	else {
 		if (class_exists('WV9_Language')) {
 			$wv9 = WV9_Language::getInstance();
 			return $wv9->translate($index);

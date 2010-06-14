@@ -43,18 +43,16 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		$notFoundArticle   = sly_post('notfound_article',    'int');
 		$defaultTemplateID = sly_post('default_template_id', 'int');
 		$backendLocale     = sly_post('backend_locale',      'string');
-		
-		$errorEMail = addcslashes(sly_post('error_email', 'string'), '"');
-		$server     = addcslashes(sly_post('server', 'string'), '"');
-		$serverName = addcslashes(sly_post('servername', 'string'), '"');
-		$modRewrite = sly_post('mod_rewrite', 'string');
+		$errorEMail        = sly_post('error_email',         'string');
+		$server            = sly_post('server',              'string');
+		$serverName        = sly_post('servername',          'string');
+		$modRewrite        = sly_post('mod_rewrite',         'string');
 
-		
 		// Änderungen speichern
 
 		$conf = sly_Core::config();
 		
-       	if (OOArticle::exists($startArticle)) {
+		if (OOArticle::exists($startArticle)) {
 			$conf->set('START_ARTICLE_ID', $startArticle);
 		}
 		else {
