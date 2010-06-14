@@ -21,7 +21,9 @@ function rex_be_add_page($params)
  */
 function rex_be_style_css_add($params)
 {
-	foreach (OOPlugin::getAvailablePlugins('be_style') as $plugin) {
+	$service = sly_Service_Factory::getService('Plugin');
+	
+	foreach ($service->getAvailablePlugins('be_style') as $plugin) {
 		$layout = sly_Core::getLayout();
 		$layout->addCssfile('scaffold/be_style/'.$plugin.'/css_main.css');
 	}
