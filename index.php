@@ -13,10 +13,6 @@ define('IS_SALLY', true);
 ob_start();
 ob_implicit_flush(0);
 
-// Globale Variablen vorbereiten
-
-require_once 'redaxo/include/functions/function_rex_mquotes.inc.php';
-
 // $REX vorbereiten
 
 unset($REX);

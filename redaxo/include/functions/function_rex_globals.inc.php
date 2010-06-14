@@ -11,9 +11,9 @@
  * 
  * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
-function rex_get($varname, $vartype = '', $default = '')
+function rex_get($varname, $vartype = '', $default = '', $addslashes = true)
 {
-	return _rex_array_key_cast($_GET, $varname, $vartype, $default);
+	return _rex_array_key_cast($_GET, $varname, $vartype, $default, $addslashes);
 }
 
 /**
@@ -21,9 +21,9 @@ function rex_get($varname, $vartype = '', $default = '')
  * 
  * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
-function rex_post($varname, $vartype = '', $default = '')
+function rex_post($varname, $vartype = '', $default = '', $addslashes = true)
 {
-	return _rex_array_key_cast($_POST, $varname, $vartype, $default);
+	return _rex_array_key_cast($_POST, $varname, $vartype, $default, $addslashes);
 }
 
 /**
@@ -31,9 +31,9 @@ function rex_post($varname, $vartype = '', $default = '')
  * 
  * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
-function rex_request($varname, $vartype = '', $default = '')
+function rex_request($varname, $vartype = '', $default = '', $addslashes = true)
 {
-	return _rex_array_key_cast($_REQUEST, $varname, $vartype, $default);
+	return _rex_array_key_cast($_REQUEST, $varname, $vartype, $default, $addslashes);
 }
 
 /**
@@ -43,7 +43,7 @@ function rex_request($varname, $vartype = '', $default = '')
  */
 function rex_server($varname, $vartype = '', $default = '')
 {
-	return _rex_array_key_cast($_SERVER, $varname, $vartype, $default);
+	return _rex_array_key_cast($_SERVER, $varname, $vartype, $default, false);
 }
 
 /**
@@ -56,11 +56,11 @@ function rex_session($varname, $vartype = '', $default = '')
 	global $REX;
 
 	if (isset($_SESSION[$varname][$REX['INSTNAME']])) {
-		return _rex_cast_var($_SESSION[$varname][$REX['INSTNAME']], $vartype, $default, 'found');
+		return _rex_cast_var($_SESSION[$varname][$REX['INSTNAME']], $vartype, $default, 'found', false);
 	}
 
 	if ($default === '') {
-		return _rex_cast_var($default, $vartype, $default, 'default');
+		return _rex_cast_var($default, $vartype, $default, 'default', false);
 	}
 	
 	return $default;
@@ -93,9 +93,9 @@ function rex_unset_session($varname)
  * 
  * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
-function rex_cookie($varname, $vartype = '', $default = '')
+function rex_cookie($varname, $vartype = '', $default = '', $addslashes = true)
 {
-	return _rex_array_key_cast($_COOKIE, $varname, $vartype, $default);
+	return _rex_array_key_cast($_COOKIE, $varname, $vartype, $default, $addslashes);
 }
 
 /**
@@ -105,7 +105,7 @@ function rex_cookie($varname, $vartype = '', $default = '')
  */
 function rex_files($varname, $vartype = '', $default = '')
 {
-	return _rex_array_key_cast($_FILES, $varname, $vartype, $default);
+	return _rex_array_key_cast($_FILES, $varname, $vartype, $default, false);
 }
 
 /**
@@ -115,7 +115,7 @@ function rex_files($varname, $vartype = '', $default = '')
  */
 function rex_env($varname, $vartype = '', $default = '')
 {
-	return _rex_array_key_cast($_ENV, $varname, $vartype, $default);
+	return _rex_array_key_cast($_ENV, $varname, $vartype, $default, false);
 }
 
 /**
@@ -128,7 +128,7 @@ function rex_env($varname, $vartype = '', $default = '')
  * 
  * @access private
  */
-function _rex_array_key_cast($haystack, $needle, $vartype, $default = '')
+function _rex_array_key_cast($haystack, $needle, $vartype, $default = '', $addslashes = true)
 {
 	if (!is_array($haystack)) {
 		trigger_error('Array expected for $haystack in _rex_array_key_cast()!', E_USER_ERROR);
@@ -141,11 +141,11 @@ function _rex_array_key_cast($haystack, $needle, $vartype, $default = '')
 	}
 
 	if (array_key_exists($needle, $haystack)) {
-		return _rex_cast_var($haystack[$needle], $vartype, $default, 'found');
+		return _rex_cast_var($haystack[$needle], $vartype, $default, 'found', $addslashes);
 	}
 
 	if ($default === '') {
-		return _rex_cast_var($default, $vartype, $default, 'default');
+		return _rex_cast_var($default, $vartype, $default, 'default', $addslashes);
 	}
 	
 	return $default;
@@ -180,7 +180,7 @@ function _rex_array_key_cast($haystack, $needle, $vartype, $default = '')
  * 
  * @access private
  */
-function _rex_cast_var($var, $vartype, $default, $mode)
+function _rex_cast_var($var, $vartype, $default, $mode, $addslashes = true)
 {
 	if (!is_string($vartype)) {
 		trigger_error('String expected for $vartype in _rex_cast_var()!', E_USER_ERROR);
@@ -263,7 +263,10 @@ function _rex_cast_var($var, $vartype, $default, $mode)
 			break;
 		
 		case 'string':
+			// Alte REDAXO-AddOns verlassen sich auf die Magic Quotes, die aus
+			// dieser Funktion rauskommen sollten. Neue AddOns verwenden sly_*.
 			$var = trim((string) $var);
+			if ($addslashes) $var = addslashes($var);
 			break;
 		
 		case 'object':

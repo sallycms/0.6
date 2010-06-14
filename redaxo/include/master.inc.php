@@ -9,6 +9,36 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
+// Magic Quotes entfernen, wenn vorhanden
+
+if (get_magic_quotes_gpc()) {
+	function stripslashes_ref(&$value) {
+		$value = stripslashes($value);
+	}
+	
+	array_walk_recursive($_GET,     'stripslashes_ref');
+	array_walk_recursive($_POST,    'stripslashes_ref');
+	array_walk_recursive($_COOKIE,  'stripslashes_ref');
+	array_walk_recursive($_REQUEST, 'stripslashes_ref');
+}
+
+// Register Globals entfernen
+
+if (ini_get('register_globals')) {
+	$superglobals = array('_GET', '_POST', '_REQUEST', '_ENV', '_FILES', '_SESSION', '_COOKIE', '_SERVER');
+	$keys         = array_keys($GLOBALS);
+	
+	foreach ($keys as $key) {
+		if (!in_array($key, $superglobals) && $key != 'GLOBALS') {
+			unset($$key);
+		}
+	}
+	
+	unset($superglobals, $key, $keys);
+}
+
+// So, jetzt haben wir eine saubere Grundlage für unsere Aufgaben.
+
 // Wir gehen davon aus, dass $REX['HTDOCS_PATH'] existiert. Das ist
 // eine Annahme die den Code hier schneller macht und vertretbar ist.
 // Wer das falsch setzt, hat es verdient, dass das Script nicht läuft.

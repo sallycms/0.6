@@ -9,9 +9,6 @@ if (!defined('SLY_IS_TESTING')) {
 	define('SLY_IS_TESTING', false);
 }
 
-// So sieht eine Datei aus, die sich darauf freut, bald obsolet zu werden.
-require 'include/functions/function_rex_mquotes.inc.php';
-
 unset($REX);
 
 $REX['REDAXO']      = true;

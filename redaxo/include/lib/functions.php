@@ -11,22 +11,22 @@
 
 function sly_get($name, $type, $default = '')
 {
-	$value = rex_get($name, $type, $default);
-	$value = strtolower($type) == 'string' ? trim(stripslashes($value)) : $value;
+	$value = rex_get($name, $type, $default, false);
+	$value = strtolower($type) == 'string' ? trim($value) : $value;
 	return $value;
 }
 
 function sly_post($name, $type, $default = '')
 {
-	$value = rex_post($name, $type, $default);
-	$value = strtolower($type) == 'string' ? trim(stripslashes($value)) : $value;
+	$value = rex_post($name, $type, $default, false);
+	$value = strtolower($type) == 'string' ? trim($value) : $value;
 	return $value;
 }
 
 function sly_request($name, $type, $default = '')
 {
-	$value = rex_request($name, $type, $default);
-	$value = strtolower($type) == 'string' ? trim(stripslashes($value)) : $value;
+	$value = rex_request($name, $type, $default, false);
+	$value = strtolower($type) == 'string' ? trim($value) : $value;
 	return $value;
 }
 
@@ -40,8 +40,8 @@ function sly_getArray($name, $types, $default = array())
 			continue;
 		}
 		
-		$value = _rex_cast_var($value, $types, $default, 'found'); // $default und 'found' ab REDAXO 4.2
-		$value = strtolower($type) == 'string' ? trim(stripslashes($value)) : $value;
+		$value = _rex_cast_var($value, $types, $default, 'found', false); // $default und 'found' ab REDAXO 4.2
+		$value = strtolower($type) == 'string' ? trim($value) : $value;
 	}
 	
 	return $values;
@@ -57,8 +57,8 @@ function sly_postArray($name, $types, $default = array())
 			continue;
 		}
 		
-		$value = _rex_cast_var($value, $types, $default, 'found'); // $default und 'found' ab REDAXO 4.2
-		$value = strtolower($types) == 'string' ? trim(stripslashes($value)) : $value;
+		$value = _rex_cast_var($value, $types, $default, 'found', false); // $default und 'found' ab REDAXO 4.2
+		$value = strtolower($types) == 'string' ? trim($value) : $value;
 	}
 	
 	return $values;
