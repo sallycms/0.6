@@ -376,6 +376,30 @@ jQuery.noConflict();
 			div.slideUp('fast');
 		}
 	};
+	
+	sly_disableLogin = function(timerElement) {
+		var nextTime = parseInt(timerElement.html(), 10) - 1;
+		
+		timerElement.html(nextTime + '');
+		
+		if (nextTime > 0) {
+			setTimeout(sly_disableLogin, 1000, timerElement);
+		}
+		else {
+			$('div.rex-message p span').html($('#login_message').text());
+			$('#loginformular input:not(:hidden)').attr('disabled', '');
+			$('#rex-form-login').focus();
+		}
+	};
+	
+	sly_startLoginTimer = function() {
+		var timerElement = $('div.rex-message p span strong');
+		
+		if (timerElement.length == 1) {
+			$('#loginformular input:not(:hidden)').attr('disabled', 'disabled');
+			setTimeout(sly_disableLogin, 1000, timerElement);
+		}
+	};
 
 })(jQuery);
 
@@ -433,4 +457,11 @@ jQuery(function($) {
 		newPoolWindow('index.php?page=mediapool');
 		return false;
 	});
+	
+	// Login-Formular
+	
+	if ($('#rex-form-login').length > 0) {
+		$('#rex-form-login').focus();
+		$('#javascript').val('1');
+	}
 });

@@ -2,7 +2,7 @@
 
 global $rex_user_loginmessage;
 
-if ($rex_user_loginmessage != '') {
+if (!empty($rex_user_loginmessage)) {
 	print rex_warning($rex_user_loginmessage);
 }
 
@@ -15,6 +15,7 @@ if ($rex_user_loginmessage != '') {
 			<legend>Login</legend>
 			<div class="rex-form-wrapper">
 				<input type="hidden" name="javascript" value="0" id="javascript" />
+				<span id="login_message" class="rex-hidden"><?= sly_html($I18N->msg('login_welcome')) ?></span>
 
 				<div class="rex-form-row">
 					<p class="rex-form-col-a rex-form-text">
@@ -38,36 +39,6 @@ if ($rex_user_loginmessage != '') {
 	</form>
 </div>
 
-<script type="text/javascript">
-<!--
-jQuery(function($) {
-	$('#rex-form-login').focus();
-	$('#javascript').val('1');
-	
-	<? if (!empty($rex_user_loginmessage)): ?>
-	var time_el = $('div.rex-message p span strong');
-	
-	if (time_el.length == 1) {
-		function disableLogin() {
-			var nextTime = parseInt(time_el.html(), 10) - 1;
-			
-			time_el.html(nextTime + '');
-			
-			if (nextTime > 0) {
-				setTimeout(disableLogin, 1000);
-			} else {
-				$('div.rex-message p span').html('<?= htmlspecialchars($I18N->msg('login_welcome')) ?>');
-				$('#loginformular input:not(:hidden)').attr('disabled', '');
-				$('#rex-form-login').focus();
-			}
-		};
-		
-		$('#loginformular input:not(:hidden)').attr('disabled', 'disabled');
-		setTimeout(disableLogin, 1000);
-	}
-	<? endif ?>
-});
-//-->
-</script>
-
-<!-- *** OUTPUT OF LOGIN-FORM - END *** -->
+<? if (!empty($rex_user_loginmessage)): ?>
+<script type="text/javascript">sly_startLoginTimer();</script>
+<? endif ?>
