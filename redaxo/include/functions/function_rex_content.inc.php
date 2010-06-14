@@ -321,8 +321,8 @@ function rex_article2startpage($neu_id)
 
 	// alter Startartikel
 
-	$alt_id   = (int) $neu_cat_id;
-	$alt = rex_sql::fetch('path', 'article', 'id = '.$alt_id.' AND startpage = 1 AND clang = 0');
+	$alt_id = (int) $neu_cat_id;
+	$alt    = rex_sql::fetch('path', 'article', 'id = '.$alt_id.' AND startpage = 1 AND clang = 0');
 
 	if ($alt === false) {
 		return false;
@@ -334,8 +334,10 @@ function rex_article2startpage($neu_id)
 
 	// cat felder sammeln.
 	// Ist speziell für das Metainfo-AddOn enthalten, um dessen Daten gleich mit zu kopieren.
+	
+	$service = sly_Service_Factory::getService('AddOn');
 
-	if (rex_addon::isAvailable('metainfo')) {
+	if ($service->isAvailable('metainfo')) {
 		$db_fields = OORedaxo::getClassVars();
 
 		foreach ($db_fields as $field) {

@@ -7,10 +7,10 @@
  */
 
 // *************************************** CONFIG
-$args = rex_request('args', 'array', array());
-$thumbs = true;
-$thumbsresize = true;
-if (!OOAddon::isAvailable('image_resize')) $thumbsresize = false;
+
+$args         = rex_request('args', 'array', array());
+$thumbs       = true;
+$thumbsresize = sly_Service_Factory::getService('AddOn')->isAvailable('image_resize');
 
 // *************************************** KATEGORIEN CHECK UND AUSWAHL
 
