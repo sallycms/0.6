@@ -18,26 +18,27 @@
 abstract class sly_Model_Base {
 	
 	const NEW_ID = -1;
-	
-    protected $id = self::NEW_ID;
-    
-    public function __construct($params) {
-    	if(isset($params['id'])) $this->id = $params['id'];
-    	
-    	foreach($this->_attributes as $name => $type){
-    		if(isset($params[$name])) $this->$name = $params[$name];
-    	}
-    }
 
-    public function getId() { return $this->id; }
-	public function setId($id) { $this->id = $id; }
+	protected $id = self::NEW_ID;
 
-    public function toHash(){
-    	$return = array('id' => $this->id);
-    	foreach($this->_attributes as $name => $type){
-    		$return[$name] = $this->$name;
-    	}
-    	return $return;
-    }
+	public function __construct($params) {
+		if (isset($params['id'])) $this->id = $params['id'];
 
+		foreach ($this->_attributes as $name => $type){
+			if (isset($params[$name])) $this->$name = $params[$name];
+		}
+	}
+
+	public function getId()    { return $this->id; }
+	public function setId($id) { $this->id = $id;  }
+
+	public function toHash() {
+		$return = array('id' => $this->id);
+		
+		foreach($this->_attributes as $name => $type) {
+			$return[$name] = $this->$name;
+		}
+		
+		return $return;
+	}
 }
