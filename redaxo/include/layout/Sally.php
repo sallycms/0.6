@@ -4,6 +4,8 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 {
 	public function __construct()
 	{
+		global $REX;
+		
 		$config = sly_Core::config();
 		
 		$this->addCSSFile('media/css_import.css');
@@ -20,7 +22,7 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		$popups_arr = array('linkmap', 'mediapool');
 		$config     = sly_Core::config();
 		
-		$body_id = str_replace('_', '-', sly_request('page', 'string', ''));
+		$body_id = str_replace('_', '-', $REX['PAGE']);
 		$this->setBodyAttr('id', 'rex-page-'.$body_id);
 
 		if (in_array($body_id, $popups_arr)) {
@@ -35,12 +37,12 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 	}
 
 	public function printHeader() {
-        parent::printHeader();
+		parent::printHeader();
 		$this->renderView('views/layout/sally_top.phtml');
-    }
+	}
 
 	public function printFooter() {
 		$this->renderView('views/layout/sally_bottom.phtml');
-        parent::printFooter();
-    }
+		parent::printFooter();
+	}
 }

@@ -166,40 +166,40 @@ class sly_Layout_XHTML extends sly_Layout
 
 	protected function printJavaScriptFiles() {
 
-		$this->javaScriptFiles =  rex_register_extension_point('HEADER_JAVASCRIPT_FILES', $this->javaScriptFiles);
+		$this->javaScriptFiles = rex_register_extension_point('HEADER_JAVASCRIPT_FILES', $this->javaScriptFiles);
 
 		foreach ($this->javaScriptFiles as $files) {
 			foreach($files as $file){
-				print "<script type=\"text/javascript\" src=\"".$file."\"></script>\n";
+				print "<script type=\"text/javascript\" src=\"".sly_html(trim($file))."\"></script>\n";
 			}
 		}
 	}
 
 	protected function printBodyAttrs() {
 		foreach($this->bodyAttrs as $name => $value) {
-			print $name.'="'.sly_html($value).'"';
+			print trim($name).'="'.sly_html(trim($value)).'"';
 		}
 	}
 
 	protected function printMetas() {
 		foreach ($this->metas as $name => $content) {
-			print "<meta name=\"".$name."\" content=\"".sly_html($content)."\" />\n";
+			print "<meta name=\"".sly_html(trim($name))."\" content=\"".sly_html(trim($content))."\" />\n";
 		}
 	}
 
 	protected function printHttpMetas(){
 		foreach($this->httpMetas as $name => $content) {
-			print "<meta http-equiv=\"".sly_html($name)."\" content=\"".sly_html($content)."\" />\n";
+			print "<meta http-equiv=\"".sly_html(trim($name))."\" content=\"".sly_html(trim($content))."\" />\n";
 		}
 	}
 
 	protected function printLinks() {
 		foreach ($this->links as $rel => $href) {
-			print "<link rel=\"".$rel."\" href=\"".$href."\" />\n";
+			print "<link rel=\"".sly_html(trim($rel))."\" href=\"".sly_html(trim($href))."\" />\n";
 		}
 	}
 
-	public function printHeader(){
+	public function printHeader() {
 		$this->renderView('views/layout/xhtml/head.phtml');
 	}
 }

@@ -9,11 +9,8 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
-abstract class sly_Layout
-{
+abstract class sly_Layout {
 	protected $title = '';
-
-
 	protected $content;
 
 	public function openBuffer() {
@@ -31,9 +28,9 @@ abstract class sly_Layout
 	public function render() {
 		ob_start();
 		$this->printHeader();
-       	print $this->content;
+		print $this->content;
 		$this->printFooter();
-       	return ob_get_clean();
+		return ob_get_clean();
 	}
 
 	protected function renderView($filename, $params = array()) {
