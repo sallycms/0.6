@@ -33,7 +33,7 @@ require_once 'redaxo/include/addons.inc.php';
 // Setup?
 if ($config->get('SETUP')) {
 	header('Location: redaxo/index.php');
-	exit();
+	exit('Bitte führe das <a href="redaxo/index.php">Setup</a> aus, um SallyCMS zu nutzen.');
 }
 
 // Aktuellen Artikel finden und ausgeben

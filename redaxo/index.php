@@ -138,9 +138,9 @@ if ($REX['USER']) {
 		if(!empty($page)) $link = '<a href="index.php?page='.urlencode($link).'">';
 		
 		if (!empty($link) && (empty($perm) || $REX['USER']->hasPerm($perm) || $REX['USER']->isAdmin())) {
-			$name = $addonService->getProperty($addon, 'name', '');
-			$name = $I18N->msg($name);
-           	$popup = $addonService->getProperty($addon, 'popup', false);
+			$name  = $addonService->getProperty($addon, 'name', '');
+			$name  = $I18N->msg($name);
+			$popup = $addonService->getProperty($addon, 'popup', false);
 			$REX['PAGES'][strtolower($addon)] = array($name, 1, $popup, $link);
 		}
 	}
@@ -172,11 +172,12 @@ if ($REX['USER']) {
 	// Login OK -> Redirect auf Startseite
 	
 	if (!empty($rex_user_login)) {
-		header('Location: index.php?page='.urlencode($REX['PAGE']));
+		$url = 'index.php?page='.urlencode($REX['PAGE']);
+		header('Location: '.$url);
+		exit('Sie werden zur <a href="'.$url.'">Startseite</a> weitergeleitet.');
 		exit();
 	}
 }
-
 
 $REX['PAGE_NO_NAVI'] = $REX['PAGES'][$REX['PAGE']][2];
 
