@@ -12,8 +12,8 @@ class rex_backend_login extends rex_login
 		$this->setSqlDb(1);
 		$this->setSysID($config->get('INSTNAME'));
 		$this->setSessiontime($config->get('SESSION_DURATION'));
-		$this->setUserID($tableName.'.user_id');
-		$this->setUserquery('SELECT * FROM '.$tableName.' WHERE status = 1 AND user_id = "USR_UID"');
+		$this->setUserID($tableName.'.id');
+		$this->setUserquery('SELECT * FROM '.$tableName.' WHERE status = 1 AND id = "USR_UID"');
 		$this->setLoginquery('SELECT * FROM '.$tableName.' WHERE status = 1 AND login = "USR_LOGIN" AND psw = "USR_PSW" AND lasttrydate < '.(time()-$config->get('RELOGINDELAY')).' AND login_tries < '.$config->get('MAXLOGINS'));
 		$this->tableName = $tableName;
 	}
@@ -43,7 +43,7 @@ class rex_backend_login extends rex_login
 		}
 
 		if ($this->isLoggedOut() && !empty($userId)) {
-			$fvs->setQuery('UPDATE '.$this->tableName.' SET session_id = "" WHERE user_id = '.intval($userId).' LIMIT 1');
+			$fvs->setQuery('UPDATE '.$this->tableName.' SET session_id = "" WHERE id = '.intval($userId).' LIMIT 1');
 		}
 
 		if ($fvs->hasError()) return $fvs->getError();

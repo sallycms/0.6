@@ -885,7 +885,7 @@ class rex_article
     {
       if(isset($REX['USER']))
       {
-        $user_id = $REX['USER']->getValue('user_id');
+        $user_id = $REX['USER']->getValue('id');
         $user_login = $REX['USER']->getValue('login');
       }else
       {

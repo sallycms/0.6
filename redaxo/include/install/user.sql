@@ -1,5 +1,5 @@
 CREATE TABLE `%PREFIX%user` (
-	`user_id`     int(11) NOT NULL auto_increment,
+	`id`          int(11) NOT NULL auto_increment,
 	`name`        varchar(255),
 	`description` text,
 	`login`       varchar(50) NOT NULL,
@@ -15,6 +15,6 @@ CREATE TABLE `%PREFIX%user` (
 	`session_id`  varchar(255),
 	`cookiekey`   varchar(255),
 	`revision`    int(11) NOT NULL,
-	PRIMARY KEY(`user_id`),
+	PRIMARY KEY(`id`),
 	UNIQUE KEY `login` (`login`)
 ) TYPE=MyISAM;

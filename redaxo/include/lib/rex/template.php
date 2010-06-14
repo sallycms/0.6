@@ -53,7 +53,7 @@ class rex_template
 		$user_id = null;
 
 		if (isset($REX['USER'])) {
-			$user_id = '.'.$REX['USER']->getValue('user_id');
+			$user_id = '.'.$REX['USER']->getValue('id');
 		}
 		else {
 			$user_id = '';

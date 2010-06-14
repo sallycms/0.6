@@ -45,7 +45,7 @@ $warning = '';
 if ($user_id != 0)
 {
   $sql = new rex_sql;
-  $sql->setQuery('SELECT * FROM '.$REX['TABLE_PREFIX'].'user WHERE user_id = '. $user_id .' LIMIT 2');
+  $sql->setQuery('SELECT * FROM '.$REX['TABLE_PREFIX'].'user WHERE id = '. $user_id .' LIMIT 2');
   if ($sql->getRows()!= 1) $user_id = 0;
 }
 
@@ -283,7 +283,7 @@ if ($FUNC_UPDATE != '' || $FUNC_APPLY != '')
 
   $updateuser = new rex_sql;
   $updateuser->setTable($REX['TABLE_PREFIX'].'user');
-  $updateuser->setWhere('user_id='. $user_id);
+  $updateuser->setWhere('id='. $user_id);
   $updateuser->setValue('name',$username);
   $updateuser->addGlobalUpdateFields();
   if ($REX['PSWFUNC']!='' && $userpsw != $sql->getValue($REX['TABLE_PREFIX'].'user.psw')) $userpsw = call_user_func($REX['PSWFUNC'],$userpsw);
@@ -371,10 +371,10 @@ if ($FUNC_UPDATE != '' || $FUNC_APPLY != '')
 } elseif ($FUNC_DELETE != '')
 {
   // man kann sich selbst nicht l�schen..
-  if ($REX['USER']->getValue("user_id") != $user_id)
+  if ($REX['USER']->getValue("id") != $user_id)
   {
     $deleteuser = new rex_sql;
-    $deleteuser->setQuery("DELETE FROM ".$REX['TABLE_PREFIX']."user WHERE user_id = '$user_id' LIMIT 1");
+    $deleteuser->setQuery("DELETE FROM ".$REX['TABLE_PREFIX']."user WHERE id = '$user_id' LIMIT 1");
     $info = $I18N->msg("user_deleted");
     $user_id = 0;
   }else
@@ -553,7 +553,7 @@ if ($FUNC_ADD != "" || $user_id > 0)
     $add_user_login = '<span class="rex-form-read" id="userlogin">'. htmlspecialchars($sql->getValue($REX['TABLE_PREFIX'].'user.login')) .'</span>';
 
     $sql = new rex_login_sql;
-    $sql->setQuery('select * from '. $REX['TABLE_PREFIX'] .'user where user_id='. $user_id);
+    $sql->setQuery('select * from '. $REX['TABLE_PREFIX'] .'user where id='. $user_id);
 
     if ($sql->getRows()==1)
     {
@@ -880,7 +880,7 @@ if ($FUNC_ADD != "" || $user_id > 0)
 
 if (isset($SHOW) and $SHOW)
 {
-  $list = rex_list::factory('SELECT user_id, name, login, lasttrydate FROM '.$REX['TABLE_PREFIX'].'user ORDER BY name');
+  $list = rex_list::factory('SELECT id, name, login, lasttrydate FROM '.$REX['TABLE_PREFIX'].'user ORDER BY name');
   $list->setCaption($I18N->msg('user_caption'));
   $list->addTableAttribute('summary', $I18N->msg('user_summary'));
   $list->addTableColumnGroup(array(40, '5%', '*', 153, 153, 153));
@@ -888,13 +888,13 @@ if (isset($SHOW) and $SHOW)
   $tdIcon = '<span class="rex-i-element rex-i-user"><span class="rex-i-element-text">###name###</span></span>';
   $thIcon = '<a class="rex-i-element rex-i-user-add" href="'. $list->getUrl(array('FUNC_ADD' => '1')) .'"><span class="rex-i-element-text">'. $I18N->msg('create_user') .'</span></a>';
   $list->addColumn($thIcon, $tdIcon, 0, array('<th class="rex-icon">###VALUE###</th>','<td class="rex-icon">###VALUE###</td>'));
-  $list->setColumnParams($thIcon, array('user_id' => '###user_id###'));
+  $list->setColumnParams($thIcon, array('user_id' => '###id###'));
 
-  $list->setColumnLabel('user_id', 'ID');
-  $list->setColumnLayout('user_id', array('<th class="rex-small">###VALUE###</th>','<td class="rex-small">###VALUE###</td>'));
+  $list->setColumnLabel('id', 'ID');
+  $list->setColumnLayout('id', array('<th class="rex-small">###VALUE###</th>','<td class="rex-small">###VALUE###</td>'));
 
   $list->setColumnLabel('name', $I18N->msg('name'));
-  $list->setColumnParams('name', array('user_id' => '###user_id###'));
+  $list->setColumnParams('name', array('user_id' => '###id###'));
   $list->setColumnFormat('name', 'custom',
     create_function(
       '$params',
@@ -910,13 +910,13 @@ if (isset($SHOW) and $SHOW)
 
   $list->addColumn('funcs', $I18N->msg('user_delete'));
   $list->setColumnLabel('funcs', $I18N->msg('user_functions'));
-  $list->setColumnParams('funcs', array('FUNC_DELETE' => '1', 'user_id' => '###user_id###'));
+  $list->setColumnParams('funcs', array('FUNC_DELETE' => '1', 'user_id' => '###id###'));
   $list->setColumnFormat('funcs', 'custom',
     create_function(
       '$params',
       'global $REX;
        $list = $params["list"];
-       if($list->getValue("user_id") == $REX["USER"]->getValue("user_id"))
+       if($list->getValue("id") == $REX["USER"]->getValue("id"))
        {
          return \'<span class="rex-strike">'. $I18N->msg('user_delete') .'</span>\';
        }

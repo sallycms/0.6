@@ -397,7 +397,7 @@ class OOArticleSlice
 		// UserId gibts nur im Backend
 		if($user_id === null) {
 			if(isset($REX['USER'])) {
-				$user_id = $REX['USER']->getValue('user_id');
+				$user_id = $REX['USER']->getValue('id');
 				$user_login = $REX['USER']->getValue('login');
 			}else {
 				$user_id = '';

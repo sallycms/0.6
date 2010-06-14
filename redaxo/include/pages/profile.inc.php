@@ -7,7 +7,7 @@
 
 $info = '';
 $warning = '';
-$user_id = $REX['USER']->getValue('user_id');
+$user_id = $REX['USER']->getValue('id');
 
 // Allgemeine Infos
 $userpsw  = trim(rex_request('userpsw', 'string'));
@@ -67,7 +67,7 @@ if (rex_post('upd_profile_button', 'string'))
 {
   $updateuser = new rex_sql;
   $updateuser->setTable($REX['TABLE_PREFIX'].'user');
-  $updateuser->setWhere('user_id='. $user_id);
+  $updateuser->setWhere('id='. $user_id);
   $updateuser->setValue('name',$username);
   $updateuser->setValue('description',$userdesc);
 
@@ -110,7 +110,7 @@ if ($warning != '')
 // --------------------------------- FORMS
 
 $sql = new rex_login_sql;
-$sql->setQuery('select * from '. $REX['TABLE_PREFIX'] .'user where user_id='. $user_id);
+$sql->setQuery('select * from '. $REX['TABLE_PREFIX'] .'user where id='. $user_id);
 if ($sql->getRows()!=1)
 {
   echo rex_warning('You have no permission to this area!');

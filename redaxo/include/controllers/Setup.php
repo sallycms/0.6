@@ -274,7 +274,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		$config      = sly_Core::config();
 		$prefix      = $config->get('DATABASE/TABLE_PREFIX');
 		$pdo         = sly_DB_Persistence::getInstance();
-		$usersExist  = $pdo->listTables($prefix.'user') && $pdo->magicFetch('user', 'user_id') !== false;
+		$usersExist  = $pdo->listTables($prefix.'user') && $pdo->magicFetch('user', 'id') !== false;
 		$createAdmin = !sly_post('no_admin', 'boolean', false);
 		$adminUser   = sly_post('admin_user', 'string');
 		$adminPass   = sly_post('admin_pass', 'string');
@@ -292,7 +292,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 				}
 
 				if (empty($error)) {
-					$userOK = $pdo->listTables($prefix.'user') && $pdo->fetch('user', 'user_id', array('login' => $adminUser)) > 0;
+					$userOK = $pdo->listTables($prefix.'user') && $pdo->fetch('user', 'id', array('login' => $adminUser)) > 0;
 					
 					if ($userOK) {
 						$error = $I18N->msg('setup_042'); // Dieses Login existiert schon!
