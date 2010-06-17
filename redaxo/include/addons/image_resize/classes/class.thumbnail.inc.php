@@ -124,7 +124,7 @@ class Thumbnail
 
 			if ($colorTransparent >= 0) {
 				// Get the original image's transparent color's RGB values
-				$trnprt_color = imagecolorsforindex($image,  $colorTransparent);
+				$trnprt_color = imagecolorsforindex($this->imgsrc,  $colorTransparent);
 
 				// Allocate the same color in the new image resource
 				$colorTransparent = imagecolorallocate($this->imgthumb, $colorTransparent['red'], $colorTransparent['green'], $colorTransparent['blue']);
