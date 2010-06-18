@@ -8,13 +8,8 @@
 
 function rex_addons_folder($addon = null)
 {
-	global $REX;
-
-	if (!is_null($addon)) {
-		return $REX['INCLUDE_PATH'].'/addons/'.$addon.'/';
-	}
-
-	return $REX['INCLUDE_PATH'].'/addons/';
+	$service = sly_Service_Factory::getService('AddOn');
+	return $service->baseFolder($addon);
 }
 
 function rex_read_addons_folder($folder = null)
@@ -23,30 +18,24 @@ function rex_read_addons_folder($folder = null)
 		$folder = rex_addons_folder();
 	}
 	
-	$addons = array();
-	$handle = opendir($folder);
+	$addons = glob($folder.'*', GLOB_ONLYDIR);
 	
-	if ($handle) {
-		while ($file = readdir($handle)) {
-			if ($file[0] != '.' && $file[0] != '_' && is_dir($folder.$file)) {
-				$addons[] = $file;
-			}
-		}
-		
-		closedir($handle);
+	if ($addons) {
+		$addons = array_map('basename', $addons);
 		natsort($addons);
+		return $addons;
 	}
 	
-	return $addons;
+	return array();
 }
 
 // ------------------------------------- Helpers
 
 /**
-* Importiert die gegebene SQL-Datei in die Datenbank
-*
-* @return boolean  true bei Erfolg, sonst eine Fehlermeldung
-*/
+ * Importiert die gegebene SQL-Datei in die Datenbank
+ *
+ * @return boolean  true bei Erfolg, sonst eine Fehlermeldung
+ */
 function rex_install_dump($file, $debug = false)
 {
 	$error = '';
@@ -82,19 +71,19 @@ function rex_install_prepare_query($qry)
 }
 
 /**
-* Removes comment lines and splits up large sql files into individual queries
-*
-* Last revision: September 23, 2001 - gandon
-*
-* @param   array    the splitted sql commands
-* @param   string   the sql commands
-* @param   integer  the MySQL release number (because certains php3 versions
-*                   can't get the value of a constant from within a function)
-*
-* @return  boolean  always true
-*
-* @access  public
-*/
+ * Removes comment lines and splits up large sql files into individual queries
+ *
+ * Last revision: September 23, 2001 - gandon
+ *
+ * @param   array    the splitted sql commands
+ * @param   string   the sql commands
+ * @param   integer  the MySQL release number (because certains php3 versions
+ *                   can't get the value of a constant from within a function)
+ *
+ * @return  boolean  always true
+ *
+ * @access  public
+ */
 // Taken from phpmyadmin (read_dump.lib.php: PMA_splitSqlFile)
 function PMA_splitSqlFile(& $ret, $sql, $release) {
 	// do not trim, see bug #1030644
@@ -207,10 +196,10 @@ function PMA_splitSqlFile(& $ret, $sql, $release) {
 }
 
 /**
-* Reads a file and split all statements in it.
-*
-* @param string $file  Path to the SQL-dump-file
-*/
+ * Reads a file and split all statements in it.
+ *
+ * @param string $file  Path to the SQL-dump-file
+ */
 function rex_read_sql_dump($file)
 {
 	if (!is_file($file) || !is_readable($file)) {
@@ -233,12 +222,12 @@ function rex_read_sql_dump($file)
 }
 
 /**
-* Sucht innerhalb des $REX['ADDON']['page'] Array rekursiv nach der page
-* $needle
-*
-* Gibt bei erfolgreicher Suche den Namen des Addons zurück, indem die page
-* gefunden wurde, sonst false
-*/
+ * Sucht innerhalb des $REX['ADDON']['page'] Array rekursiv nach der page
+ * $needle
+ *
+ * Gibt bei erfolgreicher Suche den Namen des Addons zurück, indem die page
+ * gefunden wurde, sonst false
+ */
 function rex_search_addon_page($needle, $haystack = null)
 {
 	global $REX;
