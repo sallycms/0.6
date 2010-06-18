@@ -322,7 +322,7 @@ class rex_article
 	private function printArticleContent() {
 		if ($this->article_id != 0) {
 			global $REX;
-			$article_content_file = $REX['INCLUDE_PATH'].'/generated/articles/'.$this->article_id.'.'.$this->clang.'.content';
+			$article_content_file = $REX['DYNFOLDER'].'/internal/sally/articles/'.$this->article_id.'.'.$this->clang.'.content';
 			if (!file_exists($article_content_file)) {
 				include_once ($REX["INCLUDE_PATH"]."/functions/function_rex_generate.inc.php");
 				$generated = rex_generateArticleContent($this->article_id, $this->clang);

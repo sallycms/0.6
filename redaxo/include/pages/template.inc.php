@@ -32,7 +32,7 @@ if ($function == "delete")
   }else
   {
     $del->setQuery("DELETE FROM " . $REX['TABLE_PREFIX'] . "template WHERE id = '$template_id' LIMIT 1"); // max. ein Datensatz darf loeschbar sein
-    rex_deleteDir($REX['INCLUDE_PATH'] . "/generated/templates/" . $template_id . ".template", 0);
+    rex_deleteDir($REX['DYNFOLDER'] . "/internal/sally/templates/" . $template_id . ".template", 0);
     $info = $I18N->msg("template_deleted");
   }
 
@@ -145,7 +145,7 @@ if ($function == "add" or $function == "edit")
     $templatename = stripslashes($templatename);
     $content = stripslashes($content);
 
-    rex_deleteDir($REX['INCLUDE_PATH']."/generated/templates", 0);
+    rex_deleteDir($REX['DYNFOLDER']."/internal/sally/templates", 0);
 
     if ($goon != "") {
       $function = "edit";

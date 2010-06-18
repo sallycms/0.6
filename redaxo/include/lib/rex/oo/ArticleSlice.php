@@ -188,12 +188,12 @@ class OOArticleSlice
 
 	public function getContent(){
 		global $REX, $I18N;
-		$slice_content_file = $REX['INCLUDE_PATH'].'/generated/articles/'.$this->getId().'.slice';
+		$slice_content_file = $REX['DYNFOLDER'].'/internal/sally/articles/'.$this->getId().'.slice';
 		if (!file_exists($slice_content_file)) {
 			$slice_content = $this->getSlice();
 			if (rex_put_file_contents($slice_content_file, $slice_content) === FALSE)
 			{
-				return $I18N->msg('slice_could_not_be_generated')." ".$I18N->msg('check_rights_in_directory').$REX['INCLUDE_PATH']."/generated/articles/";
+				return $I18N->msg('slice_could_not_be_generated')." ".$I18N->msg('check_rights_in_directory').$REX['DYNFOLDER']."/internal/sally/articles/";
 			}
 		}
 		if(file_exists($slice_content_file))

@@ -480,10 +480,10 @@ class RedaxoSync
 
 	private static function clearRedaxoCache()
 	{
-		$path = dirname(__FILE__).self::REDAXO_DIR.'include/generated/templates/';
+		$path = dirname(__FILE__).'data/dyn/internal/sally/templates/';
 		self::removeAllFiles($path, 'template');
 		
-		$path = dirname(__FILE__).self::REDAXO_DIR.'include/generated/articles/';
+		$path = dirname(__FILE__).'data/dyn/internal/sally/articles/';
 		self::removeAllFiles($path, 'alist');
 		self::removeAllFiles($path, 'clist');
 		self::removeAllFiles($path, 'article');

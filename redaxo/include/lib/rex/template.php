@@ -65,7 +65,7 @@ class rex_template
 	public static function getTemplatesDir()
 	{
 		global $REX;
-		return $REX['INCLUDE_PATH'].'/generated/templates';
+		return $REX['DYNFOLDER'].'/internal/sally/templates';
 	}
 
 	public function getTemplate()

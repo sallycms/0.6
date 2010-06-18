@@ -143,7 +143,7 @@ class OOArticle extends OORedaxo
 		
 		// prüfen, ob ID in Content Cache Dateien vorhanden
 		
-		$cacheFiles = glob($REX['INCLUDE_PATH'].'/generated/articles/'.$articleId.'.*');
+		$cacheFiles = glob($REX['DYNFOLDER'].'/internal/sally/articles/'.$articleId.'.*');
 		
 		if (!empty($cacheFiles)) {
 			return true;

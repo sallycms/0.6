@@ -16,7 +16,9 @@ function rex_generateAll()
 {
 	global $REX, $I18N;
 
-	rex_deleteDir($REX['INCLUDE_PATH'].'/generated', false);
+	rex_deleteDir($REX['DYNFOLDER'].'/internal/sally/articles', false);
+	rex_deleteDir($REX['DYNFOLDER'].'/internal/sally/templates', false);
+	rex_deleteDir($REX['DYNFOLDER'].'/internal/sally/files', false);
 
 	$MSG = $I18N->msg('delete_cache_message');
 	$MSG = rex_register_extension_point('ALL_GENERATED', $MSG);
@@ -67,7 +69,7 @@ function rex_deleteCacheArticleContent($id, $clang = null)
 {
 	global $REX;
 
-	$cachePath = $REX['INCLUDE_PATH'].'/generated/articles/';
+	$cachePath = $REX['DYNFOLDER'].'/internal/sally/articles/';
 	$level     = error_reporting(0);
 
 	foreach (array_keys($REX['CLANG']) as $_clang) {
@@ -85,7 +87,7 @@ function rex_deleteCacheSliceContent($slice_id)
 {
 	global $REX;
 
-	$cachePath = $REX['INCLUDE_PATH'].'/generated/articles/';
+	$cachePath = $REX['DYNFOLDER'].'/internal/sally/articles/';
 	@unlink($cachePath.$slice_id.'.slice');
 }
 
@@ -154,10 +156,10 @@ function rex_generateArticleContent($article_id, $clang = null)
 			$article_content .= '<?php } ?>';
 		}
 		
-		$article_content_file = $REX['INCLUDE_PATH']."/generated/articles/$article_id.$_clang.content";
+		$article_content_file = $REX['DYNFOLDER']."/internal/sally/articles/$article_id.$_clang.content";
 
 		if (rex_put_file_contents($article_content_file, $article_content) === false) {
-			return $I18N->msg('article_could_not_be_generated').' '.$I18N->msg('check_rights_in_directory').$REX['INCLUDE_PATH'].'/generated/articles/';
+			return $I18N->msg('article_could_not_be_generated').' '.$I18N->msg('check_rights_in_directory').$REX['DYNFOLDER'].'/internal/sally/articles/';
 		}
 		
 		rex_register_extension_point('CLANG_ARTICLE_GENERATED', '', array(

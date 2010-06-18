@@ -359,10 +359,6 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		$s = DIRECTORY_SEPARATOR;
 
 		$writables = array (
-			$REX['INCLUDE_PATH'].$s.'generated',
-			$REX['INCLUDE_PATH'].$s.'generated'.$s.'articles',
-			$REX['INCLUDE_PATH'].$s.'generated'.$s.'templates',
-			$REX['INCLUDE_PATH'].$s.'generated'.$s.'files',
 			$REX['DATAFOLDER'],
 			$REX['MEDIAFOLDER'],
 			$REX['DYNFOLDER'],
@@ -370,7 +366,10 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			$REX['DYNFOLDER'].$s.'internal',
 			$REX['DYNFOLDER'].$s.'internal'.$s.'sally',
 			$REX['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'css-cache',
-			$REX['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'yaml-cache'
+			$REX['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'yaml-cache',
+			$REX['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'articles',
+			$REX['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'templates',
+			$REX['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'files'
 		);
 
 		foreach ($REX['SYSTEM_ADDONS'] as $system_addon) {
