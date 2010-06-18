@@ -16,7 +16,7 @@ class sly_Util_HTML
 		$attributes = array_filter($attributes, array(__CLASS__, 'isAttribute'));
 
 		foreach ($attributes as $key => &$value) {
-			$value = strtolower($key).'="'.sly_html(trim($value)).'"';
+			$value = strtolower(trim($key)).'="'.sly_html(trim($value)).'"';
 		}
 
 		return implode(' ', $attributes);
@@ -62,7 +62,7 @@ class sly_Util_HTML
 
 	public static function isAttribute($value)
 	{
-		return $value !== false && strlen($value) > 0;
+		return $value !== false && strlen(trim($value)) > 0;
 	}
 
 	public static function concatValues(&$value, $key)
