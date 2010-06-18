@@ -553,7 +553,7 @@ function rex_is_int($value)
 if (!function_exists('startsWith')) {
 	function startsWith($string, $start)
 	{
-		return strstr($string, $start) == $string;
+		return sly_Util_String::startsWith($string, $start);
 	}
 }
 
@@ -567,7 +567,7 @@ if (!function_exists('startsWith')) {
 if (!function_exists('endsWith')) {
 	function endsWith($string, $end)
 	{
-		return (substr($string, strlen($string) - strlen($end)) == $end);
+		return sly_Util_String::endsWith($string, $start);
 	}
 }
 
@@ -603,13 +603,9 @@ function rex_exception(Exception $e)
 /**
  * Somewhat naive way to determine if an array is a hash.
  */
-function is_hash(&$array)
+function is_hash($array)
 {
-	if (!is_array($array))
-		return false;
-
-	$keys = array_keys($array);
-	return @is_string($keys[0]) ? true : false;
+	return is_array($array) && sly_arrayAnyKey('is_string', $array);
 }
 
 // http://snippets.dzone.com/posts/show/4660
@@ -618,12 +614,14 @@ function array_flatten(array $array)
 	$i = 0;
 	$n = count($array);
 
-	while ($i < $n)
-	{
-		if (is_array($array[$i]))
-			array_splice($array,$i,1,$array[$i]);
-        else
+	while ($i < $n) {
+		if (is_array($array[$i])) {
+			array_splice($array, $i, 1, $array[$i]);
+		}
+		else {
 			++$i;
-    }
-    return $array;
+		}
+	}
+	
+	return $array;
 }
