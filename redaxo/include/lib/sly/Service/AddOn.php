@@ -252,6 +252,15 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		return $dir;
 	}
 	
+	protected function dynPath($type, $addonName)
+	{
+		$config = sly_Core::config();
+		$dir    = SLY_BASE.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.$addonName;
+
+		if (!is_dir($dir)) mkdir($dir, $config->get('DIRPERM'), true);
+		return $dir;
+	}
+	
 	protected function extend($time, $type, $addonName, $state)
 	{
 		return rex_register_extension_point('SLY_ADDON_'.$time.'_'.$type, $state, array('addon' => $addonName));

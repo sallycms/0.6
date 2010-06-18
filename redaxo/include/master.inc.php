@@ -67,7 +67,7 @@ $config->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yml');
 $config->loadLocalConfig();
 
 /*
- * niocht unbedingt die beste lösung, aber praktikabel
+ * nicht unbedingt die beste lösung, aber praktikabel
  *
  */
 try {
