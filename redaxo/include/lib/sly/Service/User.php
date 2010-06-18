@@ -20,4 +20,10 @@ class sly_Service_User extends sly_Service_Model_Base {
 	protected function makeObject(array $params) {
 		return new sly_Model_User($params);
 	}
+	
+	public function getCurrentUser() {
+		global $REX;
+		$userID = $REX['LOGIN']->getValue('id');
+		return $this->findById($userID);
+	}
 }
