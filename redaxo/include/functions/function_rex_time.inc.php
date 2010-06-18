@@ -1,29 +1,33 @@
 <?php
-
-/**
- * Zeit Funktionen
- * @package redaxo4
- * @version svn:$Id$
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
+ * beiliegenden LICENSE Datei und unter:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
+
+rex_startScripttime();
 
 function rex_showScriptTime()
 {
-	global $scriptTimeStart;
-	$scriptTimeEnd = rex_getCurrentTime();
-	$scriptTimeDiv = intval(($scriptTimeEnd - $scriptTimeStart)*1000)/1000;
-	return $scriptTimeDiv;
+	$start    = rex_startScriptTime();
+	$end      = microtime(true);
+	$duration = round($end - $start, 3);
+
+	return $duration;
 }
 
 function rex_getCurrentTime()
 {
-	$time = explode(" ",microtime());
-	return ($time[0]+$time[1]);
+	return microtime(true);
 }
 
 function rex_startScriptTime()
 {
-	global $scriptTimeStart;
-	$scriptTimeStart = rex_getCurrentTime();
+	static $start = null;
+	if ($start === null) $start = microtime(true);
+	return $start;
 }
-
-rex_startScripttime();
