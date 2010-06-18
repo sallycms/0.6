@@ -567,7 +567,7 @@ if (!function_exists('startsWith')) {
 if (!function_exists('endsWith')) {
 	function endsWith($string, $end)
 	{
-		return sly_Util_String::endsWith($string, $start);
+		return sly_Util_String::endsWith($string, $end);
 	}
 }
 
