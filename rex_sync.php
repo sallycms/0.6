@@ -10,7 +10,7 @@
  */
 
 /**
- * Redaxo synchronisation script
+ * Sally synchronisation script
  *
  * Author: Gregor Aisch / Dave Gööck / Christoph Mewes
  *
@@ -20,7 +20,7 @@
  *
  * INSTALL NOTES
  *
- * 	 you have to set a global variable in your Eclipse environment
+ *   you have to set a global variable in your Eclipse environment
  *   > window > preferences > run/debug > string substitution
  *   variable = "PHP_PATH", value = "path/to/your/php/installation/"
  *   variable = "PHP_INI", value = "path/to/your/php.ini"
@@ -33,7 +33,7 @@
  * - storage of meta-information for templates:
  *   + createuser
  * - storage of meta-information for modules:
- * 	 + active
+ *   + active
  *   + attributes (such as ctypes)
  *   + createuser
  */
@@ -43,24 +43,24 @@ RedaxoSync::synchronize();
 
 class RedaxoSync
 {
-	private static $verbose 		= false;
-	private static $rebuild_cache 	= false;
-	private static $REX 			= null;
-	private static $metaInfosCache 	= array();
+	private static $verbose        = false;
+	private static $rebuild_cache  = false;
+	private static $REX            = null;
+	private static $metaInfosCache = array();
 
 	// directories
-	const REDAXO_DIR 				= '/redaxo/';
-	const TEMPLATE_DIR 				= '/develop/templates/';
-	const ACTIONS_DIR				= '/develop/actions/';
-	const MODULES_DIR				= '/develop/modules/';
+	const REDAXO_DIR   = '/redaxo/';
+	const TEMPLATE_DIR = '/develop/templates/';
+	const ACTIONS_DIR  = '/develop/actions/';
+	const MODULES_DIR  = '/develop/modules/';
 
 	// patterns
-	const TEMPLATE_SUFFIX			= '.template.php';
-	const MODULES_IN_SUFFIX 		= '.input.module.php';
-	const MODULES_OUT_SUFFIX 		= '.output.module.php';
-	const ACTIONS_PREVIEW_SUFFIX	= '.preview.action.php';
-	const ACTIONS_PRESAVE_SUFFIX	= '.presave.action.php';
-	const ACTIONS_POSTSAVE_SUFFIX	= '.postsave.action.php';
+	const TEMPLATE_SUFFIX         = '.template.php';
+	const MODULES_IN_SUFFIX       = '.input.module.php';
+	const MODULES_OUT_SUFFIX      = '.output.module.php';
+	const ACTIONS_PREVIEW_SUFFIX  = '.preview.action.php';
+	const ACTIONS_PRESAVE_SUFFIX  = '.presave.action.php';
+	const ACTIONS_POSTSAVE_SUFFIX = '.postsave.action.php';
 
 	public static function initialize()
 	{
@@ -69,22 +69,17 @@ class RedaxoSync
 			error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED);
 		}
 		
-		if (file_exists('redaxo/include/master.inc.php')) {
-			// since REX4.2 we do need the functions.inc.php for its rex_request() function.
-			$REX['NOFUNCTIONS'] = false;
-			$REX['GG']          = false;
-			$REX['HTDOCS_PATH'] = './';
-			$REX['REDAXO']      = false;
-			$REX['SYNC']		= true;
+		$configFile = 'data/dyn/internal/sally/config/sly_local.php';
 		
-			include_once 'redaxo/include/master.inc.php';
+		if (file_exists($configFile)) {
+			include_once $configFile;
 			
-			self::$REX = $REX;
-			self::debug('master.inc.php successfully included', true);
+			self::$REX = $config;
+			self::debug('sly_local.php successfully included', true);
 			self::openDBConnection();
 		}
 		else {
-			self::debug('couldn\'t find REDAXO\'s master.inc.php');
+			self::debug('couldn\'t find Sally\'s sly_local.php');
 			exit(-1);
 		}
 	}
@@ -118,14 +113,14 @@ class RedaxoSync
 
 	private static function openDBConnection()
 	{
-		$connection = mysql_connect(self::$REX['DB']['1']['HOST'], self::$REX['DB']['1']['LOGIN'], self::$REX['DB']['1']['PSW']);
+		$connection = mysql_connect(self::$REX['DATABASE']['HOST'], self::$REX['DATABASE']['LOGIN'], self::$REX['DATABASE']['PASSWORD']);
 
 		if (!$connection) {
 			self::debug('error while connecting to database: '.mysql_error());
 			exit(-1);
 		}
 		else {
-			mysql_select_db(self::$REX['DB']['1']['NAME']);
+			mysql_select_db(self::$REX['DATABASE']['NAME']);
 			self::debug('successfully connected to database', true);
 		}
 	}
@@ -170,7 +165,7 @@ class RedaxoSync
 		}
 
 		// fetch data from db
-		$res = mysql_query('SELECT * FROM '.self::$REX['TABLE_PREFIX'].$type.' WHERE id = '.$id);
+		$res = mysql_query('SELECT * FROM '.self::$REX['DATABASE']['TABLE_PREFIX'].$type.' WHERE id = '.$id);
 		if (!$res) {
 			self::debug(mysql_error());
 			return;
@@ -227,7 +222,7 @@ class RedaxoSync
 		ob_end_clean();
 
 		$res = mysql_query(
-			'UPDATE '.self::$REX['TABLE_PREFIX'].'module '. 
+			'UPDATE '.self::$REX['DATABASE']['TABLE_PREFIX'].'module '. 
 			'SET '.$contentField.' = "'.addslashes($content).'", '.
 			'updatedate = UNIX_TIMESTAMP() '.
 			(!empty($title) ? ', name = "'.trim($title).'" ' : '').
@@ -242,7 +237,7 @@ class RedaxoSync
 	private static function updateModuleActions($actions, $id)
 	{
 		$oldActions = array();
-		$res        = mysql_query('SELECT action_id, id FROM '.self::$REX['TABLE_PREFIX'].'module_action WHERE module_id = '.$id.'');
+		$res        = mysql_query('SELECT action_id, id FROM '.self::$REX['DATABASE']['TABLE_PREFIX'].'module_action WHERE module_id = '.$id.'');
 		
 		if (!$res) {
 			self::debug(mysql_error());
@@ -256,7 +251,7 @@ class RedaxoSync
 		if (is_array($actions)) {
 			foreach ($actions as $action) {
 				if (!isset($oldActions[$action])) {
-					$res = mysql_query('INSERT INTO '.self::$REX['TABLE_PREFIX'].'module_action (module_id, action_id) VALUES ('.$id.', '.$action.')');
+					$res = mysql_query('INSERT INTO '.self::$REX['DATABASE']['TABLE_PREFIX'].'module_action (module_id, action_id) VALUES ('.$id.', '.$action.')');
 				}
 				else {
 					unset($oldActions[$action]);
@@ -267,7 +262,7 @@ class RedaxoSync
 		$res = true;
 
 		foreach ($oldActions as $action => $module) {
-			$res &= mysql_query('DELETE FROM '.self::$REX['TABLE_PREFIX'].'module_action WHERE module_id = '.$id.' AND action_id = '.$action);
+			$res &= mysql_query('DELETE FROM '.self::$REX['DATABASE']['TABLE_PREFIX'].'module_action WHERE module_id = '.$id.' AND action_id = '.$action);
 			if (!$res) {
 				self::debug('error while updating '.type.' / '.$subtype.': "'.$name.'"');
 				self::debug(mysql_error());
@@ -279,9 +274,9 @@ class RedaxoSync
 
 	private static function updateTemplate($subtype, $content, $contentField, $objectName, $id)
 	{
-		$title	= self::getMetaInfo($content, 'param', 'name');
-		$active	= self::getMetaInfo($content, 'param', 'active');
-		$ctype	= self::getMetaInfo($content, 'attribute', 'ctype');
+		$title  = self::getMetaInfo($content, 'param', 'name');
+		$active = self::getMetaInfo($content, 'param', 'active');
+		$ctype  = self::getMetaInfo($content, 'attribute', 'ctype');
 		if (empty($title)) $title = $objectName;
 
 		$attributes = array();
@@ -300,7 +295,7 @@ class RedaxoSync
 		ob_end_clean();
 
 		return mysql_query(
-			'UPDATE '.self::$REX['TABLE_PREFIX'].'template '. 
+			'UPDATE '.self::$REX['DATABASE']['TABLE_PREFIX'].'template '. 
 			'SET name = "'.trim($title).'", '.
 			'content = "'.addslashes($content).'", '.
 		    'updatedate = UNIX_TIMESTAMP()'.
@@ -312,16 +307,16 @@ class RedaxoSync
 
 	private static function updateAction($subtype, $content, $contentField, $objectName, $id)
 	{
-		$title	= self::getMetaInfo($content, 'param', 'name');
-		$add	= intval(self::getMetaInfo($content, 'event', 'ADD'));
-		$edit	= intval(self::getMetaInfo($content, 'event', 'EDIT'));
-		$delete	= intval(self::getMetaInfo($content, 'event', 'DELETE'));
+		$title  = self::getMetaInfo($content, 'param', 'name');
+		$add    = intval(self::getMetaInfo($content, 'event', 'ADD'));
+		$edit   = intval(self::getMetaInfo($content, 'event', 'EDIT'));
+		$delete = intval(self::getMetaInfo($content, 'event', 'DELETE'));
 
 		if (empty($title)) $title = $objectName;
 		$bitmask = ($add == 1 ? 1 : 0) + ($edit == 1 ? 2 : 0) + ($delete == 1 ? 4 : 0);
 
 		return mysql_query(
-			'UPDATE '.self::$REX['TABLE_PREFIX'].'action '. 
+			'UPDATE '.self::$REX['DATABASE']['TABLE_PREFIX'].'action '. 
 			'SET '.$contentField.' = "'.addslashes($content).'", updatedate = UNIX_TIMESTAMP() '.
 			(!empty($title) ? ', name = "'.trim($title).'" ' : '').
 			', '.$contentField.'mode = "'.$bitmask.'" '. 
@@ -368,7 +363,7 @@ class RedaxoSync
 		ob_end_clean();
 
 		$res = mysql_query(
-			'INSERT INTO '.self::$REX['TABLE_PREFIX'].'module ' . 
+			'INSERT INTO '.self::$REX['DATABASE']['TABLE_PREFIX'].'module ' . 
 			'(id, name, '.$contentField.', createdate, createuser) VALUES '.
 			'('.$id.', "'.trim($title).'", "'.addslashes($content).'", UNIX_TIMESTAMP(), "admin")'
 		);
@@ -380,9 +375,9 @@ class RedaxoSync
 
 	private static function insertTemplate($subtype, $content, $contentField, $objectName, $id)
 	{
-		$title	= self::getMetaInfo($content, 'param', 'name');
-		$active	= self::getMetaInfo($content, 'param', 'active');
-		$ctype	= self::getMetaInfo($content, 'attribute', 'ctype');
+		$title  = self::getMetaInfo($content, 'param', 'name');
+		$active = self::getMetaInfo($content, 'param', 'active');
+		$ctype  = self::getMetaInfo($content, 'attribute', 'ctype');
 		if (empty($title)) $title = $objectName;
 
 		$attributes = array();
@@ -403,7 +398,7 @@ class RedaxoSync
 		$attributesString = (!empty($attributes) ? addslashes(serialize($attributes)) : '');
 
 		return mysql_query(
-			'INSERT INTO '.self::$REX['TABLE_PREFIX'].'template ' . 
+			'INSERT INTO '.self::$REX['DATABASE']['TABLE_PREFIX'].'template ' . 
 			'(id, name, content, createdate, createuser, active, label, attributes) VALUES ' .
 			'('.$id.', "'.trim($title).'", "'. addslashes($content) .'", NOW(), "admin", '.(isset($active) ? intval($active) : 0).', "", "'.$attributesString.'")'
 		);
@@ -411,16 +406,16 @@ class RedaxoSync
 
 	private static function insertAction($subtype, $content, $contentField, $objectName, $id)
 	{
-		$title	= self::getMetaInfo($content, 'param', 'name');
-		$add	= intval(self::getMetaInfo($content, 'event', 'ADD'));
-		$edit	= intval(self::getMetaInfo($content, 'event', 'EDIT'));
-		$delete	= intval(self::getMetaInfo($content, 'event', 'DELETE'));
+		$title  = self::getMetaInfo($content, 'param', 'name');
+		$add    = intval(self::getMetaInfo($content, 'event', 'ADD'));
+		$edit   = intval(self::getMetaInfo($content, 'event', 'EDIT'));
+		$delete = intval(self::getMetaInfo($content, 'event', 'DELETE'));
 
 		if (empty($title)) $title = $objectName;
 		$bitmask = ($add == 1 ? 1 : 0) + ($edit == 1 ? 2 : 0) + ($delete == 1 ? 4 : 0);
 
 		return mysql_query(
-			'INSERT INTO '.self::$REX['TABLE_PREFIX'].'action ' . 
+			'INSERT INTO '.self::$REX['DATABASE']['TABLE_PREFIX'].'action ' . 
 			'(id, name, '.$contentField.', '.$contentField.'mode, createdate, createuser) VALUES '.
 			'('.$id.', "'.trim($title).'", "'.addslashes($content).'", '.$bitmask.', UNIX_TIMESTAMP(), "admin")'
 		);
@@ -447,7 +442,7 @@ class RedaxoSync
 		if (empty($type)) return null;
 
 		$id  = null;
-		$res = mysql_query('SELECT id FROM '.self::$REX['TABLE_PREFIX'].$type.' WHERE name = "'.$onjectName.'"');
+		$res = mysql_query('SELECT id FROM '.self::$REX['DATABASE']['TABLE_PREFIX'].$type.' WHERE name = "'.$onjectName.'"');
 		
 		if (!$res) {
 			self::debug(mysql_error());
@@ -480,10 +475,10 @@ class RedaxoSync
 
 	private static function clearRedaxoCache()
 	{
-		$path = dirname(__FILE__).'data/dyn/internal/sally/templates/';
+		$path = dirname(__FILE__).'/data/dyn/internal/sally/templates/';
 		self::removeAllFiles($path, 'template');
 		
-		$path = dirname(__FILE__).'data/dyn/internal/sally/articles/';
+		$path = dirname(__FILE__).'/data/dyn/internal/sally/articles/';
 		self::removeAllFiles($path, 'alist');
 		self::removeAllFiles($path, 'clist');
 		self::removeAllFiles($path, 'article');
