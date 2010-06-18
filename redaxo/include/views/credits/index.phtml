@@ -42,7 +42,7 @@ $conf = sly_Core::config();
 			
 			$this->render('/views/credits/row.phtml', $params);
 			
-			if ($isActive) {
+			if ($params['isActive']) {
 				$params['type'] = 'plugin';
 				
 				foreach ($plugins->getAvailablePlugins($addon) as $plugin) {
