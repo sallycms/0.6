@@ -11,8 +11,14 @@ $this->addClass('rex-form-select');
 print '<select '.$this->getAttributeString('value').'>';
 
 foreach ($this->values as $key => $value) {
-	$sel = (is_array($selected) && in_array($key, $selected)) || (!is_array($selected) && $key == $selected) ? ' selected="selected"' : '';
-	print '<option value="'.sly_html($key).'"'.$sel.'>'.sly_html($value).'</option>';
+	$sel   = (is_array($selected) && in_array($key, $selected)) || (!is_array($selected) && $key == $selected) ? ' selected="selected"' : '';
+	$value = sly_html($value);
+	
+	if (preg_match('#^( *)#', $value, $matches)) {
+		$value = preg_replace('#^( *)#', str_repeat('&nbsp;', strlen($matches[1])), $value);
+	}
+
+	print '<option value="'.sly_html($key).'"'.$sel.'>'.$value.'</option>';
 }
 
 print '</select>';
