@@ -25,9 +25,13 @@ class sly_Util_Directory {
 		$this->directory = $directory;
 	}
 	
+	public function exists() {
+		return is_dir($this->directory);
+	}
+	
 	public function listPlain($files = true, $directories = true, $dotFiles = false, $absolute = false, $sortFunction = 'natsort') {
 		if (!$files && !$directories) return array();
-		if (!is_dir($this->directory)) return array();
+		if (!is_dir($this->directory)) return false;
 		
 		if (!empty($sortFunction) && !function_exists($sortFunction)) {
 			throw new sly_Exception('Sort function '.$sortFunction.' does not exist!');
@@ -38,6 +42,7 @@ class sly_Util_Directory {
 		
 		while ($file = readdir($handle)) {
 			if ($file == '.' || $file == '..') continue;
+			if ($file[0] == '.' && !$dotFiles) continue;
 			
 			$abs = self::join($this->directory, $file);
 			
@@ -45,13 +50,12 @@ class sly_Util_Directory {
 				if ($directories) $list[] = $absolute ? $abs : $file;
 			}
 			else {
-				if ($file[0] == '.' && !$dotFiles) continue;
 				$list[] = $absolute ? $abs : $file;
 			}
 		}
 		
 		closedir($handle);
-		$sortFunction($list);
+		if (!empty($sortFunction)) $sortFunction($list);
 		
 		return $list;
 	}
@@ -66,9 +70,18 @@ class sly_Util_Directory {
 		$isAbs = $paths[0][0] == '/' || $paths[0][0] == '\\';
 		
 		foreach ($paths as &$path) {
-			$path = trim($path, '/\\');
+			$path = trim(self::normalize($path), DIRECTORY_SEPARATOR);
 		}
 		
-		return ($isAbs ? '/' : '').implode('/', $paths);
+		return ($isAbs ? DIRECTORY_SEPARATOR : '').implode(DIRECTORY_SEPARATOR, $paths);
+	}
+	
+	public static function normalize($path) {
+		$s     = DIRECTORY_SEPARATOR;
+		$isAbs = $path[0] == '/' || $path[0] == '\\';
+		$path  = str_replace(array('/', '\\'), $s, $path);
+		$path  = implode($s, array_filter(explode($s, $path)));
+		
+		return ($isAbs ? $s : '').$path;
 	}
 }
