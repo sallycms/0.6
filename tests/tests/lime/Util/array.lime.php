@@ -40,6 +40,7 @@ $obj->remove('hallo');
 $lime->ok(!$obj->has('hallo'), 'has() returns false for a removed key');
 $lime->ok(!$obj->has('does_not_exists'), 'has() returns false for a non-existing key');
 $lime->is($obj->get('does_not_exists'), null, 'get() returns null for a non-existing key and hopefully throws a notice');
+$lime->is($obj->get('hallo/does_not_exists'), null, 'get() returns null for a non-existing subkey and hopefully throws a notice');
 
 $obj->set('foo/bar', 1);
 $obj->set('foo///muh/', 2);
