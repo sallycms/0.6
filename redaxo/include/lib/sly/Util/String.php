@@ -26,13 +26,21 @@ class sly_Util_String
 	
 	public static function startsWith($haystack, $needle)
 	{
+		$haystack = (string) $haystack;
+		$needle   = (string) $needle;
+		
+		if (strlen($needle) > strlen($haystack)) return false;
+		if ($haystack == $needle || strlen($needle) == 0) return true;
 		return strstr($haystack, $needle) == $haystack;
 	}
 	
 	public static function endsWith($haystack, $needle)
 	{
+		$haystack = (string) $haystack;
+		$needle   = (string) $needle;
+		
 		if (strlen($needle) > strlen($haystack)) return false;
-		if ($haystack == $needle) return true;
+		if ($haystack == $needle || strlen($needle) == 0) return true;
 		return substr($haystack, -strlen($needle)) == $needle;
 	}
 	
