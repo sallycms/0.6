@@ -13,18 +13,18 @@ foreach ($testCasesFalse as $case) $lime->ok(!sly_Util_String::isInteger($case),
 // startsWith()
 
 $testCasesTrue  = array(array('', ''), array('hallo', ''), array('hallo', 'hal'), array('  hallo', '  hal'), array('1123', '1'), array(12, 1));
-$testCasesFalse = array(array('', 'hallo'), array('hallo', 'hallo123'), array('hallo', 'xyz'), array('hallo', 'H'), array('hallo', ' '), array('  hallo', 0), );
+$testCasesFalse = array(array('', 'hallo'), array('hallo', 'hallo123'), array('hallo', 'xyz'), array('hallo', 'H'), array('hallo', ' '), array('  hallo', 0));
 
-foreach ($testCasesTrue as $case)  $lime->ok(sly_Util_String::startsWith($case[0], $case[1]), 'startsWith()');
-foreach ($testCasesFalse as $case) $lime->ok(!sly_Util_String::startsWith($case[0], $case[1]), 'startsWith()');
+foreach ($testCasesTrue as $case)  $lime->ok(sly_Util_String::startsWith($case[0], $case[1]), 'startsWith() ("'.$case[0].'", "'.$case[1].'")');
+foreach ($testCasesFalse as $case) $lime->ok(!sly_Util_String::startsWith($case[0], $case[1]), 'startsWith() ("'.$case[0].'", "'.$case[1].'")');
 
 // endsWith()
 
-$testCasesTrue  = array(array('', ''), array('hallo', ''), array('hallo', 'llo'), array('  hallo', '  allo'), array('1123', '23'), array(12, 2));
-$testCasesFalse = array(array('', 'hallo'), array('hallo', 'hallo123'), array('hallo', 'xyz'), array('hallo', 'H'), array('hallo', ' '), array('  hallo', 0), );
+$testCasesTrue  = array(array('', ''), array('hallo', ''), array('hallo', 'llo'), array('  hallo', '  hallo'), array('1123', '23'), array(12, 2));
+$testCasesFalse = array(array('', 'hallo'), array('hallo', 'hallo123'), array('hallo', 'xyz'), array('hallo', 'H'), array('hallo', ' '), array('  hallo', 0));
 
-foreach ($testCasesTrue as $case)  $lime->ok(sly_Util_String::endsWith($case[0], $case[1]), 'endsWith()');
-foreach ($testCasesFalse as $case) $lime->ok(!sly_Util_String::endsWith($case[0], $case[1]), 'endsWith()');
+foreach ($testCasesTrue as $case)  $lime->ok(sly_Util_String::endsWith($case[0], $case[1]), 'endsWith() ("'.$case[0].'", "'.$case[1].'")');
+foreach ($testCasesFalse as $case) $lime->ok(!sly_Util_String::endsWith($case[0], $case[1]), 'endsWith() ("'.$case[0].'", "'.$case[1].'")');
 
 // strToUpper()
 
