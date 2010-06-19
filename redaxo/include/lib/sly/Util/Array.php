@@ -12,8 +12,12 @@
 class sly_Util_Array extends ArrayObject {
 	
 	public function set($key, $value) {
-		if (is_null($key) || strlen($key) === 0) trigger_error('Key must not be empty!', E_USER_ERROR);
+		$key = trim($key, '/');
 		
+		if (is_null($key) || strlen($key) == 0) {
+			throw new sly_Exception('Key must not be empty!');
+		}
+
 		if (strpos($key, '/') === false) {
 			$this[$key] = $value;
 			return $value;
@@ -23,24 +27,34 @@ class sly_Util_Array extends ArrayObject {
 		// mit Referenzen. Ja, Referenzen sind i.d.R. böse, deshalb werden sie auch
 		// in get() und has() nicht benutzt. Copy-on-Write und so.
 		
-		$path = explode('/', $key);
-		
+		$path = self::getPath($key);
 		$res  = $this;
 		
 		foreach ($path as $step) {
-			
+			if (!self::isArray($res)) throw new sly_Exception('Cannot make an array out of a scalar value.');
 			if (!array_key_exists($step, $res)) $res[$step] = array();
 			$res = &$res[$step];
 		}
+		
 		$res = $value;
 		return $value;
 	}
 	
 	public function get($key) {
-		if (empty($key)) return $this->getArrayCopy();
-		if (strpos($key, '/') === false) return $this[$key];
+		$key = trim($key, '/');
 		
-		$path = array_filter(explode('/', $key));
+		if (empty($key)) return $this->getArrayCopy();
+		
+		if (strpos($key, '/') === false) {
+			if (!array_key_exists($key, $this)) {
+				trigger_error('Element '.$key.' not found!', E_USER_NOTICE);
+				return null;
+			}
+			
+			return $this[$key];
+		}
+		
+		$path = self::getPath($key);
 		$res  = $this;
 		
 		foreach ($path as $step) {
@@ -48,6 +62,7 @@ class sly_Util_Array extends ArrayObject {
 				trigger_error('Element '.$key.' not found!', E_USER_NOTICE);
 				return null;
 			}
+			
 			$res = $res[$step];
 		}
 		
@@ -55,15 +70,17 @@ class sly_Util_Array extends ArrayObject {
 	}
 	
 	public function has($key) {
+		$key = trim($key, '/');
+		
 		if (empty($key)) return true;
 		if (strpos($key, '/') === false) return array_key_exists($key, $this);
 		
-		$path = array_filter(explode('/', $key));
+		$path = self::getPath($key);
 		$curr = $this;
-		$res = true;
+		$res  = true;
 		
 		foreach ($path as $step) {
-			if ((!($curr instanceof ArrayObject) && !is_array($curr)) || !array_key_exists($step, $curr)) {
+			if (!self::isArray($curr) || !array_key_exists($step, $curr)) {
 				$res = false;
 				break;	
 			}
@@ -75,16 +92,20 @@ class sly_Util_Array extends ArrayObject {
 	}
 	
 	public function remove($key) {
+		$key = trim($key, '/');
+		
 		if (empty($key)) {
 			$this->exchangeArray(array());
 			return true;
 		}
+		
 		if (strpos($key, '/') === false) {
 			unset($this[$key]);
 			return true;
 		}
 		
-		$path = array_filter(explode('/', $key));
+		$path = self::getPath($key);
+		$last = array_pop($path);
 		$curr = $this;
 		
 		foreach ($path as $step) {
@@ -92,7 +113,7 @@ class sly_Util_Array extends ArrayObject {
 			$curr = &$curr[$step];
 		}
 		
-		unset($curr);
+		unset($curr[$last]);
 		return true;
 	}
 	
@@ -115,5 +136,15 @@ class sly_Util_Array extends ArrayObject {
 	public function merge($array) {
 		if (!is_array($array)) return false;
 		$this->exchangeArray(array_replace_recursive($this->getArrayCopy(), $array));
+	}
+	
+	protected static function getPath($key) {
+		$key = trim($key, '/');
+		// array_filter würde Steps à la "0" fälschlicherweise entfernen!
+		return explode('/', preg_replace('#/+#', '/', $key));
+	}
+	
+	protected static function isArray($obj) {
+		return ($obj instanceof ArrayObject) || is_array($obj);
 	}
 }
