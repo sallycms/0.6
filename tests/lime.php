@@ -12,7 +12,11 @@ if (isset($_SERVER['REMOTE_ADDR'])) {
 	print '<pre>';
 }
 
-$lime = new lime_test();
+$lime = new lime_test(null, array('force_colors' => isset($_SERVER['REMOTE_ADDR'])));
+
+$lime->info('SallyCMS Unit Tests');
+$lime->info('= = = = = = = = = =');
+$lime->info('Let\'s see how many bugs we can find :-)');
 
 foreach ($registration->files as $filename) {
 	include $filename;
