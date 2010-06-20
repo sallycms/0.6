@@ -9,39 +9,21 @@
 function rex_plugins_folder($addon, $plugin = null)
 {
 	$addonFolder = rex_addons_folder($addon);
-
-	if ($plugin) {
-		return $addonFolder.'plugins'.DIRECTORY_SEPARATOR.$plugin.DIRECTORY_SEPARATOR;
-	}
-
-	return $addonFolder.'plugins'.DIRECTORY_SEPARATOR;
+	return sly_Util_Directory::join($addonFolder, 'plugins', $plugin);
 }
 
 function rex_plugins_file()
 {
-	return (dirname(dirname(__FILE__))).'/plugins.inc.php';
+	trigger_error('SallyCMS does not have a specific plugins file.', E_USER_WARNING);
+	return sly_Util_Directory::join(SLY_DYNFOLDER, 'internal', 'sally', 'plugins.rexcompat.php');
 }
 
 function rex_read_plugins_folder($addon, $folder = '')
 {
-	global $REX;
-	
-	$plugins = array();
-
 	if (empty($folder)) {
-		$folder = rex_plugins_folder($addon, '*');
+		$folder = rex_plugins_folder($addon);
 	}
-
-	$files = glob(rtrim($folder, DIRECTORY_SEPARATOR), GLOB_NOSORT);
 	
-	if (is_array($files))
-	{
-		foreach ($files as $file) {
-			$plugins[] = basename($file);
-		}
-	}
-
-	// Sortiere Array
-	natsort($plugins);
-	return $plugins;
+	$directory = new sly_Util_Directory($folder);
+	return $directory->exists() ? $directory->listPlain(false, true) : array();
 }

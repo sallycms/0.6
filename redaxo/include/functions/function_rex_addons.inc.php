@@ -18,15 +18,8 @@ function rex_read_addons_folder($folder = null)
 		$folder = rex_addons_folder();
 	}
 	
-	$addons = glob($folder.'*', GLOB_ONLYDIR);
-	
-	if ($addons) {
-		$addons = array_map('basename', $addons);
-		natsort($addons);
-		return $addons;
-	}
-	
-	return array();
+	$directory = new sly_Util_Directory($folder);
+	return $directory->exists() ? $directory->listPlain(false, true) : array();
 }
 
 // ------------------------------------- Helpers
