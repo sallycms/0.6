@@ -14,11 +14,11 @@
  */
 function rex_generateAll()
 {
-	global $REX, $I18N;
+	global $I18N;
 
-	rex_deleteDir($REX['DYNFOLDER'].'/internal/sally/articles', false);
-	rex_deleteDir($REX['DYNFOLDER'].'/internal/sally/templates', false);
-	rex_deleteDir($REX['DYNFOLDER'].'/internal/sally/files', false);
+	rex_deleteDir(SLY_DYNFOLDER.'/internal/sally/articles', false);
+	rex_deleteDir(SLY_DYNFOLDER.'/internal/sally/templates', false);
+	rex_deleteDir(SLY_DYNFOLDER.'/internal/sally/files', false);
 
 	$MSG = $I18N->msg('delete_cache_message');
 	$MSG = rex_register_extension_point('ALL_GENERATED', $MSG);
@@ -69,7 +69,7 @@ function rex_deleteCacheArticleContent($id, $clang = null)
 {
 	global $REX;
 
-	$cachePath = $REX['DYNFOLDER'].'/internal/sally/articles/';
+	$cachePath = SLY_DYNFOLDER.'/internal/sally/articles/';
 	$level     = error_reporting(0);
 
 	foreach (array_keys($REX['CLANG']) as $_clang) {
@@ -85,9 +85,7 @@ function rex_deleteCacheArticleContent($id, $clang = null)
 
 function rex_deleteCacheSliceContent($slice_id)
 {
-	global $REX;
-
-	$cachePath = $REX['DYNFOLDER'].'/internal/sally/articles/';
+	$cachePath = SLY_DYNFOLDER.'/internal/sally/articles/';
 	@unlink($cachePath.$slice_id.'.slice');
 }
 
@@ -156,10 +154,10 @@ function rex_generateArticleContent($article_id, $clang = null)
 			$article_content .= '<?php } ?>';
 		}
 		
-		$article_content_file = $REX['DYNFOLDER']."/internal/sally/articles/$article_id.$_clang.content";
+		$article_content_file = SLY_DYNFOLDER."/internal/sally/articles/$article_id.$_clang.content";
 
 		if (rex_put_file_contents($article_content_file, $article_content) === false) {
-			return $I18N->msg('article_could_not_be_generated').' '.$I18N->msg('check_rights_in_directory').$REX['DYNFOLDER'].'/internal/sally/articles/';
+			return $I18N->msg('article_could_not_be_generated').' '.$I18N->msg('check_rights_in_directory').SLY_DYNFOLDER.'/internal/sally/articles/';
 		}
 		
 		rex_register_extension_point('CLANG_ARTICLE_GENERATED', '', array(
@@ -351,33 +349,21 @@ function rex_deleteDir($file, $delete_folders = false, $isRecursion = false)
  */
 function rex_deleteFiles($directory)
 {
-	$directory = rtrim($directory, '/\\');
+	$directory = new sly_Util_Directory($directory);
 	$level     = error_reporting(0);
-	$status    = true;
 
-	if (is_dir($directory)) {
-		$handle = opendir($directory);
-		
-		if (!$handle) {
+	if ($directory->exists()) {
+		$files = $directory->listPlain(true, false, true, true, null);
+		if ($files) array_map('unlink', $files);
+
+		if ($directory->listPlain(true, false, true, true, null)) {
 			error_reporting($level);
 			return false;
 		}
-
-		while ($filename = readdir($handle)) {
-			if ($filename == '.' || $filename == '..') {
-				continue;
-			}
-
-			if (is_file($directory.'/'.$filename) && !unlink($directory.'/'.$filename)) {
-				$status = false;
-			}
-		}
-		
-		closedir($handle);     
 	}
 
 	error_reporting($level);
-	return $status;
+	return true;
 }
 
 /**
@@ -518,10 +504,13 @@ function rex_addCLang($id, $name)
 /**
  * Escaped einen String
  *
- * @param $string Zu escapender String
+ * @deprecated  Using this function is a good indicator that you're doing something wrong.
+ * @param       $string Zu escapender String
  */
 function rex_addslashes($string, $flag = '\\\'\"')
 {
+	trigger_error('Using this function is a good indicator that you\'re doing something wrong. Also, it\'s deprecated.', E_USER_NOTICE);
+
 	if ($flag == '\\\'\"') {
 		$string = str_replace('\\', '\\\\', $string);
 		$string = str_replace('\'', '\\\'', $string);
@@ -531,6 +520,6 @@ function rex_addslashes($string, $flag = '\\\'\"')
 		$string = str_replace('\\', '\\\\', $string);
 		$string = str_replace('\'', '\\\'', $string);
 	}
-	
+
 	return $string;
 }
