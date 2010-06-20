@@ -107,7 +107,12 @@ class sly_Util_Directory {
 		$paths = func_get_args();
 		$isAbs = $paths[0][0] == '/' || $paths[0][0] == '\\';
 
-		foreach ($paths as &$path) {
+		foreach ($paths as $idx => &$path) {
+			if ($path === null || $path === false || $path === '') {
+				unset($paths[$idx]);
+				continue;
+			}
+			
 			$path = trim(self::normalize($path), DIRECTORY_SEPARATOR);
 		}
 

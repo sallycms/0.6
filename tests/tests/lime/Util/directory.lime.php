@@ -20,6 +20,7 @@ $lime->is(__join('foo/', '/bar/blub'), 'foo'.$s.'bar'.$s.'blub', 'join() ignores
 $lime->is(__join('foo/', '/bar\\blub'), 'foo'.$s.'bar'.$s.'blub', 'join() unifies the separator');
 $lime->is(__join('foo///', '/bar/\\blub/'), 'foo'.$s.'bar'.$s.'blub', 'join() trims multiple separators');
 $lime->is(__join('\\foo/', '/bar/blub/'), $s.'foo'.$s.'bar'.$s.'blub', 'join() recognizes absolute paths');
+$lime->is(__join('foo', null, '/bar/', false, 'blub'), 'foo'.$s.'bar'.$s.'blub', 'join() sees null and false as empty elements');
 
 $lime->is(__normalize(12), 12, 'normalize() converts numbers to strings');
 $lime->is(__normalize('\\foo/'), $s.'foo', 'normalize() recognizes absolute paths');
