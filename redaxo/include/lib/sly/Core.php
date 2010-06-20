@@ -120,11 +120,17 @@ class sly_Core {
 	}
 
 	/**
-	 *
 	 * @return sly_Configuration
 	 */
 	public static function config() {
 		return sly_Configuration::getInstance();
+	}
+
+	/**
+	 * @return sly_Event_Dispatcher
+	 */
+	public static function dispatcher() {
+		return sly_Event_Dispatcher::getInstance();
 	}
 
 	/**
