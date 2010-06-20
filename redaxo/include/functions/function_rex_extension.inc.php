@@ -9,94 +9,76 @@
 /**
  * Definiert einen Extension Point
  *
+ * @deprecated  see sly_Event_Dispatcher::notify() or sly_Event_Dispatcher::filter()
+ *
  * @param string $extensionPoint  Name des ExtensionPoints
  * @param mixed  $subject         Objekt/Variable die beeinflusst werden soll
  * @param array  $params          Parameter für die Callback-Funktion
  */
 function rex_register_extension_point($extensionPoint, $subject = '', $params = array (), $read_only = false)
 {
-	global $REX;
-	$result = $subject;
+	$dispatcher = sly_Core::dispatcher();
 
-	if (!is_array($params)) {
-		$params = array();
+	if ($read_only) {
+		$dispatcher->notify($extensionPoint, $subject, $params);
+		return $subject;
 	}
-
-	// Name des EP als Parameter mit übergeben
-	$params['extension_point'] = $extensionPoint;
-
-	if (isset($REX['EXTENSIONS'][$extensionPoint]) && is_array($REX['EXTENSIONS'][$extensionPoint])) {
-		$params['subject'] = $subject;
-		
-		foreach ($REX['EXTENSIONS'][$extensionPoint] as $ext) {
-			$func        = $ext[0];
-			$localParams = array_merge($params, $ext[1]);
-			$temp        = rex_call_func($func, $localParams);
-			
-			// Rückgabewert nur auswerten wenn auch einer vorhanden ist
-			// damit $params['subject'] nicht verfälscht wird
-			// null ist default Rückgabewert, falls kein RETURN in einer Funktion ist
-			
-			if (!$read_only && $temp !== null) {
-				$result = $temp;
-				$params['subject'] = $result;
-			}
-		}
+	else {
+		$params = sly_makeArray($params);
+		$params['extension_point'] = $extensionPoint; // REDAXO compatibility (sly_Event_Dispatcher adds 'event')
+		return $dispatcher->filter($extensionPoint, $subject, $params);
 	}
-	
-	return $result;
 }
 
 /**
  * Definiert eine Callback-Funktion, die an dem Extension Point $extension aufgerufen wird
  *
+ * @deprecated  see sly_Event_Dispatcher::register()
+ *
  * @param string $extension  Name des ExtensionPoints
  * @param mixed  $function   Name der Callback-Funktion
- * @param array  $params     Array von zus�tzlichen Parametern
+ * @param array  $params     Array von zusätzlichen Parametern
  */
 function rex_register_extension($extensionPoint, $callable, $params = array())
 {
-	global $REX;
-
-	if (!is_array($params)) {
-		$params = array();
-	}
-	
-	$REX['EXTENSIONS'][$extensionPoint][] = array($callable, $params);
+	$dispatcher = sly_Core::dispatcher();
+	$dispatcher->register($extensionPoint, $callable, $params);
 }
 
 /**
  * Prüft ob eine extension für den angegebenen Extension Point definiert ist
  *
+ * @deprecated  see sly_Event_Dispatcher::hasListeners()
+ *
  * @param string $extensionPoint  Name des ExtensionPoints
  */
 function rex_extension_is_registered($extensionPoint)
 {
-	global $REX;
-	return !empty($REX['EXTENSIONS'][$extensionPoint]);
+	$dispatcher = sly_Core::dispatcher();
+	return $dispatcher->hasListeners($extensionPoint);
 }
 
 /**
- * Gibt ein Array mit Namen von Extensions zurück, die am angegebenen Extension Point definiert wurden
+ * Gibt ein Array mit Namen von Extensions zurück, die am angegebenen Extension
+ * Point definiert wurden
+ *
+ * @deprecated  see sly_Event_Dispatcher::getListeners()
  *
  * @param string $extensionPoint  Name des ExtensionPoints
  */
 function rex_get_registered_extensions($extensionPoint)
 {
-	global $REX;
-	
-	if (rex_extension_is_registered($extensionPoint)) {
-		return $REX['EXTENSIONS'][$extensionPoint][0];
-	}
-	
-	return array();
+	$dispatcher = sly_Core::dispatcher();
+	return $dispatcher->getListeners($extensionPoint);
 }
 
 /**
  * Aufruf einer Funtion (Class-Member oder statische Funktion)
  *
+ * @deprecated  bietet keinen wirklich Mehrwert
+ *
  * @param string $function  Name der Callback-Funktion
- * @param array  $params    Parameter f�r die Funktion
+ * @param array  $params    Parameter für die Funktion
  *
  * @example
  *   rex_call_func( 'myFunction', array( 'Param1' => 'ab', 'Param2' => 12))
@@ -119,7 +101,7 @@ function rex_call_func($function, $params, $parseParamsAsArray = true)
 		// $function($params);
 		return call_user_func($function, $params);
 	}
-	
+
 	// Jeder index im Array ist ein Parameter
 	// $function($params[0], $params[1], $params[2],...);
 	return call_user_func_array($function, $params);

@@ -127,9 +127,8 @@ class sly_Event_Dispatcher
 		$listeners = $this->getListeners($event);
 		$called    = 0;
 
-		$params['event']           = $event;
-		$params['subject']         = $subject;
-		$params['extension_point'] = $event;    // REDAXO compatibility
+		$params['event']   = $event;
+		$params['subject'] = $subject;
 
 		foreach ($listeners as $listener) {
 			$callee = $listener['listener'];
