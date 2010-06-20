@@ -9,7 +9,6 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
-class sly_Exception extends Exception
-{
-	
+class sly_Exception extends Exception {
+
 }

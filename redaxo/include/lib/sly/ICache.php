@@ -23,19 +23,19 @@ interface sly_ICache {
 	/**
 	 * Setzt einen Wert in den Redaxo Cache
 	 *
-	 * @param String  $namespace    Der Namespace des abgeleten Wertes
-	 * @param String  $key          Eindeutiger Identifier für den Cacheeintrag
-	 * @param mixed   $value        Wert, der gespeichert werden soll
+	 * @param String  $namespace  Der Namespace des abgeleten Wertes
+	 * @param String  $key        Eindeutiger Identifier für den Cacheeintrag
+	 * @param mixed   $value      Wert, der gespeichert werden soll
 	 */
 	public function set($namespace, $key, $value);
 
 	/**
 	 * Holt einen Wert zu einem Schlüssel aus dem Cache
 	 *
-	 * @param String  $namespace    Der Namespace des abgeleten Wertes
-	 * @param String  $key      	Eindeutiger Identifier unter dem der Cacheeintrag erwartet wird
-	 * @param mixed   $default  	Defaultwert, der bei einem Cache-Miss zurückgegeben wird
-	 * @return mixed  				Den gewünschten Wert oder NULL
+	 * @param String  $namespace  Der Namespace des abgeleten Wertes
+	 * @param String  $key        Eindeutiger Identifier unter dem der Cacheeintrag erwartet wird
+	 * @param mixed   $default    Defaultwert, der bei einem Cache-Miss zurückgegeben wird
+	 * @return mixed              der gewünschte Wert oder NULL
 	 */
 	public function get($namespace, $key, $default);
 
@@ -47,9 +47,8 @@ interface sly_ICache {
 	/**
 	 * Löscht einen Eintrag aus dem Cache
 	 *
-	 * @param String  $namespace    Der Namespace des abgeleten Wertes
-	 * @param String  $key  		Eindeutiger Identifier unter dem der Cacheeintrag erwartet wird
+	 * @param String  $namespace  Der Namespace des abgeleten Wertes
+	 * @param String  $key        Eindeutiger Identifier unter dem der Cacheeintrag erwartet wird
 	 */
 	public function delete($namespace, $key);
-
 }
