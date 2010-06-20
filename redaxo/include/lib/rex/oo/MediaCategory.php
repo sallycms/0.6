@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Object Oriented Framework: Bildet eine Kategorie im Medienpool ab
  * @package redaxo4
@@ -9,111 +8,72 @@
 
 class OOMediaCategory
 {
-	// id
-	private $_id = "";
-	// re_id
-	private $_parent_id = "";
+	private $id = 0;
+	private $parent_id = 0;
+	private $name = '';
+	private $path = '';
+	private $createdate = 0;
+	private $updatedate = 0;
+	private $createuser = '';
+	private $updateuser = '';
+	private $children = array();
+	private $files = array();
+	private $revision = 0;
 
-	// name
-	private $_name = "";
-	// path
-	private $_path = "";
-
-	// createdate
-	private $_createdate = "";
-	// updatedate
-	private $_updatedate = "";
-
-	// createuser
-	private $_createuser = "";
-	// updateuser
-	private $_updateuser = "";
-
-	// child categories
-	private $_children = "";
-	// files (media)
-	private $_files = "";
-
-	private $_revision = 0;
-	
-	/**
-	 * @access protected
-	 */
-	protected function __construct($id = null)
+	protected function __construct()
 	{
-		$this->getCategoryById($id);
+		/* empty by design */
 	}
 
-	/**
-	 * @access protected
-	 */
 	public static function _getTableName()
 	{
 		global $REX;
-		return $REX['TABLE_PREFIX'] . 'file_category';
+		return $REX['TABLE_PREFIX'].'file_category';
 	}
 
 	/**
-	 * @access public
+	 * @return OOMediaCategory
 	 */
 	public static function getCategoryById($id)
 	{
 		$id = (int) $id;
-		if (!is_numeric($id))
-		{
+		if ($id <= 0) return null;
+
+		$query  = 'SELECT * FROM '.self::_getTableName().' WHERE id = '.$id;
+		$sql    = rex_sql::getInstance();
+		$result = $sql->getArray($query);
+
+		if (empty($result)) {
 			return null;
 		}
 
-		$query = 'SELECT * FROM ' . OOMediaCategory :: _getTableName() . ' WHERE id = ' . $id;
-
-		$sql = rex_sql::getInstance();
-		//        $sql->debugsql = true;
-		$result = $sql->getArray($query);
-
-		if (count($result) == 0)
-		{
-			// Zuerst einer Variable zuweisen, da RETURN BY REFERENCE
-			$return = null;
-			return $return;
-		}
-
 		$result = $result[0];
-		$cat = new OOMediaCategory();
+		$cat    = new self();
 
-		$cat->_id = $result['id'];
-		$cat->_parent_id = $result['re_id'];
-
-		$cat->_name = $result['name'];
-		$cat->_path = $result['path'];
-
-		$cat->_createdate = $result['createdate'];
-		$cat->_updatedate = $result['updatedate'];
-
-		$cat->_createuser = $result['createuser'];
-		$cat->_updateuser = $result['updateuser'];
-
-		$cat->_children = null;
-		$cat->_files = null;
+		$cat->id         = (int) $result['id'];
+		$cat->parent_id  = (int) $result['re_id'];
+		$cat->name       = $result['name'];
+		$cat->path       = $result['path'];
+		$cat->createdate = (int) $result['createdate'];
+		$cat->updatedate = (int) $result['updatedate'];
+		$cat->createuser = $result['createuser'];
+		$cat->updateuser = $result['updateuser'];
+		$cat->children   = null;
+		$cat->files      = null;
 
 		return $cat;
 	}
 
-	/**
-	 * @access public
-	 */
 	public static function getRootCategories()
 	{
-		$qry = 'SELECT id FROM ' . OOMediaCategory :: _getTableName() . ' WHERE re_id = 0 order by name';
-		$sql = rex_sql::getInstance();
-		$sql->setQuery($qry);
-		$result = $sql->getArray();
+		$query    = 'SELECT id FROM '.self::_getTableName().' WHERE re_id = 0 ORDER BY name';
+		$sql      = rex_sql::getInstance();
+		$result   = $sql->getArray($query);
+		$rootCats = array();
 
-		$rootCats = array ();
-		if (is_array($result))
-		{
-			foreach ($result as $line)
-			{
-				$rootCats[] = OOMediaCategory::getCategoryById($line['id']);
+		if (is_array($result)) {
+			foreach ($result as $line) {
+				$rootCats[] = self::getCategoryById($line['id']);
 			}
 		}
 
@@ -121,350 +81,239 @@ class OOMediaCategory
 	}
 
 	/**
-	 * @access public
+	 * @return array
 	 */
 	public static function getCategoryByName($name)
 	{
-		$query = 'SELECT id FROM ' . OOMediaCategory :: _getTableName() . ' WHERE name = "' . $name . '"';
-		$sql = rex_sql::getInstance();
-		//$sql->debugsql = true;
+		$query  = 'SELECT id FROM '.self::_getTableName().' WHERE name = "'.$name.'"';
+		$sql    = rex_sql::getInstance();
 		$result = $sql->getArray($query);
+		$cats   = array();
 
-		$media = array ();
-		if (is_array($result))
-		{
-			foreach ($result as $line)
-			{
-				$media[] = & OOMediaCategory :: getCategoryById($line['id']);
+		if (is_array($result)) {
+			foreach ($result as $line) {
+				$cats[] = self::getCategoryById($line['id']);
 			}
 		}
 
-		return $media;
+		return $cats;
 
 	}
 
-	/**
-	 * @access public
-	 */
 	public function toString()
 	{
-		return 'OOMediaCategory, "' . $this->getId() . '", "' . $this->getName() . '"' . "<br/>\n";
+		return 'OOMediaCategory, "'.$this->getId().'", "'.$this->getName().'"'."<br/>\n";
 	}
 
-	public function __toString(){
+	public function __toString()
+	{
 		return $this->toString();
 	}
 
-	/**
-	 * @access public
-	 */
-	public function getId()
+	public function getId()         { return $this->id;         }
+	public function getName()       { return $this->name;       }
+	public function getPath()       { return $this->path;       }
+	public function getUpdateUser() { return $this->updateuser; }
+	public function getUpdateDate() { return $this->updatedate; }
+	public function getCreateUser() { return $this->createuser; }
+	public function getCreateDate() { return $this->createdate; }
+	public function getParentId()   { return $this->parent_id;  }
+
+	public function setName($name)
 	{
-		return $this->_id;
+		$this->name = $name;
 	}
 
-	/**
-	 * @access public
-	 */
-	public function getName()
-	{
-		return $this->_name;
-	}
-	
-	public function setName($name){
-		$this->_name = $name;
-	}
-
-	/**
-	 * @access public
-	 */
-	public function getPath()
-	{
-		return $this->_path;
-	}
-
-	/**
-	 * @access public
-	 */
-	public function getUpdateUser()
-	{
-		return $this->_updateuser;
-	}
-
-	/**
-	 * @access public
-	 */
-	public function getUpdateDate()
-	{
-		return $this->_updatedate;
-	}
-
-	/**
-	 * @access public
-	 */
-	public function getCreateUser()
-	{
-		return $this->_createuser;
-	}
-
-	/**
-	 * @access public
-	 */
-	public function getCreateDate()
-	{
-		return $this->_createdate;
-	}
-
-	/**
-	 * @access public
-	 */
-	public function getParentId()
-	{
-		return $this->_parent_id;
-	}
-
-	/**
-	 * @access public
-	 */
 	public function getParent()
 	{
-		return OOMediaCategory :: getCategoryById($this->getParentId());
+		return self::getCategoryById($this->getParentId());
 	}
 
 	/**
-	 * @access public
 	 * Get an array of all parentCategories.
-	 * Returns an array of OORedaxo objects sorted by $prior.
-	 *
+	 * Returns an array of OOMediaCategory objects sorted by $prior.
 	 */
 	public function getParentTree()
 	{
 		$tree = array();
-		if($this->_path)
-		{
-			$explode = explode('|', $this->_path);
-			if(is_array($explode))
-			{
-				foreach($explode as $var)
-				{
-					if($var != '')
-					{
-						$tree[] = OOMediaCategory :: getCategoryById($var);
-					}
+
+		if ($this->path) {
+			$explode = explode('|', $this->path);
+
+			if (is_array($explode)) {
+				foreach ($explode as $var) {
+					if (empty($var)) continue;
+					$tree[] = self::getCategoryById($var);
 				}
 			}
 		}
+
 		return $tree;
 	}
 
-	/*
-	 * Object Function:
+	/**
 	 * Checks if $anObj is in the parent tree of the object
 	 */
 	public function inParentTree($anObj)
 	{
 		$tree = $this->getParentTree();
-		foreach($tree as $treeObj)
-		{
-			if($treeObj == $anObj)
-			{
+
+		foreach ($tree as $treeObj) {
+			if ($treeObj == $anObj) {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
-	/**
-	 * @access public
-	 */
 	public function getChildren()
 	{
-		if ($this->_children === null)
-		{
-			$this->_children = array ();
-			$qry = 'SELECT id FROM ' . OOMediaCategory :: _getTableName() . ' WHERE re_id = ' . $this->getId() . ' ORDER BY name ';
-			$sql = rex_sql::getInstance();
-			$sql->setQuery($qry);
-			$result = $sql->getArray();
-			if (is_array($result))
-			{
-				foreach ($result as $row)
-				{
-					$id = $row['id'];
-					$this->_children[] = OOMediaCategory::getCategoryById($id);
+		if ($this->children === null) {
+			$this->children = array();
+
+			$qry    = 'SELECT id FROM '.self::_getTableName().' WHERE re_id = '.$this->getId().' ORDER BY name';
+			$sql    = rex_sql::getInstance();
+			$result = $sql->getArray($qry);
+
+			if (is_array($result)) {
+				foreach ($result as $row) {
+					$this->children[] = self::getCategoryById($row['id']);
 				}
 			}
 		}
 
-		return $this->_children;
+		return $this->children;
 	}
 
-	/**
-	 * @access public
-	 */
 	public function countChildren()
 	{
 		return count($this->getChildren());
 	}
 
-	/**
-	 * @access public
-	 */
 	public function getMedia()
 	{
-		if ($this->_files === null)
-		{
-			$this->_files = array ();
-			$qry = 'SELECT file_id FROM ' . OOMedia :: _getTableName() . ' WHERE category_id = ' . $this->getId();
-			$sql = rex_sql::getInstance();
-			$sql->setQuery($qry);
-			$result = $sql->getArray();
-			if (is_array($result))
-			{
-				foreach ($result as $line)
-				{
-					$this->_files[] = & OOMedia :: getMediaById($line['file_id']);
+		if ($this->files === null) {
+			$this->files = array();
+
+			$qry    = 'SELECT file_id FROM '.OOMedia::_getTableName().' WHERE category_id = '.$this->getId();
+			$sql    = rex_sql::getInstance();
+			$result = $sql->getArray($qry);
+
+			if (is_array($result)) {
+				foreach ($result as $line) {
+					$this->files[] = OOMedia::getMediaById($line['file_id']);
 				}
 			}
 		}
 
-		return $this->_files;
+		return $this->files;
 	}
 
-	/**
-	 * @access public
-	 */
 	public function countMedia()
 	{
 		return count($this->getFiles());
 	}
 
-	/**
-	 * @access public
-	 */
 	public function isHidden()
 	{
-		return $this->_hide;
+		trigger_error('Using OOMediaCategory::isHidden() is useless. It never worked.', E_USER_WARNING);
+		return false; // this field never existed in the database
 	}
 
-	/**
-	 * @access public
-	 */
 	public function isRootCategory()
 	{
 		return $this->hasParent() === false;
 	}
 
-	/**
-	 * @access public
-	 */
 	public function isParent($mediaCat)
 	{
-		if (is_int($mediaCat))
-		{
+		if (is_int($mediaCat)) {
 			return $mediaCat == $this->getParentId();
 		}
-		elseif (OOMediaCategory :: isValid($mediaCat))
-		{
+		elseif (self::isValid($mediaCat)) {
 			return $this->getParentId() == $mediaCat->getId();
 		}
+
 		return null;
 	}
 
-	/**
-	 * @access public
-	 */
-	public static function isValid($mediaCat)
+	public static function isValid($obj)
 	{
-		return is_object($mediaCat) && is_a($mediaCat, 'oomediacategory');
+		return $obj instanceof self;
 	}
 
-	/**
-	 * @access public
-	 */
 	public function hasParent()
 	{
 		return $this->getParentId() != 0;
 	}
 
-	/**
-	 * @access public
-	 */
 	public function hasChildren()
 	{
 		return count($this->getChildren()) > 0;
 	}
 
-	/**
-	 * @access public
-	 */
 	public function hasMedia()
 	{
 		return count($this->getMedia()) > 0;
 	}
 
 	/**
-	 * @access public
 	 * @return Returns <code>true</code> on success or <code>false</code> on error
 	 */
 	public function save()
 	{
 		$sql = rex_sql::getInstance();
-		$sql->setTable($this->_getTableName());
+		$sql->setTable(self::_getTableName());
 		$sql->setValue('re_id', $this->getParentId());
 		$sql->setValue('name', $this->getName());
 		$sql->setValue('path', $this->getPath());
-		$sql->setValue('hide', $this->isHidden());
-		$sql->setValue('revision', $this->_revision);
+		$sql->setValue('revision', $this->revision);
 
-		if ($this->getId() !== null)
-		{
+		if ($this->getId() !== null) {
 			$sql->addGlobalUpdateFields();
-			$sql->setWhere('id=' . $this->getId() . ' LIMIT 1');
+			$sql->setWhere('id = '.$this->getId().' LIMIT 1');
 			return $sql->update();
 		}
-		else
-		{
+		else {
 			$sql->addGlobalCreateFields();
 			return $sql->insert();
 		}
 	}
 
 	/**
-	 * @access public
 	 * @return Returns <code>true</code> on success or <code>false</code> on error
 	 */
 	public function delete($recurse = false)
 	{
 		// Rekursiv löschen?
-		if(!$recurse && $this->hasChildren())
-		{
+
+		if (!$recurse && $this->hasChildren()) {
 			return false;
 		}
 
-		if ($recurse)
-		{
-			$childs = $this->getChildren();
-			foreach ($childs as $child)
-			{
-				if(!$child->delete($recurse)) return false;
+		if ($recurse) {
+			$children = $this->getChildren();
+
+			foreach ($children as $child) {
+				if (!$child->delete($recurse)) return false;
 			}
 		}
 
 		// Alle Dateien löschen
-		if ($this->hasMedia())
-		{
+
+		if ($this->hasMedia()) {
 			$files = $this->getMedia();
-			foreach ($files as $file)
-			{
-				if(!$file->delete()) return false;
+
+			foreach ($files as $file) {
+				if (!$file->delete()) return false;
 			}
 		}
 
-		$qry = 'DELETE FROM ' . $this->_getTableName() . ' WHERE id = ' . $this->getId() . ' LIMIT 1';
+		$qry = 'DELETE FROM '.self::_getTableName().' WHERE id = '.$this->getId().' LIMIT 1';
 		$sql = rex_sql::getInstance();
-		// $sql->debugsql = true;
 		$sql->setQuery($qry);
+
 		return !$sql->hasError() || $sql->getRows() != 1;
 	}
 }
