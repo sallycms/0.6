@@ -89,6 +89,49 @@ $prefix   = $here.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR;
 $expected = array($prefix.'.blafasel', $prefix.'.ignoreme', $prefix.'child', $prefix.'foo', $prefix.'helloworld', $prefix.'readme', $prefix.'test');
 $lime->is($dirs, $expected, 'listPlain() returns the full path if requested (realpath)');
 
+$prefix   = $here.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR;
+$expected = array(
+	'foo'.$s.'testfile.txt',
+	'helloworld',
+	'readme',
+	'test'
+);
+
+$lime->is($obj->listRecursive(false, false), $expected, 'listRecursive() returns the relative paths excluding dotfiles');
+
+$expected = array(
+	$prefix.'foo'.$s.'testfile.txt',
+	$prefix.'helloworld',
+	$prefix.'readme',
+	$prefix.'test'
+);
+
+$lime->is($obj->listRecursive(false, true), $expected, 'listRecursive() returns the absolute paths excluding dotfiles');
+
+$expected = array(
+	'.blafasel'.$s.'list.php',
+	'.ignoreme',
+	'foo'.$s.'.htaccess',
+	'foo'.$s.'testfile.txt',
+	'helloworld',
+	'readme',
+	'test'
+);
+
+$lime->is($obj->listRecursive(true, false), $expected, 'listRecursive() returns the relative paths including dotfiles');
+
+$expected = array(
+	$prefix.'.blafasel'.$s.'list.php',
+	$prefix.'.ignoreme',
+	$prefix.'foo'.$s.'.htaccess',
+	$prefix.'foo'.$s.'testfile.txt',
+	$prefix.'helloworld',
+	$prefix.'readme',
+	$prefix.'test'
+);
+
+$lime->is($obj->listRecursive(true, true), $expected, 'listRecursive() returns the absolute paths including dotfiles');
+
 // Clean up
 
 @unlink($here.'/tmp/foo/.htaccess');
