@@ -213,7 +213,7 @@ function rex_tabindex($html = true)
 	++$REX['TABINDEX'];
 
 	if ($html === true) {
-		return ' tabindex="'.$REX['TABINDEX'].'"';
+		return ''; // ' tabindex="'.$REX['TABINDEX'].'"';
 	}
 	
 	return $REX['TABINDEX'];
