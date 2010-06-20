@@ -23,7 +23,7 @@ function rex_create_lang($locale = 'de_de', $searchpath = '', $setlocale = true)
 	$_searchpath = $searchpath;
 
 	if (empty($searchpath)) {
-		$searchpath = $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'lang';
+		$searchpath = sly_Util_Directory::join(SLY_INCLUDE_PATH, 'lang');
 	}
 	
 	$lang_object = new i18n($locale, $searchpath);
@@ -81,7 +81,7 @@ function truncate($string, $length = 80, $etc = '...', $breakWords = false)
 }
 
 /**
- * Berechnet aus einem Relativen Pfad einen Absoluten
+ * Berechnet aus einem relativen Pfad einen absoluten
  */
 function rex_absPath($rel_path, $rel_to_current = false)
 {

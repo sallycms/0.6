@@ -91,7 +91,7 @@ function rex_get_subtitle($subline, $attr = '')
 	global $REX;
 
 	if (empty($subline)) {
-		return  '';
+		return '';
 	}
 
 	$subtitle_str = $subline;
@@ -112,7 +112,7 @@ function rex_get_subtitle($subline, $attr = '')
 			$label  = $subpage[1];
 			$perm   = !empty($subpage[2]) ? $subpage[2] : '';
 			$params = !empty($subpage[3]) ? rex_param_string($subpage[3]) : '';
-			
+
 			// Berechtigung prüfen
 			// Hat der User das Recht für die aktuelle Subpage?
 			
@@ -175,6 +175,6 @@ function rex_get_subtitle($subline, $attr = '')
 ';
 		}
 	}
-	
+
 	return $subtitle_str;
 }
