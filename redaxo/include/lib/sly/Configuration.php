@@ -142,6 +142,8 @@ class sly_Configuration {
 	}
 
 	public function get($key) {
+		if (!$this->has($key)) return null;
+		
 		$s = (empty($key) || $this->staticConfig->has($key))  ? $this->staticConfig->get($key)  : array();
 		$l = (empty($key) || $this->localConfig->has($key))   ? $this->localConfig->get($key)   : array();
 		$p = (empty($key) || $this->projectConfig->has($key)) ? $this->projectConfig->get($key) : array();
