@@ -31,5 +31,10 @@ RewriteRule ^imageresize/(.*)$ index.php?rex_resize=$1 [L]
 RewriteRule ^assets/js/([0-9a-f]{6})\.[0-9a-f]+\.min\.js$   gzip.php?file=dyn/public/deployer/compressed_$1.js&forever=1 [L]
 RewriteRule ^assets/css/([0-9a-f]{6})\.[0-9a-f]+\.min\.css$ gzip.php?file=dyn/public/deployer/compressed_$1.css&forever=1 [L]
 
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_URI}      \.css$
+RewriteCond %{REQUEST_URI}      !wym_styles.css$
+RewriteRule ^(.+)$              assets/css/scaffold/index.php?f=assets/css/$1&%{QUERY_STRING}
+
 # Komprimierung fuer statischen Content
 RewriteRule ^(assets/.*\.(css|js))$  gzip.php?file=$1
