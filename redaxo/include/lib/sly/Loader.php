@@ -48,9 +48,18 @@ class sly_Loader
 		$found = false;
 		
 		foreach (self::$loadPaths as $path => $prefix) {
-			$shortClass = strlen($className) > strlen($prefix) ? substr($className, strlen($prefix)) : $className;
-			$file       = str_replace('_', DIRECTORY_SEPARATOR, $shortClass).'.php';
-			$fullPath   = $path.DIRECTORY_SEPARATOR.$file;
+			// Präfix vom Klassennamen abschneiden, wenn Klasse damit beginnt.
+			
+			if (!empty($prefix) && strpos(strtoupper($className), strtoupper($prefix)) === 0) {
+				$shortClass = substr($className, strlen($prefix));
+			}
+			else {
+				$shortClass = $className;
+			}
+			
+			$file     = str_replace('_', DIRECTORY_SEPARATOR, $shortClass).'.php';
+			$fullPath = $path.DIRECTORY_SEPARATOR.$file;
+			
 			if (is_file($fullPath)) {
 				$found = true;
 				break;
@@ -63,5 +72,7 @@ class sly_Loader
 		}
 		
 		rex_register_extension_point('__AUTOLOAD', $className);
+		
+		return class_exists($className, false);
 	}
 }
