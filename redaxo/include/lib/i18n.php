@@ -122,7 +122,7 @@ class i18n
 	 * @param  string $key zu suchender Schlüssel
 	 * @return boolean     true wenn der Schlüssel gefunden wurde, sonst false
 	 */
-	private function hasMsg($key)
+	public function hasMsg($key)
 	{
 		return isset($this->text[$key]);
 	}
