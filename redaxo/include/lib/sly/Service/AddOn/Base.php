@@ -17,22 +17,24 @@ abstract class sly_Service_AddOn_Base
 	protected $addons;
 	protected $data;
 	protected $i18nPrefix;
-	
+
 	protected function deleteHelper($addonORplugin)
 	{
 		$state  = true;
 		$state &= $this->uninstall($addonORplugin);
 		$state &= rex_deleteDir($this->baseFolder($addonORplugin), true);
-		if($state){
+
+		if ($state){
 			$this->removeConfig($addonORplugin);
 		}
+
 		return $state;
 	}
 
 	protected function req($filename, $addonName)
 	{
 		global $REX, $I18N; // Nötig damit im Addon verfügbar
-		
+
 		try {
 			require $filename;
 		}
@@ -43,29 +45,30 @@ abstract class sly_Service_AddOn_Base
 	}
 
 	private function getConfPath($addonORplugin) {
-		if(is_array($addonORplugin)) {
+		if (is_array($addonORplugin)) {
 			list($addon, $plugin) = $addonORplugin;
 			return 'ADDON/'.$addon.'/plugins/'.$plugin;
-		}else {
+		}
+		else {
 			return 'ADDON/'.$addonORplugin;
 		}
 	}
 
 	public function loadConfig($addonORplugin)
 	{
-		$config = sly_Core::config();
-
+		$config       = sly_Core::config();
 		$staticFile   = $this->baseFolder($addonORplugin).'/static.yml';
 		$defaultsFile = $this->baseFolder($addonORplugin).'/defaults.yml';
 
-		if(file_exists($staticFile)){
+		if (file_exists($staticFile)){
 			$config->loadStatic($staticFile, $this->getConfPath($addonORplugin));
-       	}
-		if(file_exists($defaultsFile)){
+		}
+
+		if (file_exists($defaultsFile)){
 			$config->loadProjectDefaults($defaultsFile, false, $this->getConfPath($addonORplugin));
-       	}
+		}
 	}
-	
+
 	public function add($addonORplugin){
 		$this->setProperty($addonORplugin, 'install', false);
 	}
@@ -74,6 +77,7 @@ abstract class sly_Service_AddOn_Base
 		$config = sly_Core::config();
 		$config->remove($this->getConfPath($addonORplugin));
 	}
+
 //	abstract public function install($addonName);         // Installieren
 //	abstract public function uninstall($addonName);       // Deinstallieren
 //	abstract public function activate($addonName);        // Aktivieren
@@ -82,6 +86,6 @@ abstract class sly_Service_AddOn_Base
 //	abstract public function generateConfig();            // Config-Datei neu generieren (z. B. addons.inc.php)
 //	abstract public function publicFolder($addonName);    // data/dyn/public/foo
 //	abstract public function internalFolder($addonName);  // data/dyn/internal/foo
-//	
+//
 //	abstract protected function baseFolder($addonName);   // redaxo/include/addons/foo
 }
