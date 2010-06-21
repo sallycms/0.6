@@ -136,7 +136,7 @@ if ($REX['USER']) {
 		
 		if (!empty($link) && (empty($perm) || $REX['USER']->hasPerm($perm) || $REX['USER']->isAdmin())) {
 			$name  = $addonService->getProperty($addon, 'name', '');
-			$name  = $I18N->msg($name);
+			$name  = rex_translate($name);
 			$popup = $addonService->getProperty($addon, 'popup', false);
 			$REX['PAGES'][strtolower($addon)] = array($name, 1, $popup, $link);
 		}
