@@ -95,6 +95,8 @@ if (empty($REX['SYNC']) && !$config->get('SETUP')){
 		$REX['CLANG'][$clang->getId()] = $clang->getName();
 	}
 	unset($clangs);
+	
+	$REX = array_merge($REX, $config->get(null));
 
   	$REX['CUR_CLANG']  = sly_Core::getCurrentClang();
 	$REX['ARTICLE_ID'] = sly_Core::getCurrentArticleId();
