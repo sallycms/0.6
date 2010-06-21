@@ -176,8 +176,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 			$state = $this->extend('PRE', 'ACTIVATE', $addonName, true);
 			
 			if ($state === true) {
-				$config = sly_Core::config();
-               	$this->setProperty($addonName, 'status', true);
+				$this->setProperty($addonName, 'status', true);
 			}
 		}
 		else {
@@ -201,7 +200,6 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		$state = $this->extend('PRE', 'DEACTIVATE', $addonName, true);
 		
 		if ($state === true) {
-			$config = sly_Core::config();
 			$this->setProperty($addonName, 'status', false);
 		}
 
