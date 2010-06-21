@@ -1,3 +1,6 @@
 syntax:glob
 data/dyn/*
 redaxo/include/addons/error_handler/data/phperror.log
+.project
+.buildpath
+.settings/*
