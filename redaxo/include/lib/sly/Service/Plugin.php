@@ -451,8 +451,12 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 	public function mentalGymnasticsInclude($filename, $plugin)
 	{
 		global $REX, $I18N; // Nötig damit im Plugin verfügbar
+		
+		// Sicherstellen, dass aktuelle Änderungen von Plugins/AddOns auch in
+		// ADDONsic landen, da zwischenzeitlich keine Synchronisierung zwischen
+		// $REX und sly_Configuration stattfindet.
 
-		$ADDONSsic    = sly_Core::config()->get('ADDON');
+		$ADDONSsic    = array_merge_recursive(sly_Core::config()->get('ADDON'), $REX['ADDON']);
 		$REX['ADDON'] = array();
 		$__TMP        = array('filename' => $filename, 'plugin' => $plugin);
 
