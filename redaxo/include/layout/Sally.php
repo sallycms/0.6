@@ -24,6 +24,12 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		
 		$body_id = str_replace('_', '-', $REX['PAGE']);
 		$this->setBodyAttr('id', 'rex-page-'.$body_id);
+		
+		// Falls ein AddOn bereits in seiner config.inc.php auf das Layout
+		// zugegriffen hat, ist $REX['PAGE'] noch nicht bekannt. Wir hängen uns
+		// daher in PAGE_CHECKED, um den Wert später noch einmal zu validieren.
+		
+		rex_register_extension('PAGE_CHECKED', array($this, 'pageChecked'));
 
 		if (in_array($body_id, $popups_arr)) {
 			$this->setBodyAttr('class', 'rex-popup');
@@ -34,6 +40,11 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		}
 
 		$this->addHttpMeta('Content-Type', 'text/html charset='.t('htmlcharset'));
+	}
+	
+	public function pageChecked($params) {
+		$body_id = str_replace('_', '-', $params['subject']);
+		$this->setBodyAttr('id', 'rex-page-'.$body_id);
 	}
 
 	public function printHeader() {
