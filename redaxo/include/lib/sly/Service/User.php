@@ -26,4 +26,9 @@ class sly_Service_User extends sly_Service_Model_Base {
 		$userID = $REX['LOGIN']->getValue('id');
 		return $this->findById($userID);
 	}
+	
+	public function hashPassword($password) {
+		$config = sly_Core::config();
+		return sly_Util_Password::hash($password, $config->get('INSTNAME'));
+	}
 }

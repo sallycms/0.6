@@ -9,8 +9,8 @@ if (empty($errors)) {
 	print $I18N->msg('setup_016_1', ' class="rex-ul1"', '<span class="rex-ok">', '</span>');
 	
 	?>
-		<div class="rex-message">
-			<p class="rex-warning" id="security_warning" style="display:none"><span><?= $I18N->msg('setup_security_msg') ?></span></p>
+		<div class="rex-message" id="security_warning" style="display:none">
+			<p class="rex-warning"><span><?= $I18N->msg('setup_security_msg') ?></span></p>
 		</div>
 
 		<noscript>
@@ -47,6 +47,3 @@ else {
 	</div>
 	<?php
 }
-
-
-?>

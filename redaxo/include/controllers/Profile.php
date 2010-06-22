@@ -59,9 +59,10 @@ class sly_Controller_Profile extends sly_Controller_Sally
 		// Passwort ändern?
 
 		$password = sly_post('userpsw', 'string');
+		$service  = sly_Service_Factory::getService('User');
 
 		if ($password && $password != $user->getPassword()) {
-			$user->setPassword(call_user_func($REX['PSWFUNC'], $password));
+			$user->setPassword($service->hashPassword($password));
 		}
 
 		// Speichern, fertig.

@@ -10,7 +10,6 @@ START_CLANG_ID: 0
 DEFAULT_TEMPLATE_ID: 0
 LANG: de_de_utf8
 USE_MD5: never
-PSWFUNC: sha1
 DATABASE:
   DRIVER: mysql
   HOST: localhost
@@ -18,7 +17,12 @@ DATABASE:
   PASSWORD: develop
   NAME: webvariants_sally_base
   PERSISTENT: false
-  TABLE_PREFIX: rex_
+  TABLE_PREFIX: sly_
 PERM: [mediapool]
 EXTPERM: [advancedMode, moveSlice, copyContent, moveArticle, copyArticle, moveCategory, publishArticle, publishCategory, article2startpage]
 EXTRAPERM: [editContentOnly]
+ADDON:
+  be_style:
+    install: true
+    status: true
+    plugins: {agk_skin: {install: true, status: true}}

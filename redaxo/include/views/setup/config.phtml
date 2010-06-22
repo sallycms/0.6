@@ -9,18 +9,7 @@ $this->title($I18N->msg('setup_step4'));
 		<fieldset class="rex-form-col-1">
 			<? $this->printHiddens('config') ?>
 			<?php
-
 			if (!empty($this->warning)) print rex_warning($this->warning);
-
-			$pwdFunctions = '';
-			
-			foreach (array('md5', 'sha1') as $algo) {
-				$algoText = t('setup_'.$algo.'_encryption');
-				$selected = $algo == $pwdFunction ? ' selected="selected"' : '';
-
-				$pwdFunctions .= '<option value="'.$algo.'"'.$selected.'>'.$algoText.'</option>';
-			}
-
 			?>
 			<legend><?= t('setup_0201') ?></legend>
 
@@ -43,15 +32,6 @@ $this->title($I18N->msg('setup_step4'));
 					<p class="rex-form-col-a rex-form-text">
 						<label for="error_email"><?= t('setup_026') ?>:</label>
 						<input class="rex-form-text" type="text" id="error_email" name="error_email" value="<?= sly_html($errorEMail) ?>" />
-					</p>
-				</div>
-
-				<div class="rex-form-row">
-					<p class="rex-form-col-a rex-form-select">
-						<label for="pwd_func"><?= t('setup_encryption') ?>:</label>
-						<select class="rex-form-select" id="pwd_func" name="pwd_func">
-						<?= $pwdFunctions ?>
-						</select>
 					</p>
 				</div>
 			</div>

@@ -60,7 +60,6 @@ else {
 	$rex_user_login = rex_post('rex_user_login', 'string');  // addslashes()!
 	$rex_user_psw   = rex_post('rex_user_psw', 'string');    // addslashes()!
 
-	$REX['LOGIN']->setPasswordFunction($REX['PSWFUNC']);
 	$REX['LOGIN']->setLogout(rex_get('rex_logout', 'boolean'));
 	$REX['LOGIN']->setLogin($rex_user_login, $rex_user_psw);
 	

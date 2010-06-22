@@ -81,8 +81,9 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 	protected function dbconfig() {
 		$config = sly_Core::config();
-		$data = $config->get('DATABASE');
+		$data   = $config->get('DATABASE');
 		$isSent = isset($_POST['sly-submit']);
+		
 		if ($isSent) {
 			$data['TABLE_PREFIX'] = sly_post('prefix', 'string');
 			$data['HOST']         = sly_post('host', 'string');
@@ -90,33 +91,24 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			$data['PASSWORD']     = sly_post('pass', 'string');
 			$data['NAME']         = sly_post('dbname', 'string');
 			$data['DRIVER']       = sly_post('driver', 'string');
+			$createDatabase       = sly_post('create_db', 'bool');
 
-			$createdb             = sly_post('create_db', 'bool');
-
-			$ok = false;
-			try{
-				if($createdb) {
-					if($data['DRIVER'] == 'sqlite') {
-						break;
-					}
-
+			try {
+				if ($createDatabase && $data['DRIVER'] != 'sqlite') {
 					$db = new sly_DB_PDO_Persistence($data['DRIVER'], 'host='.$data['HOST'], $data['LOGIN'], $data['PASSWORD']);
 					$db->query('CREATE DATABASE '.$data['NAME']);
-				}else{
+				}
+				else {
 					$db = new sly_DB_PDO_Persistence($data['DRIVER'], 'host='.$data['HOST'].';dbname='.$data['NAME'], $data['LOGIN'], $data['PASSWORD']);
 				}
-				$ok = true;
-			}catch(PDOException $e){
-				$ok = false;
-				$this->warning = $e->getMessage();
-			}
-
-
-			if($ok){
+				
 				$config->setLocal('DATABASE', $data);
 				unset($_POST['sly-submit']);
 				$this->initdb();
 				return;
+			}
+			catch (sly_DB_PDO_Exception $e) {
+				$this->warning = $e->getMessage();
 			}
 		}
 
@@ -130,10 +122,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		));
 	}
 
-
-
-	protected function config()
-	{
+	protected function config() {
 		global $I18N;
 
 		$config = sly_Core::config();
@@ -146,19 +135,16 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			$config->setLocal('ERROR_EMAIL', sly_post('error_email', 'string'));
 
 			$config->set('LANG', $this->lang);
-			$config->set('PSWFUNC', sly_post('pwd_func', 'string'));
 
-			
 			unset($_POST['sly-submit']);
 			$this->createUser();
 			return;
 		}
 
 		$this->render('views/setup/config.phtml', array(
-			'server'      => $config->get('SERVER'),
-			'serverName'  => $config->get('SERVERNAME'),
-			'errorEMail'  => $config->get('ERROR_EMAIL'),
-			'pwdFunction' => $config->get('PSWFUNC'),
+			'server'     => $config->get('SERVER'),
+			'serverName' => $config->get('SERVERNAME'),
+			'errorEMail' => $config->get('ERROR_EMAIL')
 		));
 	}
 
@@ -169,6 +155,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		$prefix         = $config->get('DATABASE/TABLE_PREFIX');
 		$error          = '';
 		$dbInitFunction = sly_post('db_init_function', 'string', '');
+		
 		// nenötigte Tabellen prüfen
 
 		$requiredTables = array (
@@ -205,7 +192,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 			case 'setup': // leere Datenbank neu einrichten
 
-				$installScript = $REX['INCLUDE_PATH'].'/install/sally4_2.sql';
+				$installScript = SLY_INCLUDE_PATH.'/install/sally4_2.sql';
 				if (empty($error)) $error = $this->setupImport($installScript);
 				if (empty($error)) $error = $this->setupAddOns($dbInitFunction == 'drop');
 
@@ -214,28 +201,6 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			default: // Extensions eine Chance geben
 
 				rex_register_extension_point('SLY_SETUP_INIT_DATABASE', $dbInitFunction);
-
-//				$importName = wv_post('import_name', 'string');
-//
-//				if (empty($importName)) {
-//					$error = '<p>'.$I18N->msg('setup_03701').'</p>';
-//				}
-//				else {
-//					$importSQL     = getImportDir().'/'.$import_name.'.sql';
-//					$importArchive = getImportDir().'/'.$import_name.'.tar.gz';
-//
-//					// Nur hier zuerst die Addons installieren
-//					// Da sonst Daten aus dem eingespielten Export
-//					// überschrieben würden
-//
-//					if ($error == '')
-//						$error .= rex_setup_addons(true, false);
-//
-//					if ($error == '')
-//						$error .= rex_setup_import($import_sql, $import_archiv);
-//				}
-//
-//				break;
 		}
 
 		// Wenn kein Fehler aufgetreten ist, aber auch etwas geändert wurde, prüfen
@@ -298,7 +263,8 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 						$error = $I18N->msg('setup_042'); // Dieses Login existiert schon!
 					}
 					else {
-						$adminPass = call_user_func($config->get('PSWFUNC'), $adminPass);
+						$service   = sly_Service_Factory::getService('User');
+						$adminPass = $service->hashPassword($adminPass);
 						$affected  = $pdo->insert('user', array(
 							'name'       => 'Administrator',
 							'login'      => $adminUser,

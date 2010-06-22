@@ -21,7 +21,6 @@ class rex_login
 	public $message;
 	public $uid;
 	public $USER;
-	public $passwordfunction;
 	public $cache;
 	public $login_status;
 
@@ -237,18 +236,25 @@ class rex_login
 
 	/**
 	 * Setzt eine Passwort-Funktion
+	 *
+	 * @deprecated  Zum Hashen von Passwörtern sollte immer
+	 *              sly_Service_User::hashPassword() verwendet werden.
 	 */
 	public function setPasswordFunction($pswfunc)
 	{
-		$this->passwordfunction = $pswfunc;
+		/* nichts tun */
 	}
 
 	/**
 	 * Verschlüsselt den übergebnen String, falls eine Passwort-Funktion gesetzt ist.
+	 *
+	 * @deprecated  Zum Hashen von Passwörtern sollte immer
+	 *              sly_Service_User::hashPassword() verwendet werden.
 	 */
 	public function encryptPassword($psw)
 	{
-		return empty($this->passwordfunction) ? $psw : call_user_func($this->passwordfunction, $psw);
+		$service = sly_Service_Factory::getService('User');
+		return $service->hashPassword($psw);
 	}
 
 	/**
