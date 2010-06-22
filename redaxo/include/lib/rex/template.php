@@ -81,7 +81,7 @@ class rex_template
 		if ($this->getId() < 1) return false;
 
 		$sql = rex_sql::getInstance();
-		$qry = 'SELECT * FROM '. $REX['TABLE_PREFIX']  .'template WHERE id = '.$this->getId();
+		$qry = 'SELECT * FROM '. $REX['DATABASE']['TABLE_PREFIX']  .'template WHERE id = '.$this->getId();
 		$sql->setQuery($qry);
 
 		if($sql->getRows() == 1)

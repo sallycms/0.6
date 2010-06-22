@@ -25,7 +25,7 @@ class sly_Service_Action extends sly_Service_Model_Base
 	
 	public function findModules(sly_Model_Action $action)
 	{
-		$prefix = sly_Core::config()->get('TABLE_PREFIX');
+		$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 		$pdo    = sly_DB_Persistence::getInstance();
 		$usages = array();
 		

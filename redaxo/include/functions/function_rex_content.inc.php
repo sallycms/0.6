@@ -153,7 +153,7 @@ function rex_slice_module_exists($sliceID, $clang)
 	
 	$sliceID = (int) $sliceID;
 	$clang   = (int) $clang;
-	$from    = 'article_slice s LEFT JOIN '.$REX['TABLE_PREFIX'].'module m ON s.modultyp_id = m.id';
+	$from    = 'article_slice s LEFT JOIN '.$REX['DATABASE']['TABLE_PREFIX'].'module m ON s.modultyp_id = m.id';
 	$id      = rex_sql::fetch('m.id', $from, 's.id = '.$sliceID.' AND s.clang = '.$clang);
 	
 	return $id === false ? -1 : $id;
@@ -563,7 +563,7 @@ function rex_copyArticle($id, $to_cat_id)
 				}
 				
 				$art_sql = new rex_sql();
-				$art_sql->setTable($REX['TABLE_PREFIX'].'article');
+				$art_sql->setTable($REX['DATABASE']['TABLE_PREFIX'].'article');
 				
 				if (empty($new_id)) {
 					$new_id = $art_sql->setNewId('id');
@@ -676,7 +676,7 @@ function rex_moveArticle($id, $from_cat_id, $to_cat_id)
 				
 				$art_sql = new rex_sql();
 				
-				$art_sql->setTable($REX['TABLE_PREFIX'].'article');
+				$art_sql->setTable($REX['DATABASE']['TABLE_PREFIX'].'article');
 				$art_sql->setValue('re_id',   $re_id);
 				$art_sql->setValue('path',    $path);
 				$art_sql->setValue('catname', $catname);
@@ -767,14 +767,14 @@ function rex_moveCategory($from_cat, $to_cat)
 			$from_path = $from_data['path'].$from_cat.'|';
 
 			$up   = new rex_sql();
-			$cats = $up->getArrayEx('SELECT id, re_id, path FROM '.$REX['TABLE_PREFIX'].'article WHERE path LIKE "'.$from_path.'%" AND clang = 0');
+			$cats = $up->getArrayEx('SELECT id, re_id, path FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE path LIKE "'.$from_path.'%" AND clang = 0');
 			
 			foreach ($cats as $id => $data) {
 				// make update
 				$new_path = $to_path.$from_cat.'|'.str_replace($from_path, '', $data['path']);
 
 				// path Ã¤ndern und speichern
-				$up->setTable($REX['TABLE_PREFIX'].'article');
+				$up->setTable($REX['DATABASE']['TABLE_PREFIX'].'article');
 				$up->setWhere('id = '.$id);
 				$up->setValue('path', $new_path);
 				$up->update();
@@ -789,7 +789,7 @@ function rex_moveCategory($from_cat, $to_cat)
 			foreach (array_keys($REX['CLANG']) as $clang) {
 				$catprior = (int) rex_sql::fetch('MAX(catprior)', 'article', 're_id = '.$to_cat.' AND clang = '.$clang);
 				
-				$up->setTable($REX['TABLE_PREFIX'].'article');
+				$up->setTable($REX['DATABASE']['TABLE_PREFIX'].'article');
 				$up->setWhere('id = '.$from_cat.' AND clang = '.$clang);
 				$up->setValue('path', $to_path);
 				$up->setValue('re_id', $to_cat);
@@ -843,7 +843,7 @@ function rex_newCatPrio($re_id, $clang, $new_prio, $old_prio)
 		$addsql = $new_prio < $old_prio ? 'desc' : 'asc';
 
 		rex_organize_priorities(
-			$REX['TABLE_PREFIX'].'article',
+			$REX['DATABASE']['TABLE_PREFIX'].'article',
 			'catprior',
 			'clang = '.$clang.' AND re_id = '.$re_id.' AND startpage = 1',
 			'catprior, updatedate '.$addsql,
@@ -880,7 +880,7 @@ function rex_newArtPrio($re_id, $clang, $new_prio, $old_prio)
 		$addsql = $new_prio < $old_prio ? 'desc' : 'asc';
 
 		rex_organize_priorities(
-			$REX['TABLE_PREFIX'].'article',
+			$REX['DATABASE']['TABLE_PREFIX'].'article',
 			'prior',
 			'clang = '.$clang.' AND ((startpage <> 1 AND re_id = '.$re_id.') OR (startpage = 1 AND id = '.$re_id.'))',
 			'prior, updatedate '. $addsql,

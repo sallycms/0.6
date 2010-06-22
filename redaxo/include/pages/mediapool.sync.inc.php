@@ -25,7 +25,7 @@ if($PERMALL)
 
   // ---- Dateien aus der DB lesen
   $db = new rex_sql();
-  $db->setQuery('SELECT filename FROM '. $REX['TABLE_PREFIX'].'file');
+  $db->setQuery('SELECT filename FROM '. $REX['DATABASE']['TABLE_PREFIX'].'file');
   $db_files = array();
 
   for($i=0;$i<$db->getRows();$i++)

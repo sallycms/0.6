@@ -101,4 +101,6 @@ if (empty($REX['SYNC']) && !$config->get('SETUP')){
 	$REX['ARTICLE_ID'] = sly_Core::getCurrentArticleId();
 }
 
+// REDAXO compatibility
+$config->setLocal('TABLE_PREFIX', $config->get('DATABASE/TABLE_PREFIX'));
 $REX = array_merge($REX, $config->get(null));

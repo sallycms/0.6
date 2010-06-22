@@ -15,7 +15,7 @@ if ($PERMALL)
   {
     $cat_name = rex_request('cat_name', 'string');
     $db = new rex_sql;
-    $db->setTable($REX['TABLE_PREFIX'].'file_category');
+    $db->setTable($REX['DATABASE']['TABLE_PREFIX'].'file_category');
     $db->setWhere('id='.$edit_id);
     $db->setValue('name',$cat_name);
     $db->addGlobalUpdateFields();
@@ -32,12 +32,12 @@ if ($PERMALL)
   } elseif ($media_method == 'delete_file_cat')
   {
     $gf = new rex_sql;
-    $gf->setQuery('SELECT * FROM '.$REX['TABLE_PREFIX'].'file WHERE category_id='.$edit_id);
+    $gf->setQuery('SELECT * FROM '.$REX['DATABASE']['TABLE_PREFIX'].'file WHERE category_id='.$edit_id);
     $gd = new rex_sql;
-    $gd->setQuery('SELECT * FROM '.$REX['TABLE_PREFIX'].'file_category WHERE re_id='.$edit_id);
+    $gd->setQuery('SELECT * FROM '.$REX['DATABASE']['TABLE_PREFIX'].'file_category WHERE re_id='.$edit_id);
     if ($gf->getRows()==0 && $gd->getRows()==0)
     {
-      $gf->setQuery('DELETE FROM '.$REX['TABLE_PREFIX'].'file_category WHERE id='. $edit_id);
+      $gf->setQuery('DELETE FROM '.$REX['DATABASE']['TABLE_PREFIX'].'file_category WHERE id='. $edit_id);
       $info = $I18N->msg('pool_kat_deleted');
     }else
     {
@@ -46,7 +46,7 @@ if ($PERMALL)
   } elseif ($media_method == 'add_file_cat')
   {
     $db = new rex_sql;
-    $db->setTable($REX['TABLE_PREFIX'].'file_category');
+    $db->setTable($REX['DATABASE']['TABLE_PREFIX'].'file_category');
     $db->setValue('name',rex_request('catname', 'string'));
     $db->setValue('re_id', rex_request('cat_id', 'int'));
     $db->setValue('path', rex_request('catpath', 'string'));

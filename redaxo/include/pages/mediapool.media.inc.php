@@ -16,7 +16,7 @@ $thumbsresize = sly_Service_Factory::getService('AddOn')->isAvailable('image_res
 
 // ***** kategorie auswahl
 $db = new rex_sql();
-$file_cat = $db->getArray('SELECT * FROM '.$REX['TABLE_PREFIX'].'file_category ORDER BY name ASC');
+$file_cat = $db->getArray('SELECT * FROM '.$REX['DATABASE']['TABLE_PREFIX'].'file_category ORDER BY name ASC');
 
 // ***** select bauen
 $sel_media = new rex_select;
@@ -172,7 +172,7 @@ if ($subpage=='detail' && rex_post('btn_delete', 'string')) {
 if ($subpage=="detail" && rex_post('btn_update', 'string')){
 
   $gf = new rex_sql;
-  $gf->setQuery("select * from ".$REX['TABLE_PREFIX']."file where file_id='$file_id'");
+  $gf->setQuery("select * from ".$REX['DATABASE']['TABLE_PREFIX']."file where file_id='$file_id'");
   if ($gf->getRows()==1)
   {
     if ($PERMALL || ($REX['USER']->hasPerm('media['.$gf->getValue('category_id').']') && $REX['USER']->hasPerm('media['. $rex_file_category .']')))
@@ -491,7 +491,7 @@ if($PERMALL && $media_method == 'updatecat_selectedmedia')
 
       $db = new rex_sql;
       // $db->debugsql = true;
-      $db->setTable($REX['TABLE_PREFIX'].'file');
+      $db->setTable($REX['DATABASE']['TABLE_PREFIX'].'file');
       $db->setWhere('file_id='.$file_id);
       $db->setValue('category_id',$rex_file_category);
       $db->addGlobalUpdateFields();
@@ -621,7 +621,7 @@ if ($subpage == '')
   {
     $add_input = '';
     $filecat = new rex_sql();
-    $filecat->setQuery("SELECT * FROM ".$REX['TABLE_PREFIX']."file_category ORDER BY name ASC LIMIT 1");
+    $filecat->setQuery("SELECT * FROM ".$REX['DATABASE']['TABLE_PREFIX']."file_category ORDER BY name ASC LIMIT 1");
     if ($filecat->getRows() > 0)
     {
       $cats_sel->setId('rex_move_file_dest_category');
@@ -659,7 +659,7 @@ if ($subpage == '')
     }
     $where .= ' AND ('. implode(' OR ', $types) .')';
   }
-  $qry = "SELECT file_id FROM ".$REX['TABLE_PREFIX']."file f WHERE ". $where ." ORDER BY f.updatedate desc";
+  $qry = "SELECT file_id FROM ".$REX['DATABASE']['TABLE_PREFIX']."file f WHERE ". $where ." ORDER BY f.updatedate desc";
 
   // ----- EXTENSION POINT
   $qry = rex_register_extension_point('MEDIA_LIST_QUERY', $qry,

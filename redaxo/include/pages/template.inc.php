@@ -15,15 +15,16 @@ $template_id  = rex_request('template_id', 'rex-template-id');
 $save         = rex_request('save','string');
 $goon         = rex_request('goon', 'string');
 
-$info = '';
+$info    = '';
 $warning = '';
+$prefix  = $REX['DATABASE']['TABLE_PREFIX'];
 
 if ($function == "delete")
 {
   $del = new rex_sql;
-  $del->setQuery("SELECT " . $REX['TABLE_PREFIX'] . "article.id," . $REX['TABLE_PREFIX'] . "template.name FROM " . $REX['TABLE_PREFIX'] . "article
-    LEFT JOIN " . $REX['TABLE_PREFIX'] . "template ON " . $REX['TABLE_PREFIX'] . "article.template_id=" . $REX['TABLE_PREFIX'] . "template.id
-    WHERE " . $REX['TABLE_PREFIX'] . "article.template_id='$template_id' LIMIT 0,10");
+  $del->setQuery("SELECT " . $prefix . "article.id," . $prefix . "template.name FROM " . $prefix . "article
+    LEFT JOIN " . $prefix . "template ON " . $prefix . "article.template_id=" . $prefix . "template.id
+    WHERE " . $prefix . "article.template_id='$template_id' LIMIT 0,10");
 
   if ($del->getRows() > 0  || $REX['DEFAULT_TEMPLATE_ID'] == $template_id) 
   {
@@ -31,7 +32,7 @@ if ($function == "delete")
 
   }else
   {
-    $del->setQuery("DELETE FROM " . $REX['TABLE_PREFIX'] . "template WHERE id = '$template_id' LIMIT 1"); // max. ein Datensatz darf loeschbar sein
+    $del->setQuery("DELETE FROM " . $prefix . "template WHERE id = '$template_id' LIMIT 1"); // max. ein Datensatz darf loeschbar sein
     rex_deleteDir($REX['DYNFOLDER'] . "/internal/sally/templates/" . $template_id . ".template", 0);
     $info = $I18N->msg("template_deleted");
   }
@@ -42,7 +43,7 @@ if ($function == "delete")
   $legend = $I18N->msg("edit_template") . ' [ID=' . $template_id . ']';
 
   $hole = new rex_sql;
-  $hole->setQuery("SELECT * FROM " . $REX['TABLE_PREFIX'] . "template WHERE id = '$template_id'");
+  $hole->setQuery("SELECT * FROM " . $prefix . "template WHERE id = '$template_id'");
   if($hole->getRows() == 1)
   {
     $templatename = $hole->getValue("name");
@@ -103,7 +104,7 @@ if ($function == "add" or $function == "edit")
     }
 
     $TPL = new rex_sql;
-    $TPL->setTable($REX['TABLE_PREFIX'] . "template");
+    $TPL->setTable($prefix . "template");
     $TPL->setValue("name", $templatename);
     $TPL->setValue("active", $active);
     $TPL->setValue("content", $content);
@@ -173,7 +174,7 @@ if ($function == "add" or $function == "edit")
     $modul_select->setMultiple(TRUE);
     $modul_select->setSize(10);
     $m_sql = new rex_sql;
-    $m_sql->setQuery('SELECT id, name FROM '.$REX['TABLE_PREFIX'].'module ORDER BY name');
+    $m_sql->setQuery('SELECT id, name FROM '.$prefix.'module ORDER BY name');
     foreach($m_sql->getArray() as $m)
       $modul_select->addOption($m["name"],$m["id"]);
 
@@ -340,7 +341,7 @@ if ($OUT)
   if ($warning != '')
     echo rex_warning($warning);
 
-  $list = rex_list::factory('SELECT id, name, active FROM '.$REX['TABLE_PREFIX'].'template ORDER BY name');
+  $list = rex_list::factory('SELECT id, name, active FROM '.$prefix.'template ORDER BY name');
   $list->setCaption($I18N->msg('header_template_caption'));
   $list->addTableAttribute('summary', $I18N->msg('header_template_summary'));
   $list->addTableColumnGroup(array(40, 40, '*', 153, 153));

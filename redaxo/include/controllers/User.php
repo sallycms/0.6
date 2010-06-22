@@ -272,6 +272,7 @@ class sly_Controller_User extends sly_Controller_Sally
 
 		$permissions = array();
 		$current     = $REX['USER']->getValue('id');
+		$config      = sly_Core::config();
 		
 		if (sly_post('useradmin', 'boolean', false) || ($user && $current == $user->getId())) {
 			$permissions[] = 'admin[]';
@@ -298,7 +299,7 @@ class sly_Controller_User extends sly_Controller_Sally
 			$persistence = sly_DB_Persistence::getInstance();
 
 			$persistence->query(
-				'SELECT DISTINCT path FROM '.$REX['TABLE_PREFIX'].'article '.
+				'SELECT DISTINCT path FROM '.$config->get('DATABASE/TABLE_PREFIX').'article '.
 				'WHERE id IN ('.implode(',', $allowedCategories).') AND clang = 0'
 			);
 

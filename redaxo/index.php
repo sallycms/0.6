@@ -56,7 +56,7 @@ else {
 	
 	// Login vorbereiten
 
-	$REX['LOGIN']   = new rex_backend_login($REX['TABLE_PREFIX'].'user');
+	$REX['LOGIN']   = new rex_backend_login($config->get('DATABASE/TABLE_PREFIX').'user');
 	$rex_user_login = rex_post('rex_user_login', 'string');  // addslashes()!
 	$rex_user_psw   = rex_post('rex_user_psw', 'string');    // addslashes()!
 

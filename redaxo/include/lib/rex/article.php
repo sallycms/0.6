@@ -124,7 +124,7 @@ class rex_article
       $this->ARTICLE = new rex_sql();
       if($this->debug)
       	$this->ARTICLE->debugsql = 1;
-      $qry = "SELECT * FROM ".$REX['TABLE_PREFIX']."article WHERE ".$REX['TABLE_PREFIX']."article.id='$this->article_id' AND clang='".$this->clang."' LIMIT 1";
+      $qry = "SELECT * FROM ".$REX['DATABASE']['TABLE_PREFIX']."article WHERE ".$REX['DATABASE']['TABLE_PREFIX']."article.id='$this->article_id' AND clang='".$this->clang."' LIMIT 1";
       $this->ARTICLE->setQuery($qry);
 
       if ($this->ARTICLE->getRows() > 0)
@@ -343,17 +343,19 @@ class rex_article
 		global $REX;
 		// ---------- alle teile/slices eines artikels auswaehlen
 		// slice + value + modul + artikel
-		$query = "SELECT ".$REX['TABLE_PREFIX']."module.id, ".$REX['TABLE_PREFIX']."module.name, ".$REX['TABLE_PREFIX']."module.ausgabe, ".$REX['TABLE_PREFIX']."module.eingabe, ".$REX['TABLE_PREFIX']."article_slice.*, ".$REX['TABLE_PREFIX']."article.re_id
+		$prefix = $REX['DATABASE']['TABLE_PREFIX'];
+		
+		$query = "SELECT ".$prefix."module.id, ".$prefix."module.name, ".$prefix."module.ausgabe, ".$prefix."module.eingabe, ".$prefix."article_slice.*, ".$prefix."article.re_id
 			FROM
-				".$REX['TABLE_PREFIX']."article_slice
-				LEFT JOIN ".$REX['TABLE_PREFIX']."module ON ".$REX['TABLE_PREFIX']."article_slice.modultyp_id=".$REX['TABLE_PREFIX']."module.id
-				LEFT JOIN ".$REX['TABLE_PREFIX']."article ON ".$REX['TABLE_PREFIX']."article_slice.article_id=".$REX['TABLE_PREFIX']."article.id
+				".$prefix."article_slice
+				LEFT JOIN ".$prefix."module ON ".$prefix."article_slice.modultyp_id=".$prefix."module.id
+				LEFT JOIN ".$prefix."article ON ".$prefix."article_slice.article_id=".$prefix."article.id
 			WHERE
-				".$REX['TABLE_PREFIX']."article_slice.article_id='".$this->article_id."' AND
-				".$REX['TABLE_PREFIX']."article_slice.clang='".$this->clang."' AND
-				".$REX['TABLE_PREFIX']."article.clang='".$this->clang."' AND
-				".$REX['TABLE_PREFIX']."article_slice.revision='".$this->slice_revision."'
-				ORDER BY ".$REX['TABLE_PREFIX']."article_slice.re_article_slice_id";
+				".$prefix."article_slice.article_id='".$this->article_id."' AND
+				".$prefix."article_slice.clang='".$this->clang."' AND
+				".$prefix."article.clang='".$this->clang."' AND
+				".$prefix."article_slice.revision='".$this->slice_revision."'
+				ORDER BY ".$prefix."article_slice.re_article_slice_id";
 		
 		$sql = new rex_sql;
 		if ($this->debug) $sql->debugsql = 1;
@@ -371,16 +373,16 @@ class rex_article
 		// ---------- SLICE IDS/MODUL SETZEN - speichern der daten
 		for ($i=0; $i < $this->CONT->getRows(); $i++) {
 			$previousSliceID = $this->CONT->getValue('re_article_slice_id');
-			$sliceId         = $this->CONT->getValue($REX['TABLE_PREFIX'].'article_slice.id');
+			$sliceId         = $this->CONT->getValue($REX['DATABASE']['TABLE_PREFIX'].'article_slice.id');
 			
 			$slices[$sliceId]['ID']           = $sliceId;
 			$slices[$sliceId]['Previous']     = $previousSliceID;
-			$slices[$sliceId]['CType']        = $this->CONT->getValue($REX['TABLE_PREFIX'].'article_slice.ctype');
-			$slices[$sliceId]['sliceId']      = $this->CONT->getValue($REX['TABLE_PREFIX'].'article_slice.slice_id');
-			$slices[$sliceId]['ModuleInput']  = $this->CONT->getValue($REX['TABLE_PREFIX'].'module.eingabe');
-			$slices[$sliceId]['ModuleOutput'] = $this->CONT->getValue($REX['TABLE_PREFIX'].'module.ausgabe');
-			$slices[$sliceId]['ModuleID']     = $this->CONT->getValue($REX['TABLE_PREFIX'].'module.id');
-			$slices[$sliceId]['ModuleName']   = $this->CONT->getValue($REX['TABLE_PREFIX'].'module.name');
+			$slices[$sliceId]['CType']        = $this->CONT->getValue($REX['DATABASE']['TABLE_PREFIX'].'article_slice.ctype');
+			$slices[$sliceId]['sliceId']      = $this->CONT->getValue($REX['DATABASE']['TABLE_PREFIX'].'article_slice.slice_id');
+			$slices[$sliceId]['ModuleInput']  = $this->CONT->getValue($REX['DATABASE']['TABLE_PREFIX'].'module.eingabe');
+			$slices[$sliceId]['ModuleOutput'] = $this->CONT->getValue($REX['DATABASE']['TABLE_PREFIX'].'module.ausgabe');
+			$slices[$sliceId]['ModuleID']     = $this->CONT->getValue($REX['DATABASE']['TABLE_PREFIX'].'module.id');
+			$slices[$sliceId]['ModuleName']   = $this->CONT->getValue($REX['DATABASE']['TABLE_PREFIX'].'module.name');
 			$slices[$sliceId]['Counter']      = $i;
 			
 			$predecessors[$previousSliceID]   = $sliceId;
@@ -585,7 +587,7 @@ class rex_article
 			$ga = new rex_sql;
 			if ($this->debug) $ga->debugsql = 1;
 			
-			$ga->setQuery('SELECT preview FROM '.$REX['TABLE_PREFIX'].'module_action ma,'. $REX['TABLE_PREFIX']. 'action a WHERE preview != "" AND ma.action_id=a.id AND module_id='.$currentSlice['ModuleID'].' AND ((a.previewmode & '.$modebit.') = '.$modebit.')');
+			$ga->setQuery('SELECT preview FROM '.$REX['DATABASE']['TABLE_PREFIX'].'module_action ma,'. $REX['DATABASE']['TABLE_PREFIX']. 'action a WHERE preview != "" AND ma.action_id=a.id AND module_id='.$currentSlice['ModuleID'].' AND ((a.previewmode & '.$modebit.') = '.$modebit.')');
 			
 			for ($t=0; $t < $ga->getRows(); $t++) {
 				$iaction = $ga->getValue('preview');
@@ -734,7 +736,7 @@ class rex_article
 
       // Den Dummy mit allen Feldern aus rex_article_slice füllen
       $slice_fields = new rex_sql();
-      $slice_fields->setQuery('SELECT * FROM '. $REX['TABLE_PREFIX'].'article_slice LIMIT 1');
+      $slice_fields->setQuery('SELECT * FROM '. $REX['DATABASE']['TABLE_PREFIX'].'article_slice LIMIT 1');
       foreach($slice_fields->getFieldnames() as $fieldname)
       {
         switch($fieldname)
@@ -747,7 +749,7 @@ class rex_article
           case 'slice_id'     : $def_value = 0; break;
           default             : $def_value = '';
         }
-        $dummysql->setValue($REX['TABLE_PREFIX']. 'article_slice.'. $fieldname, $def_value);
+        $dummysql->setValue($REX['DATABASE']['TABLE_PREFIX']. 'article_slice.'. $fieldname, $def_value);
       }*/
       $slice_content = $this->replaceVars(0, $slice_content);
     }
@@ -807,7 +809,7 @@ class rex_article
          //-->
       </script>';
 
-	$slice_id = $this->CONT->getValue($REX['TABLE_PREFIX'].'article_slice.slice_id');
+	$slice_id = $this->CONT->getValue($REX['DATABASE']['TABLE_PREFIX'].'article_slice.slice_id');
 
 	$slice_content = $this->replaceVars($slice_id, $slice_content);
     return $slice_content;

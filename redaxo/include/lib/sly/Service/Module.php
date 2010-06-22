@@ -35,7 +35,7 @@ class sly_Service_Module extends sly_Service_Model_Base
 	
 	public function findUsages(sly_Model_Module $module)
 	{
-		$prefix = sly_Core::config()->get('TABLE_PREFIX');
+		$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 		$pdo    = sly_DB_Persistence::getInstance();
 		$usages = array();
 		

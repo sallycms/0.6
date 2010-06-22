@@ -113,7 +113,7 @@ function rex_generateArticleContent($article_id, $clang = null)
 			'ORDER BY re_article_slice_id ASC';
 		
 		$sql             = new rex_sql();
-		$slices          = $sql->getArray(str_replace('#_', $REX['TABLE_PREFIX'], $query));
+		$slices          = $sql->getArray(str_replace('#_', $REX['DATABASE']['TABLE_PREFIX'], $query));
 		$article_content = '';
 		
 		if (!empty($slices)) {
@@ -494,7 +494,7 @@ function rex_addCLang($id, $name)
 				'FROM #_article WHERE clang = 0', '#_'
 	);
 
-	$sql->setQuery('INSERT INTO '.$REX['TABLE_PREFIX'].'clang (id,name,revision) VALUES ('.$id.', "'.$sql->escape($name).'", 0)');
+	$sql->setQuery('INSERT INTO '.$REX['DATABASE']['TABLE_PREFIX'].'clang (id,name,revision) VALUES ('.$id.', "'.$sql->escape($name).'", 0)');
 	unset($sql);
 	
 	rex_register_extension_point('CLANG_ADDED', '', array('id' => $id, 'name' => $name));

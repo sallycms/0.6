@@ -15,7 +15,7 @@ if (!isset($KATout)) {
 }
 
 $KAT = new rex_sql();
-$KAT->setQuery('SELECT catname, path FROM '.$REX['TABLE_PREFIX'].'article WHERE id = '.$category_id.' AND startpage = 1 AND clang = '.$clang);
+$KAT->setQuery('SELECT catname, path FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE id = '.$category_id.' AND startpage = 1 AND clang = '.$clang);
 
 if ($KAT->getRows() != 1) {
 	// Kategorie existiert nicht
@@ -33,7 +33,7 @@ else {
 	
 	if (!empty($pathElements)) {
 		$path         = implode(',', $pathElements);
-		$query        = 'SELECT id, catname FROM '.$REX['TABLE_PREFIX'].'article WHERE id IN ('.$path.') AND startpage = 1 AND clang = '.$clang;
+		$query        = 'SELECT id, catname FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE id IN ('.$path.') AND startpage = 1 AND clang = '.$clang;
 		$pathElements = rex_sql::getArrayEx($query);
 		
 		foreach ($pathElements as $catID => $catName) {

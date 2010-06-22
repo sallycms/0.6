@@ -39,7 +39,7 @@ $rex_file_category = rex_request('rex_file_category', 'rex-mediacategory-id', -1
 if ($file_name != "")
 {
   $sql = new rex_sql();
-  $sql->setQuery("select * from ".$REX['TABLE_PREFIX']."file where filename='$file_name'");
+  $sql->setQuery("select * from ".$REX['DATABASE']['TABLE_PREFIX']."file where filename='$file_name'");
   if ($sql->getRows()==1)
   {
     $file_id = $sql->getValue("file_id");
@@ -54,7 +54,7 @@ if($rex_file_category == -1)
 
 
 $gc = new rex_sql;
-$gc->setQuery('SELECT * FROM '.$REX['TABLE_PREFIX'].'file_category WHERE id='. $rex_file_category);
+$gc->setQuery('SELECT * FROM '.$REX['DATABASE']['TABLE_PREFIX'].'file_category WHERE id='. $rex_file_category);
 if ($gc->getRows() != 1)
 {
   $rex_file_category = 0;

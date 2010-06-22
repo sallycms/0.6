@@ -422,7 +422,7 @@ echo '
 if ($category_id > -1)
 {
   $TEMPLATES = rex_sql::getInstance();
-  $TEMPLATES->setQuery('select id, name from '.$REX['TABLE_PREFIX'].'template where active=1 order by name');
+  $TEMPLATES->setQuery('select id, name from '.$REX['DATABASE']['TABLE_PREFIX'].'template where active=1 order by name');
   $TMPL_SEL = new rex_select;
   $TMPL_SEL->setName('template_id');
   $TMPL_SEL->setId('rex-form-template');
@@ -474,7 +474,7 @@ if ($category_id > -1)
   // $sql->debugsql = true;
   $sql->setQuery('SELECT *
         FROM
-          '.$REX['TABLE_PREFIX'].'article
+          '.$REX['DATABASE']['TABLE_PREFIX'].'article
         WHERE
           ((re_id='. $category_id .' AND startpage=0) OR (id='. $category_id .' AND startpage=1))
           AND clang='. $clang .'
@@ -526,7 +526,7 @@ if ($category_id > -1)
     {
       // template_id vom Startartikel erben
       $sql2 = new rex_sql;
-      $sql2->setQuery('SELECT template_id FROM '.$REX['TABLE_PREFIX'].'article WHERE id='. $category_id .' AND clang='. $clang .' AND startpage=1');
+      $sql2->setQuery('SELECT template_id FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE id='. $category_id .' AND clang='. $clang .' AND startpage=1');
       if ($sql2->getRows() == 1)
         $TMPL_SEL->setSelected($sql2->getValue('template_id'));
     }

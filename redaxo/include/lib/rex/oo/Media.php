@@ -35,7 +35,7 @@ class OOMedia
 	public static function _getTableName()
 	{
 		global $REX;
-		return $REX['TABLE_PREFIX'].'file';
+		return $REX['DATABASE']['TABLE_PREFIX'].'file';
 	}
 
 	protected static function _getTableJoin()
@@ -381,7 +381,7 @@ class OOMedia
 
 		$sql      = new rex_sql();
 		$filename = addslashes($this->getFileName());
-		$prefix   = $REX['TABLE_PREFIX'];
+		$prefix   = $REX['DATABASE']['TABLE_PREFIX'];
 		$query    =
 			'SELECT s.article_id, s.clang FROM '.$prefix.'slice_value sv, '.$prefix.'article_slice s, '.$prefix.'article a '.
 			'WHERE sv.slice_id = s.slice_id AND a.id = s.article_id AND a.clang = s.clang AND ('.

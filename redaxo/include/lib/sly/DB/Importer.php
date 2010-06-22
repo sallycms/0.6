@@ -145,7 +145,7 @@ class sly_DB_Importer
 			$this->content = trim(str_replace('## Prefix '.$this->prefix, '', $this->content));
 		}
 		else {
-			$this->returnValues['message'] = $I18N->msg('importer_no_valid_import_file').'. [## Prefix '. $REX['TABLE_PREFIX'] .'] is missing.<br />';
+			$this->returnValues['message'] = $I18N->msg('importer_no_valid_import_file').'. [## Prefix '. $REX['DATABASE']['TABLE_PREFIX'] .'] is missing.<br />';
 			throw new Exception('bad prefix');
 		}
 	}
@@ -176,12 +176,12 @@ class sly_DB_Importer
 	{
 		global $REX;
 		
-		if ($REX['TABLE_PREFIX'] != $this->prefix) {
+		if ($REX['DATABASE']['TABLE_PREFIX'] != $this->prefix) {
 			// Hier case-insensitiv ersetzen, damit alle möglich Schreibweisen (TABLE TablE, tAblE,..) ersetzt werden
 			// Dies ist wichtig, da auch SQLs innerhalb von Ein/Ausgabe der Module vom rex-admin verwendet werden
-			$this->content = preg_replace('/(TABLE `?)'.preg_quote($this->prefix, '/').'/i',  '$1'.$REX['TABLE_PREFIX'], $this->content);
-			$this->content = preg_replace('/(INTO `?)'.preg_quote($this->prefix, '/').'/i',   '$1'.$REX['TABLE_PREFIX'], $this->content);
-			$this->content = preg_replace('/(EXISTS `?)'.preg_quote($this->prefix, '/').'/i', '$1'.$REX['TABLE_PREFIX'], $this->content);
+			$this->content = preg_replace('/(TABLE `?)'.preg_quote($this->prefix, '/').'/i',  '$1'.$REX['DATABASE']['TABLE_PREFIX'], $this->content);
+			$this->content = preg_replace('/(INTO `?)'.preg_quote($this->prefix, '/').'/i',   '$1'.$REX['DATABASE']['TABLE_PREFIX'], $this->content);
+			$this->content = preg_replace('/(EXISTS `?)'.preg_quote($this->prefix, '/').'/i', '$1'.$REX['DATABASE']['TABLE_PREFIX'], $this->content);
 		}
 	}
 	
@@ -218,9 +218,9 @@ class sly_DB_Importer
 		
 		$tables = rex_sql::showTables();
 
-		if (!in_array($REX['TABLE_PREFIX'].'user', $tables)) {
+		if (!in_array($REX['DATABASE']['TABLE_PREFIX'].'user', $tables)) {
 			$createStmt = file_get_contents($REX['INCLUDE_PATH'].'/install/user.sql');
-			$createStmt = str_replace('%PREFIX%', $REX['TABLE_PREFIX'], $createStmt);
+			$createStmt = str_replace('%PREFIX%', $REX['DATABASE']['TABLE_PREFIX'], $createStmt);
 			
 			$db = new rex_sql();
 			$db->setQuery($createStmt);

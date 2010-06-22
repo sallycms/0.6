@@ -114,7 +114,7 @@ abstract class rex_var
   {
     global $REX;
 	if(!$sql instanceof rex_sql) debug_print_backtrace();
-    //return $sql->getValue($REX['TABLE_PREFIX'] . 'article_slice.' . $value);
+    //return $sql->getValue($REX['DATABASE']['TABLE_PREFIX'] . 'article_slice.' . $value);
   }
   /**
    * setValue Wrapper, da hier immer auf die gleiche Tabelle gearbeitet wird und
@@ -125,7 +125,7 @@ abstract class rex_var
   {
     global $REX;
 	 
-	 $table = $prependTableName ? $REX['TABLE_PREFIX'].'article_slice.' : '';
+	 $table = $prependTableName ? $REX['DATABASE']['TABLE_PREFIX'].'article_slice.' : '';
 
     if ($escape)
       return $sql->setValue($table.$fieldname, addslashes($value));

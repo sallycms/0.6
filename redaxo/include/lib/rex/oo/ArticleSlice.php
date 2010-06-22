@@ -102,7 +102,7 @@ class OOArticleSlice
                                           )
                                           AND a.revision='.$revision.' 
                                           AND b.revision='.$revision,
-		$REX['TABLE_PREFIX'].'article_slice a, '. $REX['TABLE_PREFIX'].'article_slice b',
+		$REX['DATABASE']['TABLE_PREFIX'].'article_slice a, '. $REX['DATABASE']['TABLE_PREFIX'].'article_slice b',
                                           'a.*' 
                                           );
 	}
@@ -130,7 +130,7 @@ class OOArticleSlice
                                           )
                                           AND a.revision='.$revision.' 
                                           AND b.revision='.$revision,
-		$REX['TABLE_PREFIX'].'article_slice a, '. $REX['TABLE_PREFIX'].'article_slice b',
+		$REX['DATABASE']['TABLE_PREFIX'].'article_slice a, '. $REX['DATABASE']['TABLE_PREFIX'].'article_slice b',
                                           'a.*'
                                           );
 	}
@@ -217,7 +217,7 @@ class OOArticleSlice
 		global $REX;
 
 		if(!$table)
-		$table = $REX['TABLE_PREFIX'].'article_slice';
+		$table = $REX['DATABASE']['TABLE_PREFIX'].'article_slice';
 
 		if(!$fields)
 		$fields = '*';

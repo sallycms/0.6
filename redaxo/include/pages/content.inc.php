@@ -442,7 +442,7 @@ if ($article->getRows() == 1)
 				$meta_sql->addGlobalUpdateFields();
 	
 				if ($meta_sql->update()) {
-					$article->setQuery('SELECT * FROM '.$REX['TABLE_PREFIX'].'article WHERE id = '.$article_id.' AND clang = '.$clang);
+					$article->setQuery('SELECT * FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE id = '.$article_id.' AND clang = '.$clang);
 					
 					$info     = $I18N->msg('metadata_updated');
 					$meta_sql = null;

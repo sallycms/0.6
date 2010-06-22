@@ -81,7 +81,7 @@ class OOArticle extends OORedaxo
 	
 		if ($alist === null) {
 			$where = 're_id = '.$category_id.' AND clang = '.$clang.($ignore_offlines ? ' AND status = 1' : '');
-			$query = 'SELECT id FROM '.$REX['TABLE_PREFIX'].'article WHERE '.$where.' ORDER BY prior,name';
+			$query = 'SELECT id FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE '.$where.' ORDER BY prior,name';
 			$alist = array_map('intval', rex_sql::getArrayEx($query));
 			
 			if ($category_id != 0) {

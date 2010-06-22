@@ -124,7 +124,7 @@ function rex_addCategory($parentID, $data)
 		sly_Core::cache()->delete('clist', $parentID.'_'.$clangID);
 	}
 	
-	$sql->setQuery('INSERT INTO '.$REX['TABLE_PREFIX'].'article (id,re_id,name,'.
+	$sql->setQuery('INSERT INTO '.$REX['DATABASE']['TABLE_PREFIX'].'article (id,re_id,name,'.
 		'catname,catprior,attributes,startpage,prior,path,status,createdate,'.
 		'updatedate,template_id,clang,createuser,updateuser,revision) VALUES '.
 		implode(',', $records)
@@ -206,7 +206,7 @@ function rex_editCategory($categoryID, $clang, $data)
 	
 	$sql = new rex_sql();
 	$sql->setQuery(
-		'UPDATE '.$REX['TABLE_PREFIX'].'article '.
+		'UPDATE '.$REX['DATABASE']['TABLE_PREFIX'].'article '.
 		'SET catname = "'.$data['catname'].'", '. // Magic Quotes von REDAXO!
 		'updatedate = UNIX_TIMESTAMP(), updateuser = "'.$sql->escape($REX['USER']->getValue('login')).'" '.
 		'WHERE id = '.$categoryID.' AND clang = '.$clang
@@ -258,7 +258,7 @@ function rex_editCategory($categoryID, $clang, $data)
 			// Alle anderen entsprechend verschieben
 			
 			$sql->setQuery(
-				'UPDATE '.$REX['TABLE_PREFIX'].'article '.
+				'UPDATE '.$REX['DATABASE']['TABLE_PREFIX'].'article '.
 				'SET catprior = catprior '.$relation.' 1 '.
 				'WHERE catprior BETWEEN '.$a.' AND '.$b.' '.
 				'AND re_id = '.$parentID.' AND catprior <> 0 AND clang = '.$clang
@@ -267,12 +267,12 @@ function rex_editCategory($categoryID, $clang, $data)
 			// Eigene neue Position speichern
 			
 			$sql->setQuery(
-				'UPDATE '.$REX['TABLE_PREFIX'].'article '.
+				'UPDATE '.$REX['DATABASE']['TABLE_PREFIX'].'article '.
 				'SET catprior = '.$newPrio.' '.
 				'WHERE id = '.$categoryID.' AND clang = '.$clang
 			);
 
-			$sql->setQuery('SELECT id FROM '.$REX['TABLE_PREFIX'].'article WHERE re_id = "'.$parentID.'" AND clang ="'.$clang.'" AND catprior != 0');
+			$sql->setQuery('SELECT id FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE re_id = "'.$parentID.'" AND clang ="'.$clang.'" AND catprior != 0');
 			for ($i=0; $i < $sql->getRows(); $i++)
 			{
 				sly_Core::cache()->delete('category', $sql->getValue('id').'_'.$clang);
@@ -588,7 +588,7 @@ function rex_addArticle($data)
 		$cache->delete('alist', $categoryID.'_'.$clangID);
 	}
 	
-	$sql->setQuery('INSERT INTO '.$REX['TABLE_PREFIX'].'article (id,re_id,name,'.
+	$sql->setQuery('INSERT INTO '.$REX['DATABASE']['TABLE_PREFIX'].'article (id,re_id,name,'.
 		'catname,catprior,attributes,startpage,prior,path,status,createdate,'.
 		'updatedate,template_id,clang,createuser,updateuser,revision) VALUES '.
 		implode(',', $records)
@@ -654,7 +654,7 @@ function rex_editArticle($articleID, $clang, $data)
 	
 	$sql = new rex_sql();
 	$sql->setQuery(
-		'UPDATE '.$REX['TABLE_PREFIX'].'article '.
+		'UPDATE '.$REX['DATABASE']['TABLE_PREFIX'].'article '.
 		'SET name = "'.$data['name'].'", template_id = '.$data['template_id'].', '. // Magic Quotes von REDAXO!
 		'updatedate = UNIX_TIMESTAMP(), updateuser = "'.$sql->escape($REX['USER']->getValue('login')).'" '.
 		'WHERE id = '.$articleID.' AND clang = '.$clang
@@ -697,7 +697,7 @@ function rex_editArticle($articleID, $clang, $data)
 				'WHERE id = '.$articleID.' AND clang = '.$clang, '#_'
 			);
 
-			$sql->setQuery('SELECT id FROM '.$REX['TABLE_PREFIX'].'article WHERE re_id = "'.$parentID.'" AND clang ="'.$clang.'" AND catprior = 0');
+			$sql->setQuery('SELECT id FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE re_id = "'.$parentID.'" AND clang ="'.$clang.'" AND catprior = 0');
 			for ($i=0; $i < $sql->getRows(); $i++)
 			{
 				sly_Core::cache()->delete('article', $sql->getValue('id').'_'.$clang);

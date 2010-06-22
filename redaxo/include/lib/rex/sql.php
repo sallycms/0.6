@@ -143,7 +143,7 @@ class rex_sql
 		$query = sprintf(
 			'SELECT %s FROM %s%s WHERE %s LIMIT 1',
 			$what,
-			$REX['TABLE_PREFIX'],
+			$REX['DATABASE']['TABLE_PREFIX'],
 			$from,
 			$where
 		);
@@ -193,7 +193,7 @@ class rex_sql
 		
 		if (!empty($tablePrefix)) {
 			global $REX;
-			$query = str_replace($tablePrefix, $REX['TABLE_PREFIX'], $query);
+			$query = str_replace($tablePrefix, $REX['DATABASE']['TABLE_PREFIX'], $query);
 		}
 		
 		$result = mysql_query($query);
@@ -264,7 +264,7 @@ class rex_sql
 		
 		if (!empty($tablePrefix)) {
 			global $REX;
-			$qry = str_replace($tablePrefix, $REX['TABLE_PREFIX'], $qry);
+			$qry = str_replace($tablePrefix, $REX['DATABASE']['TABLE_PREFIX'], $qry);
 		}
 
 		$qry = trim($qry);
@@ -322,7 +322,7 @@ class rex_sql
 	{
 		if ($prependWithPrefix) {
 			global $REX;
-			$table = $REX['TABLE_PREFIX'].$table;
+			$table = $REX['DATABASE']['TABLE_PREFIX'].$table;
 		}
 		
 		$this->table = $table;
