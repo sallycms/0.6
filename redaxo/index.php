@@ -180,7 +180,7 @@ $REX['PAGE_NO_NAVI'] = $REX['PAGES'][$REX['PAGE']][2];
 // Seite gefunden. AddOns benachrichtigen
 
 //$config->appendArray($REX);
-rex_register_extension_point('PAGE_CHECKED', $REX['PAGE'], array('pages' => $REX['PAGES']));
+rex_register_extension_point('PAGE_CHECKED', $REX['PAGE'], array('pages' => $REX['PAGES']), true);
 
 // Im Testmodus verlassen wir das Script jetzt.
 
