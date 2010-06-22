@@ -24,17 +24,15 @@ RewriteRule ^imageresize/(.*)$ data/dyn/public/image_resize/image_resize__$1 [L]
 
 RewriteRule ^imageresize/(.*)$ index.php?rex_resize=$1 [L]
 
-# Deployer-AddOn (< 2.0)
-# RewriteRule ^files/(tmp_|css|js)/t[0-9]+_(.+)$ gzip.php?file=files/$1/$2&forever=1 [L]
-
 # Deployer-AddOn (>= 2.0)
 RewriteRule ^assets/js/([0-9a-f]{6})\.[0-9a-f]+\.min\.js$   gzip.php?file=dyn/public/deployer/compressed_$1.js&forever=1 [L]
 RewriteRule ^assets/css/([0-9a-f]{6})\.[0-9a-f]+\.min\.css$ gzip.php?file=dyn/public/deployer/compressed_$1.css&forever=1 [L]
 
-RewriteCond %{REQUEST_FILENAME} -f
-RewriteCond %{REQUEST_URI}      \.css$
-RewriteCond %{REQUEST_URI}      !wym_styles.css$
-RewriteRule ^(.+)$              assets/css/scaffold/index.php?f=assets/css/$1&%{QUERY_STRING}
+# Scaffold für alle Frontend-CSS-Dateien
+RewriteCond %{REQUEST_FILENAME}  -f
+RewriteCond %{REQUEST_URI}       \.css$
+RewriteCond %{REQUEST_URI}       !wym_styles.css$
+RewriteRule assets/css/(.+)$     redaxo/scaffold.php?f=assets/css/$1&%{QUERY_STRING} [L]
 
 # Komprimierung fuer statischen Content
 RewriteRule ^(assets/.*\.(css|js))$  gzip.php?file=$1

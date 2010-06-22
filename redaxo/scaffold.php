@@ -7,7 +7,7 @@ if (empty($_GET['f'])) {
 	die('Keine Datei angegeben.');
 }
 
-$projectBase = rtrim(realpath('../../'), '/\\').'/';
+$projectBase = rtrim(realpath('../'), '/\\').'/';
 $cacheDir    = $projectBase.'data/dyn/internal/sally/css-cache';
 $lastMTime   = empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? 0 : strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']);
 
