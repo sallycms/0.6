@@ -9,16 +9,19 @@
 /**
  * Definiert einen Extension Point
  *
+ * Wird kein Subject (null) übergeben, findet immer ein Read-Only-Zugriff statt.
+ *
  * @deprecated  see sly_Event_Dispatcher::notify() or sly_Event_Dispatcher::filter()
  *
  * @param string $extensionPoint  Name des ExtensionPoints
  * @param mixed  $subject         Objekt/Variable die beeinflusst werden soll
  * @param array  $params          Parameter für die Callback-Funktion
  */
-function rex_register_extension_point($extensionPoint, $subject = '', $params = array (), $read_only = false)
+function rex_register_extension_point($extensionPoint, $subject = null, $params = array (), $read_only = false)
 {
 	$dispatcher = sly_Core::dispatcher();
-
+	$read_only |= $subject === null;
+	
 	if ($read_only) {
 		$dispatcher->notify($extensionPoint, $subject, $params);
 		return $subject;
