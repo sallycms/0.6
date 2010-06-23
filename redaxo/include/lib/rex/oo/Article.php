@@ -85,7 +85,11 @@ class OOArticle extends OORedaxo
 			$alist = array_map('intval', rex_sql::getArrayEx($query));
 			
 			if ($category_id != 0) {
-				array_unshift($alist, $category_id);
+				$category = OOCategory::getCategoryById($category_id, $clang);
+				
+				if (($ignore_offlines && $category->isOnline()) || !$ignore_offlines) {
+					array_unshift($alist, $category_id);
+				}
 			}
 
 			sly_Core::cache()->set($namespace, $key, $alist);
