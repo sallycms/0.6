@@ -53,7 +53,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 					$state = $this->I18N('no_install', $pluginName).'<br />';
 					
 					if ($hasError) {
-						$state .= $config->get('ADDON/installmsg/'.$pluginName);
+						$state .= $state .= $REX['ADDON']['installmsg'][$pluginName];
 					}
 					else {
 						$state .= $this->I18N('no_reason');
@@ -230,7 +230,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 	public function baseFolder($plugin)
 	{
 		list($addon, $pluginName) = $plugin;
-		return rex_plugins_folder($addon, $pluginName);
+		return rex_plugins_folder($addon, $pluginName).DIRECTORY_SEPARATOR;
 	}
 
 	public function publicFolder($plugin)
