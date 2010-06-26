@@ -35,4 +35,4 @@ RewriteCond %{REQUEST_URI}       !wym_styles.css$
 RewriteRule assets/css/(.+)$     redaxo/scaffold.php?f=assets/css/$1&%{QUERY_STRING} [L]
 
 # Komprimierung fuer statischen Content
-RewriteRule ^(assets/.*\.(css|js))$  gzip.php?file=$1
+RewriteRule ^(assets/.*\.(css|js))$  gzip.php?file=$1 [L]
