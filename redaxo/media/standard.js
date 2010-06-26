@@ -295,7 +295,6 @@ jQuery.noConflict();
 		var select = $('#' + i_select + id)[0];
 
 		for (var i = 0; i < options.length; ++i) {
-			console.log(options[i]);
 			select.options[i] = new Option(elements[i].title, elements[i].value);
 			select.options[i].selected = was_selected[i];
 		}
