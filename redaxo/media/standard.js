@@ -275,13 +275,14 @@ jQuery.noConflict();
 
 		if (direction == 'bottom') {
 			inserted = 0;
+			var len = options.length;
 
-			for (var i = options.length - 1; i >= 0; --i) {
+			for (var i = len - 1; i >= 0; --i) {
 				if (options[i].selected) {
-					to = sourcelength - inserted - 1;
+					to = len - inserted - 1;
 
-					if (to > options.length) {
-						to = options.length;
+					if (to > len) {
+						to = len;
 					}
 
 					elements         = moveItem(elements, i, to);
@@ -290,14 +291,17 @@ jQuery.noConflict();
 				}
 			}
 		}
+		
+		var select = $('#' + i_select + id)[0];
 
 		for (var i = 0; i < options.length; ++i) {
-			options[i] = new Option(elements[i].title, elements[i].value);
-			options[i].selected = was_selected[i];
+			console.log(options[i]);
+			select.options[i] = new Option(elements[i].title, elements[i].value);
+			select.options[i].selected = was_selected[i];
 		}
 
 		writeREX(id, i_list, i_select);
-	}
+	};
 
 	/* übertrage Werte aus der Selectbox in einer hidden input field */
 	writeREX = function(id, input, select) {
