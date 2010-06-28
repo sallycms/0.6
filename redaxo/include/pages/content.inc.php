@@ -293,43 +293,6 @@ if ($article->getRows() == 1)
 		
 		// END: Slice add/edit/delete
 		if($mode == 'meta'){
-			// START: Slice move up/down
-			
-			if ($function == 'moveup' || $function == 'movedown') {
-				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveSlice[]')) {
-					// Modul und Rechte vorhanden?
-	
-					$module_id = rex_slice_module_exists($slice_id, $clang);
-					
-					if ($module_id == -1) {
-						// MODUL IST NICHT VORHANDEN
-						$warning  = $I18N->msg('module_not_found');
-						$slice_id = '';
-						$function = '';
-					}
-					else {
-						// RECHTE AM MODUL ?
-						if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('module['.$module_id.']') || $REX['USER']->hasPerm('module[0]')) {
-							list($success, $message) = rex_moveSlice($slice_id, $clang, $function);
-	
-							if ($success) {
-								$info = $message;
-							}
-							else {
-								$warning = $message;
-							}
-						}
-						else {
-							$warning = $I18N->msg('no_rights_to_this_function');
-						}
-					}
-				}
-				else {
-					$warning = $I18N->msg('no_rights_to_this_function');
-				}
-			}
-			
-			// END: Slice move up/down
 			// START: ARTICLE2STARTARTICLE
 			
 			if (rex_post('article2startpage', 'string')) {
@@ -568,6 +531,44 @@ if ($article->getRows() == 1)
 	';
 
 		if ($mode == 'edit') {
+			// START: Slice move up/down
+
+			if ($function == 'moveup' || $function == 'movedown') {
+				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveSlice[]')) {
+					// Modul und Rechte vorhanden?
+
+					$module_id = rex_slice_module_exists($slice_id, $clang);
+
+					if ($module_id == -1) {
+						// MODUL IST NICHT VORHANDEN
+						$warning  = $I18N->msg('module_not_found');
+						$slice_id = '';
+						$function = '';
+					}
+					else {
+						// RECHTE AM MODUL ?
+						if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('module['.$module_id.']') || $REX['USER']->hasPerm('module[0]')) {
+							list($success, $message) = rex_moveSlice($slice_id, $clang, $function);
+
+							if ($success) {
+								$info = $message;
+							}
+							else {
+								$warning = $message;
+							}
+						}
+						else {
+							$warning = $I18N->msg('no_rights_to_this_function');
+						}
+					}
+				}
+				else {
+					$warning = $I18N->msg('no_rights_to_this_function');
+				}
+			}
+
+			// END: Slice move up/down
+
 			// START: MODULE EDITIEREN/ADDEN ETC.
 
 			print '
