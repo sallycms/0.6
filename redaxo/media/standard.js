@@ -184,135 +184,52 @@ jQuery.noConflict();
 	};
 
 	deleteREX = function(id, i_list, i_select) {
-		var options  = $('#' + i_list + id + ' option');
-		var length   = options.length;
-		var position = options.filter(':selected').index();
+		var $select   = $('#' + i_select + id);
+		var position = $('option:selected', $select).index();
 
 		if (position == -1) return;
+		$('option:eq(' + position + ')', $select).remove();
 
-		options[position] = null;
-		length--;
+		var length = $('option', $select).length;
+		if(length < 1) return;
 
-		// Wenn das erste gelöscht wurde
-		if (position == 0) {
-			// Und es gibt noch weitere,
-			// -> selektiere das "neue" erste
-			if (length > 0) options[0].selected = 'selected';
-		}
-		else {
-			// -> selektiere das neue an der Stelle >position<
-			if (length > position) options[position].selected = 'selected';
-			else options[position-1].selected = 'selected';
-		}
+		if (length <= position) position--;
+
+		$('#' + i_select + id + ' option:eq(' + position + ')').attr('selected', 'selected');
 
 		writeREX(id, i_list, i_select);
 	};
 
 	moveREX = function(id, i_list, i_select, direction) {
-		var options      = $('#' + i_select + id + ' option');
-		var elements     = [];
-		var was_selected = [];
+		var $select      = $('#' + i_select + id);
+		var $selected    = $('#' + i_select + id + ' option:selected');
 
-		for (var i = 0; i < options.length; ++i) {
-			was_selected[i] = false;
-			elements[i]     = {
-				value: options[i].value,
-				title: options[i].text
-			};
-		}
-
-		var inserted  = 0;
-		var was_moved = [];
-
-		was_moved[-1]             = true;
-		was_moved[options.length] = true;
+		if(!$selected.length) return;
 
 		if (direction == 'top') {
-			for (var i = 0; i < options.length; ++i) {
-				if (options[i].selected) {
-					elements = moveItem(elements, i, inserted);
-					was_selected[inserted] = true;
-					inserted++;
-				}
-			}
-		}
-
-		if (direction == 'up') {
-			for (var i = 0; i < options.length; ++i) {
-				was_moved[i] = false;
-
-				if (options[i].selected) {
-					to = i - 1;
-
-					if (was_moved[to]) {
-						to = i;
-					}
-
-					elements         = moveItem(elements, i, to);
-					was_selected[to] = true;
-					was_moved[to]    = true;
-				}
-			}
-		}
-
-		if (direction == 'down') {
-			for (var i = options.length - 1; i >= 0; --i) {
-				was_moved[i] = false;
-
-				if (options[i].selected) {
-					to = i + 1;
-
-					if (was_moved[to]) {
-						to = i;
-					}
-
-					elements         = moveItem(elements, i, to);
-					was_selected[to] = true;
-					was_moved[to]    = true;
-				}
-			}
-		}
-
-		if (direction == 'bottom') {
-			inserted = 0;
-			var len = options.length;
-
-			for (var i = len - 1; i >= 0; --i) {
-				if (options[i].selected) {
-					to = len - inserted - 1;
-
-					if (to > len) {
-						to = len;
-					}
-
-					elements         = moveItem(elements, i, to);
-					was_selected[to] = true;
-					inserted++;
-				}
-			}
-		}
-		
-		var select = $('#' + i_select + id)[0];
-
-		for (var i = 0; i < options.length; ++i) {
-			select.options[i] = new Option(elements[i].title, elements[i].value);
-			select.options[i].selected = was_selected[i];
+			$select.prepend($selected);
+		}else if (direction == 'up') {
+			$($selected).prev().insertAfter($selected);
+		} else if (direction == 'down') {
+			$($selected).next().insertBefore($selected);
+		} else if (direction == 'bottom') {
+			$select.append($selected);
 		}
 
 		writeREX(id, i_list, i_select);
-	};
+	}
 
 	/* übertrage Werte aus der Selectbox in einer hidden input field */
 	writeREX = function(id, input, select) {
-		var options  = $('#' + select + id + ' option');
-		var target   = $('#' + input + id);
+		var $target   = $('#' + input + id);
 		var elements = [];
 
-		for (var i = 0; i < options.length; ++i) {
-			elements.push(options[i].text);
-		}
+		$('#' + select + id + ' option').each(function(){
+			elements.push($(this).text());
 
-		target.val(elements.join(','));
+		});
+
+		$target.val(elements.join(','));
 	};
 
 	moveItem = function(arr, from, to) {
