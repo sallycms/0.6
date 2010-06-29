@@ -26,7 +26,7 @@ class sly_Layout_XHTML extends sly_Layout
 		
 	}
 	
-	public function setFavIcon() {
+	public function setFavIcon($iconPath) {
 		$this->favIcon = $iconPath;
 	}
 
@@ -201,109 +201,5 @@ class sly_Layout_XHTML extends sly_Layout
 
 	public function printHeader() {
 		$this->renderView('views/layout/xhtml/head.phtml');
-	}
-
-	public function pageHeader($head, $subtitle = null) {
-		global $REX;
-
-		if (empty($subtitle)) {
-			$subtitle = '<div class="rex-title-row rex-title-row-sub rex-title-row-empty"><p>&nbsp;</p></div>';
-		}
-		else {
-			$subtitle = '<div class="rex-title-row rex-title-row-sub">'.$this->getSubtitle($subtitle).'</div>';
-		}
-
-		$head = rex_register_extension_point('PAGE_TITLE', $head, array('page' => $REX['PAGE']));
-		print '<div id="rex-title"><div class="rex-title-row"><h1>'.$head.'</h1></div>'.$subtitle.'</div>';
-
-		rex_register_extension_point('PAGE_TITLE_SHOWN', $subtitle, array('page' => $REX['PAGE']));
-		print '<!-- *** OUTPUT OF CONTENT - START *** --><div id="rex-output">';
-	}
-
-	/**
-	 * Helper function, die den Subtitle generiert
-	 */
-	public function getSubtitle($subline, $attr = '')
-	{
-		global $REX;
-
-		if (empty($subline)) {
-			return '';
-		}
-
-		$subtitle_str = $subline;
-		$subtitle     = $subline;
-		$cur_subpage  = sly_request('subpage', 'string');
-		$cur_page     = urlencode(sly_request('page', 'string'));
-
-		if (is_array($subline) && !empty($subline)) {
-			$subtitle = array();
-			$numPages = count($subline);
-			$isAdmin  = $REX['USER']->hasPerm('admin[]');
-
-			foreach ($subline as $subpage) {
-				if (!is_array($subpage)) {
-					continue;
-				}
-
-				$link   = $subpage[0];
-				$label  = $subpage[1];
-				$perm   = !empty($subpage[2]) ? $subpage[2] : '';
-				$params = !empty($subpage[3]) ? rex_param_string($subpage[3]) : '';
-
-				// Berechtigung prüfen
-				// Hat der User das Recht für die aktuelle Subpage?
-
-				if (!empty($perm) && !$isAdmin && !$REX['USER']->hasPerm($perm)) {
-					// Wenn der User kein Recht hat, und diese Seite öffnen will -> Fehler
-					if ($cur_subpage == $link) {
-						exit('You have no permission to this area!');
-					}
-					// Den Punkt aus der Navi entfernen
-					else {
-						continue;
-					}
-				}
-
-				$link   = reset(explode('&', $link, 2)); // alles nach dem ersten & abschneiden
-				$active = (empty($cur_subpage) && empty($link)) || (!empty($cur_subpage) && $cur_subpage == $link);
-
-				// Auf der aktiven Seite den Link nicht anzeigen
-				if ($active) {
-					$link       = empty($link) ? '' : '&amp;subpage='.urlencode($link);
-					$format     = '<a href="?page='.$cur_page.'%s%s"%s class="rex-active">%s</a>';
-					$subtitle[] = sprintf($format, $link, $params, $attr, $label);
-				}
-				elseif (empty($link)) {
-					$format     = '<a href="?page='.$cur_page.'%s"%s>%s</a>';
-					$subtitle[] = sprintf($format, $params, $attr, $label);
-				}
-				else {
-					$link       = '&amp;subpage='.urlencode($link);
-					$format     = '<a href="?page='.$cur_page.'%s%s"%s>%s</a>';
-					$subtitle[] = sprintf($format, $link, $params, $attr, $label);
-				}
-			}
-
-			if (!empty($subtitle)) {
-				$items = array();
-				$i     = 1;
-
-				foreach ($subtitle as $part) {
-					if ($i == 1) {
-						$items[] = '<li class="rex-navi-first">'.$part.'</li>';
-					}
-					else {
-						$items[] = '<li>'.$part.'</li>';
-					}
-
-					++$i;
-				}
-
-				$subtitle_str = '<div id="rex-navi-page"><ul>'.implode("\n", $items).'</ul></div>';
-			}
-		}
-
-		return $subtitle_str;
 	}
 }
