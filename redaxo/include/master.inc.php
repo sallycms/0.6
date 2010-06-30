@@ -71,7 +71,7 @@ $config->loadLocalConfig();
 try {
 	$config->loadProjectConfig();
 }
-catch (sly_DB_PDO_Exception $e) {
+catch (PDOException $e) {
 	// geht halt nicht
 }
 
