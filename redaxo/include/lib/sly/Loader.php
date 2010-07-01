@@ -71,7 +71,7 @@ class sly_Loader
 			return $fullPath;
 		}
 		
-		rex_register_extension_point('__AUTOLOAD', $className);
+		rex_register_extension_point('__AUTOLOAD', $className, null, true);
 		
 		return class_exists($className, false);
 	}
