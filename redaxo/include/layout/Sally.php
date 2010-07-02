@@ -22,7 +22,7 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		$popups_arr = array('linkmap', 'mediapool');
 		$config     = sly_Core::config();
 		
-		$body_id = str_replace('_', '-', $REX['PAGE']);
+		$body_id = str_replace('_', '-', $config->get('PAGE')); // $REX['PAGE']);
 		$this->setBodyAttr('id', 'rex-page-'.$body_id);
 		
 		// Falls ein AddOn bereits in seiner config.inc.php auf das Layout
