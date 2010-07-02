@@ -133,6 +133,10 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
 		$this->next();
 		$data = $this->current();
 		
+		if ($this->statement) {
+			$this->statement->closeCursor();
+		}
+		
 		return $data;
     }
 	 
@@ -141,6 +145,10 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
 		$this->select($table, $select, $where, null, $order, null, 1);
 		$this->next();
 		$data = $this->current();
+		
+		if ($this->statement) {
+			$this->statement->closeCursor();
+		}
 		
 		if ($data === false) {
 			return false;
