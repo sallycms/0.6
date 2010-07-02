@@ -145,7 +145,7 @@ class sly_Event_Dispatcher
 
 				case 'stop':
 					// If one listener returns true, break the loop.
-					if ($retval) return array('state' => 'stopped', 'called' => $called, 'result' => $retval);
+					if ($retval === true) return array('state' => 'stopped', 'called' => $called, 'result' => $retval);
 			}
 		}
 
