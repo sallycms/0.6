@@ -112,7 +112,7 @@ class sly_Util_Directory {
 				unset($paths[$idx]);
 				continue;
 			}
-			
+
 			$path = trim(self::normalize($path), DIRECTORY_SEPARATOR);
 		}
 
@@ -126,5 +126,17 @@ class sly_Util_Directory {
 		$path  = implode($s, array_filter(explode($s, $path)));
 
 		return ($isAbs ? $s : '').$path;
+	}
+
+	public static function getRelative($path, $base = null) {
+		if ($base === null) $base = SLY_BASE;
+		$path = self::normalize(realpath($path));
+		$base = self::normalize(realpath($base));
+
+		if (!sly_Util_String::startsWith($path, $base)) {
+			return $path;
+		}
+
+		return substr($path, strlen($base) +1);
 	}
 }

@@ -133,6 +133,10 @@ $expected = array(
 
 $lime->is($obj->listRecursive(true, true), $expected, 'listRecursive() returns the absolute paths including dotfiles');
 
+// Test getRelative()
+
+$lime->is(sly_Util_Directory::getRelative(__FILE__, SLY_BASE), 'tests'.$s.'tests'.$s.'lime'.$s.'Util'.$s.'directory.lime.php', 'getRelative() works');
+
 // Clean up
 
 @unlink($here.'/tmp/foo/.htaccess');
