@@ -76,8 +76,8 @@ class sly_Event_Dispatcher
 	 * Notify all listeners until one stops
 	 *
 	 * This method will call all listeners and stop when the first one returns
-	 * true (or any other value except null, false or ''). A listener therefore
-	 * can decide whether further listeners will be called or not.
+	 * true. A listener therefore can decide whether further listeners will be
+	 * called or not.
 	 *
 	 * Be careful: If a listener returns false/null, you cannot distinguish this
 	 * from an error or empty event.
@@ -86,16 +86,14 @@ class sly_Event_Dispatcher
 	 * @param  mixed  $subject  an optional value for the listeners to work with
 	 * @param  array  $params   additional parameters (if necessary)
 	 * @return mixed            null if no listeners are set, false if no
-	 *                          listener stops the evaluation or the return value
-	 *                          of the last executed listener (the one that
-	 *                          stopped the loop)
+	 *                          listener stops the evaluation or else true
 	 */
 	public function notifyUntil($event, $subject = null, $params = array()) {
 		$result = $this->iterate($event, $subject, $params, 'stop');
 
 		switch ($result['state']) {
 			case 'empty':   return null;
-			case 'stopped': return $result['result'];
+			case 'stopped': return true;
 			default:        return false;
 		}
 	}
@@ -145,7 +143,7 @@ class sly_Event_Dispatcher
 
 				case 'stop':
 					// If one listener returns true, break the loop.
-					if ($retval === true) return array('state' => 'stopped', 'called' => $called, 'result' => $retval);
+					if ($retval === true) return array('state' => 'stopped', 'called' => $called);
 			}
 		}
 
