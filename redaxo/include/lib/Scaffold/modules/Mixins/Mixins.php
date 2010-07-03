@@ -92,10 +92,9 @@ class Mixins
 			self::$mixins = $bases;
 			
 			# Remove all of the mixin bases
-			Scaffold::$css->string = str_replace($full_base,'',Scaffold::$css);
+			Scaffold::$css->string = str_replace($full_base,'',Scaffold::$css->string);
 		}
 	}
-
 	/**
 	 * The main processing function called by Scaffold. MUST return $css!
 	 *
@@ -110,7 +109,7 @@ class Mixins
 			# Loop through each of the found +mixins
 			foreach($mixins[2] as $mixin_key => $mixin_name)
 			{
-				Scaffold::$css->string = str_replace($mixins[0][$mixin_key], self::build_mixins($mixin_key, $mixins), Scaffold::$css);
+				Scaffold::$css->string = str_replace($mixins[0][$mixin_key], self::build_mixins($mixin_key, $mixins), Scaffold::$css->string);
 			}
 		}
 	}

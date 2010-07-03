@@ -448,10 +448,8 @@ class Scaffold extends Scaffold_Utils
 		 * Clean up the include paths
 		 */
 		self::remove_include_path($file);
-
-		return (string)Scaffold::$css;
+		return Scaffold::$css->string;
 	}
-
 	/**
 	 * Sets the HTTP headers for a particular file
 	 *

@@ -5,7 +5,7 @@
  *
  * Allows you to create new properties by dumping a function into
  * the properties folder.
- * 
+ *
  * @author Anthony Short
  */
 class Extensions
@@ -15,7 +15,7 @@ class Extensions
 	 * @var array
 	 */
 	public static $extensions = array();
-	
+
 	/**
 	 * Post Process
 	 *
@@ -39,7 +39,7 @@ class Extensions
 	public static function load_extensions($location,$function,$split_params = false)
 	{
 		$files = Scaffold::list_files($location,true);
-				
+
 		foreach ($files as $path)
 		{
 			if(is_dir($path))
@@ -51,12 +51,12 @@ class Extensions
 			 * are found to be exactly the same will be merged.
 			 */
 			$unique = false;
-			
+
 			/**
 			 * The name of the property that can be used in Scaffold CSS
 			 */
-			$extension_name = pathinfo($path, PATHINFO_FILENAME);
-			
+			$extension_name = basename($path); // Original: pathinfo() -> >= PHP 5.2.x
+
 			/**
 			 * Include the function we'll use as a callback
 			 */
@@ -68,12 +68,12 @@ class Extensions
 			{
 				$unique = self::$extensions[$extension_name]['unique'];
 			}
-			
+
 			/**
 			 * The name of the function we'll call for this property
 			 */
 			$callback = 'Scaffold_'.str_replace('-','_',$extension_name);
-			
+
 			/**
 			 * Save this extension
 			 */
@@ -93,7 +93,7 @@ class Extensions
 			{
 				// Make the list unique or not
 				$originals = ($unique === false) ? array_unique($found[0]) : $found[0];
-	
+
 				// Loop through each found instance
 				foreach($originals as $key => $value)
 				{
@@ -106,13 +106,13 @@ class Extensions
 					{
 						$result = call_user_func($callback,$found[2][$key]);
 					}
-	
-					// Run the user callback										
+
+					// Run the user callback
 					if($result === false)
 					{
 						Scaffold::error('Invalid Extension Syntax - <strong>' . $originals[$key] . '</strong>');
 					}
-					
+
 					// Just replace the first match if they are unique
 					elseif($unique === true)
 					{

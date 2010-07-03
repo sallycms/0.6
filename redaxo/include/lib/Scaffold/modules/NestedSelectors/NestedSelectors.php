@@ -38,9 +38,8 @@ class NestedSelectors
 	{
 		# These will break the xml, so we'll transform them for now
 		Scaffold::$css->convert_entities('encode');
-		$xml = self::to_xml(Scaffold::$css);
+		$xml = self::to_xml(Scaffold::$css->string);
 		$css = "";
-
 		foreach($xml->children() as $key => $value)
 		{
 			$attributes = (array)$value->attributes();
