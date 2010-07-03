@@ -15,7 +15,7 @@ if (get_magic_quotes_gpc()) {
 	function stripslashes_ref(&$value) {
 		$value = stripslashes($value);
 	}
-	
+
 	array_walk_recursive($_GET,     'stripslashes_ref');
 	array_walk_recursive($_POST,    'stripslashes_ref');
 	array_walk_recursive($_COOKIE,  'stripslashes_ref');
@@ -27,13 +27,13 @@ if (get_magic_quotes_gpc()) {
 if (ini_get('register_globals')) {
 	$superglobals = array('_GET', '_POST', '_REQUEST', '_ENV', '_FILES', '_SESSION', '_COOKIE', '_SERVER');
 	$keys         = array_keys($GLOBALS);
-	
+
 	foreach ($keys as $key) {
 		if (!in_array($key, $superglobals) && $key != 'GLOBALS') {
 			unset($$key);
 		}
 	}
-	
+
 	unset($superglobals, $key, $keys);
 }
 
@@ -88,16 +88,16 @@ if (empty($REX['SYNC']) && !$config->get('SETUP')){
 	sly_Core::registerVarType('rex_var_media');
 
 	// Sprachen laden
-	
+
 	$clangs = sly_Service_Factory::getService('Language')->find(null, null, 'id');
 	foreach($clangs as $clang){
 		$REX['CLANG'][$clang->getId()] = $clang->getName();
 	}
 	unset($clangs);
-	
+
 	$REX = array_merge($REX, $config->get(null));
 
-  	$REX['CUR_CLANG']  = sly_Core::getCurrentClang();
+	$REX['CUR_CLANG']  = sly_Core::getCurrentClang();
 	$REX['ARTICLE_ID'] = sly_Core::getCurrentArticleId();
 }
 
