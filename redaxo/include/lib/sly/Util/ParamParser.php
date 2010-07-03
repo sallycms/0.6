@@ -22,17 +22,18 @@ class sly_Util_ParamParser {
 		$this->params = null;
 	}
 
-	public function getParams() {
+	public function get($key = null, $default = false) {
+		$this->getParams();
+		if ($key === null) return $this->params;
+		return isset($this->params[$key]) ? $this->params[$key] : $default;
+	}
+
+	protected function getParams() {
 		if ($this->params === null) {
 			$this->parseFile();
 		}
 
 		return $this->params;
-	}
-
-	public function getParam($key, $default = false) {
-		$this->getParams();
-		return isset($this->params[$key]) ? $this->params[$key] : $default;
 	}
 
 	protected function parseFile() {

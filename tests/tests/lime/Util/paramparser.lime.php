@@ -46,9 +46,9 @@ $params = array(
 );
 
 // getParams() soll eine Warning werfen
-$lime->is_deeply(@$parser->getParams(), $params, 'getParams() recognizes all parameters');
-$lime->is_deeply($parser->getParam('test_double'), 194.234, 'getParam() returns the correct value');
-$lime->is_deeply($parser->getParam('missing', 'mydefault'), 'mydefault', 'getParam() correctly returns the default value for non-existing params');
+$lime->is_deeply(@$parser->get(), $params, 'get() recognizes all parameters');
+$lime->is_deeply($parser->get('test_double'), 194.234, 'get() returns the correct value');
+$lime->is_deeply($parser->get('missing', 'mydefault'), 'mydefault', 'get() correctly returns the default value for non-existing params');
 
 // Sicherstellen, dass die Datei nicht bei jedem Aufruf neu geparsed wird.
 
@@ -67,15 +67,15 @@ TESTFILE;
 file_put_contents($filename, $testfile);
 unset($testfile);
 
-$lime->is_deeply($parser->getParam('test_boolean'), true, 'getParam() correctly caches the results');
+$lime->is_deeply($parser->get('test_boolean'), true, 'get() correctly caches the results');
 
 // Überprüfen, ob ein neuer Parser (kein Singleton!) die frischen Werte erfasst.
 
 $parser = new sly_Util_ParamParser($filename);
 $params = array('test_boolean' => false);
 
-$lime->is_deeply($parser->getParams(), $params, '__construct() creates a fresh object');
-$lime->is_deeply($parser->getParam('test_boolean'), false, 'getParam() correctly returns the new value');
+$lime->is_deeply($parser->get(), $params, '__construct() creates a fresh object');
+$lime->is_deeply($parser->get('test_boolean'), false, 'get() correctly returns the new value');
 
 unlink($filename);
 unset($parser, $filename);
