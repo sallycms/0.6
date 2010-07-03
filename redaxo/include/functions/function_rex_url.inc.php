@@ -14,23 +14,23 @@ function rex_parse_article_name($name)
 		global $REX, $I18N;
 
 		// Im Frontend gibts kein I18N
-		
+
 		if (!$I18N) {
 			$I18N = rex_create_lang($REX['LANG']);
 		}
 
 		// sprachspezifische Sonderzeichen filtern
-		
+
 		$search  = explode('|', $I18N->msg('special_chars'));
 		$replace = explode('|', $I18N->msg('special_chars_rewrite'));
 	}
 
-	return 
+	return
 		// ggf übrige zeichen url-codieren
 		urlencode(
 			// mehrfach hintereinander auftretende Spaces auf eines reduzieren
 			preg_replace('/ {2,}/',' ',
-				// alle sonderzeichen raus 
+				// alle sonderzeichen raus
 				preg_replace('/[^a-zA-Z_\-0-9 ]/', '',
 					// sprachspezifische Zeichen umschreiben
 					str_replace($search, $replace, $name)
@@ -52,7 +52,7 @@ function rex_param_string($params, $divider = '&amp;')
 			return $params;
 		}
 	}
-	
+
 	return '';
 }
 
@@ -69,7 +69,7 @@ function rex_getUrl($id = 0, $clang = false, $name = 'NoName', $params = '', $di
 {
 	global $REX;
 
-	$clangOrig = $clang; 
+	$clangOrig = $clang;
 	$id        = (int) $id;
 	$clang     = (int) $clang;
 
@@ -79,24 +79,26 @@ function rex_getUrl($id = 0, $clang = false, $name = 'NoName', $params = '', $di
 
 	// Wenn eine rexExtension vorhanden ist, immer die clang mitgeben!
 	// Die rexExtension muss selbst entscheiden was sie damit macht.
-	
+
 	if ($clangOrig === false && (rex_is_multilingual() || rex_extension_is_registered('URL_REWRITE'))) {
 		$clang = rex_cur_clang();
 	}
-	
+
 	// Die Erzeugung von URLs kann in Abhängigkeit von den installierten
 	// AddOns eine ganze Weile dauern. Da sich die URLs auf einer Seite
 	// wohl eher selten ändern, cachen wir sie hier zwischen.
-	
+
 	static $urlCache = array();
-	$cacheKey        = substr(md5($id.'_'.$clang.'_'.json_encode($params).'_'.$divider), 0, 10); // $params kann ein Array sein.
-	
+
+	$func     = function_exists('json_encode') ? 'json_encode' : 'serialize';
+	$cacheKey = substr(md5($id.'_'.$clang.'_'.$func($params).'_'.$divider), 0, 10); // $params kann ein Array sein.
+
 	if (isset($urlCache[$cacheKey])) {
 		return $urlCache[$cacheKey];
 	}
 
 	$paramString = rex_param_string($params, $divider);
-	
+
 	if ($id != 0) {
 		$ooa = OOArticle::getArticleById($id, $clang);
 		if ($ooa) {
