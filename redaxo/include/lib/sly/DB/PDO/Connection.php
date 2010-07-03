@@ -10,33 +10,35 @@
  */
 
 /**
- * Stellt eine PDO Verbindung zur Datenbank her und hält sie vor.  
- * 
+ * Stellt eine PDO Verbindung zur Datenbank her und hält sie vor.
+ *
  * @author zozi@webvariants.de
  *
  */
 class sly_DB_PDO_Connection {
-	
+
 	private static $instances = array();
 
 	private $driver;
 	private $pdo;
-	private $transrunning = false; 
-	
+	private $transrunning = false;
+
 	private function __construct($driver, $connString, $login, $password) {
 		$this->driver = $driver;
 		$this->pdo    = new PDO($driver.':'.$connString, $login, $password);
+
+		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return sly_DB_PDO_Connection instance
 	 */
 	public static function getInstance($driver, $connString, $login, $password) {
 		if (empty(self::$instances[$driver.$connString])) {
 			self::$instances[$driver.$connString] = new self($driver, $connString, $login, $password);
 		}
-		
+
 		return self::$instances[$driver.$connString];
 	}
 
@@ -46,17 +48,17 @@ class sly_DB_PDO_Connection {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return PDO instance
 	 */
 	public function getPDO() {
 		return $this->pdo;
-	} 
-	
+	}
+
 	public function isTransRunning() {
 		return $this->transrunning;
 	}
-	
+
 	public function setTransRunning($bool) {
 		$this->transrunning = $bool;
 	}
