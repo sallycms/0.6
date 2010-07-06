@@ -22,9 +22,9 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
 	private $connection   = null;
 	private $statement    = null;
 	private $currentRow   = null;
-	
-	public function __construct($driver, $connString, $login, $password) {
-		$this->connection = sly_DB_PDO_Connection::getInstance($driver, $connString, $login, $password);
+
+	public function __construct($driver, $host, $login, $password, $database) {
+		$this->connection = sly_DB_PDO_Connection::getInstance($driver, $host, $login, $password, $database);
 	}
 	
 	public function query($query, $data = array()){
