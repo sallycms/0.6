@@ -99,7 +99,7 @@ jQuery.noConflict();
 	};
 
 	deleteREXMedia = function(id) {
-		$('REX_MEDIA_' + id).val();
+		$('#REX_MEDIA_' + id).val('');
 	};
 
 	addREXMedia = function(id,params) {
