@@ -5,9 +5,9 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 	public function __construct()
 	{
 		global $REX;
-		
+
 		$config = sly_Core::config();
-		
+
 		$this->addCSSFile('media/css_import.css');
 		$this->addCSSFile('scaffold/import_export/backend.css');
 		$this->addCSSFile('media/css_ie_lte_7.css', 'all', 'if lte IE 7');
@@ -21,14 +21,14 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 
 		$popups_arr = array('linkmap', 'mediapool');
 		$config     = sly_Core::config();
-		
-		$body_id = str_replace('_', '-', $config->get('PAGE')); // $REX['PAGE']);
+
+		$body_id = str_replace('_', '-', isset($REX['PAGE']) ? $REX['PAGE'] : '');
 		$this->setBodyAttr('id', 'rex-page-'.$body_id);
-		
+
 		// Falls ein AddOn bereits in seiner config.inc.php auf das Layout
 		// zugegriffen hat, ist $REX['PAGE'] noch nicht bekannt. Wir hängen uns
 		// daher in PAGE_CHECKED, um den Wert später noch einmal zu validieren.
-		
+
 		rex_register_extension('PAGE_CHECKED', array($this, 'pageChecked'));
 
 		if (in_array($body_id, $popups_arr)) {
@@ -41,7 +41,7 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 
 		$this->addHttpMeta('Content-Type', 'text/html charset='.t('htmlcharset'));
 	}
-	
+
 	public function pageChecked($params) {
 		$body_id = str_replace('_', '-', $params['subject']);
 		$this->setBodyAttr('id', 'rex-page-'.$body_id);
