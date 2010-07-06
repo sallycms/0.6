@@ -40,7 +40,6 @@ foreach ($registration->files as $filename) {
 }
 
 if (SLY_TEST_LIME_XDEBUG) {
-	error_reporting(E_ALL);
 	$exportDir = 'coverage_reports';
 	$baseDir   = realpath(dirname(__FILE__).'/../redaxo/include');
 	@mkdir($exportDir, 0777, true);

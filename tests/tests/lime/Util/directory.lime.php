@@ -33,9 +33,15 @@ $here = realpath(dirname(__FILE__));
 
 $obj = new sly_Util_Directory($here.'/4986z9irugh3wiufzgeu');
 $lime->is($obj->exists(), false, 'exists() returns false on a non-existing directory');
+$lime->isnt((string) $obj, realpath($here).' (not existing)', '__toString() works as expected for non-existing directories');
+
+$obj = new sly_Util_Directory($here.'/4986z9irugh3wiufzgeu', true);
+$lime->ok(is_dir($here.'/4986z9irugh3wiufzgeu'), '__construct() creates the directory for us if we ask');
+@rmdir($here.'/4986z9irugh3wiufzgeu');
 
 $obj = new sly_Util_Directory($here);
 $lime->ok($obj->exists(), 'exists() returns true on an existing directory');
+$lime->is((string) $obj, realpath($here), '__toString() works as espexted');
 
 @mkdir($here.'/tmp/foo/bar', 0777, true);
 @mkdir($here.'/tmp/.blafasel/xy', 0777, true);
