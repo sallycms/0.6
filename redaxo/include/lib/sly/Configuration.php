@@ -143,11 +143,11 @@ class sly_Configuration {
 
 	public function get($key) {
 		if (!$this->has($key)) return null;
-		
+
 		$s = (empty($key) || $this->staticConfig->has($key))  ? $this->staticConfig->get($key)  : array();
 		$l = (empty($key) || $this->localConfig->has($key))   ? $this->localConfig->get($key)   : array();
 		$p = (empty($key) || $this->projectConfig->has($key)) ? $this->projectConfig->get($key) : array();
-		
+
 		if (!is_array($p)) return $p;
 		if (!is_array($l)) return $l;
 		if (!is_array($s)) return $s;
@@ -223,7 +223,7 @@ class sly_Configuration {
 			}
 			return false;
 		}
-		
+
 		// case: sly_Configuration::STORE_PROJECT
 		return $this->projectConfig->set($key, $value);
 	}
@@ -249,10 +249,12 @@ class sly_Configuration {
 
 	protected function flush() {
 		file_put_contents($this->getLocalCacheFile(), '<?php $config = '.var_export($this->localConfig->get(null), true).';');
+
 		try {
 			sly_Core::getPersistentRegistry()->set('sly_ProjectConfig', $this->projectConfig);
-		}catch(sly_DB_PDO_Exception $e) {
-			//geht halt nicht
+		}
+		catch (Exception $e) {
+			// Wir sind vermutlich noch vor dem Setup und können daher noch keine Verbindung zur DB aufbauen.
 		}
 	}
 
