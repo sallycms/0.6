@@ -27,10 +27,75 @@ class sly_Service_Template {
 		if ($this->refresh === null) $this->refresh = 0;
 	}
 
+	public function getTemplates() {
+		$result = array();
+		foreach ($this->list as $name => $params) $result[$name] = $params['title'];
+		return $result;
+	}
+
 	public function getFolder() {
-		$dir = sly_Util_Directory::join(SLY_BASE, 'develop', 'templates');
+		$dir = sly_Util_Directory::join(SLY_BASE, 'develop/templates');
 		if (!is_dir($dir) && !@mkdir($dir, 0777, true)) throw new sly_Exception('Konnte Template-Verzeichnis '.$dir.' nicht erstellen.');
 		return $dir;
+	}
+
+	public function getCacheFolder() {
+		$dir = sly_Util_Directory::join(SLY_DYNFOLDER, 'internal/sally/templates');
+		if (!is_dir($dir) && !@mkdir($dir, 0777, true)) throw new sly_Exception('Konnte Cache-Verzeichnis '.$dir.' nicht erstellen.');
+		return $dir;
+	}
+
+	public function isGenerated($name) {
+		if (!$this->exists($name)) return false;
+		return file_exists($this->getCacheFile($name));
+	}
+
+	public function findById($id) {
+		$id = (int) $id;
+
+		foreach ($this->list as $name => $data) {
+			if ($this->get($name, 'id', null) == $id) return $name;
+		}
+
+		return null;
+	}
+
+	public function generate($name) {
+		if (!$this->exists($name)) return false;
+
+		$content = $this->getContent($name);
+		if ($content === false) return false;
+
+		foreach (sly_Core::getVarTypes() as $var) {
+			$content = $var->getTemplate($content);
+		}
+
+		$templateFile = $this->getCacheFile($name);
+		return file_put_contents($templateFile, $content) > 0;
+	}
+
+	public function getCacheFile($name) {
+		return sly_Util_Directory::join($this->getCacheFolder(), $name.'.php');
+	}
+
+	public function flush($name = null) {
+		if ($name === null) {
+			$dir   = new sly_Util_Directory($this->getCacheFolder());
+			$files = $dir->listPlain(true, false, false, true, '');
+		}
+		elseif ($this->exists($name)) {
+			$files = array(sly_Util_Directory::join($this->getFolder(), $this->getFilename($name)));
+		}
+		else {
+			return false;
+		}
+
+		array_map('unlink', $files);
+		return true;
+	}
+
+	public function exists($name) {
+		return isset($this->list[$name]);
 	}
 
 	public function getTemplateFiles($absolute = true) {
@@ -61,7 +126,7 @@ class sly_Service_Template {
 	}
 
 	public function getFilename($name, $fullPath) {
-		return $this->get($name, 'modules');
+		return $this->get($name, 'filename');
 	}
 
 	public function get($name, $key = null, $default = null) {
@@ -81,6 +146,12 @@ class sly_Service_Template {
 		// Erst auf Standard-Parameter testen, dann die custom params testen.
 
 		return (isset($data[$key]) ? $data[$key] : (isset($data['params'][$key]) ? $data['params'][$key] : $default));
+	}
+
+	public function getContent($name) {
+		if (!isset($this->list[$name])) return false;
+		$filename = sly_Util_Directory::join($this->getFolder(), $this->list[$name]['filename']);
+		return file_exists($filename) ? file_get_contents($filename) : false;
 	}
 
 	public function needsRefresh() {
@@ -120,12 +191,17 @@ class sly_Service_Template {
 			$name   = $parser->get('name', null);
 
 			if ($name === null) {
-				trigger_error('Template '.$basename.' enthält keinen internen Namen und kann daher nicht geladen werden.', E_USER_WARNING);
+				//trigger_error('Template '.$basename.' enthält keinen internen Namen und kann daher nicht geladen werden.', E_USER_WARNING);
 				continue;
 			}
 
 			if (isset($newData[$name])) {
-				trigger_error('Template '.$basename.' enthält keinen eindeutigen Namen. Template '.$newData[$name]['filename'].' heißt bereits '.$name.'.', E_USER_WARNING);
+				//trigger_error('Template '.$basename.' enthält keinen eindeutigen Namen. Template '.$newData[$name]['filename'].' heißt bereits '.$name.'.', E_USER_WARNING);
+				continue;
+			}
+
+			if (preg_match('#[^a-z0-9_.-]#i', $name)) {
+				trigger_error('Der Name des Templates '.$basename.' enthält ungültige Zeichen.', E_USER_WARNING);
 				continue;
 			}
 
@@ -141,6 +217,8 @@ class sly_Service_Template {
 				'params'   => $data,
 				'mtime'    => $mtime
 			);
+
+			if ($this->isGenerated($name)) unlink($this->getCacheFile($name));
 		}
 
 		$this->list    = $newData;

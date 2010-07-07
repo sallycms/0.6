@@ -106,7 +106,7 @@ elseif (rex_post('artadd_function', 'boolean') && $category_id !== '' && $KATPER
   $data = array();
   $data['prior']       = rex_post('Position_New_Article', 'int');
   $data['name']        = rex_post('article_name', 'string');
-  $data['template_id'] = rex_post('template_id', 'rex-template-id');
+  $data['template']    = sly_post('template', 'string');
   $data['category_id'] = $category_id;
   $data['path']        = $KATPATH;
 
@@ -123,7 +123,7 @@ elseif (rex_post('artedit_function', 'boolean') && $article_id != '' && $KATPERM
   $data = array();
   $data['prior']       = rex_post('Position_Article', 'int');
   $data['name']        = rex_post('article_name', 'string');
-  $data['template_id'] = rex_post('template_id', 'rex-template-id');
+  $data['template']    = sly_post('template', 'string');
   $data['category_id'] = $category_id;
   $data['path']        = $KATPATH;
 
@@ -190,7 +190,7 @@ if($function == 'add_cat' || $function == 'edit_cat')
   $legend = $I18N->msg('add_category');
   if ($function == 'edit_cat')
     $legend = $I18N->msg('edit_category');
-    
+
   echo '
   <div class="rex-form" id="rex-form-structure-category">
   <form action="index.php" method="post">
@@ -331,7 +331,7 @@ foreach ($categories as $cat)
       	'catprior' => $cat->getValue('catprior'),
       	'data_colspan' => ($data_colspan+1),
 		  ));
-		  
+
     }
     else
     {
@@ -342,7 +342,7 @@ foreach ($categories as $cat)
       {
         $add_td = '<td class="rex-small">'. $i_category_id .'</td>';
       }
-    
+
 			if (!$REX['USER']->hasPerm('editContentOnly[]'))
 			{
 				$category_delete = '<a href="index.php?page=structure&amp;category_id='. $category_id .'&amp;edit_id='. $i_category_id .'&amp;function=catdelete_function&amp;clang='. $clang .'" onclick="return confirm(\''.$I18N->msg('delete').' ?\')">'.$I18N->msg('delete').'</a>';
@@ -421,21 +421,19 @@ echo '
 
 if ($category_id > -1)
 {
-  $TEMPLATES = rex_sql::getInstance();
-  $TEMPLATES->setQuery('select id, name from '.$REX['DATABASE']['TABLE_PREFIX'].'template where active=1 order by name');
+  $templates = sly_Service_Factory::getService('Template')->getTemplates();
+
   $TMPL_SEL = new rex_select;
-  $TMPL_SEL->setName('template_id');
+  $TMPL_SEL->setName('template');
   $TMPL_SEL->setId('rex-form-template');
   $TMPL_SEL->setSize(1);
-  $TMPL_SEL->addOption($I18N->msg('option_no_template'), '0');
+  $TMPL_SEL->addOption($I18N->msg('option_no_template'), '');
 
-  for ($i = 0; $i < $TEMPLATES->getRows(); $i++)
-  {
-    $TMPL_SEL->addOption(rex_translate($TEMPLATES->getValue('name'), null, false), $TEMPLATES->getValue('id'));
-    $TEMPLATE_NAME[$TEMPLATES->getValue('id')] = rex_translate($TEMPLATES->getValue('name'));
-    $TEMPLATES->next();
+  foreach ($templates as $name => $title) {
+    $TMPL_SEL->addOption(rex_translate($title, null, false), $name);
   }
-  $TEMPLATE_NAME[0] = $I18N->msg('template_default_name');
+
+  $templates[''] = $I18N->msg('template_default_name');
 
   // --------------------- ARTIKEL LIST
   $art_add_link = '';
@@ -456,7 +454,7 @@ if ($category_id > -1)
     $legend = $I18N->msg('article_add');
     if ($function == 'edit_art')
       $legend = $I18N->msg('article_edit');
-    
+
     echo '
     <div class="rex-form" id="rex-form-structure-article">
     <form action="index.php" method="post">
@@ -518,17 +516,17 @@ if ($category_id > -1)
   // --------------------- ARTIKEL ADD FORM
   if ($function == 'add_art' && $KATPERM && !$REX['USER']->hasPerm('editContentOnly[]'))
   {
-    if($REX['DEFAULT_TEMPLATE_ID'] > 0 && isset($TEMPLATE_NAME[$REX['DEFAULT_TEMPLATE_ID']]))
+    if($REX['DEFAULT_TEMPLATE_ID'] > 0 && isset($templates[$REX['DEFAULT_TEMPLATE_ID']]))
     {
       $TMPL_SEL->setSelected($REX['DEFAULT_TEMPLATE_ID']);
-    
+
     }else
     {
-      // template_id vom Startartikel erben
+      // Template vom Startartikel erben
       $sql2 = new rex_sql;
-      $sql2->setQuery('SELECT template_id FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE id='. $category_id .' AND clang='. $clang .' AND startpage=1');
+      $sql2->setQuery('SELECT template FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE id='. $category_id .' AND clang='. $clang .' AND startpage=1');
       if ($sql2->getRows() == 1)
-        $TMPL_SEL->setSelected($sql2->getValue('template_id'));
+        $TMPL_SEL->setSelected($sql2->getValue('template'));
     }
 
     $add_td = '';
@@ -565,7 +563,7 @@ if ($category_id > -1)
       if ($REX['USER']->hasPerm('advancedMode[]'))
         $add_td = '<td class="rex-small">'. $sql->getValue("id") .'</td>';
 
-      $TMPL_SEL->setSelected($sql->getValue('template_id'));
+      $TMPL_SEL->setSelected($sql->getValue('template'));
 
       echo '<tr class="rex-table-row-activ">
               <td class="rex-icon"><a class="rex-i-element '.$class.'" href="index.php?page=content&amp;article_id='. $sql->getValue('id') .'&amp;category_id='. $category_id .'&amp;clang='. $clang .'"><span class="rex-i-element-text">' .htmlspecialchars($sql->getValue("name")).'</span></a></td>
@@ -613,7 +611,7 @@ if ($category_id > -1)
               '. $add_td .'
               <td><a href="index.php?page=content&amp;article_id='. $sql->getValue('id') .'&amp;category_id='. $category_id .'&amp;mode=edit&amp;clang='. $clang .'">'. htmlspecialchars($sql->getValue('name')) . '</a></td>
               <td>'. htmlspecialchars($sql->getValue('prior')) .'</td>
-              <td>'. $TEMPLATE_NAME[$sql->getValue('template_id')] .'</td>
+              <td>'. $templates[$sql->getValue('template')] .'</td>
               <td>'. rex_formatter :: format($sql->getValue('createdate'), 'strftime', 'date') .'</td>
               <td><a href="index.php?page=structure&amp;article_id='. $sql->getValue('id') .'&amp;function=edit_art&amp;category_id='. $category_id.'&amp;clang='. $clang .'">'. $I18N->msg('change') .'</a></td>
               '. $add_extra .'
@@ -636,7 +634,7 @@ if ($category_id > -1)
               '. $add_td .'
               <td>'. htmlspecialchars($sql->getValue('name')).'</td>
               <td>'. htmlspecialchars($sql->getValue('prior')).'</td>
-              <td>'. $TEMPLATE_NAME[$sql->getValue('template_id')].'</td>
+              <td>'. $templates[$sql->getValue('template')].'</td>
               <td>'. rex_formatter :: format($sql->getValue('createdate'), 'strftime', 'date') .'</td>
               <td><span class="rex-strike">'.$I18N->msg('change').'</span></td>
               <td><span class="rex-strike">'.$I18N->msg('delete').'</span></td>
