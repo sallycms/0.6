@@ -19,7 +19,6 @@ class rex_article
   var $category_id;
 
   var $template;
-  var $template_attributes;
 
   var $save;
   var $ctype;
@@ -443,26 +442,24 @@ class rex_article
 		if (empty($moduleSelect)) {
 			global $REX, $I18N;
 
-			$moduleService = sly_Service_Factory::getService('Module');
-			$modules = $moduleService->find(null, null, 'name');
+			$moduleService   = sly_Service_Factory::getService('Module');
+			$templateService = sly_Service_Factory::getService('Template');
+			$modules         = $moduleService->find(null, null, 'name');
+			$slots           = $templateService->getSlots($this->template);
+			$moduleSelect    = array();
 
-			$template_ctypes = rex_getAttributes('ctype', $this->template_attributes, array ());
-			// wenn keine ctyes definiert sind, gibt es immer den CTYPE=1
-			if (count($template_ctypes) == 0) $template_ctypes = array(1 => 'default');
+			foreach (array_keys($slots) as $slotID) {
+				$moduleSelect[$slotID] = new rex_select;
+				$moduleSelect[$slotID]->setName('module_id');
+				$moduleSelect[$slotID]->setSize('1');
+				$moduleSelect[$slotID]->setStyle('class="rex-form-select"');
+				$moduleSelect[$slotID]->setAttribute('onchange', 'this.form.submit();');
+				$moduleSelect[$slotID]->addOption('----------------------------  '.$I18N->msg('add_block'),'');
 
-			$moduleSelect = array();
-			foreach ($template_ctypes as $ct_id => $ct_name) {
-				$moduleSelect[$ct_id] = new rex_select;
-				$moduleSelect[$ct_id]->setName('module_id');
-				$moduleSelect[$ct_id]->setSize('1');
-				$moduleSelect[$ct_id]->setStyle('class="rex-form-select"');
-				$moduleSelect[$ct_id]->setAttribute('onchange', 'this.form.submit();');
-				$moduleSelect[$ct_id]->addOption('----------------------------  '.$I18N->msg('add_block'),'');
-
-				foreach($modules as $module) {
+				foreach ($modules as $module) {
 					if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('module['.$module->getId().']')) {
-						if(rex_template::hasModule($this->template_attributes,$ct_id,$module->getId())) {
-							$moduleSelect[$ct_id]->addOption(rex_translate($module->getName(),NULL,FALSE),$module->getId());
+						if ($templateService->hasModule($this->template, $slotID, $module->getId())) {
+							$moduleSelect[$slotID]->addOption(rex_translate($module->getName(),NULL,FALSE),$module->getId());
 						}
 					}
 				}

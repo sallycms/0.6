@@ -14,55 +14,44 @@
 
 unset ($REX_ACTION);
 
-$category_id = rex_request('category_id', 'rex-category-id');
-$article_id  = rex_request('article_id',  'rex-article-id');
-$clang       = rex_request('clang',       'rex-clang-id', $REX['START_CLANG_ID']);
-$slice_id    = rex_request('slice_id',    'rex-slice-id', '');
-$function    = rex_request('function',    'string');
+$category_id = sly_request('category_id', 'rex-category-id');
+$article_id  = sly_request('article_id',  'rex-article-id');
+$clang       = sly_request('clang',       'rex-clang-id', $REX['START_CLANG_ID']);
+$slice_id    = sly_request('slice_id',    'rex-slice-id', '');
+$function    = sly_request('function',    'string');
 
-$article_revision    = 0;
-$slice_revision      = 0;
-$template_attributes = '';
-
-$warning        = '';
-$global_warning = '';
-$info           = '';
-$global_info    = '';
+$article_revision = 0;
+$slice_revision   = 0;
+$warning          = '';
+$global_warning   = '';
+$info             = '';
+$global_info      = '';
 
 require $REX['INCLUDE_PATH'].'/functions/function_rex_content.inc.php';
 
 $article = new rex_sql();
-$article->setQuery(
-	'SELECT a.startpage, a.name, a.re_id, t.attributes AS template_attributes '.
-	'FROM #_article a LEFT JOIN #_template t ON a.template_id = t.id '.
-	'WHERE a.id = '.$article_id.' AND clang = '.$clang, '#_'
-);
+$article->setQuery('SELECT startpage, name, re_id, template FROM #_article a WHERE a.id = '.$article_id.' AND clang = '.$clang, '#_');
 
-if ($article->getRows() == 1)
-{
-	// ----- ctype holen
-	$template_attributes = $article->getValue('template_attributes');
+if ($article->getRows() == 1) {
+	$service      = sly_Service_Factory::getService('Template');
+	$templateName = $article->getValue('template');
 
-	// Für Artikel ohne Template
-	if ($template_attributes === null) {
-		$template_attributes = '';
+	// Slot validieren
+
+	$REX['CTYPE'] = $service->getSlots($templateName);
+	$slot         = rex_request('ctype', 'rex-ctype-id', 0);
+
+	if (!array_key_exists($slot, $REX['CTYPE'])) {
+		$slot = 0;
 	}
 
-	$REX['CTYPE'] = rex_getAttributes('ctype', $template_attributes, array()); // ctypes - aus dem template
+	// Artikel wurde gefunden - Kategorie holen
 
-	$ctype = rex_request('ctype', 'rex-ctype-id', 1);
-	
-	if (!array_key_exists($ctype, $REX['CTYPE'])) {
-		$ctype = 1; // default
-	}
-
-	// ----- Artikel wurde gefunden - Kategorie holen
-	
 	$OOArt       = OOArticle::getArticleById($article_id, $clang);
 	$category_id = $OOArt->getCategoryId();
 
-	// ----- Kategoriepfad und -rechte
-	
+	// Kategoriepfad und -rechte
+
 	require $REX['INCLUDE_PATH'].'/functions/function_rex_category.inc.php';
 	// $KATout kommt aus dem include
 	// $KATPERM
@@ -77,30 +66,30 @@ if ($article->getRows() == 1)
 			$KATout .= $I18N->msg('article').' : ';
 		}
 
-		$catname = str_replace(' ', '&nbsp;', htmlspecialchars($article->getValue('name')));
+		$catname = str_replace(' ', '&nbsp;', sly_html($article->getValue('name')));
 
-		$KATout .= '<a href="index.php?page=content&amp;article_id='.$article_id.'&amp;mode=edit&amp;clang='.$clang.'"'.rex_tabindex().'>'.$catname.'</a>';
+		$KATout .= '<a href="index.php?page=content&amp;article_id='.$article_id.'&amp;mode=edit&amp;clang='.$clang.'">'.$catname.'</a>';
 		$KATout .= '</p>';
 	}
 
-	// ----- Titel anzeigen
-	
+	// Titel anzeigen
+
 	rex_title($I18N->msg('content'), $KATout);
 
-	// ----- Request Parameter
-	
-	$mode     = rex_request('mode', 'string', 'edit');
-	$function = rex_request('function', 'string');
-	$warning  = rex_request('warning', 'string');
-	$info     = rex_request('info', 'string');
+	// Request Parameter
 
-	// ----- Sprachenblock
-	
+	$mode     = sly_request('mode', 'string', 'edit');
+	$function = sly_request('function', 'string');
+	$warning  = sly_request('warning', 'string');
+	$info     = sly_request('info', 'string');
+
+	// Sprachenblock
+
 	$sprachen_add = '&amp;mode='.$mode.'&amp;category_id='.$category_id.'&amp;article_id='.$article_id;
 	require $REX['INCLUDE_PATH'].'/functions/function_rex_languages.inc.php';
 
-	// ----- EXTENSION POINT
-	
+	// EXTENSION POINT
+
 	print rex_register_extension_point('PAGE_CONTENT_HEADER', '', array(
 		'article_id'       => $article_id,
 		'clang'            => $clang,
@@ -108,21 +97,22 @@ if ($article->getRows() == 1)
 		'mode'             => $mode,
 		'slice_id'         => $slice_id,
 		'page'             => 'content',
-		'ctype'            => $ctype,
+		'slot'             => $slot,
+		'ctype'            => $slot, // REDAXO-Kompatibilität
 		'category_id'      => $category_id,
 		'article_revision' => &$article_revision,
 		'slice_revision'   => &$slice_revision
 	));
 
 	// Rechte prüfen
-	
+
 	if (!($KATPERM || $REX['USER']->hasPerm('article['.$article_id.']'))) {
 		// keine Rechte
 		print rex_warning($I18N->msg('no_rights_to_edit'));
 	}
 	else {
 		// Slice add/edit/delete
-		
+
 		if (rex_request('save', 'boolean') && in_array($function, array('add', 'edit', 'delete'))) {
 			// check module
 
@@ -130,7 +120,7 @@ if ($article->getRows() == 1)
 				$module_id = rex_slice_module_exists($slice_id, $clang);
 			}
 			else { // add
-				$module_id = rex_post('module_id', 'int');
+				$module_id = sly_post('module_id', 'int');
 			}
 
 			if (!rex_module_exists($module_id)) {
@@ -140,8 +130,10 @@ if ($article->getRows() == 1)
 			}
 			else {
 				// Rechte am Modul
-				
-				if (!rex_template::hasModule($template_attributes,$ctype,$module_id)) {
+
+				$templateService = sly_Service_Factory::getService('Template');
+
+				if (!$templateService->hasModule($templateName, $slot, $module_id)) {
 					$global_warning = $I18N->msg('no_rights_to_this_function');
 					$slice_id       = '';
 					$function       = '';
@@ -153,7 +145,7 @@ if ($article->getRows() == 1)
 				}
 				else {
 					// Daten einlesen
-					
+
 					$REX_ACTION         = array();
 					$REX_ACTION['SAVE'] = true;
 
@@ -162,15 +154,15 @@ if ($article->getRows() == 1)
 					}
 
 					// ----- PRE SAVE ACTION [ADD/EDIT/DELETE]
-					
+
 					list($action_message, $REX_ACTION) = rex_execPreSaveAction($module_id, $function, $REX_ACTION);
 
 					// Statusspeicherung für die rex_article Klasse
-					
+
 					$REX['ACTION'] = $REX_ACTION;
 
 					// Werte werden aus den REX_ACTIONS übernommen wenn SAVE=true
-					
+
 					if (!$REX_ACTION['SAVE']) {
 						// DONT SAVE/UPDATE SLICE
 						if (!empty($action_message)) {
@@ -185,7 +177,7 @@ if ($article->getRows() == 1)
 					}
 					else {
 						// SAVE / UPDATE SLICE
-						
+
 						if ($function == 'add' || $function == 'edit') {
 							$newsql = new rex_sql();
 							$newsql->setTable('article_slice', true);
@@ -200,14 +192,14 @@ if ($article->getRows() == 1)
 							}
 							elseif ($function == 'add') {
 								$realslice = sly_Service_Factory::getService('Slice')->create(array('module_id' => $module_id));
-								
+
 								$newsql->setValue('slice_id', $realslice->getId());
-								
+
 								$newsql->setValue('re_article_slice_id', $slice_id);
 								$newsql->setValue('article_id', $article_id);
 								$newsql->setValue('modultyp_id', $module_id);
 								$newsql->setValue('clang', $clang);
-								$newsql->setValue('ctype', $ctype);
+								$newsql->setValue('ctype', $slot);
 								$newsql->setValue('revision', $slice_revision);
 							}
 
@@ -218,7 +210,7 @@ if ($article->getRows() == 1)
 
 							if ($function == 'edit') {
 								$newsql->addGlobalUpdateFields();
-								
+
 								if ($newsql->update()) {
 									$info = $action_message.$I18N->msg('block_updated');
 								}
@@ -229,7 +221,7 @@ if ($article->getRows() == 1)
 							elseif ($function == 'add') {
 								$newsql->addGlobalUpdateFields();
 								$newsql->addGlobalCreateFields();
-								
+
 								if ($newsql->insert()) {
 									$last_id = $newsql->getLastId();
 									$query   =
@@ -238,24 +230,24 @@ if ($article->getRows() == 1)
 										'WHERE re_article_slice_id = '.$slice_id.' '.
 										'AND id <> '.$last_id.' AND article_id = '.$article_id.' '.
 										'AND clang = '.$clang.' AND revision = '.$slice_revision;
-									
+
 									if ($newsql->setQuery($query, '#_')) {
 										$info     = $action_message.$I18N->msg('block_added');
 										$slice_id = $last_id;
 									}
-									
+
 									$function = '';
 								}
 								else {
 									$warning = $action_message.$newsql->getError();
 								}
 							}
-							
+
 							$newsql = null;
 						}
 						else {
 							// make delete
-							
+
 							if (rex_deleteSlice($slice_id)) {
 								$global_info = $I18N->msg('block_deleted');
 							}
@@ -266,7 +258,7 @@ if ($article->getRows() == 1)
 						// ----- / SAVE SLICE
 
 						// Artikel neu generieren
-						
+
 						$update = new rex_sql();
 						$update->setTable('article', true);
 						$update->setWhere('id = '.$article_id.' AND clang = '.$clang);
@@ -278,11 +270,11 @@ if ($article->getRows() == 1)
 						rex_deleteCacheSliceContent($slice_id);
 
 						// POST SAVE ACTION [ADD/EDIT/DELETE]
-						
+
 						$info .= rex_execPostSaveAction($module_id, $function, $REX_ACTION);
 
 						// Update Button wurde gedrückt?
-						
+
 						if (rex_post('btn_save', 'string')) {
 							$function = '';
 						}
@@ -290,17 +282,17 @@ if ($article->getRows() == 1)
 				}
 			}
 		}
-		
+
 		// END: Slice add/edit/delete
 		if($mode == 'meta'){
 			// START: ARTICLE2STARTARTICLE
-			
+
 			if (rex_post('article2startpage', 'string')) {
 				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('article2startpage[]')) {
 					if (rex_article2startpage($article_id)) {
 						$info = $I18N->msg('content_tostartarticle_ok');
 						while (ob_get_level()) ob_end_clean();
-						header('Location: index.php?page=content&mode=meta&clang='.$clang.'&ctype='.$ctype.'&article_id='.$article_id.'&info='.urlencode($info));
+						header('Location: index.php?page=content&mode=meta&clang='.$clang.'&ctype='.$slot.'&article_id='.$article_id.'&info='.urlencode($info));
 						exit;
 					}
 					else {
@@ -308,15 +300,15 @@ if ($article->getRows() == 1)
 					}
 				}
 			}
-			
+
 			// END: ARTICLE2STARTARTICLE
 			// START: COPY LANG CONTENT
-			
+
 			if (rex_post('copycontent', 'string')) {
 				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('copyContent[]')) {
 					$clang_a = rex_post('clang_a', 'rex-clang-id');
 					$clang_b = rex_post('clang_b', 'rex-clang-id');
-	
+
 					if (rex_copyContent($article_id, $article_id, $clang_a, $clang_b)) {
 						$info = $I18N->msg('content_contentcopy');
 					}
@@ -325,18 +317,18 @@ if ($article->getRows() == 1)
 					}
 				}
 			}
-			
+
 			// END: COPY LANG CONTENT
 			// START: MOVE ARTICLE
-			
+
 			if (rex_post('movearticle', 'string') && $category_id != $article_id) {
 				$category_id_new = rex_post('category_id_new', 'rex-category-id');
-				
+
 				if ($REX['USER']->isAdmin() || ($REX['USER']->hasPerm('moveArticle[]') && ($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('csw['.$category_id_new.']')))) {
 					if (rex_moveArticle($article_id, $category_id, $category_id_new)) {
 						$info = $I18N->msg('content_articlemoved');
 						while (ob_get_level()) ob_end_clean();
-						header('Location: index.php?page=content&article_id='.$article_id.'&mode=meta&clang='.$clang.'&ctype='.$ctype.'&info='.urlencode($info));
+						header('Location: index.php?page=content&article_id='.$article_id.'&mode=meta&clang='.$clang.'&ctype='.$slot.'&info='.urlencode($info));
 						exit;
 					}
 					else {
@@ -347,18 +339,18 @@ if ($article->getRows() == 1)
 					$warning = $I18N->msg('no_rights_to_this_function');
 				}
 			}
-			
+
 			// END: MOVE ARTICLE
 			// START: COPY ARTICLE
-			
+
 			if (rex_post('copyarticle', 'string')) {
 				$category_copy_id_new = rex_post('category_copy_id_new', 'rex-category-id');
-				
+
 				if ($REX['USER']->isAdmin() || ($REX['USER']->hasPerm('copyArticle[]') && ($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('csw['.$category_copy_id_new.']')))) {
 					if (($new_id = rex_copyArticle($article_id, $category_copy_id_new)) !== false) {
 						$info = $I18N->msg('content_articlecopied');
 						while (ob_get_level()) ob_end_clean();
-						header('Location: index.php?page=content&article_id='.$new_id.'&mode=meta&clang='.$clang.'&ctype='.$ctype.'&info='.urlencode($info));
+						header('Location: index.php?page=content&article_id='.$new_id.'&mode=meta&clang='.$clang.'&ctype='.$slot.'&info='.urlencode($info));
 						exit;
 					}
 					else {
@@ -369,18 +361,18 @@ if ($article->getRows() == 1)
 					$warning = $I18N->msg('no_rights_to_this_function');
 				}
 			}
-			
+
 			// END: COPY ARTICLE
 			// START: MOVE CATEGORY
-			
+
 			if (rex_post('movecategory', 'string')) {
 				$category_id_new = rex_post('category_id_new', 'rex-category-id');
-				
+
 				if ($REX['USER']->isAdmin() || ($REX['USER']->hasPerm('moveCategory[]') && (($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('csw['.$category_id.']')) && ($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('csw['.$category_id_new.']'))))) {
 					if ($category_id != $category_id_new && rex_moveCategory($category_id, $category_id_new)) {
 						$info = $I18N->msg('category_moved');
 						while (ob_get_level()) ob_end_clean();
-						header('Location: index.php?page=content&article_id='.$category_id.'&mode=meta&clang='.$clang.'&ctype='.$ctype.'&info='.urlencode($info));
+						header('Location: index.php?page=content&article_id='.$category_id.'&mode=meta&clang='.$clang.'&ctype='.$slot.'&info='.urlencode($info));
 						exit;
 					}
 					else {
@@ -391,25 +383,25 @@ if ($article->getRows() == 1)
 					$warning = $I18N->msg('no_rights_to_this_function');
 				}
 			}
-			
+
 			// END: MOVE CATEGORY
 			// START: SAVE METADATA
-			
+
 			if (rex_post('savemeta', 'string')) {
 				$meta_article_name = rex_post('meta_article_name', 'string');
-	
+
 				$meta_sql = new rex_sql();
 				$meta_sql->setTable('article', true);
 				$meta_sql->setWhere('id = '.$article_id.' AND clang = '.$clang);
 				$meta_sql->setValue('name', $meta_article_name);
 				$meta_sql->addGlobalUpdateFields();
-	
+
 				if ($meta_sql->update()) {
 					$article->setQuery('SELECT * FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE id = '.$article_id.' AND clang = '.$clang);
-					
+
 					$info     = $I18N->msg('metadata_updated');
 					$meta_sql = null;
-	
+
 					rex_deleteCacheArticle($article_id, $clang);
 				}
 				else {
@@ -417,33 +409,33 @@ if ($article->getRows() == 1)
 					$warning  = $meta_sql->getError();
 				}
 			}
-			
+
 			$info = rex_register_extension_point('ART_META_UPDATED', $info, array(
 				'id'    => $article_id,
 				'clang' => $clang,
 			));
-			
+
 			// END: SAVE METADATA
 		}
 		// START: CONTENT HEAD MENUE
-		
-		$num_ctypes = count($REX['CTYPE']);
-		$ctype_menu = '';
-		
-		if ($num_ctypes > 0) {
-			$listElements = array($I18N->msg($num_ctypes > 1 ? 'content_types' : 'content_type').' : ');
+
+		$numSlots = count($REX['CTYPE']);
+		$slotMenu = '';
+
+		if ($numSlots > 0) {
+			$listElements = array($I18N->msg($numSlots > 1 ? 'content_types' : 'content_type').' : ');
 
 			foreach ($REX['CTYPE'] as $key => $val) {
 				$s     = '';
 				$class = '';
 
-				if ($key == $ctype && $mode == 'edit') {
+				if ($key == $slot && $mode == 'edit') {
 					$class = ' class="rex-active"';
 				}
 
 				$val = rex_translate($val);
 				$s  .= '<a href="index.php?page=content&amp;article_id='.$article_id.'&amp;clang='.$clang.'&amp;ctype='.$key.'&amp;mode=edit"'.$class.''.rex_tabindex().'>'.$val.'</a>';
-				
+
 				$listElements[] = $s;
 			}
 
@@ -455,24 +447,24 @@ if ($article->getRows() == 1)
 				'slice_id'   => $slice_id
 			));
 
-			$ctype_menu  .= '<ul id="rex-navi-ctype">';
-			
+			$slotMenu  .= '<ul id="rex-navi-ctype">';
+
 			foreach ($listElements as $idx => $listElement) {
 				$class = '';
-				
+
 				if ($idx == 1) { // das erste Element ist nur Beschriftung -> überspringen
 					$class = ' class="rex-navi-first"';
 				}
 
-				$ctype_menu .= '<li'.$class.'>'.$listElement.'</li>';
+				$slotMenu .= '<li'.$class.'>'.$listElement.'</li>';
 			}
-			
-			$ctype_menu .= '</ul>';
+
+			$slotMenu .= '</ul>';
 		}
 
-		$menu         = $ctype_menu;
+		$menu         = $slotMenu;
 		$listElements = array();
-		$baseURL      = 'index.php?page=content&amp;article_id='.$article_id.'&amp;clang='.$clang.'&amp;ctype='.$ctype;
+		$baseURL      = 'index.php?page=content&amp;article_id='.$article_id.'&amp;clang='.$clang.'&amp;ctype='.$slot;
 
 		if ($mode == 'edit') {
 			$listElements[] = '<a href="'.$baseURL.'&amp;mode=edit" class="rex-active"'.rex_tabindex().'>'.$I18N->msg('edit_mode').'</a>';
@@ -494,17 +486,17 @@ if ($article->getRows() == 1)
 		));
 
 		$menu .= '<ul class="rex-navi-content">';
-		
+
 		foreach ($listElements as $idx => $element) {
 			$class = $idx == 0 ? ' class="rex-navi-first"' : '';
 			$menu .= '<li'.$class.'>'.$element.'</li>';
 		}
-		
+
 		$menu .= '</ul>';
 
 		// END: CONTENT HEAD MENUE
 		// START: AUSGABE
-		
+
 		print '
 <!-- *** OUTPUT OF ARTICLE-CONTENT - START *** -->
 <div class="rex-content-header">
@@ -516,10 +508,10 @@ if ($article->getRows() == 1)
 		';
 
 		// Meldungen
-		
+
 		if (!empty($global_warning)) print rex_warning($global_warning);
 		if (!empty($global_info))    print rex_info($global_info);
-		
+
 		if ($mode != 'edit') {
 			if (!empty($warning)) print rex_warning($warning);
 			if (!empty($info))    print rex_info($info);
@@ -579,7 +571,7 @@ if ($article->getRows() == 1)
 			$CONT->getContentAsQuery();
 			$CONT->info = $info;
 			$CONT->warning = $warning;
-			$CONT->template_attributes = $template_attributes;
+			$CONT->template = $templateName;
 			$CONT->setArticleId($article_id);
 			$CONT->setSliceId($slice_id);
 			$CONT->setMode($mode);
@@ -587,7 +579,7 @@ if ($article->getRows() == 1)
 			$CONT->setEval(true);
 			$CONT->setSliceRevision($slice_revision);
 			$CONT->setFunction($function);
-			print $CONT->getArticle($ctype);
+			print $CONT->getArticle($slot);
 
 			print '
 		</div>
@@ -609,7 +601,7 @@ if ($article->getRows() == 1)
 					<input type="hidden" name="mode" value="meta" />
 					<input type="hidden" name="save" value="1" />
 					<input type="hidden" name="clang" value="'.$clang.'" />
-					<input type="hidden" name="ctype" value="'.$ctype.'" />
+					<input type="hidden" name="ctype" value="'.$slot.'" />
 
 					<div class="rex-form-wrapper">
 
@@ -620,7 +612,7 @@ if ($article->getRows() == 1)
 							</p>
 							<div class="rex-clearer"></div>
 						</div>
-						
+
 						<div class="rex-clearer"></div>
 						';
 
@@ -636,7 +628,7 @@ if ($article->getRows() == 1)
 								<input class="rex-form-submit" type="submit" name="savemeta" value="'.$I18N->msg('update_metadata').'" />
 							</p>
 						</div>
-						
+
 						<div class="rex-clearer"></div>
 					</div>
 				</fieldset>';
@@ -647,10 +639,10 @@ if ($article->getRows() == 1)
 			));
 
 			// SONSTIGES START
-			
+
 			if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('article2startpage[]') || $REX['USER']->hasPerm('moveArticle[]') || $REX['USER']->hasPerm('copyArticle[]') || ($REX['USER']->hasPerm('copyContent[]') && count($REX['CLANG']) > 1)) {
 				// ZUM STARTARTICLE MACHEN START
-				
+
 				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('article2startpage[]')) {
 					print '
 				<fieldset class="rex-form-col-1">
@@ -676,10 +668,10 @@ if ($article->getRows() == 1)
 					</div>
 				</fieldset>';
 				}
-				
+
 				// ZUM STARTARTICLE MACHEN END
 				// INHALTE KOPIEREN START
-				
+
 				if (($REX['USER']->isAdmin() || $REX['USER']->hasPerm('copyContent[]')) && count($REX['CLANG']) > 1) {
 					$lang_a = new rex_select();
 					$lang_a->setStyle('class="rex-form-select"');
@@ -687,7 +679,7 @@ if ($article->getRows() == 1)
 					$lang_a->setName('clang_a');
 					$lang_a->setSize('1');
 					$lang_a->setAttribute('tabindex', rex_tabindex(false));
-					
+
 					foreach ($REX['CLANG'] as $key => $val) {
 						$val = rex_translate($val);
 						$lang_a->addOption($val, $key);
@@ -699,7 +691,7 @@ if ($article->getRows() == 1)
 					$lang_b->setName('clang_b');
 					$lang_b->setSize('1');
 					$lang_b->setAttribute('tabindex', rex_tabindex(false));
-					
+
 					foreach ($REX['CLANG'] as $key => $val) {
 						$val = rex_translate($val);
 						$lang_b->addOption($val, $key);
@@ -722,21 +714,21 @@ if ($article->getRows() == 1)
 								'.$lang_b->get().'
 							</p>
 						</div>
-						
+
 						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-submit">
 								<input class="rex-form-submit" type="submit" name="copycontent" value="'.$I18N->msg('content_submitcopycontent').'"'.rex_tabindex().' onclick="return confirm(\''.$I18N->msg('content_submitcopycontent').'?\')" />
 							</p>
 						</div>
-						
+
 						<div class="rex-clearer"></div>
 					</div>
 				</fieldset>';
 				}
-				
+
 				// INHALTE KOPIEREN ENDE
 				// ARTIKEL VERSCHIEBEN START
-				
+
 				if ($article->getValue('startpage') == 0 && ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveArticle[]'))) {
 					// Wenn Artikel kein Startartikel dann Selectliste darstellen, sonst...
 					$move_a = new rex_category_select();
@@ -769,10 +761,10 @@ if ($article->getRows() == 1)
 					</div>
 				</fieldset>';
 				}
-				
+
 				// ARTIKEL VERSCHIEBEN ENDE
 				// ARTIKEL KOPIEREN START
-				
+
 				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('copyArticle[]')) {
 					$move_a = new rex_category_select();
 					$move_a->setStyle('class="rex-form-select"');
@@ -804,10 +796,10 @@ if ($article->getRows() == 1)
 					</div>
 				</fieldset>';
 				}
-				
+
 				// ARTIKEL KOPIEREN ENDE
 				// KATEGORIE/STARTARTIKEL VERSCHIEBEN START
-				
+
 				if ($article->getValue('startpage') == 1 && ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveCategory[]'))) {
 					$move_a = new rex_category_select();
 					$move_a->setStyle('class="rex-form-select"');

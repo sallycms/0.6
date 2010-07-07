@@ -10,7 +10,7 @@
  */
 
 /**
- * DB Model Klasse für Templates
+ * Service-Klasse für Templates
  *
  * @author christoph@webvariants.de
  */
@@ -118,7 +118,10 @@ class sly_Service_Template {
 	}
 
 	public function getSlots($name) {
-		return $this->get($name, 'slots');
+		$slots = $this->get($name, 'slots', array());
+		$slots = sly_makeArray($slots);
+		if (empty($slots)) $slots = array(0 => 'default');
+		return $slots;
 	}
 
 	public function getModules($name) {
@@ -243,5 +246,16 @@ class sly_Service_Template {
 		}
 
 		return false;
+	}
+
+	public function hasModule($template, $ctype, $module) {
+		if (!$this->exists($template)) return false;
+
+		$modules = $this->get($template, 'modules', array());
+
+		return
+			/* keine Angabe -> alle erlaubt */ !isset($modules[$ctype]) ||
+			/* 'all' oder [all] angegeben   */ sly_makeArray($modules[$ctype]) == array('all') ||
+			/* Modulkennung angegeben       */ in_array($module, sly_makeArray($modules[$ctype]));
 	}
 }
