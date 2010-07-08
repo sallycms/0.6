@@ -10,33 +10,25 @@
  */
 
 /**
- * Business Model Klasse für Slice Values 
- * 
- * @author zozi@webvariants.de
+ * Business Model Klasse für Slice Values
  *
+ * @author zozi@webvariants.de
  */
-class sly_Model_SliceValue extends sly_Model_Base{
-
+class sly_Model_SliceValue extends sly_Model_Base {
 	protected $slice_id;
 	protected $type;
 	protected $finder;
 	protected $value;
-	
-    protected $_attributes = array('slice_id' => 'int', 'type' => 'string', 'finder' => 'string', 'value' => 'string');
-    
-    public function getSliceId(){ return $this->slice_id; }
-    
-    public function setSliceId($slice_id){ $this->slice_id = $slice_id; }
-    
-    public function getType(){ return $this->type; }
 
-	public function setType($type){ $this->type = $type; }
-    
-    public function getFinder(){ return $this->finder; }
-    
-	public function setFinder($finder){ $this->finder = $finder; }
-    
-    public function getValue(){	return $this->value; }
-    
-    public function setValue($value){ $this->value = $value; }
+	protected $_attributes = array('slice_id' => 'int', 'type' => 'string', 'finder' => 'string', 'value' => 'string');
+
+	public function getSliceId() { return $this->slice_id; }
+	public function getType()    { return $this->type;     }
+	public function getFinder()  { return $this->finder;   }
+	public function getValue()   { return $this->value;    }
+
+	public function setSliceId($slice_id) { $this->slice_id = $slice_id; }
+	public function setType($type)        { $this->type = $type;         }
+	public function setFinder($finder)    { $this->finder = $finder;     }
+	public function setValue($value)      { $this->value = $value;       }
 }

@@ -12,13 +12,12 @@
  * @version svn:$Id$
  */
 
-class OOArticleSlice
-{
+class OOArticleSlice {
 	private $_id;
 	private $_article_id;
 	private $_clang;
 	private $_ctype;
-	private $_modultyp_id;
+	private $_module;
 	private $_slice_id;
 
 	private $_re_article_slice_id;
@@ -30,109 +29,98 @@ class OOArticleSlice
 	private $_updateuser;
 	private $_revision;
 
-	/*
+	/**
 	 * Constructor
 	 */
-	public function __construct(
-	$id, $article_id, $clang, $ctype, $modultyp_id,
-	$re_article_slice_id, $next_article_slice_id,
-	$createdate,$updatedate,$createuser,$updateuser,$revision,
-	$slice_id = 0)
-	{
-		$this->_id = $id;
-		$this->_article_id = $article_id;
-		$this->_clang = $clang;
-		$this->_ctype = $ctype;
-		$this->_modultyp_id = $modultyp_id;
-		$this->_slice_id = $slice_id;
+	public function __construct($id, $article_id, $clang, $ctype, $module, $re_article_slice_id,
+		$next_article_slice_id, $createdate,$updatedate,$createuser,$updateuser,$revision, $slice_id = 0) {
+		$this->_id         = (int) $id;
+		$this->_article_id = (int) $article_id;
+		$this->_clang      = (int) $clang;
+		$this->_ctype      = $ctype;
+		$this->_module     = $module;
+		$this->_slice_id   = (int) $slice_id;
 
-		$this->_re_article_slice_id = $re_article_slice_id;
-		$this->_next_article_slice_id = $next_article_slice_id;
+		$this->_re_article_slice_id   = (int) $re_article_slice_id;
+		$this->_next_article_slice_id = (int) $next_article_slice_id;
 
-		$this->_createdate = $createdate;
-		$this->_updatedate = $updatedate;
+		$this->_createdate = (int) $createdate;
+		$this->_updatedate = (int) $updatedate;
 		$this->_createuser = $createuser;
 		$this->_updateuser = $updateuser;
-		$this->_revision = $revision;
-
+		$this->_revision   = (int) $revision;
 	}
 
-	/*
-	 * CLASS Function:
-	 * Return an ArticleSlice by its id
-	 * Returns an OOArticleSlice object
+	/**
+	 * @return OOArticleSlice
 	 */
-	public static function getArticleSliceById($an_id, $clang = false, $revision = 0)
-	{
+	public static function getArticleSliceById($id, $clang = false, $revision = 0) {
 		if ($clang === false) $clang = sly_Core::getCurrentClang();
-		$namespace = 'slice';
-		$key = $an_id;
 
-		$obj = sly_Core::cache()->get($namespace, $key, null);
+		$namespace = 'slice';
+		$clang     = (int) $clang;
+		$id        = (int) $id;
+		$revision  = (int) $revision;
+		$key       = $id.'_'.$clang.'_'.$revision;
+		$obj       = sly_Core::cache()->get($namespace, $key, null);
+
 		if ($obj === null) {
-			$obj = self::_getSliceWhere('id='. $an_id .' AND clang='. $clang.' and revision='.$revision);
+			$obj = self::_getSliceWhere('id = '.$id.' AND clang = '.$clang.' AND revision = '.$revision);
 			sly_Core::cache()->set($namespace, $key, $obj);
 		}
+
 		return $obj;
 	}
 
 	/**
-	 * CLASS Function:
 	 * Return the first slice for an article.
 	 * This can then be used to iterate over all the
 	 * slices in the order as they appear using the
 	 * getNextSlice() function.
 	 * Returns an OOArticleSlice object
-	 * 
+	 *
 	 * @return OOArticleSlice
 	 */
-	public static function getFirstSliceForArticle($an_article_id, $clang = false, $revision = 0)
-	{
-		global $REX;
+	public static function getFirstSliceForArticle($articleID, $clang = false, $revision = 0) {
+		if ($clang === false) $clang = sly_Core::getCurrentClang();
 
-		if ($clang === false)
-		$clang = sly_Core::getCurrentClang();
+		$prefix    = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+		$articleID = (int) $articleID;
+		$clang     = (int) $clang;
+		$revision  = (int) $revision;
 
-		return self::_getSliceWhere('a.article_id='. $an_article_id .' AND
-                                          a.clang='. $clang .' AND
-                                          (
-                                           (a.re_article_slice_id=0 AND a.ctype=1 AND a.id = b.id)
-                                            OR
-                                           (b.ctype=2 AND a.ctype=1 AND b.id = a.re_article_slice_id)
-                                          )
-                                          AND a.revision='.$revision.' 
-                                          AND b.revision='.$revision,
-		$REX['DATABASE']['TABLE_PREFIX'].'article_slice a, '. $REX['DATABASE']['TABLE_PREFIX'].'article_slice b',
-                                          'a.*' 
-                                          );
+		return self::_getSliceWhere(
+			'a.article_id = '.$articleID.' AND a.clang = '. $clang .' AND '.
+			'((a.re_article_slice_id = 0 AND a.ctype = 0 AND a.id = b.id) '.
+			'OR (b.ctype = 2 AND a.ctype = 0 AND b.id = a.re_article_slice_id)) '.
+			'AND a.revision = '.$revision.' AND b.revision = '.$revision,
+			$prefix.'article_slice a, '.$prefix.'article_slice b',
+			'a.*'
+		);
 	}
 
 	/**
-	 * CLASS Function:
 	 * Returns the first slice of the given ctype of an article
 	 *
 	 * @return OOArticleSlice
 	 */
-	public static function getFirstSliceForCtype($ctype, $an_article_id, $clang = false, $revision = 0)
-	{
-		global $REX;
+	public static function getFirstSliceForCtype($ctype, $articleID, $clang = false, $revision = 0) {
+		if ($clang === false) $clang = sly_Core::getCurrentClang();
 
-		if ($clang === false)
-		$clang = sly_Core::getCurrentClang();
+		$prefix    = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+		$articleID = (int) $articleID;
+		$clang     = (int) $clang;
+		$revision  = (int) $revision;
+		$ctype     = mysql_real_escape_string($ctype);
 
-		return self::_getSliceWhere('a.article_id='. $an_article_id .' AND
-                                          a.clang='. $clang .' AND
-                                          a.ctype='. $ctype .' AND
-                                          (
-                                           (a.re_article_slice_id=0  AND a.id = b.id)
-                                            OR
-                                           (b.ctype != a.ctype AND b.id = a.re_article_slice_id)
-                                          )
-                                          AND a.revision='.$revision.' 
-                                          AND b.revision='.$revision,
-		$REX['DATABASE']['TABLE_PREFIX'].'article_slice a, '. $REX['DATABASE']['TABLE_PREFIX'].'article_slice b',
-                                          'a.*'
-                                          );
+		return self::_getSliceWhere(
+			'a.article_id = '.$articleID.' AND a.clang = "'.$clang.'" AND a.ctype = "'.$ctype.'" AND '.
+			'((a.re_article_slice_id = 0  AND a.id = b.id) '.
+			'OR (b.ctype != a.ctype AND b.id = a.re_article_slice_id)) '.
+			'AND a.revision = '.$revision.' AND b.revision = '.$revision,
+			$prefix.'article_slice a, '.$prefix.'article_slice b',
+			'a.*'
+		);
 	}
 
 	/*
@@ -141,266 +129,158 @@ class OOArticleSlice
 	 * module type.
 	 * Returns an array of OOArticleSlice objects
 	 */
-	public static function getSlicesForArticleOfType($an_article_id, $a_moduletype_id, $clang = false, $revision = 0)
-	{
-		global $REX;
+	public static function getSlicesForArticleOfType($articleID, $module, $clang = false, $revision = 0) {
+		if ($clang === false) $clang = sly_Core::getCurrentClang();
 
-		if ($clang === false)
-		$clang = sly_Core::getCurrentClang();
+		$prefix    = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+		$articleID = (int) $articleID;
+		$clang     = (int) $clang;
+		$revision  = (int) $revision;
+		$module    = mysql_real_escape_string($module);
 
-		return self::_getSliceWhere('article_id='. $an_article_id .' AND clang='. $clang .' AND modultyp_id='. $a_moduletype_id .' AND revision='.$revision, array());
+		return self::_getSliceWhere(
+			'article_id = '.$articleID.' AND clang = '.$clang.' AND module = "'.$module.'" AND revision = '.$revision,
+			array()
+		);
 	}
 
 	/**
-	 * Object Function:
 	 * Return the next slice for this article
 	 * Returns an OOArticleSlice object.
 	 *
 	 * @return OOArticleSlice
 	 */
-	public function getNextSlice()
-	{
-		return self::_getSliceWhere('re_article_slice_id = '. $this->_id .' AND clang = '. $this->_clang.' AND revision='.$this->_revision);
+	public function getNextSlice() {
+		return self::_getSliceWhere('re_article_slice_id = '.$this->_id.' AND clang = '.$this->_clang.' AND revision = '.$this->_revision);
 	}
 
-	/*
-	 * Object Function:
+	/**
+	 * @return OOArticleSlice
 	 */
-	public function getPreviousSlice()
-	{
-		return self::_getSliceWhere('id = '. $this->_re_article_slice_id .' AND clang = '. $this->_clang.' AND revision='.$this->_revision);
+	public function getPreviousSlice() {
+		return self::_getSliceWhere('id = '.$this->_re_article_slice_id.' AND clang = '.$this->_clang.' AND revision = '.$this->_revision);
 	}
 
 	/**
 	 * Gibt den Slice formatiert zurück
 	 * @since 4.1 - 29.05.2008
 	 */
-	public function getSlice()
-	{
-		$slice = sly_Service_Factory::getService('Slice')->findById($this->getSliceId());
+	public function getSlice() {
+		$slice   = sly_Service_Factory::getService('Slice')->findById($this->getSliceId());
 		$content = $slice->getOutput();
-		
 		$content = self::replaceLinks($content);
 		$content = $this->replaceCommonVars($content);
 		$content = $this->replaceGlobals($content);
+
 		return $content;
 	}
 
-	public function getContent(){
+	public function getContent() {
 		global $REX, $I18N;
-		$slice_content_file = $REX['DYNFOLDER'].'/internal/sally/articles/'.$this->getId().'.slice';
+
+		$slice_content_file = SLY_DYNFOLDER.'/internal/sally/articles/'.$this->getId().'.slice';
+
 		if (!file_exists($slice_content_file)) {
 			$slice_content = $this->getSlice();
-			if (rex_put_file_contents($slice_content_file, $slice_content) === FALSE)
-			{
-				return $I18N->msg('slice_could_not_be_generated')." ".$I18N->msg('check_rights_in_directory').$REX['DYNFOLDER']."/internal/sally/articles/";
+
+			if (rex_put_file_contents($slice_content_file, $slice_content) === false) {
+				return $I18N->msg('slice_could_not_be_generated').' '.$I18N->msg('check_rights_in_directory').SLY_DYNFOLDER.'/internal/sally/articles/';
 			}
 		}
-		if(file_exists($slice_content_file))
-		{
+
+		if (file_exists($slice_content_file)) {
 			include $slice_content_file;
 		}
 	}
 
 	/**
-	 * 
-	 * 
-	 * @param string $where
-	 * @param string $table
-	 * @param string $fields
-	 * @param mixed $default
-	 * 
-	 * @return array of OOArticleSlice
+	 * @param  string $where
+	 * @param  string $table
+	 * @param  string $fields
+	 * @param  mixed  $default
+	 * @return array  OOArticleSlice
 	 */
-	public static function _getSliceWhere($where, $table = null, $fields = null, $default = null)
-	{
-		global $REX;
+	public static function _getSliceWhere($where, $table = null, $fields = null, $default = null) {
+		$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 
-		if(!$table)
-		$table = $REX['DATABASE']['TABLE_PREFIX'].'article_slice';
+		if (!$table)  $table  = $prefix.'article_slice';
+		if (!$fields) $fields = '*';
 
-		if(!$fields)
-		$fields = '*';
+		$sql  = new rex_sql();
+		$data = $sql->getArray('SELECT '.$fields.' FROM '.$table.' WHERE '.$where);
 
-		$sql = new rex_sql;
-		// $sql->debugsql = true;
-		$query = '
-      SELECT '. $fields .'
-      FROM '. $table .'
-      WHERE '. $where;
-
-		$sql->setQuery($query);
-		$rows = $sql->getRows();
-
-		$slices = array ();
-		for ($i = 0; $i < $rows; $i++) {
+		foreach ($data as $row) {
 			$slices[] = new OOArticleSlice(
-			$sql->getValue('id'), $sql->getValue('article_id'), $sql->getValue('clang'), $sql->getValue('ctype'), $sql->getValue('modultyp_id'),
-			$sql->getValue('re_article_slice_id'), $sql->getValue('next_article_slice_id'),
-			$sql->getValue('createdate'), $sql->getValue('updatedate'), $sql->getValue('createuser'), $sql->getValue('updateuser'), $sql->getValue('revision'),
-			$sql->getValue('slice_id'));
-
-			$sql->next();
+				$row['id'], $row['article_id'], $row['clang'], $row['ctype'], $row['module'],
+				$row['re_article_slice_id'], $row['next_article_slice_id'], $row['createdate'],
+				$row['updatedate'], $row['createuser'], $row['updateuser'], $row['revision'],
+				$row['slice_id']
+			);
 		}
-	 if (!empty($slices)) return count($slices) == 1 ? $slices[0] : $slices;
 
-	 return $default;
+		if (!empty($slices)) return count($slices) == 1 ? $slices[0] : $slices;
+		return $default;
 	}
 
-	public function getArticle()
-	{
+	public function getArticle() {
 		return OOArticle::getArticleById($this->getArticleId());
 	}
 
-	public function getArticleId()
-	{
-		return $this->_article_id;
-	}
+	public function getArticleId()  { return $this->_article_id;          }
+	public function getClang()      { return $this->_clang;               }
+	public function getCtype()      { return $this->_ctype;               }
+	public function getRevision()   { return $this->_revision;            }
+	public function getModuleName() { return $this->_module;              }
+	public function getId()         { return $this->_id;                  }
+	public function getReId()       { return $this->_re_article_slice_id; }
+	public function getSliceId()    { return $this->_slice_id;            }
 
-	public function getClang()
-	{
-		return $this->_clang;
-	}
+	public function getValue($index)     { return $this->getRexVarValue('REX_VALUE', $index);     }
+	public function getLink($index)      { return $this->getRexVarValue('REX_LINK', $index);      }
+	public function getLinkList($index)  { return $this->getRexVarValue('REX_LINKLIST', $index);  }
+	public function getMedia($index)     { return $this->getRexVarValue('REX_MEDIA', $index);     }
+	public function getMediaList($index) { return $this->getRexVarValue('REX_MEDIALIST', $index); }
+	public function getHtml()            { return $this->getRexVarValue('REX_HTML', $index);      }
+	public function getPhp()             { return $this->getRexVarValue('REX_PHP', $index);       }
 
-	public function getCtype()
-	{
-		return $this->_ctype;
-	}
-
-	public function getRevision()
-	{
-		return $this->_revision;
-	}
-
-	public function getModuleId()
-	{
-		return $this->_modultyp_id;
-	}
-
-	public function getId()
-	{
-		return $this->_id;
-	}
-	
-	public function getReId()
-	{
-		return $this->_re_article_slice_id;
-	}
-	
-	public function getSliceId(){
-		return $this->_slice_id;
-	}
-	
-
-	public function getValue($index)
-	{
-		$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_VALUE', $index);
-		if($value){
-			return $value->getValue();
-		}
-		
-		return null;
-	}
-
-	public function getLink($index)
-	{
-		$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_LINK', $index);
-		if($value){
-			return $value->getValue();
-		}
-		
-		return null;
-	}
-
-	public function getLinkUrl($index)
-	{
-		
+	public function getLinkUrl($index) {
 		return rex_getUrl($this->getLink());
-				
-		return null;
 	}
 
-	public function getLinkList($index)
-	{
-		$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_LINKLIST', $index);
-		if($value){
-			return $value->getValue();
-		}
-		
-		return null;
-	}
-
-	public function getMedia($index)
-	{
-		$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_MEDIA', $index);
-		if($value){
-			return $value->getValue();
-		}
-		
-		return null;
-	}
-
-	public function getMediaUrl($index)
-	{
+	public function getMediaUrl($index) {
 		global $REX;
 		return $REX['MEDIAFOLDER'].'/'.$this->getMedia($index);
 	}
 
-	public function getMediaList($index)
-	{
-		$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_MEDIALIST', $index);
-		if($value){
-			return $value->getValue();
-		}
-		
-		return null;
+	private function replaceGlobals($content) {
+		// Slice-abhängige globale Variablen ersetzen
+
+		$slice   = sly_Service_Factory::getService('Slice')->findById($this->getSliceId());
+		$content = str_replace('REX_MODULE_ID', $slice->getModuleId(), $content);
+		$content = str_replace('REX_SLICE_ID', $this->getId(), $content);
+		$content = str_replace('REX_CTYPE_ID', $this->getCtype(), $content);
+
+		return $content;
 	}
 
-	public function getHtml()
-	{
-		$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_HTML', $index);
-		if($value){
-			return $value->getValue();
-		}
-		
-		return null;
-	}
-
-	public function getPhp()
-	{
-		$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), 'REX_PHP', $index);
-		if($value){
-			return $value->getValue();
-		}
-		
-		return null;
-	}
-
-	private function replaceGlobals($content){
-	    // Articleslice abhängige Globale Variablen ersetzen
-	    $slice = sly_Service_Factory::getService('Slice')->findById($this->getSliceId());
-		
-    	$content = str_replace('REX_MODULE_ID', $slice->getModuleId(), $content);
-	    $content = str_replace('REX_SLICE_ID', $this->getId(), $content);
-    	$content = str_replace('REX_CTYPE_ID', $this->getCtype(), $content);
-
-    	return $content;
-	}
-	
-	// ---- Artikelweite globale variablen werden ersetzt
+	/**
+	 * Artikelweite globale variablen werden ersetzt
+	 */
 	private function replaceCommonVars($content) {
 		global $REX;
 
-		static $user_id = null;
+		static $user_id    = null;
 		static $user_login = null;
 
-		// UserId gibts nur im Backend
-		if($user_id === null) {
-			if(isset($REX['USER'])) {
-				$user_id = $REX['USER']->getValue('id');
+		// UserId gibt's nur im Backend
+
+		if ($user_id === null) {
+			if (isset($REX['USER'])) {
+				$user_id    = $REX['USER']->getValue('id');
 				$user_login = $REX['USER']->getValue('login');
-			}else {
-				$user_id = '';
+			}
+			else {
+				$user_id    = '';
 				$user_login = '';
 			}
 		}
@@ -408,54 +288,59 @@ class OOArticleSlice
 		$article = $this->getArticle();
 
 		static $search = array(
-		'REX_ARTICLE_ID',
-		'REX_CATEGORY_ID',
-		'REX_CLANG_ID',
-		'REX_TEMPLATE_ID',
-		'REX_USER_ID',
-		'REX_USER_LOGIN'
+			'REX_ARTICLE_ID',
+			'REX_CATEGORY_ID',
+			'REX_CLANG_ID',
+			'REX_TEMPLATE_NAME',
+			'REX_USER_ID',
+			'REX_USER_LOGIN'
 		);
 
 		$replace = array(
-				$article->getId(),
-				$article->getCategoryId(),
-				$article->getClang(),
-				$article->getTemplateId(),
-				$user_id,
-				$user_login
+			$article->getId(),
+			$article->getCategoryId(),
+			$article->getClang(),
+			$article->getTemplateName(),
+			$user_id,
+			$user_login
 		);
 
 		return str_replace($search, $replace,$content);
 	}
 
-
-	private static function replaceLinks($content)
-	{
+	private static function replaceLinks($content) {
 		// Hier beachten, dass man auch ein Zeichen nach dem jeweiligen Link mitmatched,
 		// damit beim ersetzen von z.b. redaxo://11 nicht auch innerhalb von redaxo://112
 		// ersetzt wird
 		// siehe dazu: http://forum.redaxo.de/ftopic7563.html
 
 		// -- preg match redaxo://[ARTICLEID]-[CLANG] --
-		preg_match_all('@redaxo://([0-9]*)\-([0-9]*)(.){1}/?@im',$content,$matches,PREG_SET_ORDER);
-		foreach($matches as $match)
-		{
-			if(empty($match)) continue;
+		preg_match_all('@redaxo://([0-9]*)\-([0-9]*)(.){1}/?@im', $content, $matches, PREG_SET_ORDER);
 
-			$url = OOArticle::getArticleById($match[1], $match[2])->getUrl();
+		foreach ($matches as $match) {
+			if (empty($match)) continue;
+
+			$url     = OOArticle::getArticleById($match[1], $match[2])->getUrl();
 			$content = str_replace($match[0],$url.$match[3],$content);
 		}
 
 		// -- preg match redaxo://[ARTICLEID] --
-		preg_match_all('@redaxo://([0-9]*)(.){1}/?@im',$content,$matches,PREG_SET_ORDER);
-		foreach($matches as $match)
-		{
-			if(empty($match)) continue;
 
-			$url = OOArticle::getArticleById($match[1])->getUrl();
+		preg_match_all('@redaxo://([0-9]*)(.){1}/?@im', $content, $matches, PREG_SET_ORDER);
+
+		foreach ($matches as $match) {
+			if (empty($match)) continue;
+
+			$url     = OOArticle::getArticleById($match[1])->getUrl();
 			$content = str_replace($match[0],$url.$match[2],$content);
 		}
 
 		return $content;
+	}
+
+	protected function getRexVarValue($type, $key) {
+		$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), $type, $key);
+		if ($value) return $value->getValue();
+		return null;
 	}
 }

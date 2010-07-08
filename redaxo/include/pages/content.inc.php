@@ -113,17 +113,19 @@ if ($article->getRows() == 1) {
 	else {
 		// Slice add/edit/delete
 
+		$moduleService = sly_Service_Factory::getService('Module');
+
 		if (rex_request('save', 'boolean') && in_array($function, array('add', 'edit', 'delete'))) {
 			// check module
 
 			if ($function == 'edit' || $function == 'delete') {
-				$module_id = rex_slice_module_exists($slice_id, $clang);
+				$module = rex_slice_module_exists($slice_id, $clang);
 			}
 			else { // add
-				$module_id = sly_post('module_id', 'int');
+				$module = sly_post('module', 'string');
 			}
 
-			if (!rex_module_exists($module_id)) {
+			if (!$moduleService->exists($module)) {
 				$global_warning = $I18N->msg('module_not_found');
 				$slice_id       = '';
 				$function       = '';
@@ -133,12 +135,12 @@ if ($article->getRows() == 1) {
 
 				$templateService = sly_Service_Factory::getService('Template');
 
-				if (!$templateService->hasModule($templateName, $slot, $module_id)) {
+				if (!$templateService->hasModule($templateName, $slot, $module)) {
 					$global_warning = $I18N->msg('no_rights_to_this_function');
 					$slice_id       = '';
 					$function       = '';
 				}
-				elseif (!($REX['USER']->isAdmin() || $REX['USER']->hasPerm('module['.$module_id.']') || $REX['USER']->hasPerm('module[0]'))) {
+				elseif (!($REX['USER']->isAdmin() || $REX['USER']->hasPerm('module['.$module.']') || $REX['USER']->hasPerm('module[0]'))) {
 					$global_warning = $I18N->msg('no_rights_to_this_function');
 					$slice_id       = '';
 					$function       = '';
@@ -155,7 +157,7 @@ if ($article->getRows() == 1) {
 
 					// ----- PRE SAVE ACTION [ADD/EDIT/DELETE]
 
-					list($action_message, $REX_ACTION) = rex_execPreSaveAction($module_id, $function, $REX_ACTION);
+					list($action_message, $REX_ACTION) = rex_execPreSaveAction($module, $function, $REX_ACTION);
 
 					// Statusspeicherung für die rex_article Klasse
 
@@ -191,13 +193,12 @@ if ($article->getRows() == 1) {
 								$newsql->setValue('slice_id', $realslice->getId());
 							}
 							elseif ($function == 'add') {
-								$realslice = sly_Service_Factory::getService('Slice')->create(array('module_id' => $module_id));
+								$realslice = sly_Service_Factory::getService('Slice')->create(array('module' => $module));
 
 								$newsql->setValue('slice_id', $realslice->getId());
-
 								$newsql->setValue('re_article_slice_id', $slice_id);
 								$newsql->setValue('article_id', $article_id);
-								$newsql->setValue('modultyp_id', $module_id);
+								$newsql->setValue('module', $module);
 								$newsql->setValue('clang', $clang);
 								$newsql->setValue('ctype', $slot);
 								$newsql->setValue('revision', $slice_revision);
@@ -271,7 +272,7 @@ if ($article->getRows() == 1) {
 
 						// POST SAVE ACTION [ADD/EDIT/DELETE]
 
-						$info .= rex_execPostSaveAction($module_id, $function, $REX_ACTION);
+						$info .= rex_execPostSaveAction($module, $function, $REX_ACTION);
 
 						// Update Button wurde gedrückt?
 
@@ -529,9 +530,9 @@ if ($article->getRows() == 1) {
 				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveSlice[]')) {
 					// Modul und Rechte vorhanden?
 
-					$module_id = rex_slice_module_exists($slice_id, $clang);
+					$module = rex_slice_module_exists($slice_id, $clang);
 
-					if ($module_id == -1) {
+					if ($module == -1) {
 						// MODUL IST NICHT VORHANDEN
 						$warning  = $I18N->msg('module_not_found');
 						$slice_id = '';
@@ -539,7 +540,7 @@ if ($article->getRows() == 1) {
 					}
 					else {
 						// RECHTE AM MODUL ?
-						if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('module['.$module_id.']') || $REX['USER']->hasPerm('module[0]')) {
+						if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('module['.$module.']') || $REX['USER']->hasPerm('module[0]')) {
 							list($success, $message) = rex_moveSlice($slice_id, $clang, $function);
 
 							if ($success) {

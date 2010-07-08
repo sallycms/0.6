@@ -10,26 +10,22 @@
  */
 
 /**
- * DB Model Klasse für Slice Values 
- * 
- * @author zozi@webvariants.de
+ * DB Model Klasse für Slice Values
  *
+ * @author zozi@webvariants.de
  */
-class sly_Service_SliceValue extends sly_Service_Model_Base{
-
+class sly_Service_SliceValue extends sly_Service_Model_Base {
 	protected $tablename = 'slice_value';
-	
-	protected function makeObject(array $params){
+
+	protected function makeObject(array $params) {
 		return new sly_Model_SliceValue($params);
 	}
-	
-	public function findBySliceTypeFinder($slice_id, $type, $finder){
+
+	public function findBySliceTypeFinder($slice_id, $type, $finder) {
 		$where = array('slice_id' => $slice_id, 'type' => $type, 'finder' => $finder);
+		$res   = $this->find($where);
 
-		$res = $this->find($where);
-    	if(count($res) == 1) return $res[0];
-    	
-    	return null;
+		if (count($res) == 1) return $res[0];
+		return null;
 	}
-
 }

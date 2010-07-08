@@ -5,241 +5,202 @@
  * Zuständig für die Verarbeitung eines Artikel
  *
  * @package redaxo4
- * @version svn:$Id$
  */
 
-class rex_article
-{
-  var $slice_id;
-  var $article_id;
-  var $mode;
-  var $content;
-  var $function;
+class rex_article {
+	public $slice_id;
+	public $article_id;
+	public $mode;
+	public $content;
+	public $function;
+	public $category_id;
+	public $template;
+	public $save;
+	public $ctype;
+	public $clang;
+	public $getSlice;
+	public $eval;
+	public $viasql;
+	public $article_revision;
+	public $slice_revision;
+	public $warning;
+	public $info;
+	public $debug;
 
-  var $category_id;
+	private $slices       = array();
+	private $predecessors = array();
 
-  var $template;
+	public function __construct($article_id = null, $clang = null) {
+		$this->article_id = 0;
+		$this->template   = '';
+		$this->ctype      = -1; // zeigt alles an
+		$this->slice_id   = 0;
 
-  var $save;
-  var $ctype;
-  var $clang;
-  var $getSlice;
+		$this->mode    = 'view';
+		$this->content = '';
+		$this->eval    = false;
+		$this->viasql  = false;
 
-  var $eval;
-  var $viasql;
+		$this->article_revision = 0;
+		$this->slice_revision   = 0;
 
-  var $article_revision;
-  var $slice_revision;
+		$this->debug   = false;
+		$this->ARTICLE = null;
 
-  var $warning;
-  var $info;
-  var $debug;
+		if ($clang === null) {
+			$clang = sly_Core::getCurrentClang();
+		}
 
-  private $slices       = array();
-  private $predecessors = array();
+		$this->setClang($clang);
 
-  public function __construct($article_id = null, $clang = null)
-  {
-    $this->article_id = 0;
-    $this->template = '';
-    $this->ctype = -1; // zeigt alles an
-    $this->slice_id = 0;
+		rex_register_extension_point('ART_INIT', "", array(
+			'article'    => $this,
+			'article_id' => $article_id,
+			'clang'      => $this->clang
+		));
 
-    $this->mode = "view";
-    $this->content = "";
+		if ($article_id !== null) {
+			$this->setArticleId($article_id);
+		}
+	}
 
-    $this->eval = false;
-    $this->viasql = false;
+	public function setSliceRevision($sr) {
+		$this->slice_revision = (int) $sr;
+	}
 
-    $this->article_revision = 0;
-    $this->slice_revision = 0;
+	public function getContentAsQuery($viasql = true) {
+		$this->viasql = (boolean) $viasql;
+	}
 
-    $this->debug = FALSE;
-    $this->ARTICLE = null;
+	/**
+	 * Slice Id setzen für Editiermodus
+	 */
+	public function setSliceId($id) {
+		$this->slice_id = (int) $id;
+	}
 
-    if($clang === null)
-      $clang = sly_Core::getCurrentClang();
+	public function setClang($value) {
+		global $REX;
+		if (!isset($REX['CLANG'][$value]) || empty($REX['CLANG'][$value])) $value = sly_Core::getCurrentClang();
+		$this->clang  = $value;
+		$this->slices = array();
+	}
 
-    $this->setClang($clang);
+	public function getArticleId() {
+		return $this->article_id;
+	}
 
-    // ----- EXTENSION POINT
-    rex_register_extension_point('ART_INIT', "",
-      array (
-        'article' => &$this,
-        'article_id' => $article_id,
-        'clang' => $this->clang
-      )
-    );
+	public function getClang() {
+		return $this->clang;
+	}
 
-    if ($article_id !== null)
-      $this->setArticleId($article_id);
+	public function setArticleId($article_id) {
+		global $REX;
 
-  }
+		$this->article_id = (int) $article_id;
 
-  function setSliceRevision($sr)
-  {
-    $this->slice_revision = (int) $sr;
-  }
+		if ($this->viasql) {
+			$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+			$qry    = 'SELECT * FROM '.$prefix.'article WHERE id = '.$this->article_id.' AND clang = '.$this->clang;
 
-  function getContentAsQuery($viasql = TRUE)
-  {
-    if ($viasql !== TRUE) $viasql = FALSE;
-    $this->viasql = $viasql;
-  }
+			$this->ARTICLE = new rex_sql();
+			$this->ARTICLE->setQuery($qry);
 
-  // ----- Slice Id setzen für Editiermodus
-  function setSliceId($value)
-  {
-    $this->slice_id = $value;
-  }
+			if ($this->ARTICLE->getRows() > 0) {
+				$this->template    = $this->getValue('template');
+				$this->category_id = $this->getValue('category_id');
+				return true;
+			}
+		}
+		else {
+			$this->ARTICLE = OOArticle::getArticleById($this->article_id, $this->clang);
 
-  function setClang($value)
-  {
-    global $REX;
-    if (!isset($REX['CLANG'][$value]) || empty($REX['CLANG'][$value])) $value = sly_Core::getCurrentClang();
-    $this->clang = $value;
-    $this->slices = array();
-  }
+			if (OOArticle::isValid($this->ARTICLE)) {
+				$this->template    = $this->ARTICLE->getTemplateName();
+				$this->category_id = $this->ARTICLE->getCategoryId();
+				return true;
+			}
+		}
 
-  function getArticleId()
-  {
-    return $this->article_id;
-  }
+		$this->article_id  = 0;
+		$this->template    = '';
+		$this->category_id = 0;
+		$this->slices      = array();
 
-  function getClang()
-  {
-    return $this->clang;
-  }
+		return false;
+	}
 
-  function setArticleId($article_id)
-  {
-    global $REX;
+	public function setTemplateName($template) {
+		$service = sly_Service_Factory::getService('Template');
+		$this->template = $service->exists($template) ? $template : '';
+		return $this->template;
+	}
 
-    $this->article_id = (int) $article_id;
+	public function getTemplateName() {
+		return $this->template;
+	}
 
-    if ($this->viasql)
-    {
-      // ---------- select article
-      $this->ARTICLE = new rex_sql();
-      if($this->debug)
-      	$this->ARTICLE->debugsql = 1;
-      $qry = "SELECT * FROM ".$REX['DATABASE']['TABLE_PREFIX']."article WHERE ".$REX['DATABASE']['TABLE_PREFIX']."article.id='$this->article_id' AND clang='".$this->clang."' LIMIT 1";
-      $this->ARTICLE->setQuery($qry);
+	public function setMode($mode) {
+		$this->mode = $mode;
+	}
 
-      if ($this->ARTICLE->getRows() > 0)
-      {
-        $this->template    = $this->getValue('template');
-        $this->category_id = $this->getValue('category_id');
-        return TRUE;
-      }
-    }
-    else
-    {
-      $this->ARTICLE = OOArticle::getArticleById($this->article_id, $this->clang);
-      if(OOArticle::isValid($this->ARTICLE))
-      {
-      	$this->template = $this->ARTICLE->getTemplateName();
-        $this->category_id = $this->ARTICLE->getCategoryId();
-        return TRUE;
-      }
-    }
+	public function setFunction($function) {
+		$this->function = $function;
+	}
 
-    $this->article_id  = 0;
-    $this->template    = '';
-    $this->category_id = 0;
-    $this->slices = array();
-    return FALSE;
-  }
+	public function setEval($value) {
+		$this->eval = (boolean) $value;
+	}
 
-  function setTemplateName($template)
-  {
-    $service = sly_Service_Factory::getService('Template');
-    $this->template = $service->exists($template) ? $template : '';
-    return $this->template;
-  }
+	public function correctValue($value) {
+		if ($value == 'category_id') {
+			if ($this->getValue('startpage') != 1) $value = 're_id';
+			else $value = 'id';
+		}
+		// Nicht generated, oder über SQL muss article_id -> id heißen
+		else if ($value == 'article_id') {
+			$value = 'id';
+		}
 
-  function getTemplateName()
-  {
-    return $this->template;
-  }
+		return $value;
+	}
 
-  function setMode($mode)
-  {
-    $this->mode = $mode;
-  }
+	protected function _getValue($value) {
+		global $REX;
+		$value = $this->correctValue($value);
+		return $this->ARTICLE->getValue($value);
+	}
 
-  function setFunction($function)
-  {
-    $this->function = $function;
-  }
+	public function getValue($value) {
+		if ($this->hasValue($value)) {
+			return $this->_getValue($value);
+		}
 
-  function setEval($value)
-  {
-    $this->eval = $value;
-  }
+		return '['.$value.' not found]';
+	}
 
-  function correctValue($value)
-  {
-    if ($value == 'category_id')
-    {
-      if ($this->getValue('startpage')!=1) $value = 're_id';
-      else $value = 'id';
-    }
-    // Nicht generated, oder über SQL muss article_id -> id heißen
-    else if ($value == 'article_id')
-    {
-      $value = 'id';
-    }
+	public function hasValue($value) {
+		$value = $this->correctValue($value);
+		return $this->ARTICLE->hasValue($value);
+	}
 
-    return $value;
-  }
-
-  function _getValue($value)
-  {
-    global $REX;
-    $value = $this->correctValue($value);
-    return $this->ARTICLE->getValue($value);
-  }
-
-  function getValue($value)
-  {
-    // damit alte rex_article felder wie teaser, online_from etc
-    // noch funktionieren
-    // gleicher BC code nochmals in OOREDAXO::getValue
-    foreach(array('', 'art_', 'cat_') as $prefix)
-    {
-      $val = $prefix . $value;
-      if($this->hasValue($val))
-      {
-      	return $this->_getValue($val);
-      }
-    }
-    return '['. $value .' not found]';
-  }
-
-  function hasValue($value)
-  {
-    $value = $this->correctValue($value);
-    return $this->ARTICLE->hasValue($value);
-  }
-
-	function getArticle($curctype = -1) {
+	public function getArticle($curctype = -1) {
 		// Einzelnes Slice ausgeben. Besser: direkt $this->getSliceOutput aufrufen.
 		if ($this->getSlice) return $this->getSliceOutput($this->getSlice);
-		if ($this->content != "") return $this->content;
+		if ($this->content != '') return $this->content;
 
-		global $REX,$I18N;
-
+		global $REX, $I18N;
 
 		$this->ctype = $curctype;
-		$module_id   = rex_request('module_id', 'int');
+		$module      = sly_request('module', 'string');
 
-		// ----- start: article caching
+		// article caching
 		ob_start();
 		ob_implicit_flush(0);
 
-
-		if (!$this->viasql && !$this->getSlice) $this->printArticleContent();
+		if (!$this->viasql && !$this->getSlice) {
+			$this->printArticleContent();
+		}
 		else {
 			if ($this->article_id != 0) {
 				// Initialize $this->CONT, $this->slices, $this->predecessors
@@ -250,46 +211,47 @@ class rex_article
 				// ---------- SLICE IDS SORTIEREN UND AUSGEBEN
 				$currentPredecessorID = $this->getSlice ? $slices[$this->getSlice]['Previous'] : 0;
 				$lastSliceID   = 0;
-				$this->content = "";
+				$this->content = '';
 
 				while (isset($predecessors[$currentPredecessorID]) && isset($slices[$predecessors[$currentPredecessorID]])) {
 					// ------------- EINZELNER SLICE - AUSGABE
-					$slice_content       = "";
-					$SLICE_SHOW          = TRUE;
+					$slice_content       = '';
 					$currentSlice        = $slices[$predecessors[$currentPredecessorID]];
 					$this->CONT->counter = $currentSlice['Counter'];
 
-					if ($this->mode == "edit") { // BACKEND
+					if ($this->mode == 'edit') { // BACKEND
 						// ----- add select box einbauen
-						if ($this->function=="add" && $this->slice_id == $currentPredecessorID) $slice_content = $this->addSlice($currentPredecessorID, $module_id);
-						else $slice_content = $this->getAddModuleForm($currentSlice); // ----- BLOCKAUSWAHL - SELECT
+
+						if ($this->function == 'add' && $this->slice_id == $currentPredecessorID) {
+							$slice_content = $this->addSlice($currentPredecessorID, $module);
+						}
+						else {
+							$slice_content = $this->getAddModuleForm($currentSlice); // ----- BLOCKAUSWAHL - SELECT
+						}
 
 						// ----- EDIT/DELETE BLOCK - Wenn Rechte vorhanden
-						if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm("module[".$currentSlice['ModuleID']."]")) {
+
+						if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('module['.$currentSlice['Module'].']')) {
 							$slice_content = $this->getEditSliceMarkup($currentSlice, $slice_content);
 						}
 						else {
-							// ----- hat keine rechte an diesem modul
+							// ----- hat keine Rechte an diesem Modul
 							$mne = '
 								<div class="rex-content-editmode-module-name">
-									<h3 class="rex-hl4" id="slice'.$currentSlice['ID'].'">'.htmlspecialchars($currentSlice['ModuleName']).'</h3>
+									<h3 class="rex-hl4" id="slice'.$currentSlice['ID'].'">'.sly_html($currentSlice['ModuleName']).'</h3>
 									<div class="rex-navi-slice">
 										<ul>
-											<li>'.$I18N->msg('no_editing_rights').' <span>'.htmlspecialchars($currentSlice['ModuleName']).'</span></li>
+											<li>'.$I18N->msg('no_editing_rights').' <span>'.sly_html($currentSlice['ModuleName']).'</span></li>
 										</ul>
 									</div>
 								</div>';
 							$slice_content .= $mne.$this->getSliceOutput($currentSlice['ID']);
 						}
 					}
-					else {
-						throw new Exception('es gibt offensichtlich doch einen fall, in dem mode nicht edit ist und trotzdem ein einzelnes slice gerendert wird.');
-						// sollte diese exception mal fliegen, könnte es sein, dass die kommende zeile doch wichtig ist ;)
-						// $slice_content.= $this->getSliceOutput($currentSlice['ID']);
-					}
+
 					// --------------- ENDE EINZELNER SLICE
 
-					// ---------- slice in ausgabe speichern wenn ctype richtig
+					// ---------- Slice in Ausgabe speichern wenn ctype richtig
 					if ($this->ctype == -1 or $this->ctype == $currentSlice['CType']) {
 						$this->content .= $slice_content;
 
@@ -297,25 +259,31 @@ class rex_article
 						$lastSliceID = $currentSlice['ID'];
 					}
 
-					// zum nachsten slice
+					// zum nächsten Slice
 					$currentPredecessorID = $currentSlice['ID'];
 				}
 
 				// ----- add module im edit mode
-				if ($this->mode == "edit") {
-					if ($this->function=="add" && $this->slice_id == $lastSliceID) $slice_content = $this->addSlice($lastSliceID, $module_id);
-					else $slice_content = $this->getAddModuleForm(array('ID' => $lastSliceID), true);
+				if ($this->mode == 'edit') {
+					if ($this->function=='add' && $this->slice_id == $lastSliceID) {
+						$slice_content = $this->addSlice($lastSliceID, $module);
+					}
+					else {
+						$slice_content = $this->getAddModuleForm(array('ID' => $lastSliceID), true);
+					}
+
 					$this->content .= $slice_content;
 				}
 
-				// -------------------------- schreibe content
-				if ($this->eval === FALSE) echo $this->content;
+				// schreibe Content
+				if ($this->eval === false) print $this->content;
 				else eval("?>".$this->content);
 			}
-			else echo $I18N->msg('no_article_available');
+			else {
+				print $I18N->msg('no_article_available');
+			}
 		}
 
-		// ----- end: article caching
 		$CONTENT = ob_get_clean();
 		return $CONTENT;
 	}
@@ -323,16 +291,22 @@ class rex_article
 	private function printArticleContent() {
 		if ($this->article_id != 0) {
 			global $REX;
-			$article_content_file = $REX['DYNFOLDER'].'/internal/sally/articles/'.$this->article_id.'.'.$this->clang.'.content';
+
+			$article_content_file = SLY_DYNFOLDER.'/internal/sally/articles/'.$this->article_id.'.'.$this->clang.'.php';
+
 			if (!file_exists($article_content_file)) {
-				include_once ($REX["INCLUDE_PATH"]."/functions/function_rex_generate.inc.php");
+				include_once SLY_INCLUDE_PATH.'/functions/function_rex_generate.inc.php';
 				$generated = rex_generateArticleContent($this->article_id, $this->clang);
+
 				if ($generated !== true) {
-					// fehlermeldung ausgeben
-					echo $generated;
+					// Fehlermeldung ausgeben
+					print $generated;
 				}
 			}
-			if (file_exists($article_content_file)) include $article_content_file;
+
+			if (file_exists($article_content_file)) {
+				include $article_content_file;
+			}
 		}
 	}
 
@@ -341,49 +315,46 @@ class rex_article
 	 * Result-Array in $this->CONT ab.
 	 */
 	private function fetchArticleSlices() {
-		global $REX;
 		// ---------- alle teile/slices eines artikels auswaehlen
 		// slice + value + modul + artikel
-		$prefix = $REX['DATABASE']['TABLE_PREFIX'];
+		$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+		$query  =
+			'SELECT slices.*, a.re_id FROM '.$prefix.'article_slice AS slices '.
+			'LEFT JOIN '.$prefix.'article a ON slices.article_id = a.id '.
+			'WHERE '.
+				'slices.article_id = '.intval($this->article_id).' AND '.
+				'slices.clang = '.intval($this->clang).' AND a.clang = '.intval($this->clang).' AND '.
+				'slices.revision = '.intval($this->slice_revision).' '.
+			'ORDER BY slices.re_article_slice_id';
 
-		$query = "SELECT ".$prefix."module.id, ".$prefix."module.name, ".$prefix."module.ausgabe, ".$prefix."module.eingabe, ".$prefix."article_slice.*, ".$prefix."article.re_id
-			FROM
-				".$prefix."article_slice
-				LEFT JOIN ".$prefix."module ON ".$prefix."article_slice.modultyp_id=".$prefix."module.id
-				LEFT JOIN ".$prefix."article ON ".$prefix."article_slice.article_id=".$prefix."article.id
-			WHERE
-				".$prefix."article_slice.article_id='".$this->article_id."' AND
-				".$prefix."article_slice.clang='".$this->clang."' AND
-				".$prefix."article.clang='".$this->clang."' AND
-				".$prefix."article_slice.revision='".$this->slice_revision."'
-				ORDER BY ".$prefix."article_slice.re_article_slice_id";
-
-		$sql = new rex_sql;
-		if ($this->debug) $sql->debugsql = 1;
+		$sql = new rex_sql();
 		$sql->setQuery($query);
 		$this->CONT = $sql;
 	}
 
 	private function initSlices() {
 		if (!empty($this->slices)) return;
-		global $REX;
+
 		$this->fetchArticleSlices();
 
-		$slices = null;
+		$slices       = null;
 		$predecessors = null;
-		// ---------- SLICE IDS/MODUL SETZEN - speichern der daten
-		for ($i=0; $i < $this->CONT->getRows(); $i++) {
+		$service      = sly_Service_Factory::getService('Module');
+
+		// SLICE IDS/MODUL SETZEN - Speichern der Daten
+
+		for ($i = 0; $i < $this->CONT->getRows(); $i++) {
 			$previousSliceID = $this->CONT->getValue('re_article_slice_id');
-			$sliceId         = $this->CONT->getValue($REX['DATABASE']['TABLE_PREFIX'].'article_slice.id');
+			$sliceId         = $this->CONT->getValue('slices.id');
 
 			$slices[$sliceId]['ID']           = $sliceId;
 			$slices[$sliceId]['Previous']     = $previousSliceID;
-			$slices[$sliceId]['CType']        = $this->CONT->getValue($REX['DATABASE']['TABLE_PREFIX'].'article_slice.ctype');
-			$slices[$sliceId]['sliceId']      = $this->CONT->getValue($REX['DATABASE']['TABLE_PREFIX'].'article_slice.slice_id');
-			$slices[$sliceId]['ModuleInput']  = $this->CONT->getValue($REX['DATABASE']['TABLE_PREFIX'].'module.eingabe');
-			$slices[$sliceId]['ModuleOutput'] = $this->CONT->getValue($REX['DATABASE']['TABLE_PREFIX'].'module.ausgabe');
-			$slices[$sliceId]['ModuleID']     = $this->CONT->getValue($REX['DATABASE']['TABLE_PREFIX'].'module.id');
-			$slices[$sliceId]['ModuleName']   = $this->CONT->getValue($REX['DATABASE']['TABLE_PREFIX'].'module.name');
+			$slices[$sliceId]['CType']        = $this->CONT->getValue('slices.ctype');
+			$slices[$sliceId]['sliceId']      = $this->CONT->getValue('slices.slice_id');
+//			$slices[$sliceId]['ModuleInput']  = $this->CONT->getValue('module.eingabe');
+//			$slices[$sliceId]['ModuleOutput'] = $this->CONT->getValue('module.ausgabe');
+			$slices[$sliceId]['Module']       = $this->CONT->getValue('slices.module');
+			$slices[$sliceId]['ModuleName']   = $service->getTitle($slices[$sliceId]['Module']);
 			$slices[$sliceId]['Counter']      = $i;
 
 			$predecessors[$previousSliceID]   = $sliceId;
@@ -392,29 +363,30 @@ class rex_article
 		}
 
 		$this->CONT->reset();
-		$this->slices = $slices;
+		$this->slices       = $slices;
 		$this->predecessors = $predecessors;
 	}
 
 	private function getSliceOutput($sliceID) {
-		//damit $REX verfügbar ist
+		// damit $REX verfügbar ist
 		global $REX;
 
 		ob_start();
 		ob_implicit_flush(0);
 
 		$this->initSlices();
-		$slice = $this->slices[$sliceID];
-		$sliceContent = $slice['ModuleOutput'];
+
+		$slice        = $this->slices[$sliceID];
+		$service      = sly_Service_Factory::getService('Module');
+		$sliceContent = (string) $service->getContent($slice['Module'], 'output');
+
 		// TODO: abhängigkeit zu CONT auflösen
 		$this->CONT->counter = $slice['Counter'];
 
 		$sliceContent = $this->replaceObjectVars($slice['sliceId'], $sliceContent);
-
-		// --------------- EP: SLICE_SHOW
 		$sliceContent = $this->triggerSliceShowEP($sliceContent, $slice);
 
-		if ($this->eval === FALSE) echo $sliceContent;
+		if ($this->eval === false) echo $sliceContent;
 		else eval("?>".$sliceContent);
 
 		$CONTENT = ob_get_clean();
@@ -422,19 +394,15 @@ class rex_article
 	}
 
 	private function triggerSliceShowEP($content, $slice) {
-		return rex_register_extension_point(
-						'SLICE_SHOW',
-						$content,
-						array(
-							'article_id'        => $this->article_id,
-							'clang'             => $this->clang,
-							'ctype'             => $slice['CType'],
-							'module_id'         => $slice['ModuleID'],
-							'slice_id'          => $slice['ID'],
-							'function'          => $this->function,
-							'function_slice_id' => $this->slice_id
-						)
-					);
+		return rex_register_extension_point('SLICE_SHOW', $content, array(
+			'article_id'        => $this->article_id,
+			'clang'             => $this->clang,
+			'ctype'             => $slice['CType'],
+			'module'            => $slice['Module'],
+			'slice_id'          => $slice['ID'],
+			'function'          => $this->function,
+			'function_slice_id' => $this->slice_id
+		));
 	}
 
 	public function getModuleSelect() {
@@ -444,47 +412,49 @@ class rex_article
 
 			$moduleService   = sly_Service_Factory::getService('Module');
 			$templateService = sly_Service_Factory::getService('Template');
-			$modules         = $moduleService->find(null, null, 'name');
+			$modules         = $moduleService->getModules();
 			$slots           = $templateService->getSlots($this->template);
 			$moduleSelect    = array();
 
 			foreach (array_keys($slots) as $slotID) {
-				$moduleSelect[$slotID] = new rex_select;
-				$moduleSelect[$slotID]->setName('module_id');
+				$moduleSelect[$slotID] = new rex_select();
+				$moduleSelect[$slotID]->setName('module');
 				$moduleSelect[$slotID]->setSize('1');
 				$moduleSelect[$slotID]->setStyle('class="rex-form-select"');
 				$moduleSelect[$slotID]->setAttribute('onchange', 'this.form.submit();');
 				$moduleSelect[$slotID]->addOption('----------------------------  '.$I18N->msg('add_block'),'');
 
-				foreach ($modules as $module) {
-					if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('module['.$module->getId().']')) {
-						if ($templateService->hasModule($this->template, $slotID, $module->getId())) {
-							$moduleSelect[$slotID]->addOption(rex_translate($module->getName(),NULL,FALSE),$module->getId());
+				foreach ($modules as $module => $moduleTitle) {
+					if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('module['.$module.']')) {
+						if ($templateService->hasModule($this->template, $slotID, $module)) {
+							$moduleSelect[$slotID]->addOption(rex_translate($moduleTitle, null, false), $module);
 						}
 					}
 				}
 			}
 		}
+
 		return $moduleSelect;
 	}
 
 	private function getAddModuleForm($currentSlice, $last = false) {
 		global $I18N;
+
 		$formURL      = 'index.php';
 		$moduleSelect = $this->getModuleSelect();
 		$sliceID      = $last ? $currentSlice['ID'] : $currentSlice['Previous'];
 		$formID       = $last ? '' : ' id="slice'.$currentSlice['ID'].'"';
-		$moduleSelect[$this->ctype]->setId("module_id".$sliceID);
 
+		$moduleSelect[$this->ctype]->setId('module'.$sliceID);
 
 		$sliceContent = '
 			<div class="rex-form rex-form-content-editmode">
 				<form action="'.$formURL.'" method="get"'.$formID.'>
 					<fieldset class="rex-form-col-1">
 						<legend><span>'. $I18N->msg("add_block") .'</span></legend>
-						<input type="hidden" name="article_id" value="'. $this->article_id .'" />
+						<input type="hidden" name="article_id" value="'.$this->article_id.'" />
 						<input type="hidden" name="page" value="content" />
-						<input type="hidden" name="mode" value="'. $this->mode .'" />
+						<input type="hidden" name="mode" value="'.$this->mode.'" />
 						<input type="hidden" name="slice_id" value="'.$sliceID.'" />
 						<input type="hidden" name="function" value="add" />
 						<input type="hidden" name="clang" value="'.$this->clang.'" />
@@ -494,7 +464,7 @@ class rex_article
 							<div class="rex-form-row">
 								<p class="rex-form-col-a rex-form-select">
 									'.$moduleSelect[$this->ctype]->get().'
-									<noscript><input class="rex-form-submit" type="submit" name="btn_add" value="'. $I18N->msg("add_block") .'" /></noscript>
+									<noscript><input class="rex-form-submit" type="submit" name="btn_add" value="'.$I18N->msg("add_block").'" /></noscript>
 								</p>
 							</div>
 						</div>
@@ -506,105 +476,122 @@ class rex_article
 
 	private function getEditSliceMarkup($currentSlice, $slice_content) {
 		global $REX, $I18N;
+
 		$msg = '';
 
 		if ($this->slice_id == $currentSlice['ID']) {
-			if ($this->warning != '') $msg .= rex_warning($this->warning);
-			if ($this->info != '')    $msg .= rex_info($this->info);
+			if (!empty($this->warning)) $msg .= rex_warning($this->warning);
+			if (!empty($this->info))    $msg .= rex_info($this->info);
 		}
 
 		$sliceUrl = 'index.php?page=content&amp;article_id='.$this->article_id.'&amp;mode=edit&amp;slice_id='.$currentSlice['ID'].'&amp;clang='.$this->clang.'&amp;ctype='.$this->ctype.'%s#slice'.$currentSlice['ID'];
 		$listElements = array();
-		$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;function=edit').'" class="rex-tx3">'.$I18N->msg('edit').' <span>'.htmlspecialchars($currentSlice['ModuleName']).'</span></a>';
-		$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;function=delete&amp;save=1').'" class="rex-tx2" onclick="return confirm(\''.$I18N->msg('delete').' ?\')">'.$I18N->msg('delete').' <span>'.htmlspecialchars($currentSlice['ModuleName']).'</span></a>';
+		$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;function=edit').'" class="rex-tx3">'.$I18N->msg('edit').' <span>'.sly_html($currentSlice['ModuleName']).'</span></a>';
+		$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;function=delete&amp;save=1').'" class="rex-tx2" onclick="return confirm(\''.$I18N->msg('delete').' ?\')">'.$I18N->msg('delete').' <span>'.sly_html($currentSlice['ModuleName']).'</span></a>';
 
 		if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveSlice[]')) {
-			$moveUp = $I18N->msg('move_slice_up');
+			$moveUp   = $I18N->msg('move_slice_up');
 			$moveDown = $I18N->msg('move_slice_down');
+
 			// upd stamp übergeben, da sonst ein block nicht mehrfach hintereindander verschoben werden kann
 			// (Links wären sonst gleich und der Browser lässt das klicken auf den gleichen Link nicht zu)
+			// WTF?!
+
 			$listElements[] = '<a href="'. sprintf($sliceUrl, '&amp;upd='.time().'&amp;function=moveup')  .'" title="'.$moveUp  .'" class="rex-slice-move-up"><span>'.  $currentSlice['ModuleName'].'</span></a>';
 			$listElements[] = '<a href="'. sprintf($sliceUrl, '&amp;upd='.time().'&amp;function=movedown').'" title="'.$moveDown.'" class="rex-slice-move-down"><span>'.$currentSlice['ModuleName'].'</span></a>';
 		}
 
-		// ----- EXTENSION POINT
-		$listElements = rex_register_extension_point('ART_SLICE_MENU', $listElements,
-			array(
-				'article_id' => $this->article_id,
-				'clang'      => $this->clang,
-				'ctype'      => $currentSlice['CType'],
-				'module_id'  => $currentSlice['ModuleID'],
-				'slice_id'   => $currentSlice['ID']
-			)
-		);
+		$listElements = rex_register_extension_point('ART_SLICE_MENU', $listElements, array(
+			'article_id' => $this->article_id,
+			'clang'      => $this->clang,
+			'ctype'      => $currentSlice['CType'],
+			'module'     => $currentSlice['Module'],
+			'slice_id'   => $currentSlice['ID']
+		));
 
 		$mne = $msg;
 
-		if ($this->function=="edit" && $this->slice_id == $currentSlice['ID']) $mne .= '<div class="rex-content-editmode-module-name rex-form-content-editmode-edit-slice">';
-		else $mne .= '<div class="rex-content-editmode-module-name">';
+		if ($this->function=="edit" && $this->slice_id == $currentSlice['ID']) {
+			$mne .= '<div class="rex-content-editmode-module-name rex-form-content-editmode-edit-slice">';
+		}
+		else {
+			$mne .= '<div class="rex-content-editmode-module-name">';
+		}
 
 		$mne .= '
-			<h3 class="rex-hl4">'.htmlspecialchars($currentSlice['ModuleName']).'</h3>
+			<h3 class="rex-hl4">'.sly_html($currentSlice['ModuleName']).'</h3>
 			<div class="rex-navi-slice">
 				<ul>';
 
 		$listElementFlag = true;
+
 		foreach ($listElements as $listElement) {
 			$class = '';
+
 			if ($listElementFlag) {
 				$class = ' class="rex-navi-first"';
 				$listElementFlag = false;
 			}
-			$mne  .= '<li'.$class.'>'.$listElement.'</li>';
+
+			$mne .= '<li'.$class.'>'.$listElement.'</li>';
 		}
 
-		$mne .= '</ul></div></div>';
-
+		$mne           .= '</ul></div></div>';
 		$slice_content .= $mne;
-		if ($this->function=="edit" && $this->slice_id == $currentSlice['ID']) {
+
+		if ($this->function == 'edit' && $this->slice_id == $currentSlice['ID']) {
 			// **************** Aktueller Slice
 
 			// ----- PRE VIEW ACTION [EDIT]
-			$REX_ACTION = array ();
+			$REX_ACTION = array();
 
 			// nach klick auf den Übernehmen button,
 			// die POST werte übernehmen
+
 			if (rex_var::isEditEvent()) {
 				foreach (sly_Core::getVarTypes() as $obj) $REX_ACTION = $obj->getACRequestValues($REX_ACTION);
 			}
+
 			// Sonst die Werte aus der DB holen
 			// (1. Aufruf via Editieren Link)
+
 			else {
 				// TODO: Abhängigkeit von CONT aufheben.
 				foreach (sly_Core::getVarTypes() as $obj) $REX_ACTION = $obj->getACDatabaseValues($REX_ACTION, $this->CONT);
 			}
 
-			if     ($this->function == 'edit')   $modebit = '2'; // pre-action and edit
-			elseif ($this->function == 'delete') $modebit = '4'; // pre-action and delete
-			else                                 $modebit = '1'; // pre-action and add
+			if     ($this->function == 'edit')   $modebit = 2; // pre-action and edit
+			elseif ($this->function == 'delete') $modebit = 4; // pre-action and delete
+			else                                 $modebit = 1; // pre-action and add
 
-			$ga = new rex_sql;
-			if ($this->debug) $ga->debugsql = 1;
+			$moduleService = sly_Service_Factory::getService('Module');
+			$actionService = sly_Service_Factory::getService('Action');
+			$actions       = $moduleService->getActions($currentSlice['Module']);
+			$actions       = isset($actions['preview']) ? sly_makeArray($actions['preview']) : array();
 
-			$ga->setQuery('SELECT preview FROM '.$REX['DATABASE']['TABLE_PREFIX'].'module_action ma,'. $REX['DATABASE']['TABLE_PREFIX']. 'action a WHERE preview != "" AND ma.action_id=a.id AND module_id='.$currentSlice['ModuleID'].' AND ((a.previewmode & '.$modebit.') = '.$modebit.')');
+			foreach ($actions as $actionName) {
+				$action = $actionService->getContent($actionName, 'preview');
 
-			for ($t=0; $t < $ga->getRows(); $t++) {
-				$iaction = $ga->getValue('preview');
+				// Variablen ersetzen
+				foreach (sly_Core::getVarTypes() as $obj) {
+					$iaction = $obj->getACOutput($REX_ACTION, $action);
+				}
 
-				// ****************** VARIABLEN ERSETZEN
-				foreach (sly_Core::getVarTypes() as $obj) $iaction = $obj->getACOutput($REX_ACTION, $iaction);
-				eval('?>'.$iaction);
+				eval('?>'.$action);
 
-				// ****************** SPEICHERN FALLS NOETIG
-				// TODO: abhängigkeit zu CONT auflösen
-				foreach (sly_Core::getVarTypes() as $obj) $obj->setACValues($this->CONT, $REX_ACTION);
+				// Speichern (falls nätig)
+				// TODO: Abhängigkeit zu CONT auflösen
 
-				$ga->next();
+				foreach (sly_Core::getVarTypes() as $obj) {
+					$obj->setACValues($this->CONT, $REX_ACTION);
+				}
 			}
 
 			// ----- / PRE VIEW ACTION
-			$slice_content .= $this->editSlice($currentSlice['ID'], $currentSlice['ModuleInput'], $currentSlice['CType'], $currentSlice['ModuleID']);
-			$slice_content = $this->triggerSliceShowEP($slice_content, $currentSlice);
+
+			$moduleInput    = $moduleService->getContent($currentSlice['Module'], 'input');
+			$slice_content .= $this->editSlice($currentSlice['ID'], $moduleInput, $currentSlice['CType'], $currentSlice['Module']);
+			$slice_content  = $this->triggerSliceShowEP($slice_content, $currentSlice);
 		}
 		else {
 			// Modulinhalt ausgeben
@@ -618,6 +605,7 @@ class rex_article
 				<!-- *** OUTPUT OF MODULE-OUTPUT - END *** -->
 			';
 		}
+
 		return $slice_content;
 	}
 
@@ -648,36 +636,37 @@ class rex_article
 	}
 
   // ----- ADD Slice
-  function addSlice($I_ID,$module_id)
+  public function addSlice($sliceID, $module)
   {
     global $REX,$I18N;
 
-	$moduleService = sly_Service_Factory::getService('Module');
-	$module = $moduleService->findById($module_id);
-    if (!$module)
+    $moduleService = sly_Service_Factory::getService('Module');
+
+    if (!$moduleService->exists($module))
     {
       $slice_content = rex_warning($I18N->msg('module_doesnt_exist'));
-    }else
+    }
+    else
     {
       $slice_content = '
         <a name="addslice"></a>
         <div class="rex-form rex-form-content-editmode-add-slice">
-        <form action="index.php#slice'. $I_ID .'" method="post" id="REX_FORM" enctype="multipart/form-data">
+        <form action="index.php#slice'.$sliceID.'" method="post" id="REX_FORM" enctype="multipart/form-data">
           <fieldset class="rex-form-col-1">
             <legend><span>'. $I18N->msg('add_block').'</span></legend>
-            <input type="hidden" name="article_id" value="'. $this->article_id .'" />
+            <input type="hidden" name="article_id" value="'.$this->article_id.'" />
             <input type="hidden" name="page" value="content" />
-            <input type="hidden" name="mode" value="'. $this->mode .'" />
-            <input type="hidden" name="slice_id" value="'. $I_ID .'" />
+            <input type="hidden" name="mode" value="'.$this->mode.'" />
+            <input type="hidden" name="slice_id" value="'.$sliceID.'" />
             <input type="hidden" name="function" value="add" />
-            <input type="hidden" name="module_id" value="'. $module_id .'" />
+            <input type="hidden" name="module" value="'.sly_html($module).'" />
             <input type="hidden" name="save" value="1" />
-            <input type="hidden" name="clang" value="'. $this->clang .'" />
-            <input type="hidden" name="ctype" value="'.$this->ctype .'" />
+            <input type="hidden" name="clang" value="'.$this->clang.'" />
+            <input type="hidden" name="ctype" value="'.$this->ctype.'" />
 
             <div class="rex-content-editmode-module-name">
               <h3 class="rex-hl4">
-                '. $I18N->msg("module") .': <span>'. htmlspecialchars($module->getName()) .'</span>
+                '.$I18N->msg("module").': <span>'.sly_html($moduleService->getTitle($module)).'</span>
               </h3>
             </div>
 
@@ -686,7 +675,7 @@ class rex_article
               <div class="rex-form-row">
                 <div class="rex-content-editmode-slice-input">
                 <div class="rex-content-editmode-slice-input-2">
-                  '. $module->getInput() .'
+                  '.$moduleService->getContent($module, 'input').'
                 </div>
                 </div>
               </div>
@@ -698,7 +687,7 @@ class rex_article
              <div class="rex-form-wrapper">
               <div class="rex-form-row">
                 <p class="rex-form-col-a rex-form-submit">
-                  <input class="rex-form-submit" type="submit" name="btn_save" value="'. $I18N->msg('add_block') .'" />
+                  <input class="rex-form-submit" type="submit" name="btn_save" value="'.$I18N->msg('add_block').'" />
                 </p>
               </div>
             </div>
@@ -714,13 +703,14 @@ class rex_article
         </script>';
 
       // Beim Add hier die Meldung ausgeben
-      if($this->slice_id == 0)
+      // Sollte das hier nicht immer true sein?
+      if ($this->slice_id == 0)
       {
-         if($this->warning != '')
+         if ($this->warning != '')
          {
            echo rex_warning($this->warning);
          }
-         if($this->info != '')
+         if ($this->info != '')
          {
            echo rex_info($this->info);
          }
@@ -747,26 +737,27 @@ class rex_article
       }*/
       $slice_content = $this->replaceVars(0, $slice_content);
     }
+
     return $slice_content;
   }
 
   // ----- EDIT Slice
-  function editSlice($RE_CONTS, $RE_MODUL_IN, $RE_CTYPE, $RE_MODUL_ID)
+  public function editSlice($sliceID, $moduleInput, $ctype, $module)
   {
     global $REX, $I18N;
 
     $slice_content = '
       <a name="editslice"></a>
       <div class="rex-form rex-form-content-editmode-edit-slice">
-      <form enctype="multipart/form-data" action="index.php#slice'.$RE_CONTS.'" method="post" id="REX_FORM">
+      <form enctype="multipart/form-data" action="index.php#slice'.$sliceID.'" method="post" id="REX_FORM">
         <fieldset class="rex-form-col-1">
           <legend><span>'. $I18N->msg('edit_block') .'</span></legend>
           <input type="hidden" name="article_id" value="'.$this->article_id.'" />
           <input type="hidden" name="page" value="content" />
           <input type="hidden" name="mode" value="'.$this->mode.'" />
-          <input type="hidden" name="slice_id" value="'.$RE_CONTS.'" />
-          <input type="hidden" name="ctype" value="'.$RE_CTYPE.'" />
-          <input type="hidden" name="module_id" value="'. $RE_MODUL_ID .'" />
+          <input type="hidden" name="slice_id" value="'.$sliceID.'" />
+          <input type="hidden" name="ctype" value="'.$ctype.'" />
+          <input type="hidden" name="module" value="'.sly_html($module).'" />
           <input type="hidden" name="function" value="edit" />
           <input type="hidden" name="save" value="1" />
           <input type="hidden" name="update" value="0" />
@@ -776,7 +767,7 @@ class rex_article
             <div class="rex-form-row">
               <div class="rex-content-editmode-slice-input">
               <div class="rex-content-editmode-slice-input-2">
-              '. $RE_MODUL_IN .'
+              '.$moduleInput.'
               </div>
               </div>
             </div>
@@ -803,112 +794,100 @@ class rex_article
          //-->
       </script>';
 
-	$slice_id = $this->CONT->getValue($REX['DATABASE']['TABLE_PREFIX'].'article_slice.slice_id');
+		return $this->replaceVars($sliceID, $slice_content);
+	}
 
-	$slice_content = $this->replaceVars($slice_id, $slice_content);
-    return $slice_content;
-  }
+	/**
+	 * Modulvariablen werden ersetzt
+	 */
+	public function replaceVars($sliceID, $content, $forceMode = null) {
+		$content = $this->replaceObjectVars($sliceID, $content);
+		$content = $this->replaceCommonVars($content, $forceMode);
+		return $content;
+	}
 
-  // ----- Modulvariablen werden ersetzt
-  function replaceVars($slice_id, $content, $forceMode = null)
-  {
-    $content = $this->replaceObjectVars($slice_id,$content);
-    $content = $this->replaceCommonVars($content, $forceMode);
-    return $content;
-  }
+	/**
+	 * REX_VAR-Ersetzungen
+	 */
+	public function replaceObjectVars($slice_id, $content, $forceMode = null) {
+		global $REX;
 
-  // ----- REX_VAR Ersetzungen
-  function replaceObjectVars($slice_id, $content, $forceMode = null)
-  {
-    global $REX;
+		$tmp      = '';
+		$mode     = $forceMode === null ? $this->mode : $forceMode;
+		$artslice = OOArticleSlice::_getSliceWhere('slice_id = '.intval($slice_id));
 
-    $tmp = '';
-    $mode    = $forceMode === null ? $this->mode : $forceMode;
+		foreach (sly_Core::getVarTypes() as $idx => $var) {
+			if ($mode == 'edit') {
+				if (($this->function == 'add' && $slice_id == '0') || ($this->function == 'edit' && $artslice && $artslice->getId() == $this->slice_id)) {
+					if (isset($REX['ACTION']['SAVE']) && $REX['ACTION']['SAVE'] === false) {
+						// Wenn der aktuelle Slice nicht gespeichert werden soll
+						// (via Action wurde das Nicht-Speichern-Flag gesetzt)
+						// Dann die Werte manuell aus dem Post übernehmen
+						// und anschließend die Werte wieder zurücksetzen,
+						// damit die nächsten Slices wieder die Werte aus der DB verwenden
+						$var->setACValues($slice_id, $REX['ACTION']);
+						$tmp = $var->getBEInput($slice_id, $content);
+					}
+					else {
+						// Slice normal parsen
+						$tmp = $var->getBEInput($slice_id, $content);
+					}
+				}
+				else {
+					$tmp = $var->getBEOutput($slice_id, $content);
+				}
+			}
 
-	$artslice = OOArticleSlice::_getSliceWhere('slice_id = '. $slice_id);
+			// Rückgabewert nur auswerten wenn auch einer vorhanden ist
 
+			if ($tmp !== null) {
+				$content = $tmp;
+			}
+		}
 
-    foreach(sly_Core::getVarTypes() as $idx => $var)
-    {
-      if ($mode == 'edit')
-      {
-        if (($this->function == 'add' && $slice_id == '0') ||
-            ($this->function == 'edit' && $artslice && $artslice->getId() == $this->slice_id))
-        {
-          if (isset($REX['ACTION']['SAVE']) && $REX['ACTION']['SAVE'] === false)
-          {
-            // Wenn der aktuelle Slice nicht gespeichert werden soll
-            // (via Action wurde das Nicht-Speichern-Flag gesetzt)
-            // Dann die Werte manuell aus dem Post übernehmen
-            // und anschließend die Werte wieder zurücksetzen,
-            // damit die nächsten Slices wieder die Werte aus der DB verwenden
-            $var->setACValues($slice_id, $REX['ACTION']);
-            $tmp = $var->getBEInput($slice_id, $content);
-          }
-          else
-          {
-            // Slice normal parsen
-            $tmp = $var->getBEInput($slice_id, $content);
-          }
-        }else
-        {
-          $tmp = $var->getBEOutput($slice_id, $content);
-        }
-      }
+		return $content;
+	}
 
-      // Rückgabewert nur auswerten wenn auch einer vorhanden ist
-      // damit $content nicht verfälscht wird
-      // null ist default Rückgabewert, falls kein RETURN in einer Funktion ist
-      if($tmp !== null)
-      {
-        $content = $tmp;
-      }
-    }
+	/**
+	 * artikelweite globale Variablen werden ersetzt
+	 */
+	function replaceCommonVars($content) {
+		global $REX;
 
-    return $content;
-  }
+		static $user_id    = null;
+		static $user_login = null;
 
-  // ---- Artikelweite globale variablen werden ersetzt
-  function replaceCommonVars($content)
-  {
-    global $REX;
+		// UserId gibt's nur im Backend
 
-    static $user_id = null;
-    static $user_login = null;
+		if ($user_id === null) {
+			if (isset($REX['USER'])) {
+				$user_id    = $REX['USER']->getValue('id');
+				$user_login = $REX['USER']->getValue('login');
+			}
+			else {
+				$user_id    = '';
+				$user_login = '';
+			}
+		}
 
-    // UserId gibts nur im Backend
-    if($user_id === null)
-    {
-      if(isset($REX['USER']))
-      {
-        $user_id = $REX['USER']->getValue('id');
-        $user_login = $REX['USER']->getValue('login');
-      }else
-      {
-        $user_id = '';
-        $user_login = '';
-      }
-    }
+		static $search = array(
+			'REX_ARTICLE_ID',
+			'REX_CATEGORY_ID',
+			'REX_CLANG_ID',
+			'REX_TEMPLATE_NAME',
+			'REX_USER_ID',
+			'REX_USER_LOGIN'
+		);
 
-    static $search = array(
-       'REX_ARTICLE_ID',
-       'REX_CATEGORY_ID',
-       'REX_CLANG_ID',
-       'REX_TEMPLATE_ID',
-       'REX_USER_ID',
-       'REX_USER_LOGIN'
-    );
+		$replace = array(
+			$this->article_id,
+			$this->category_id,
+			$this->clang,
+			$this->getTemplateName(),
+			$user_id,
+			$user_login
+		);
 
-    $replace = array(
-      $this->article_id,
-      $this->category_id,
-      $this->clang,
-      $this->getTemplateId(),
-      $user_id,
-      $user_login
-    );
-
-    return str_replace($search, $replace,$content);
-  }
-
+		return str_replace($search, $replace,$content);
+	}
 }

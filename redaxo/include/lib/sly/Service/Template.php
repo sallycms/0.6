@@ -103,7 +103,7 @@ class sly_Service_Template {
 		return $dir->listPlain(true, false, false, $absolute);
 	}
 
-	public function getKnownTemplateFiles($absolute = true) {
+	public function getKnownTemplateFiles() {
 		$known = array();
 		foreach ($this->list as $data) $known[] = $data['filename'];
 		return $known;
@@ -251,7 +251,8 @@ class sly_Service_Template {
 	public function hasModule($template, $ctype, $module) {
 		if (!$this->exists($template)) return false;
 
-		$modules = $this->get($template, 'modules', array());
+		$modules = $this->getModules($template);
+		$modules = sly_makeArray($modules);
 
 		return
 			/* keine Angabe -> alle erlaubt */ !isset($modules[$ctype]) ||
