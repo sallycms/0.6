@@ -151,13 +151,13 @@ function selectMedialist(filename)
 
 function insertImage(src,alt)
 {
-  window.opener.insertImage('files/' + src, alt);
+  window.opener.insertImage('data/mediapool/' + src, alt);
   self.close();
 }
 
 function insertLink(src)
 {
-  window.opener.insertFileLink('files/' + src);
+  window.opener.insertFileLink('data/mediapool/' + src);
   self.close();
 }
 
