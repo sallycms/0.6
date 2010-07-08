@@ -151,7 +151,7 @@ function selectMedialist(filename)
 
 function insertImage(src,alt)
 {
-  window.opener.insertImage('files/' + src, alt);
+  window.opener.insertImage('data/mediapool/' + src, alt);
   self.close();
 }
 
