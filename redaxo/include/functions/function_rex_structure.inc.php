@@ -312,7 +312,7 @@ function rex_editCategory($categoryID, $clang, $data)
  */
 function rex_deleteCategoryReorganized($categoryID)
 {
-	global $I18N;
+	global $I18N, $REX;
 
 	$message    = '';
 	$clang      = 0;
@@ -320,9 +320,9 @@ function rex_deleteCategoryReorganized($categoryID)
 
 	// Prüfen ob die Kategorie existiert
 
-	$testID = rex_sql::fetch('id', 'article', 'id = '.$categoryID.' AND clang = '. $clang);
+	$parentID = rex_sql::fetch('re_id', 'article', 'id = '.$categoryID.' AND clang = '. $clang);
 
-	if ($testID === false) {
+	if ($parentID === false) {
 		$message = $I18N->msg('category_could_not_be_deleted');
 		return array(false, $message);
 	}
@@ -357,29 +357,44 @@ function rex_deleteCategoryReorganized($categoryID)
 
 	$return = rex_deleteArticle($categoryID);
 
-	// Kinder neu positionieren
+	if($return['state'] != false)
+	{
+		// Kinder neu positionieren
 
-	$cache = sly_Core::cache();
+		$cache = sly_Core::cache();
 
-	foreach ($instances as $clang => $data) {
-		$sql->setQuery(
-			'UPDATE #_article SET catprior = catprior - 1 '.
-			'WHERE re_id = '.$data['re_id'].' AND catprior > '.$data['catprior'].' '.
-			'AND catprior <> 0 AND clang = '.$clang, '#_'
-		);
+		foreach ($instances as $clang => $data) {
+			$sql->setQuery(
+				'UPDATE #_article SET catprior = catprior - 1 '.
+				'WHERE re_id = '.$data['re_id'].' AND catprior > '.$data['catprior'].' '.
+				'AND catprior <> 0 AND clang = '.$clang, '#_'
+			);
 
-		$return = rex_register_extension_point('CAT_DELETED', $return, array(
-			'id'     => $categoryID,
-			'clang'  => $clang,
-			're_id'  => $data['re_id'],
-			'name'   => $data['catname'],
-			'prior'  => $data['catprior'],
-			'path'   => $data['path'],
-			'status' => $data['status']
-		));
+			$return = rex_register_extension_point('CAT_DELETED', $return, array(
+				'id'     => $categoryID,
+				'clang'  => $clang,
+				're_id'  => $data['re_id'],
+				'name'   => $data['catname'],
+				'prior'  => $data['catprior'],
+				'path'   => $data['path'],
+				'status' => $data['status']
+			));
 
-		$cache->delete('category', $categoryID.'_'.$clang);
-		$cache->delete('clist', $data['re_id'].'_'.$clang);
+			$cache->delete('category', $categoryID.'_'.$clang);
+			$cache->delete('clist', $data['re_id'].'_'.$clang);
+		}
+
+		// remove all caches
+		$sql->setQuery('SELECT id FROM #_article WHERE re_id = "'.$parentID.'" AND catprior >= "' .$data['catprior']. '"', '#_');
+		for ($i=0; $i < $sql->getRows(); $i++)
+		{
+			$id = $sql->getValue('id');
+			foreach(array_keys($REX['CLANG']) as $clang)
+			{
+				$cache->delete('category', $id.'_'.$clang);
+			}
+			$sql->next();
+		}
 	}
 
 	return array($return['state'], $return['message']);
