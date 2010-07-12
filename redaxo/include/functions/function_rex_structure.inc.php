@@ -306,13 +306,13 @@ function rex_editCategory($categoryID, $clang, $data)
 /**
  * Löscht eine Kategorie und reorganisiert die Prioritäten verbleibender
  * Geschwister-Kategorien
- * 
+ *
  * @param  int $categoryID  Id der Kategorie die gelöscht werden soll
  * @return array            ein Array welches den Status sowie eine Fehlermeldung beinhaltet
  */
 function rex_deleteCategoryReorganized($categoryID)
 {
-	global $I18N;
+	global $I18N, $REX;
 
 	$message    = '';
 	$clang      = 0;
@@ -320,17 +320,17 @@ function rex_deleteCategoryReorganized($categoryID)
 
 	// Prüfen ob die Kategorie existiert
 
-	$testID = rex_sql::fetch('id', 'article', 'id = '.$categoryID.' AND clang = '. $clang);
-	
-	if ($testID === false) {
+	$parentID = rex_sql::fetch('re_id', 'article', 'id = '.$categoryID.' AND clang = '. $clang);
+
+	if ($parentID === false) {
 		$message = $I18N->msg('category_could_not_be_deleted');
 		return array(false, $message);
 	}
-	
+
 	// Prüfen ob die Kategorie noch Unterkategorien besitzt
-	
+
 	$numSubCats = rex_sql::fetch('COUNT(*)', 'article', 're_id = '.$categoryID.' AND clang = '.$clang.' AND startpage = 1');
-	
+
 	if ($numSubCats > 0) {
 		$message  = $I18N->msg('category_could_not_be_deleted').' ';
 		$message .= $I18N->msg('category_still_contains_subcategories');
@@ -338,48 +338,63 @@ function rex_deleteCategoryReorganized($categoryID)
 	}
 
 	// Prüfen ob die Kategorie noch Artikel besitzt (ausser dem Startartikel)
-	
+
 	$numChildren = rex_sql::fetch('COUNT(*)', 'article', 're_id = '.$categoryID.' AND clang = '.$clang.' AND startpage = 0');
-	
+
 	if ($numChildren > 0) {
 		$message  = $I18N->msg('category_could_not_be_deleted').' ';
 		$message .= $I18N->msg('category_still_contains_articles');
 		return array(false, $message);
 	}
-	
+
 	$sql       = new rex_sql();
 	$instances = rex_sql::getArrayEx(
 		'SELECT clang, re_id, catname, catprior, path, status '.
 		'FROM #_article WHERE id = '.$categoryID, '#_'
 	);
-	
+
 	// Kategorie löschen
-	
+
 	$return = rex_deleteArticle($categoryID);
-	
-	// Kinder neu positionieren
-	
-	$cache = sly_Core::cache();
 
-	foreach ($instances as $clang => $data) {
-		$sql->setQuery(
-			'UPDATE #_article SET catprior = catprior - 1 '.
-			'WHERE re_id = '.$data['re_id'].' AND catprior > '.$data['catprior'].' '.
-			'AND catprior <> 0 AND clang = '.$clang, '#_'
-		);
+	if($return['state'] != false)
+	{
+		// Kinder neu positionieren
 
-		$return = rex_register_extension_point('CAT_DELETED', $return, array(
-			'id'     => $categoryID,
-			'clang'  => $clang,
-			're_id'  => $data['re_id'],
-			'name'   => $data['catname'],
-			'prior'  => $data['catprior'],
-			'path'   => $data['path'],
-			'status' => $data['status']
-		));
-		
-		$cache->delete('category', $categoryID.'_'.$clang);
-		$cache->delete('clist', $data['re_id'].'_'.$clang);
+		$cache = sly_Core::cache();
+
+		foreach ($instances as $clang => $data) {
+			$sql->setQuery(
+				'UPDATE #_article SET catprior = catprior - 1 '.
+				'WHERE re_id = '.$data['re_id'].' AND catprior > '.$data['catprior'].' '.
+				'AND catprior <> 0 AND clang = '.$clang, '#_'
+			);
+
+			$return = rex_register_extension_point('CAT_DELETED', $return, array(
+				'id'     => $categoryID,
+				'clang'  => $clang,
+				're_id'  => $data['re_id'],
+				'name'   => $data['catname'],
+				'prior'  => $data['catprior'],
+				'path'   => $data['path'],
+				'status' => $data['status']
+			));
+
+			$cache->delete('category', $categoryID.'_'.$clang);
+			$cache->delete('clist', $data['re_id'].'_'.$clang);
+		}
+
+		// remove all caches
+		$sql->setQuery('SELECT id FROM #_article WHERE re_id = "'.$parentID.'" AND catprior >= "' .$data['catprior']. '"', '#_');
+		for ($i=0; $i < $sql->getRows(); $i++)
+		{
+			$id = $sql->getValue('id');
+			foreach(array_keys($REX['CLANG']) as $clang)
+			{
+				$cache->delete('category', $id.'_'.$clang);
+			}
+			$sql->next();
+		}
 	}
 
 	return array($return['state'], $return['message']);
