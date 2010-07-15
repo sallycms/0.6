@@ -734,7 +734,7 @@ div#rex-footer  #rex-navi-footer {
 
 	ul {
 		float: left;
-		width: 70%;
+		width: 50%; /* Vorsicht: Die Loginseite ist schmaler! */
 		margin: 0 5px;
 
 		li {
