@@ -1,0 +1,651 @@
++global-reset;
++html5-reset;
+
+=hardcore-hidden {
+	display: inline !important;
+	position: absolute !important;
+	left: -1000px !important;
+	top: -1000px !important;
+	width: 0px !important;
+	height: 0px !important;
+	overflow: hidden !important;
+	background-color: $background !important;
+}
+
+html>body div#rex-title {
+	height: auto;
+	min-height: 0; /*oder 61*/
+}
+
+body {
+	background-color: #f2f2f2;
+	font-family: Calibri, Verdana, Arial, sans-serif;
+	font-size: 100.01%;
+	font-weight: normal;
+	line-height: 1;
+	position: relative;
+	text-align: left;
+	background-repeat: no-repeat;
+	margin: 0;
+	color: $drk_grey;
+	/* width: 1000px; */
+	background-image: url(../body.gif);
+	background-repeat: repeat-x;
+
+
+	div#rex-website {
+
+		width: 1000px;
+		float: none;
+		margin: 0 auto;
+
+		font-size: 0.9em;
+		background-image: url(../website.gif);
+		background-repeat: repeat-x;
+
+		.rex-mab-10 { margin-bottom: 10px; }
+		.rex-pat-0  { padding-top: 0px;    }
+		.rex-par-0  { padding-right: 0px;  }
+		.rex-pab-0  { padding-bottom: 0px; }
+		.rex-pal-0  { padding-left: 0px;   }
+	}
+
+	&#rex-page-mediapool {
+
+		div#rex-website { width: 100%; }
+		div#rex-title div.rex-title-row { width: 100%; }
+		div#rex-title { background-image: none; }
+		div#rex-redaxo-link { display: none; }
+		div#rex-navi-logout {display: none;}
+		div#rex-footer {/* width: 690px; margin: 0 auto; */ display:none;}
+
+		div#rex-wrapper {
+			float:none;
+			margin:0 auto;
+			padding-top:20px;
+			width:690px;
+		}
+
+		/* Pfadangabe im Medienpool */
+		div#rex-navi-path ul{
+			border: 0;
+			list-style: none;
+			margin: 0 0 10px 0;
+			padding: 0;
+			font-size: 1em;
+
+			& li {
+				display: inline;
+				font-weight: normal;
+
+				& a.rex-active {
+					color: $drk_grey;
+				}
+			}
+
+		}
+	}
+
+	&#rex-page-linkmap {
+
+		width: 740px;
+		div#rex-website { width: 100%; }
+
+		div#rex-redaxo-link { display: none; }
+
+		div#rex-title {
+			background-image: none;
+			height: auto;
+			min-height: 31px;
+			height: 31px;
+
+			&-row { width: 100%; }
+			p { display: none; }
+			div.rex-area-content { line-height: 1em; }
+		}
+	}
+
+
+
+	&.rex-layout-liquid {
+		div#rex-website {
+			width: 100%;
+		}
+
+		div#rex-navi-main {
+			width: 15%;
+			margin-left: 2%;
+		}
+
+		div#rex-wrapper {
+			width: 78%;
+			margin-right: 2%;
+		}
+	}
+
+	.rex-popup {
+		div#rex-navi-logout {
+			margin-bottom: 2px;
+		}
+
+		div#rex-title h1 {
+			padding-bottom: 6px;
+			text-align: right;
+		}
+
+		div#rex-output {
+			margin-top: 12px;
+		}
+	}
+
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: normal;
+}
+
+input.rex-form-text {
+	padding: 1px 2px;
+	border: 1px solid $lt_grey;
+}
+
+input, textarea, select {
+	font-size: 100%;
+	margin: 0;
+	border: 1px solid $lt_grey;
+	padding: 0;
+	vertical-align: baseline;
+	color: $drk_grey;
+}
+
+p.rex-button a, input.rex-form-submit {
+	background-image: url(../button.gif);
+	background-repeat: repeat-x;
+	padding: 1px 6px;
+	color: $drk_grey;
+	text-decoration: none;
+	border: 1px solid $lt_grey;
+	+border-radius($brd_rad);
+}
+
+a {
+	color: $link_color;
+	text-decoration: none;
+	&:hover { text-decoration: underline; }
+}
+
+ins {
+	text-decoration:none;
+}
+del {
+	text-decoration:line-through;
+}
+
+img, iframe {
+	vertical-align:bottom;
+}
+
+/* REX-TITLE --------------------------------------------------------------------------------------- REX-TITLE */
+div#rex-title {
+
+/* 	background-image: url(../logo.jpg);
+	background-position: 100% 50%; */
+	margin: 0px;
+	background: none;
+	height: 61px;
+
+	div.rex-title-row {
+		width: 100%;
+
+		& h1{
+			padding-top: 5px; /* Ausrichtung der Überschrift mit der Navi-Überschrift */
+			margin-bottom: 5px; /* Ausrichtung der Überschrift mit der Navi-Überschrift */
+			font-weight: normal;
+			font-size: 2em;
+			color: $drk_grey;
+			text-shadow: 1px 1px 0px rgba(255,255,255,.8);
+		}
+
+		/* gestrichelte Linien über und unter der Pfadangabe */
+		&-sub {
+			border-top: 1px dotted $md_grey;
+			border-bottom: 1px dotted $md_grey;
+			padding: 15px 0;
+			margin-bottom: 5px;
+		}
+
+		&-empty {
+			border-bottom: 0;
+			padding: 0;
+			margin: 0;
+			p { display: none; }
+		}
+
+		& ul li a.rex-active {
+			color: $drk_grey;
+		}
+
+		/* p = zweite Zeile der Pfadangabe */
+		& ul#rex-navi-path{
+			border: 0;
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			font-size: 1em;
+
+			& li {
+				display: inline;
+				font-weight: normal;
+
+				& a.rex-active {
+					color: $drk_grey;
+				}
+			}
+
+		}
+
+		/* p = zweite Zeile der Pfadangabe */
+		& p {
+			margin-top: 10px;
+		}
+
+	}
+}
+
+/* ----------------------------------------------------------------------------------------------------------- */
+
+html>body div#rex-navi-main {
+	height: auto;
+	min-height: 24px;
+}
+
+/* REX-OUTPUT -------------------------------------------------------------------------------------- REX-OUTPUT*/
+
+.rex-addon-output {
+
+	padding: 15px;
+
+	h2 {
+		color: $drk_grey;
+		background: none;
+		padding: 0;
+		font-size: 1.6em;
+		margin: 15px 0 2px 0;
+		display: block;
+		padding-bottom: 5px;
+		border-bottom: 1px dotted $md_grey;
+		width: 100%;
+
+	}
+
+	h3 {
+		background: none;
+		padding: 0;
+		font-size: 1.2em;
+		margin: 30px 0 0 0;
+		display: block;
+		padding-bottom: 0;
+		border-bottom: 1px dotted $md_grey;
+		width: 100%;
+	}
+}
+
+div#rex-output {
+
+	margin-top: 5px; /* Abstand zwischen letzter Trennlinie und erstem Contentelement */
+	position: relative;
+	clear: both;
+	float: left;
+	width: 100%;
+
+	& div.rex-toolbar {
+
+		background-color: #fff;
+		position: relative;
+		margin-bottom: 10px;
+
+		&-content {
+			margin: 0;
+			padding: 10px;
+
+			& ul li {
+				list-style: none;
+				display: inline;
+				margin: 0 5px 0 0; /* Abstand der Listenelemente zu einander, s. Sprachen */
+			}
+		}
+	}
+
+	& div#rex-navi-page {
+
+		background-color: #fff;
+
+		& ul {
+			line-height: 2;
+			padding: 0;
+
+			& li a.rex-active {
+				color: $drk_grey;
+			}
+		}
+	}
+
+	div.rex-content-header {
+		position: relative;
+		float: left;
+		width: 100%;
+		margin-bottom: 10px;
+
+		& div#rex-clang {
+			& ul li {
+				display: inline;
+				font-weight: normal;
+				liste-style: none;
+
+				& a {
+					padding: 0 5px;
+					font-weight: bold;
+				}
+
+				&.rex-navi-first a {
+					padding-left: 0;
+				}
+			}
+		}
+
+		&-2 ul {
+			float: right;
+			padding: 5px 0; /*  Abstand oben und unten */
+
+			& li {
+				liste-style: none;
+				display: inline;
+				margin: 0 0 0 5px; /* Abstand der Listenelemente zu einander, s. Buttons Editier-Modus etc. */
+
+				/* Buttons Editier Modus, Metadaten, Anzeigen */
+				& a {
+					text-decoration: none;
+					background-color: #fff;
+					padding: 2px 8px;
+					+border-radius(3px);
+
+					&:hover {
+						background-color: #b3b3b3;
+						color: #fff;
+					}
+
+					&.rex-active {
+						background-color: $drk_grey;
+						color: #fff;
+
+						&:hover {
+							background-color: #b3b3b3;
+						}
+					}
+				}
+			}
+		}
+
+	} /* Ende div.rex-content-header */
+
+} /* Ende div#rex-output */
+
+/* ----------------------------------------------------------------------------------------------------------- */
+
+/* body#rex-page-addon table.rex-table tr.rex-plugin td.rex-col-b,
+body#rex-page-credits table.rex-table tr.rex-plugin td.rex-col-a {
+	padding-left: 15px;
+	background-image: url(../corner.gif);
+	background-position: 7px 12px;
+	background-repeat: no-repeat;
+} */
+
+
+div#rex-form-structure-category {
+	margin-bottom: 10px;
+
+	table.rex-table-mrgn {
+		margin-bottom: 0px;
+	}
+}
+
+/* ----------------------------------------------------------------------------------------------------------- */
+
+.rex-nospace {
+	margin: 0;
+	padding: 0;
+}
+
+.rex-clearer {
+	clear: both;
+	display: block;
+	font-size: 0;
+	height: 1px;
+	line-height: 0;
+	visibility: hidden;
+}
+
+.rex-clear {
+	clear: both;
+}
+
+.rex-hidden {
+	display: inline !important;
+	position: absolute !important;
+	left: -1000px !important;
+	top: -1000px !important;
+	width: 0px !important;
+	height: 0px !important;
+	overflow: hidden !important;
+	background-color: $background !important;
+}
+
+.rex-rvrs {
+	unicode-bidi: bidi-override;
+	direction: rtl;
+}
+
+.rex-fl-lft    { float: left; }
+.rex-fl-rght   { float: right; }
+.rex-algn-lft  { text-align: left; }
+.rex-algn-rght { text-align: right; }
+.rex-strike    { text-decoration: line-through; }
+.rex-clear     { clear: both; }
+
+.rex-display-inline,
+ol.rex-display-inline li,
+ul.rex-display-inline li {
+	display: inline;
+}
+
+div#rex-navi-paginate ul li.rex-navi-paginate-page a span {
+	font-family: Monospace, Courier ;
+}
+
+.rex-code {
+	font-size: 1.2em;
+	background-color: $drk_grey;
+	border-color: 1px solid #F2353A;
+	display: block;
+	padding: 10px;
+}
+
+.rex-tx {
+	&2, &3, &4 { font-weight: bold; }
+}
+
+.rex-hl4,
+.rex-tx2,
+.rex-tx3,
+div#rex-navi-paginate ul li.rex-navi-paginate-page a span {
+	font-size: 1.2em;
+	font-weight: normal;
+}
+
+.rex-tx3 {
+	color: #478C44;
+}
+
+p.rex-tx1,
+p.rex-tx4,
+ul.rex-ul1{
+	margin-bottom: 1em;
+}
+
+div.rex-addon-content {
+	h4, p, ul, ol, dl { margin-bottom: 1em; }
+	h4 { padding-top: 20px; }
+}
+
+ul.rex-ul1 {
+	margin-left: 20px;
+	li { list-style-type: square; }
+}
+
+div.rex-addon-content,
+div.rex-area-content {
+	line-height: 1.6;
+	p.rex-form-checkbox, p.rex-form-radio { line-height: 1em; }
+}
+
+.rex-offline, div#rex-linkmap ul li a.rex-offline {
+	color: $link_color_offline;
+}
+
+.rex-info {
+	background-image: url(../excla_mark_green.gif);
+	background-position: 0% 50%;
+	background-color: #209eb5;
+
+	&-block {
+		a { color: #fff; }
+	}
+}
+
+.rex-ok, .rex-online, div#rex-linkmap ul li a.rex-online {
+	color: $link_color_online;
+}
+
+div.rex-area-scroll,
+div.rex-widget {
+	background-color: #FFF;
+}
+
+div#rex-header p.rex-header-top,
+div#rex-linkmap,
+div#rex-form-system-setup,
+div.rex-area,
+div.rex-content-cols,
+div.rex-widget p.rex-widget-field input,
+div.rex-widget p.rex-widget-field select{
+	background-color: #fff;
+}
+
+div.rex-area-footer,
+div.rex-addon-footer{
+	background-color: #D7D6D3;
+}
+
+div#rex-navi-page{
+	ul li a {
+		background-image: url(../pipe_c2.gif);
+		background-position: 0px 4px;
+		background-repeat: no-repeat;
+	}
+
+	ul li.rex-navi-first a { background: none; }
+}
+
+/*	Paginate */
+
+div#rex-navi-paginate ul li {
+	&.rex-navi-paginate-prev a {
+		background-image: url(../back.gif);
+	}
+
+	&.rex-navi-paginate-next a {
+		background-image: url(../forward.gif);
+	}
+
+	&.rex-navi-paginate-page {
+		a, a span {
+			background-image: url(../list_pages.gif);
+			background-position: 100% -50px;
+		}
+
+		a span { background-position: 0 0; }
+	}
+}
+
+/*	Button - Arrows */
+
+.rex-i- {
+	&action            { background-image: url(../action.gif);        }
+	&action-add        { background-image: url(../action_plus.gif);   }
+	&addon             { background-image: url(../addon.gif);         }
+	&article           { background-image: url(../document.gif);      }
+	&article-add       { background-image: url(../document_plus.gif); }
+	&article-startpage { background-image: url(../liste.gif);         }
+	&metainfo          { background-image: url(../metainfo.gif);      }
+	&metainfo-add      { background-image: url(../metainfo_plus.gif); }
+	&module            { background-image: url(../modul.gif);         }
+	&module-add        { background-image: url(../modul_plus.gif);    }
+	&template          { background-image: url(../template.gif);      }
+	&template-add      { background-image: url(../template_plus.gif); }
+	&user              { background-image: url(../user.gif);          }
+	&user-add          { background-image: url(../user_plus.gif);     }
+
+	&category, &mediapool-category {
+		background-image: url(../folder.gif);
+	}
+
+	&category-add, &mediapool-category-add {
+		background-image: url(../folder_plus.gif);
+	}
+}
+
+div.rex-area-scroll,
+div.rex-widget {
+	border-color: #999;
+}
+
+/*	Elemente verstecken ********************************************************
+		Hinweis:
+			den Elementen nicht die Klasse "rex-hidden" einzeln zuweisen,
+			da diese von anderen Layouts eventuell dargestellt werden sollen
+*******************************************************************************/
+
+div.rex-navi-slice ul li span {
+	+hardcore-hidden;
+}
+
+div#rex-header {
+	position: relative;
+	clear: both;
+	float: left;
+	width: 100%;
+
+	p.rex-header-top {
+		padding: 5px;
+		text-align: right;
+	}
+}
+
+div.rex-content-body {
+	clear: both;
+	float: left;
+	width: 100%;
+}
+
+div#rex-redaxo-link {
+	position: absolute;
+	right: 0;
+	top: 64px;
+
+	a {
+		display: block;
+		width: 153px;
+		height: 41px;
+		text-indent: -1000em;
+	}
+}

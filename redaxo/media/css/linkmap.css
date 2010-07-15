@@ -1,0 +1,55 @@
+div#rex-linkmap div.rex-area-col-b ul li a {
+	background-image: url(../document.gif);
+}
+
+div#rex-linkmap div.rex-area-col-b ul li a {
+	background-position: 0px 50%;
+}
+
+div#rex-linkmap {
+	&, ul li ul {
+		background-image:url(../file_vert.gif);
+		background-position: 49% 0px;
+		background-repeat: repeat-y;
+	}
+
+	div.rex-area-col-b ul li.rex-linkmap-startpage a {
+		background-image: url(../liste.gif);
+	}
+
+	ul {
+		li.rex-children ul li,
+		li ul li.rex-children-last {
+			background-image: url(../file.gif);
+			background-position: -21px 0px;
+		}
+
+		li ul li.rex-children-last {
+			background-image: url(../file_last_2.gif);
+		}
+
+		li {
+			ul {
+				background-position: 2px 0px;
+			}
+
+			/*	Folder */
+
+			a {
+				background-image: url(../folder_off_empty.gif);
+			}
+
+			a.rex-linkmap-is-not-empty {
+				background-image: url(../folder_off.gif);
+			}
+
+			&.rex-active a.rex-active {
+				background-image: url(../folder_on_empty.gif);
+			}
+
+			&.rex-active a.rex-linkmap-is-not-empty.rex-active {
+				background-image: url(../folder_on.gif);
+			}
+		}
+	}
+}

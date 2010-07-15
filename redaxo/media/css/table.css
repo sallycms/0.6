@@ -1,0 +1,64 @@
+table.rex-table {
+	clear: both;
+	width: 100%;
+	background-color: #fff;
+	border-spacing: 0;
+	border-top: 0:
+	border: 1px solid #efefef;
+	+border-bottom-radius(5px);
+
+
+	caption {
+		+border-top-radius(4px);
+		text-align: left;
+		background-color: $drk_grey;
+		color: transparent;
+		border: 1px solid $drk_grey;
+		height: 5px;
+	}
+
+	tr {
+		th {
+			text-align: left;
+			color: #fff;
+			padding: 4px 0 9px 0px;
+			vertical-align: middle;
+			background-color: $drk_grey;
+		}
+
+		td {
+			height: 40px;
+			border-top: 1px dotted $md_grey;
+
+
+			&.rex-colored {
+				background-color: $drk_grey;
+			}
+		}
+
+		&.rex-table-row-activ td {
+			background-color: $link_color;
+			color: #fff;
+
+			input {padding: 0; border: 1px solid #fff;}
+		}
+
+		&.rex-plugin td {
+			background-color: #FAF9F5;
+		}
+
+
+		tr.rex-metainfo-cat {
+			display: none;
+		}
+
+		&.rex-metainfo-cat td {
+			padding-top: 4px;
+			padding-bottom: 4px;
+		}
+	}
+}
+
+table.rex-table-mrgn {
+	margin-bottom:10px
+}

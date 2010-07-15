@@ -27,14 +27,11 @@ $config = sly_Core::config();
 				</li>
 				<? endif ?>
 			</ul>
-			<p id="rex-scripttime"><!--DYN--><?= rex_showScriptTime() ?> Sek | <?= rex_formatter::format(time(), 'strftime', 'date'); ?><!--/DYN--></p>
+			<p id="rex-scripttime"><!--DYN-->
+			<?= rex_showScriptTime() ?> Sek |
+			<?= sly_Util_String::formatFilesize(function_exists('memory_get_peak_usage') ? memory_get_peak_usage() : memory_get_usage()) ?> |
+			<?= rex_formatter::format(time(), 'strftime', 'date'); ?>
+			<!--/DYN--></p>
 		</div>
-	</div>
-
-	<div id="rex-extra"></div>
-	<div id="rex-redaxo-link">
-		<p>
-			<a href="./">Wohin verlinke ich?</a>
-		</p>
 	</div>
 </div>

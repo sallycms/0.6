@@ -1,0 +1,138 @@
+div#rex-navi-main {
+	float: left;
+	height: 80px;
+	width: 171px;
+	margin-left: 16px;
+	padding: 0;
+
+	/*gesamtes menü*/
+	dl {
+		width: 100%;
+		text-decoration: none;
+		display: block;
+		color: $drk_grey;
+
+		/* Navi-Headline */
+		dt {
+			display: block !important;
+			position: static !important;
+			width: auto !important;
+			height: auto !important;
+			background-color: transparent !important;
+			padding: 12px 10px 7px 10px !important;
+
+			clear: both;
+			display: block;
+			font-size: 1.4em;
+			letter-spacing: -0.01em;
+			text-shadow: 1px 1px 0px rgba(255,255,255,1.0);
+			border-bottom: 1px dotted $md_grey;
+			margin-bottom: 5px; /* Abstand "Basis Naviagtion" zum ersten Menüpunkt 5px */
+
+		}
+
+		dd {
+			margin: 0 0 16px 0;
+			padding: 0;
+			clear: both;
+			color: $drk_grey;
+
+			ul li {
+
+				list-style: none;
+				float:none;
+				font-size:0.9em;
+				line-height:25px;
+				list-style:none outside none;
+				margin-bottom:1px;
+
+				a {
+					+border-radius(3px);
+					display: block;
+					padding:0 0 0 25px;
+					white-space: normal;
+					background-color: #fff;
+					color: $drk_grey;
+					background-image: url(background_menu_arrow.sld.png);
+					background-position: 10px 0;
+					background-repeat: no-repeat;
+					vertical-align: center; /* zentriert, zusammen mit line-height aus oberem element, die links */
+
+					&:hover {
+						color: #fff;
+						background-color: #b3b3b3;
+						text-decoration: none;
+						background-image: url(background_menu_arrow.sld.png);
+						background-position: 10px -24px;
+						background-repeat: no-repeat;
+					}
+
+					&.rex-active {
+						background-color: $drk_grey;
+						color: #fff;
+						font-weight: bold;
+						background-image: url(background_menu_arrow.sld.png);
+						background-position: 10px -49px;
+						background-repeat: no-repeat;
+					}
+
+					/* anderes Menü-Icon für Medienpool */
+					&.popup {
+						background-image: url(xbackground_btn_popup.sld.png);
+						background-position: top;
+
+						&.hover {
+							background-image: url(xbackground_btn_popup.sld.png);
+							background-position: center;
+						}
+					}
+
+				}/* Ende a */
+
+
+				/* Untermenü ohne ul, da ein li immer in einem ul ist */
+				li {
+					display: none;
+
+					a {
+						padding-left: 40px;
+						font-weight: normal;
+						background-color: #fff;
+						background-image: url(background_sub-menu_arrow.sld.png);
+						background-position: 25px 0;
+						background-repeat: no-repeat;
+
+						&.rex-active {
+							color: $drk_grey;
+							background-color: $lt_grey;
+							text-decoration: none;
+							background-image: url(background_sub-menu_arrow.sld.png);
+							background-position: 25px -49px;
+							background-repeat: no-repeat;
+							font-size: 1.1em; /* font-size vererbung geht nicht? */
+						}
+
+						&:hover {
+							color: #fff;
+							background-color: $md_grey;
+							text-decoration: none;
+							background-image: url(background_sub-menu_arrow.sld.png);
+							background-position: 25px -24px;
+							background-repeat: no-repeat;
+						}
+
+						&.rex-navi-first {
+							margin-top: 1px;
+						}
+					}
+				}
+
+				&.rex-active li { display: block;}
+
+			}/* Ende ul li Ebene 1*/
+
+		} /* Ende dd */
+
+	} /* Ende dl */
+}
+/* ----------------------------------------------------------------------------------------------------------- */

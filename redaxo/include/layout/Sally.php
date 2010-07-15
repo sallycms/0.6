@@ -8,7 +8,7 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 
 		$config = sly_Core::config();
 
-		$this->addCSSFile('media/css_import.css');
+		$this->addCSSFile('media/css/import.css');
 		$this->addCSSFile('scaffold/import_export/backend.css');
 		$this->addCSSFile('media/css_ie_lte_7.css', 'all', 'if lte IE 7');
 		$this->addCSSFile('media/css_ie_7.css', 'all', 'if IE 7');

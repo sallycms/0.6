@@ -280,7 +280,7 @@ if ($subpage == "detail")
             <img src="'. $imgn .'" alt="'. htmlspecialchars($ftitle) .'" title="'. htmlspecialchars($ftitle) .'" />
           </p>
           </div>';
-     $style_width = ' style="width:64.9%; border-right: 1px solid #FFF;"';
+     /* $style_width = ' style="width:64.9%; border-right: 1px solid #FFF;"'; */
     }
 
     if ($warning != '')

@@ -21,8 +21,4 @@ DATABASE:
 PERM: [mediapool]
 EXTPERM: [advancedMode, moveSlice, copyContent, moveArticle, copyArticle, moveCategory, publishArticle, publishCategory, article2startpage]
 EXTRAPERM: [editContentOnly]
-ADDON:
-  be_style:
-    install: true
-    status: true
-    plugins: {agk_skin: {install: true, status: true}}
+ADDON: []

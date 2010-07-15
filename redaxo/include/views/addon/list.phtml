@@ -5,6 +5,7 @@ if (!empty($warning)) print rex_warning($warning);
 
 ?>
 <table class="rex-table">
+	<caption>Liste der verfügbaren AddOns</caption>
 	<colgroup>
 		<col width="40" />
 		<col width="*"/>
@@ -23,11 +24,11 @@ if (!empty($warning)) print rex_warning($warning);
 			</tr>
 		</thead>
 	<tbody>
-	
+
 	<?php
-	
+
 	$addonList = $addons->getRegisteredAddOns();
-	
+
 	foreach ($addonList as $addon) {
 		$base       = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;func=';
 		$pluginList = $plugins->getRegisteredPlugins($addon);
@@ -41,7 +42,7 @@ if (!empty($warning)) print rex_warning($warning);
 
 		if ($addons->isInstalled($addon)) {
 			$install = $I18N->msg('addon_yes').' - <a href="'.$base.'install">'.$I18N->msg('addon_reinstall').'</a>';
-			
+
 			if (!empty($pluginList)) {
 				$uninstall = $I18N->msg('plugin_plugins_installed');
 				$delete    = $uninstall;
@@ -114,7 +115,7 @@ if (!empty($warning)) print rex_warning($warning);
 			}
 		}
 	}
-	
+
 	?>
 	</tbody>
 </table>
