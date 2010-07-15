@@ -53,7 +53,7 @@ div#rex-navi-main {
 					white-space: normal;
 					background-color: #fff;
 					color: $drk_grey;
-					background-image: url(background_menu_arrow.sld.png);
+					background-image: url(../background_menu_arrow.sld.png);
 					background-position: 10px 0;
 					background-repeat: no-repeat;
 					vertical-align: center; /* zentriert, zusammen mit line-height aus oberem element, die links */
@@ -62,7 +62,7 @@ div#rex-navi-main {
 						color: #fff;
 						background-color: #b3b3b3;
 						text-decoration: none;
-						background-image: url(background_menu_arrow.sld.png);
+						background-image: url(../background_menu_arrow.sld.png);
 						background-position: 10px -24px;
 						background-repeat: no-repeat;
 					}
@@ -71,18 +71,18 @@ div#rex-navi-main {
 						background-color: $drk_grey;
 						color: #fff;
 						font-weight: bold;
-						background-image: url(background_menu_arrow.sld.png);
+						background-image: url(../background_menu_arrow.sld.png);
 						background-position: 10px -49px;
 						background-repeat: no-repeat;
 					}
 
 					/* anderes Menü-Icon für Medienpool */
 					&.popup {
-						background-image: url(xbackground_btn_popup.sld.png);
+						background-image: url(../xbackground_btn_popup.sld.png);
 						background-position: top;
 
 						&.hover {
-							background-image: url(xbackground_btn_popup.sld.png);
+							background-image: url(../xbackground_btn_popup.sld.png);
 							background-position: center;
 						}
 					}
@@ -98,7 +98,7 @@ div#rex-navi-main {
 						padding-left: 40px;
 						font-weight: normal;
 						background-color: #fff;
-						background-image: url(background_sub-menu_arrow.sld.png);
+						background-image: url(../background_sub-menu_arrow.sld.png);
 						background-position: 25px 0;
 						background-repeat: no-repeat;
 
@@ -106,7 +106,7 @@ div#rex-navi-main {
 							color: $drk_grey;
 							background-color: $lt_grey;
 							text-decoration: none;
-							background-image: url(background_sub-menu_arrow.sld.png);
+							background-image: url(../background_sub-menu_arrow.sld.png);
 							background-position: 25px -49px;
 							background-repeat: no-repeat;
 							font-size: 1.1em; /* font-size vererbung geht nicht? */
@@ -116,7 +116,7 @@ div#rex-navi-main {
 							color: #fff;
 							background-color: $md_grey;
 							text-decoration: none;
-							background-image: url(background_sub-menu_arrow.sld.png);
+							background-image: url(../background_sub-menu_arrow.sld.png);
 							background-position: 25px -24px;
 							background-repeat: no-repeat;
 						}
