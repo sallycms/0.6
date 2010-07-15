@@ -132,14 +132,14 @@ input#rex-form-field-prior {
 
 /* REX-FORM -------------------------------------------------------------------------------------- REX-FORM */
 
-
 .rex-form .rex-form-row {
-	label,	p.rex-form-label {
+	label, p.rex-form-label {
 		clear: both;
 		display: block;
 		float: left;
 		width: 145px;
 		padding: 0;
+		line-height: 21px;
 
 		img {
 			vertical-align: middle;
@@ -167,7 +167,10 @@ input#rex-form-field-prior {
 
 		span.rex-form-notice {
 			clear: both;
-			margin-left: 155px;
+			margin-left: 145px;
+			margin-top: 5px;
+			color: #777777;
+			font-size: 11px;
 		}
 
 		label span {
@@ -208,7 +211,22 @@ input#rex-form-field-prior {
 	}
 }
 
+/*	Checkbox / Radio */
 
+p.rex-form-label-right {
+	height: 20px;
+}
+
+div.rex-form-row, div.rex-message {
+	p.rex-form-label-right {
+		input.rex-form-checkbox,
+		input.rex-form-radio {
+			clear: both;
+			float: left;
+			margin: 0 5px 0 135px;
+		}
+	}
+}
 
 div.rex-message p.rex-form-label-right,
 div.rex-form-row div.rex-form-checkboxes-wrapper,
@@ -227,6 +245,19 @@ div.rex-form-row {
 
 	p input.rex-form-select-checkbox {
 		vertical-align: middle;
+	}
+}
+
+div.rex-form div.rex-form-row {
+	div.rex-form-checkboxes-wrapper,
+	div.rex-form-radios-wrapper,
+	p.rex-form-label-right label,
+	p.rex-form-read span,
+	p.rex-form-text input,
+	p.rex-form-password input,
+	p select,
+	p textarea {
+		width: 456px;
 	}
 }
 
@@ -1837,48 +1868,44 @@ body#rex-page-login {
 		margin-left: 50px;
 	}
 
-
 	&-row {
-		padding: 10px 0;
+		padding: 7px 0;
 		clear: both;
 		float: left;
 		width: 100%;
 		vertical-align: middle;
 	}
 
+	textarea { height: 350px; width: 605px; margin-bottom: 15px;}
 
-		textarea { height: 350px; width: 605px; margin-bottom: 15px;}
+	input.rex-form-checkbox,
+	input.rex-form-radio {
+		clear: both;
+		margin: 0 0 0 21px;
+	}
 
+	/* Überschrift | dunkelgrau hinterlegt mit runden Ecken*/
+	legend {
+		color: #fff;
+		background-color: $drk_grey;
+		font-size: 1.1em;
+		+border-top-radius(4px);
+		width: 771px; /* Breite des Loginbereichs abzüglich des padding links*/
+		padding: 8px 0 8px 10px;
+	}
 
-		input.rex-form-checkbox,
-		input.rex-form-radio {
-			clear: both;
-			margin: 0 0 0 21px;
-		}
+	/* .rex-form-checkbox {
+		margin: 0 5px 0 10px;
+	} */
 
-
-		/* Überschrift | dunkelgrau hinterlegt mit runden Ecken*/
-		legend {
-			color: #fff;
-			background-color: $drk_grey;
-			font-size: 1.1em;
-			+border-top-radius(4px);
-			width: 771px; /* Breite des Loginbereichs abzüglich des padding links*/
-			padding: 8px 0 8px 10px;
-		}
-
-		/* .rex-form-checkbox {
-			margin: 0 5px 0 10px;
-		} */
-
-		.rex-form-wrapper {
-			background-color: #fff;
-			+border-bottom-radius(4px);
-			clear: both;
-			float: left;
-			width: 761px;
-			padding: 0 10px;
-		}
+	.rex-form-wrapper {
+		background-color: #fff;
+		+border-bottom-radius(4px);
+		clear: both;
+		float: left;
+		width: 761px;
+		padding: 0 10px;
+	}
 }
 
 
@@ -1896,7 +1923,7 @@ div.rex-area-col-2 .rex-hl2 {
 }
 
 /* System -> Einstellungen | unterer Abstand zu den gestrichelten Linien in der rechten Box*/
-p.rex-form-text, p.rex-form-select {padding-bottom: 10px;}
+#rex-page-specials p.rex-form-text, p.rex-form-select {padding-bottom: 10px;}
 
 .rex-area-content {
 
