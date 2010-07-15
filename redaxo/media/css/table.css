@@ -46,16 +46,6 @@ table.rex-table {
 		&.rex-plugin td {
 			background-color: #FAF9F5;
 		}
-
-
-		tr.rex-metainfo-cat {
-			display: none;
-		}
-
-		&.rex-metainfo-cat td {
-			padding-top: 4px;
-			padding-bottom: 4px;
-		}
 	}
 }
 

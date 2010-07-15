@@ -1,0 +1,48 @@
+/*	Button - Arrows */
+
+.rex-i- {
+	&template     { background-image: url(../template.gif);      }
+	&template-add { background-image: url(../template_plus.gif); }
+}
+
+body#rex-page-template div.rex-form {
+	+border-radius($brd_rad);
+}
+
+.rex-form-template-editmode {
+	textarea         { height: 350px; width: 605px; margin-bottom: 15px;}
+	.rex-form-col-a  { padding-bottom: 10px; }
+	.rex-form-submit { margin-left: 73px;    }
+
+	input.rex-form-checkbox,
+	input.rex-form-radio {
+		clear: both;
+		margin: 0 0 0 21px;
+	}
+
+	div#rex-form-template-ctype {
+		p.rex-form-checkbox      { padding-top: 5px; }
+		p.rex-form-select select { margin-top: 5px;  }
+
+		.rex-form-row { border: 0; margin: 0 }
+	}
+
+	/* Überschrift | dunkelgrau hinterlegt mit runden Ecken*/
+	legend {
+		color: #fff;
+		background-color: $drk_grey;
+		font-size: 1.1em;
+		+border-top-radius(4px);
+		width: 771px; /* Breite des Loginbereichs abzüglich des padding links*/
+		padding: 8px 0 8px 10px;
+	}
+
+	.rex-form-wrapper {
+		background-color: #fff;
+		+border-bottom-radius($brd_rad);
+		clear: both;
+		float: left;
+		width: 761px;
+		padding: 0 10px;
+	}
+}

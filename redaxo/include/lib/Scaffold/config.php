@@ -29,15 +29,15 @@ $dynDirectory = rtrim($dynDirectory, '/\\').'/';
  * This means the load on your server will be much less when the site is live.
  *
  * Also, in production mode, errors are disabled and any modules which change
- * the output will not be available - like the Typography module. 
+ * the output will not be available - like the Typography module.
  */
-define('SCAFFOLD_PRODUCTION', !file_exists($dynDirectory.'scaffold.debug'));
+define('SCAFFOLD_PRODUCTION', false);
 
 /**
  * Document Root
  *
  * The document root for the server. If you're server doesn't set the $_SERVER['DOCUMENT_ROOT']
- * variable (I'm looking at you Windows) you can manually enter in the server path 
+ * variable (I'm looking at you Windows) you can manually enter in the server path
  * to the document root. Most of the time, you won't need to touch this.
  */
 $config['document_root'] = $_SERVER['DOCUMENT_ROOT'];
@@ -49,7 +49,7 @@ $config['document_root'] = $_SERVER['DOCUMENT_ROOT'];
  * need to change this unless you are moving folders around. If you're calling Scaffold
  * from another class or script, you'll still need to set this. You can make it relative,
  * an absolute file path, or even relative to the document root and Scaffold
- * will take care of the rest. 
+ * will take care of the rest.
  */
 $config['system'] = $projectBase.'redaxo/include/lib/Scaffold/';
 
@@ -70,7 +70,7 @@ $config['cache'] = $dynDirectory.'/css-cache/';
  *
  * This has no effect when no in production mode.
  *
- * Scaffold can cache it's flags, config values and more to save on 
+ * Scaffold can cache it's flags, config values and more to save on
  * rendering time when a file isn't being recached and just being delivered
  * to the browser. Rather than finding the config files, loading modules,
  * loading flags, checking modified times etc. It can just skip straight

@@ -1,0 +1,27 @@
+div#rex-form-structure-category {
+	margin-bottom: 10px;
+
+	table.rex-table-mrgn {
+		margin-bottom: 0px;
+	}
+}
+
+div#rex-form, div#sly-form {
+	&-structure-article,
+	&-structure-category {
+		table.rex-table {
+			th, td                   { vertical-align: middle; }
+			th.rex-icon, td.rex-icon { padding-bottom: 6px;    }
+			th.sly-icon, td.sly-icon { padding-bottom: 6px;    }
+		}
+	}
+}
+
+body#rex-page-structure div.rex-form {
+	+border-radius($brd_rad);
+
+	table.rex-table {
+		+border-radius(0px);
+		border: 0;
+	}
+}

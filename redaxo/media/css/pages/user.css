@@ -1,0 +1,51 @@
+.rex-i- {
+	&user     { background-image: url(../user.gif);      }
+	&user-add { background-image: url(../user_plus.gif); }
+}
+
+#rex-form-user-editmode {
+	/* Überschrift | dunkelgrau hinterlegt mit runden Ecken*/
+	legend {
+		color: #fff;
+		background-color: $drk_grey;
+		font-size: 1.1em;
+		+border-top-radius(4px);
+		width: 771px; /* Breite des Loginbereichs abzüglich des padding links*/
+		padding: 8px 0 8px 10px;
+	}
+
+	.rex-form-notice { margin-left: 145px; line-height: 1.2em; }
+
+	.rex-form {
+		&-wrapper {
+			background-color: #fff;
+			+border-bottom-radius(4px);
+			clear: both;
+			float: left;
+			width: 761px;
+			padding: 0 10px;
+			line-height: 40px;
+		}
+
+		&-col-2 {
+			.rex-form-col-a {
+				width:49%;
+				float: left;
+			}
+
+			.rex-form-col-b {
+				width:49%;
+				float: right;
+			}
+		}
+
+		&-submit {
+			margin-left: 145px;
+		}
+
+		&-row {
+			width: 100%;
+			border-top: 1px dotted $md_grey;
+		}
+	}
+}

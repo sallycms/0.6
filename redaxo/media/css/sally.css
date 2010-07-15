@@ -27,10 +27,6 @@ div.sly-content {
 		margin-bottom: 1em;
 		line-height: 15px;
 	}
-
-	div.rex-form {
-		margin-bottom: 1em;
-	}
 }
 
 /* Sprites */
@@ -38,9 +34,6 @@ div.sly-content {
 .sly-sprite {
 	background-image: url(sprites.png);
 	background-repeat: no-repeat;
-
-	&.sly-module     { background-position: 0 0; }
-	&.sly-module-add { background-position: 0 -16px; }
 }
 
 img.sly-sprite {
@@ -57,49 +50,6 @@ span.sly-sprite {
 	display: block;
 }
 
-a.sly-action {
-	background-image: url(sprites.png);
-	background-position: left 50%;
-	background-repeat: no-repeat;
-	padding: 1px 0;
-
-	&.sly-delete { color: red; background-position: 0 -32px; }
-}
-
-
-
-#rex-page-module {
-	form#module .rex-form-row {
-		label        { width: 100px;       }
-		textarea     { width: 600px;       }
-		/* input#submit { margin-left: 110px; } */
-	}
-
-	table#actions span {
-		&.sly-mode-add { background-color: green; color: white; }
-		&.sly-mode-edit { background-color: yellow; }
-		&.sly-mode-delete { background-color: red; color: white; }
-
-		&.sly-mode { &-add, &-edit, &-delete {
-			padding: 2px 4px;
-			font-size: 11px;
-			font-weight: bold;
-			border: 1px solid black;
-		} }
-	}
-
-	table#module_actions {
-		margin-bottom: 1em;
-	}
-}
-
-
-
-
-
-
-
-
 /**********************************************************************/
 /* START CSS_form                                                     */
 /**********************************************************************/
@@ -109,370 +59,6 @@ a.sly-action {
 	- add, edit Article (Structure)
 *******************************************************************************/
 
-
-input#rex-form-field-name {
-	width: 97%;
-}
-
-tr.rex-has-metainfo input#rex-form-field-name {
-	width: 92%;
-}
-
-input#rex-form-field-prior {
-	width: 87%;
-}
-
-.rex-form-hidden-legend span,
-.rex-form-hidden-label {
-	+hardcore-hidden;
-}
-
-
-
-
-/* REX-FORM -------------------------------------------------------------------------------------- REX-FORM */
-
-.rex-form .rex-form-row {
-	label, p.rex-form-label {
-		clear: both;
-		display: block;
-		float: left;
-		width: 145px;
-		padding: 0;
-		line-height: 21px;
-
-		img {
-			vertical-align: middle;
-		}
-	}
-
-	p.rex-form-label-right label {
-		clear: none;
-		display: inline;
-		width: auto;
-		padding: 0;
-	}
-
-	p.rex-form-checkbox,
-	p.rex-form-radio {
-		label { padding-top: 2px; }
-	}
-
-	p {
-		span.rex-form-read,
-		span.rex-form-notice {
-			display: block;
-			/* padding: 10px 0 10px 10px; */
-		}
-
-		span.rex-form-notice {
-			clear: both;
-			margin-left: 145px;
-			margin-top: 5px;
-			color: #777777;
-			font-size: 11px;
-		}
-
-		label span {
-			display: inline;
-			margin-left: 0;
-			padding: 0 0 0 5px;
-			font-weight: normal;
-		}
-
-		textarea {
-			padding: 2px;
-			&.rex-form-textarea-v2 { width: 94%; }
-		}
-	}
-
-	div.rex-form-checkboxes-wrapper,
-	div.rex-form-radios-wrapper {
-		float: left;
-	}
-
-
-	div.rex-form-widget {
-		div.rex-widget-link input  { width: 208px; }
-		div.rex-widget-media input { width: 189px; }
-	}
-
-	/*	Select */
-
-	p select.rex-form-select-date { width: 50px;  }
-	p select.rex-form-select-year { width: 70px;  }
-	div.rex-form-widget select    { width: 212px; }
-
-	/*	Spezial Select - Bspl.: Setup : Step 3 (Auswahl von Export ) */
-
-	p.rex-form-radio-select {
-		padding-top: 10px;
-		select.rex-form-select { margin-left: 25px; }
-	}
-}
-
-/*	Checkbox / Radio */
-
-p.rex-form-label-right {
-	height: 20px;
-}
-
-div.rex-form-row, div.rex-message {
-	p.rex-form-label-right {
-		input.rex-form-checkbox,
-		input.rex-form-radio {
-			clear: both;
-			float: left;
-			margin: 0 5px 0 135px;
-		}
-	}
-}
-
-div.rex-message p.rex-form-label-right,
-div.rex-form-row div.rex-form-checkboxes-wrapper,
-div.rex-form-row div.rex-form-radios-wrapper {
-	input.rex-form-checkbox,
-	input.rex-form-radio {
-		margin-left: 0;
-	}
-}
-
-div.rex-form-row {
-	div.rex-form-checkboxes-wrapper p.rex-form-checkbox,
-	div.rex-form-radios-wrapper p.rex-form-radio {
-		padding-top: 3px;
-	}
-
-	p input.rex-form-select-checkbox {
-		vertical-align: middle;
-	}
-}
-
-div.rex-form div.rex-form-row {
-	div.rex-form-checkboxes-wrapper,
-	div.rex-form-radios-wrapper,
-	p.rex-form-label-right label,
-	p.rex-form-read span,
-	p.rex-form-text input,
-	p.rex-form-password input,
-	p select,
-	p textarea {
-		width: 456px;
-	}
-}
-
-/*	Submit */
-
-div.rex-form {
-	input.rex-form-submit {
-		cursor: pointer;
-	}
-
-	&,
-	div.rex-form-row p {
-		input.rex-form-submit-2 { margin-left: 20px; }
-	}
-
-	div.rex-form-row p,
-	fieldset.rex-form-col-2 div.rex-form-row p.rex-form-text {
-		input.rex-form-submit { width: auto; }
-	}
-
-	/*	Zweispaltig */
-
-	fieldset.rex-form-col-2 div.rex-form-row {
-		/* p.rex-form-col-a, */
-		p.rex-form-col-b {
-			width: 49%;
-
-			/* margin: 0 0 0 15px; */
-		}
-	}
-
-	/*	rex-form-element-v2 : Standardwerte von label und input vertauscht */
-
-	div.rex-form-element-v2 {
-		label, p.rex-form-label {
-			width: 456px;
-		}
-
-		border: 0;
-
-		div.rex-form-checkboxes-wrapper,
-		div.rex-form-radios-wrapper,
-		p.rex-form-label-right label,
-		p.rex-form-read span,
-		p.rex-form-text input,
-		p.rex-form-password input,
-		p select,
-		p textarea {
-			width: 145px;
-		}
-
-		/*	Submit */
-
-		p input.rex-form-submit {
-			margin-left: 546px;
-		}
-	}
-}
-
-/*	Bspl.: div.rex-area-col-2 -> System : Einstellungen */
-
-div.rex-area-col-2 fieldset.rex-form-col-1, div.rex-form fieldset.rex-form-col-2 {
-
-	div.rex-form-row {
-		div.rex-form-checkboxes-wrapper,
-		div.rex-form-radios-wrapper,
-		p.rex-form-label-right label,
-		p.rex-form-read span,
-		p.rex-form-text input,
-		p.rex-form-password input,
-		p select,
-		p textarea {
-			width: 200px;
-		}
-	}
-}
-
-/*	Setup */
-
-div.rex-form-setup-step-database div.rex-form-row {
-	p.rex-form-label-right label { width: 630px; }
-
-	p input.rex-form-radio,
-	p input.rex-form-submit {
-		margin-left: 5px;
-	}
-}
-
-div.rex-form-setup-admin div.rex-form-row p.rex-form-text input {
-	width: 200px;
-}
-
-
-
-/*	Struktur : Metainfo */
-
-div#rex-form-structure-category tr.rex-metainfo-cat  {
-	div.rex-form-row { border-bottom: 0; }
-	div.rex-widget   { margin-bottom: 0; }
-
-	div.rex-form-checkboxes-wrapper,
-	div.rex-form-radios-wrapper,
-	p.rex-form-label-right label,
-	p.rex-form-read span,
-	p.rex-form-text input,
-	p textarea {
-		width: 340px;
-	}
-
-	p.rex-form-select select {
-		width: 346px;
-	}
-
-	label {
-		padding-left: 0px;
-		margin-right: 5px;
-	}
-
-	div.rex-form-checkboxes-wrapper,
-	div.rex-form-radios-wrapper {
-		p.rex-form-label-right label { width: 296px; }
-	}
-}
-
-
-
-
-/*	System : Einstellungen */
-
-div#rex-form-system-setup {
-	fieldset { padding-bottom: 1em; }
-
-	legend {
-		padding-left: 0;
-		padding-top: 0;
-	}
-
-	div.rex-form-row {
-		border-bottom-width: 0;
-
-		label {
-			width: 190px;
-			padding-left: 0;
-			font-weight: normal;
-		}
-	}
-
-	fieldset.rex-form-col-1 div.rex-form-row {
-		p.rex-form-label-right label,
-		p.rex-form-read span,
-		p.rex-form-text input,
-		p select,
-		p textarea {
-			width: 40%;
-		}
-
-		/*	Submit */
-
-		p input.rex-form-submit {
-			margin-left: 190px;
-		}
-	}
-}
-
-/*	System : Sprachen */
-
-div#rex-form-system-language input.rex-form-text {
-	width: 98%;
-}
-
-
-
-/*	System Addons */
-
-/*	Import / Export */
-
-div#rex-form-export div.rex-form-row {
-	p.rex-form-label-right input.rex-form-radio {
-		margin-left: 5px;
-	}
-
-	div.rex-form-checkboxes {
-		clear: both;
-		padding-top: 5px;
-		padding-bottom: 10px;
-		padding-left: 23px;
-	}
-
-	div.rex-form-checkboxes-wrapper {
-		float: none;
-		width: 300px;
-	}
-}
-
-/*	Image Resize */
-
-body#rex-page-image-resize div.rex-form div.rex-form-element-v2 {
-	label,
-	p.rex-form-label {
-		width: 546px;
-	}
-
-	div.rex-form-checkboxes-wrapper,
-	div.rex-form-radios-wrapper,
-	p.rex-form-label-right label,
-	p.rex-form-read span,
-	p.rex-form-text input,
-	p.rex-form-password input,
-	p select,
-	p textarea {
-		width: 55px;
-	}
-}
-
-
 /**********************************************************************/
 /* START CSS_component                                                */
 /**********************************************************************/
@@ -481,14 +67,9 @@ caption, legend {
 	&.rex-hidden { display: none; }
 }
 
-
-
 div.rex-addon-output {
 	ol, ul { margin-left: 20px; }
 }
-
-
-
 
 /*	REX-MESSAGE -------------------------------------------------------------------------- REX-MESSAGE */
 
@@ -499,7 +80,7 @@ div.rex-message {
 	margin-bottom:10px;
 	width:100%;
 
-	& .rex-info, & .rex-warning {
+	.rex-info, .rex-warning {
 		padding: 8px 0;
 		color: #fff;
 		background-color: $link_color;;
@@ -508,15 +89,14 @@ div.rex-message {
 		background-repeat: no-repeat;
 		+border-radius(4px);
 		border: 1px solid #efefef;
-
-	margin-bottom: 0;
+		margin-bottom: 0;
 	}
 
-	& .rex-warning {
+	.rex-warning {
 		background-color: #b32430;
 	}
 
-	& span {
+	span {
 		display: block;
 		padding: 0 45px;
 	}
@@ -542,41 +122,9 @@ div.rex-message {
 			li { list-style-type: square; }
 		}
 	}
-
 }
-
 
 /* --------------------------------------------------------------------------------------------------- */
-
-
-
-
-
-
-/*  Kategorietabelle Metainfo Button */
-
-div#rex-form-structure-category p.rex-button-add {
-  display: inline;
-  margin: 0 5px;
-}
-
-
-
-div#rex-form-, div#sly-form- {
-	&-structure-article,
-	&-structure-category,
-	&-system-language,
-	&-mediapool-media,
-	&-mediapool-categories {
-		table.rex-table {
-			th, td                 { vertical-align: middle; }
-			th.rex-icon, td.rex-icon { padding-bottom: 6px;    }
-			th.sly-icon, td.sly-icon { padding-bottom: 6px;    }
-		}
-	}
-}
-
-
 
 /*	real width = border + padding + width */
 
@@ -607,11 +155,7 @@ div.rex-addon-output {
 
 div.rex-area,
 div.rex-addon {
-/* 	&-content {
-		padding: 10px 5px;
-	} */
-
-	&-footer  {
+	&-footer {
 		padding: 7px 5px;
 		font-weight: bold;
 	}
@@ -636,44 +180,6 @@ div.rex-addon-col {
 		float: right;
 	}
 }
-
-/*	Setup */
-
-/* Language */
-
-div#rex-setup ul.rex-setup-language {
-	font-weight: bold;
-	text-align: center;
-
-	li {
-		display: block;
-		padding: 5px 0;
-	}
-}
-
-/* License */
-
-div.rex-area-scroll {
-	margin: 30px 0;
-	padding: 5px 0 5px 5px;
-	width: 500px;
-	height: 200px;
-	overflow: auto;
-	border-width: 1px;
-	border-style: solid;
-}
-
-
-/*	Linkmap */
-
-div#rex-linkmap {
-	clear: both;
-	position: relative;
-	float: left;
-	width: 100%;
-}
-
-
 
 /*	Widget */
 
@@ -702,26 +208,6 @@ div.rex-widget {
 	}
 }
 
-/*	System Addon : Import / Export */
-
-body#rex-page-import-export {
-	table.rex-table tr th {
-		white-space: nowrap;
-	}
-
-	div.rex-area-content,
-	div.rex-addon-content {
-		padding: 0;
-
-		p.rex-tx1 {
-			margin-bottom: 0px;
-			padding: 5px;
-		}
-	}
-}
-
-
-
 /*	Icons */
 
 .rex-i-element {
@@ -732,271 +218,20 @@ body#rex-page-import-export {
 	text-indent: -1000em;
 }
 
+/* Grau - Dunkel */
 
-
-/******************************************************************************\
-* Header / Footer                                                              *
-\******************************************************************************/
-
-
-
-div#rex-footer  #rex-navi-footer {
-	clear: both;
-	position: relative;
-	float: left;
-	background-image: url(../footer.gif);
-	background-repeat: repeat-x;
-	border-top-color: #efefef;
-	border-top-width: 0px; /* Überschreibt die unauffindbare grüne Border */
-	margin-top: 50px; /* Abstand zum Content */
-	padding: 0px;
-	width: 100%;
-	height: 51px;
-	color: &md-grey;
-	line-height: 51px; /* Schriftzentrierung */
-	font-size: 0.8em;
-
-	 /* Text rechts im Footer */
-	p#rex-scripttime {
-		float: right;
-		margin: 0 5px;
-		color: &lt-grey;
-	}
-
-	ul {
-		float: left;
-		width: 50%; /* Vorsicht: Die Loginseite ist schmaler! */
-		margin: 0 5px;
-
-		li {
-			display: inline;
-			background-image: url(../pipe_c2.gif);
-			background-position: 0px 2px;
-			background-repeat: no-repeat;
-
-			&.rex-navi-first {
-				background: none;
-			}
-
-			a {
-				padding: 0 8px;
-			}
-
-			&.rex-navi-first a {
-				padding-left: 0;
-			}
-		}
-	}
-
-
-
-}
-
-/******************************************************************************\
-* Navi Logout                                                                  *
-\******************************************************************************/
-div#rex-navi-logout {
-	position: static;
-	right: 0;
-	top: 59px;
-	color: #b2b2b2;
-	float: left;
-	width: 100%;
-	height: 75px;
-	margin-bottom: 36px;
-	background-image: url(../logo.gif);
-	background-position: 11px 0px;
-	background-repeat: no-repeat;
-
-	p, ul {
-		padding: 59px 10px 0 0;
-		text-align: right;
-		font-size: 0.8em;
-	}
-
-
-	p.rex-logout {
-		padding-right: 5px;
-	}
-
-	ul li {
-		display: inline;
-		font-weight: bold;
-		background-image: url(../pipe_c2.gif);
-		background-position: 0px 2px;
-		background-repeat: no-repeat;
-
-		a, span { padding: 0 5px; }
-
-		&.rex-navi-first {
-			background: none;
-			a, span { padding-left: 0; }
-		}
-	}
-}
-
-
-
-/******************************************************************************\
-* Navigation unter dem Seitentitel                                             *
-\******************************************************************************/
-
-div#rex-navi-page ul li {
-	display: inline;
-	font-weight: normal;
-
-	a { padding: 0 15px;  }
-	&.rex-navi-first a { padding-left: 0; }
-}
-
-
-
-
-
-
-
-/******************************************************************************\
-* Pager                                                                        *
-\******************************************************************************/
-
-div#rex-navi-paginate ul li {
-	display: block;
-	float: left;
-	margin-right: 5px;
-
-	&.rex-navi-paginate-message {
-		padding-top: 2px;
-	}
-
-	&.rex-navi-paginate-prev, &.rex-navi-paginate-next, &.rex-navi-paginate-page {
-		a { display: block; }
-	}
-
-	&.rex-navi-paginate-page a span {
-		display: block;
-		padding: 1px 4px 2px 4px;
-	}
-
-	&.rex-navi-paginate-prev a, &.rex-navi-paginate-next a {
-		width: 24px;
-		height: 13px;
-		text-indent: -1000em;
-	}
-}
-
-/******************************************************************************\
-* Linkmap                                                                      *
-\******************************************************************************/
-
-div#rex-linkmap {
-	ul {
-		margin: 0 5px 10px 0;
-
-		li {
-			ul {
-				margin: 0;
-
-				&.rex-children-one {
-					background: none;
-				}
-			}
-
-			a {
-				display: block;
-				margin-bottom: 4px;
-				padding: 4px 0px 4px 35px;
-			}
-
-			&.rex-children ul li, ul li.rex-children-last {
-				margin-left: 23px;
-				padding-left: 10px;
-			}
-		}
-	}
-
-	div.rex-area-col-b ul li a {
-		padding-left: 20px;
-	}
-}
-
-/**********************************************************************/
-/* ENDE CSS_navigation                                                */
-/**********************************************************************/
-
-
-
-
-/*	Textfarben */
-
-/*	Weiß */
-
-/* Textfarbe des aktiven Menüpunkts im Logout-Menü*/
-
-
-/* Textfarbe des aktiven Menüpunkts */
-div#rex-navi-main ul li a.rex-active {
-	color: #fff;
-	font-weight: bold;
-}
-
-
-
-
-
-
-div.rex-content-header ul li a {
-	color: #1f9eb5;
-}
-
-/*	Grau - Dunkel */
-
-div#rex-navi-page ul li a.rex-active,
-div#rex-navi-paginate ul li.rex-navi-paginate-page a.rex-active,
-div#rex-clang ul li a.rex-active,
-div.rex-content-header ul li a.rex-active {
+div#rex-clang ul li a.rex-active {
 	color: $drk_grey;
 }
 
-/*	Grün */
+.rex-tx3 { color: #188D12; } /* Grün */
+.rex-tx2 { color: #AF112F; } /* Rot */
 
-.rex-tx3 {
-	color: #188D12;
-}
+/* Schriftarten */
 
-/*	Rot */
-
-.rex-tx2 {
-	color: #AF112F;
-}
-
-/*	Schriftarten */
-
-input, textarea, select, div#rex-navi-paginate ul li.rex-navi-paginate-page a span {
+input, textarea, select {
 	font-family: Calibri, Arial, Verdana, sans-serif;
 }
-
-/*	Schriftgrößen */
-
-
-
-
-
-
-
-div#rex-navi-paginate ul li.rex-navi-paginate-page a span {
-	font-size: 1em;
-}
-
-
-
-
-/*	Background Color */
-
-body#rex-page-import-export div.rex-area {
-	background-color: transparent;
-}
-
-
 
 div.rex-area-footer,
 div.rex-addon-footer{
@@ -1004,181 +239,25 @@ div.rex-addon-footer{
 }
 
 div#rex-header p.rex-header-top,
-div#rex-linkmap,
-div#rex-form-system-setup,
 div.rex-area,
 div.rex-addon-output,
 div.rex-content-cols,
 div.rex-widget p.rex-widget-field input,
-div.rex-widget p.rex-widget-field select,
-body#rex-page-import-export div.rex-area-col-a,
-body#rex-page-import-export div.rex-area-col-b {
+div.rex-widget p.rex-widget-field select {
 	background-color: #fff;
 	color: $drk_grey;
 }
 
-/*  Gruen - Add-, EditSlice */
-
-/*  Slice Inhalt */
-
-
-
-/*	Background Image */
-
-div.rex-content-header { background-image: none; }
-
-div#rex-navi-paginate ul li.rex-navi-paginate {
-	&-prev, &-message, &-page a, &-page a span {
-		background-image: none;
-	}
-}
-
-
-
-
-
-/*	Button - Pfeil links */
-
-div#rex-navi-paginate ul li.rex-navi-paginate-prev a {
-	background-image: url(../icon_left.gif);
-}
-
-/*	Button - Pfeil rechts */
-
-div#rex-navi-paginate ul li.rex-navi-paginate-next a {
-	background-image: url(../icon_right.gif);
-}
-
-
-div#rex-navi-paginate ul li,
-div.rex-navi-slice li {
-	display: block;
-	float: left;
-	padding: 0;
-	margin-top: 8px;
-
-	&.rex-navi-first {
-		padding-left: 0;
-	}
-
-	a {
-		display: block;
-		color: #fff;
-		font-weight: normal;
-		font-size: 1em;
-		margin-left: 2px;
-		height: 20px;
-		background-color: $link_color;
-		line-height: 20px;
-		padding-left: 20px;
-		+border-radius(3px);
-
-		/* Editbutton auf Artikelseite */
-		&.rex-tx3 {
-			background-image: url(background_btn_edit.png);
-			background-position: 6px 0;
-			background-repeat: no-repeat;
-			width: 60px;
-
-
-			&:hover {
-				background-color: #4bcee4;
-			}
-		}
-
-		/* Löschen-Button */
-		&.rex-tx2 {
-			background-image: url(background_btn_dlt.png);
-			background-position: 6px 0;
-			background-repeat: no-repeat;
-			width: 55px;
-
-			&:hover {
-				background-color: #4bcee4;
-			}
-		}
-
-		/*  Pfeil-Buttons */
-		&.rex-slice-{
-			&move-up, &move-down {
-				padding: 0px;
-				width: 22px;
-
-				&:hover {
-					background-color: #4bcee4;
-				}
-			}
-
-			&move-down {
-				background-image: url(background_btn_down.png);
-				background-position: 7px 0;
-				background-repeat: no-repeat;
-			}
-
-			&move-up {
-				background-image: url(background_btn_up.png);
-				background-position: 7px 0;
-				background-repeat: no-repeat;
-			}
-		}
-
-	}
-}
-
-
-
-
 /*	Back */
 
 a.rex-back {
-  padding-left: 8px;
+	padding-left: 8px;
 	background-image: url(../back.gif);
 	background-position: 0 4px;
 }
 
-.rex-i- {
-	&action            { background-image: url(../action.gif);        }
-	&action-add        { background-image: url(../action_plus.gif);   }
-	&addon             { background-image: url(../addon.gif);         }
-	&article           { background-image: url(../document.gif);      }
-	&article-add       { background-image: url(../document_plus.gif); }
-	&article-startpage { background-image: url(../startpage.gif);     }
-	&metainfo          { background-image: url(../metainfo.gif);      }
-	&metainfo-add      { background-image: url(../metainfo_plus.gif); }
-	&module            { background-image: url(../module.gif);        }
-	&module-add        { background-image: url(../module_plus.gif);   }
-	&template          { background-image: url(../template.gif);      }
-	&template-add      { background-image: url(../template_plus.gif); }
-	&user              { background-image: url(../user.gif);          }
-	&user-add          { background-image: url(../user_plus.gif);     }
-
-	&category,
-	&mediapool-category {
-		background-image: url(../folder.gif);
-	}
-
-	&category-add,
-	&mediapool-category-add {
-		background-image: url(../folder_plus.gif);
-	}
-}
-
-/*	Border */
-
-table.rex-table tr.rex-metainfo-cat td {
-  border-color: #DFE9E9;
-}
-
-
 /*	Allgemeines */
 
-/* .rex-hl2 {
-	border-bottom: 1px solid #CBCBCB;
-} */
-
-
-
-/* wichtig */
 div#rex-wrapper {
 	clear: none;
 	float: right;
@@ -1186,65 +265,9 @@ div#rex-wrapper {
 	padding-bottom: 36px;
 }
 
-/* #rex-page-login div#rex-wrapper {
-	padding-bottom: 72px;
-} */
-
-/* body#rex-page-linkmap,
-body#rex-page-mediapool,
-body#rex-page-setup {
-	div#rex-wrapper {
-		width: 100%;
-		padding: 15px;
-	}
-} */
-
-
-
-#rex-page-setup {
-	div#rex-title, div#rex-output {
-		float: none;
-		width: 650px;
-		margin-right: auto;
-		margin-left: auto;
-	}
-}
-
-
-
-
 /*	Sprachen, Content (Editiermodus, Metadaten, Anzeigen) */
 
-
-/*	Paginate */
-
-div#rex-navi-paginate ul li {
-	margin-right: 10px;
-
-	&.rex-navi-paginate-page    { margin-right: 0;    }
-	&.rex-navi-paginate-next    { padding-left: 10px; }
-	&.rex-navi-paginate-message { padding-top: 3px;   }
-
-	&.rex-navi-paginate-prev a,
-	&.rex-navi-paginate-next a {
-		width: 18px;
-		height: 18px;
-
-		span { display: none; }
-	}
-
-	&.rex-navi-paginate-page a span {
-		padding: 3px 10px 2px 10px;
-		font-weight: bold;
-	}
-}
-
-div.rex-content-body-2 {
-	padding: 0;
-}
-
-div,
-body#rex-page-import-export div {
+div {
 	&.rex-addon-col-a,
 	&.rex-addon-col-b {
 		float: none;
@@ -1265,39 +288,6 @@ body#rex-page-import-export div {
 	background-color: #FFF !important;
 }
 
-/*	Formulare */
-
-/*	Struktur : Metainfo */
-
-div#rex-form-structure-category tr.rex-metainfo-cat {
-	div.rex-form-checkboxes-wrapper,
-	div.rex-form-radios-wrapper {
-		p.rex-form-label-right label { width: 282px; }
-	}
-
-	div.rex-form-checkboxes-wrapper,
-	div.rex-form-radios-wrapper,
-	p.rex-form-label-right label,
-	p.rex-form-read span,
-	p.rex-form-text input,
-	p textarea {
-		width: 312px;
-	}
-
-	p.rex-form-select select {
-		width: 318px;
-	}
-}
-
-div.rex-form-setup-step-database div.rex-form-row p.rex-form-label-right label {
-	width: 590px;
-}
-
-div#rex-form-mediapool-detail div.rex-form-row p select{
-	&.rex-form-select-date { width: 45px; }
-	&.rex-form-select-year { width: 65px; }
-}
-
 /*	Extras */
 
 div#rex-redaxo-link {
@@ -1314,600 +304,30 @@ div#rex-redaxo-link {
 	}
 }
 
-
 /*	Rundungen */
-body#rex-page-linkmap div#rex-linkmap,
-body#rex-page-mediapool div.rex-form,
-body#rex-page-mediapool div#rex-mediapool-detail-wrapper,
-body#rex-page-module div.rex-form,
-body#rex-page-specials div.rex-form,
-body#rex-page-structure div.rex-form,
-body#rex-page-template div.rex-form,
-/* body#rex-page-user div.rex-form, | erzeugt unerwünschten rand innerhalb der artikel-suchleiste */
-body#rex-page-import-export div.rex-area-col-a,
-body#rex-page-import-export div.rex-area-col-b,
 div.rex-area,
 div.rex-addon-output,
-div.rex-addon-output-v2 div.rex-form,
-div.rex-content-header,
-div.rex-content-body,
 div.rex-info-block,
-div.rex-content-header-2,
-div.rex-form input.rex-form-submit,
-div#rex-output div.rex-toolbar{
+div#rex-output div.rex-toolbar {
 	+border-radius($brd_rad);
 	/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
 }
 
-
-
-body#rex-page-import-export div.rex-area,
-body#rex-page-module div.rex-form table.rex-table,
-body#rex-page-structure div.rex-form table.rex-table,
-div.rex-addon-output div.rex-area,
-div.rex-content-body {
+div.rex-addon-output div.rex-area {
 	+border-radius(0px);
 	border: 0;
 }
-
-
 
 div.rex-area-col-2,
 div.rex-addon-col-2 {
 	position: static;
 }
 
-body#rex-page-import-export div.rex-area-col-a,
-div.rex-addon-output,
-div#rex-form-mediapool-selectcategory {
+div.rex-addon-output {
 	margin-bottom: 10px;
 }
 
-
-
-
-
-
-/*	Editmode */
-.rex-content-editmode {
-
-	color: $drk_grey;
-
-	.rex-form  {
-
-		float: left;
-		width: 100%;
-
-		input.rex-form-submit {margin: 5px;}
-
-		&-row {
-
-			background-color: #e8e8e8;
-			clear: both;
-			float: left;
-			padding: 0;
-			width: 100%;
-			+border-radius(4px);
-			border: 1px solid #efefef;
-
-
-			& input, select {
-				margin: 5px;
-			}
-
-			& label {
-				margin:10px 0 5px 10px;
-			}
-
-			p.rex-form-submit {
-				background-color: $md_grey;
-				+border-radius(4px);
-				border: 1px solid #efefef;
-			}
-		}
-
-
-		&-content-editmode {
-
-			.rex-form-col-1 {
-				select {width: 99%} /* Block hinzufügen - Element*/
-			}
-
-			&, &-add-slice, &-edit-slice {
-
-				legend, legend span { +hardcore-hidden; }
-
-				.rex-form-row {
-					p input.rex-form-submit { margin-left: 10px; }
-					p.rex-form-col-b input.rex-form-submit { margin-left: 0; }
-				}
-			}
-		}
-
-
-	}
-
-	div.rex-message, div.rex-content-body {
-		+border-radius(0px);
-		border: 0;
-	}
-
-
-	/* dunkelgraue Leiste mit Namen des Moduls */
-	 &-module-name {
-		float: left;
-		width: 100%;
-		line-height: 35px;
-		background-color: $drk_grey;
-		+border-radius(4px);
-
-		h3 {
-			float: left;
-
-			&.rex-hl4 {
-				vertical-align: middle;
-				color: #fff;
-				font-size: 1.1em;
-				margin: 0 0 0 10px;
-			}
-		}
-
-		.rex-navi-slice {
-			float: right;
-			margin-right: 5px; /* Schiebt die Edit, Delete- und Pfeil-Buttons rein*/
-
-		}
-	}
-
-
-	&-slice-input,	&-slice-output {
-		clear: both;
-		padding: 10px;
-		line-height: 1.6;
-		ol, ul { margin-left: 20px; }
-	}
-
-	&-slice-output {
-		/* border-bottom: 1px solid #fff; */
-		background-color: $lt_grey;
-		margin-bottom: 2px;
-		color: #999;
-
-		h1{ font-size: 2em;   }
-		h2 { font-size: 1.6em; }
-		h3 { font-size: 1.4em; }
-		h4 { font-size: 1.2em; }
-		h5 { font-size: 1.1em; }
-		h6 { font-size: 1em;   }
-	}
-}
-
-
- /* ENDE EDIT-MODE ------------------------------------------------------------------------- ENDE EDIT-MODE */
-
-
-
-
-
-
-
-
-
-
-
- /* METAMODE ------------------------------------------------------------------------------------- METAMODE */
-
-#rex-form-content-metamode {
-
-	padding: 0px;
-	margin-bottom: 10px;
-
-	div.rex-widget {
-		margin-bottom: 0px;
-	}
-
-	.rex-form {
-
-		&-row {
-			vertical-align: middle;
-			/* padding: 5px 0 5px 15px; */
-			border: 0;
-		}
-
-		&-col-1, &-col-2 {
-
-			.rex-form-wrapper {
-				margin-top: -17px; /* Ausgleich für Legend */
-				padding: 0 10px 10px 10px;
-				line-height: 25px;
-				background-color: #fff;;
-				margin:0 0 20px -1px;
-				+border-bottom-radius(4px);
-				border: 1px solid #efefef;
-				color: $drk_grey;
-				float: left;
-				width: 761px;
-			}
-
-			input.rex-form-submit, input.rex-form-text, select {border: 1px solid $md_grey; margin-bottom: 0;}
-
-			/* legend {
-				font-size: 1.2em;
-				margin: 0 0 2px 0;
-				display: block;
-				/* background-color: yellow;
-				padding-bottom: 2px;
-				border-bottom: 1px dotted $md_grey;
-				width: 100%;
-			} */
-
-			legend {
-				color: #fff;
-				background-color: $md_grey;
-				font-size: 1.1em;
-				+border-top-radius(4px);
-				width: 771px; /* Breite des Loginbereichs abzüglich des padding links*/
-				padding: 8px 0 8px 10px;
-			}
-
-			p.rex-form-read span {
-				margin-left: 155px;
-				color: $md_grey;
-			}
-
-		}
-
-		/* Spezialfall mit zwei Spalten*/
-		&-col-2 {
-
-			.rex-form-col-a {
-				width:49%;
-				float: left;
-			}
-
-			.rex-form-col-b {
-				width:49%;
-				float: right;
-			}
-		}
-	}
-}
 /* ----------------------------------------------------------------------------------------------------- */
-
-
-/* LOGIN ----------------------------------------------------------------------------------------- LOGIN */
-
-body#rex-page-login {
-
-	p.rex-form-text, p.rex-form-select {padding: 0}
-
-	div#rex-title, div#rex-output {
-		float: none;
-		width: 650px;
-		margin-right: auto;
-		margin-left: auto;
-	}
-
-	div#rex-wrapper {
-		width: 100%;
-		margin-right: 0px;
-		&2 { padding: 0 16px; }
-	}
-
-	/* Anpassung der Footerbreite nur für Login-Seite */
-	div#rex-footer {
-		width: 650px;
-		float: none;
-		margin-right: auto;
-		margin-left: auto;
-	}
-
-	label {margin-left: 20px;}
-
-	.rex-form-row:first-child {margin-top: 20px;}
-
-	.rex-form{
-
-		&-login {
-			margin: 7px 0 0 0;
-			+border-radius(4px);
-			/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
-
-			background-color: #fff;
-			color: #fff;
-
-			.rex-form-text input,.rex-form-password input {
-				width: 250px;
-			}
-
-			/* Überschrift */
-			legend {
-				color: #fff;
-				background-color: $drk_grey;
-				font-size: 1.1em;
-				+border-top-radius(4px);
-				width: 630px; /* Breite des Loginbereichs abzüglich des padding links*/
-				padding: 5px 0 8px 20px;
-				margin-bottom: 15px;
-			}
-		}
-
-		&-submit {
-			margin: 2px 0 10px 82px;
-		}
-
-		&-row {
-			color: $drk_grey;
-			line-height: 25px;
-			padding: 0;
-			border: 0;
-		}
-
-		&-col-a {
-			vertical-aling: middle;
-
-		}
-	}
-}
-/* ----------------------------------------------------------------------------------------------------- */
-
-
-
-
-
- /* PROFILE ------------------------------------------------------------------------------------ PROFILE */
-
- body#rex-page-profile {
-
-	#rex-form-profile {
-		background-color: #fff;
-		+border-bottom-radius(4px);
-		/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
-	}
-
-
-	.rex-form {
-
-		&-row {
-			clear: both;
-			float: left;
-			/* background-color: pink; */
-			width: 100%;
-			vertical-align: middle;
-			border-bottom: 1px dotted $md_grey;
-			border-top: 0;
-		}
-
-		&-wrapper
-			{
-				padding: 0 10px;
-				line-height: 40px;
-			}
-
-		&-col-2 {
-			.rex-form-col-a, .rex-form-col-b {
-				width:49%;
-				float: left;
-			}
-		}
-
-		&-col-1 {
-			.rex-form-wrapper {padding-top: 0} /* löscht den oberen abstand des 'profil speichern'-buttons */
-			.rex-form-row {border: 0}  /* keinen rand für die letzte zeile im profil */
-		}
-
-		&-notice {
-			margin-left: 145px;
-			line-height: 1.2em;
-			margin-bottom: 10px;
-		}
-
-		&-submit {
-			margin-bottom: 3px;
-		}
-
-	}
-
-	/* Überschrift | dunkelgrau hinterlegt mit runden Ecken*/
-	legend {
-		color: #fff;
-		background-color: $drk_grey;
-		font-size: 1.1em;
-		+border-top-radius(4px);
-		width: 771px; /* Breite des Loginbereichs abzüglich des padding links*/
-		padding: 8px 0 8px 10px;
-	}
-}
-
-/* ----------------------------------------------------------------------------------------------------- */
-
-
-
-
-/*	Template / Module : Action */
-
-.rex-form {
-
-	&-row {
-		padding: 10px 0 0;
-		clear: both;
-		float: left;
-		width: 100%;
-		vertical-align: middle;
-		border-top:1px dotted $md_grey;
-	}
-
-	&-template-editmode {
-		textarea { height: 350px; width: 605px; margin-bottom: 15px;}
-
-		.rex-form-col-a {
-
-				padding-bottom: 10px;
-		}
-
-		.rex-form-submit {
-			margin-left: 73px;
-		}
-
-		input.rex-form-checkbox,
-		input.rex-form-radio {
-			clear: both;
-			margin: 0 0 0 21px;
-		}
-
-		div#rex-form-template-ctype {
-			p.rex-form-checkbox      { padding-top: 5px; }
-			p.rex-form-select select { margin-top: 5px;  }
-
-			.rex-form-row {border: 0; margin: 0}
-		}
-
-
-		/* Überschrift | dunkelgrau hinterlegt mit runden Ecken*/
-		legend {
-			color: #fff;
-			background-color: $drk_grey;
-			font-size: 1.1em;
-			+border-top-radius(4px);
-			width: 771px; /* Breite des Loginbereichs abzüglich des padding links*/
-			padding: 8px 0 8px 10px;
-		}
-
-		/* .rex-form-checkbox {
-			margin: 0 5px 0 10px;
-		} */
-
-		.rex-form-wrapper {
-			background-color: #fff;
-			+border-bottom-radius($brd_rad);
-			clear: both;
-			float: left;
-			width: 761px;
-			padding: 0 10px;
-		}
-
-	}
-
-
-
-	&-action-editmode {
-		.rex-form-row p.rex-form-textarea textarea {
-			height: 200px;
-		}
-	}
-
-
-
-	&-module-editmode {
-		.rex-form-row p.rex-form-textarea textarea {
-			height: 200px;
-		}
-	}
-}
-
-
-
-
-#rex-form-user-editmode {
-
-	/* Überschrift | dunkelgrau hinterlegt mit runden Ecken*/
-	legend {
-		color: #fff;
-		background-color: $drk_grey;
-		font-size: 1.1em;
-		+border-top-radius(4px);
-		width: 771px; /* Breite des Loginbereichs abzüglich des padding links*/
-		padding: 8px 0 8px 10px;
-	}
-
-	.rex-form-notice {margin-left: 145px; line-height: 1.2em}
-
-	.rex-form {
-		&-wrapper {
-			background-color: #fff;
-			+border-bottom-radius(4px);
-			clear: both;
-			float: left;
-			width: 761px;
-			padding: 0 10px;
-			line-height: 40px;
-		}
-
-		&-col-2 {
-
-			.rex-form-col-a {
-				width:49%;
-				float: left;
-			}
-
-			.rex-form-col-b {
-				width:49%;
-				float: right;
-			}
-		}
-
-		&-submit {
-			margin-left: 145px;
-		}
-
-		&-row {
-			/* clear: both;
-			float: left; */
-			/* background-color: pink; */
-			width: 100%;
-			border-top: 1px dotted $md_grey;
-		}
-
-	}
-}
-
-
-.rex-addon-output-v2 .rex-form {
-
-	&-submit {
-		margin-left: 50px;
-	}
-
-	&-row {
-		padding: 7px 0;
-		clear: both;
-		float: left;
-		width: 100%;
-		vertical-align: middle;
-	}
-
-	textarea { height: 350px; width: 605px; margin-bottom: 15px;}
-
-	input.rex-form-checkbox,
-	input.rex-form-radio {
-		clear: both;
-		margin: 0 0 0 21px;
-	}
-
-	/* Überschrift | dunkelgrau hinterlegt mit runden Ecken*/
-	legend {
-		color: #fff;
-		background-color: $drk_grey;
-		font-size: 1.1em;
-		+border-top-radius(4px);
-		width: 771px; /* Breite des Loginbereichs abzüglich des padding links*/
-		padding: 8px 0 8px 10px;
-	}
-
-	/* .rex-form-checkbox {
-		margin: 0 5px 0 10px;
-	} */
-
-	.rex-form-wrapper {
-		background-color: #fff;
-		+border-bottom-radius(4px);
-		clear: both;
-		float: left;
-		width: 761px;
-		padding: 0 10px;
-	}
-}
-
 
 .rex-hl2 {
 	font-size: 1.4em;
@@ -1922,11 +342,7 @@ div.rex-area-col-2 .rex-hl2 {
 	width: 93%;
 }
 
-/* System -> Einstellungen | unterer Abstand zu den gestrichelten Linien in der rechten Box*/
-#rex-page-specials p.rex-form-text, p.rex-form-select {padding-bottom: 10px;}
-
 .rex-area-content {
-
 	padding: 10px 0;
 	+border-bottom-radius($brd_rad);
 	background-color: #fff;
@@ -1937,234 +353,13 @@ div.rex-area-col-2 .rex-hl2 {
 		font-weight: bold;
 	}
 
+	h4.rex-h13 { margin: 10px; }
 
-	h4.rex-h13 {margin: 10px;}
-
-	.rex-tx1, fieldset{
+	.rex-tx1, fieldset {
 		margin: 0 10px 5px 10px
 	}
 
-	.rex-button{
+	.rex-button {
 		margin: 0 0 15px 5px
 	}
-}
-
-
-/*-------------------------------------------------------------------------------------------------------*/
-
-
-
-div#rex-form-mediapool-selectcategory{
-
-	div.rex-form-row p {
-		label {
-			font-weight: bold;
-		}
-
-		select {
-			width: 330px;
-		}
-
-		input.rex-form-submit {
-			margin-left: 10px;
-		}
-	}
-
-	noscript div.rex-form-row p input.rex-form-submit {
-		margin-left: 153px;
-	}
-
-	/*  Bspl. Searchbar */
-
-	fieldset.rex-form-col-2 {
-
-		background-color: #fff;
-		width: 100%;
-		+border-bottom-radius(4px);
-		margin-bottom: 40px;
-
-		/* Überschrift | mittelgrau hinterlegt mit runden Ecken*/
-		legend {
-			color: #fff;
-			background-color: $md_grey;
-			font-size: 1.1em;
-			+border-top-radius(4px);
-			width: 680px;
-			padding: 8px 0 8px 10px;
-		}
-
-		div.rex-form-row {
-
-			line-height: 30px;
-			label  { width: 100px; margin-left: 10px;  }
-			select { margin-right: 5px; width: 153px; }
-
-
-
-
-			.rex-form-col-a,
-			.rex-form-col-b {
-				width: auto;
-				vertical-align: middle;
-			}
-
-			.rex-form-col-a {
-				float: left;
-			}
-
-			.rex-form-col-b {
-				float: right;
-			}
-		}
-	}
-}
-
-body#rex-page-mediapool,
-div#rex-form-mediapool-other {
-
-	fieldset.rex-form-col-1 {
-
-		background-color: #fff;
-		width: 100%;
-		+border-bottom-radius(4px);
-		/* margin-bottom: 20px; */
-
-		/* Überschrift | mittelgrau hinterlegt mit runden Ecken*/
-		legend {
-			color: #fff;
-			background-color: $drk_grey;
-			font-size: 1.1em;
-			+border-top-radius(4px);
-			width: 680px;
-			padding: 8px 0 8px 10px;
-		}
-
-		div.rex-form-row {
-
-			line-height: 30px;
-			label  { width: 140px; margin-left: 10px;  }
-			select { margin-right: 5px; width: 153px; }
-
-			.rex-form-col-a,
-			.rex-form-col-b {
-				width: auto;
-				vertical-align: middle;
-			}
-
-			.rex-form-col-a {
-				float: left;
-			}
-
-			.rex-form-col-b {
-				float: right;
-			}
-
-			/* nur der absatz soll einen abstand haben, nicht die inputs*/
-			p.rex-form-submit {
-				margin-left: 150px;
-			}
-
-			input#file_new .rex-form-file {
-				border: 0;
-			}
-
-			p.rex-form-label-right {
-				input.rex-form-checkbox,
-				input.rex-form-radio {
-					margin-left: 5px;
-				}
-
-				label { width: 426px; }
-			}
-		}
-	}
-}
-
-
-div#rex-mediapool-detail {
-	&-wrapper {
-		float: left;
-		width: 100%;
-		color: $drk_grey;
-	}
-
-	&-image {
-		float: right;
-		width: 34%;
-		padding-top: 5px;
-		text-align: center;
-	}
-
-	.rex-form-submit {margin-left: 75px;}
-
-	div.rex-form-row {
-
-		div.rex-form-checkboxes-wrapper,
-		div.rex-form-radios-wrapper,
-		p.rex-form-label-right label,
-		p.rex-form-read span,
-		p.rex-form-text input,
-		p.rex-form-password input,
-		p select,
-		p textarea {
-			width: 244px;
-		}
-
-		p select.rex-form-select-date {
-			width: 50px;
-		}
-
-		p select.rex-form-select-year {
-			width: 70px;
-		}
-
-		div.rex-form-checkboxes-wrapper p.rex-form-label-right label,
-		div.rex-form-radios-wrapper p.rex-form-label-right label,
-		div.rex-form-widget select {
-			width: 212px;
-		}
-	}
-}
-
-
-div#rex-form-mediapool-media, div#rex-form-mediapool-categories {
-
-	legend {
-		font-size: 1.2em;
-		margin-bottom: 5px;
-	}
-
-	td {padding: 10px 0}
-
-	.rex-tx4 {
-		line-height: 1.4em;
-		margin: 0;
-	}
-
-	caption {display: none;}
-
-	table.rex-table {
-
-		width: 690px;
-
-		tr th {
-			background-color:#fff;
-			color:$drk_grey;
-			font-weight: bold;
-			padding:4px 0 9px;
-			vertical-align:middle;
-		}
-	}
-}
-
-
-/*-------------------------------------------------------------------------------------------------------*/
-
-
-/*	Addons */
-
-div#rex-addon-editmode form div.rex-widget {
-	margin-top: -20px;
-	margin-left: 155px;
-	margin-bottom: 0px;
 }

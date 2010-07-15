@@ -1,0 +1,59 @@
+div#rex-form-export div.rex-form-row {
+	p.rex-form-label-right input.rex-form-radio {
+		margin-left: 5px;
+	}
+
+	div.rex-form-checkboxes {
+		clear: both;
+		padding-top: 5px;
+		padding-bottom: 10px;
+		padding-left: 23px;
+	}
+
+	div.rex-form-checkboxes-wrapper {
+		float: none;
+		width: 300px;
+	}
+}
+
+body#rex-page-import-export {
+	table.rex-table tr th {
+		white-space: nowrap;
+	}
+
+	div.rex-area-content,
+	div.rex-addon-content {
+		padding: 0;
+
+		p.rex-tx1 {
+			margin-bottom: 0px;
+			padding: 5px;
+		}
+	}
+
+	div.rex-area {
+		background-color: transparent;
+		+border-radius(0px);
+		border: 0;
+	}
+
+	div.rex-area-col-a,
+	div.rex-area-col-b {
+		background-color: #fff;
+		color: $drk_grey;
+		+border-radius($brd_rad);
+		/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
+	}
+
+	div {
+		&.rex-addon-col-a,
+		&.rex-addon-col-b {
+			float: none;
+			width: 100%;
+		}
+	}
+
+	div.rex-area-col-a {
+		margin-bottom: 10px;
+	}
+}
