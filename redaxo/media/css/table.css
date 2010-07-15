@@ -56,7 +56,9 @@ table.rex-table {
 			padding-top: 4px;
 			padding-bottom: 4px;
 		}
-
 	}
+}
 
+table.rex-table-mrgn {
+	margin-bottom:10px
 }

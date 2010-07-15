@@ -1,7 +1,23 @@
-/**********************************************************************/
-/* START CSS_sally
-kommt aus backend_sly01.css                                           */
-/**********************************************************************/
+#rex-website:after {
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0;
+	line-height: 0;
+	visibility: hidden;
+}
+
+#rex-website {
+	display: inline-block;
+}
+
+* html #rex-website {
+	height: 1%;
+}
+
+#rex-website {
+	display: block;
+}
 
 div.sly-content {
 	clear: left;
@@ -693,7 +709,7 @@ body#rex-page-import-export {
 
 
 
-div#rex-footer  #rex-navi-footer{
+div#rex-footer  #rex-navi-footer {
 	clear: both;
 	position: relative;
 	float: left;
@@ -1135,8 +1151,7 @@ table.rex-table tr.rex-metainfo-cat td {
 div#rex-wrapper {
 	clear: none;
 	float: right;
-	width: 745px;
-	margin-right: 16px;
+	width: 797px;
 	padding-bottom: 36px;
 }
 
@@ -1871,10 +1886,13 @@ body#rex-page-login {
 	font-size: 1.4em;
 	letter-spacing: -0.01em;
 	padding: 7px 10px;
-	background-color:#4D4646;
-	color:#FFFFFF;
-	width:93%;
+	background-color: #4D4646;
+	color: #FFFFFF;
 	+border-top-radius($brd_rad);
+}
+
+div.rex-area-col-2 .rex-hl2 {
+	width: 93%;
 }
 
 /* System -> Einstellungen | unterer Abstand zu den gestrichelten Linien in der rechten Box*/

@@ -5,11 +5,6 @@ $config = sly_Core::config();
 ?>
 
 <div id="rex-website">
-	<div id="rex-header">
-		<p class="rex-header-top">
-			<a href="../" onclick="window.open(this.href);"><?= sly_html($config->get('SERVERNAME')) ?></a>
-		</p>
-	</div>
 	<div id="rex-navi-logout" style="height: 88px;">
 		<? $this->renderView('views/layout/sally_navi_logout.phtml') ?>
 	</div>
@@ -24,7 +19,6 @@ $config = sly_Core::config();
 	<?php
 	endif;
 	?>
-	
+
 	<div id="rex-wrapper">
 		<div id="rex-wrapper2">
-			

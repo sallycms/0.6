@@ -35,8 +35,10 @@ body {
 
 	div#rex-website {
 
-		/* float: left; */
-		/* width: 964px; */
+		width: 1000px;
+		float: none;
+		margin: 0 auto;
+
 		font-size: 0.9em;
 		background-image: url(../website.gif);
 		background-repeat: repeat-x;
@@ -46,9 +48,6 @@ body {
 		.rex-par-0  { padding-right: 0px;  }
 		.rex-pab-0  { padding-bottom: 0px; }
 		.rex-pal-0  { padding-left: 0px;   }
-		width: 1000px;
-		/* position: relative; */
-
 	}
 
 	&#rex-page-mediapool {
@@ -185,22 +184,6 @@ del {
 img, iframe {
 	vertical-align:bottom;
 }
-
-div#rex-header {
-	display: inline !important;
-	position: absolute !important;
-	left: -1000px !important;
-	top: -1000px !important;
-	width: 0px !important;
-	height: 0px !important;
-	margin: 0 !important;
-	padding: 0 !important;
-	background-color: #FFF !important;
-	overflow: hidden !important;
-}
-
-
-
 
 /* REX-TITLE --------------------------------------------------------------------------------------- REX-TITLE */
 div#rex-title {

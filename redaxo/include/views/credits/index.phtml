@@ -16,6 +16,7 @@ $conf = sly_Core::config();
 
 <div class="rex-area">
 	<table class="rex-table sly-addonlist" summary="">
+		<caption>Liste aller verfügbaren AddOns</caption>
 		<thead><tr>
 			<th class="rex-icon">&nbsp;</th>
 			<th><?= $I18N->msg('credits_name') ?></th>
@@ -26,7 +27,7 @@ $conf = sly_Core::config();
 		<tbody>
 
 		<?php
-		
+
 		$addons  = sly_Service_Factory::getService('AddOn');
 		$plugins = sly_Service_Factory::getService('Plugin');
 
@@ -39,12 +40,12 @@ $conf = sly_Core::config();
 			$params['icon']        = $addons->getIcon($addon);
 			$params['author']      = $addons->getAuthor($addon);
 			$params['supportPage'] = $addons->getSupportPage($addon);
-			
+
 			$this->render('/views/credits/row.phtml', $params);
-			
+
 			if ($params['isActive']) {
 				$params['type'] = 'plugin';
-				
+
 				foreach ($plugins->getAvailablePlugins($addon) as $plugin) {
 					$params['type']        = 'plugin';
 					$params['name']        = $plugin;
