@@ -26,9 +26,6 @@ $config = sly_Core::config();
 					<a href="index.php?page=credits"><?= t('credits') ?></a>
 				</li>
 				<? endif ?>
-				<li>
-					<?= sly_Service_Factory::getService('User')->hashPassword('admin') ?>
-				</li>
 			</ul>
 			<p id="rex-scripttime"><!--DYN-->
 			<?= rex_showScriptTime() ?> Sek |
