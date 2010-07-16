@@ -56,11 +56,11 @@ class sly_Core {
 
 	public static function getCurrentClang() {
 		$instance = self::getInstance();
-		
+
 		if (!isset($instance->curClang)) {
 			$instance->curClang = rex_request('clang', 'rex-clang-id', self::config()->get('START_CLANG_ID'));
 		}
-		
+
 		return $instance->curClang;
 	}
 
@@ -71,16 +71,19 @@ class sly_Core {
 	public static function getCurrentArticleId() {
 		$conf     = self::config();
 		$instance = self::getInstance();
-		
+
 		if (!isset($instance->curArticleId)) {
-			if (isset($_REQUEST['article_id'])) {
-				$instance->curArticleId = rex_request('article_id', 'rex-article-id', $conf->get('NOTFOUND_ARTICLE_ID'));
+			$instance->curArticleId = rex_request('article_id', 'int', $conf->get('START_ARTICLE_ID'));
+
+			if (!OOArticle::exists($instance->curArticleId)) {
+				$instance->curArticleId = $conf->get('NOTFOUND_ARTICLE_ID');
 			}
-			else {
-				$instance->curArticleId = $conf->get('START_ARTICLE_ID');
+
+			if (!OOArticle::exists($instance->curArticleId)) {
+				$instance->curArticleId = -1;
 			}
 		}
-		
+
 		return $instance->curArticleId;
 	}
 
