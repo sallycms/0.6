@@ -12,7 +12,7 @@
 class sly_Controller_Module extends sly_Controller_Sally
 {
 	protected $func = '';
-	
+
 	public function init()
 	{
 		rex_title(t('modules'), array(
@@ -25,7 +25,7 @@ class sly_Controller_Module extends sly_Controller_Sally
 
       	print '<div class="sly-content">';
 	}
-	
+
 	public function teardown()
 	{
 		print '</div>';
@@ -39,13 +39,13 @@ class sly_Controller_Module extends sly_Controller_Sally
 
 	public function add()
 	{
-		global $I18N;
+		global $I18N, $REX;
 
 		$save  = sly_post('save', 'boolean', false);
-		$user  = sly_Core::config()->get('USER');
+		$user  = $REX['USER'];
 		$login = $user->getValue('login');
 		$now   = time();
-		
+
 		if ($save) {
 			$module = array(
 				'name'        => sly_post('name', 'string', ''),
@@ -62,7 +62,7 @@ class sly_Controller_Module extends sly_Controller_Sally
 
 			$service = sly_Service_Factory::getService('Module');
 			$service->create($module);
-			
+
 			print rex_info($I18N->msg('module_added'));
 			$this->listModules();
 			return true;
@@ -72,21 +72,21 @@ class sly_Controller_Module extends sly_Controller_Sally
 		$this->render('views/module/edit.phtml', array('module' => null));
 		return true;
 	}
-	
+
 	public function edit()
 	{
 		global $I18N;
-			
+
 		$module = $this->getModule();
-		
+
 		if ($module === null) {
 			$this->listModules();
 			return false;
 		}
-		
+
 		$save    = sly_post('save', 'boolean', false);
 		$service = sly_Service_Factory::getService('Module');
-		
+
 		if ($save) {
 			$module->setName(sly_post('name', 'string', ''));
 			$module->setInput(sly_post('input', 'string', ''));
@@ -105,41 +105,41 @@ class sly_Controller_Module extends sly_Controller_Sally
 
 		$params     = array('module' => $module, 'actions' => $service->getAttachedActions($module));
 		$this->func = 'edit';
-		
+
 		$this->render('views/module/edit.phtml', $params);
-		
+
 		if (!empty($params['actions'])) {
 			$this->render('views/module/module_action.phtml', $params);
 		}
-		
+
 		return true;
 	}
-	
+
 	public function delete()
 	{
 		global $REX, $I18N;
-		
+
 		$module = $this->getModule();
-		
+
 		if ($module === null) {
 			$this->listModules();
 			return false;
 		}
-		
+
 		$service = sly_Service_Factory::getService('Module');
 		$usages  = $service->findUsages($module);
-		
+
 		if (!empty($usages)) {
 			$errormsg     = array();
 			$languages    = sly_Core::config()->get('CLANG');
 			$multilingual = count($languages) > 1;
-			
+
 			foreach ($usages as $articleID => $usage) {
 				$article = $usage['article'];
 				$clangID = $usage['clang'];
 				$aID     = $article->getId();
 				$label   = $article->getName().' ['.$aID.']';
-				
+
 				if ($multilingual) {
 					$label = '('.rex_translate($languages[$clangID]).') '.$label;
 				}
@@ -149,18 +149,18 @@ class sly_Controller_Module extends sly_Controller_Sally
 
 			$moduleName = sly_html($module->getName());
 			$warning    = '<ul>'.implode("\n", $errormsg).'</ul>';
-			
+
 			print rex_warning($I18N->msg('module_cannot_be_deleted', $moduleName).$warning);
 			return false;
 		}
-		
+
 		$service->deleteWithActions($module);
 		print rex_info($I18N->msg('module_deleted'));
-		
+
 		$this->listModules();
 		return true;
 	}
-	
+
 	public function add_action()
 	{
 		global $I18N;
@@ -169,7 +169,7 @@ class sly_Controller_Module extends sly_Controller_Sally
 		$service  = sly_Service_Factory::getService('Module');
 		$save     = rex_post('save', 'boolean', false);
 		$actionID = sly_post('action_id', 'rex-action-id');
-		
+
 		if ($save && $actionID) {
 			$action = sly_Service_Factory::getService('Action')->findById($actionID);
 			$service->attachAction($module, $action);
@@ -183,10 +183,10 @@ class sly_Controller_Module extends sly_Controller_Sally
 	public function delete_action()
 	{
 		global $I18N;
-		
+
 		$pid     = sly_get('pid', 'int', 0);
 		$service = sly_Service_Factory::getService('Module');
-		
+
 		if ($service->detachActionById($pid)) {
 			print rex_info($I18N->msg('action_deleted_from_module'));
 		}
@@ -210,20 +210,20 @@ class sly_Controller_Module extends sly_Controller_Sally
 		$modules = $service->find(null, null, 'name', null, null);
 		$this->render('views/module/list.phtml', array('modules' => $modules));
 	}
-	
+
 	protected function getModule()
 	{
 		global $I18N;
-		
+
 		$moduleID = sly_request('id', 'int', 0);
 		$service  = sly_Service_Factory::getService('Module');
 		$module   = $service->findById($moduleID);
-		
+
 		if (!$moduleID || $module === null) {
 			print rex_warning($I18N->msg('module_not_exists'));
 			return null;
 		}
-		
+
 		return $module;
 	}
 }
