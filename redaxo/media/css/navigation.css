@@ -193,8 +193,8 @@ div#rex-navi-page ul li {
 	display: inline;
 	font-weight: normal;
 
-	a { padding: 0 15px;  }
-	&.rex-navi-first a { padding-left: 0; }
+	a { margin: 0 15px;  }
+	&.rex-navi-first a { margin-left: 0; }
 }
 
 div#rex-navi-page ul li a.rex-active {
@@ -240,22 +240,22 @@ div#rex-navi-page ul li a.rex-active {
 			}
 
 			a {
-				padding: 0 8px;
+				margin: 0 8px;
 			}
 
 			&.rex-navi-first a {
-				padding-left: 0;
+				margin-left: 0;
 			}
 		}
 	}
 }
 
 div#rex-navi-page {
-	ul li a {
+	ul li {
 		background-image: url(../pipe_c2.gif);
-		background-position: 0px 4px;
+		background-position: 0 4px;
 		background-repeat: no-repeat;
 	}
 
-	ul li.rex-navi-first a { background: none; }
+	ul li.rex-navi-first { background: none; }
 }
