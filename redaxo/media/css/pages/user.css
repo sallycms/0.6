@@ -1,18 +1,13 @@
 .rex-i- {
-	&user     { background-image: url(../user.png);      }
-	&user-add { background-image: url(../user_plus.png); }
+	&user     { background-image: url(../user.gif);      }
+	&user-add { background-image: url(../user_plus.gif); }
 }
 
 /* Sprites */
 
 .sly-sprite {
-	&.sly-user     { background-position: 0 -48px; }
-	&.sly-user-add { background-position: 0 -64px; }
-}
-
-div#rex-navi-main dl dd ul li#rex-navi-page-user > a {
-	background-image: url(../user.png);
-	background-position: 5px 5px;
+	&.sly-user     { background-position: 0 0; }
+	&.sly-user-add { background-position: 0 -16px; }
 }
 
 #rex-form-user-editmode {

@@ -22,6 +22,17 @@ class sly_Util_HTML
 		return implode(' ', $attributes);
 	}
 
+	public static function getSpriteLink($target, $text, $class)
+	{
+		if (empty($target)) {
+			$span = array('class' => 'sly-sprite sly-sprite-'.$class);
+			return sprintf('<span %s><span>%s</span></span>', self::buildAttributeString($span), sly_html($text));
+		}
+
+		$a = array('href' => $target, 'class' => 'sly-sprite sly-sprite-'.$class);
+		return sprintf('<a %s><span>%s</span></a>', self::buildAttributeString($a), sly_html($text));
+	}
+
 	public static function startJavaScript()
 	{
 		ob_start();

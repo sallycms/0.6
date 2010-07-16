@@ -1,8 +1,3 @@
-div#rex-navi-main dl dd ul li#rex-navi-page-mediapool > a {
-	background-image: url(../mediapool.png);
-	background-position: 5px 5px;
-}
-
 body#rex-page-mediapool {
 	div#rex-website { width: 100%; }
 	div#rex-title div.rex-title-row { width: 100%; }
