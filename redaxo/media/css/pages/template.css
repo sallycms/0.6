@@ -1,8 +1,8 @@
-/*	Button - Arrows */
+/* Sprites */
 
-.rex-i- {
-	&template     { background-image: url(../template.png);      }
-	&template-add { background-image: url(../template_plus.png); }
+.sly-sprite {
+	&.sly-template     { background-position: 0 -80px; }
+	&.sly-template-add { background-position: 0 -96px; }
 }
 
 div#rex-navi-main dl dd ul li#rex-navi-page-template > a {

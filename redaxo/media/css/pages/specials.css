@@ -10,7 +10,7 @@ div#rex-navi-main dl dd ul li#rex-navi-page-specials > a {
 
 /* System -> Einstellungen | unterer Abstand zu den gestrichelten Linien in der rechten Box*/
 #rex-page-specials {
-	p.rex-form-text, p.rex-form-select { padding-bottom: 10px; }
+	p.rex-form-text, p.rex-form-select, p.rex-form-read { padding-bottom: 5px; }
 }
 
 /*	System : Einstellungen */
@@ -25,6 +25,7 @@ div#rex-form-system-setup {
 
 	div.rex-form-row {
 		border-bottom-width: 0;
+		padding: 5px 0 0;
 
 		label {
 			width: 190px;
@@ -40,6 +41,11 @@ div#rex-form-system-setup {
 		p select,
 		p textarea {
 			width: 40%;
+		}
+
+		#rex_include_path {
+			display: inline;
+			line-height: 21px;
 		}
 
 		/*	Submit */

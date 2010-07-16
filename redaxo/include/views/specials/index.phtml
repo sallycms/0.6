@@ -88,9 +88,9 @@ $sel_mod_rewrite->addOption('deaktiviert', 'FALSE');
 								<span class="rex-form-read" id="rex_include_path" title=" <?= $REX['INCLUDE_PATH']  ?>">
 								<?
 								$tmp = $REX['INCLUDE_PATH'];
-								
+
 								// Mitte entfernen, wenn zu lang
-								
+
 								if (strlen($REX['INCLUDE_PATH']) > 24) {
 									$tmp = substr($tmp, 0, 8).'&hellip;'.substr($tmp, strlen($tmp) - 10);
 								}

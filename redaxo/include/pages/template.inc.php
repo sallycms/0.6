@@ -350,10 +350,11 @@ if ($OUT)
   $list->addTableAttribute('summary', $I18N->msg('header_template_summary'));
   $list->addTableColumnGroup(array(40, 40, '*', 153, 153));
 
-  $tdIcon = '<span class="rex-i-element rex-i-template"><span class="rex-i-element-text">###name###</span></span>';
-  $thIcon = '<a class="rex-i-element rex-i-template-add" href="'. $list->getUrl(array('function' => 'add')) .'"><span class="rex-i-element-text">'.$I18N->msg('create_template').'</span></a>';
+  $editUrl = array('function' => 'edit', 'template_id' => '###id###');
+  $tdIcon = '<a href="'. $list->getUrl($editUrl) .'"><img class="sly-icon sly-sprite sly-template" src="media/empty.png" alt="###name###" title="###name###" /></a>';
+  $thIcon = '<a href="'. $list->getUrl(array('function' => 'add')) .'"><img class="sly-icon sly-sprite sly-template-add" src="media/empty.png" alt="" title="'.$I18N->msg('create_template').'"" /></a>';
   $list->addColumn($thIcon, $tdIcon, 0, array('<th class="rex-icon">###VALUE###</th>','<td class="rex-icon">###VALUE###</td>'));
-  $list->setColumnParams($thIcon, array('function' => 'edit', 'template_id' => '###id###'));
+  $list->setColumnParams($thIcon, $editUrl);
 
   $list->setColumnLabel('id', 'ID');
   $list->setColumnLayout('id',  array('<th class="rex-small">###VALUE###</th>','<td class="rex-small">###VALUE###</td>'));
