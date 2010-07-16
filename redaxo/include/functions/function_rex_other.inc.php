@@ -10,7 +10,7 @@
 
 /**
  * Funktion zum Anlegen eines Sprache-Objekts
- * 
+ *
  * @param $locale Locale der Sprache
  * @param $searchpath Pfad zum Ordner indem die Sprachdatei gesucht werden soll
  * @param $setlocale true, wenn die locale für die Umgebung gesetzt werden soll, sonst false
@@ -25,8 +25,8 @@ function rex_create_lang($locale = 'de_de', $searchpath = '', $setlocale = true)
 	if (empty($searchpath)) {
 		$searchpath = sly_Util_Directory::join(SLY_INCLUDE_PATH, 'lang');
 	}
-	
-	$lang_object = new i18n($locale, $searchpath);
+
+	$lang_object = new sly_I18N($locale, $searchpath);
 
 	if (empty($_searchpath)) {
 		$REX['LOCALES'] = $lang_object->getLocales($searchpath);
@@ -34,7 +34,7 @@ function rex_create_lang($locale = 'de_de', $searchpath = '', $setlocale = true)
 
 	if ($setlocale) {
 		$locales = array();
-		
+
 		foreach (explode(',', trim($lang_object->msg('setlocale'))) as $locale) {
 			$locales[] = $locale.'.'.strtoupper(str_replace('iso-', 'iso', $lang_object->msg('htmlcharset')));
 			$locales[] = $locale.'.'.strtoupper(str_replace('iso-', 'iso', str_replace('-', '', $lang_object->msg('htmlcharset'))));
@@ -69,14 +69,14 @@ function truncate($string, $length = 80, $etc = '...', $breakWords = false)
 
 	if (strlen($string) > $length) {
 		$length -= strlen($etc);
-		
+
 		if (!$breakWords) {
 			$string = preg_replace('/\s+?(\S+)?$/', '', substr($string, 0, $length + 1));
 		}
 
 		return substr($string, 0, $length).$etc;
 	}
-	
+
 	return $string;
 }
 
@@ -86,10 +86,10 @@ function truncate($string, $length = 80, $etc = '...', $breakWords = false)
 function rex_absPath($rel_path, $rel_to_current = false)
 {
 	$stack = array();
-	
+
 	// Pfad relativ zum aktuellen Verzeichnis?
 	// z.b. ../../files
-	
+
 	if ($rel_to_current) {
 		$path  = realpath('.');
 		$stack = explode(DIRECTORY_SEPARATOR, $path);
@@ -130,16 +130,16 @@ function _rex_is_writable_info($is_writable, $item = '')
 
 	$state = true;
 	$key   = '';
-	
+
 	switch ($is_writable) {
 		case 1:
 			$key = 'setup_012';
 			break;
-			
+
 		case 2:
 			$key = 'setup_014';
 			break;
-			
+
 		case 3:
 			$key = 'setup_015';
 			break;
@@ -147,7 +147,7 @@ function _rex_is_writable_info($is_writable, $item = '')
 
 	if (!empty($key)) {
 		$file = '';
-		
+
 		if (!empty($item)) {
 			$file = '<strong>'.$item.'</strong>';
 		}
@@ -162,7 +162,7 @@ function _rex_is_writable($item)
 {
 	$status = 0;
 	$level  = error_reporting(0);
-	
+
 	if (is_dir($item)) {
 		if (!is_writable($item . '/.')) {
 			$status = 1;
@@ -209,13 +209,13 @@ function rex_tabindex($html = true)
 	if (empty($REX['TABINDEX'])) {
 		$REX['TABINDEX'] = 0;
 	}
-	
+
 	++$REX['TABINDEX'];
 
 	if ($html === true) {
 		return ''; // ' tabindex="'.$REX['TABINDEX'].'"';
 	}
-	
+
 	return $REX['TABINDEX'];
 }
 
@@ -280,7 +280,7 @@ function rex_message_block($message, $cssClass, $sorroundTag)
 function rex_ini_get($val)
 {
 	$val = trim(ini_get($val));
-	
+
 	if (!empty($val)) {
 		$last = $val[strlen($val)-1];
 		$val  = substr($val, 0, -1);
@@ -288,17 +288,17 @@ function rex_ini_get($val)
 	else {
 		$last = '';
 	}
-	
+
 	// Nur, wenn der Teil vor dem letzten Buchstaben numerisch ist,
 	// interpretieren wir den letzten Buchstaben als Einheit. Andernfalls
 	// würde der Code bei einem Wert wie "hallo welt" versuchen, "hallo wel"
 	// mal 1 Billion zu rechnen...
-	
+
 	if (preg_match('#^[0-9]+$#', $val)) {
 		// PHP konvertiert die Werte automatisch in Zahlen.
-		
+
 		$last = strtolower($last);
-		
+
 		switch ($last) {
 			case 'p': $val *= 1024;
 			case 't': $val *= 1024;
@@ -306,13 +306,13 @@ function rex_ini_get($val)
 			case 'm': $val *= 1024;
 			case 'k': $val *= 1024;
 		}
-		
+
 		return $val;
 	}
-	
+
 	// Kein numerischer Wert, also scheint es sich um einen normalen String
 	// zu handeln.
-	
+
 	return $val.$last;
 }
 
@@ -341,7 +341,7 @@ function rex_translate($text, $I18N_Catalog = null, $as_html = true)
 	}
 
 	$transKey = 'translate:';
-	
+
 	if (startsWith($text, $transKey)) {
 		$text = $I18N_Catalog->msg(substr($text, strlen($transKey)));
 	}
@@ -419,7 +419,7 @@ function rex_split_string($string)
 			$result[$var_name] = $var_value;
 		}
 	}
-	
+
 	return $result;
 }
 
@@ -448,7 +448,7 @@ function rex_replace_dynamic_contents($path, $content)
 		$fcontent = preg_replace("#//.---.DYN.*//.---./DYN#s", $content, $fcontent);
 		return rex_put_file_contents($path, $fcontent);
 	}
-	
+
 	return false;
 }
 
@@ -462,24 +462,24 @@ function rex_organize_priorities($tableName, $priorColumnName, $whereCondition =
 {
 	$update = new rex_sql();
 	$select = new rex_sql();
-	
+
 	$qry = 'SELECT '.$id_field.' FROM '.$tableName;
-	
+
 	if (!empty($whereCondition)) {
 		$qry .= ' WHERE '.$whereCondition;
 	}
-	
+
 	if (!empty($orderBy)) {
 		$qry .= ' ORDER BY '.$orderBy;
 	}
-	
+
 	$select->setQuery($qry);
 	$gu = rex_sql::getInstance();
 	for ($i = 1; $i <= $select->getRows(); ++$i) {
 		$gu->setQuery('UPDATE '.$tableName.' SET '.$priorColumnName.' = '.$i.' WHERE '.$id_field.' = '.$select->getValue($id_field));
 		$select->next();
 	}
-	
+
 	$select = null;
 	$update = null;
 	unset($select, $update);
@@ -524,15 +524,15 @@ function rex_cur_clang()
 function rex_get_clang($clang = false, $default = -1)
 {
 	global $REX;
-	
+
 	if ($clang === false) {
 		$clang = $default;
 	}
-	
+
 	if (!isset($REX['CLANG'][$clang])) {
 		$clang = sly_Core::getCurrentClang();
 	}
-	
+
 	return (int) $clang;
 }
 
@@ -545,7 +545,7 @@ function rex_is_int($value)
 
 /**
  * Returns true if $string starts with $start
- * 
+ *
  * @param $string String Searchstring
  * @param $start String Prefix to search for
  * @author Markus Staab <staab@public-4u.de>
@@ -559,7 +559,7 @@ if (!function_exists('startsWith')) {
 
 /**
  * Returns true if $string ends with $end
- * 
+ *
  * @param $string String Searchstring
  * @param $start String Suffix to search for
  * @author Markus Staab <staab@public-4u.de>
@@ -576,12 +576,12 @@ if (!function_exists('endsWith')) {
 function rex_highlight_string($string, $return = false)
 {
 	$s = '<p class="rex-code">'.highlight_string($string, true).'</p>';
-	
+
 	if ($return) {
 		return $s;
 	}
-	
-	print $s;  
+
+	print $s;
 }
 
 function rex_highlight_file($filename, $return = false)
@@ -591,8 +591,8 @@ function rex_highlight_file($filename, $return = false)
 	if ($return) {
 		return $s;
 	}
-	
-	print $s; 
+
+	print $s;
 }
 
 function rex_exception(Exception $e)
@@ -622,6 +622,6 @@ function array_flatten(array $array)
 			++$i;
 		}
 	}
-	
+
 	return $array;
 }
