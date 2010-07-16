@@ -24,8 +24,6 @@ body#rex-page-login {
 		margin-left: auto;
 	}
 
-	label { margin-left: 20px; }
-
 	.rex-form-row:first-child { margin-top: 20px; }
 
 	.rex-form {
@@ -48,18 +46,20 @@ body#rex-page-login {
 				+border-top-radius(4px);
 				width: 630px; /* Breite des Loginbereichs abzüglich des padding links*/
 				padding: 5px 0 8px 20px;
-				margin-bottom: 15px;
 			}
+		}
+
+		&-wrapper {
+			padding: 0 10px;
 		}
 
 		&-row {
 			color: $drk_grey;
-			line-height: 25px;
-			padding: 0;
-			border: 0;
+			padding: 7px 0;
+			border-top: 1px dotted $md_grey;
+			border-bottom: 0;
 		}
 
-		&-submit { margin: 2px 0 10px 82px; }
 		&-col-a { vertical-aling: middle; }
 	}
 }

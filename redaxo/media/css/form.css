@@ -63,7 +63,7 @@ input#rex-form-field-prior {
 
 	p.rex-form-checkbox,
 	p.rex-form-radio {
-		label { padding-top: 2px; }
+		input { float: none; margin-top: 4px; }
 	}
 
 	p {
