@@ -29,31 +29,31 @@ $REX['LOGIN']    = null;
 if (!SLY_IS_TESTING && $config->get('SETUP')) {
 	$REX['LANG']      = 'de_de_utf8';
 	$REX['LANGUAGES'] = array();
-	
+
 	$requestLang = sly_request('lang', 'string');
 	$langpath    = $REX['INCLUDE_PATH'].'/lang';
 	$languages   = glob($langpath.'/*.lang');
-	
+
 	if ($languages) {
 		foreach ($languages as $language) {
 			$locale = substr(basename($language), 0, -5);
 			$REX['LANGUAGES'][] = $locale;
-			
+
 			if ($requestLang == $locale) {
 				$REX['LANG'] = $locale;
 			}
 		}
 	}
-	
+
 	$I18N = rex_create_lang($REX['LANG']);
-	
+
 	$REX['PAGES']['setup'] = array($I18N->msg('setup'), 0, 1);
 	$REX['PAGE']           = 'setup';
 	$_REQUEST['page']      = 'setup';
 }
 else {
 	$I18N = rex_create_lang($REX['LANG']);
-	
+
 	// Login vorbereiten
 
 	$REX['LOGIN']   = new rex_backend_login($config->get('DATABASE/TABLE_PREFIX').'user');
@@ -62,15 +62,15 @@ else {
 
 	$REX['LOGIN']->setLogout(rex_get('rex_logout', 'boolean'));
 	$REX['LOGIN']->setLogin($rex_user_login, $rex_user_psw);
-	
+
 	$loginCheck = $REX['LOGIN']->checkLogin();
-	
+
 	// Login OK / Session gefunden?
 
 	if ($loginCheck === true) {
 		// Userspezifische Sprache einstellen, falls gleicher Zeichensatz
 		$lang = $REX['LOGIN']->getLanguage();
-		
+
 		if ($I18N->msg('htmlcharset') == rex_create_lang($lang, '', false)->msg('htmlcharset')) {
 			$I18N = rex_create_lang($lang);
 		}
@@ -81,7 +81,7 @@ else {
 		$rex_user_loginmessage = $REX['LOGIN']->message;
 
 		// Fehlermeldung von der Datenbank
-		
+
 		if (is_string($loginCheck)) {
 			$rex_user_loginmessage = $loginCheck;
 		}
@@ -130,9 +130,9 @@ if ($REX['USER']) {
 		$link = '';
 		$perm = $addonService->getProperty($addon, 'perm', '');
 		$page = $addonService->getProperty($addon, 'page', '');
-		
+
 		if(!empty($page)) $link = '<a href="index.php?page='.urlencode($link).'">';
-		
+
 		if (!empty($link) && (empty($perm) || $REX['USER']->hasPerm($perm) || $REX['USER']->isAdmin())) {
 			$name  = $addonService->getProperty($addon, 'name', '');
 			$name  = rex_translate($name);
@@ -145,28 +145,28 @@ if ($REX['USER']) {
 
 	$REX['USER']->pages = $REX['PAGES'];
 	$REX['PAGE']        = strtolower(sly_request('page', 'string'));
-	
+
 	if (!empty($rex_user_login)) {
 		$REX['PAGE'] = strtolower($REX['LOGIN']->getStartpage());
 	}
-	
+
 	// Erst normale Startseite, dann User-Startseite, dann System-Startseite und
 	// zuletzt auf die Profilseite zurückfallen.
-	
+
 	if (!isset($REX['PAGES'][$REX['PAGE']])) {
 		$REX['PAGE'] = strtolower($REX['LOGIN']->getStartpage());
-		
+
 		if (!isset($REX['PAGES'][$REX['PAGE']])) {
 			$REX['PAGE'] = strtolower($config->get('START_PAGE'));
-			
+
 			if (!isset($REX['PAGES'][$REX['PAGE']])) {
 				$REX['PAGE'] = 'profile';
 			}
 		}
 	}
-	
+
 	// Login OK -> Redirect auf Startseite
-	
+
 	if (!empty($rex_user_login)) {
 		$url = 'index.php?page='.urlencode($REX['PAGE']);
 		header('Location: '.$url);
@@ -211,7 +211,6 @@ else {
 	// View laden
 	$layout = sly_Core::getLayout('Sally');
 	$layout->openBuffer();
-	$layout->appendToTitle(t($REX['PAGE']));
 
 	if (!empty($REX['PAGES'][$REX['PAGE']]['PATH'])) { // If page has a new/overwritten path
 		require $REX['PAGES'][$REX['PAGE']]['PATH'];
@@ -222,7 +221,7 @@ else {
 	else { // Core Page
 		require $REX['INCLUDE_PATH'].'/pages/'.$REX['PAGE'].'.inc.php';
 	}
-	
+
 	$layout->closeBuffer();
 	$CONTENT = $layout->render();
 }

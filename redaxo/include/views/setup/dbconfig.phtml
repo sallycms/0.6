@@ -19,7 +19,7 @@ $this->title(t('setup_step2'));
 					if (!empty($this->warning)) print rex_warning($this->warning);
 				?>
 				<legend><?= t('setup_0202') ?></legend>
-				
+
 				<div class="rex-form-wrapper">
 					<div class="rex-form-row">
 						<p class="rex-form-col-a rex-form-text">
@@ -52,7 +52,7 @@ $this->title(t('setup_step2'));
 							<input class="rex-form-text" type="text" id="pass" name="pass" value="<?= sly_html($pass) ?>" />
 						</p>
 					</div>
-					
+
 					<div class="rex-form-row">
 						<p class="rex-form-col-a rex-form-text">
 							<label for="dbname"><?= t('setup_027') ?>:</label>
@@ -71,11 +71,6 @@ $this->title(t('setup_step2'));
 							<input class="rex-form-checkbox" type="checkbox" id="create_db" name="create_db" value="1" />
 						</p>
 					</div>
-				</div>
-			</fieldset>
-
-			<fieldset class="rex-form-col-1">
-				<div class="rex-form-wrapper">
 					<div class="rex-form-row">
 						<p class="rex-form-col-a rex-form-submit">
 							<input class="rex-form-submit" type="submit" name="sly-submit" value="<?= t('setup_029') ?>" />

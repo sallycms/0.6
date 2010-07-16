@@ -53,7 +53,7 @@ div#rex-navi-main {
 					white-space: normal;
 					background-color: #fff;
 					color: $drk_grey;
-					background-image: url(background_menu_arrow.sld.png);
+					background-image: url(../background_menu_arrow.sld.png);
 					background-position: 10px 0;
 					background-repeat: no-repeat;
 					vertical-align: center; /* zentriert, zusammen mit line-height aus oberem element, die links */
@@ -62,7 +62,7 @@ div#rex-navi-main {
 						color: #fff;
 						background-color: #b3b3b3;
 						text-decoration: none;
-						background-image: url(background_menu_arrow.sld.png);
+						background-image: url(../background_menu_arrow.sld.png);
 						background-position: 10px -24px;
 						background-repeat: no-repeat;
 					}
@@ -71,18 +71,18 @@ div#rex-navi-main {
 						background-color: $drk_grey;
 						color: #fff;
 						font-weight: bold;
-						background-image: url(background_menu_arrow.sld.png);
+						background-image: url(../background_menu_arrow.sld.png);
 						background-position: 10px -49px;
 						background-repeat: no-repeat;
 					}
 
 					/* anderes Menü-Icon für Medienpool */
 					&.popup {
-						background-image: url(xbackground_btn_popup.sld.png);
+						background-image: url(../xbackground_btn_popup.sld.png);
 						background-position: top;
 
 						&.hover {
-							background-image: url(xbackground_btn_popup.sld.png);
+							background-image: url(../xbackground_btn_popup.sld.png);
 							background-position: center;
 						}
 					}
@@ -98,7 +98,7 @@ div#rex-navi-main {
 						padding-left: 40px;
 						font-weight: normal;
 						background-color: #fff;
-						background-image: url(background_sub-menu_arrow.sld.png);
+						background-image: url(../background_sub-menu_arrow.sld.png);
 						background-position: 25px 0;
 						background-repeat: no-repeat;
 
@@ -106,7 +106,7 @@ div#rex-navi-main {
 							color: $drk_grey;
 							background-color: $lt_grey;
 							text-decoration: none;
-							background-image: url(background_sub-menu_arrow.sld.png);
+							background-image: url(../background_sub-menu_arrow.sld.png);
 							background-position: 25px -49px;
 							background-repeat: no-repeat;
 							font-size: 1.1em; /* font-size vererbung geht nicht? */
@@ -116,7 +116,7 @@ div#rex-navi-main {
 							color: #fff;
 							background-color: $md_grey;
 							text-decoration: none;
-							background-image: url(background_sub-menu_arrow.sld.png);
+							background-image: url(../background_sub-menu_arrow.sld.png);
 							background-position: 25px -24px;
 							background-repeat: no-repeat;
 						}
@@ -127,12 +127,135 @@ div#rex-navi-main {
 					}
 				}
 
-				&.rex-active li { display: block;}
+				&.rex-active li { display: block; }
 
-			}/* Ende ul li Ebene 1*/
+			} /* Ende ul li Ebene 1*/
 
 		} /* Ende dd */
 
 	} /* Ende dl */
 }
-/* ----------------------------------------------------------------------------------------------------------- */
+
+/* Textfarbe des aktiven Menüpunkts */
+div#rex-navi-main ul li a.rex-active {
+	color: #fff;
+	font-weight: bold;
+}
+
+/******************************************************************************\
+* Navi Logout                                                                  *
+\******************************************************************************/
+div#rex-navi-logout {
+	position: static;
+	right: 0;
+	top: 59px;
+	color: #b2b2b2;
+	float: left;
+	width: 100%;
+	height: 75px;
+	margin-bottom: 36px;
+	background-image: url(../logo.gif);
+	background-position: 11px 0px;
+	background-repeat: no-repeat;
+
+	p, ul {
+		padding: 59px 10px 0 0;
+		text-align: right;
+		font-size: 0.8em;
+	}
+
+
+	p.rex-logout {
+		padding-right: 5px;
+	}
+
+	ul li {
+		display: inline;
+		font-weight: bold;
+		background-image: url(../pipe_c2.gif);
+		background-position: 0px 2px;
+		background-repeat: no-repeat;
+
+		a, span { padding: 0 5px; }
+
+		&.rex-navi-first {
+			background: none;
+			a, span { padding-left: 0; }
+		}
+	}
+}
+
+/******************************************************************************\
+* Navigation unter dem Seitentitel                                             *
+\******************************************************************************/
+
+div#rex-navi-page ul li {
+	display: inline;
+	font-weight: normal;
+
+	a { margin: 0 15px;  }
+	&.rex-navi-first a { margin-left: 0; }
+}
+
+div#rex-navi-page ul li a.rex-active {
+	color: $drk_grey;
+}
+
+#rex-navi-footer {
+	clear: both;
+	position: relative;
+	float: left;
+	background-image: url(../footer.gif);
+	background-repeat: repeat-x;
+	border-top-color: #efefef;
+	border-top-width: 0px; /* Überschreibt die unauffindbare grüne Border */
+	margin-top: 50px; /* Abstand zum Content */
+	padding: 0px;
+	width: 100%;
+	height: 51px;
+	color: $md_grey;
+	line-height: 51px; /* Schriftzentrierung */
+	font-size: 0.8em;
+
+	 /* Text rechts im Footer */
+	p#rex-scripttime {
+		float: right;
+		margin: 0 5px;
+		color: $lt_grey;
+	}
+
+	ul {
+		float: left;
+		width: 50%; /* Vorsicht: Die Loginseite ist schmaler! */
+		margin: 0 5px;
+
+		li {
+			display: inline;
+			background-image: url(../pipe_c2.gif);
+			background-position: 0px 2px;
+			background-repeat: no-repeat;
+
+			&.rex-navi-first {
+				background: none;
+			}
+
+			a {
+				margin: 0 8px;
+			}
+
+			&.rex-navi-first a {
+				margin-left: 0;
+			}
+		}
+	}
+}
+
+div#rex-navi-page {
+	ul li {
+		background-image: url(../pipe_c2.gif);
+		background-position: 0 4px;
+		background-repeat: no-repeat;
+	}
+
+	ul li.rex-navi-first { background: none; }
+}

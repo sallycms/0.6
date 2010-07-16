@@ -5,7 +5,7 @@
 		<form method="<?= strtolower($this->method) ?>" action="<?= sly_html($this->action) ?>"<?= $id.$enc ?>>
 			<? foreach ($this->fieldsets as $i => $fieldset): ?>
 			<? $id = empty($fieldset['id']) ? '' : ' id="'.sly_html($fieldset['id']).'"'; ?>
-			<fieldset class="rex-form-col-1"<?= $id ?>>
+			<fieldset class="rex-form-col-1 sly-num<?= $i ?>"<?= $id ?>>
 				<legend class="rex-lgnd"><?= sly_html($fieldset['title']) ?></legend>
 				<div class="rex-form-wrapper">
 

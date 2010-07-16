@@ -1,0 +1,62 @@
+/*	Button - Arrows */
+
+.rex-i- {
+	&module     { background-image: url(../modul.gif);       }
+	&module-add { background-image: url(../modul_plus.gif);  }
+	&action     { background-image: url(../action.gif);      }
+	&action-add { background-image: url(../action_plus.gif); }
+}
+
+div#rex-navi-main dl dd ul li#rex-navi-page-module > a {
+	background-image: url(../module.png);
+	background-position: 5px 5px;
+}
+
+/* Sprites */
+
+.sly-sprite {
+	&.sly-module     { background-position: 0 0; }
+	&.sly-module-add { background-position: 0 -16px; }
+}
+
+body#rex-page-module {
+	form#module .rex-form-row {
+		label                   { width: 100px;       }
+		textarea                { width: 600px;       }
+		input.rex-form-submit   { margin-left: 100px; }
+		input.rex-form-submit-2 { margin-left: 20px;  }
+	}
+
+	div.rex-form {
+		+border-radius($brd_rad);
+
+		table.rex-table {
+			+border-radius(0px);
+			border: 0;
+		}
+	}
+
+	table#actions span {
+		&.sly-mode-add    { background-color: green; color: white; }
+		&.sly-mode-edit   { background-color: yellow; }
+		&.sly-mode-delete { background-color: red; color: white; }
+
+		&.sly-mode { &-add, &-edit, &-delete {
+			padding: 2px 4px;
+			font-size: 11px;
+			font-weight: bold;
+			border: 1px solid black;
+		} }
+	}
+
+	table#module_actions {
+		margin-bottom: 1em;
+	}
+}
+
+.rex-form-module-editmode,
+.rex-form-action-editmode {
+	.rex-form-row p.rex-form-textarea textarea {
+		height: 200px;
+	}
+}

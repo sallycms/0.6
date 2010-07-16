@@ -1,0 +1,103 @@
+div#rex-form-system-setup {
+	background-color: #fff;
+}
+
+div.rex-form-setup-step-database div.rex-form-row {
+	p.rex-form-label-right label { width: 630px; }
+
+	p input.rex-form-radio,
+	p input.rex-form-submit {
+		margin-left: 5px;
+	}
+}
+
+div.rex-form-setup-admin div.rex-form-row p.rex-form-text input {
+	width: 200px;
+}
+
+/* Language */
+
+div#rex-setup ul.rex-setup-language {
+	font-weight: bold;
+	text-align: center;
+
+	li {
+		display: block;
+		padding: 5px 0;
+	}
+}
+
+/* License */
+
+div.rex-area-scroll {
+	margin: 10px 0 10px 20px;
+	padding: 5px 0 5px 5px;
+	width: 598px;
+	height: 200px;
+	overflow: auto;
+	border-width: 1px;
+	border-style: solid;
+
+	p.rex-tx1 {
+		margin: 0;
+		line-height: 18px;
+	}
+}
+
+#rex-page-setup {
+	div#rex-title, div#rex-output {
+		float: none;
+		width: 650px;
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	div#rex-wrapper {
+		width: 100%;
+		margin-right: 0px;
+		&2 { padding: 0 16px; }
+	}
+
+	.rex-form {
+		& {
+			margin: 7px 0 0 0;
+			+border-radius(4px);
+			/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
+			background-color: #fff;
+			color: #fff;
+
+			.rex-form-text input,.rex-form-password input {
+				width: 250px;
+			}
+
+			/* Überschrift */
+			legend {
+				color: #fff;
+				background-color: $drk_grey;
+				font-size: 1.1em;
+				+border-top-radius(4px);
+				width: 630px; /* Breite des Loginbereichs abzüglich des padding links*/
+				padding: 5px 0 8px 20px;
+			}
+		}
+
+		&-wrapper {
+			padding: 0 10px;
+		}
+
+		&-row {
+			color: $drk_grey;
+			padding: 7px 0;
+			border-top: 1px dotted $md_grey;
+			border-bottom: 0;
+		}
+
+		&-col-a { vertical-aling: middle; }
+	}
+}
+
+/*	Formulare */
+
+div.rex-form-setup-step-database div.rex-form-row p.rex-form-label-right label {
+	width: 590px;
+}

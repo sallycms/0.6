@@ -1,0 +1,349 @@
+div#rex-output div.rex-content-header {
+	position: relative;
+	float: left;
+	width: 100%;
+	margin-bottom: 10px;
+
+	& div#rex-clang {
+		& ul li {
+			display: inline;
+			font-weight: normal;
+			liste-style: none;
+
+			& a {
+				padding: 0 5px;
+				font-weight: bold;
+			}
+
+			&.rex-navi-first a {
+				padding-left: 0;
+			}
+		}
+	}
+
+	&-2 ul {
+		float: right;
+		padding: 5px 0; /*  Abstand oben und unten */
+
+		& li {
+			liste-style: none;
+			display: inline;
+			margin: 0 0 0 5px; /* Abstand der Listenelemente zu einander, s. Buttons Editier-Modus etc. */
+
+			/* Buttons Editier Modus, Metadaten, Anzeigen */
+			& a {
+				text-decoration: none;
+				background-color: #fff;
+				padding: 2px 8px;
+				+border-radius(3px);
+
+				&:hover {
+					background-color: #b3b3b3;
+					color: #fff;
+				}
+
+				&.rex-active {
+					background-color: $drk_grey;
+					color: #fff;
+
+					&:hover { background-color: #b3b3b3; }
+				}
+			}
+		}
+	}
+}
+
+div.rex-content-body {
+	clear: both;
+	float: left;
+	width: 100%;
+}
+
+div.rex-content-header ul li a {
+	color: #1f9eb5;
+}
+
+div.rex-content-header ul li a.rex-active {
+	color: $drk_grey;
+}
+
+/*	Background Image */
+
+div.rex-content-header { background-image: none; }
+div.rex-content-body-2 { padding: 0; }
+
+/*	Rundungen */
+div.rex-content-header,
+div.rex-content-body,
+div.rex-content-header-2  {
+	+border-radius($brd_rad);
+}
+
+div.rex-content-body {
+	+border-radius(0px);
+	border: 0;
+}
+
+/*	Editmode */
+
+.rex-content-editmode {
+
+	color: $drk_grey;
+
+	.rex-form  {
+
+		float: left;
+		width: 100%;
+
+		input.rex-form-submit {margin: 5px;}
+
+		&-row {
+
+			background-color: #e8e8e8;
+			clear: both;
+			float: left;
+			padding: 0;
+			width: 100%;
+			+border-radius(4px);
+			border: 1px solid #efefef;
+
+
+			& input, select {
+				margin: 5px;
+			}
+
+			& label {
+				margin:10px 0 5px 10px;
+			}
+
+			p.rex-form-submit {
+				background-color: $md_grey;
+				+border-radius(4px);
+				border: 1px solid #efefef;
+			}
+		}
+
+
+		&-content-editmode {
+
+			.rex-form-col-1 {
+				select {width: 99%} /* Block hinzufügen - Element*/
+			}
+
+			&, &-add-slice, &-edit-slice {
+
+				legend, legend span { +hardcore-hidden; }
+
+				.rex-form-row {
+					p input.rex-form-submit { margin-left: 10px; }
+					p.rex-form-col-b input.rex-form-submit { margin-left: 0; }
+				}
+			}
+		}
+	}
+
+	div.rex-message, div.rex-content-body {
+		+border-radius(0px);
+		border: 0;
+	}
+
+	&-slice-input,	&-slice-output {
+		clear: both;
+		padding: 10px;
+		line-height: 1.6;
+		ol, ul { margin-left: 20px; }
+	}
+
+	&-slice-output {
+		/* border-bottom: 1px solid #fff; */
+		background-color: $lt_grey;
+		margin-bottom: 2px;
+		color: #999;
+
+		h1{ font-size: 2em;   }
+		h2 { font-size: 1.6em; }
+		h3 { font-size: 1.4em; }
+		h4 { font-size: 1.2em; }
+		h5 { font-size: 1.1em; }
+		h6 { font-size: 1em;   }
+	}
+}
+
+/*	Editmode */
+.rex-content-editmode-module-name {
+	float: left;
+	width: 100%;
+	line-height: 35px;
+	background-color: $drk_grey;
+	+border-radius(4px);
+
+	h3 {
+		float: left;
+
+		&.rex-hl4 {
+			vertical-align: middle;
+			color: #fff;
+			font-size: 1.1em;
+			margin: 0 0 0 10px;
+		}
+	}
+
+	.rex-navi-slice {
+		float: right;
+		margin-right: 5px; /* Schiebt die Edit, Delete- und Pfeil-Buttons rein*/
+	}
+}
+
+/* METAMODE ------------------------------------------------------------------------------------- METAMODE */
+
+#rex-form-content-metamode {
+
+	padding: 0px;
+	margin-bottom: 10px;
+
+	div.rex-widget {
+		margin-bottom: 0px;
+	}
+
+	.rex-form {
+
+		&-row {
+			vertical-align: middle;
+			/* padding: 5px 0 5px 15px; */
+			border: 0;
+		}
+
+		&-col-1, &-col-2 {
+
+			.rex-form-wrapper {
+				margin-top: -17px; /* Ausgleich für Legend */
+				padding: 0 10px 10px 10px;
+				line-height: 25px;
+				background-color: #fff;;
+				margin:0 0 20px -1px;
+				+border-bottom-radius(4px);
+				border: 1px solid #efefef;
+				color: $drk_grey;
+				float: left;
+				width: 777px;
+			}
+
+			input.rex-form-submit, input.rex-form-text, select {border: 1px solid $md_grey; margin-bottom: 0;}
+
+			/* legend {
+				font-size: 1.2em;
+				margin: 0 0 2px 0;
+				display: block;
+				/* background-color: yellow;
+				padding-bottom: 2px;
+				border-bottom: 1px dotted $md_grey;
+				width: 100%;
+			} */
+
+			legend {
+				color: #fff;
+				background-color: $md_grey;
+				font-size: 1.1em;
+				+border-top-radius(4px);
+				width: 787px; /* Breite des Loginbereichs abzüglich des padding links*/
+				padding: 8px 0 8px 10px;
+			}
+
+			p.rex-form-read span {
+				margin-left: 155px;
+				color: $md_grey;
+			}
+
+		}
+
+		/* Spezialfall mit zwei Spalten*/
+		&-col-2 {
+
+			.rex-form-col-a {
+				width:49%;
+				float: left;
+			}
+
+			.rex-form-col-b {
+				width:49%;
+				float: right;
+			}
+		}
+	}
+}
+
+/* Wird von rex_article ausgegeben */
+
+div.rex-navi-slice li {
+	display: block;
+	float: left;
+	padding: 0;
+	margin-top: 8px;
+
+	&.rex-navi-first {
+		padding-left: 0;
+	}
+
+	a {
+		display: block;
+		color: #fff;
+		font-weight: normal;
+		font-size: 1em;
+		margin-left: 2px;
+		height: 20px;
+		background-color: $link_color;
+		line-height: 20px;
+		padding-left: 20px;
+		+border-radius(3px);
+
+		/* Editbutton auf Artikelseite */
+		&.rex-tx3 {
+			background-image: url(background_btn_edit.png);
+			background-position: 6px 0;
+			background-repeat: no-repeat;
+			width: 60px;
+
+
+			&:hover {
+				background-color: #4bcee4;
+			}
+		}
+
+		/* Löschen-Button */
+		&.rex-tx2 {
+			background-image: url(background_btn_dlt.png);
+			background-position: 6px 0;
+			background-repeat: no-repeat;
+			width: 55px;
+
+			&:hover {
+				background-color: #4bcee4;
+			}
+		}
+
+		/*  Pfeil-Buttons */
+		&.rex-slice-{
+			&move-up, &move-down {
+				padding: 0px;
+				width: 22px;
+
+				&:hover {
+					background-color: #4bcee4;
+				}
+			}
+
+			&move-down {
+				background-image: url(background_btn_down.png);
+				background-position: 7px 0;
+				background-repeat: no-repeat;
+			}
+
+			&move-up {
+				background-image: url(background_btn_up.png);
+				background-position: 7px 0;
+				background-repeat: no-repeat;
+			}
+		}
+
+	}
+}

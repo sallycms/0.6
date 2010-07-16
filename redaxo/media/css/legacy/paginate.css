@@ -1,0 +1,193 @@
+/* Styles, die nur von rex_list genutzt werden */
+
+
+
+div#rex-navi-paginate ul li.rex-navi-paginate-page a span {
+	font-family: Monaco, Consolas, Courier New, monospace;
+}
+
+div#rex-navi-paginate ul li.rex-navi-paginate-page a span {
+	font-size: 1.2em;
+	font-weight: normal;
+}
+
+/*	Paginate */
+
+div#rex-navi-paginate ul li {
+	&.rex-navi-paginate-prev a {
+		background-image: url(../back.gif);
+	}
+
+	&.rex-navi-paginate-next a {
+		background-image: url(../forward.gif);
+	}
+
+	&.rex-navi-paginate-page {
+		a, a span {
+			background-image: url(../list_pages.gif);
+			background-position: 100% -50px;
+		}
+
+		a span { background-position: 0 0; }
+	}
+}
+
+
+div#rex-navi-paginate ul li {
+	display: block;
+	float: left;
+	margin-right: 5px;
+
+	&.rex-navi-paginate-message {
+		padding-top: 2px;
+	}
+
+	&.rex-navi-paginate-prev, &.rex-navi-paginate-next, &.rex-navi-paginate-page {
+		a { display: block; }
+	}
+
+	&.rex-navi-paginate-page a span {
+		display: block;
+		padding: 1px 4px 2px 4px;
+	}
+
+	&.rex-navi-paginate-prev a, &.rex-navi-paginate-next a {
+		width: 24px;
+		height: 13px;
+		text-indent: -1000em;
+	}
+}
+
+div#rex-navi-paginate ul li.rex-navi-paginate-page a.rex-active {
+	color: $drk_grey;
+}
+
+/* Schriftarten */
+
+input, textarea, select, div#rex-navi-paginate ul li.rex-navi-paginate-page a span {
+	font-family: Calibri, Arial, Verdana, sans-serif;
+}
+
+/* Schriftgrößen */
+
+div#rex-navi-paginate ul li.rex-navi-paginate-page a span {
+	font-size: 1em;
+}
+
+
+div#rex-navi-paginate ul li.rex-navi-paginate {
+	&-prev, &-message, &-page a, &-page a span {
+		background-image: none;
+	}
+}
+
+/*	Button - Pfeil links */
+
+div#rex-navi-paginate ul li.rex-navi-paginate-prev a {
+	background-image: url(../icon_left.gif);
+}
+
+/*	Button - Pfeil rechts */
+
+div#rex-navi-paginate ul li.rex-navi-paginate-next a {
+	background-image: url(../icon_right.gif);
+}
+
+div#rex-navi-paginate ul li,
+div.rex-navi-slice li {
+	display: block;
+	float: left;
+	padding: 0;
+	margin-top: 8px;
+
+	&.rex-navi-first {
+		padding-left: 0;
+	}
+
+	a {
+		display: block;
+		color: #fff;
+		font-weight: normal;
+		font-size: 1em;
+		margin-left: 2px;
+		height: 20px;
+		background-color: $link_color;
+		line-height: 20px;
+		padding-left: 20px;
+		+border-radius(3px);
+
+		/* Editbutton auf Artikelseite */
+		&.rex-tx3 {
+			background-image: url(background_btn_edit.png);
+			background-position: 6px 0;
+			background-repeat: no-repeat;
+			width: 60px;
+
+
+			&:hover {
+				background-color: #4bcee4;
+			}
+		}
+
+		/* Löschen-Button */
+		&.rex-tx2 {
+			background-image: url(background_btn_dlt.png);
+			background-position: 6px 0;
+			background-repeat: no-repeat;
+			width: 55px;
+
+			&:hover {
+				background-color: #4bcee4;
+			}
+		}
+
+		/*  Pfeil-Buttons */
+		&.rex-slice-{
+			&move-up, &move-down {
+				padding: 0px;
+				width: 22px;
+
+				&:hover {
+					background-color: #4bcee4;
+				}
+			}
+
+			&move-down {
+				background-image: url(background_btn_down.png);
+				background-position: 7px 0;
+				background-repeat: no-repeat;
+			}
+
+			&move-up {
+				background-image: url(background_btn_up.png);
+				background-position: 7px 0;
+				background-repeat: no-repeat;
+			}
+		}
+
+	}
+}
+
+
+/*	Paginate */
+
+div#rex-navi-paginate ul li {
+	margin-right: 10px;
+
+	&.rex-navi-paginate-page    { margin-right: 0;    }
+	&.rex-navi-paginate-next    { padding-left: 10px; }
+	&.rex-navi-paginate-message { padding-top: 3px;   }
+
+	&.rex-navi-paginate-prev a,
+	&.rex-navi-paginate-next a {
+		width: 18px;
+		height: 18px;
+
+		span { display: none; }
+	}
+
+	&.rex-navi-paginate-page a span {
+		padding: 3px 10px 2px 10px;
+		font-weight: bold;
+	}
+}

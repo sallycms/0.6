@@ -1,0 +1,78 @@
+body#rex-page-specials div.rex-form {
+	+border-radius($brd_rad);
+	/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
+}
+
+div#rex-navi-main dl dd ul li#rex-navi-page-specials > a {
+	background-image: url(../system.png);
+	background-position: 5px 5px;
+}
+
+/* System -> Einstellungen | unterer Abstand zu den gestrichelten Linien in der rechten Box*/
+#rex-page-specials {
+	p.rex-form-text, p.rex-form-select, p.rex-form-read { padding-bottom: 5px; }
+}
+
+/*	System : Einstellungen */
+
+div#rex-form-system-setup {
+	fieldset { padding-bottom: 1em; }
+
+	legend {
+		padding-left: 0;
+		padding-top: 0;
+	}
+
+	div.rex-form-row {
+		border-bottom-width: 0;
+		padding: 5px 0 0;
+
+		label {
+			width: 190px;
+			padding-left: 0;
+			font-weight: normal;
+		}
+	}
+
+	fieldset.rex-form-col-1 div.rex-form-row {
+		p.rex-form-label-right label,
+		p.rex-form-read span,
+		p.rex-form-text input,
+		p select,
+		p textarea {
+			width: 40%;
+		}
+
+		#rex_include_path {
+			display: inline;
+			line-height: 21px;
+		}
+
+		/*	Submit */
+
+		p input.rex-form-submit {
+			margin-left: 190px;
+		}
+	}
+}
+
+/*	System : Sprachen */
+
+div#rex-form-system-language input.rex-form-text {
+	width: 98%;
+}
+
+div#rex-form, div#sly-form {
+	&-system-language {
+		table.rex-table {
+			th, td                   { vertical-align: middle; }
+			th.rex-icon, td.rex-icon { padding-bottom: 6px;    }
+			th.sly-icon, td.sly-icon { padding-bottom: 6px;    }
+		}
+	}
+}
+
+div#rex-form-system-setup {
+	background-color: #fff;
+	color: $drk_grey;
+}

@@ -1,0 +1,43 @@
+body#rex-page-profile {
+	#rex-form-profile {
+		background-color: #fff;
+		+border-bottom-radius(4px);
+		/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
+	}
+
+	.rex-form {
+		&-wrapper {
+			padding: 0 10px;
+		}
+
+		&-col-2 {
+			.rex-form-col-a, .rex-form-col-b {
+				width:49%;
+				float: left;
+			}
+		}
+
+		&-col-1 {
+			.rex-form-wrapper {padding-top: 0} /* löscht den oberen abstand des 'profil speichern'-buttons */
+			.rex-form-row {border: 0}  /* keinen rand für die letzte zeile im profil */
+		}
+
+		&-notice {
+			line-height: 1.2em;
+		}
+
+		&-submit {
+			margin-bottom: 3px;
+		}
+	}
+
+	/* Überschrift | dunkelgrau hinterlegt mit runden Ecken*/
+	legend {
+		color: #fff;
+		background-color: $drk_grey;
+		font-size: 1.1em;
+		+border-top-radius(4px);
+		width: 787px; /* Breite des Loginbereichs abzüglich des padding links*/
+		padding: 8px 0 8px 10px;
+	}
+}

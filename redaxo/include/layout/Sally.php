@@ -67,6 +67,8 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 			$subtitle = '<div class="rex-title-row rex-title-row-sub">'.$this->getSubtitle($subtitle).'</div>';
 		}
 
+		$this->appendToTitle($head);
+
 		$head = rex_register_extension_point('PAGE_TITLE', $head, array('page' => $REX['PAGE']));
 		print '<div id="rex-title"><div class="rex-title-row"><h1>'.$head.'</h1></div>'.$subtitle.'</div>';
 

@@ -2,5 +2,24 @@
 @include 'base.css';
 @include 'navigation.css';
 @include 'table.css';
-@include 'linkmap.css';
 @include 'sally.css';
+@include 'form.css';
+
+@include 'pages/linkmap.css';
+@include 'pages/login.css';
+@include 'pages/mediapool.css';
+@include 'pages/module.css';
+@include 'pages/profile.css';
+@include 'pages/setup.css';
+@include 'pages/specials.css';
+@include 'pages/structure.css';
+@include 'pages/content.css';
+@include 'pages/addon.css';
+@include 'pages/user.css';
+@include 'pages/template.css';
+
+@include 'addons/metainfo.css';
+@include 'addons/import_export.css';
+@include 'addons/image_resize.css';
+
+@include 'legacy/paginate.css';

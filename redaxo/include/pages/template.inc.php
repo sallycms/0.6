@@ -26,7 +26,7 @@ if ($function == "delete")
     LEFT JOIN " . $prefix . "template ON " . $prefix . "article.template_id=" . $prefix . "template.id
     WHERE " . $prefix . "article.template_id='$template_id' LIMIT 0,10");
 
-  if ($del->getRows() > 0  || $REX['DEFAULT_TEMPLATE_ID'] == $template_id) 
+  if ($del->getRows() > 0  || $REX['DEFAULT_TEMPLATE_ID'] == $template_id)
   {
     $warning = $I18N->msg("cant_delete_template_because_its_in_use", 'ID = '.$template_id);
 
@@ -96,7 +96,7 @@ if ($function == "add" or $function == "edit")
     // leerer eintrag = 0
     if(count($modules) == 0)
       $modules[1]["all"] = 0;
-    
+
     foreach($modules as $k => $module)
     {
       if(!isset($module["all"]) ||$module["all"] != 1)
@@ -113,7 +113,7 @@ if ($function == "add" or $function == "edit")
     $TPL->setValue("attributes", addslashes($attributes));
     $TPL->addGlobalCreateFields();
 
-    if ($function == "add") 
+    if ($function == "add")
     {
       $attributes = rex_setAttributes("ctype", $ctypes, "");
       $attributes = rex_setAttributes("modules", $modules, $attributes);
@@ -162,7 +162,7 @@ if ($function == "add" or $function == "edit")
     // Ctype Handling
     $ctypes = rex_getAttributes("ctype", $attributes);
     $modules = rex_getAttributes("modules", $attributes);
-    
+
     if(!is_array($modules))
       $modules = array();
 
@@ -181,33 +181,37 @@ if ($function == "add" or $function == "edit")
     $ctypes_out = '';
     $i = 1;
     $ctypes[] = ""; // Extra, f�r Neue Spalte
-    
+
     if (is_array($ctypes)) {
-      foreach ($ctypes as $id => $name) 
+      foreach ($ctypes as $id => $name)
       {
         $modul_select->setName('modules['.$i.'][]');
         $modul_select->setId('modules_'.$i.'_select');
         $modul_select->resetSelected();
         if(isset($modules[$i]) && count($modules[$i])>0)
           foreach($modules[$i] as $j => $jj)
-            if("$j" != 'all') 
+            if("$j" != 'all')
               $modul_select->setSelected($jj);
 
         $ctypes_out .= '
         <div class="rex-form-row">
         <p class="rex-form-col-a rex-form-text">
-          <label for="ctype'.$i.'">ID=' . $i . '</label> 
+          <label for="ctype'.$i.'">ID=' . $i . '</label>
           <input class="rex-form-text" id="ctype'.$i.'" type="text" name="ctype[' . $i . ']" value="' . htmlspecialchars($name) . '" />
         </p>
+        </div>
+        <div class="rex-form-row">
         <p class="rex-form-col-a rex-form-checkbox rex-form-label-right">
           <input class="rex-form-checkbox" id="allmodules'.$i.'" type="checkbox" name="modules[' . $i . '][all]" ';
         if(!isset($modules[$i]['all']) || $modules[$i]['all'] == 1)
           $ctypes_out .= ' checked="checked" ';
         $ctypes_out .= ' value="1" />
-          <label for="allmodules'.$i.'">'.$I18N->msg("modules_available_all").'</label> 
+          <label for="allmodules'.$i.'">'.$I18N->msg("modules_available_all").'</label>
         </p>
-        <p class="rex-form-col-a rex-form-select" id="p_modules'.$i.'">
-          <label for="modules_'.$i.'_select">'.$I18N->msg("modules_available").'</label> 
+        </div>
+        <div class="rex-form-row" id="div_modules'.$i.'">
+        <p class="rex-form-col-a rex-form-select">
+          <label for="modules_'.$i.'_select">'.$I18N->msg("modules_available").'</label>
           '.$modul_select->get().'
           <span class="rex-form-notice">'. $I18N->msg('ctrl') .'</span>
         </p>
@@ -222,17 +226,17 @@ if ($function == "add" or $function == "edit")
       <!--
       jQuery(function($) {
     ';
-    
+
     for($j=1;$j<=$i;$j++)
     {
       $ctypes_out .= '
 
         $("#allmodules'.$j.'").click(function() {
-          $("#p_modules'.$j.'").slideToggle("slow");
+          $("#div_modules'.$j.'").slideToggle("slow");
         });
-        
+
         if($("#allmodules'.$j.'").is(":checked")) {
-          $("#p_modules'.$j.'").hide();
+          $("#div_modules'.$j.'").hide();
         }
       ';
     }
@@ -261,28 +265,28 @@ if ($function == "add" or $function == "edit")
               <input type="hidden" name="function" value="' . $function . '" />
               <input type="hidden" name="save" value="ja" />
               <input type="hidden" name="template_id" value="' . $template_id . '" />
-              
+
               <div class="rex-form-row">
                 <p class="rex-form-col-a rex-form-text">
                   <label for="ltemplatename">' . $I18N->msg("template_name") . '</label>
                   <input class="rex-form-text" type="text" size="10" id="ltemplatename" name="templatename" value="' . htmlspecialchars($templatename) . '" />
                 </p>
               </div>
-      
+
               <div class="rex-form-row">
                 <p class="rex-form-col-a rex-form-checkbox rex-form-label-right">
                   <input class="rex-form-checkbox" type="checkbox" id="active" name="active" value="1"' . $tmpl_active_checked . '/>
                   <label for="active">' . $I18N->msg("checkbox_template_active") . '<span>' . $I18N->msg("checkbox_template_active_info") . '</span></label>
                 </p>
               </div>
-      
+
               <div class="rex-form-row">
                 <p class="rex-form-col-a rex-form-textarea">
                   <label for="content">' . $I18N->msg("header_template") . '</label>
                   <textarea class="rex-form-textarea" name="content" id="content" cols="50" rows="6">' . htmlspecialchars($content) . '</textarea>
                 </p>
               </div>
-              
+
               <div class="rex-clearer"></div>
             </div>
         </fieldset>
@@ -320,7 +324,7 @@ if ($function == "add" or $function == "edit")
         $("#active").click(function() {
           $("#rex-form-template-ctype").slideToggle("slow");
         });
-        
+
         if($("#active").is(":not(:checked)")) {
           $("#rex-form-template-ctype").hide();
         }
@@ -346,10 +350,11 @@ if ($OUT)
   $list->addTableAttribute('summary', $I18N->msg('header_template_summary'));
   $list->addTableColumnGroup(array(40, 40, '*', 153, 153));
 
-  $tdIcon = '<span class="rex-i-element rex-i-template"><span class="rex-i-element-text">###name###</span></span>';
-  $thIcon = '<a class="rex-i-element rex-i-template-add" href="'. $list->getUrl(array('function' => 'add')) .'"><span class="rex-i-element-text">'.$I18N->msg('create_template').'</span></a>';
+  $editUrl = array('function' => 'edit', 'template_id' => '###id###');
+  $tdIcon = '<a href="'. $list->getUrl($editUrl) .'"><img class="sly-icon sly-sprite sly-template" src="media/empty.png" alt="###name###" title="###name###" /></a>';
+  $thIcon = '<a href="'. $list->getUrl(array('function' => 'add')) .'"><img class="sly-icon sly-sprite sly-template-add" src="media/empty.png" alt="" title="'.$I18N->msg('create_template').'"" /></a>';
   $list->addColumn($thIcon, $tdIcon, 0, array('<th class="rex-icon">###VALUE###</th>','<td class="rex-icon">###VALUE###</td>'));
-  $list->setColumnParams($thIcon, array('function' => 'edit', 'template_id' => '###id###'));
+  $list->setColumnParams($thIcon, $editUrl);
 
   $list->setColumnLabel('id', 'ID');
   $list->setColumnLayout('id',  array('<th class="rex-small">###VALUE###</th>','<td class="rex-small">###VALUE###</td>'));
@@ -362,7 +367,7 @@ if ($OUT)
 
   $list->addColumn($I18N->msg('header_template_functions'), $I18N->msg('delete_template'));
   $list->setColumnParams($I18N->msg('header_template_functions'), array('function' => 'delete', 'template_id' => '###id###'));
-  $list->addLinkAttribute($I18N->msg('header_template_functions'), 'onclick', 'return confirm(\''.$I18N->msg('delete').' ?\')');
+  $list->addLinkAttribute($I18N->msg('header_template_functions'), 'class', 'sly-action sly-delete');
 
   $list->setNoRowsMessage($I18N->msg('templates_not_found'));
 

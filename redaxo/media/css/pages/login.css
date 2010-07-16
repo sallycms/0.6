@@ -1,0 +1,65 @@
+body#rex-page-login {
+
+	p.rex-form-text, p.rex-form-select { padding: 0; }
+
+	div#rex-title, div#rex-output {
+		float: none;
+		width: 650px;
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	div#rex-wrapper {
+		width: 100%;
+		margin-right: 0px;
+		&2 { padding: 0 16px; }
+	}
+
+	/* Anpassung der Footerbreite nur für Login-Seite */
+
+	div#rex-footer {
+		width: 650px;
+		float: none;
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	.rex-form-row:first-child { margin-top: 20px; }
+
+	.rex-form {
+		&-login {
+			margin: 7px 0 0 0;
+			+border-radius(4px);
+			/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
+			background-color: #fff;
+			color: #fff;
+
+			.rex-form-text input,.rex-form-password input {
+				width: 250px;
+			}
+
+			/* Überschrift */
+			legend {
+				color: #fff;
+				background-color: $drk_grey;
+				font-size: 1.1em;
+				+border-top-radius(4px);
+				width: 630px; /* Breite des Loginbereichs abzüglich des padding links*/
+				padding: 5px 0 8px 20px;
+			}
+		}
+
+		&-wrapper {
+			padding: 0 10px;
+		}
+
+		&-row {
+			color: $drk_grey;
+			padding: 7px 0;
+			border-top: 1px dotted $md_grey;
+			border-bottom: 0;
+		}
+
+		&-col-a { vertical-aling: middle; }
+	}
+}
