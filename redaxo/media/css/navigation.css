@@ -213,7 +213,7 @@ div#rex-navi-page ul li a.rex-active {
 	padding: 0px;
 	width: 100%;
 	height: 51px;
-	color: &md-grey;
+	color: $md_grey;
 	line-height: 51px; /* Schriftzentrierung */
 	font-size: 0.8em;
 
@@ -221,7 +221,7 @@ div#rex-navi-page ul li a.rex-active {
 	p#rex-scripttime {
 		float: right;
 		margin: 0 5px;
-		color: &lt-grey;
+		color: $lt_grey;
 	}
 
 	ul {

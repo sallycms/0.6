@@ -321,7 +321,7 @@ ul.rex-display-inline li {
 .rex-code {
 	font-size: 1.2em;
 	background-color: $drk_grey;
-	border-color: 1px solid #F2353A;
+	border: 1px solid #F2353A;
 	display: block;
 	padding: 10px;
 }

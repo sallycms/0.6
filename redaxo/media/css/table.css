@@ -3,10 +3,7 @@ table.rex-table {
 	width: 100%;
 	background-color: #fff;
 	border-spacing: 0;
-	border-top: 0:
-	border: 1px solid #efefef;
 	+border-bottom-radius(5px);
-
 
 	caption {
 		+border-top-radius(4px);
@@ -40,7 +37,7 @@ table.rex-table {
 			background-color: $link_color;
 			color: #fff;
 
-			input {padding: 0; border: 1px solid #fff;}
+			input { padding: 0; border: 1px solid #fff; }
 		}
 
 		&.rex-plugin td {
@@ -50,5 +47,5 @@ table.rex-table {
 }
 
 table.rex-table-mrgn {
-	margin-bottom:10px
+	margin-bottom: 10px;
 }

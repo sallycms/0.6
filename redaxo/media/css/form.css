@@ -147,24 +147,22 @@ div.rex-form-row {
 	}
 }
 
-div.rex-form div.rex-form-row {
-	div.rex-form-checkboxes-wrapper,
-	div.rex-form-radios-wrapper,
-	p.rex-form-label-right label,
-	p.rex-form-read span,
-	p.rex-form-text input,
-	p.rex-form-password input,
-	p select,
-	p textarea {
-		width: 456px;
-	}
-}
-
-/*	Submit */
-
 div.rex-form {
 	input.rex-form-submit {
 		cursor: pointer;
+	}
+
+	div.rex-form-row {
+		div.rex-form-checkboxes-wrapper,
+		div.rex-form-radios-wrapper,
+		p.rex-form-label-right label,
+		p.rex-form-read span,
+		p.rex-form-text input,
+		p.rex-form-password input,
+		p select,
+		p textarea {
+			width: 456px;
+		}
 	}
 
 	&,
