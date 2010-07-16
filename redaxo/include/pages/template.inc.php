@@ -367,7 +367,7 @@ if ($OUT)
 
   $list->addColumn($I18N->msg('header_template_functions'), $I18N->msg('delete_template'));
   $list->setColumnParams($I18N->msg('header_template_functions'), array('function' => 'delete', 'template_id' => '###id###'));
-  $list->addLinkAttribute($I18N->msg('header_template_functions'), 'onclick', 'return confirm(\''.$I18N->msg('delete').' ?\')');
+  $list->addLinkAttribute($I18N->msg('header_template_functions'), 'class', 'sly-action sly-delete');
 
   $list->setNoRowsMessage($I18N->msg('templates_not_found'));
 
