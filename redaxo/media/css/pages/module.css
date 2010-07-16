@@ -1,22 +1,10 @@
-/*	Button - Arrows */
-
-.rex-i- {
-	&module     { background-image: url(../modul.gif);       }
-	&module-add { background-image: url(../modul_plus.gif);  }
-	&action     { background-image: url(../action.gif);      }
-	&action-add { background-image: url(../action_plus.gif); }
-}
-
-div#rex-navi-main dl dd ul li#rex-navi-page-module > a {
-	background-image: url(../module.png);
-	background-position: 5px 5px;
-}
-
 /* Sprites */
 
 .sly-sprite {
-	&.sly-module     { background-position: 0 0; }
-	&.sly-module-add { background-position: 0 -16px; }
+	&.sly-module     { background-position: -64px 0; }
+	&.sly-module-add { background-position: -64px -16px; }
+	&.sly-module-action     { background-position: -80px 0; }
+	&.sly-module-action-add { background-position: -80px -16px; }
 }
 
 body#rex-page-module {

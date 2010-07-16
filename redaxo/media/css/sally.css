@@ -36,18 +36,24 @@ div.sly-content {
 	background-repeat: no-repeat;
 }
 
-img.sly-sprite {
+img.sly-sprite, a.sly-sprite, span.sly-sprite {
 	height: 16px;
 	width: 16px;
+
+	span { display: none; }
 }
 
-span.sly-sprite {
-	height: 20px;
-	width: 20px;
-	text-align: left;
-	float: left;
-	text-indent: -999em;
+a.sly-sprite, span.sly-sprite {
 	display: block;
+	margin: 0 auto;
+}
+
+.sly-sprite.sly-sprite {
+	&-article           { background-position: -16px 0;     }
+	&-article-add       { background-position: -16px -16px; }
+	&-article-startpage { background-position: -16px -32px; }
+	&-category          { background-position: -32px 0;     }
+	&-category-add      { background-position: -32px -16px; }
 }
 
 /**********************************************************************/
@@ -370,5 +376,9 @@ a.sly-action {
 	background-repeat: no-repeat;
 	padding: 1px 0 1px 18px;
 
-	&.sly-delete { color: red; background-position: 0 -112px; }
+	&.sly-delete { color: red; background-position: -48px -32px; }
+}
+
+.sly-strike {
+	text-decoration: line-through;
 }

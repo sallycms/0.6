@@ -3,14 +3,17 @@ body#rex-page-specials div.rex-form {
 	/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
 }
 
-div#rex-navi-main dl dd ul li#rex-navi-page-specials > a {
-	background-image: url(../system.png);
-	background-position: 5px 5px;
-}
+/* Sprites */
+
+.sly-sprite.sly-sprite {
+	&-language     { background-position: 0 -48px; }
+	&-language-add { background-position: 0 -64px; }
+}s
 
 /* System -> Einstellungen | unterer Abstand zu den gestrichelten Linien in der rechten Box*/
 #rex-page-specials {
 	p.rex-form-text, p.rex-form-select, p.rex-form-read { padding-bottom: 5px; }
+	#languages .sly-col-d { width: 130px; }
 }
 
 /*	System : Einstellungen */

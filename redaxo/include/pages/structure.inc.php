@@ -161,7 +161,8 @@ if($category)
 $add_category = '';
 if ($KATPERM && !$REX['USER']->hasPerm('editContentOnly[]'))
 {
-  $add_category = '<a class="rex-i-element rex-i-category-add" href="index.php?page=structure&amp;category_id='.$category_id.'&amp;function=add_cat&amp;clang='.$clang.'"><span class="rex-i-element-text">'.$I18N->msg("add_category").'</span></a>';
+  $_link        = 'index.php?page=structure&category_id='.$category_id.'&function=add_cat&clang='.$clang;
+  $add_category = sly_Util_HTML::getSpriteLink($_link, $I18N->msg('add_category'), 'category-add');
 }
 
 $add_header = '';
@@ -263,7 +264,7 @@ if ($function == 'add_cat' && $KATPERM && !$REX['USER']->hasPerm('editContentOnl
 
   echo '
         <tr class="'. $class .'">
-          <td class="rex-icon"><span class="rex-i-element rex-i-category"><span class="rex-i-element-text">'. $I18N->msg('add_category') .'</span></span></td>
+          <td class="rex-icon">'.sly_Util_HTML::getSpriteLink('', $I18N->msg('add_category'), 'category-add').'</td>
           '. $add_td .'
           <td><input class="rex-form-text" type="text" id="rex-form-field-name" name="category_name" />'. $meta_buttons .'</td>
           <td><input class="rex-form-text" type="text" id="rex-form-field-prior" name="Position_New_Category" value="100" /></td>
@@ -284,8 +285,8 @@ $categories = OOCategory::getChildrenById($category_id , false, $clang);
 foreach ($categories as $cat)
 {
   $i_category_id = $cat->getId();
-  $kat_link = 'index.php?page=structure&amp;category_id='. $i_category_id .'&amp;clang='. $clang;
-  $kat_icon_td = '<td class="rex-icon"><a class="rex-i-element rex-i-category" href="'. $kat_link .'"><span class="rex-i-element-text">'. htmlspecialchars($cat->getName()). '</span></a></td>';
+  $kat_link    = 'index.php?page=structure&category_id='.$i_category_id.'&clang='.$clang;
+  $kat_icon_td = '<td class="rex-icon">'.sly_Util_HTML::getSpriteLink($kat_link, $cat->getName(), 'category').'</td>';
 
   $kat_status = $catStatusTypes[$cat->getValue('status')][0];
   $status_class = $catStatusTypes[$cat->getValue('status')][1];
@@ -356,8 +357,8 @@ foreach ($categories as $cat)
         <tr>
           '. $kat_icon_td .'
           '. $add_td .'
-          <td><a href="'. $kat_link .'">'. htmlspecialchars($cat->getName()) .'</a></td>
-          <td>'. htmlspecialchars($cat->getValue("catprior")) .'</td>
+          <td><a href="'. sly_html($kat_link) .'">'. sly_html($cat->getName()) .'</a></td>
+          <td>'. sly_html($cat->getValue("catprior")) .'</td>
           <td><a href="index.php?page=structure&amp;category_id='. $category_id .'&amp;edit_id='. $i_category_id .'&amp;function=edit_cat&amp;clang='. $clang .'">'. $I18N->msg('change') .'</a></td>
           <td>'. $category_delete .'</td>
           <td>'. $kat_status .'</td>
@@ -379,7 +380,7 @@ foreach ($categories as $cat)
           '. $kat_icon_td .'
           '. $add_td .'
           <td><a href="'. $kat_link .'">'.$KAT->getValue("catname").'</a></td>
-          <td>'.htmlspecialchars($KAT->getValue("catprior")).'</td>
+          <td>'.sly_html($KAT->getValue("catprior")).'</td>
           <td><span class="rex-strike">'. $I18N->msg('change') .'</span></td>
           <td><span class="rex-strike">'. $I18N->msg('delete') .'</span></td>
           <td>'. $kat_status .'</td>
@@ -437,8 +438,10 @@ if ($category_id > -1)
 
   // --------------------- ARTIKEL LIST
   $art_add_link = '';
-  if ($KATPERM && !$REX['USER']->hasPerm('editContentOnly[]'))
-    $art_add_link = '<a class="rex-i-element rex-i-article-add" href="index.php?page=structure&amp;category_id='. $category_id .'&amp;function=add_art&amp;clang='. $clang .'"><span class="rex-i-element-text">'. $I18N->msg('article_add') .'</span></a>';
+  if ($KATPERM && !$REX['USER']->hasPerm('editContentOnly[]')) {
+    $url          = 'index.php?page=structure&category_id='.$category_id.'&function=add_art&clang='.$clang;
+    $art_add_link = sly_Util_HTML::getSpriteLink($url, $I18N->msg('article_add'), 'article-add');
+  }
 
   $add_head = '';
   $add_col  = '';
@@ -468,20 +471,15 @@ if ($category_id > -1)
   }
 
   // READ DATA
-  $sql = new rex_sql;
-  // $sql->debugsql = true;
-  $sql->setQuery('SELECT *
-        FROM
-          '.$REX['DATABASE']['TABLE_PREFIX'].'article
-        WHERE
-          ((re_id='. $category_id .' AND startpage=0) OR (id='. $category_id .' AND startpage=1))
-          AND clang='. $clang .'
-        ORDER BY
-          prior, name');
+  $sql = new rex_sql();
+  $sql->setQuery('SELECT * FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article '.
+    'WHERE ((re_id = '. $category_id .' AND startpage = 0) OR (id = '.$category_id.' AND startpage = 1)) '.
+    'AND clang = '.$clang.' ORDER BY prior, name'
+  );
 
   echo '
-      <table class="rex-table" summary="'. htmlspecialchars($I18N->msg('structure_articles_summary', $cat_name)) .'">
-        <caption>'. htmlspecialchars($I18N->msg('structure_articles_caption', $cat_name)).'</caption>
+      <table class="rex-table" summary="'. sly_html($I18N->msg('structure_articles_summary', $cat_name)) .'">
+        <caption>'. sly_html($I18N->msg('structure_articles_caption', $cat_name)).'</caption>
         <colgroup>
           <col width="40" />
           '. $add_col .'
@@ -534,7 +532,7 @@ if ($category_id > -1)
       $add_td = '<td class="rex-small">-</td>';
 
     echo '<tr class="rex-table-row-activ">
-            <td class="rex-icon"><span class="rex-i-element rex-i-article"><span class="rex-i-element-text">'.$I18N->msg('article_add') .'</span></span></td>
+            <td class="rex-icon">'.sly_Util_HTML::getSpriteLink('', $I18N->msg('article_add'), 'article').'</td>
             '. $add_td .'
             <td><input type="text" class="rex-form-text" id="rex-form-field-name" name="article_name" /></td>
             <td><input type="text" class="rex-form-text" id="rex-form-field-prior" name="Position_New_Article" value="100" /></td>
@@ -551,9 +549,9 @@ if ($category_id > -1)
   {
 
     if ($sql->getValue('startpage') == 1)
-      $class = 'rex-i-article-startpage';
+      $class = 'article-startpage';
     else
-      $class = 'rex-i-article';
+      $class = 'article';
 
     // --------------------- ARTIKEL EDIT FORM
 
@@ -564,9 +562,10 @@ if ($category_id > -1)
         $add_td = '<td class="rex-small">'. $sql->getValue("id") .'</td>';
 
       $TMPL_SEL->setSelected($sql->getValue('template'));
+      $url = 'index.php?page=content&article_id='.$sql->getValue('id').'&category_id='.$category_id.'&clang='.$clang;
 
       echo '<tr class="rex-table-row-activ">
-              <td class="rex-icon"><a class="rex-i-element '.$class.'" href="index.php?page=content&amp;article_id='. $sql->getValue('id') .'&amp;category_id='. $category_id .'&amp;clang='. $clang .'"><span class="rex-i-element-text">' .htmlspecialchars($sql->getValue("name")).'</span></a></td>
+              <td class="rex-icon">'.sly_Util_HTML::getSpriteLink($url, $sql->getValue('name'), $class).'</td>
               '. $add_td .'
               <td><input type="text" class="rex-form-text" id="rex-form-field-name" name="article_name" value="' .htmlspecialchars($sql->getValue('name')).'" /></td>
               <td><input type="text" class="rex-form-text" id="rex-form-field-prior" name="Position_Article" value="'. htmlspecialchars($sql->getValue('prior')).'" /></td>
@@ -606,8 +605,11 @@ if ($category_id > -1)
                       <td>'. $article_status .'</td>';
       }
 
+      // wird von sly_Util_HTML escaped
+      $url = 'index.php?page=content&article_id='.$sql->getValue('id').'&category_id='.$category_id.'&mode=edit&clang='.$clang;
+
       echo '<tr>
-              <td class="rex-icon"><a class="rex-i-element '.$class.'" href="index.php?page=content&amp;article_id='. $sql->getValue('id') .'&amp;category_id='. $category_id .'&amp;mode=edit&amp;clang='. $clang .'"><span class="rex-i-element-text">' .htmlspecialchars($sql->getValue('name')).'</span></a></td>
+              <td class="rex-icon">'.sly_Util_HTML::getSpriteLink($url, $sql->getValue('name'), $class).'</td>
               '. $add_td .'
               <td><a href="index.php?page=content&amp;article_id='. $sql->getValue('id') .'&amp;category_id='. $category_id .'&amp;mode=edit&amp;clang='. $clang .'">'. htmlspecialchars($sql->getValue('name')) . '</a></td>
               <td>'. htmlspecialchars($sql->getValue('prior')) .'</td>

@@ -2,14 +2,14 @@
 
 //$element = $type == 'addon' ? $addon : $plugin;
 $class   = $isActive ? 'rex-clr-grn' : 'rex-clr-red';
-$author  = $isActive ? htmlspecialchars($author) : $I18N->msg('credits_addon_inactive');
+$author  = $isActive ? sly_html($author) : $I18N->msg('credits_addon_inactive');
 
 if ($isActive) $class .= ' sly-activated';
 elseif ($isInstalled) $class .= ' sly-installed';
 else $class .= ' sly-notinstalled';
 
 if ($supportPage) {
-	$supportPage = '<a href="http://'.htmlspecialchars($supportPage).'" class="sly-blank">'.htmlspecialchars($supportPage).'</a>';
+	$supportPage = '<a href="http://'.sly_html($supportPage).'" class="sly-blank">'.sly_html($supportPage).'</a>';
 }
 
 if (!$icon) {
@@ -19,9 +19,9 @@ if (!$icon) {
 ?>
 
 <tr class="rex-<?= $type ?> sly-<?= $type ?> <?= $class ?>">
-	<td class="rex-col-a sly-col-a rex-icon"><img src="<?= $icon ?>" alt="<?= sly_html($name) ?>" title="<?= sly_html($name) ?>" /></td>
-	<td class="rex-col-b sly-col-b"><?= sly_html($name) ?> [<a href="index.php?page=addon&amp;subpage=help&amp;addonname=<?= urlencode($name) ?>">?</a>]</td>
-	<td class="rex-col-c sly-col-c"><?= sly_html($version) ?></td>
-	<td class="rex-col-d sly-col-d"><?= $author ?></td>
-	<td class="rex-col-e sly-col-e"><?= $supportPage ?></td>
+	<td class="sly-col-a rex-icon"><?= sly_Util_HTML::getSpriteLink('', $name, 'addon') ?></td>
+	<td class="sly-col-b"><?= sly_html($name) ?> [<a href="index.php?page=addon&amp;subpage=help&amp;addonname=<?= urlencode($name) ?>">?</a>]</td>
+	<td class="sly-col-c"><?= sly_html($version) ?></td>
+	<td class="sly-col-d"><?= $author ?></td>
+	<td class="sly-col-e"><?= $supportPage ?></td>
 </tr>
