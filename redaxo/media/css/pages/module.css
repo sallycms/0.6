@@ -19,15 +19,6 @@ div#rex-navi-main dl dd ul li#rex-navi-page-module > a {
 	&.sly-module-add { background-position: 0 -16px; }
 }
 
-a.sly-action {
-	background-image: url(../sprites.png);
-	background-position: left 50%;
-	background-repeat: no-repeat;
-	padding: 1px 0;
-
-	&.sly-delete { color: red; background-position: 0 -32px; }
-}
-
 body#rex-page-module {
 	form#module .rex-form-row {
 		label                   { width: 100px;       }

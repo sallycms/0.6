@@ -434,3 +434,8 @@ div#rex-header {
 		text-align: right;
 	}
 }
+
+p.center, td.center, th.center, div.center {
+	text-align: center;
+}
+
