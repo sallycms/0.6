@@ -73,6 +73,10 @@ input#rex-form-field-prior {
 			/* padding: 10px 0 10px 10px; */
 		}
 
+		span.rex-form-read {
+			line-height: 21px;
+		}
+
 		span.rex-form-notice {
 			clear: both;
 			margin-left: 145px;

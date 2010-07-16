@@ -9,7 +9,9 @@ div#rex-navi-main dl dd ul li#rex-navi-page-specials > a {
 }
 
 /* System -> Einstellungen | unterer Abstand zu den gestrichelten Linien in der rechten Box*/
-#rex-page-specials p.rex-form-text, p.rex-form-select {padding-bottom: 10px;}
+#rex-page-specials {
+	p.rex-form-text, p.rex-form-select { padding-bottom: 10px; }
+}
 
 /*	System : Einstellungen */
 
