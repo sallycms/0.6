@@ -22,7 +22,7 @@ div#rex-navi-main dl dd ul li#rex-navi-page-user > a {
 		background-color: $drk_grey;
 		font-size: 1.1em;
 		+border-top-radius(4px);
-		width: 771px; /* Breite des Loginbereichs abzüglich des padding links*/
+		width: 787px; /* Breite des Loginbereichs abzüglich des padding links*/
 		padding: 8px 0 8px 10px;
 	}
 
@@ -34,7 +34,7 @@ div#rex-navi-main dl dd ul li#rex-navi-page-user > a {
 			+border-bottom-radius(4px);
 			clear: both;
 			float: left;
-			width: 761px;
+			width: 777px;
 			padding: 0 10px;
 		}
 

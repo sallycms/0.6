@@ -280,7 +280,7 @@ div.rex-form input.rex-form-submit {
 		color: #fff;
 		background-color: $drk_grey;
 		font-size: 1.1em;
-		width: 771px; /* Breite des Loginbereichs abzüglich des padding links*/
+		width: 787px; /* Breite des Loginbereichs abzüglich des padding links*/
 		padding: 8px 0 8px 10px;
 	}
 
@@ -293,7 +293,7 @@ div.rex-form input.rex-form-submit {
 		+border-bottom-radius(4px);
 		clear: both;
 		float: left;
-		width: 761px;
+		width: 777px;
 		padding: 0 10px;
 	}
 }
