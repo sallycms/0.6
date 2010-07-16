@@ -164,8 +164,9 @@ class sly_Service_Template {
 		$known = $this->getKnownTemplateFiles();
 
 		return
-			/* neuere Daten? */ max(array_map('filemtime', $files)) > $this->refresh ||
-			/* neue Dateien? */ count(array_diff(array_map('basename', $files), $known)) > 0;
+			/* Dateien?      */ count($files) > 0 &&
+			/* neuere Daten? */ (max(array_map('filemtime', $files)) > $this->refresh ||
+			/* neue Dateien? */ count(array_diff(array_map('basename', $files), $known)) > 0);
 	}
 
 	public function refresh($force = false) {

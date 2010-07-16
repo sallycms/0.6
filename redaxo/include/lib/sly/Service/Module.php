@@ -131,8 +131,9 @@ class sly_Service_Module {
 		$known = $this->getKnownModuleFiles();
 
 		return
-			/* neuere Daten? */ max(array_map('filemtime', $files)) > $this->refresh ||
-			/* neue Dateien? */ count(array_diff(array_map('basename', $files), $known)) > 0;
+			/* Dateien?      */ count($files) > 0 &&
+			/* neuere Daten? */ (max(array_map('filemtime', $files)) > $this->refresh ||
+			/* neue Dateien? */ count(array_diff(array_map('basename', $files), $known)) > 0);
 	}
 
 	public function refresh($force = false) {
