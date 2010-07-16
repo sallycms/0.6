@@ -22,7 +22,7 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		$popups_arr = array('linkmap', 'mediapool');
 		$config     = sly_Core::config();
 
-		$body_id = str_replace('_', '-', $REX['PAGE']);
+		$body_id = str_replace('_', '-', isset($REX['PAGE']) ? $REX['PAGE'] : '');
 		$this->setBodyAttr('id', 'rex-page-'.$body_id);
 
 		// Falls ein AddOn bereits in seiner config.inc.php auf das Layout
@@ -66,6 +66,8 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		else {
 			$subtitle = '<div class="rex-title-row rex-title-row-sub">'.$this->getSubtitle($subtitle).'</div>';
 		}
+
+		$this->appendToTitle($head);
 
 		$head = rex_register_extension_point('PAGE_TITLE', $head, array('page' => $REX['PAGE']));
 		print '<div id="rex-title"><div class="rex-title-row"><h1>'.$head.'</h1></div>'.$subtitle.'</div>';
