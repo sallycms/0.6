@@ -16,6 +16,7 @@
 @include 'pages/content.css';
 @include 'pages/addon.css';
 @include 'pages/user.css';
+@include 'pages/template.css';
 
 @include 'addons/metainfo.css';
 @include 'addons/import_export.css';

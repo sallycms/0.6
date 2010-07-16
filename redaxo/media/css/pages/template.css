@@ -1,8 +1,13 @@
 /*	Button - Arrows */
 
 .rex-i- {
-	&template     { background-image: url(../template.gif);      }
-	&template-add { background-image: url(../template_plus.gif); }
+	&template     { background-image: url(../template.png);      }
+	&template-add { background-image: url(../template_plus.png); }
+}
+
+div#rex-navi-main dl dd ul li#rex-navi-page-template > a {
+	background-image: url(../template.png);
+	background-position: 5px 5px;
 }
 
 body#rex-page-template div.rex-form {
@@ -10,7 +15,7 @@ body#rex-page-template div.rex-form {
 }
 
 .rex-form-template-editmode {
-	textarea         { height: 350px; width: 605px; margin-bottom: 15px;}
+	textarea         { height: 350px; width: 605px; }
 	.rex-form-col-a  { padding-bottom: 10px; }
 	.rex-form-submit { margin-left: 73px;    }
 
@@ -21,10 +26,9 @@ body#rex-page-template div.rex-form {
 	}
 
 	div#rex-form-template-ctype {
-		p.rex-form-checkbox      { padding-top: 5px; }
-		p.rex-form-select select { margin-top: 5px;  }
-
-		.rex-form-row { border: 0; margin: 0 }
+		p.rex-form-select select { margin-top: 5px;     }
+		legend                   { +border-radius(0px); }
+		.rex-form-row            { margin: 0;           }
 	}
 
 	/* Überschrift | dunkelgrau hinterlegt mit runden Ecken*/

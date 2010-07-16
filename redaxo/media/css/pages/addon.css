@@ -1,1 +1,6 @@
-.rex-i-addon { background-image: url(../addon.gif); }
+.rex-i-addon { background-image: url(../addon.png); }
+
+div#rex-navi-main dl dd ul li#rex-navi-page-addon > a {
+	background-image: url(../addon.png);
+	background-position: 5px 5px;
+}

@@ -401,11 +401,11 @@ div.rex-addon-footer {
 /*	Button - Arrows */
 
 .rex-i- {
-	&article           { background-image: url(../document.gif);      }
-	&article-add       { background-image: url(../document_plus.gif); }
-	&article-startpage { background-image: url(../liste.gif);         }
-	&category          { background-image: url(../folder.gif);        }
-	&category-add      { background-image: url(../folder_plus.gif);   }
+	&article           { background-image: url(../document.png);           }
+	&article-add       { background-image: url(../document_plus.png);      }
+	&article-startpage { background-image: url(../document_startpage.png); }
+	&category          { background-image: url(../folder.png);             }
+	&category-add      { background-image: url(../folder_plus.png);        }
 }
 
 div.rex-area-scroll,

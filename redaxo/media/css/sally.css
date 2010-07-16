@@ -32,7 +32,7 @@ div.sly-content {
 /* Sprites */
 
 .sly-sprite {
-	background-image: url(sprites.png);
+	background-image: url(../sprites.png);
 	background-repeat: no-repeat;
 }
 
@@ -212,9 +212,9 @@ div.rex-widget {
 
 .rex-i-element {
 	display: block;
-	width: 18px;
-	height: 18px;
-	margin: -5px auto 0 auto;
+	width: 16px;
+	height: 16px;
+	margin: 0 auto;
 	text-indent: -1000em;
 }
 

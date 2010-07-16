@@ -1,6 +1,11 @@
 .rex-i- {
-	&user     { background-image: url(../user.gif);      }
-	&user-add { background-image: url(../user_plus.gif); }
+	&user     { background-image: url(../user.png);      }
+	&user-add { background-image: url(../user_plus.png); }
+}
+
+div#rex-navi-main dl dd ul li#rex-navi-page-user > a {
+	background-image: url(../user.png);
+	background-position: 5px 5px;
 }
 
 #rex-form-user-editmode {
@@ -24,7 +29,6 @@
 			float: left;
 			width: 761px;
 			padding: 0 10px;
-			line-height: 40px;
 		}
 
 		&-col-2 {
@@ -37,10 +41,6 @@
 				width:49%;
 				float: right;
 			}
-		}
-
-		&-submit {
-			margin-left: 145px;
 		}
 
 		&-row {

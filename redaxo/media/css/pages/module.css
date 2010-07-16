@@ -7,6 +7,11 @@
 	&action-add { background-image: url(../action_plus.gif); }
 }
 
+div#rex-navi-main dl dd ul li#rex-navi-page-module > a {
+	background-image: url(../module.png);
+	background-position: 5px 5px;
+}
+
 /* Sprites */
 
 .sly-sprite {
@@ -25,8 +30,10 @@ a.sly-action {
 
 body#rex-page-module {
 	form#module .rex-form-row {
-		label    { width: 100px; }
-		textarea { width: 600px; }
+		label                   { width: 100px;       }
+		textarea                { width: 600px;       }
+		input.rex-form-submit   { margin-left: 100px; }
+		input.rex-form-submit-2 { margin-left: 20px;  }
 	}
 
 	div.rex-form {

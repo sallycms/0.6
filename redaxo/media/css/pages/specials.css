@@ -3,6 +3,11 @@ body#rex-page-specials div.rex-form {
 	/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
 }
 
+div#rex-navi-main dl dd ul li#rex-navi-page-specials > a {
+	background-image: url(../system.png);
+	background-position: 5px 5px;
+}
+
 /* System -> Einstellungen | unterer Abstand zu den gestrichelten Linien in der rechten Box*/
 #rex-page-specials p.rex-form-text, p.rex-form-select {padding-bottom: 10px;}
 
