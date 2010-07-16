@@ -165,6 +165,15 @@ div.rex-form {
 		p textarea {
 			width: 456px;
 		}
+
+		span.sly-radio-group {
+			display: block;
+			padding-left: 145px;
+			line-height: 21px;
+
+			label { float:none; display:inline; }
+			input.rex-chckbx { margin-top: 3px; margin-right: 5px; float:left; }
+		}
 	}
 
 	&,
