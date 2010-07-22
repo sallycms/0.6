@@ -153,4 +153,15 @@ class sly_Util_Array {
 	protected static function isArray($obj) {
 		return ($obj instanceof ArrayObject) || is_array($obj);
 	}
+
+	/**
+	 * Checks, if an array is associative
+	 *
+	 * @param  array $array  the array to check
+	 * @return boolean       true, if the array is associative
+	 */
+	public static function isAssoc($array) {
+		return is_array($array) && (empty($array) || 0 !== count(array_diff_key($array, array_keys(array_keys($array)))));
+	}
+
 }
