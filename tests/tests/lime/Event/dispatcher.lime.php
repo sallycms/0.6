@@ -115,17 +115,9 @@ $result = runEventDispatcherTest('a,c,b', 'notifyUntil', 'foo');
 $lime->is($result, true, 'notifyUntil() returns true because listenerC returned true');
 $lime->is($___STATE, array('a', 'c'), 'notifyUntil() really stopped at listenerC');
 
-// notifyUntil() ===============================================================
 
-$result = runEventDispatcherTest('d,a,c,b', 'notifyUntil', 'foo');
-$lime->is($result, 'hello world', 'notifyUntil() returns the return value of listenerD');
-$lime->is($___STATE, array('d'), 'notifyUntil() really stopped at listenerD');
 
-// notifyUntil() ===============================================================
 
-$result = runEventDispatcherTest('a,e', 'notifyUntil', 'return_me');
-$lime->is($result, 'return_me', 'notifyUntil() correctly passes the subject to the listeners');
-$lime->is($___STATE, array('a', 'e'), 'notifyUntil() really stopped at listenerE');
 
 // filter() ====================================================================
 
