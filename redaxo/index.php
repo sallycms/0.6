@@ -28,7 +28,7 @@ $REX['LOGIN']    = null;
 // Setup vorbereiten
 
 if (!SLY_IS_TESTING && $config->get('SETUP')) {
-	$REX['LANG']      = 'de_de_utf8';
+	$REX['LANG']      = 'de_de';
 	$REX['LANGUAGES'] = array();
 
 	$requestLang = sly_request('lang', 'string');
