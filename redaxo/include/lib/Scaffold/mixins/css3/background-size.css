@@ -2,6 +2,8 @@
  * Specify the size of the background image in pixels or percentage.
  * Firefox 3.6+ can also have values of cover or contain
  * @see https://developer.mozilla.org/en/CSS/-moz-background-size
+ *
+ * @license BSD License
  */
 =background-size(!x, !y)
 {

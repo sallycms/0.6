@@ -10,21 +10,22 @@
  * constants using a CMS or by any other means to tie it in with your CSS.
  *
  * XML must be in this format:
- 
+
  	<?xml version="1.0" ?>
  	<constants>
- 	
+
  		<constant>
  			<name>Foo</name>
  			<value>Bar</value>
  		</constant>
- 	
+
  	</constants>
  *
  * By default, it requires a constants.xml file in the root of the CSS directory.
  * You can change this in the plugins config.
  *
- * @author Anthony Short
+ * @author  Anthony Short
+ * @license BSD License
  */
 class Constants
 {
@@ -48,7 +49,7 @@ class Constants
 	{
 		# Global Constants
 		self::set_global_constants();
-		
+
 		# XML Constants
 		self::load_xml_constants( Scaffold::$config['Constants']['xml_path'] );
 
@@ -57,16 +58,16 @@ class Constants
 		{
 			# Create our template style constants
 			foreach($found['values'] as $key => $value)
-			{				
+			{
 				# Check if this contains other constants
 				$value = self::replace($value);
-				
+
 				# Set it
 				self::set($key, $value);
-			}	
+			}
 		}
 	}
-	
+
 	/**
 	 * Replaces the constants
 	 *
@@ -112,9 +113,9 @@ class Constants
 		else
 		{
 			self::$constants[$key] = $value;
-		}	
+		}
 	}
-	
+
 	/**
 	 * Unsets a constant
 	 *
@@ -125,7 +126,7 @@ class Constants
 	{
 		unset(self::$constants[$key]);
 	}
-	
+
 	/**
 	 * Returns the constant value
 	 *
@@ -137,7 +138,7 @@ class Constants
 	{
 		return self::$constants[$key];
 	}
-	
+
 	/**
 	 * Replaces all of the constants in a CSS string
 	 * with the constants defined in the member variable $constants
@@ -147,7 +148,7 @@ class Constants
 	{
 		# Pull the constants into the local scope as variables
 		extract(self::$constants, EXTR_SKIP);
-		
+
 		# Remove unset variables from the string, so errors aren't thrown
 		foreach(array_unique( Scaffold_Utils::match('/\{?\$([A-Za-z0-9_-]+)\}?/', $css, 1) ) as $value)
 		{
@@ -158,11 +159,11 @@ class Constants
 		}
 
 		$css = stripslashes( eval('return "' . addslashes($css) . '";') );
-		
+
 		# Replace the variables within the string like a normal PHP string
 		return $css;
 	}
-	
+
 	/**
 	 * Loads constants from an XML file
 	 *
@@ -180,15 +181,15 @@ class Constants
 			Scaffold::log("Missing constants XML file. The file ($file) doesn't exist.",1);
 			return;
 		}
-		
+
 		# Load the xml
 		$xml = simplexml_load_file($file);
-		
+
 		# Loop through them and set them as constants
 		foreach($xml->constant as $key => $value)
 		{
 			self::set((string)$value->name, (string)$value->value);
 		}
 	}
-		
+
 }

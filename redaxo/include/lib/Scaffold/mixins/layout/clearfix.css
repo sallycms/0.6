@@ -1,4 +1,8 @@
 /**
+ * @license BSD License
+ */
+
+/**
 * Quick Clearfix
 *
 * Clears an element of its floated children. The quick way.
@@ -17,8 +21,8 @@
 {
 	+has-layout;
 	display:block;
-	
-	&:after 
+
+	&:after
 	{
 		content:'\\0020';
 		display:block;

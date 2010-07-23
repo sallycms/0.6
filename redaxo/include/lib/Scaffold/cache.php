@@ -1,4 +1,12 @@
 <?php
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
 
 error_reporting(0);
 ini_set('display_errors', 'Off');
@@ -15,10 +23,10 @@ if ($lastMTime > 0 && $lastMTime <= time()) {
 	$caches    = file_exists($cacheFile) ? file($cacheFile) : array();
 	$now       = time();
 	$lifetime  = 3600;
-	
+
 	foreach ($caches as $line) {
 		list ($filename, $mtime) = explode(':', trim($line));
-		
+
 		if ($filename == $file && ($mtime + $lifetime) > time()) {
 			header('HTTP/1.1 304 Not Modified');
 			header('Last-Modified: '.gmdate('D, d M Y H:i:s T', $mtime));

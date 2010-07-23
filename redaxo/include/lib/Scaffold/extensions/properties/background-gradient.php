@@ -1,6 +1,10 @@
 <?php
 
 /**
+ * @license BSD License
+ */
+
+/**
  * Creates a gradient in the form of a background image.
  *
  * @author Anthony Short
@@ -19,21 +23,21 @@ function Scaffold_background_gradient($params)
 	}
 
 	$params = explode(',',$params);
-	
+
 	foreach(array('dir','size','from','to') as $key => $name)
 	{
 		$$name = trim(str_replace('#COMMA#',',', array_shift($params) ));
 	}
-	
+
 	$stops = array();
-	
+
 	foreach($params as $stop)
 	{
 		$stop = preg_replace('/color\-stop\(|\)/','',$stop);
 		$stop = explode('#COMMA#',$stop);
 		$stops[] = array('position' => trim($stop[0]), 'color' => trim($stop[1]));
 	}
-	
+
 	$from = preg_replace('/from\s*\(|\)/','',$from);
 	$to = preg_replace('/to\s*\(|\)/','',$to);
 	$size = str_replace('px','',$size);

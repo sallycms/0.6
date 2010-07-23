@@ -1,6 +1,10 @@
 <?php
 
 /**
+ * @license BSD License
+ */
+
+/**
  * x number of baselines. Quicker way of doing calc($baseline * n)
  *
  * @param $num

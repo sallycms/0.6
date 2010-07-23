@@ -1,6 +1,10 @@
 <?php
 
 /**
+ * @license BSD License
+ */
+
+/**
  * Parses the input as PHP. Used for perform math operations.
  *
  * @param $math
@@ -13,6 +17,6 @@ function Scaffold_calc($expression)
 	$E = error_reporting(0);
 	$result = eval("return $expression;");
 	error_reporting($E);
-	
+
 	return ($result) ? $result : false;
 }

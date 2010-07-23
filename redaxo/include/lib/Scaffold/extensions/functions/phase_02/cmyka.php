@@ -1,6 +1,10 @@
 <?php
 
 /**
+ * @license BSD License
+ */
+
+/**
  * Creates a cmyka() colour function
  *
  * @author Olivier Gorzalka
@@ -17,10 +21,10 @@ function Scaffold_cmyka($c,$m,$y,$k,$a)
 	$m = intval($m) / 100;
 	$y = intval($y) / 100;
 	$k = intval($k) / 100;
-	
+
 	$r = intval((1-min(1,$c*(1-$k)+$k))*255+0.5);
 	$g = intval((1-min(1, $m * (1 - $k) + $k))*255+0.5);
 	$b = intval((1-min(1, $y * (1 - $k) + $k))*255+0.5);
-	
+
 	return "rgba($r,$g,$b,$a)";
 }

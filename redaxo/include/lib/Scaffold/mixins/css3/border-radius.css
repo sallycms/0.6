@@ -1,5 +1,7 @@
 /**
  * Easier way to use border-radius
+ *
+ * @license BSD License
  */
 =border-radius($radius)
 {

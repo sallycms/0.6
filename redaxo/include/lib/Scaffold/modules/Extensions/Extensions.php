@@ -6,7 +6,8 @@
  * Allows you to create new properties by dumping a function into
  * the properties folder.
  *
- * @author Anthony Short
+ * @author  Anthony Short
+ * @license BSD License
  */
 class Extensions
 {

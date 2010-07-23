@@ -6,9 +6,9 @@
  *
  * @author     Kohana Team
  * @copyright  (c) 2007 Kohana Team
- * @license    http://kohanaphp.com/license.html
+ * @license    http://kohanaphp.com/license.html (BSD License)
  */
-final class Scaffold_Benchmark 
+final class Scaffold_Benchmark
 {
 	private static $marks;
 
@@ -100,7 +100,7 @@ final class Scaffold_Benchmark
 			'count'  => count(self::$marks[$name])
 		);
 	}
-	
+
 	/**
 	 * Returns the current memory usage. This is only possible if the
 	 * memory_get_usage function is supported in PHP.

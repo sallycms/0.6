@@ -5,9 +5,10 @@
  *
  * Has methods for interacting with the CSS string
  * and makes it very easy to find properties and values within the css
- * 
+ *
  * @package CSScaffold
- * @author Anthony Short
+ * @author  Anthony Short
+ * @license BSD License
  */
 class Scaffold_CSS
 {
@@ -17,21 +18,21 @@ class Scaffold_CSS
 	 * @var string
 	 */
 	public $path;
-	
+
 	/**
 	 * The name of this CSS file
 	 *
 	 * @var string
 	 */
 	public $file;
-	
+
 	/**
 	 * The string of CSS code
 	 *
 	 * @var string
 	 */
 	public $string;
-	
+
 	/**
 	 * Constructor
 	 *
@@ -44,7 +45,7 @@ class Scaffold_CSS
 		$this->file = $file;
 		$this->string = $this->remove_inline_comments(file_get_contents($file));
 	}
-	
+
 	/**
 	 * Returns the CSS string when treated as a string
 	 *
@@ -60,19 +61,19 @@ class Scaffold_CSS
 	 * but enough to minimize parsing time.
 	 *
 	 * @return string $css
-	 */	
+	 */
 	public function compress($css)
-	{		
+	{
 		# Remove comments
 		$this->string = $this->remove_comments($this->string);
 
 		# Remove extra white space
 		$this->string = preg_replace('/\s+/', ' ', $css);
-		
+
 		# Remove line breaks
 		$this->string = preg_replace('/\n|\r/', '', $css);
 	}
-	
+
 	/**
 	 * Removes inline comments
 	 *
@@ -139,34 +140,34 @@ class Scaffold_CSS
 	public function find_at_group($group, $remove = true)
 	{
 		$found = array();
-		
-		$regex = 
+
+		$regex =
 		"/
 			# Group name
 			@{$group}
-			
+
 			# Flag
 			(?:
 				\(( [^)]*? )\)
 			)?
-			
+
 			[^{]*?
 
 			(
 				([0-9a-zA-Z\_\-\@*&]*?)\s*
-				\{	
+				\{
 					( (?: [^{}]+ | (?2) )*)
 				\}
 			)
 
 		/ixs";
-			
+
 		if(preg_match_all($regex, $this->string, $matches))
 		{
 			$found['groups'] = $matches[0];
 			$found['flag'] = $matches[1];
 			$found['content'] = $matches[4];
-						
+
 			foreach($matches[4] as $key => $value)
 			{
 				// Remove comments to prevent breaking it
@@ -180,8 +181,8 @@ class Scaffold_CSS
 						$value = str_replace($m[0][0],str_replace(':','#COLON#',$m[0][0]),$value);
 					}
 
-					$value = explode(":", $value);	
-					
+					$value = explode(":", $value);
+
 					// Make sure it's set
 					if(isset($value[1]))
 					{
@@ -189,19 +190,19 @@ class Scaffold_CSS
 					}
 				}
 			}
-			
+
 			// Remove the found @ groups
 			if($remove === true)
 			{
-				$this->string = str_replace($found['groups'], array(), $this->string);	
+				$this->string = str_replace($found['groups'], array(), $this->string);
 			}
 
-			return $found;		
+			return $found;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Finds selectors which contain a particular property
 	 *
@@ -211,7 +212,7 @@ class Scaffold_CSS
 	 * @param $value string
 	 */
 	public function find_selectors_with_property($property, $value = ".*?")
-	{		
+	{
 		if(preg_match_all("/([^{}]*)\s*\{\s*[^}]*(".$property."\s*\:\s*(".$value.")\s*\;).*?\s*\}/sx", $this->string, $match))
 		{
 			return $match;
@@ -221,7 +222,7 @@ class Scaffold_CSS
 			return array();
 		}
 	}
-	
+
 	/**
 	 * Finds all properties with a particular value
 	 *
@@ -232,11 +233,11 @@ class Scaffold_CSS
 	 * @return array
 	 */
 	public function find_properties_with_value($property, $value = ".*?")
-	{		
+	{
 		# Make the property name regex-friendly
 		$property = Scaffold_Utils::preg_quote($property);
 		$regex = "/ ({$property}) \s*\:\s* ({$value}) /sx";
-			
+
 		if(preg_match_all($regex, $this->string, $match))
 		{
 			return $match;
@@ -246,7 +247,7 @@ class Scaffold_CSS
 			return array();
 		}
 	}
-		
+
 	/**
 	 * Finds a selector and returns it as string
 	 *
@@ -255,28 +256,28 @@ class Scaffold_CSS
 	 * @param $css string
 	 */
 	public function find_selectors($selector, $recursive = "")
-	{		
+	{
 		if($recursive != "")
 		{
 			$recursive = "|(?{$recursive})";
 		}
 
-		$regex = 
+		$regex =
 			"/
-				
+
 				# This is the selector we're looking for
 				({$selector})
-				
+
 				# Return all inner selectors and properties
 				(
 					([0-9a-zA-Z\_\-\*&]*?)\s*
-					\{	
+					\{
 						(?P<properties>(?:[^{}]+{$recursive})*)
 					\}
 				)
-				
+
 			/xs";
-		
+
 		if(preg_match_all($regex, $this->string, $match))
 		{
 			return $match;
@@ -286,7 +287,7 @@ class Scaffold_CSS
 			return array();
 		}
 	}
-	
+
 	/**
 	 * Finds all properties within a css string
 	 *
@@ -295,7 +296,7 @@ class Scaffold_CSS
 	 * @param $css string
 	 */
 	public function find_property($property)
-	{ 		
+	{
 		if(preg_match_all('/('.Scaffold_Utils::preg_quote($property).')\s*\:\s*(.*?)\s*\;/sx', $this->string, $matches))
 		{
 			return (array)$matches;
@@ -305,7 +306,7 @@ class Scaffold_CSS
 			return array();
 		}
 	}
-	
+
 	/**
 	 * Check if a selector exists
 	 *
@@ -316,7 +317,7 @@ class Scaffold_CSS
 	{
 		return preg_match('/'.preg_quote($name).'\s*?({|,)/', $this->string);
 	}
-		
+
 	/**
 	 * Removes all instances of a particular property from the css string
 	 *
@@ -329,7 +330,7 @@ class Scaffold_CSS
 	{
 		return preg_replace('/'.$property.'\s*\:\s*'.$value.'\s*\;/', '', $this->string);
 	}
-	
+
 	/**
 	 * Encodes or decodes parts of the css that break the xml
 	 *
@@ -341,7 +342,7 @@ class Scaffold_CSS
 	{
 		if($css === false)
 			$css =& $this->string;
-		
+
 		$css_replacements = array(
 			'"' => '#SCAFFOLD-QUOTE#',
 			'>' => '#SCAFFOLD-GREATER#',
@@ -352,18 +353,18 @@ class Scaffold_CSS
 			'data:image/jpg;' => "#SCAFFOLD-IMGDATA-JPG#",
 			'http://' => "#SCAFFOLD-HTTP#",
 		);
-		
+
 		switch ($action)
 		{
 		    case 'decode':
 		        $this->string = str_replace(array_values($css_replacements),array_keys($css_replacements), $this->string);
 		        break;
-		    
+
 		    case 'encode':
 		        $this->string = str_replace(array_keys($css_replacements),array_values($css_replacements), $this->string);
-		        break;  
+		        break;
 		}
-		
+
 		return $css;
 	}
 

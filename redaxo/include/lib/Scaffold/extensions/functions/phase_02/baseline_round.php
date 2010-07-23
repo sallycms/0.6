@@ -1,6 +1,10 @@
 <?php
 
 /**
+ * @license BSD License
+ */
+
+/**
  * Round a number to the nearest baseline multiple.
  * Requires the layout module (@grid rule)
  *
@@ -14,6 +18,6 @@ function Scaffold_baseline_round($num)
 		$baseline = Layout::$grid_settings['baseline'];
 		return round($num/$baseline)*$baseline."px";
 	}
-		
+
 	return false;
 }

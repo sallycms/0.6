@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @license BSD License
+ */
+
 $dynDirectory = realpath(dirname(__FILE__).'/../../../../data/dyn/internal/sally/');
 $dynDirectory = rtrim($dynDirectory, '/\\').'/';
 

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @license BSD License
+ */
+
 # Include the required classes
 require dirname(__FILE__) . '/Scaffold/Utils.php';
 require dirname(__FILE__) . '/Scaffold/CSS.php';

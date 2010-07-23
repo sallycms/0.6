@@ -3,9 +3,10 @@
  * Scaffold_Cache
  *
  * Handles the file caching
- * 
- * @author Anthony Short
+ *
+ * @author  Anthony Short
  * @package CSScaffold
+ * @license BSD License
  */
 final class Scaffold_Cache
 {
@@ -15,21 +16,21 @@ final class Scaffold_Cache
 	 * @var string
 	 */
 	private static $cache_path;
-	
+
 	/**
 	 * Cache lifetime
 	 *
 	 * @var string
 	 */
 	private static $lifetime = 0;
-	
+
 	/**
 	 * Is the cache locked?
 	 *
 	 * @var boolan
 	 */
 	private static $frozen = false;
-	
+
 	private static $cacheFile = 'data/dyn/internal/sally/css-cache/mtimes.txt';
 
 	/**
@@ -41,7 +42,7 @@ final class Scaffold_Cache
 	{
 		if (!is_dir($path))
 			Scaffold::log("Cache path does not exist. $path",0);
-			
+
 		if (!is_writable($path))
 			Scaffold::log("Cache path is not writable. $path",0);
 
@@ -49,7 +50,7 @@ final class Scaffold_Cache
 		self::lifetime($lifetime);
 	}
 
-	
+
 	public function is_fresh($file)
 	{
 		if( time() <= ( self::$lifetime +  self::modified($file) ) )
@@ -61,7 +62,7 @@ final class Scaffold_Cache
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Sets the lifetime of the cache
 	 *
@@ -72,7 +73,7 @@ final class Scaffold_Cache
 	{
 		self::$lifetime = $time;
 	}
-	
+
 	/**
 	 * Returns the particular cache file as a string
 	 *
@@ -85,10 +86,10 @@ final class Scaffold_Cache
 		{
 			return file_get_contents(self::find($file));
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Returns the full path of the cache file, if it exists
 	 *
@@ -104,10 +105,10 @@ final class Scaffold_Cache
 		{
 			return true;
 		}
-			
+
 		return false;
 	}
-	
+
 	/**
 	 * Returns the last modified date of a cache file
 	 *
@@ -118,7 +119,7 @@ final class Scaffold_Cache
 	{
 		return ( self::exists($file) ) ? (int) filemtime(self::find($file)) : 0 ;
 	}
-	
+
 	/**
 	 * Finds a file inside the cache and returns it's full path
 	 *
@@ -129,7 +130,7 @@ final class Scaffold_Cache
 	{
 		if(self::exists($file))
 			return self::$cache_path.$file;
-			
+
 		return false;
 	}
 
@@ -140,12 +141,12 @@ final class Scaffold_Cache
 	 * @author Anthony Short
 	 */
 	public function write( $data, $target = '', $append = false )
-	{	
+	{
 		# Create the cache file
 		self::create(dirname($target));
 
 		$target = self::$cache_path.$target;
-		
+
 		if(is_array($data))
 			$data = serialize($data);
 
@@ -158,28 +159,28 @@ final class Scaffold_Cache
 		{
 			file_put_contents($target, $data);
 		}
-		
+
 		# Set its parmissions
 		chmod($target, 0777);
 		touch($target, time());
-			
+
 		# Update cache list
-		
+
 		clearstatcache();
-		
+
 		$lines = file_exists(self::$cacheFile) ? array_map('trim', file(self::$cacheFile)) : array();
 		$lines = array_filter($lines);
 		$fp    = fopen(self::$cacheFile, 'w');
 		$file  = $_GET['wv_f']; // der einzige Wert, der bereits in der cache.php bekannt ist
-		
+
 		fwrite($fp, $file.':'.time()."\n");
-		
+
 		foreach ($lines as $line) {
 			list($f, $mtime) = explode(':', $line);
 			if ($f == $file) continue;
 			fwrite($fp, $line);
 		}
-		
+
 		fclose($fp);
 		return true;
 	}
@@ -197,10 +198,10 @@ final class Scaffold_Cache
 			unlink(self::find($file));
 			return true;
 		}
-			
+
 		return false;
 	}
-	
+
 	/**
 	 * Remove a cache directory and sub-directories
 	 *
@@ -214,21 +215,21 @@ final class Scaffold_Cache
 			$dir = self::find($dir);
 		}
 
-		$files = glob( $dir . '*', GLOB_MARK ); 
-		
+		$files = glob( $dir . '*', GLOB_MARK );
+
 		foreach( $files as $file )
-		{ 
+		{
 			if( is_dir($file) )
-			{ 
-				self::remove_dir( $file );
-				rmdir( $file ); 
-			}
-			else 
 			{
-				unlink( $file ); 
+				self::remove_dir( $file );
+				rmdir( $file );
+			}
+			else
+			{
+				unlink( $file );
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -236,25 +237,25 @@ final class Scaffold_Cache
 	 * Create the cache file directory
 	 */
 	public function create($path)
-	{	
+	{
 		# If it already exists
 		if(is_dir(self::$cache_path.$path))
 			return true;
 
 		# Create the directories inside the cache folder
 		$next = "";
-				
+
 		foreach(explode('/',$path) as $dir)
 		{
 			$next = '/' . $next . '/' . $dir;
 
-			if(!is_dir(self::$cache_path.$next)) 
+			if(!is_dir(self::$cache_path.$next))
 			{
 				mkdir(self::$cache_path.$next);
 				chmod(self::$cache_path.$next, 0777);
 			}
 		}
-		
+
 		return true;
 	}
 }

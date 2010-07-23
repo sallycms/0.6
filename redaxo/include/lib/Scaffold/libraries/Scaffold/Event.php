@@ -9,7 +9,7 @@
  * @package    Scaffold
  * @author     Kohana Team
  * @copyright  (c) 2007 Kohana Team
- * @license    http://kohanaphp.com/license.html
+ * @license    http://kohanaphp.com/license.html (BSD License)
  * @link       http://docs.kohanaphp.com/general/events
  */
 final class Scaffold_Event {

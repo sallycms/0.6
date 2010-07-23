@@ -1,5 +1,7 @@
 /**
  * Adds a drop shadow
+ *
+ * @license BSD License
  */
 =box-shadow($x, $y, $blur, $color)
 {
