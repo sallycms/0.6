@@ -1,4 +1,11 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
  * REX_ARTICLE[1]
@@ -11,9 +18,7 @@
  * REX_ARTICLE[field='description' id=3 clang=2]
  *
  * @package redaxo4
- * @version svn:$Id$
  */
-
 class rex_var_article extends rex_var
 {
   // --------------------------------- Output

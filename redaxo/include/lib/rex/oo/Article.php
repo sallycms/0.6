@@ -1,18 +1,24 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
  * Object Oriented Framework: Bildet einen Artikel der Struktur ab
+ *
  * @package redaxo4
- * @version svn:$Id$
  */
-
 class OOArticle extends OORedaxo
 {
 	public function __construct($params = false, $clang = false)
 	{
 		parent::__construct($params, $clang);
 	}
-	
+
 	/**
 	 * @return OOArticle
 	 */
@@ -37,7 +43,7 @@ class OOArticle extends OORedaxo
 				$class = $OOCategory ? 'OOCategory' : 'OOArticle';
 				$obj   = new $class($article, $clang);
 
-				
+
 				sly_Core::cache()->set($namespace, $key, $obj);
 			}
 		}
@@ -71,22 +77,22 @@ class OOArticle extends OORedaxo
 		if ($clang === false) {
 			$clang = sly_Core::getCurrentClang();
 		}
-		
+
 		$category_id = (int) $category_id;
 		$clang       = (int) $clang;
 
 		$namespace = 'alist';
 		$key       = $category_id.'_'.$clang.'_'.($ignore_offlines ? 1 : 0);
 		$alist     = sly_Core::cache()->get($namespace, $key, null);
-	
+
 		if ($alist === null) {
 			$where = 're_id = '.$category_id.' AND clang = '.$clang.($ignore_offlines ? ' AND status = 1' : '');
 			$query = 'SELECT id FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE '.$where.' ORDER BY prior,name';
 			$alist = array_map('intval', rex_sql::getArrayEx($query));
-			
+
 			if ($category_id != 0) {
 				$category = OOCategory::getCategoryById($category_id, $clang);
-				
+
 				if (($ignore_offlines && $category->isOnline()) || !$ignore_offlines) {
 					array_unshift($alist, $category_id);
 				}
@@ -96,11 +102,11 @@ class OOArticle extends OORedaxo
 		}
 
 		$artlist = array();
-			
+
 		foreach ($alist as $articleID) {
 			$artlist[] = OOArticle::getArticleById($articleID, $clang);
 		}
-		
+
 		return $artlist;
 	}
 
@@ -140,23 +146,23 @@ class OOArticle extends OORedaxo
 	public static function exists($articleId)
 	{
 		global $REX;
-		
+
 		if (sly_Core::cache()->get('article', $articleId.'_'.sly_Core::getCurrentClang(), null) !== null) {
 			return true;
 		}
-		
+
 		// prüfen, ob ID in Content Cache Dateien vorhanden
-		
+
 		$cacheFiles = glob($REX['DYNFOLDER'].'/internal/sally/articles/'.$articleId.'.*');
-		
+
 		if (!empty($cacheFiles)) {
 			return true;
 		}
-		
+
 		// prüfen, ob ID in DB vorhanden
 		return self::isValid(self::getArticleById($articleId));
 	}
-	
+
 	/**
 	 * Static Method: Returns boolean if is article
 	 */
@@ -164,7 +170,7 @@ class OOArticle extends OORedaxo
 	{
 		return is_object($article) && ($article instanceof OOArticle);
 	}
-	
+
 	public function getValue($value)
 	{
 		// alias für re_id -> category_id
@@ -173,7 +179,7 @@ class OOArticle extends OORedaxo
 			// da dort je nach ArtikelTyp Unterscheidungen getroffen werden müssen
 			return $this->getCategoryId();
 		}
-		
+
 		return parent::getValue($value);
 	}
 

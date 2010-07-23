@@ -1,13 +1,18 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
  * Template Objekt.
  * Zuständig für die Verarbeitung eines Templates
  *
  * @package redaxo4
- * @version svn:$Id$
  */
-
 class rex_template
 {
 	protected $id;
@@ -30,15 +35,15 @@ class rex_template
 	public function getFile()
 	{
 		$file = self::getFilePath($this->getId());
-			
+
 		if (!$file) {
 			return false;
 		}
-			
+
 		if (!file_exists($file)&& !$this->generate()) {
 			trigger_error('Unable to generate rexTemplate with ID '.$this->getId(), E_USER_ERROR);
 		}
-			
+
 		return $file;
 	}
 
@@ -94,7 +99,7 @@ class rex_template
 			{
 				$content = $var->getTemplate($content);
 			}
-			
+
 			if(rex_put_file_contents($templateFile, $content) !== FALSE)
 			{
 				return TRUE;

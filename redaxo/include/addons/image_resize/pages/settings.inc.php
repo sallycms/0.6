@@ -1,4 +1,11 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
  * Image-Resize Addon
@@ -76,7 +83,7 @@ if ($func == 'update') {
 								<input class="rex-form-text" type="text" id="jpg_quality" name="jpg_quality" value="<?= sly_html($service->getProperty('image_resize', 'jpg_quality')) ?>" />
 							</p>
 						</div>
-						
+
 						<div class="rex-form-row rex-form-element-v2">
 							<p class="rex-form-submit">
 								<input type="submit" class="rex-form-submit" name="sendit" value="<?= $I18N->msg('update') ?>" />

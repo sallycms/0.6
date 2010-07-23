@@ -1,15 +1,21 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
  * Klasse zum Handling des Login/Logout-Mechanismus
  *
  * @package redaxo4
  */
-
 class rex_login
 {
 	/* Elemente sind public, da wir nicht sicher wissen, von wo auf sie zugegriffen wird. */
-	
+
 	public $DB;
 	public $session_duration;
 	public $login_query;
@@ -32,7 +38,7 @@ class rex_login
 		$this->system_id    = 'default';
 		$this->cache        = false;
 		$this->login_status = 0; // 0 = noch checken, 1 = ok, -1 = not ok
-		
+
 		if (!session_id() && !SLY_IS_TESTING) session_start();
 	}
 
@@ -152,7 +158,7 @@ class rex_login
 		if (!$this->logout) {
 			// LoginStatus: 0 = noch checken, 1 = ok, -1 = not ok
 			// checkLogin() schonmal ausgeführt? Gecachte Ausgabe erlaubt?
-			
+
 			if ($this->cache) {
 				if ($this->login_status > 0) return true;
 				if ($this->login_status < 0) return false;
@@ -169,7 +175,7 @@ class rex_login
 				$query      = str_replace('USR_PSW', $this->usr_psw, $query);
 
 				$this->USER->setQuery($query);
-				
+
 				if ($this->USER->getRows() == 1) {
 					$ok = true;
 					$this->setSessionVar('UID', $this->USER->getValue($this->uid));
@@ -188,7 +194,7 @@ class rex_login
 				$query      = str_replace('USR_UID', $this->getSessionVar('UID'), $this->user_query);
 
 				$this->USER->setQuery($query);
-				
+
 				if ($this->USER->getRows() == 1) {
 					if (($this->getSessionVar('STAMP') + $this->session_duration) > time()) {
 						$ok = true;
@@ -274,7 +280,7 @@ class rex_login
 			if ($varname == 'UID')   return SLY_TESTING_USER_ID;
 			if ($varname == 'STAMP') return time()-10; // vor 10 Sekunden
 		}
-		
+
 		if (isset($_SESSION[$this->system_id][$varname])) {
 			return $_SESSION[$this->system_id][$varname];
 		}

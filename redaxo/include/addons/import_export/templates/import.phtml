@@ -1,3 +1,16 @@
+<?
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
+/**
+ * @package redaxo4
+ */
+?>
 <div class="sly-content rex-addon-output-v2">
 	<?
 
@@ -15,7 +28,7 @@
 	$baseDir = $REX['DATAFOLDER'].'/import_export';
 	$dumps   = sly_A1_Helper::getDatabaseDumps($baseDir);
 	$tars    = sly_A1_Helper::getFileArchives($baseDir);
-	
+
 	$table = new sly_Table('dumps');
 	$table->addColumn(new sly_Table_Column('<img src="images/import_export/database.png" alt="" />', '', '', array('class' => 'rex-icon')));
 	$table->addColumn(new sly_Table_Column('Datei', 'auto'));
@@ -25,13 +38,13 @@
 	$table->setIsEmpty(empty($dumps));
 	$table->setEmptyNotice('Es sind keine Datenbank-Backups vorhanden.');
 	$table->renderHeader();
-	
+
 	foreach ($dumps as $dump) {
 		$info = sly_A1_Helper::getFileInfo($baseDir.'/'.$dump);
 		if (!$info['exists']) continue;
-		
+
 		$baseURL = 'index.php?page=import_export&amp;subpage=import&amp;file='.urlencode($dump).'&amp;function=';
-		
+
 		?>
 		<tr>
 			<td class="rex-col-a rex-icon"><img src="images/import_export/database.png" alt="" /></td>
@@ -48,7 +61,7 @@
 		</tr>
 		<?
 	}
-	
+
 	$table->renderFooter();
 
 	?>

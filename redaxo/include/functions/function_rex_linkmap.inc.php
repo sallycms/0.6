@@ -1,4 +1,15 @@
-<?php 
+<?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
+/**
+ * @package redaxo4
+ */
 
 function rex_linkmap_url($local = array(), $globals = array())
 {
@@ -51,18 +62,18 @@ function rex_linkmap_tree($tree, $category_id, $children, $globalParams)
 	if (is_array($children)) {
 		$li        = '';
 		$ulclasses = '';
-		
+
 		if (count($children) == 1) {
 			$ulclasses = 'rex-children-one';
 		}
-		
+
 		foreach ($children as $cat) {
 			$cat_children = $cat->getChildren();
 			$cat_id       = $cat->getId();
 			$liclasses    = '';
 			$linkclasses  = '';
 			$sub_li       = '';
-			
+
 			if (!empty($cat_children)) {
 				$liclasses   = 'rex-children ';
 				$linkclasses = 'rex-linkmap-is-not-empty ';
@@ -71,9 +82,9 @@ function rex_linkmap_tree($tree, $category_id, $children, $globalParams)
 			if (next($children) == null) {
 				$liclasses .= 'rex-children-last ';
 			}
-			
+
 			$linkclasses .= $cat->isOnline() ? 'rex-online ' : 'rex-offline ';
-			
+
 			if (is_array($tree) && in_array($cat_id,$tree)) {
 				$sub_li       = rex_linkmap_tree($tree, $cat_id, $cat_children, $globalParams);
 				$liclasses   .= 'rex-active ';
@@ -104,6 +115,6 @@ function rex_linkmap_tree($tree, $category_id, $children, $globalParams)
 			$ul = "<ul>\n$li</ul>\n";
 		}
 	}
-	
+
 	return $ul;
 }

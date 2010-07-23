@@ -1,9 +1,16 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
  * Plugin-Funktionen
+ *
  * @package redaxo4
- * @version svn:$Id$
  */
 
 function rex_plugins_folder($addon, $plugin = null)
@@ -23,7 +30,7 @@ function rex_read_plugins_folder($addon, $folder = '')
 	if (empty($folder)) {
 		$folder = rex_plugins_folder($addon);
 	}
-	
+
 	$directory = new sly_Util_Directory($folder);
 	return $directory->exists() ? $directory->listPlain(false, true) : array();
 }

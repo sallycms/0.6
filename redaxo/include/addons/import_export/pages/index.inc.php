@@ -1,4 +1,15 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
+/**
+ * @package redaxo4
+ */
 
 // $__before = microtime(true);
 // $__mema   = memory_get_usage();
@@ -24,7 +35,7 @@ else {
 
 // $time = microtime(true) - $__before;
 // $memory = memory_get_usage() - $__mema;
-// 
+//
 // print "time: $time, mem = ".number_format($memory, 0, ',', '.')." bytes";
 // print ", peak = ".number_format(memory_get_peak_usage(), 0, ',', '.')." bytes";
 

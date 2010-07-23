@@ -1,5 +1,15 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
+/**
+ * @package redaxo4
+ */
 class rex_backend_login extends rex_login
 {
 	public $tableName;
@@ -29,16 +39,16 @@ class rex_backend_login extends rex_login
 		if (!empty($this->usr_login)) {
 			if ($check) {
 				// gelungenen Versuch speichern
-				
+
 				$this->sessionFixation();
 				$fvs->setQuery('UPDATE '.$this->tableName.' SET login_tries = 0, lasttrydate = '.time().', session_id = "'.session_id().'" WHERE login = "'.$this->usr_login.'" LIMIT 1');
 			}
 			else {
 				// Fehlversuch speichern
-				
+
 				$fvs->setQuery('UPDATE '.$this->tableName.' SET login_tries = login_tries + 1, session_id = "", lasttrydate = '.time().' WHERE login = "'. $this->usr_login .'" LIMIT 1');
 			}
-			
+
 			if ($fvs->hasError()) return $fvs->getError();
 		}
 
@@ -57,7 +67,7 @@ class rex_backend_login extends rex_login
 		if (preg_match('@#be_lang\[(.+?)\]#@', $this->getValue('rights'), $match)) {
 			return $match[1];
 		}
-		
+
 		return $REX['LANG'];
 	}
 
@@ -68,7 +78,7 @@ class rex_backend_login extends rex_login
 		if (preg_match('@#startpage\[(.+?)\]#@', $this->getValue('rights'), $match)) {
 			return $match[1];
 		}
-		
+
 		return $REX['START_PAGE'];
 	}
 }

@@ -1,4 +1,16 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
+/**
+ * @package redaxo4
+ */
+
 /**
  * Branded ein Bild mit einem Wasserzeichen
  *
@@ -10,11 +22,11 @@ function image_resize_brand(&$src_im)
 	global $REX;
 
 	$files = glob($REX['INCLUDE_PATH'].'/addons/image_resize/media/brand.*');
-	
+
 	if (empty($files)) {
 		return;
 	}
-	
+
 	$brandImage = $files[0];
 	$brand      = new Thumbnail($brandImage);
 

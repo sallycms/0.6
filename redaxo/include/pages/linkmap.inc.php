@@ -1,4 +1,15 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
+/**
+ * @package redaxo4
+ */
 
 require $REX['INCLUDE_PATH'].'/functions/function_rex_linkmap.inc.php';
 
@@ -43,7 +54,7 @@ if ($opener_input_field != '' && $opener_input_field_name == '')
 if($opener_input_field=="TINY"){
 	$func_body .= 'window.opener.insertLink(link,name);
 	               self.close();';
-} 
+}
 else if (substr($opener_input_field,0,13)=="REX_LINKLIST_")
 {
 $id = substr($opener_input_field,13,strlen($opener_input_field));
@@ -55,7 +66,7 @@ $func_body .= 'var linklist = "REX_LINKLIST_SELECT_'. $id .'";
                option = opener.document.createElement("OPTION");
                option.text = name;
                option.value = linkid;
-			   
+
 			   source.options.add(option, sourcelength);
 			   opener.writeREXLinklist('. $id .');';
 }
@@ -119,7 +130,7 @@ rex_title('Linkmap', $navi_path);
 			?>
 			</div>
 		</div>
-		
+
 		<div class="rex-area-col-b">
 			<h3 class="rex-hl2"><?php echo $I18N->msg('lmap_articles'); ?></h3>
 			<div class="rex-area-content">
@@ -130,7 +141,7 @@ rex_title('Linkmap', $navi_path);
 				$articles = OOArticle::getRootArticles();
 			else if($category)
 				$articles = $category->getArticles();
-	
+
 			if ($articles)
 			{
 				foreach($articles as $article)
@@ -138,10 +149,10 @@ rex_title('Linkmap', $navi_path);
 					if ($article->isStartpage() && $article->getId() != $category_id) {
 						continue;
 					}
-					
+
 					$liClass = ''; // $article->isStartpage() ? ' class="rex-linkmap-startpage"' : '';
 					$url = rex_linkmap_backlink($article->getId(), htmlspecialchars($article->getName()));
-	
+
 					echo rex_linkmap_format_li($article, $category_id, $GlobalParams, $liClass, ' href="'. $url .'"');
 					echo '</li>'. "\n";
 				}

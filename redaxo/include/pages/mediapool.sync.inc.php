@@ -1,4 +1,15 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
+/**
+ * @package redaxo4
+ */
 
 // *************************************** SYNC FUNCTIONS
 
@@ -41,7 +52,7 @@ if($PERMALL)
   {
     $sync_files = rex_post('sync_files', 'array');
     $ftitle     = rex_post('ftitle', 'string');
-    
+
     if($diff_count > 0)
     {
       foreach($sync_files as $file)

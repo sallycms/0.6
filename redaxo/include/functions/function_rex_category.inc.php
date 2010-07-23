@@ -1,10 +1,17 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
  * Regelt die Rechte an den einzelnen Kategorien und gibt den Pfad aus
  * Kategorien = Startartikel und Bezüge
+ *
  * @package redaxo4
- * @version svn:$Id$
  */
 
 $KATPATH = '|'; // Standard für path Eintragungen in DB
@@ -19,7 +26,7 @@ $KAT->setQuery('SELECT catname, path FROM '.$REX['DATABASE']['TABLE_PREFIX'].'ar
 
 if ($KAT->getRows() != 1) {
 	// Kategorie existiert nicht
-	
+
 	if ($category_id != 0) {
 		$category_id = 0;
 		$article_id  = 0;
@@ -28,14 +35,14 @@ if ($KAT->getRows() != 1) {
 else {
 	$pathElements = trim($KAT->getValue('path'), '|');
 	$pathElements = empty($pathElements) ? array(): explode('|', $pathElements);
-	
+
 	// Informationen über den Pfad sammeln
-	
+
 	if (!empty($pathElements)) {
 		$path         = implode(',', $pathElements);
 		$query        = 'SELECT id, catname FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE id IN ('.$path.') AND startpage = 1 AND clang = '.$clang;
 		$pathElements = rex_sql::getArrayEx($query);
-		
+
 		foreach ($pathElements as $catID => $catName) {
 			$catName = str_replace(' ', '&nbsp;', htmlspecialchars($catName));
 
@@ -50,7 +57,7 @@ else {
 			}
 		}
 	}
-	
+
 	$pathElements = null;
 	unset($pathElements);
 

@@ -1,4 +1,15 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
+/**
+ * @package redaxo4
+ */
 
 /**
  * Image-Resize Addon
@@ -12,7 +23,6 @@
  * @author <a href="http://www.yakamara.de">www.yakamara.de</a>
  *
  * @package redaxo4
- * @version svn:$Id$
  */
 
 // Resize Script verlassen, wenn Frontend und kein Resize-Aufruf
@@ -35,9 +45,9 @@ if (!empty($rex_resize)) {
 
 if ($REX['REDAXO']) {
 	// Bei Update Cache löschen
-	
+
 	rex_register_extension('MEDIA_UPDATED', array('Thumbnail', 'mediaUpdated'));
-	
+
 	$I18N->appendFile($REX['INCLUDE_PATH'].'/addons/'.$mypage.'/lang/');
 	$REX['ADDON'][$mypage]['SUBPAGES'] = array (
 		array('',            $I18N->msg('iresize_subpage_desc')),

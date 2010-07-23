@@ -1,4 +1,15 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
+/**
+ * @package redaxo4
+ */
 
 function getImportDir()
 {
@@ -11,8 +22,8 @@ function getImportDir()
 function compareFiles($file_a, $file_b)
 {
 	$dir    = getImportDir();
-	$time_a = filemtime($dir.'/'.$file_a); 
-	$time_b = filemtime($dir.'/'.$file_b); 
+	$time_a = filemtime($dir.'/'.$file_a);
+	$time_b = filemtime($dir.'/'.$file_b);
 
 	if ($time_a == $time_b) {
 		return 0;

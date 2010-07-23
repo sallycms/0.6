@@ -1,11 +1,10 @@
 <?php
-
-
-/**
- * Klasse zum Erstellen von Listen
+/*
+ * Copyright (C) 2009 REDAXO
  *
- * @package redaxo4
- * @version svn:$Id$
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
  */
 
 /*
@@ -40,6 +39,11 @@
 
  */
 
+/**
+ * Klasse zum Erstellen von Listen
+ *
+ * @package redaxo4
+ */
 class rex_list
 {
 	private $query;
@@ -80,7 +84,7 @@ class rex_list
 	private $rowsPerPage;
 
 	const REX_LIST_OPT_SORT = 0;
-	
+
 	/**
 	 * Erstellt ein rex_list Objekt
 	 *

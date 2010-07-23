@@ -1,4 +1,11 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
  * REX_LINK_BUTTON,
@@ -8,9 +15,7 @@
  * REX_LINKLIST
  *
  * @package redaxo4
- * @version svn:$Id$
  */
-
 class rex_var_link extends rex_var
 {
 	// --------------------------------- Actions
@@ -34,7 +39,7 @@ class rex_var_link extends rex_var
 
 	function getACDatabaseValues($REX_ACTION, $slice_id)
 	{
-			
+
 		$values = sly_Service_Factory::getService('SliceValue')->find(array('slice_id' => $slice_id, 'type' => 'REX_LINK'));
 		foreach($values as $value)
 		{
@@ -48,12 +53,12 @@ class rex_var_link extends rex_var
 		}
 
 		return $REX_ACTION;
-			
+
 	}
 
 	function setACValues($slice_id, $REX_ACTION, $escape = false, $prependTableName = true)
 	{
-			
+
 		//global $REX;
 
 		//$slice_id = $sql->getValue('slice_id');

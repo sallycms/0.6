@@ -1,10 +1,10 @@
 <?php
-
-/**
- * Klasse zum Erstellen von Navigationen, v0.1
+/*
+ * Copyright (C) 2009 REDAXO
  *
- * @package redaxo4
- * @version svn:$Id$
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
  */
 
 /*
@@ -15,7 +15,7 @@
  * und offline categorien nicht beachten
  *
  * Navigation:
- * 
+ *
  * $nav = rex_navigation::factory();
  * $nav->setClasses(array('lev1', 'lev2', 'lev3'));
  * echo $nav->get(0,2,TRUE,TRUE);
@@ -24,13 +24,18 @@
  *
  * $nav = rex_navigation::factory();
  * $nav->show(0,-1,TRUE,TRUE);
- * 
+ *
  * Breadcrump:
- * 
+ *
  * $nav = rex_navigation::factory();
  * $nav->showBreadcrump(true);
  */
 
+/**
+ * Klasse zum Erstellen von Navigationen, v0.1
+ *
+ * @package redaxo4
+ */
 class rex_navigation
 {
 	var $depth; // Wieviele Ebene tief, ab der Startebene
@@ -58,10 +63,10 @@ class rex_navigation
 
     return new $class();
   }
-  
+
   /**
    * Generiert eine Navigation
-   * 
+   *
    * @param $category_id Id der Wurzelkategorie
    * @param $depth Anzahl der Ebenen die angezeigt werden sollen
    * @param $open True, wenn nur Elemente der aktiven Kategorie angezeigt werden sollen, sonst FALSE
@@ -70,11 +75,11 @@ class rex_navigation
 	/*public*/ function get($category_id = 0,$depth = 3,$open = FALSE, $ignore_offlines = FALSE)
 	{
     if(!$this->_setActivePath()) return FALSE;
-    
+
 	  $this->depth = $depth;
     $this->open = $open;
     $this->ignore_offlines = $ignore_offlines;
-	  
+
 		return $this->_getNavigation($category_id,$this->ignore_offlines);
 	}
 
@@ -85,10 +90,10 @@ class rex_navigation
 	{
 		echo $this->get($category_id, $depth, $open, $ignore_offlines);
 	}
-	
+
   /**
    * Generiert eine Breadcrumb-Navigation
-   * 
+   *
    * @param $startPageLabel Label der Startseite, falls FALSE keine Start-Page anzeigen
    * @param $includeCurrent True wenn der aktuelle Artikel enthalten sein soll, sonst FALSE
    * @param $category_id Id der Wurzelkategorie
@@ -96,14 +101,14 @@ class rex_navigation
 	/*public*/ function getBreadcrumb($startPageLabel, $includeCurrent = FALSE, $category_id = 0)
 	{
 	  if(!$this->_setActivePath()) return FALSE;
-	  
+
 	  global $REX;
-    
+
 	  $path = $this->path;
-            
+
     $i = 1;
     $lis = '';
-    
+
     if($startPageLabel)
     {
       $lis .= '<li class="rex-lvl'. $i .'"><a href="'. rex_getUrl($REX['START_ARTICLE_ID']) .'">'. htmlspecialchars($startPageLabel) .'</a></li>';
@@ -115,14 +120,14 @@ class rex_navigation
         unset($path[0]);
       }
     }
-    
+
     foreach($path as $pathItem)
     {
       $cat = OOCategory::getCategoryById($pathItem);
       $lis .= '<li class="rex-lvl'. $i .'"><a href="'. $cat->getUrl() .'">'. htmlspecialchars($cat->getName()) .'</a></li>';
       $i++;
     }
-    
+
     if($includeCurrent)
     {
       if($art = OOArticle::getArticleById($this->current_article_id))
@@ -135,10 +140,10 @@ class rex_navigation
           $lis .= '<li class="rex-lvl'. $i .'">'. htmlspecialchars($cat->getName()) .'</li>';
         }
     }
-    
+
     return '<ul class="rex-breadcrumb">'. $lis .'</ul>';
 	}
-	
+
 	/**
 	 * @see getBreadcrumb()
 	 */
@@ -146,7 +151,7 @@ class rex_navigation
   {
     echo $this->getBreadcrumb($includeCurrent, $category_id);
   }
-  
+
 	/*public*/ function setClasses($classes)
 	{
 	  $this->classes = $classes;
@@ -160,23 +165,23 @@ class rex_navigation
 		if($OOArt = OOArticle::getArticleById($article_id))
 		{
 		  $path = trim($OOArt->getValue("path"), '|');
-		  
+
 		  $this->path = array();
 		  if($path != "")
 			 $this->path = explode("|",$path);
-			 
+
       $this->current_article_id = $article_id;
 			$this->current_category_id = $OOArt->getCategoryId();
 			return TRUE;
 		}
-		
+
 		return FALSE;
 	}
 
 	/*protected*/ function _getNavigation($category_id,$ignore_offlines = TRUE)
 	{
 	  static $depth = 0;
-	  
+
     if($category_id < 1)
 	  	$nav_obj = OOCategory::getRootCategories($ignore_offlines);
 		else
@@ -191,7 +196,7 @@ class rex_navigation
 		{
 		  $liClass = '';
 		  $linkClass = '';
-		  
+
 		  // classes abhaengig vom pfad
 			if($nav->getId() == $this->current_category_id)
 			{
@@ -207,20 +212,20 @@ class rex_navigation
 			{
         $liClass .= ' rex-normal';
 			}
-			
+
       // classes abhaengig vom level
       if(isset($this->classes[$depth]))
         $liClass .= ' '. $this->classes[$depth];
-      
+
 			$liClass   = $liClass   == '' ? '' : ' class="'. ltrim($liClass) .'"';
 			$linkClass = $linkClass == '' ? '' : ' class="'. ltrim($linkClass) .'"';
-			  
+
       $return .= '<li id="rex-article-'. $nav->getId() .'"'. $liClass .'>';
 			$return .= '<a'. $linkClass .' href="'.$nav->getUrl().'">'.htmlspecialchars($nav->getName()).'</a>';
 
 			$depth++;
-			if(($this->open || 
-			    $nav->getId() == $this->current_category_id || 
+			if(($this->open ||
+			    $nav->getId() == $this->current_category_id ||
 			    in_array($nav->getId(),$this->path))
          && ($this->depth > $depth || $this->depth < 0))
 			{

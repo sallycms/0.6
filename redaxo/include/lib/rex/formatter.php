@@ -1,11 +1,16 @@
 <?php
-
-/**
- * @package redaxo4
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
  */
 
 /**
  * Klasse zur Formatierung von Strings
+ *
+ * @package redaxo4
  */
 abstract class rex_formatter
 {
@@ -110,7 +115,7 @@ abstract class rex_formatter
 	private static function _formatStrftime($value, $format)
 	{
 		global $I18N;
-		
+
 		if (empty($value)) return '';
 		if (!is_object($I18N)) $I18N = rex_create_lang();
 
@@ -122,7 +127,7 @@ abstract class rex_formatter
 			// Default REX-Datetimeformat
 			$format = $I18N->msg('datetimeformat');
 		}
-		
+
 		return strftime($format, $value);
 	}
 
@@ -133,7 +138,7 @@ abstract class rex_formatter
 		if (empty($format[0])) $format[0] = 2;   // Kommastellen
 		if (empty($format[1])) $format[1] = ','; // Dezimal Trennzeichen
 		if (empty($format[2])) $format[2] = ' '; // Tausender Trennzeichen
-		
+
 		return number_format($value, $format[0], $format[1], $format[2]);
 	}
 
@@ -145,7 +150,7 @@ abstract class rex_formatter
 		if (empty ($format['attr'])) {
 			$format['attr'] = '';
 		}
-		
+
 		// Linkparameter (z.b. subject=Hallo Sir)
 		if (empty($format['params'])) {
 			$format['params'] = '';
@@ -153,7 +158,7 @@ abstract class rex_formatter
 		elseif ($format['params'][0] != '?') {
 			$format['params'] = '?'.$format['params'];
 		}
-		
+
 		// URL-Formatierung
 		return '<a href="mailto:'.$value.$format['params'].'"'.$format['attr'].'>'.$value.'</a>';
 	}
@@ -167,7 +172,7 @@ abstract class rex_formatter
 		if (empty($format['attr'])) {
 			$format['attr'] = '';
 		}
-		
+
 		// Linkparameter (z.b. subject=Hallo Sir)
 		if (empty ($format['params'])) {
 			$format['params'] = '';
@@ -175,7 +180,7 @@ abstract class rex_formatter
 		elseif ($format['params'][0] != '?') {
 			$format['params'] = '?'.$format['params'];
 		}
-		
+
 		// Protokoll
 		if (!preg_match('@((ht|f)tps?|telnet|redaxo)://@', $value)) {
 			$value = 'http://'.$value;
@@ -187,7 +192,7 @@ abstract class rex_formatter
 	private static function _formatTruncate($value, $format)
 	{
 		if (!is_array($format)) $format = array();
-		
+
 		if (empty($format['length']))      $format['length']      = 80;
 		if (empty($format['etc']))         $format['etc']         = '...';
 		if (empty($format['break_words'])) $format['break_words'] = false;
@@ -208,14 +213,14 @@ abstract class rex_formatter
 			}
 
 			$params['subject'] = $value;
-			
+
 			if (is_array($format[1])) {
 				$params = array_merge($format[1], $params);
 			}
 			else {
 				$params['params'] = $format[1];
 			}
-			
+
 			// $format ist in der Form
 			// array(Name des Callables, Weitere Parameter)
 			return rex_call_func($format[0], $params);
@@ -230,13 +235,13 @@ abstract class rex_formatter
 		$params = $format['params'];
 
 		// Resize aktivieren, falls nicht anders übergeben
-		
+
 		if (empty($params['resize'])) {
 			$params['resize'] = true;
 		}
 
 		$media = OOMedia::getMediaByName($value);
-		
+
 		// Bilder als Thumbnail
 		if ($media->isImage()) {
 			$value = $media->toImage($params);
@@ -255,14 +260,14 @@ abstract class rex_formatter
 		if (!is_array($format)) $format = array();
 
 		// Format, in dem die Werte gespeichert sind
-		
+
 		if (empty($format['format'])) {
 			// default: <article-id>-<clang-id>
 			$format['format'] = '%i-%i';
 		}
 
 		$hits = sscanf($value, $format['format'], $value, $format['clang']);
-		
+
 		if ($hits == 1 && empty($format['clang'])) {
 			$format['clang'] = false;
 		}
@@ -276,14 +281,14 @@ abstract class rex_formatter
 		}
 
 		// divider
-		
+
 		if (empty($format['divider'])) {
 			$format['divider'] = '&amp;';
 		}
 
 		$name = 'NoName';
 		$art  = OOArticle::getArticleById($value, $format['clang']);
-		
+
 		if ($art) {
 			$name = $art->getName();
 		}

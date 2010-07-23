@@ -1,4 +1,11 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
  * REX_MODULE_ID,
@@ -6,9 +13,7 @@
  * REX_CTYPE_ID
  *
  * @package redaxo4
- * @version svn:$Id$
  */
-
 class rex_var_globals extends rex_var
 {
   // --------------------------------- Actions

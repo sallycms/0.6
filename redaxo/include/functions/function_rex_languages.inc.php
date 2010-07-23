@@ -1,9 +1,16 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
- * Dient zur Ausgabe des Sprachen-blocks
+ * Dient zur Ausgabe des Sprachen-Blocks
+ *
  * @package redaxo4
- * @version svn:$Id$
  */
 
 // rechte einbauen
@@ -24,7 +31,7 @@ if ($num_clang > 1) {
 
 	$stop = false;
 	$i    = 1;
-	
+
 	foreach ($REX['CLANG'] as $clangID => $clangName) {
 		if ($i == 1) {
 			print '<li class="rex-navi-first rex-navi-clang-'.$clangID.'">';
@@ -41,11 +48,11 @@ if ($num_clang > 1) {
 		}
 		else {
 			$class = '';
-			
+
 			if ($clangID == $clang) {
 				$class = ' class="rex-active"';
 			}
-			
+
 			print '<a'.$class.' href="index.php?page='.$REX['PAGE'].'&amp;clang='.$clangID.$sprachen_add.'&amp;ctype='.$ctype.'"'.rex_tabindex().'>'.$clangName.'</a>';
 		}
 

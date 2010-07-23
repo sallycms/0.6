@@ -1,9 +1,14 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
- *
  * @package redaxo4
- * @version svn:$Id$
  */
 
 rex_title($I18N->msg('title_templates'), '');

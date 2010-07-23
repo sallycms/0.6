@@ -1,4 +1,15 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
+/**
+ * @package redaxo4
+ */
 
 // Für größere Exports den Speicher für PHP erhöhen.
 @ini_set('memory_limit', '64M');
@@ -15,7 +26,7 @@ $download = sly_post('download', 'boolean', false);
 
 if ($function == 'export') {
 	// Dateiname entschärfen
-	
+
 	$orig     = $filename;
 	$filename = strtolower($filename);
 	$filename = preg_replace('#[^\.a-z0-9_-]#', '', $filename);
@@ -31,7 +42,7 @@ if ($function == 'export') {
 		$ext        = $type == 'sql' ? '.sql' : '.tar.gz';
 		$exportPath = getImportDir().'/';
 		$filename   = sly_A1_Helper::getIteratedFilename($exportPath, $filename, $ext);
-		
+
 		// Export durchführen
 
 		if ($type == 'sql') {

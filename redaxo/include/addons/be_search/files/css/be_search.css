@@ -1,17 +1,29 @@
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
+/**
+ * @package redaxo4
+ */
+
 div#rex-a256-searchbar form {
 	label          { font-weight: bold; }
 	input.rex-sbmt { line-height: 1em;  }
-	
+
 	input#rex-a256-article-name {
 		width: 120px;
 		margin-right: 5px;
 	}
-	
+
 	input#rex-a256-article-id {
 		width: 30px;
 		margin-right: 5px;
 	}
-	
+
 	select#rex-a256-category-id {
 		max-width: 297px;
 	}
@@ -25,18 +37,18 @@ div.rex-form fieldset.rex-form-col-2 div.rex-form-row {
 div#rex-a256-searchbar {
 	ul.a256-search-result {
 		padding: 10px 0 0 0;
-		
+
 		li {
 			display: block;
 			padding-bottom: 3px;
-			
+
 			ul.a256-search-hit li {
 				display: inline;
 				padding-bottom: 0px;
 			}
 		}
 	}
-	
+
 	span.a256-search-hit {
 		font-weight: bold;
 	}

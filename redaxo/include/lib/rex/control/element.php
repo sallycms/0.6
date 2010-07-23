@@ -1,5 +1,15 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
+/**
+ * @package redaxo4
+ */
 class rex_form_control_element extends rex_form_element
 {
 	public $saveElement;
@@ -7,7 +17,7 @@ class rex_form_control_element extends rex_form_element
 	public $deleteElement;
 	public $resetElelement;
 	public $abortElement;
-	
+
 	private $className;
 
 	public function __construct(&$table, $saveElement = null, $applyElement = null, $deleteElement = null, $resetElement = null, $abortElement = null)
@@ -24,7 +34,7 @@ class rex_form_control_element extends rex_form_element
 	public function _get()
 	{
 		$this->className = '';
-		
+
 		$s  = $this->prepareElement($this->saveElement,   '');
 		$s .= $this->prepareElement($this->applyElement,  'rex-form-submit-2');
 		$s .= $this->prepareElement($this->deleteElement, 'rex-form-submit-2', 'return confirm(\'Löschen?\');');
@@ -38,19 +48,19 @@ class rex_form_control_element extends rex_form_element
 
 		return $s;
 	}
-	
+
 	private static function prepareElement($element, $class, $onClick = null)
 	{
 		if (!$element) return '';
-		
+
 		if (!$element->hasAttribute('class')) {
 			$element->setAttribute('class', 'rex-form-submit '.$class);
 		}
-		
+
 		if ($onClick && !$element->hasAttribute('onclick')) {
 			$element->setAttribute('onclick', $onClick);
 		}
-		
+
 		$this->className = $element->formatClass();
 		return $element->formatElement();
 	}

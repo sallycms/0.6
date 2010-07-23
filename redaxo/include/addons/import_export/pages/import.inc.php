@@ -1,4 +1,15 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
+/**
+ * @package redaxo4
+ */
 
 $info     = '';
 $warning  = '';
@@ -9,7 +20,7 @@ $baseDir  = getImportDir().'/';
 if (!empty($filename)) {
 	$filename = str_replace('/', '', $filename);
 	$fileInfo = sly_A1_Helper::getFileInfo($baseDir.$filename);
-	
+
 	if (!$fileInfo['exists']) {
 		$warning  = 'Die ausgewählte Datei existiert nicht.';
 		$filename = '';

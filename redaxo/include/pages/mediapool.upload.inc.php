@@ -1,4 +1,15 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
+/**
+ * @package redaxo4
+ */
 
 // *************************************** Subpage: ADD FILE
 
@@ -11,14 +22,14 @@ if ($media_method == 'add_file')
 
     $FILEINFOS['title'] = rex_request('ftitle', 'string');
 
-    if (!$PERMALL && !$REX['USER']->hasPerm("media[$rex_file_category]")) 
+    if (!$PERMALL && !$REX['USER']->hasPerm("media[$rex_file_category]"))
     	$rex_file_category = 0;
 
     // function in function.rex_mediapool.inc.php
     $return = rex_mediapool_saveMedia($_FILES['file_new'],$rex_file_category,$FILEINFOS,$REX['USER']->getValue("login"));
     $info = $return['msg'];
     $subpage = "";
-    
+
     // ----- EXTENSION POINT
     if ($return['ok'] == 1)
       rex_register_extension_point('MEDIA_ADDED','',$return);

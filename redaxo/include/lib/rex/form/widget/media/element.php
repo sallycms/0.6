@@ -1,5 +1,15 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
+/**
+ * @package redaxo4
+ */
 class rex_form_widget_media_element extends rex_form_element
 {
 	// 1. Parameter nicht genutzt, muss aber hier stehen,

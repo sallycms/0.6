@@ -1,9 +1,16 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
  * Funktionen zur Registrierung von Schnittstellen (EXTENSION_POINTS)
+ *
  * @package redaxo4
- * @version svn:$Id$
  */
 
 /**
@@ -21,7 +28,7 @@ function rex_register_extension_point($extensionPoint, $subject = null, $params 
 {
 	$dispatcher = sly_Core::dispatcher();
 	$read_only |= $subject === null;
-	
+
 	if ($read_only) {
 		$dispatcher->notify($extensionPoint, $subject, $params);
 		return $subject;

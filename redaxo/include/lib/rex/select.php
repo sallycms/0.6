@@ -1,11 +1,17 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
  * Klasse zur Erstellung eines HTML-Pulldown-Menues (Select-Box)
  *
  * @package redaxo4
  */
-
 class rex_select
 {
 	public $attributes;
@@ -40,7 +46,7 @@ class rex_select
 			unset($this->attributes[$name]);
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -60,7 +66,7 @@ class rex_select
 		if ($this->hasAttribute($name)) {
 			return $this->attributes[$name];
 		}
-		
+
 		return $default;
 	}
 
@@ -109,7 +115,7 @@ class rex_select
 	public function setSelected($selected)
 	{
 		if (!is_array($selected)) $selected = array($selected);
-		
+
 		foreach ($selected as $sectvalue) {
 			$this->option_selected[] = htmlspecialchars($sectvalue);
 		}
@@ -145,17 +151,17 @@ class rex_select
 		if (!is_array($options) || empty($options)) {
 			return false;
 		}
-		
+
 		// Hier vorher auf is_array abfragen, da bei Strings auch die Syntax mit [] funktioniert
 		// $ab = "hallo"; $ab[2] -> "l"
 		$grouped = isset($options[0]) && is_array($options[0]) && isset($options[0][2]) && isset($options[0][3]);
-		
+
 		foreach ($options as $key => $option) {
 			$option = (array) $option;
-			
+
 			if ($grouped) {
 				$this->addOption($option[0], $option[1], $option[2], $option[3]);
-				
+
 				if (isset($option[4])) {
 					$this->setSelected($option[4]);
 				}
@@ -170,7 +176,7 @@ class rex_select
 				}
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -210,7 +216,7 @@ class rex_select
 	public function get()
 	{
 		$attr = array();
-		
+
 		foreach($this->attributes as $name => $value) {
 			$attr[] = trim($name).'="'.trim($value).'"';
 		}
@@ -218,7 +224,7 @@ class rex_select
 		$output = '<select '.implode(' ', $attr).'>';
 		if (is_array($this->options)) $output .= $this->_outGroup(0);
 		$output .= '</select>';
-		
+
 		return $output;
 	}
 
@@ -240,18 +246,18 @@ class rex_select
 
 		$output = '';
 		$group  = $this->_getGroup($re_id);
-		
+
 		foreach ($group as $option) {
 			list($name, $value, $id) = $option;
-			
+
 			$output  .= $this->_outOption($name, $value, $level);
 			$subgroup = $this->_getGroup($id, true);
-			
+
 			if ($subgroup !== false) {
 				$output .= $this->_outGroup($id, $level + 1);
 			}
 		}
-		
+
 		return $output;
 	}
 
@@ -265,7 +271,7 @@ class rex_select
 		$indent = str_repeat('&nbsp;&nbsp;&nbsp;', $level);
 
 		$selected = '';
-		
+
 		if ($this->option_selected !== null) {
 			$selected = in_array($value, $this->option_selected) ? ' selected="selected"' : '';
 		}

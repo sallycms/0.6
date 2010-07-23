@@ -1,14 +1,21 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
 /**
- * Getter Funktionen zum Handling von Superglobalen Variablen 
- * 
+ * Getter Funktionen zum Handling von Superglobalen Variablen
+ *
  * @package redaxo4
- * @version svn:$Id$
  */
 
 /**
  * Gibt die Superglobale variable $varname des Array $_GET zurück und castet dessen Wert ggf.
- * 
+ *
  * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
 function rex_get($varname, $vartype = '', $default = '', $addslashes = true)
@@ -18,7 +25,7 @@ function rex_get($varname, $vartype = '', $default = '', $addslashes = true)
 
 /**
  * Gibt die Superglobale variable $varname des Array $_POST zurück und castet dessen Wert ggf.
- * 
+ *
  * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
 function rex_post($varname, $vartype = '', $default = '', $addslashes = true)
@@ -28,7 +35,7 @@ function rex_post($varname, $vartype = '', $default = '', $addslashes = true)
 
 /**
  * Gibt die Superglobale variable $varname des Array $_REQUEST zurück und castet dessen Wert ggf.
- * 
+ *
  * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
 function rex_request($varname, $vartype = '', $default = '', $addslashes = true)
@@ -38,7 +45,7 @@ function rex_request($varname, $vartype = '', $default = '', $addslashes = true)
 
 /**
  * Gibt die Superglobale variable $varname des Array $_SERVER zurück und castet dessen Wert ggf.
- * 
+ *
  * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
 function rex_server($varname, $vartype = '', $default = '')
@@ -48,7 +55,7 @@ function rex_server($varname, $vartype = '', $default = '')
 
 /**
  * Gibt die Superglobale variable $varname des Array $_SESSION zurück und castet dessen Wert ggf.
- * 
+ *
  * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
 function rex_session($varname, $vartype = '', $default = '')
@@ -62,13 +69,13 @@ function rex_session($varname, $vartype = '', $default = '')
 	if ($default === '') {
 		return _rex_cast_var($default, $vartype, $default, 'default', false);
 	}
-	
+
 	return $default;
 }
 
 /**
  * Setzt den Wert einer Session Variable.
- * 
+ *
  * Variablen werden Instanzabhängig gespeichert.
  */
 function rex_set_session($varname, $value)
@@ -79,7 +86,7 @@ function rex_set_session($varname, $value)
 
 /**
  * Löscht den Wert einer Session Variable.
- * 
+ *
  * Variablen werden Instanzabhängig gelöscht.
  */
 function rex_unset_session($varname)
@@ -90,7 +97,7 @@ function rex_unset_session($varname)
 
 /**
  * Gibt die Superglobale variable $varname des Array $_COOKIE zurück und castet dessen Wert ggf.
- * 
+ *
  * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
 function rex_cookie($varname, $vartype = '', $default = '', $addslashes = true)
@@ -100,7 +107,7 @@ function rex_cookie($varname, $vartype = '', $default = '', $addslashes = true)
 
 /**
  * Gibt die Superglobale variable $varname des Array $_FILES zurück und castet dessen Wert ggf.
- * 
+ *
  * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
 function rex_files($varname, $vartype = '', $default = '')
@@ -110,7 +117,7 @@ function rex_files($varname, $vartype = '', $default = '')
 
 /**
  * Gibt die Superglobale variable $varname des Array $_ENV zurück und castet dessen Wert ggf.
- * 
+ *
  * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
  */
 function rex_env($varname, $vartype = '', $default = '')
@@ -120,12 +127,12 @@ function rex_env($varname, $vartype = '', $default = '')
 
 /**
  * Durchsucht das Array $haystack nach dem Schlüssel $needle.
- *  
- * Falls ein Wert gefunden wurde wird dieser nach 
+ *
+ * Falls ein Wert gefunden wurde wird dieser nach
  * $vartype gecastet und anschließend zurückgegeben.
- * 
+ *
  * Falls die Suche erfolglos endet, wird $default zurückgegeben
- * 
+ *
  * @access private
  */
 function _rex_array_key_cast($haystack, $needle, $vartype, $default = '', $addslashes = true)
@@ -147,13 +154,13 @@ function _rex_array_key_cast($haystack, $needle, $vartype, $default = '', $addsl
 	if ($default === '') {
 		return _rex_cast_var($default, $vartype, $default, 'default', $addslashes);
 	}
-	
+
 	return $default;
 }
 
 /**
  * Castet die Variable $var zum Typ $vartype
- * 
+ *
  * Mögliche PHP-Typen sind:
  *  - bool (auch boolean)
  *  - int (auch integer)
@@ -164,7 +171,7 @@ function _rex_array_key_cast($haystack, $needle, $vartype, $default = '', $addsl
  *  - object
  *  - array
  *  - '' (nicht casten)
- *  
+ *
  * Mögliche REDAXO-Typen sind:
  *  - rex-article-id
  *  - rex-category-id
@@ -177,7 +184,7 @@ function _rex_array_key_cast($haystack, $needle, $vartype, $default = '', $addsl
  *  - rex-media-id
  *  - rex-mediacategory-id
  *  - rex-user-id
- * 
+ *
  * @access private
  */
 function _rex_cast_var($var, $vartype, $default, $mode, $addslashes = true)
@@ -192,20 +199,20 @@ function _rex_cast_var($var, $vartype, $default, $mode, $addslashes = true)
 			$var = (int) $var;
 			if ($mode == 'found') {
 				if (!OOArticle::exists($var)) {
-					$var = (int) $default; 
+					$var = (int) $default;
 				}
 			}
 			break;
-			
+
 		case 'rex-category-id':
 			$var = (int) $var;
 			if ($mode == 'found') {
 				if (!OOCategory::isValid(OOCategory::getCategoryById($var))) {
 					$var = (int) $default;
 				}
-			} 
+			}
 			break;
-			
+
 		case 'rex-clang-id':
 			$var = (int) $var;
 			if ($mode == 'found') {
@@ -215,7 +222,7 @@ function _rex_cast_var($var, $vartype, $default, $mode, $addslashes = true)
 				}
 			}
 			break;
-			
+
 		case 'rex-template-id':
 		case 'rex-ctype-id':
 		case 'rex-slice-id':
@@ -233,46 +240,46 @@ function _rex_cast_var($var, $vartype, $default, $mode, $addslashes = true)
 		case 'boolean':
 			$var = (boolean) $var;
 			break;
-			
-		case 'int': 
+
+		case 'int':
 		case 'integer':
 			$var = (int) $var;
 			break;
-			
-		case 'uint': 
+
+		case 'uint':
 		case 'uinteger':
 			$var = abs((int) $var);
 			break;
-			
+
 		case 'double':
 			$var = (double) $var;
 			break;
-			
+
 		case 'udouble':
 			$var = abs((double) $var);
 			break;
-			
+
 		case 'float':
 		case 'real':
 			$var = (float) $var;
 			break;
-			
+
 		case 'ufloat':
 		case 'ureal':
 			$var = abs((float) $var);
 			break;
-		
+
 		case 'string':
 			// Alte REDAXO-AddOns verlassen sich auf die Magic Quotes, die aus
 			// dieser Funktion rauskommen sollten. Neue AddOns verwenden sly_*.
 			$var = trim((string) $var);
 			if ($addslashes) $var = addslashes($var);
 			break;
-		
+
 		case 'object':
 			$var = (object) $var;
 			break;
-		
+
 		case 'array':
 			$var = empty($var) ? array() : (array) $var;
 			break;

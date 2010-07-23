@@ -1,18 +1,28 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
+/**
+ * @package redaxo4
+ */
 class sly_A1_Export_Database
 {
 	protected $filename;
-	
+
 	public function __construct()
 	{
 		$this->filename = '';
 	}
-	
+
 	public function export($filename)
 	{
 		global $REX, $I18N;
-		
+
 		$this->filename = $filename;
 
 		$fp = @fopen($this->filename, 'wb');
@@ -27,7 +37,7 @@ class sly_A1_Export_Database
 		rex_register_extension_point('A1_BEFORE_DB_EXPORT');
 
 		// Versionsstempel hinzufügen
-		
+
 		fwrite($fp, '## Redaxo Database Dump Version '.$REX['VERSION'].$nl);
 		fwrite($fp, '## Prefix '.$REX['TABLE_PREFIX'].$nl);
 		fwrite($fp, '## charset '.$I18N->msg('htmlcharset').$nl.$nl);
@@ -37,13 +47,13 @@ class sly_A1_Export_Database
 				continue;
 			}
 			// CREATE-Statement
-			
+
 			$create = reset($sql->getArray("SHOW CREATE TABLE `$table`"));
 			$create = $create['Create Table'];
 
 			fwrite($fp, "DROP TABLE IF EXISTS `$table`;\n");
 			fwrite($fp, "$create;\n");
-			
+
 			// Daten-Export vorbereiten
 
 			$fields = $this->getFields($sql, $table);
@@ -92,24 +102,24 @@ class sly_A1_Export_Database
 
 	  return $hasContent;
 	}
-	
+
 	protected function includeTable($table)
 	{
 		global $REX;
-		
+
 		$prefix = $REX['TABLE_PREFIX'];
 		$tmp    = $REX['TEMP_PREFIX'];
-		
+
 		return
 			strstr($table, $prefix) == $table &&                      // Nur Tabellen mit dem aktuellen Präfix
 			$table != $prefix.'user' &&                               // User-Tabelle nicht exportieren
 			substr($table, 0, strlen($prefix.$tmp)) != $prefix.$tmp; // Tabellen die mit rex_tmp_ beginnnen, werden nicht exportiert!
 	}
-	
+
 	protected function getFields($sql, $table)
 	{
 		$fields = $sql->getArray("SHOW FIELDS FROM `$table`");
-		
+
 		foreach ($fields as &$field) {
 			if (preg_match('#^(bigint|int|smallint|mediumint|tinyint|timestamp)#i', $field['Type'])) {
 				$field = 'int';
@@ -121,10 +131,10 @@ class sly_A1_Export_Database
 				$field = 'string';
 			}
 		}
-		
+
 		return $fields;
 	}
-	
+
 	protected function getRecord($sql, $fields)
 	{
 		$record = array();
@@ -136,21 +146,21 @@ class sly_A1_Export_Database
 				case 'int':
 					$record[] = intval($column);
 					break;
-					
+
 				case 'double':
 					$record[] = sprintf('%.10F', (double) $column);
 					break;
-					
+
 				case 'string':
 				default:
 					$record[] = "'".mysql_real_escape_string($column)."'";
 					break;
 			}
 		}
-		
+
 		return '('.implode(',', $record).')';
 	}
-	
+
 	protected function handleExtensions($filename)
 	{
 		$content    = file_get_contents($filename);
@@ -161,7 +171,7 @@ class sly_A1_Export_Database
 		if ($hashAfter != $hashBefore) {
 			file_put_contents($filename, $content);
 		}
-		
+
 		return !empty($content);
 	}
 }

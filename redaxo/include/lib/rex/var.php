@@ -1,12 +1,17 @@
 <?php
-
-
-/**
- * Abtrackte Basisklasse für REX_VARS
- * @package redaxo4
- * @version svn:$Id$
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
  */
 
+/**
+ * Abstrakte Basisklasse für REX_VARS
+ *
+ * @package redaxo4
+ */
 abstract class rex_var
 {
   // --------------------------------- Actions
@@ -124,7 +129,7 @@ abstract class rex_var
   function setValue($sql, $fieldname, $value, $escape = false, $prependTableName = true)
   {
     global $REX;
-	 
+
 	 $table = $prependTableName ? $REX['DATABASE']['TABLE_PREFIX'].'article_slice.' : '';
 
     if ($escape)
@@ -187,7 +192,7 @@ abstract class rex_var
 
     return $prefix . $value . $suffix;
   }
-  
+
   /**
    * Parameter aus args zur Laufzeit auf den Wert einer Variablen anwenden.
    * Wichtig f�r Variablen, die Variable ausgaben haben.
@@ -209,7 +214,7 @@ abstract class rex_var
     $result = array ();
 
     $match = $this->matchVar($content, $varname);
-    
+
     foreach ($match as $param_str)
     {
     	$args = array();
@@ -218,13 +223,13 @@ abstract class rex_var
     	{
         $args = $this->handleDefaultParam($varname, $args, $name, $value);
     	}
-      
+
       $result[] = array (
         $param_str,
         $args
       );
     }
-    
+
     return $result;
   }
 
@@ -243,12 +248,12 @@ abstract class rex_var
         $result[] = $match;
       }
     }
-    
+
     return $result;
   }
-  
-  
-  
+
+
+
   function extractArg($name, $args, $default = null)
   {
   	$val = $default;

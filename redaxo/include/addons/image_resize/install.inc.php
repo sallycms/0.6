@@ -1,4 +1,12 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
 /**
  * Image-Resize Addon
  *
@@ -6,10 +14,8 @@
  * @author <a href="http://www.vscope.at">www.vscope.at</a>
  *
  * @author markus[dot]staab[at]redaxo[dot]de Markus Staab
- * 
  *
  * @package redaxo4
- * @version svn:$Id$
  */
 
 $error   = '';
@@ -21,11 +27,11 @@ if (!extension_loaded('gd')) {
 
 if (empty($error)) {
 	$folder = $service->internalFolder('image_resize');
-	
+
 	if (!file_exists($folder.'/config.inc.php')) {
 		copy(dirname(__FILE__).'/example.config.inc.php', $folder.'/config.inc.php');
 	}
-	
+
 	$file = $folder.'/config.inc.php';
 	if (($state = rex_is_writable($file)) !== true) $error = $state;
 }

@@ -1,9 +1,16 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
  * Addon Funktionen
+ *
  * @package redaxo4
- * @version svn:$Id$
  */
 
 function rex_addons_folder($addon = null)
@@ -17,7 +24,7 @@ function rex_read_addons_folder($folder = null)
 	if ($folder === null) {
 		$folder = rex_addons_folder();
 	}
-	
+
 	$directory = new sly_Util_Directory($folder);
 	return $directory->exists() ? $directory->listPlain(false, true) : array();
 }
@@ -88,10 +95,10 @@ function PMA_splitSqlFile(& $ret, $sql, $release) {
 	$in_string = FALSE;
 	$nothing = TRUE;
 	$time0 = time();
-	
+
 	for ($i = 0; $i < $sql_len; ++ $i) {
 		$char = $sql[$i];
-	
+
 		// We are in a string, check for not escaped end of strings except for
 		// backquotes that can't be escaped
 		if ($in_string) {
@@ -129,16 +136,16 @@ function PMA_splitSqlFile(& $ret, $sql, $release) {
 					}
 					// ... else loop
 					else $i++;
-					
+
 				} // end if...elseif...else
 			} // end for
 		} // end if (in string)
-	
+
 		// lets skip comments (/*, -- and #)
 		else
 		if (($char == '-' && $sql_len > $i +2 && $sql[$i +1] == '-' && $sql[$i +2] <= ' ')
 			|| $char == '#' || ($char == '/' && $sql_len > $i +1 && $sql[$i +1] == '*')) {
-			
+
 			$i = strpos($sql, $char == '/' ? '*/' : "\n", $i);
 			// didn't we hit end of string?
 			if ($i === FALSE)
@@ -148,7 +155,7 @@ function PMA_splitSqlFile(& $ret, $sql, $release) {
 			if ($char == '/')
 			$i ++;
 		}
-	
+
 		// We are not in a string, first check for delimiter...
 		else
 		if ($char == ';') {
@@ -161,7 +168,7 @@ function PMA_splitSqlFile(& $ret, $sql, $release) {
 			// The submited statement(s) end(s) here
 			else return TRUE;
 		} // end else if (is delimiter)
-		
+
 		// ... then check for start of a string,...
 		else
 		if (($char == '"') || ($char == '\'') || ($char == '`')) {
@@ -169,9 +176,9 @@ function PMA_splitSqlFile(& $ret, $sql, $release) {
 			$nothing = FALSE;
 			$string_start = $char;
 		} // end else if (is start of string)
-	
+
 		elseif ($nothing) $nothing = FALSE;
-	
+
 		// loic1: send a fake header each 30 sec. to bypass browser timeout
 		$time1 = time();
 		if ($time1 >= $time0 +30) {
@@ -179,13 +186,13 @@ function PMA_splitSqlFile(& $ret, $sql, $release) {
 			header('X-pmaPing: Pong');
 		} // end if
 	} // end for
-	
+
 	// add any rest to the returned array
 	if (!empty ($sql) && preg_match('@[^[:space:]]+@', $sql))
 		$ret[] = array ('query' => $sql, 'empty' => $nothing);
-	
+
 	return TRUE;
-	
+
 }
 
 /**
@@ -202,7 +209,7 @@ function rex_read_sql_dump($file)
 	$ret         = array();
 	$sqlsplit    = '';
 	$fileContent = file_get_contents($file);
-	
+
 	PMA_splitSqlFile($sqlsplit, $fileContent, '');
 
 	if (is_array($sqlsplit)) {
@@ -210,7 +217,7 @@ function rex_read_sql_dump($file)
 			$ret[] = $qry['query'];
 		}
 	}
-	
+
 	return $ret;
 }
 

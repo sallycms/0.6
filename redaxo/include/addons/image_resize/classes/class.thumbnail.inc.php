@@ -1,4 +1,12 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
 /**
  * Image-Resize Addon
  *
@@ -8,11 +16,8 @@
  * @author markus[dot]staab[at]redaxo[dot]de Markus Staab
  * @author zozi@webvariants.de
  *
- *
  * @package redaxo4
- * @version svn:$Id$
  */
-
 class Thumbnail
 {
 	const ERRORFILE = 'warning.jpg';
@@ -459,7 +464,7 @@ class Thumbnail
 
 		return $c;
 	}
-	
+
 	/**
 	 * @return int
 	 */

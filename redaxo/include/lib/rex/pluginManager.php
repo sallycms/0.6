@@ -1,9 +1,17 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
  * Manager zum Installieren von Plugins
  *
  * @deprecated
+ * @package redaxo4
  */
 class rex_pluginManager extends rex_baseManager
 {
@@ -36,7 +44,7 @@ class rex_pluginManager extends rex_baseManager
 		$service = sly_Service_Factory::getService('Plugin');
 		return $service->mentalGymnasticsInclude($includeFile, array($addonName, $pluginName));
 	}
-	
+
 	protected function makeComponent($component)
 	{
 		return array($this->addonName, $component);

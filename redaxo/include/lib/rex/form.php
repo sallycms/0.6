@@ -1,7 +1,15 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
  * Klasse zum Erstellen von Formularen
+ *
  * @package redaxo4
  */
 class rex_form
@@ -36,7 +44,7 @@ class rex_form
 		$this->params         = array();
 		$this->whereCondition = $whereCondition;
 		$this->divId          = 'rex-addon-editmode';
-		
+
 		$this->addFieldset($fieldset);
 
 		if ($REX['REDAXO']) {
@@ -49,7 +57,7 @@ class rex_form
 		$this->sql->setQuery('SELECT * FROM '.$tableName.' WHERE '.$this->whereCondition.' LIMIT 2');
 
 		$numRows = $this->sql->getRows();
-		
+
 		if ($numRows == 0) {
 			// Kein Datensatz gefunden => Mode: Add
 			$this->setEditMode(false);
@@ -105,7 +113,7 @@ class rex_form
 		$deleteElement = null;
 		$resetElement  = null;  // immer null in REDAXO 4.2.1
 		$abortElement  = null;  // immer null in REDAXO 4.2.1
-		
+
 		if (!empty($saveLabel)) {
 			$saveElement = $this->addInputField('submit', 'save', $saveLabel, array('internal::useArraySyntax' => false), false);
 		}
@@ -128,7 +136,7 @@ class rex_form
 		$params = array_merge($this->getParams(), $params);
 		$params['form'] = $this->getName();
 		$paramString = http_build_query($params, '', $escape ? '&amp;' : '&');
-		
+
 		return 'index.php?'. $paramString;
 	}
 
@@ -193,7 +201,7 @@ class rex_form
 	public function addTextAreaField($name, $value = null, $attributes = array())
 	{
 		$attributes['internal::fieldSeparateEnding'] = true;
-		
+
 		if (!isset($attributes['cols']))  $attributes['cols']  = 50;
 		if (!isset($attributes['rows']))  $attributes['rows']  = 6;
 		if (!isset($attributes['class'])) $attributes['class'] = 'rex-form-textarea';
@@ -256,15 +264,15 @@ class rex_form
 	{
 		$id        = $this->tableName.'_'.$this->fieldset.'_'.$name;
 		$postValue = $this->elementPostValue($this->getFieldsetName(), $name);
-		
+
 		// evtl. POST-Werte wieder übernehmen (auch externe Werte überschreiben)
-		
+
 		if ($postValue !== null) {
 			$value = stripslashes($postValue);
 		}
 
 		// Wert aus der DB nehmen, falls keiner extern und keiner im POST angegeben
-		
+
 		if ($value === null && $this->sql->getRows() == 1) {
 			$value = $this->sql->getValue($name);
 		}
@@ -274,22 +282,22 @@ class rex_form
 		}
 
 		// eigentlichen Feldnamen nochmals speichern
-		
+
 		$fieldName = $name;
-		
+
 		if ($attributes['internal::useArraySyntax'] === true) {
 			$name = $this->fieldset.'['.$name.']';
 		}
 		elseif ($attributes['internal::useArraySyntax'] === false) {
 			$name = $this->fieldset.'_'.$name;
 		}
-		
+
 		unset($attributes['internal::useArraySyntax']);
 
 		$class          = 'rex_form_element';
 		$separateEnding = false;
 		$internal_attr  = array('name' => $name);
-		
+
 		if (isset($attributes['internal::fieldClass'])) {
 			$class = $attributes['internal::fieldClass'];
 			unset($attributes['internal::fieldClass']);
@@ -299,7 +307,7 @@ class rex_form
 			$separateEnding = $attributes['internal::fieldSeparateEnding'];
 			unset($attributes['internal::fieldSeparateEnding']);
 		}
-		
+
 		if (isset($attributes['internal::noNameAttribute'])) {
 			$internal_attr = array();
 			unset($attributes['internal::noNameAttribute']);
@@ -308,12 +316,12 @@ class rex_form
 		// 1. Array: Eigenschaften, die via Parameter Überschrieben werden können/dürfen
 		// 2. Array: Eigenschaften, via Parameter
 		// 3. Array: Eigenschaften, die hier fest definiert sind / nicht veränderbar via Parameter
-		
+
 		$attributes = array_merge(array('id' => $id), $attributes, $internal_attr);
 		$element    = new $class($tag, $this, $attributes, $separateEnding);
 		$element->setFieldName($fieldName);
 		$element->setValue($value);
-		
+
 		return $element;
 	}
 
@@ -357,17 +365,17 @@ class rex_form
 	{
 		return $this->getElements(array(__CLASS__, 'isFooterElement'));
 	}
-	
+
 	protected function getElements($predicate)
 	{
 		$elements = array();
-		
+
 		foreach ($this->elements as $fieldsetName => $fieldsetElementsArray) {
 			foreach ($fieldsetElementsArray as $element) {
 				if ($predicate($element)) $elements[] = $element;
 			}
 		}
-		
+
 		return $elements;
 	}
 
@@ -384,7 +392,7 @@ class rex_form
 	public function getFieldsetElements()
 	{
 		$fieldsetElements = array();
-		
+
 		foreach ($this->elements as $fieldsetName => $fieldsetElementsArray) {
 			foreach ($fieldsetElementsArray as $element) {
 				if (self::isHeaderElement($element)) continue;
@@ -393,7 +401,7 @@ class rex_form
 				$fieldsetElements[$fieldsetName][] = $element;
 			}
 		}
-		
+
 		return $fieldsetElements;
 	}
 
@@ -414,13 +422,13 @@ class rex_form
 		if (!is_array($this->elements[$fieldsetName])) {
 			return null;
 		}
-		
+
 		foreach ($this->elements[$fieldsetName] as $idx => $element) {
 			if ($element->getAttribute('name') == $elementName) {
 				return $element;
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -478,7 +486,7 @@ class rex_form
 				if (in_array('createuser', $fieldnames)) $saveSql->setValue('createuser', $REX['USER']->getValue('login'));
 				if (in_array('createdate', $fieldnames)) $saveSql->setValue('createdate', time());
 			}
-			
+
 			$setOnce = true;
 		}
 
@@ -535,7 +543,7 @@ class rex_form
 		// Entscheiden zwischen UPDATE <-> CREATE via editMode möglich
 		// Falls die Extension FALSE zurückgibt, nicht speicher,
 		// um hier die Möglichkeit offen zu haben eigene Validierungen/Speichermechanismen zu implementieren
-		
+
 		if (rex_register_extension_point('REX_FORM_'.strtoupper($this->getName()).'_SAVE', '', array('form' => $this)) === false) {
 			return;
 		}
@@ -546,7 +554,7 @@ class rex_form
 		foreach ($this->getFieldsets() as $fieldsetName) {
 			// POST-Werte ermitteln
 			$fieldValues = $this->fieldsetPostValues($fieldsetName);
-			
+
 			foreach($fieldValues as $fieldName => $fieldValue) {
 				// Callback, um die Values vor dem Speichern noch beeinflussen zu können
 				$fieldValue = $this->preSave($fieldsetName, $fieldName, $fieldValue, $sql);
@@ -571,7 +579,7 @@ class rex_form
 			$sql->setWhere($this->whereCondition);
 			return $sql->update();
 		}
-		
+
 		return $sql->insert();
 	}
 
@@ -585,7 +593,7 @@ class rex_form
 		foreach($this->getFieldsets() as $fieldsetName) {
 			// POST-Werte ermitteln
 			$fieldValues = $this->fieldsetPostValues($fieldsetName);
-			
+
 			foreach ($fieldValues as $fieldName => $fieldValue) {
 				// Callback, um die Values vor dem Löschen noch beeinflussen zu können
 				$fieldValue = $this->preDelete($fieldsetName, $fieldName, $fieldValue, $deleteSql);
@@ -625,9 +633,9 @@ class rex_form
 		$this->init();
 		$this->setApplyUrl($this->getUrl(array('func' => ''), false));
 		$this->handleSubmittedForm();
-		
+
 		// Parameter dem Formular hinzufügen
-		
+
 		foreach($this->getParams() as $name => $value) {
 			$this->addHiddenField($name, $value, array('internal::useArraySyntax' => 'none'));
 		}
@@ -635,7 +643,7 @@ class rex_form
 		$s       = '';
 		$warning = $this->getWarning();
 		$message = $this->getMessage();
-		
+
 		if (!empty($warning)) {
 			$s .= '  '.rex_warning($warning);
 		}
@@ -651,14 +659,14 @@ class rex_form
 		$last       = count($fieldsets);
 
 		$s .= '  <form action="index.php" method="'. $this->method .'">';
-		
+
 		foreach ($fieldsets as $fieldsetName => $fieldsetElements) {
 			$s .= '<fieldset class="rex-form-col-1">';
 			$s .= '<legend>'.sly_html($fieldsetName).'</legend>';
 			$s .= '<div class="rex-form-wrapper">';
 
 			// Die HeaderElemente nur im 1. Fieldset ganz am Anfang einfügen
-			
+
 			if ($i == 0 && $addHeaders) {
 				foreach ($this->getHeaderElements() as $element) {
 					// Callback
@@ -666,7 +674,7 @@ class rex_form
 					// HeaderElemente immer ohne <p>
 					$s .= $element->formatElement();
 				}
-				
+
 				$addHeaders = false;
 			}
 
@@ -697,18 +705,18 @@ class rex_form
 	{
 		print $this->get();
 	}
-	
+
 	protected function handleSubmittedForm()
 	{
 		global $I18N;
-		
+
 		$controlElement = $this->getControlElement();
 
 		if ($controlElement !== null) {
 			if ($controlElement->saved()) {
 				// speichern und umleiten
 				// Nachricht in der Liste anzeigen
-				
+
 				if (($result = $this->validate()) === true && ($result = $this->save()) === true)
 					$this->redirect($I18N->msg('form_saved'));
 				elseif (is_string($result) && $result != '')
@@ -720,7 +728,7 @@ class rex_form
 			elseif ($controlElement->applied()) {
 				// speichern und wiederanzeigen
 				// Nachricht im Formular anzeigen
-				
+
 				if (($result = $this->validate()) === true && ($result = $this->save()) === true)
 					$this->setMessage($I18N->msg('form_applied'));
 				elseif (is_string($result) && $result != '')
@@ -731,7 +739,7 @@ class rex_form
 			elseif ($controlElement->deleted()) {
 				// speichern und wiederanzeigen
 				// Nachricht in der Liste anzeigen
-				
+
 				if (($result = $this->delete()) === true)
 					$this->redirect($I18N->msg('form_deleted'));
 				elseif (is_string($result) && $result != '')

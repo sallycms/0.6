@@ -1,8 +1,19 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
+/**
+ * @package redaxo4
+ */
 
 /**
  * Hebt einen Suchtreffer $needle im Suchergebnis $string hervor
- * 
+ *
  * @param $params
  */
 function rex_a256_highlight_hit($string, $needle)
@@ -16,17 +27,17 @@ function rex_a256_highlight_hit($string, $needle)
 
 /**
  * Bindet ggf. extensions ein
- * 
+ *
  * @param $params Extension-Point Parameter
  */
 function rex_a256_extensions_handler($params)
 {
   global $REX;
-  
+
   $page = $params['subject'];
-  
+
   rex_register_extension('PAGE_HEADER', 'rex_be_search_css_add');
-  
+
   // Include Extensions
   if($page == 'structure')
   {
@@ -48,7 +59,7 @@ function rex_a256_extensions_handler($params)
 
 /**
  * Fügt die benötigen Stylesheets ein
- * 
+ *
  * @param $params Extension-Point Parameter
  */
 function rex_be_search_css_add($params)

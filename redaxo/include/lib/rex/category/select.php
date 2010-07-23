@@ -1,5 +1,15 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
+/**
+ * @package redaxo4
+ */
 class rex_category_select extends rex_select
 {
 	public $ignore_offlines;
@@ -15,7 +25,7 @@ class rex_category_select extends rex_select
 		if ($add_homepage) {
 			$this->addOption('Homepage', 0);
 		}
-		
+
 		$cats = OOCategory::getRootCategories($ignore_offlines, $clang);
 
 		if ($cats) {
@@ -33,7 +43,7 @@ class rex_category_select extends rex_select
 		if (!$this->check_perms || $this->check_perms && $REX['USER']->hasCategoryPerm($cat->getId())) {
 			$this->addOption($cat->getName(), $cat->getId(), $cat->getId(), $cat->getParentId());
 			$children = $cat->getChildren($this->ignore_offlines, $this->clang);
-			
+
 			if (is_array($children)) {
 				foreach ($children as $child) $this->addCatOption($child);
 			}

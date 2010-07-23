@@ -1,8 +1,18 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 // Stellt ein Element im Formular dar
 // Nur für internes Handling!
 
+/**
+ * @package redaxo4
+ */
 abstract class rex_form_element // seit Sally abstract
 {
 	public $value;
@@ -25,7 +35,7 @@ abstract class rex_form_element // seit Sally abstract
 		$this->tag            = $tag;
 		$this->table          = &$table;
 		$this->separateEnding = $separateEnding;
-		
+
 		$this->setAttributes($attributes);
 		$this->setHeader('');
 		$this->setFooter('');
@@ -70,7 +80,7 @@ abstract class rex_form_element // seit Sally abstract
 	{
 		$name  = trim($name);
 		$value = trim($value);
-		
+
 		if ($name == 'value') {
 			$this->setValue($value);
 		}
@@ -83,7 +93,7 @@ abstract class rex_form_element // seit Sally abstract
 			}
 
 			// Wenn noch kein Label gesetzt, den Namen als Label verwenden
-			
+
 			if ($name == 'name' && $this->getLabel() == '') {
 				$this->setLabel($value);
 			}
@@ -150,7 +160,7 @@ abstract class rex_form_element // seit Sally abstract
 		if ($this->hasSeparateEnding()) {
 			return '<'.$this->getTag().' '.$attr.'>'.$value.'</'.$this->getTag().'>';
 		}
-		
+
 		$attr .= ' value="'.$value.'"';
 		return '<'.$this->getTag().$attr.' />';
 	}
@@ -158,11 +168,11 @@ abstract class rex_form_element // seit Sally abstract
 	public function formatNotice()
 	{
 		$notice = $this->getNotice();
-		
+
 		if (!empty($notice)) {
 			return '<span class="rex-form-notice" id="'.$this->getAttribute('id').'_notice">'.$notice.'</span>';
 		}
-		
+
 		return '';
 	}
 
@@ -194,7 +204,7 @@ abstract class rex_form_element // seit Sally abstract
 		$s .= $this->_get();
 		$s .= '</div>';
 		$s .= $this->getFooter();
-		
+
 		return $s;
 	}
 

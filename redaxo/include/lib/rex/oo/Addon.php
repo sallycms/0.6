@@ -1,10 +1,16 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
  * Klasse zum Prüfen ob Addons installiert/aktiviert sind
  *
  * @package redaxo4
- * @version svn:$Id$
  */
 abstract class OOAddon extends rex_addon
 {

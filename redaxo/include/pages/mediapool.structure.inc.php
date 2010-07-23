@@ -1,9 +1,14 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
- *
  * @package redaxo4
- * @version svn:$Id$
  */
 
 // *************************************** SUBPAGE: KATEGORIEN
@@ -80,7 +85,7 @@ if ($PERMALL)
     foreach($parents as $parent){
     	$textpath .= '<li> : <a href="'.$link.$parent->getId().'">'.$parent->getName().'</a></li>';
     }
-    
+
     $textpath .= '<li> : <a href="'.$link.$cat_id.'">'.$OOCat->getName().'</a></li>';
     $catpath = $OOCat->getPath()."$cat_id|";
   }
@@ -109,7 +114,7 @@ if ($PERMALL)
       <form action="index.php" method="post">
         <fieldset class="rex-form-col-1">
           <legend>'. $legend .'</legend>
-          
+
           <div class="rex-form-wrapper">
             <input type="hidden" name="page" value="mediapool" />
             <input type="hidden" name="subpage" value="categories" />

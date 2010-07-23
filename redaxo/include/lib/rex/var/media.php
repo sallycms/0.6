@@ -1,4 +1,11 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
  * REX_FILE[1],
@@ -11,14 +18,13 @@
  * REX_MEDIALIST_BUTTON[1]
  *
  * Alle Variablen die mit REX_FILE beginnnen sind als deprecated anzusehen!
+ *
  * @package redaxo4
- * @version svn:$Id$
  */
-
 class rex_var_media extends rex_var
 {
 	// --------------------------------- Actions
-	
+
 	const MEDIA = 'REX_MEDIA';
 	const MEDIALIST = 'REX_MEDIALIST';
 	const FILE = 'REX_FILE';

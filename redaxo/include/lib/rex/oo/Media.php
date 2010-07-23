@@ -1,11 +1,17 @@
 <?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
 
 /**
  * Object Oriented Framework: Bildet ein Medium des Medienpools ab
+ *
  * @package redaxo4
- * @version svn:$Id$
  */
-
 class OOMedia
 {
 	private $id = '';
@@ -592,14 +598,14 @@ class OOMedia
 
 		// damit alte rex_article felder wie copyright, description
 		// noch funktionieren
-		
+
 		if ($this->hasValue($value)) {
 			return $this->$value;
 		}
 		elseif ($this->hasValue('med_'.$value)) {
 			return $this->getValue('med_'.$value);
 		}
-		
+
 		return null;
 	}
 }
