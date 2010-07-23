@@ -167,7 +167,8 @@ final class Scaffold_Cache
 		
 		clearstatcache();
 		
-		$lines = file_exists(self::$cacheFile) ? file(self::$cacheFile) : array();
+		$lines = file_exists(self::$cacheFile) ? array_map('trim', file(self::$cacheFile)) : array();
+		$lines = array_filter($lines);
 		$fp    = fopen(self::$cacheFile, 'w');
 		$file  = $_GET['wv_f']; // der einzige Wert, der bereits in der cache.php bekannt ist
 		
