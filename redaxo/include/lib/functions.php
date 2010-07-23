@@ -2,11 +2,10 @@
 /*
  * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
- * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
- * beiliegenden LICENSE Datei und unter:
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
  *
  * http://www.opensource.org/licenses/mit-license.php
- * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
 function sly_get($name, $type, $default = '')
@@ -33,34 +32,34 @@ function sly_request($name, $type, $default = '')
 function sly_getArray($name, $types, $default = array())
 {
 	$values = sly_makeArray(isset($_GET[$name]) ? $_GET[$name] : $default);
-	
+
 	foreach ($values as &$value) {
 		if (is_array($value)) {
 			unset($value);
 			continue;
 		}
-		
+
 		$value = _rex_cast_var($value, $types, $default, 'found', false); // $default und 'found' ab REDAXO 4.2
 		$value = strtolower($type) == 'string' ? trim($value) : $value;
 	}
-	
+
 	return $values;
 }
 
 function sly_postArray($name, $types, $default = array())
 {
 	$values = sly_makeArray(isset($_POST[$name]) ? $_POST[$name] : $default);
-	
+
 	foreach ($values as $idx => &$value) {
 		if (is_array($value)) {
 			unset($values[$idx]);
 			continue;
 		}
-		
+
 		$value = _rex_cast_var($value, $types, $default, 'found', false); // $default und 'found' ab REDAXO 4.2
 		$value = strtolower($types) == 'string' ? trim($value) : $value;
 	}
-	
+
 	return $values;
 }
 
@@ -195,7 +194,7 @@ function sly_makeArray($element)
 function t($index)
 {
 	global $REX;
-	
+
 	if ($REX['REDAXO']) {
 		global $I18N;
 		return $I18N->msg($index);

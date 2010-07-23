@@ -1,4 +1,13 @@
 <?
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
 $tableID        = $this->id;
 $currentPage    = abs(sly_get('p_'.$tableID, 'int'));
 $hasPager       = $this->hasPager();
@@ -13,7 +22,7 @@ $style = 'margin-bottom:1em;font-size:11px;line-height:20px';
 if (!self::isDragAndDropMode() && $hasPager) {
 	$pager = new sly_Util_Pager($currentPage, $this->totalElements, self::$perPage);
 	$pager = $pager->getHTMLString($_GET, 'p_'.$tableID);
-	
+
 	print '<p style="'.$style.';float:left">Seiten: '.$pager.'</p>';
 }
 
@@ -22,7 +31,7 @@ if ($this->enableDragAndDrop && ($hasSearch || $hasPager)) {
 
 	unset($params['p_'.$tableID]);
 	unset($params['q_'.$tableID]);
-	
+
 	if (self::isDragAndDropMode()) {
 		unset($params['tableswitch']);
 		$params = http_build_query($params, '', '&amp;');
@@ -38,18 +47,18 @@ if ($this->enableDragAndDrop && ($hasSearch || $hasPager)) {
 if (!self::isDragAndDropMode() && $hasSearch) {
 	$key   = 'q_'.$tableID;
 	$query = wv_get($key, 'string');
-	
+
 	print '<form method="get" action="index.php">';
 	print '<p style="margin-bottom:1em;font-size:11px;float:right;line-height:20px">Filter: ';
-	
+
 	foreach ($_GET as $name => $value) {
 		if ($name != 'p_'.$this->id && $name != $key && is_scalar($value)) {
 			print '<input type="hidden" name="'.wv_html($name).'" value="'.wv_html($value).'" />';
 		}
 	}
-	
+
 	print '<input type="text" name="'.$key.'" value="'.wv_html($query).'" class="filter_input_'.$this->id.'" style="width:150px" />';
-	
+
 	print '</p>';
 	print '</form>';
 }
@@ -71,4 +80,3 @@ print $this->surroundingHTML;
 		</tr>
 	</thead>
 	<tbody>
-	

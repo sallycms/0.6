@@ -2,11 +2,10 @@
 /*
  * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
- * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
- * beiliegenden LICENSE Datei und unter:
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
  *
  * http://www.opensource.org/licenses/mit-license.php
- * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
 abstract class sly_Controller_Base
@@ -37,7 +36,7 @@ abstract class sly_Controller_Base
 		if (class_exists($name)) {
 			return new $name($name);
 		}
-		
+
 		return null;
 	}
 
@@ -50,19 +49,19 @@ abstract class sly_Controller_Base
 		if ($this->checkPermission() !== true){
 			throw new sly_Authorisation_Exception('HTTP 403: Zugriff auf '. $this->action .' in '. get_class($this) .' nicht gestattet!');
 		}
-		
+
 		$this->init();
 
 		$method = $this->action;
 		$retval = $this->$method();
-		
+
 		$this->teardown();
 	}
 
 	protected function render($filename, $params = array())
 	{
 		global $REX, $I18N;
-		
+
 		// Die Parameternamen $params und $filename sind zu kurz, als dass
 		// man sie zuverlässig nutzen könnte. Wenn $params durch extract()
 		// während der Ausführung überschrieben wird kann das unvorhersehbare
@@ -78,11 +77,11 @@ abstract class sly_Controller_Base
 		include $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.$filenameHtuG50hNCdikAvf7CZ1F;
 		print ob_get_clean();
 	}
-	
+
 	protected function init()
 	{
 	}
-	
+
 	protected function teardown()
 	{
 	}

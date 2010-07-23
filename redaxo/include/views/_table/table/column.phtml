@@ -1,4 +1,12 @@
 <?
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
 
 if (!isset($this->htmlAttributes['class'])) {
 	$this->htmlAttributes['class'] = '';
@@ -12,7 +20,7 @@ if (!$isRexIcon && $table->isSorting() && !$table->hasDragAndDrop() && !empty($t
 	unset($params['sortby'], $params['direction']);
 
 	$params['sortby'] = $this->sortkey;
-	
+
 	switch ($this->direction) {
 		case 'asc':
 			$params['direction'] = 'desc';
@@ -28,7 +36,7 @@ if (!$isRexIcon && $table->isSorting() && !$table->hasDragAndDrop() && !empty($t
 			$link = ' <a href="index.php?'.http_build_query($params, '', '&amp;').'"><img src="include/addons/developer_utils/images/nosort.gif" alt="" title="Keine Sortierung" /></a>';
 			break;
 	}
-	
+
 	$this->htmlAttributes['class'] .= ' has-sort-icon';
 }
 

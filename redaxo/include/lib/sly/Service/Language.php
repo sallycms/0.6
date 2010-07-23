@@ -2,11 +2,10 @@
 /*
  * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
- * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
- * beiliegenden LICENSE Datei und unter:
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
  *
  * http://www.opensource.org/licenses/mit-license.php
- * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
 /**
@@ -15,12 +14,12 @@
 class sly_Service_Language extends sly_Service_Model_Base
 {
 	protected $tablename = 'clang';
-	
+
 	protected function makeObject(array $params)
 	{
 		return new sly_Model_Language($params);
 	}
-	
+
 	public function add($name)
 	{
 		return $this->create(array('name' => $name));

@@ -2,21 +2,20 @@
 /*
  * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
- * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
- * beiliegenden LICENSE Datei und unter:
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
  *
  * http://www.opensource.org/licenses/mit-license.php
- * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
 /**
  * Basisklasse für alle Models
- * 
+ *
  * @author zozi@webvariants.de
  *
  */
 abstract class sly_Model_Base {
-	
+
 	const NEW_ID = -1;
 
 	protected $id = self::NEW_ID;
@@ -34,11 +33,11 @@ abstract class sly_Model_Base {
 
 	public function toHash() {
 		$return = array('id' => $this->id);
-		
+
 		foreach($this->_attributes as $name => $type) {
 			$return[$name] = $this->$name;
 		}
-		
+
 		return $return;
 	}
 }

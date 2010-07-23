@@ -1,10 +1,21 @@
-<? $id = $this->javascriptID; ?>
+<?
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+$id = $this->javascriptID;
+?>
 <input type="hidden" name="<?= $this->attributes['id'] ?>" id="REX_MEDIALIST_<?= $id ?>" value="<?= wv_html(implode(',', (array)$this->attributes['value'])) ?>" />
 <select name="MEDIALIST_SELECT[<?= $id ?>]" id="REX_MEDIALIST_SELECT_<?= $id ?>" size="8" class="<?= wv_html($this->attributes['class']) ?>">
 <?
 	$files = empty($this->attributes['value']) ? array() : $this->attributes['value'];
 	$files = array_filter($files);
-	
+
 	foreach ($files as $file) {
 		?><option value="<?= wv_html($file) ?>"><?= wv_html($file) ?></option><?
 	}

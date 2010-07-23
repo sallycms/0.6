@@ -2,11 +2,10 @@
 /*
  * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
- * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
- * beiliegenden LICENSE Datei und unter:
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
  *
  * http://www.opensource.org/licenses/mit-license.php
- * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
 class sly_Layout_XHTML extends sly_Layout
@@ -23,9 +22,9 @@ class sly_Layout_XHTML extends sly_Layout
 	protected $links           = array();
 
 	public function __construct() {
-		
+
 	}
-	
+
 	public function setFavIcon($iconPath) {
 		$this->favIcon = $iconPath;
 	}
@@ -90,10 +89,10 @@ class sly_Layout_XHTML extends sly_Layout
 	}
 
 
-	
+
 	protected function printFeedFiles() {
 		foreach ($this->feedFiles as $type => $file) {
-			
+
 			$link = "<link rel=\"alternate\" type=\"application/";
 			if ($type != 'atom') $link .= "rss";
 			else $link .= $type;
@@ -108,13 +107,13 @@ class sly_Layout_XHTML extends sly_Layout
 				case 'atom':
 					$link .= "Atom-Feed";
 					break;
-					
+
 				default:
 					$link .= "RSS-Feed";
 					break;
 			}
 			$link .= "\" href=\"".$file."\" />\n";
-			
+
 			print $link;
 		}
 	}
@@ -134,7 +133,7 @@ class sly_Layout_XHTML extends sly_Layout
 
 		foreach ($this->cssFiles as $group => $medias) {
 			$isConditional = false;
-			
+
 			if (strtoupper(substr($group, 0, 3)) == 'IF ') {
 				print "<!--[if ".strtoupper(substr($group, 3))."]>\n";
 				$isConditional = true;
@@ -145,7 +144,7 @@ class sly_Layout_XHTML extends sly_Layout
 					print "<link rel=\"stylesheet\" type=\"text/css\" href=\"".$file['src']."\" media=\"".$media."\" />\n";
 				}
 			}
-			
+
 			if ($isConditional) print "<![endif]-->\n";
 		}
 	}

@@ -2,11 +2,10 @@
 /*
  * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
- * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
- * beiliegenden LICENSE Datei und unter:
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
  *
  * http://www.opensource.org/licenses/mit-license.php
- * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
 $modes   = array('preview', 'presave', 'postsave');
@@ -45,11 +44,11 @@ $form->add($name);
 
 foreach ($modes as $mode) {
 	$form->beginFieldset(ucfirst($mode).'-Action ['.$I18N->msg('action_mode_'.$mode).']');
-	
+
 	// Preview-Action macht nur beim Edit Sinn, da
 	// - beim Delete kein View kommt und
 	// - beim Add noch keine Werte vorhanden sind, welche man verarbeiten könnte.
-	
+
 	$opts   = $mode == 'preview' ? array(2 => $options[2]) : $options;
 	$input  = new sly_Form_Textarea($mode.'_action', $I18N->msg('input'), $action ? $action->getInput($mode) : '');
 	$status = new sly_Form_Select_DropDown($mode.'_status', $I18N->msg('action_event'), $action ? $action->getMode($mode, $modeMap) : array(), $opts);
@@ -58,7 +57,7 @@ foreach ($modes as $mode) {
 	$input->setAttribute('cols', 6);
 	$input->setAttribute('wrap', 'off');
 	$input->setHelpText($I18N->msg('action_hint'));
-	
+
 	$status->setSize(count($opts));
 	$status->setHelpText($I18N->msg('ctrl'));
 

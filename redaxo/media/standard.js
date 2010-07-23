@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
 /**
  * SallyCMS - JavaScript-Bibliothek
  */
@@ -296,12 +305,12 @@ jQuery.noConflict();
 			div.slideUp('fast');
 		}
 	};
-	
+
 	sly_disableLogin = function(timerElement) {
 		var nextTime = parseInt(timerElement.html(), 10) - 1;
-		
+
 		timerElement.html(nextTime + '');
-		
+
 		if (nextTime > 0) {
 			setTimeout(sly_disableLogin, 1000, timerElement);
 		}
@@ -311,16 +320,16 @@ jQuery.noConflict();
 			$('#rex-form-login').focus();
 		}
 	};
-	
+
 	sly_startLoginTimer = function() {
 		var timerElement = $('div.rex-message p span strong');
-		
+
 		if (timerElement.length == 1) {
 			$('#loginformular input:not(:hidden)').attr('disabled', 'disabled');
 			setTimeout(sly_disableLogin, 1000, timerElement);
 		}
 	};
-	
+
 	sly_catsChecked = function() {
 		var c_checked = $('#allcats').is(':checked');
 		var m_checked = $('#allmcats').is(':checked');
@@ -338,7 +347,7 @@ jQuery.noConflict();
 
 jQuery(function($) {
 	pageloaded = true;
-	
+
 	// Medienpool-Events
 
 	$('#rex-form-mediapool-media .sly-button-delete').click(function() {
@@ -353,33 +362,33 @@ jQuery(function($) {
 	$('#rex-form-mediapool-media .sly-button-changecat').click(function() {
 		$('#media_method').val('updatecat_selectedmedia');
 	});
-	
+
 	// Lösch-Links in Tabellen
 
 	$('table.rex-table').delegate('a.sly-delete', 'click', function() {
 		var table    = $(this).parents('table');
 		var question = table.attr('rel');
-		
+
 		if (!question) {
 			question = 'Löschen?';
 		}
-		
+
 		return confirm(question);
 	});
-	
+
 	// Links in neuem Fenster öffnen
-	
+
 	$('a.sly-blank').attr('target', '_blank');
-	
+
    // Medialist-Preview neu anzeigen, beim Wechsel der Auswahl
-	
+
 	$('.rex-widget-medialist.rex-widget-preview').click(rexShowMediaPreview);
 
 	$('.rex-widget-media.rex-widget-preview, .rex-widget-medialist.rex-widget-preview')
 		.bind('mousemove', rexShowMediaPreview)
 		.bind('mouseleave', function() {
 			var div = $('.rex-media-preview', this);
-			
+
 			if (div.css('height') != 'auto') {
 				div.slideUp('normal');
 			}
@@ -388,16 +397,16 @@ jQuery(function($) {
 		newPoolWindow('index.php?page=mediapool');
 		return false;
 	});
-	
+
 	// Login-Formular
-	
+
 	if ($('#rex-form-login').length > 0) {
 		$('#rex-form-login').focus();
 		$('#javascript').val('1');
 	}
-	
+
 	// Benutzer-Formular
-	
+
 	if ($('#rex-page-user #rex-form-user-editmode')) {
 		$('#useradmin').click(function() {
 			if ($(this).is(':checked')) {

@@ -1,4 +1,12 @@
 <?php
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
 
 global $REX, $I18N;
 
@@ -11,14 +19,14 @@ $this->title($I18N->msg('setup_step4'));
 		<fieldset class="rex-form-col-1">
 			<? $this->printHiddens('createuser') ?>
 			<legend><?= $I18N->msg('setup_045') ?></legend>
-			
+
 			<div class="rex-form-wrapper">
 				<?php
 
 				if (!empty($this->warning)) {
 					print rex_warning($this->warning);
 				}
-				
+
 				?>
 				<div class="rex-form-row">
 					<p class="rex-form-col-a rex-form-text">
@@ -26,14 +34,14 @@ $this->title($I18N->msg('setup_step4'));
 						<input class="rex-form-text" type="text" value="<?= sly_html($adminUser) ?>" id="admin_user" name="admin_user" />
 					</p>
 				</div>
-				
+
 				<div class="rex-form-row">
 					<p class="rex-form-col-a rex-form-text">
 						<label for="admin_pass"><?= $I18N->msg('setup_047') ?>:</label>
 						<input class="rex-form-text" type="password" value="" id="admin_pass" name="admin_pass" />
 					</p>
 				</div>
-				
+
 				<? if ($usersExist): ?>
 				<div class="rex-form-row">
 					<p class="rex-form-col-a rex-form-checkbox rex-form-label-right">
@@ -44,7 +52,7 @@ $this->title($I18N->msg('setup_step4'));
 				<? endif ?>
 			</div>
 		</fieldset>
-		
+
 		<fieldset class="rex-form-col-1">
 			<div class="rex-form-wrapper">
 				<div class="rex-form-row">

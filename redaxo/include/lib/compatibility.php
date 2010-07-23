@@ -2,18 +2,17 @@
 /*
  * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
- * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
- * beiliegenden LICENSE Datei und unter:
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
  *
  * http://www.opensource.org/licenses/mit-license.php
- * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
 /**
  * Backport of array_replace_recursive for PHP < 5.3.0
- * 
+ *
  * Implementation used from http://de.php.net/manual/en/function.array-replace-recursive.php#92574
- * 
+ *
  * @author: Gregor at der-meyer dot de
  */
 if (!function_exists('array_replace_recursive')) {
@@ -25,7 +24,7 @@ if (!function_exists('array_replace_recursive')) {
 					if (!isset($array[$key]) || (isset($array[$key]) && !is_array($array[$key]))) {
 						$array[$key] = array();
 					}
-	
+
 					// overwrite the value in the base array
 					if (is_array($value)) {
 						$value = array_replace_recursive___recurse($array[$key], $value);

@@ -2,16 +2,15 @@
 /*
  * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
- * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
- * beiliegenden LICENSE Datei und unter:
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
  *
  * http://www.opensource.org/licenses/mit-license.php
- * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
 /**
  * Business Model Klasse für Benutzer
- * 
+ *
  * @author christoph@webvariants.de
  */
 class sly_Model_User extends sly_Model_Base {
@@ -30,7 +29,7 @@ class sly_Model_User extends sly_Model_Base {
 	protected $session_id;
 	protected $cookiekey;
 	protected $revision;
-	
+
 	protected $startpage;
 	protected $backendLocale;
 	protected $rightsArray;
@@ -46,15 +45,15 @@ class sly_Model_User extends sly_Model_Base {
 		parent::__construct($params);
 		$this->evalRights();
 	}
-	
+
 	protected function evalRights() {
 		$config = sly_Core::config();
-		
+
 		$this->rightsArray   = array_filter(explode('#', $this->getRights()));
 		$this->startpage     = $config->get('START_PAGE');
 		$this->backendLocale = $config->get('LANG');
 		$this->isAdmin       = false;
-		
+
 		foreach ($this->rightsArray as $right) {
 			if ($right == 'admin[]') {
 				$this->isAdmin = true;
@@ -67,7 +66,7 @@ class sly_Model_User extends sly_Model_Base {
 			}
 		}
 	}
-	
+
 	public function setName($name)               { $this->name        = $name;         }
 	public function setDescription($description) { $this->description = $description;  }
 	public function setLogin($login)             { $this->login       = $login;        }
@@ -82,7 +81,7 @@ class sly_Model_User extends sly_Model_Base {
 	public function setSessionId($session_id)    { $this->session_id  = $session_id;   }
 	public function setCookieKey($cookiekey)     { $this->cookiekey   = $cookiekey;    }
 	public function setRevision($revision)       { $this->revision    = $revision;     }
-	
+
 	public function getName()        { return $this->name;        }
 	public function getDescription() { return $this->description; }
 	public function getLogin()       { return $this->login;       }
@@ -98,50 +97,50 @@ class sly_Model_User extends sly_Model_Base {
 	public function getSessionId()   { return $this->session_id;  }
 	public function getCookieKey()   { return $this->cookiekey;   }
 	public function getRevision()    { return $this->revision;    }
-	
+
 	// Wenn Rechte gesetzt werden, müssen wir etwas mehr arbeiten.
-	
+
 	public function setRights($rights) {
 		$this->rights = '#'.trim($rights, '#').'#';
 		$this->evalRights();
 	}
-	
+
 	// Hilfsfunktionen für abgeleitete Attribute
-	
+
 	public function getStartPage()     { return $this->startpage;     }
 	public function getBackendLocale() { return $this->backendLocale; }
 	public function isAdmin()          { return $this->isAdmin;       }
-	
+
 	public function getAllowedCategories() {
 		preg_match_all('/#csw\[(\d+)\]/', $this->getRights(), $matches);
 		return isset($matches[1]) ? $matches[1] : array();
 	}
-	
+
 	public function getAllowedMediaCategories() {
 		preg_match_all('/#media\[(\d+)\]/', $this->getRights(), $matches);
 		return isset($matches[1]) ? $matches[1] : array();
 	}
-	
+
 	public function getAllowedModules() {
 		preg_match_all('/#module\[(\d+)\]/', $this->getRights(), $matches);
 		return isset($matches[1]) ? $matches[1] : array();
 	}
-	
+
 	public function getAllowedCLangs() {
 		preg_match_all('/#clang\[(\d+)\]/', $this->getRights(), $matches);
 		return isset($matches[1]) ? $matches[1] : array();
 	}
-	
+
 	public function getRightsAsArray() {
 		return $this->rightsArray;
 	}
-	
+
 	public function hasRight($right) {
 		return in_array($right, $this->rightsArray);
 	}
-	
+
 	// Misc
-	
+
 	public function delete() {
 		return sly_Service_Factory::getService('User')->delete(array('id' => $this->id));
 	}

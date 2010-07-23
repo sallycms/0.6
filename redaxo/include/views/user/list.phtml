@@ -2,11 +2,10 @@
 /*
  * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
- * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
- * beiliegenden LICENSE Datei und unter:
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
  *
  * http://www.opensource.org/licenses/mit-license.php
- * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
 global $I18N, $REX;
@@ -32,11 +31,11 @@ foreach ($users as $user) {
 	$id    = (int) $user->getId();
 	$name  = $user->getName();
 	$login = $user->getLogin();
-	
+
 	if (empty($name)) {
 		$name = $login;
 	}
-	
+
 	?>
 	<tr>
 		<td class="sly-col-a sly-icon">
@@ -48,7 +47,7 @@ foreach ($users as $user) {
 		<td class="sly-col-c"><a href="<?= $base ?>edit&amp;id=<?= $id ?>"><?= sly_html($name) ?></a></td>
 		<td class="sly-col-d"><?= sly_html($user->getLogin()) ?></td>
 		<td class="sly-col-e"><?= rex_formatter::format($user->getLastTryDate(), 'strftime', 'datetime') ?></td>
-		
+
 		<? if ($id == $currentID): ?>
 		<td class="sly-col-f"><span class="rex-strike"><?= $I18N->msg('user_delete') ?></span></td>
 		<? else: ?>

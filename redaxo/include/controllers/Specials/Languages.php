@@ -2,33 +2,32 @@
 /*
  * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
- * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
- * beiliegenden LICENSE Datei und unter:
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
  *
  * http://www.opensource.org/licenses/mit-license.php
- * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
 class sly_Controller_Specials_Languages extends sly_Controller_Sally
 {
 	// for now just copy those two fields and the init() method, until
 	// I find a nice way to generalize it into. --xrstf
-	
+
 	protected $warning   = '';
 	protected $info      = '';
 	protected $func      = '';
 	protected $id        = '';
 	protected $languages = array();
-	
+
 	public function init()
 	{
 		global $I18N;
-		
+
 		$subline = array(
 			array('',          $I18N->msg('main_preferences')),
 			array('languages', $I18N->msg('languages'))
 		);
-		
+
 		rex_title($I18N->msg('specials'), $subline);
 	}
 
@@ -38,15 +37,15 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally
 		$this->languages = $languageService->find(null, null, 'id');
 		$this->render('views/specials/languages.phtml');
 	}
-	
+
 	public function add()
 	{
 		global $REX, $I18N;
-		
+
 		if (isset($_POST['sly-submit'])) {
 			$this->id  = sly_request('clang_id', 'int', -1);
 			$clangName = sly_request('clang_name', 'string');
-			
+
 			if (!empty($clangName)) {
 				if (!isset($REX['CLANG'][$this->id]) && $this->id > 0) {
 					rex_addCLang($this->id, $clangName);
@@ -65,16 +64,16 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally
 		else {
 			$this->func = 'add';
 		}
-		
+
 		$this->index();
 	}
-	
+
 	public function edit()
 	{
 		global $REX, $I18N;
-		
+
 		$id = sly_request('clang_id', 'int', -1);
-		
+
 		if (isset($_POST['sly-submit'])) {
 			$clangName = sly_request('clang_name', 'string');
 			$languageService = sly_Service_Factory::getService('Language');
@@ -89,24 +88,24 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally
 		else {
 			$this->func = 'edit';
 		}
-		
+
 		$this->index();
 	}
-	
+
 	public function delete()
 	{
 		global $REX, $I18N;
-		
+
 		$clangID = sly_request('clang_id', 'int', -1);
-		
+
 		if (isset($REX['CLANG'][$clangID])) {
 			rex_deleteCLang($clangID);
 			$this->info = $I18N->msg('clang_deleted');
 		}
-		
+
 		$this->index();
 	}
-	
+
 	public function checkPermission()
 	{
 		return true;

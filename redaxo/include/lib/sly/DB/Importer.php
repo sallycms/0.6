@@ -2,11 +2,10 @@
 /*
  * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
- * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
- * beiliegenden LICENSE Datei und unter:
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
  *
  * http://www.opensource.org/licenses/mit-license.php
- * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
 class sly_DB_Importer
@@ -17,39 +16,39 @@ class sly_DB_Importer
 	protected $prefix;
 	protected $charset;
 	protected $queries;
-	
+
 	public function __construct()
 	{
 		$this->reset();
 	}
-	
+
 	protected function reset($filename = '')
 	{
 		$this->returnValues['state']   = false;
 		$this->returnValues['message'] = '';
-		
+
 		$this->content  = '';
 		$this->prefix   = '';
 		$this->charset  = '';
 		$this->queries  = array();
 		$this->filename = $filename;
 	}
-	
+
 	public function import($filename)
 	{
 		global $REX, $I18N;
-		
+
 		$this->reset($filename);
-		
+
 		// Vorbedingungen abtesten
-		
+
 		if (!$this->prepareImport()) {
 			return $this->returnValues;
 		}
-		
+
 		$msg   = '';
 		$error = array();
-		
+
 		// Extensions auslösen
 
 		$filesize = filesize($filename);
@@ -60,7 +59,7 @@ class sly_DB_Importer
 		));
 
 		// Import durchführen
-		
+
 		$error = $this->executeQueries();
 
 		if (!empty($error)) {
@@ -71,16 +70,16 @@ class sly_DB_Importer
 		$msg .= $I18N->msg('importer_database_imported').'. '.$I18N->msg('importer_entry_count', count($this->queries)).'<br />';
 
 		// User-Tabelle ggf. anlegen, falls nicht vorhanden
-		
+
 		$dbObject = $this->checkForUserTable();
-		
+
 		if ($dbObject instanceof rex_sql && $dbObject->hasError()) {
 			$msg   = '';
 			$error = $dbObject->getError();
 		}
 
 		// Cache erneuern, wenn alles OK lief
-		
+
 		if (empty($error)) {
 			$msg = $this->regenerateCache($msg);
 		}
@@ -88,58 +87,58 @@ class sly_DB_Importer
 		$this->returnValues['message'] = $msg;
 		return $this->returnValues;
 	}
-	
+
 	protected function prepareImport()
 	{
 		try {
 			$this->checkFilename();
-			
+
 			$this->content = file_get_contents($this->filename);
-			
+
 			$this->checkVersion();
 			$this->checkPrefix();
 			$this->checkCharset();
 			$this->replacePrefix();
-			
+
 			return true;
 		}
 		catch (Exception $e) {
 			return false;
 		}
 	}
-	
+
 	protected function checkFilename()
 	{
 		global $I18N;
-		
+
 		if (empty($this->filename) || substr($this->filename, -4) != '.sql') {
 			$this->returnValues['message'] = $I18N->msg('importer_no_import_file_chosen_or_wrong_version').'<br />';
 			throw new Exception('bad filename');
 		}
 	}
-	
+
 	protected function checkVersion()
 	{
 		global $REX, $I18N;
-		
+
 		// ## Redaxo Database Dump Version x.x
-		
+
 		$version = strpos($this->content, '## Redaxo Database Dump Version '.$REX['VERSION']);
-		
+
 		if ($version === false) {
 			$this->returnValues['message'] = $I18N->msg('importer_no_valid_import_file').'. [## Redaxo Database Dump Version '.$REX['VERSION'].'] is missing.<br />';
 			throw new Exception('bad version');
 		}
-		
+
 		$this->content = trim(str_replace('## Redaxo Database Dump Version '.$REX['VERSION'], '', $this->content));
 	}
-	
+
 	protected function checkPrefix()
 	{
 		global $REX, $I18N;
-		
+
 		// ## Prefix xxx_
-		
+
 		if (preg_match('/^## Prefix ([a-zA-Z0-9\_]*)/', $this->content, $matches) && isset($matches[1])) {
 			$this->prefix  = $matches[1];
 			$this->content = trim(str_replace('## Prefix '.$this->prefix, '', $this->content));
@@ -149,11 +148,11 @@ class sly_DB_Importer
 			throw new Exception('bad prefix');
 		}
 	}
-	
+
 	protected function checkCharset()
 	{
 		global $REX, $I18N;
-		
+
 		if (preg_match('/^## charset ([a-zA-Z0-9\_\-]*)/', $this->content, $matches) && isset($matches[1])) {
 			$this->charset = $matches[1];
 			$this->content = trim(str_replace('## charset '. $this->charset, '', $this->content));
@@ -163,19 +162,19 @@ class sly_DB_Importer
 				throw new Exception('bad charset');
 			}
 		}
-		
+
 		// Charset ist im Moment nicht zwingend notwendig
-		
+
 //		else {
 //			$this->returnValues['message'] = $I18N->msg('importer_no_valid_import_file').'. [## Charset '. $I18N->msg('htmlcharset') .'] is missing]';
 //			throw new Exception('no charset');
 //		}
 	}
-	
+
 	protected function replacePrefix()
 	{
 		global $REX;
-		
+
 		if ($REX['DATABASE']['TABLE_PREFIX'] != $this->prefix) {
 			// Hier case-insensitiv ersetzen, damit alle möglich Schreibweisen (TABLE TablE, tAblE,..) ersetzt werden
 			// Dies ist wichtig, da auch SQLs innerhalb von Ein/Ausgabe der Module vom rex-admin verwendet werden
@@ -184,23 +183,23 @@ class sly_DB_Importer
 			$this->content = preg_replace('/(EXISTS `?)'.preg_quote($this->prefix, '/').'/i', '$1'.$REX['DATABASE']['TABLE_PREFIX'], $this->content);
 		}
 	}
-	
+
 	protected function splitToQuries()
 	{
 		$this->splitFile();
-		
+
 		foreach ($this->queries as $idx => $line) {
 			$this->queries[$idx] = $line['query'];
 		}
 	}
-	
+
 	protected function executeQueries()
 	{
 		$this->splitToQuries();
-		
+
 		$sql   = new rex_sql();
 		$error = array();
-		
+
 		foreach ($this->queries as $qry) {
 			$sql->setQuery($qry);
 
@@ -208,28 +207,28 @@ class sly_DB_Importer
 				$error[] = $sql->getError();
 			}
 		}
-		
+
 		return $error;
 	}
-	
+
 	protected function checkForUserTable()
 	{
 		global $REX;
-		
+
 		$tables = rex_sql::showTables();
 
 		if (!in_array($REX['DATABASE']['TABLE_PREFIX'].'user', $tables)) {
 			$createStmt = file_get_contents($REX['INCLUDE_PATH'].'/install/user.sql');
 			$createStmt = str_replace('%PREFIX%', $REX['DATABASE']['TABLE_PREFIX'], $createStmt);
-			
+
 			$db = new rex_sql();
 			$db->setQuery($createStmt);
 			return $db;
 		}
-		
+
 		return true;
 	}
-	
+
 	protected function regenerateCache($msg)
 	{
 		$msg = rex_register_extension_point('SLY_DB_IMPORTER_AFTER', $msg, array(
@@ -237,11 +236,11 @@ class sly_DB_Importer
 			'filename' => $this->filename,
 			'filesize' => strlen($this->content)
 		));
-		
+
 		$this->returnValues['state'] = true;
 		return $msg.rex_generateAll();
 	}
-	
+
 	protected function splitFile()
 	{
 		// do not trim, see bug #1030644
@@ -311,11 +310,11 @@ class sly_DB_Importer
 			elseif ($char == ';') {
 				// if delimiter found, add the parsed part to the returned array
 				$this->queries[] = array('query' => substr($sql, 0, $i), 'empty' => $nothing);
-				
+
 				$nothing = true;
 				$sql     = ltrim(substr($sql, min($i + 1, $sql_len)));
 				$sql_len = strlen($sql);
-				
+
 				if ($sql_len) {
 					$i = -1;
 				}

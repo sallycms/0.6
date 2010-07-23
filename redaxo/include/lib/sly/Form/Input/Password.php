@@ -2,11 +2,10 @@
 /*
  * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
- * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
- * beiliegenden LICENSE Datei und unter:
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
  *
  * http://www.opensource.org/licenses/mit-license.php
- * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
 class sly_Form_Input_Password extends sly_Form_Input_Base
@@ -27,11 +26,11 @@ class sly_Form_Input_Password extends sly_Form_Input_Base
 	public function render()
 	{
 		$this->addClass('rex-form-text');
-		
+
 		// Das Passwort-Eingabefeld besitzt eine eigene render()-Implementierung,
 		// damit bei abgeschickte und erneut angezeigten Formularen eben NICHT
 		// die übermittelten POST-Daten (= Passwörter) wieder eingesetzt werden.
-		
+
 		$attributeString = $this->getAttributeString();
 		return '<input '.$attributeString.' />';
 	}

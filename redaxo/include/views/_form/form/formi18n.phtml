@@ -1,4 +1,15 @@
-<? $id = !empty($this->id) ? ' id="'.$this->id.'"' : ''; ?>
+<?
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+$id = !empty($this->id) ? ' id="'.$this->id.'"' : '';
+?>
 <div class="rex-addon-output-v2" style="margin-bottom:1em">
 	<div class="rex-form">
 		<form method="<?= strtolower($this->method) ?>" action="<?= wv_html($this->action) ?>"<?= $id ?>>

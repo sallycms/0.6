@@ -1,4 +1,13 @@
 <?
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
 global $I18N;
 
 $name     = $this->getAttribute('name');
@@ -45,16 +54,16 @@ if (!WV_Registry::getTemp('devutils_datatypes_datetime_datepicker', false)) {
 		print '<script type="text/javascript" src="include/addons/developer_utils/js/jquery.ui.slider.js"></script>';
 		print '<script type="text/javascript" src="include/addons/developer_utils/js/jquery.timepicker.js"></script>';
 	}
-	
+
 	$locale = $I18N->msg('htmllang');
-	
+
 	if ($locale != 'en') {
 		$filename = 'include/addons/developer_utils/js/datepicker.i18n/'.$locale.'.js';
 		if (file_exists($filename)) {
 			print '<script type="text/javascript" src="'.$filename.'"></script>';
 		}
 	}
-	
+
 	WV_Registry::setTemp('devutils_datatypes_datetime_datepicker', true);
 }
 ?>

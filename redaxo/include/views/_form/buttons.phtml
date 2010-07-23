@@ -1,3 +1,13 @@
+<?
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+?>
 <div class="rex-form-row<?= $isLast ? ' last' : '' ?>">
 	<p class="rex-form-col-a rex-form-submit">
 		<?
@@ -5,44 +15,44 @@
 		if ($this->submitButton) {
 			$this->submitButton->addClass('rex-form-submit');
 			$additionalClass = ' rex-form-submit-2';
-			
+
 			foreach ($this->buttonClasses['submit'] as $class) {
 				$this->submitButton->addClass($class);
 			}
-			
+
 			print $this->submitButton->render($this->redaxo);
 		}
-		
+
 		if ($this->resetButton) {
 			$this->resetButton->addClass('rex-form-submit'.$additionalClass);
 			$additionalClass = ' rex-form-submit-2';
-			
+
 			foreach ($this->buttonClasses['reset'] as $class) {
 				$this->resetButton->addClass($class);
 			}
-			
+
 			print $this->resetButton->render($this->redaxo);
 		}
-		
+
 		if ($this->applyButton) {
 			$this->applyButton->addClass('rex-form-submit'.$additionalClass);
 			$additionalClass = ' rex-form-submit-2';
-			
+
 			foreach ($this->buttonClasses['apply'] as $class) {
 				$this->applyButton->addClass($class);
 			}
-			
+
 			print $this->applyButton->render($this->redaxo);
 		}
-		
+
 		if ($this->deleteButton) {
 			$this->deleteButton->addClass('rex-form-submit'.$additionalClass);
 			$additionalClass = ' rex-form-submit-2';
-			
+
 			foreach ($this->buttonClasses['delete'] as $class) {
 				$this->deleteButton->addClass($class);
 			}
-			
+
 			print $this->deleteButton->render($this->redaxo);
 		}
 		?>

@@ -2,11 +2,10 @@
 /*
  * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
- * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
- * beiliegenden LICENSE Datei und unter:
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
  *
  * http://www.opensource.org/licenses/mit-license.php
- * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
 class sly_Controller_Addon_Help extends sly_Controller_Sally
@@ -18,21 +17,21 @@ class sly_Controller_Addon_Help extends sly_Controller_Sally
 	protected $plugin  = null;
 	protected $info    = '';
 	protected $warning = '';
-	
+
 	public function init()
 	{
 		rex_title(t('addon'));
 		print '<div class="sly-content">';
-		
+
 		$this->addons  = sly_Service_Factory::getService('AddOn');
 		$this->plugins = sly_Service_Factory::getService('Plugin');
-		
+
 		$addon  = sly_request('addon', 'string', '');
 		$plugin = sly_request('plugin', 'string', '');
 		$addons = $this->addons->getRegisteredAddOns();
-		
+
 		$this->addon = in_array($addon, $addons) ? $addon : null;
-		
+
 		if ($this->addon) {
 			$plugins      = $this->plugins->getRegisteredPlugins($this->addon);
 			$this->plugin = in_array($plugin, $plugins) ? $plugin : null;
@@ -41,12 +40,12 @@ class sly_Controller_Addon_Help extends sly_Controller_Sally
 			$_REQUEST['func'] = 'nohelp';
 		}
 	}
-	
+
 	public function teardown()
 	{
 		print '</div>';
 	}
-	
+
 	public function nohelp()
 	{
 		$this->render('views/addon/list.phtml', array(
@@ -60,7 +59,7 @@ class sly_Controller_Addon_Help extends sly_Controller_Sally
 	public function index()
 	{
 		$this->checkForNewComponents();
-		
+
 		$this->render('views/addon/help.phtml', array(
 			'addons'  => $this->addons,
 			'plugins' => $this->plugins,
@@ -68,7 +67,7 @@ class sly_Controller_Addon_Help extends sly_Controller_Sally
 			'plugin'  => $this->plugin
 		));
 	}
-	
+
 	protected function prepareAction()
 	{
 		return array(
@@ -76,7 +75,7 @@ class sly_Controller_Addon_Help extends sly_Controller_Sally
 			$this->plugin ? array($this->addon, $this->plugin) : $this->addon
 		);
 	}
-	
+
 	protected function checkForNewComponents()
 	{
 		$config = sly_Core::config();
@@ -112,7 +111,7 @@ class sly_Controller_Addon_Help extends sly_Controller_Sally
 			}
 		}
 	}
-	
+
 	protected function t($key, $param = null)
 	{
 		global $I18N;
@@ -120,12 +119,12 @@ class sly_Controller_Addon_Help extends sly_Controller_Sally
 		if ($this->plugin && is_array($param)) $param = $param[1];
 		return $I18N->msg($prefix.$key, $param);
 	}
-	
+
 	protected function call($method, $i18n)
 	{
 		list($service, $component) = $this->prepareAction();
 		$this->warning = $service->$method($component);
-		
+
 		if ($this->warning === true) {
 			$this->info    = $this->t($i18n, $component);
 			$this->warning = '';

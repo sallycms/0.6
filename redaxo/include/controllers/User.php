@@ -2,11 +2,10 @@
 /*
  * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
- * Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
- * beiliegenden LICENSE Datei und unter:
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
  *
  * http://www.opensource.org/licenses/mit-license.php
- * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
 class sly_Controller_User extends sly_Controller_Sally
@@ -19,7 +18,7 @@ class sly_Controller_User extends sly_Controller_Sally
 
 		$layout = sly_Core::getLayout();
 		$layout->appendToTitle(t('title_user'));
-		
+
 		print '<div class="sly-content">';
 	}
 
@@ -43,28 +42,28 @@ class sly_Controller_User extends sly_Controller_Sally
 			$login    = sly_post('userlogin', 'string');
 			$service  = sly_Service_Factory::getService('User');
 			$error    = false;
-			
+
 			if (empty($login)) {
 				print rex_warning('Es muss ein Loginname angegeben werden.');
 				$error = true;
 			}
-			
+
 			if (empty($password)) {
 				print rex_warning('Es muss ein Passwort angegeben werden.');
 				$error = true;
 			}
-			
+
 			if ($service->find(array('login' => $login))) {
 				print rex_warning($I18N->msg('user_login_exists'));
 				$error = true;
 			}
-			
+
 			if ($error) {
 				$this->func = 'add';
 				$this->render('views/user/edit.phtml', array('user' => null));
 				return true;
 			}
-			
+
 			$params = array(
 				'login'       => sly_post('userlogin', 'string'),
 				'name'        => sly_post('username', 'string'),
@@ -110,11 +109,11 @@ class sly_Controller_User extends sly_Controller_Sally
 
 		if ($save) {
 			$status = sly_post('userstatus', 'boolean', false) ? 1 : 0;
-			
+
 			if ($current == $user->getId()) {
 				$status = $user->getStatus();
 			}
-			
+
 			$user->setName(sly_post('username', 'string'));
 			$user->setDescription(sly_post('userdesc', 'string'));
 			$user->setStatus($status);
@@ -170,12 +169,12 @@ class sly_Controller_User extends sly_Controller_Sally
 
 		$service = sly_Service_Factory::getService('User');
 		$current = $REX['USER'];
-		
+
 		if ($current->getValue('id') == $user->getId()) {
 			print rex_warning($I18N->msg('user_notdeleteself'));
 			return false;
 		}
-		
+
 		$user->delete();
 		print rex_info($I18N->msg('user_deleted'));
 
@@ -254,15 +253,15 @@ class sly_Controller_User extends sly_Controller_Sally
 
 		return $startpages;
 	}
-	
+
 	protected function getModules()
 	{
 		$service = sly_Service_Factory::getService('Module');
 		$modules = $service->find(null, null, 'name');
 		$result  = array();
-		
+
 		foreach ($modules as $module) $result[$module->getId()] = $module->getName();
-		
+
 		return $result;
 	}
 
@@ -273,7 +272,7 @@ class sly_Controller_User extends sly_Controller_Sally
 		$permissions = array();
 		$current     = $REX['USER']->getValue('id');
 		$config      = sly_Core::config();
-		
+
 		if (sly_post('useradmin', 'boolean', false) || ($user && $current == $user->getId())) {
 			$permissions[] = 'admin[]';
 		}
@@ -336,43 +335,43 @@ class sly_Controller_User extends sly_Controller_Sally
 
 		return '#'.implode('#', $permissions).'#';
 	}
-	
+
 	protected function getStructure()
 	{
 		$rootCats        = OOCategory::getRootCategories();
 		$this->structure = array();
-		
+
 		if ($rootCats) {
 			foreach ($rootCats as $rootCat) {
 				$this->walkTree($rootCat, 0, $this->structure);
 			}
 		}
-		
+
 		return $this->structure;
 	}
-	
+
 	protected function getMediaStructure()
 	{
 		$rootCats          = OOMediaCategory::getRootCategories();
 		$this->mediaStruct = array();
-		
+
 		if ($rootCats) {
 			foreach ($rootCats as $rootCat) {
 				$this->walkTree($rootCat, 0, $this->mediaStruct);
 			}
 		}
-		
+
 		return $this->mediaStruct;
 	}
-	
+
 	protected function walkTree($category, $depth, &$target)
 	{
 		if (empty($category)) return;
-		
+
 		$target[$category->getId()] = str_repeat(' ', $depth*2).$category->getName();
-		
+
 		$children = $category->getChildren();
-		
+
 		if (is_array($children)) {
 			foreach ($children as $child) {
 				$this->walkTree($child, $depth + 1, $target);

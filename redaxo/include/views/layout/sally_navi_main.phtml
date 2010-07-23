@@ -1,4 +1,12 @@
 <?php
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
 
 global $REX, $I18N;
 
@@ -35,12 +43,12 @@ foreach ($REX['USER']->pages as $pageKey => $pageArr) {
 		else {
 			$item['href'] = 'index.php?page='.$pageKey;
 		}
-		
+
 		$subpagesKey = 'ADDON';
 	}
-	
+
 	$item['subpages'] = array();
-	
+
 	if (isset($REX[$subpagesKey][$pageKey]['SUBPAGES'])) {
 		$item['subpages'] = $REX[$subpagesKey][$pageKey]['SUBPAGES'];
 	}
@@ -73,10 +81,10 @@ foreach ($areas as $topic => $naviList) {
 
 	$first   = true;
 	$subpage = sly_request('subpage', 'string');
-	
+
 	foreach ($naviList as $pageTitle => $item) {
 		if ($first) $item['class'] .= ' rex-navi-first';
-		
+
 		$p        = $item['page'];
 		$subpages = $item['subpages'];
 		$liAttr   = sly_Util_HTML::buildAttributeString(array('class' => $item['class'], 'id' => $item['id']));
@@ -87,31 +95,31 @@ foreach ($areas as $topic => $naviList) {
 		// ***** Subnavi
 		if (!empty($subpages)) {
 			print '<ul class="rex-navi-level-2">';
-			
+
 			$subfirst = true;
-			
+
 			foreach ($subpages as $sp) {
 				$class = '';
 				$id    = 'rex-navi-'.$p.'-subpage-'.$sp[0];
 				$href  = 'index.php?page='.$p.'&subpage='.$sp[0];
-				
+
 				if ($subfirst)                            $class .= ' rex-navi-first';
 				if ($p == $curPage && $subpage == $sp[0]) $class .= ' rex-active';
-				
+
 				$liAttr = sly_Util_HTML::buildAttributeString(array('class' => $class, 'id' => $id));
 				$aAttr  = sly_Util_HTML::buildAttributeString(array('class' => $class, 'href' => $href));
-				
+
 				print '<li '.$liAttr.'><a '.$aAttr.'>'.$sp[1].'</a></li>';
 				$subfirst = false;
 			}
-			
+
 			print '</ul>';
 		}
 
 		print '</li>';
 		$first = false;
 	}
-	
+
 	print '</ul></dd>';
 }
 
