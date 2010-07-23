@@ -9,15 +9,17 @@
  */
 
 /**
- * Log-Funktionen
+ * Simple logging class
+ *
+ * This class provides an easy way to log data to the disk. ALl log files will
+ * be placed in data/dyn/internal/sally/logs.
  *
  * @author christoph@webvariants.de
  * @since  0.1
  */
-class sly_Log
-{
-	protected $filename;
-	protected $format;
+class sly_Log {
+	protected $filename;    ///< string  the current target file
+	protected $format;      ///< string  the line format to use
 
 	private static $instances = array();
 
@@ -29,28 +31,57 @@ class sly_Log
 	const FORMAT_EXTENDED = '[%date% %time%] %typename%: %message% (IP: %ip%, Hostname: %hostname%)';
 	const FORMAT_CALLER   = '[%date% %time%] %typename%: %message% (%caller%, %called%)';
 
-	private function __construct($filename)
-	{
+	/**
+	 * Constructor
+	 *
+	 * @param string  $filename  the filename to use
+	 */
+	private function __construct($filename) {
 		$this->filename = $filename;
 		$this->format   = self::FORMAT_SIMPLE;
 	}
 
-	public static function getInstance($name)
-	{
-		global $REX;
-
+	/**
+	 * Get a logger instance
+	 *
+	 * This method returns the instance for a specific file. The extension ".log"
+	 * will be appended automatically to the given $name.
+	 *
+	 * Only [a-z], [0-9], _ and - are allowed in $name.
+	 *
+	 * @param  string $name  the target file's basename (without extension)
+	 * @return sly_Log       the logger instance
+	 */
+	public static function getInstance($name) {
 		$name = preg_replace('#[^a-z0-9-_]#i', '_', $name);
-		$dir  = $REX['DYNFOLDER'].'/internal/sally/logs';
+		$dir  = SLY_DYNFOLDER.'/internal/sally/logs';
 
-		if (!is_dir($dir) && !@mkdir($dir, 0777, true)) {
-			throw new sly_Exception('Konnte Log-Verzeichnis '.$dir.' nicht erzeugen.');
+		if (!sly_Util_Directory::create($dir)) {
+			throw new sly_Exception('Could not create logging directory in '.$dir.'.');
 		}
 
 		return new self($dir.'/'.$name.'.log');
 	}
 
-	public function setFormat($format)
-	{
+	/**
+	 * Set the log format to use
+	 *
+	 * You can use the following placeholders in $format:
+	 *
+	 *  - %date%      (%Y-%m-%d)
+	 *  - %time%      (%H:%M:%S)
+	 *  - %typename%  (Info, Error, Warning or Dump)
+	 *  - %message%   (the user defined message)
+	 *  - %ip%        (the current user's IP or "<not set>" for cmdline calls)
+	 *  - %hostname%  (the current user's hostname or "N/A" if not available)
+	 *  - %caller%    (the function the called the logger instance)
+	 *  - %called%    (the line number where the logger was called)
+	 *
+	 * Everything else in $format will be left as is.
+	 *
+	 * @param string $format  the new log format
+	 */
+	public function setFormat($format) {
 		$this->format = trim($format);
 	}
 
@@ -58,8 +89,7 @@ class sly_Log
 	public function warning($text, $depth = 1) { return $this->log(self::LEVEL_WARNING, $text, $depth + 1); }
 	public function error($text, $depth = 1)   { return $this->log(self::LEVEL_ERROR,   $text, $depth + 1); }
 
-	public function log($level, $message, $depth = 1)
-	{
+	public function log($level, $message, $depth = 1) {
 		if ($level != self::LEVEL_INFO && $level != self::LEVEL_ERROR && $level != self::LEVEL_WARNING) {
 			throw new sly_Exception('Unbekannter Nachrichtentyp: '.$level);
 		}
@@ -84,8 +114,7 @@ class sly_Log
 		return file_put_contents($this->filename, $line."\n", FILE_APPEND) > 0;
 	}
 
-	public function dump($name, $value, $force_style = null, $depth = 1)
-	{
+	public function dump($name, $value, $force_style = null, $depth = 1) {
 		$line = $this->replacePlaceholders($this->format, 'Dump', $depth);
 
 		if ($force_style) {
@@ -131,8 +160,7 @@ class sly_Log
 		return file_put_contents($this->filename, $line."\n", FILE_APPEND) > 0;
 	}
 
-	protected function replacePlaceholders($line, $typename, $depth)
-	{
+	protected function replacePlaceholders($line, $typename, $depth) {
 		$ip   = empty($_SERVER['REMOTE_ADDR']) ? '<not set>' : $_SERVER['REMOTE_ADDR'];
 		$line = str_replace('%ip%', $ip, $line);
 		$line = str_replace('%date%', strftime('%Y-%m-%d'), $line);
@@ -160,8 +188,7 @@ class sly_Log
 		return $line;
 	}
 
-	protected function getCaller($depth)
-	{
+	protected function getCaller($depth) {
 		$trace = array_slice(debug_backtrace(), $depth);
 
 		// Wurde getCaller() nicht innerhalb einer Funktion aufgerufen?
