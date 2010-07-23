@@ -7,11 +7,22 @@ if (empty($_GET['f'])) {
 	die('Keine Datei angegeben.');
 }
 
-$projectBase = rtrim(realpath('../'), '/\\').'/';
+$projectBase = str_replace('\\', '/', rtrim(realpath('../'), '/\\')).'/';
 $cacheDir    = $projectBase.'data/dyn/internal/sally/css-cache';
 $lastMTime   = empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? 0 : strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']);
 
-if (!is_dir($cacheDir)) mkdir($cacheDir, 0777, true);
+if (!is_dir($cacheDir)) {
+	mkdir($cacheDir, 0777, true);
+
+	// chmod all path components on their own!
+
+	$base = '';
+
+	foreach (explode('/', $cacheDir) as $component) {
+		chmod($base.$component, 0777);
+		$base .= $component.'/';
+	}
+}
 
 if ($lastMTime > 0 && $lastMTime <= time()) {
 	$file      = (string) $_GET['f'];
@@ -19,10 +30,10 @@ if ($lastMTime > 0 && $lastMTime <= time()) {
 	$caches    = file_exists($cacheFile) ? file($cacheFile) : array();
 	$now       = time();
 	$lifetime  = 3600;
-	
+
 	foreach ($caches as $line) {
 		list ($filename, $mtime) = explode(':', trim($line));
-		
+
 		if ($filename == $file && ($mtime + $lifetime) > time()) {
 			header('HTTP/1.1 304 Not Modified');
 			header('Last-Modified: '.gmdate('D, d M Y H:i:s T', $mtime));

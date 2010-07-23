@@ -36,9 +36,11 @@ class sly_Configuration {
 
 	protected function getCacheDir() {
 		$dir = SLY_DYNFOLDER.DIRECTORY_SEPARATOR.'internal'.DIRECTORY_SEPARATOR.'sally'.DIRECTORY_SEPARATOR.'config';
-		if (!is_dir($dir) && !mkdir($dir, '0755', true)) {
-			throw new Exception('Cache-Verzeichnis '.$dir.' konnte nicht erzeugt werden.');
+
+		if (!sly_Util_Directory::create($dir)) {
+			throw new sly_Exception('Cache-Verzeichnis '.$dir.' konnte nicht erzeugt werden.');
 		}
+
 		return $dir;
 	}
 
@@ -254,7 +256,12 @@ class sly_Configuration {
 			sly_Core::getPersistentRegistry()->set('sly_ProjectConfig', $this->projectConfig);
 		}
 		catch (Exception $e) {
-			// Wir sind vermutlich noch vor dem Setup und können daher noch keine Verbindung zur DB aufbauen.
+			// Could not save project configuration. This is only "ok" while we're
+			// in setup mode and don't know the correct database name yet.
+
+			if (!sly_Core::config()->get('SETUP')) {
+				trigger_error('Could not save project configuration on script exit.', E_USER_WARNING);
+			}
 		}
 	}
 
