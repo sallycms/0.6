@@ -157,7 +157,7 @@ function insertImage(src,alt)
 
 function insertLink(src)
 {
-  window.opener.insertFileLink('files/' + src);
+  window.opener.insertFileLink('data/mediapool/' + src);
   self.close();
 }
 
