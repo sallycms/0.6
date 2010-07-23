@@ -157,7 +157,7 @@ class sly_Core {
 	}
 
 	public static function isBackend() {
-		return self::config()->get('SALLY');
+		return defined('IS_SALLY_BACKEND') && IS_SALLY_BACKEND == true;
 	}
 
 	/**

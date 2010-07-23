@@ -1,6 +1,7 @@
 <?php
 
 define('IS_SALLY', true);
+define('IS_SALLY_BACKEND', true);
 
 ob_start();
 ob_implicit_flush(0);
