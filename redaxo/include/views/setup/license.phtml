@@ -15,7 +15,7 @@ print '<div class="rex-area-scroll">';
 $basedir = $REX['FRONTEND_PATH'];
 $license = '<p class="rex-tx1">'.nl2br(file_get_contents($basedir.'/_lizenz.txt')).'</p>';
 
-print strpos($REX['LANG'], 'utf8') === false ? utf8_decode($license) : $license;
+print $license;
 
 ?>
 	</div>

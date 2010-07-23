@@ -487,8 +487,8 @@ function rex_organize_priorities($tableName, $priorColumnName, $whereCondition =
 
 function rex_lang_is_utf8()
 {
-	global $REX;
-	return strpos($REX['LANG'], 'utf8') !== false;
+	// In SallyCMS all backend locales are UTF-8.
+	return true;
 }
 
 function rex_is_multilingual()

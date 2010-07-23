@@ -25,7 +25,7 @@ if (get_magic_quotes_gpc()) {
 // Register Globals entfernen
 
 if (ini_get('register_globals')) {
-	$superglobals = array('_GET', '_POST', '_REQUEST', '_ENV', '_FILES', '_SESSION', '_COOKIE', '_SERVER');
+	$superglobals = array('REX', '_GET', '_POST', '_REQUEST', '_ENV', '_FILES', '_SESSION', '_COOKIE', '_SERVER');
 	$keys         = array_keys($GLOBALS);
 
 	foreach ($keys as $key) {

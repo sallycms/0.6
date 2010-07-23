@@ -220,3 +220,39 @@ function ht($index)
 {
 	return sly_html(t($index));
 }
+
+function sly_ini_get($key, $default = null) {
+	if (empty($key)) return $default;
+
+	$res = trim(ini_get($key));
+
+	// interpret numeric values
+	if (preg_match('#(^[0-9]+)([ptgmk])$#i', $res, $matches)) {
+		$last = strtolower($matches[2]);
+		$res  = strtolower($matches[1]);
+
+		switch ($last) {
+			case 'p': $res *= 1024;
+			case 't': $res *= 1024;
+			case 'g': $res *= 1024;
+			case 'm': $res *= 1024;
+			case 'k': $res *= 1024;
+		}
+	}
+
+	// interpret boolean values
+	switch (strtolower($res)) {
+		case 'on':
+		case 'yes':
+		case 'true':
+			$res = true;
+			break;
+		case 'off':
+		case 'no':
+		case 'false':
+			$res = false;
+			break;
+	}
+
+	return $res;
+}
