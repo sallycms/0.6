@@ -36,9 +36,11 @@ class sly_Configuration {
 
 	protected function getCacheDir() {
 		$dir = SLY_DYNFOLDER.DIRECTORY_SEPARATOR.'internal'.DIRECTORY_SEPARATOR.'sally'.DIRECTORY_SEPARATOR.'config';
-		if (!is_dir($dir) && !mkdir($dir, '0755', true)) {
-			throw new Exception('Cache-Verzeichnis '.$dir.' konnte nicht erzeugt werden.');
+
+		if (!sly_Util_Directory::create($dir)) {
+			throw new sly_Exception('Cache-Verzeichnis '.$dir.' konnte nicht erzeugt werden.');
 		}
+
 		return $dir;
 	}
 

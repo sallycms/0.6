@@ -22,7 +22,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 	public function index()	{
 		global $REX;
-		
+
 		$languages = $REX['LANGUAGES'];
 
 		// wenn nur eine Sprache -> direkte Weiterleitung
@@ -60,14 +60,19 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		}
 
 		$errorMsg = $this->checkDirsAndFiles();
-		
+
 		// Verzeichnisse schützen
-		
+
 		$protected = array('../develop', '../data/dyn/internal');
 		$htaccess  = 'include/.htaccess';
-		
+
 		foreach ($protected as $directory) {
-			if (is_dir($directory) && !file_exists($directory.'/.htaccess') && !copy($htaccess, $directory.'/.htaccess')) {
+			if (
+				is_dir($directory) &&
+				!file_exists($directory.'/.htaccess') &&
+				!copy($htaccess, $directory.'/.htaccess') &&
+				!chmod($directory.'/.htaccess', 0777)
+			) {
 				$errors[] = 'Vezeichnis '.realpath($directory).' konnte nicht gegen HTTP-Zugriffe geschützt werden.';
 			}
 		}
@@ -83,7 +88,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		$config = sly_Core::config();
 		$data   = $config->get('DATABASE');
 		$isSent = isset($_POST['sly-submit']);
-		
+
 		if ($isSent) {
 			$data['TABLE_PREFIX'] = sly_post('prefix', 'string');
 			$data['HOST']         = sly_post('host', 'string');
@@ -101,7 +106,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 				else {
 					$db = new sly_DB_PDO_Persistence($data['DRIVER'], 'host='.$data['HOST'].';dbname='.$data['NAME'], $data['LOGIN'], $data['PASSWORD']);
 				}
-				
+
 				$config->setLocal('DATABASE', $data);
 				unset($_POST['sly-submit']);
 				$this->initdb();
@@ -155,7 +160,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		$prefix         = $config->get('DATABASE/TABLE_PREFIX');
 		$error          = '';
 		$dbInitFunction = sly_post('db_init_function', 'string', '');
-		
+
 		// nenötigte Tabellen prüfen
 
 		$requiredTables = array (
@@ -232,10 +237,10 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			));
 		}
 	}
-	
+
 	protected function createuser() {
 		global $I18N;
-		
+
 		$config      = sly_Core::config();
 		$prefix      = $config->get('DATABASE/TABLE_PREFIX');
 		$pdo         = sly_DB_Persistence::getInstance();
@@ -244,7 +249,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		$adminUser   = sly_post('admin_user', 'string');
 		$adminPass   = sly_post('admin_pass', 'string');
 		$error       = '';
-		
+
 		if (isset($_POST['sly-submit'])) {
 			if ($createAdmin) {
 				if (empty($adminUser)) {
@@ -258,7 +263,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 				if (empty($error)) {
 					$userOK = $pdo->listTables($prefix.'user') && $pdo->fetch('user', 'id', array('login' => $adminUser)) > 0;
-					
+
 					if ($userOK) {
 						$error = $I18N->msg('setup_042'); // Dieses Login existiert schon!
 					}
@@ -274,7 +279,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 							'createuser' => 'setup',
 							'status'     => 1
 						));
-						
+
 						if ($affected == 0) {
 							$error = $I18N->msg('setup_043');
 						}
@@ -284,7 +289,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			elseif (!$usersExist) {
 				$error = $I18N->msg('setup_044');
 			}
-			
+
 			if (empty($error)) {
 				unset($_POST['sly-submit']);
 				$this->finish();
@@ -299,12 +304,12 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			'adminPass'  => $adminPass
 		));
 	}
-	
+
 	public function finish() {
 		global $I18N, $REX;
 
 		sly_Core::config()->setLocal('SETUP', false);
-		
+
 		$this->render('views/setup/finish.phtml');
 	}
 
@@ -324,7 +329,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 		$s = DIRECTORY_SEPARATOR;
 
-		$writables = array (
+		$writables = array(
 			$REX['DATAFOLDER'],
 			$REX['MEDIAFOLDER'],
 			$REX['DYNFOLDER'],
@@ -378,7 +383,8 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 		foreach ($elements as $element) {
 			if ($elementsAreDirs && !is_dir($element)) {
-				mkdir($element, $REX['DIRPERM']);
+				mkdir($element);
+				chmod($element, 0777);
 			}
 
 			$writable = _rex_is_writable($element);

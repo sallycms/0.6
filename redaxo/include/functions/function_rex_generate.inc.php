@@ -34,13 +34,13 @@ function rex_generateAll()
  *
  * @param $id ArtikelId des Artikels
  * @param [$clang ClangId des Artikels]
- * 
+ *
  * @return void
  */
 function rex_deleteCacheArticle($id, $clang = null)
 {
 	global $REX;
-	
+
 	$cache = sly_Core::cache();
 
 	foreach (array_keys($REX['CLANG']) as $_clang) {
@@ -62,7 +62,7 @@ function rex_deleteCacheArticle($id, $clang = null)
  *
  * @param $id ArtikelId des Artikels
  * @param [$clang ClangId des Artikels]
- * 
+ *
  * @return void
  */
 function rex_deleteCacheArticleContent($id, $clang = null)
@@ -76,10 +76,10 @@ function rex_deleteCacheArticleContent($id, $clang = null)
 		if ($clang !== null && $clang != $_clang) {
 			continue;
 		}
-		
+
 		unlink($cachePath.$id.'.'.$_clang.'.content');
 	}
-	
+
 	error_reporting($level);
 }
 
@@ -91,10 +91,10 @@ function rex_deleteCacheSliceContent($slice_id)
 
 /**
  * Generiert den Artikel-Cache des Artikelinhalts.
- * 
+ *
  * @param $article_id Id des zu generierenden Artikels
  * @param [$clang ClangId des Artikels]
- * 
+ *
  * @return true bei Erfolg, false wenn eine ungütlige article_id übergeben wird, sonst eine Fehlermeldung
  */
 function rex_generateArticleContent($article_id, $clang = null)
@@ -111,14 +111,14 @@ function rex_generateArticleContent($article_id, $clang = null)
 			'FROM #_article_slice '.
 			'WHERE article_id = '.$article_id.' AND clang = '.$clang.' '.
 			'ORDER BY re_article_slice_id ASC';
-		
+
 		$sql             = new rex_sql();
 		$slices          = $sql->getArray(str_replace('#_', $REX['DATABASE']['TABLE_PREFIX'], $query));
 		$article_content = '';
-		
+
 		if (!empty($slices)) {
 			$sliceArray = array();
-			
+
 			foreach ($slices as $slice) {
 				$re_id = $slice['re_article_slice_id'];
 
@@ -130,11 +130,11 @@ function rex_generateArticleContent($article_id, $clang = null)
 			$ctype_content = array();
 			$idx           = 0;
 			$sliceCount    = count($sliceArray);
-			
+
 			for ($i = 0; $i < $sliceCount; ++$i) {
 				$ctype = $sliceArray[$idx]['ctype'];
 				$id    = $sliceArray[$idx]['id'];
-				
+
 				if (!$oldctype) {
 					$article_content .= '<?php if ($this->ctype == '.$ctype.' || $this->ctype == -1) { ?>';
 				}
@@ -143,23 +143,23 @@ function rex_generateArticleContent($article_id, $clang = null)
 					$ctype_content    = array();
 					$article_content .= '<?php } elseif ($this->ctype == '.$ctype.' || $this->ctype == -1) { ?>';
 				}
-				
+
 				$oldctype = $ctype;
 				$idx      = $id;
-				
+
 				$ctype_content[] = 'OOArticleSlice::getArticleSliceById('.$id.','.$clang.')->getContent()';
 			}
-			
+
 			$article_content .= '<?php print '.implode('.', $ctype_content).'; ?>';
 			$article_content .= '<?php } ?>';
 		}
-		
+
 		$article_content_file = SLY_DYNFOLDER."/internal/sally/articles/$article_id.$_clang.content";
 
 		if (rex_put_file_contents($article_content_file, $article_content) === false) {
 			return $I18N->msg('article_could_not_be_generated').' '.$I18N->msg('check_rights_in_directory').SLY_DYNFOLDER.'/internal/sally/articles/';
 		}
-		
+
 		rex_register_extension_point('CLANG_ARTICLE_GENERATED', '', array(
 			'id'      => $article_id,
 			'clang'   => $clang
@@ -175,7 +175,7 @@ function rex_generateArticleContent($article_id, $clang = null)
  * Löscht einen Artikel
  *
  * @param $id ArtikelId des Artikels, der gelöscht werden soll
- * 
+ *
  * @return Erfolgsmeldung bzw. Fehlermeldung bei Fehlern.
  */
 function rex_deleteArticle($id)
@@ -185,9 +185,9 @@ function rex_deleteArticle($id)
 
 /**
  * Löscht einen Artikel
- * 
+ *
  * @param $id ArtikelId des Artikels, der gelöscht werden soll
- * 
+ *
  * @return true wenn der Artikel gelöscht wurde, sonst eine Fehlermeldung
  */
 function _rex_deleteArticle($id)
@@ -214,7 +214,7 @@ function _rex_deleteArticle($id)
 		$return['message'] = $I18N->msg('cant_delete_sitestartarticle');
 		return $return;
 	}
-	
+
 	if ($id == $REX['NOTFOUND_ARTICLE_ID']) {
 		$return['message'] = $I18N->msg('cant_delete_notfoundarticle');
 		return $return;
@@ -225,15 +225,15 @@ function _rex_deleteArticle($id)
 	if ($articleData !== false) {
 		$re_id = (int) $articleData['re_id'];
 		$return['state'] = true;
-		
+
 		if ($articleData['startpage'] == 1) {
 			$return['message'] = $I18N->msg('category_deleted');
 			$children = rex_sql::getArrayEx('SELECT id FROM #_article WHERE re_id = '.$id.' AND clang = 0', '#_');
-			
+
 			foreach ($children as $child) {
 				$retval = _rex_deleteArticle($child);;
 				$return['state'] &= $retval['state'];
-				
+
 				if (!$retval['status']) {
 					$return['message'] .= "<br />\n$retval[message]";
 				}
@@ -245,22 +245,22 @@ function _rex_deleteArticle($id)
 
 		// Rekursion über alle Kindkategorien ergab keine Fehler
 		// => löschen erlaubt
-		
+
 		if ($return['state'] === true) {
 			rex_deleteCacheArticle($id);
-			
+
 			$sql = new rex_sql();
 			$sql->setQuery('DELETE FROM #_article WHERE id = '.$id, '#_');
 			$sql->setQuery('DELETE FROM #_article_slice WHERE article_id = '.$id, '#_');
 			$sql = null;
-			
+
 			// Listen generieren (auskommtiert, weil: werden layze erzeugt)
 			//rex_generateLists($re_id);
 		}
 
 		return $return;
 	}
-	
+
 	$return['message'] = $I18N->msg('category_doesnt_exist');
 	return $return;
 }
@@ -282,7 +282,7 @@ function rex_deleteDir($file, $delete_folders = false, $isRecursion = false)
 	if (file_exists($file)) {
 		if (is_dir($file)) {
 			$handle = opendir($file);
-			
+
 			if (!$handle) {
 				if (!$isRecursion) error_reporting($level);
 				return false;
@@ -292,21 +292,21 @@ function rex_deleteDir($file, $delete_folders = false, $isRecursion = false)
 				if ($filename == '.' || $filename == '..') {
 					continue;
 				}
-				
+
 				$full = $file.DIRECTORY_SEPARATOR.$filename;
-				
+
 				// Auch wenn wir beim rekursiven Aufruf eine einzelne Datei löschen
 				// würden, sparen wir uns den Aufwand und erledigen es gleich mit.
 
 				if (is_dir($full) && !rex_deleteDir($full, $delete_folders, true)) {
 					$state = false;
 				}
-				
+
 				if (is_file($full) && !unlink($full)) {
 					$state = false;
 				}
 			}
-			
+
 			closedir($handle);
 
 			if ($state !== true) {
@@ -315,7 +315,7 @@ function rex_deleteDir($file, $delete_folders = false, $isRecursion = false)
 			}
 
 			// Ordner auch löschen?
-			
+
 			if ($delete_folders && !rmdir($file)) {
 				if (!$isRecursion) error_reporting($level);
 				return false;
@@ -323,7 +323,7 @@ function rex_deleteDir($file, $delete_folders = false, $isRecursion = false)
 		}
 		else {
 			// Datei löschen
-			
+
 			if (!unlink($file)) {
 				if (!$isRecursion) error_reporting($level);
 				return false;
@@ -332,7 +332,7 @@ function rex_deleteDir($file, $delete_folders = false, $isRecursion = false)
 	}
 	else {
 		// Datei/Ordner existiert nicht
-		
+
 		if (!$isRecursion) error_reporting($level);
 		return false;
 	}
@@ -368,7 +368,7 @@ function rex_deleteFiles($directory)
 
 /**
  * Kopiert eine Ordner von $srcdir nach $dstdir
- * 
+ *
  * @param  string $srcdir    Zu kopierendes Verzeichnis
  * @param  string $dstdir    Zielpfad
  * @param  string $startdir  Pfad ab welchem erst neue Ordner generiert werden
@@ -382,13 +382,13 @@ function rex_copyDir($srcdir, $dstdir, $startdir = '')
 
 	if (!is_dir($dstdir)) {
 		$dir = '';
-		
+
 		foreach (explode(DIRECTORY_SEPARATOR, $dstdir) as $dirPart) {
 			$dir .= $dirPart.DIRECTORY_SEPARATOR;
-			
+
 			if (strpos($startdir, $dir) !== 0 && !is_dir($dir)) {
 				mkdir($dir);
-				chmod($dir, $REX['DIRPERM']);
+				chmod($dir, 0777);
 			}
 		}
 	}
@@ -398,10 +398,10 @@ function rex_copyDir($srcdir, $dstdir, $startdir = '')
 			if ($file[0] != '.') {
 				$srcfile = $srcdir.DIRECTORY_SEPARATOR.$file;
 				$dstfile = $dstdir.DIRECTORY_SEPARATOR.$file;
-				
+
 				if (is_file($srcfile)) {
 					$isNewer = true;
-					
+
 					if (is_file($dstfile)) {
 						$isNewer = (filemtime($srcfile) - filemtime($dstfile)) > 0;
 					}
@@ -421,10 +421,10 @@ function rex_copyDir($srcdir, $dstdir, $startdir = '')
 				}
 			}
 		}
-		
+
 		closedir($curdir);
 	}
-	
+
 	return $state;
 }
 
@@ -434,13 +434,13 @@ function rex_copyDir($srcdir, $dstdir, $startdir = '')
  * Löscht eine Clang
  *
  * @param $id Zu löschende ClangId
- * 
+ *
  * @return true bei Erfolg, sonst false
  */
 function rex_deleteCLang($clang)
 {
 	global $REX;
-	
+
 	$clang = (int) $clang;
 
 	if ($clang == 0 || !isset($REX['CLANG'][$clang])) {
@@ -475,7 +475,7 @@ function rex_deleteCLang($clang)
 function rex_addCLang($id, $name)
 {
 	global $REX;
-	
+
 	$id = (int) $id;
 
 	if (isset($REX['CLANG'][$id])) {
@@ -483,7 +483,7 @@ function rex_addCLang($id, $name)
 	}
 
 	$REX['CLANG'][$id] = $name;
-	
+
 	$sql = new rex_sql();
 	$sql->setQuery(
 		'INSERT INTO #_article (id,re_id,name,catname,catprior,attributes,'.
@@ -496,7 +496,7 @@ function rex_addCLang($id, $name)
 
 	$sql->setQuery('INSERT INTO '.$REX['DATABASE']['TABLE_PREFIX'].'clang (id,name,revision) VALUES ('.$id.', "'.$sql->escape($name).'", 0)');
 	unset($sql);
-	
+
 	rex_register_extension_point('CLANG_ADDED', '', array('id' => $id, 'name' => $name));
 	return true;
 }

@@ -13,16 +13,35 @@ class sly_Util_Directory {
 	protected $directory;
 
 	public function __construct($directory, $createIfNeeded = false) {
-		global $REX;
-
 		$directory = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $directory);
 		$directory = rtrim($directory, DIRECTORY_SEPARATOR);
 
 		if (!is_dir($directory) && $createIfNeeded) {
-			mkdir($directory, $REX['DIRPERM'], true);
+			self::create($directory);
 		}
 
 		$this->directory = $directory;
+	}
+
+	public static function create($path, $perm = 0777) {
+		$path = self::normalize($path);
+
+		if (!is_dir($path)) {
+			if (!mkdir($path, $perm, true)) {
+				return false;
+			}
+
+			// chmod all path components on their own!
+
+			$base = '';
+
+			foreach (explode(DIRECTORY_SEPARATOR, $path) as $component) {
+				chmod($base.$component, $perm);
+				$base .= $component.'/';
+			}
+		}
+
+		return true;
 	}
 
 	public function exists() {
@@ -112,7 +131,7 @@ class sly_Util_Directory {
 				unset($paths[$idx]);
 				continue;
 			}
-			
+
 			$path = trim(self::normalize($path), DIRECTORY_SEPARATOR);
 		}
 

@@ -19,7 +19,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		$this->data       = sly_Core::config()->get('ADDON');
 		$this->i18nPrefix = 'plugin_';
 	}
-	
+
 	/**
 	 * Installiert ein Plugin
 	 *
@@ -28,19 +28,19 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 	public function install($plugin, $installDump = true)
 	{
 		global $REX;
-		
+
 		list ($addon, $pluginName) = $plugin;
 		$pluginDir   = $this->baseFolder($plugin);
 		$installFile = $pluginDir.'install.inc.php';
 		$installSQL  = $pluginDir.'install.sql';
 		$configFile  = $pluginDir.'config.inc.php';
 		$filesDir    = $pluginDir.'files';
-		
+
 		$state = $this->extend('PRE', 'INSTALL', $plugin, true);
 
 		// Prüfen des Plugin-Ornders auf Schreibrechte,
 		// damit das Plugin später wieder gelöscht werden kann
-		
+
 		$state = rex_is_writable($pluginDir);
 
 		if ($state) {
@@ -51,7 +51,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 
 				if ($hasError) {
 					$state = $this->I18N('no_install', $pluginName).'<br />';
-					
+
 					if ($hasError) {
 						$state .= $state .= $REX['ADDON']['installmsg'][$pluginName];
 					}
@@ -76,7 +76,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 							$state = 'Error found in install.sql:<br />'.$state;
 						}
 					}
-					
+
 					if ($state === true) {
 						$this->setProperty($plugin, 'install', true);
 					}
@@ -86,17 +86,17 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 				$state = $this->I18N('install_not_found');
 			}
 		}
-		
+
 		$state = $this->extend('POST', 'INSTALL', $plugin, $state);
-		
+
 		// Dateien kopieren
-		
+
 		if ($state === true && is_dir($filesDir)) {
 			if (!rex_copyDir($filesDir, $this->publicFolder($plugin), $REX['MEDIAFOLDER'])) {
 				$state = $this->I18N('install_cant_copy_files');
 			}
 		}
-		
+
 		$state = $this->extend('POST', 'ASSET_COPY', $plugin, $state);
 
 		if ($state !== true) {
@@ -105,7 +105,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 
 		return $state;
 	}
-	
+
 	/**
 	 * De-installiert ein Plugin
 	 *
@@ -114,21 +114,21 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 	public function uninstall($plugin)
 	{
 		list($addon, $pluginName) = $plugin;
-		
+
 		$pluginDir      = $this->baseFolder($plugin);
 		$uninstallFile  = $pluginDir.'uninstall.inc.php';
 		$uninstallSQL   = $pluginDir.'uninstall.sql';
-		
+
 		$state = $this->extend('PRE', 'UNINSTALL', $plugin, true);
 
 		if (is_readable($uninstallFile)) {
 			$this->mentalGymnasticsInclude($uninstallFile, $plugin);
-			
+
 			$hasError = $config->has('ADDON/installmsg/'.$pluginName);
 
 			if ($hasError) {
 				$state = $this->I18N('no_uninstall', $pluginName).'<br />';
-				
+
 				if ($hasError) {
 					$state .= $config->get('ADDON/installmsg/'.$pluginName);
 				}
@@ -155,12 +155,12 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		else {
 			$state = $this->I18N('uninstall_not_found');
 		}
-		
+
 		$state = $this->extend('POST', 'UNINSTALL', $plugin, $state);
-		
+
 		if ($state === true) $state = $this->deletePublicFiles($plugin);
 		if ($state === true) $state = $this->deleteInternalFiles($plugin);
-		
+
 		$state = $this->extend('POST', 'ASSET_DELETE', $plugin, $state);
 
 		if ($state !== true) {
@@ -180,10 +180,10 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		if ($this->isActivated($plugin)) {
 			return true;
 		}
-		
+
 		if ($this->isInstalled($plugin)) {
 			$state = $this->extend('PRE', 'ACTIVATE', $plugin, true);
-			
+
 			if ($state === true) {
 				$this->setProperty($plugin, 'status', true);
 			}
@@ -205,9 +205,9 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		if (!$this->isActivated($plugin)) {
 			return true;
 		}
-		
+
 		$state = $this->extend('PRE', 'DEACTIVATE', $plugin, true);
-		
+
 		if ($state === true) {
 			$this->setProperty($plugin, 'status', false);
 		}
@@ -226,7 +226,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		if ($state === true) $state = $this->deleteHelper($plugin);
 		return $this->extend('POST', 'DELETE', $plugin, $state);
 	}
-	
+
 	public function baseFolder($plugin)
 	{
 		list($addon, $pluginName) = $plugin;
@@ -242,50 +242,51 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 	{
 		return $this->dynFolder('internal', $plugin);
 	}
-	
+
 	protected function dynFolder($type, $plugin)
 	{
 		list($addon, $pluginName) = $plugin;
-		
+
 		$config = sly_Core::config();
 		$s      = DIRECTORY_SEPARATOR;
 		$dir    = SLY_DYNFOLDER.$s.$type.$s.$addon.$s.$pluginName;
-		if (!is_dir($dir)) mkdir($dir, $config->get('DIRPERM'), true);
+
+		sly_Util_Directory::create($dir);
 		return $dir;
 	}
-	
+
 	protected function extend($time, $type, $plugin, $state)
 	{
 		list($addon, $pluginName) = $plugin;
 		return rex_register_extension_point('SLY_PLUGIN_'.$time.'_'.$type, $state, array('addon' => $addon, 'plugin' => $pluginName));
 	}
-	
+
 	public function deletePublicFiles($plugin)
 	{
 		return $this->deleteFiles('public', $plugin);
 	}
-	
+
 	public function deleteInternalFiles($plugin)
 	{
 		return $this->deleteFiles('internal', $plugin);
 	}
-	
+
 	protected function deleteFiles($type, $plugin)
 	{
 		$dir   = $this->dynFolder($type, $plugin);
 		$state = $this->extend('PRE', 'DELETE_'.strtoupper($type), $plugin, true);
-		
+
 		if ($state !== true) {
 			return $state;
 		}
-		
+
 		if (is_dir($dir) && !rex_deleteDir($dir, true)) {
 			return $this->I18N('install_cant_delete_files');
 		}
-		
+
 		return $this->extend('POST', 'DELETE_'.strtoupper($type), $plugin, true);
 	}
-	
+
 	protected function I18N()
 	{
 		global $I18N;
@@ -300,48 +301,48 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 	{
 		return $this->isInstalled($plugin) && $this->isActivated($plugin);
 	}
-	
+
 	public function isInstalled($plugin)
 	{
 		return $this->getProperty($plugin, 'install', false) == true;
 	}
-	
+
 	public function isActivated($plugin)
 	{
 		return $this->getProperty($plugin, 'status', false) == true;
 	}
-	
+
 	public function getVersion($plugin, $default = null)
 	{
 		$version     = $this->getProperty($plugin, 'version', null);
 		$versionFile = $this->baseFolder($plugin).'/version';
-		
+
 		if ($version === null && file_exists($versionFile)) {
 			$version = file_get_contents($versionFile);
 		}
-		
+
 		return $version === null ? $default : $version;
 	}
-	
+
 	public function getAuthor($plugin, $default = null)
 	{
 		return $this->getProperty($plugin, 'author', $default);
 	}
-	
+
 	public function getSupportPage($plugin, $default = null)
 	{
 		return $this->getProperty($plugin, 'supportpage', $default);
 	}
-	
+
 	public function getIcon($plugin)
 	{
 		$directory = $this->publicFolder($plugin);
 		$base      = $this->baseFolder($plugin);
 		$icon      = $this->getProperty($plugin, 'icon', null);
-		
+
 		if ($icon === null) {
 			list($addon, $plugin) = $plugin;
-			
+
 			if (file_exists($directory.'/images/icon.png')) {
 				$icon = 'images/'.$addon.'/'.$plugin.'/icon.png';
 			}
@@ -358,10 +359,10 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 				$icon = false;
 			}
 		}
-		
+
 		return $icon;
 	}
-	
+
 	/**
 	 * Setzt eine Eigenschaft des Addons.
 	 *
@@ -373,10 +374,10 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 	public function setProperty($plugin, $property, $value)
 	{
 		list($addon, $pluginName) = $plugin;
-		
+
 		return sly_Core::config()->set('ADDON/'.$addon.'/plugins/'.$pluginName.'/'.$property, $value);
 	}
-	
+
 	/**
 	 * Gibt eine Eigenschaft des Plugins zurück.
 	 *
@@ -414,16 +415,16 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 	public function getAvailablePlugins($addon)
 	{
 		$avail = array();
-		
+
 		foreach ($this->getRegisteredPlugins($addon) as $pluginName) {
 			if ($this->isAvailable(array($addon, $pluginName))) {
 				$avail[] = $pluginName;
 			}
 		}
-		
+
 		return $avail;
 	}
-	
+
 	/**
 	 * Gibt ein Array aller installierten Plugins zurück.
 	 *
@@ -433,14 +434,14 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 	public function getInstalledPlugins($addon)
 	{
 		$avail = array();
-		
+
 		foreach ($this->getRegisteredPlugins($addon) as $plugin) {
 			if ($this->isInstalled(array($addon, $plugin))) $avail[] = $plugin;
 		}
 
 		return $avail;
 	}
-	
+
 	/**
 	 * So sieht eine Methode aus, die sich auf ihr Refactoring freut.
 	 *
@@ -451,7 +452,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 	public function mentalGymnasticsInclude($filename, $plugin)
 	{
 		global $REX, $I18N; // Nötig damit im Plugin verfügbar
-		
+
 		// Sicherstellen, dass aktuelle Änderungen von Plugins/AddOns auch in
 		// ADDONsic landen, da zwischenzeitlich keine Synchronisierung zwischen
 		// $REX und sly_Configuration stattfindet.
@@ -465,9 +466,9 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 
 			$plugin       = $__TMP['plugin'];
 			$pluginConfig = array();
-			
+
 			list($addonName, $pluginName) = $plugin;
-			
+
 			if (isset($ADDONSsic['plugins'][$addonName])) {
 				$pluginConfig = $ADDONSsic['plugins'][$addonName];
 			}
@@ -475,14 +476,14 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 			if (isset($REX['ADDON']) && is_array($REX['ADDON'])) {
 				foreach (array_keys($REX['ADDON']) as $key) {
 					// alle Eigenschaften, die das Plugin betreffen, verschieben
-					
+
 					if (isset($REX['ADDON'][$key][$pluginName])) {
 						$pluginConfig[$key][$pluginName] = $REX['ADDON'][$key][$pluginName];
 						unset($REX['ADDON'][$key][$pluginName]);
 
 						// ggf leeres Array löschen,
 						// damit es beim Merge später nicht ein Vorhandenes überschreibt
-						
+
 						if (empty($REX['ADDON'][$key])) {
 							unset($REX['ADDON'][$key]);
 						}
@@ -500,5 +501,5 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 				'Es ist eine unerwartete Ausnahme während der Installation aufgetreten: '.$e->getMessage();
 		}
 	}
-	
+
 }
