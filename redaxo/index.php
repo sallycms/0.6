@@ -145,26 +145,7 @@ if ($REX['USER']) {
 	// Startseite ermitteln
 
 	$REX['USER']->pages = $REX['PAGES'];
-	$REX['PAGE']        = strtolower(sly_request('page', 'string'));
-
-	if (!empty($rex_user_login)) {
-		$REX['PAGE'] = strtolower($REX['LOGIN']->getStartpage());
-	}
-
-	// Erst normale Startseite, dann User-Startseite, dann System-Startseite und
-	// zuletzt auf die Profilseite zurückfallen.
-
-	if (!isset($REX['PAGES'][$REX['PAGE']])) {
-		$REX['PAGE'] = strtolower($REX['LOGIN']->getStartpage());
-
-		if (!isset($REX['PAGES'][$REX['PAGE']])) {
-			$REX['PAGE'] = strtolower($config->get('START_PAGE'));
-
-			if (!isset($REX['PAGES'][$REX['PAGE']])) {
-				$REX['PAGE'] = 'profile';
-			}
-		}
-	}
+	$REX['PAGE']        = sly_Controller_Base::getPage(!empty($rex_user_login));
 
 	// Login OK -> Redirect auf Startseite
 

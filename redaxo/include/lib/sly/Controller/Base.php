@@ -23,21 +23,50 @@ abstract class sly_Controller_Base
 		$this->action = rex_request(self::ACTIONPARAM, 'string', 'index');
 	}
 
+	public static function getPage($isLogin = false)
+	{
+		global $REX;
+
+		$config = sly_Core::config();
+		$page   = strtolower(sly_request(self::PAGEPARAM, 'string'));
+
+		if ($isLogin) {
+			$page = strtolower($REX['LOGIN']->getStartpage());
+		}
+
+		// Erst normale Startseite, dann User-Startseite, dann System-Startseite und
+		// zuletzt auf die Profilseite zurückfallen.
+
+		if (!isset($REX['PAGES'][$page])) {
+			$page = strtolower($REX['LOGIN']->getStartpage());
+
+			if (!isset($REX['PAGES'][$page])) {
+				$page = strtolower($config->get('START_PAGE'));
+
+				if (!isset($REX['PAGES'][$page])) {
+					$page = 'profile';
+				}
+			}
+		}
+
+		$_REQUEST[self::PAGEPARAM] = $page;
+		return $page;
+	}
+
 	public static function factory($forcePage = null, $forceSubpage = null)
 	{
 		$page    = $forcePage === null    ? sly_request(self::PAGEPARAM, 'string', self::DEFAULTPAGE) : $forcePage;
 		$subpage = $forceSubpage === null ? strtolower(sly_request(self::SUBPAGEPARAM, 'string', '')) : $forceSubpage;
 		$name    = 'sly_Controller_'.ucfirst($page);
 
-
-      	if (!empty($subpage) && $subpage != 'index') {
-			$name .= '_'.strtoupper(substr($subpage, 0, 1)).substr($subpage, 1);
+		if (!empty($subpage) && $subpage != 'index') {
+			$name .= '_'.ucfirst($subpage);
 		}
 
 		if (class_exists($name)) {
 			return new $name($name);
 		}
-		
+
 		return null;
 	}
 
@@ -50,19 +79,19 @@ abstract class sly_Controller_Base
 		if ($this->checkPermission() !== true){
 			throw new sly_Authorisation_Exception('HTTP 403: Zugriff auf '. $this->action .' in '. get_class($this) .' nicht gestattet!');
 		}
-		
+
 		$this->init();
 
 		$method = $this->action;
 		$retval = $this->$method();
-		
+
 		$this->teardown();
 	}
 
 	protected function render($filename, $params = array())
 	{
 		global $REX, $I18N;
-		
+
 		// Die Parameternamen $params und $filename sind zu kurz, als dass
 		// man sie zuverlässig nutzen könnte. Wenn $params durch extract()
 		// während der Ausführung überschrieben wird kann das unvorhersehbare
@@ -78,11 +107,11 @@ abstract class sly_Controller_Base
 		include $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.$filenameHtuG50hNCdikAvf7CZ1F;
 		print ob_get_clean();
 	}
-	
+
 	protected function init()
 	{
 	}
-	
+
 	protected function teardown()
 	{
 	}
