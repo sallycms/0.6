@@ -85,10 +85,70 @@ class sly_Log {
 		$this->format = trim($format);
 	}
 
-	public function info($text, $depth = 1)    { return $this->log(self::LEVEL_INFO,    $text, $depth + 1); }
-	public function warning($text, $depth = 1) { return $this->log(self::LEVEL_WARNING, $text, $depth + 1); }
-	public function error($text, $depth = 1)   { return $this->log(self::LEVEL_ERROR,   $text, $depth + 1); }
+	/**
+	 * Log an information
+	 *
+	 * This method is just a wrapper for log() called with sly_log::LEVEL_INFO.
+	 *
+	 * @param  string $text   the text to log
+	 * @param  int    $depth  the steps that should be skipped in the stacktrace
+	 *                        when finding the caller method.
+	 * @return boolean        true if writing to the log was successful, else false
+	 */
+	public function info($text, $depth = 1) {
+		return $this->log(self::LEVEL_INFO, $text, $depth + 1);
+	}
 
+	/**
+	 * Log a warning message
+	 *
+	 * This method is just a wrapper for log() called with
+	 * sly_log::LEVEL_WARNING.
+	 *
+	 * @param  string $text   the text to log
+	 * @param  int    $depth  the steps that should be skipped in the stacktrace
+	 *                        when finding the caller method.
+	 * @return boolean        true if writing to the log was successful, else false
+	 */
+	public function warning($text, $depth = 1) {
+		return $this->log(self::LEVEL_WARNING, $text, $depth + 1);
+	}
+
+	/**
+	 * Log an error message
+	 *
+	 * This method is just a wrapper for log() called with sly_log::LEVEL_ERROR.
+	 *
+	 * @param  string $text   the text to log
+	 * @param  int    $depth  the steps that should be skipped in the stacktrace
+	 *                        when finding the caller method.
+	 * @return boolean        true if writing to the log was successful, else false
+	 */
+	public function error($text, $depth = 1) {
+		return $this->log(self::LEVEL_ERROR, $text, $depth + 1);
+	}
+
+	/**
+	 * Log a generic message
+	 *
+	 * This function is used to perform the actual logging. You have to specify
+	 * both a log level (every level is logged, so it's just used for the type
+	 * string in the log line) and the message (preferably single-line).
+	 *
+	 * Via $depth can be controlled, how many call steps the method should skip
+	 * when finding the caller. This is useful when you don't log directly, but
+	 * through a custom log wrapper function. In this case the caller would
+	 * always the this wrapper and not the actual line of code that called this
+	 * wrapper.
+	 *
+	 * @throws sly_Exception    if provided with an invalid log level
+	 *
+	 * @param  int    $level    one of LEVEL_INFO, LEVEL_WARNING and LEVEL_ERROR
+	 * @param  string $message  the text to log
+	 * @param  int    $depth    the steps that should be skipped in the
+	 *                          stacktrace when finding the caller method.
+	 * @return boolean          true if writing to the log was successful, else false
+	 */
 	public function log($level, $message, $depth = 1) {
 		if ($level != self::LEVEL_INFO && $level != self::LEVEL_ERROR && $level != self::LEVEL_WARNING) {
 			throw new sly_Exception('Unbekannter Nachrichtentyp: '.$level);
@@ -114,11 +174,32 @@ class sly_Log {
 		return file_put_contents($this->filename, $line."\n", FILE_APPEND) > 0;
 	}
 
-	public function dump($name, $value, $force_style = null, $depth = 1) {
+	/**
+	 * Dump an arbitrary PHP variable to the log
+	 *
+	 * This message is just awesome if you frequently need the values of complex
+	 * structures like deeply nested arrays. You can throw any value in this
+	 * method and it will do it's best to print it out nicely in the log.
+	 *
+	 * Beware that dumping a multi-line element (like texts with line-breaks or
+	 * arrays) result in a log file that cannot be parsed by simple reading the
+	 * lines one after another.
+	 *
+	 * @param  string $name        the name of whatever you're logging there.
+	 *                             The dollar sign will be added automatically.
+	 * @param  mixed  $value       an arbitrary value
+	 * @param  string $displayFct  Use this if you want to override the way the
+	 *                             value will be printed. Use a PHP callback
+	 *                             like "print_r" or your own function.
+	 * @param  int    $depth       the steps that should be skipped in the
+	 *                             stacktrace when finding the caller method.
+	 * @return boolean             true if writing to the log was successful, else false
+	 */
+	public function dump($name, $value, $displayFct = null, $depth = 1) {
 		$line = $this->replacePlaceholders($this->format, 'Dump', $depth);
 
-		if ($force_style) {
-			$value = $force_style($value);
+		if ($displayFct) {
+			$value = $displayFct($value);
 		}
 		else {
 			switch (gettype($value)) {
