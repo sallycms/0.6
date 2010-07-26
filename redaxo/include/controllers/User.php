@@ -274,14 +274,14 @@ class sly_Controller_User extends sly_Controller_Sally
 		$current     = $REX['USER']->getValue('id');
 		$config      = sly_Core::config();
 
-		if (sly_post('useradmin', 'boolean', false) || ($user && $current == $user->getId())) {
+		if (sly_post('is_admin', 'boolean', false) || ($user && $current == $user->getId())) {
 			$permissions[] = 'admin[]';
 		}
 
 		// Rechte, die nur der Optik wegen in diesen Gruppen angeordnet wurden.
 
-		if (sly_post('allcats',   'boolean', false)) $permissions[] = 'csw[0]';
-		if (sly_post('allmcats',  'boolean', false)) $permissions[] = 'media[0]';
+		if (sly_post('userperm_cat_all',   'boolean', false)) $permissions[] = 'csw[0]';
+		if (sly_post('userperm_media_all', 'boolean', false)) $permissions[] = 'media[0]';
 
 		foreach (sly_postArray('userperm_all',   'string') as $perm) $permissions[] = $perm;
 		foreach (sly_postArray('userperm_ext',   'string') as $perm) $permissions[] = $perm;
