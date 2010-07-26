@@ -103,13 +103,17 @@ input#rex-form-field-prior {
 		float: left;
 	}
 
-
 	div.rex-form-widget {
 		div.rex-widget-link input  { width: 208px; }
 		div.rex-widget-media input { width: 189px; }
 	}
 
 	/*	Select */
+
+	p select.rex-form-select:disabled {
+		background-color: #F9F9F9;
+		color: #7D7676;
+	}
 
 	p select.rex-form-select-date { width: 50px;  }
 	p select.rex-form-select-year { width: 70px;  }
