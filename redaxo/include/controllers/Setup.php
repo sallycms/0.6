@@ -101,7 +101,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			try {
 				if ($createDatabase && $data['DRIVER'] != 'sqlite') {
 					$db = new sly_DB_PDO_Persistence($data['DRIVER'], 'host='.$data['HOST'], $data['LOGIN'], $data['PASSWORD']);
-					$db->query('CREATE DATABASE '.$data['NAME']);
+					$db->query('CREATE DATABASE `'.$data['NAME'].'` DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci');
 				}
 				else {
 					$db = new sly_DB_PDO_Persistence($data['DRIVER'], 'host='.$data['HOST'].';dbname='.$data['NAME'], $data['LOGIN'], $data['PASSWORD']);
