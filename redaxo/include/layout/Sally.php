@@ -24,6 +24,7 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 
 		$body_id = str_replace('_', '-', isset($REX['PAGE']) ? $REX['PAGE'] : '');
 		$this->setBodyAttr('id', 'rex-page-'.$body_id);
+		$this->setBodyAttr('class', 'sally sally'.$config->get('VERSION').$config->get('SUBVERSION'));
 
 		// Falls ein AddOn bereits in seiner config.inc.php auf das Layout
 		// zugegriffen hat, ist $REX['PAGE'] noch nicht bekannt. Wir hängen uns
