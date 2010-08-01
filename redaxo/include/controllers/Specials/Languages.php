@@ -72,12 +72,12 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally
 	{
 		global $REX, $I18N;
 
-		$id = sly_request('clang_id', 'int', -1);
+		$this->id = sly_request('clang_id', 'int', -1);
 
 		if (isset($_POST['sly-submit'])) {
 			$clangName = sly_request('clang_name', 'string');
 			$languageService = sly_Service_Factory::getService('Language');
-			$clang = $languageService->findById($id);
+			$clang = $languageService->findById($this->id);
 			if($clang){
 				$clang->setName($clangName);
 				$languageService->save($clang);
