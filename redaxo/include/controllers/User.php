@@ -71,6 +71,7 @@ class sly_Controller_User extends sly_Controller_Sally
 				'description' => sly_post('userdesc', 'string'),
 				'status'      => sly_post('userstatus', 'boolean', false) ? 1 : 0,
 				'login_tries' => 0,
+				'lasttrydate' => 0,
 				'createdate'  => time(),
 				'updatedate'  => time(),
 				'createuser'  => $REX['LOGIN']->getValue('login'),
