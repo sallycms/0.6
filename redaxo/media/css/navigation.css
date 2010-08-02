@@ -146,11 +146,7 @@ div#rex-navi-main ul li a.rex-active {
 * Navi Logout                                                                  *
 \******************************************************************************/
 div#rex-navi-logout {
-	position: static;
-	right: 0;
-	top: 59px;
 	color: #b2b2b2;
-	float: left;
 	width: 100%;
 	height: 75px;
 	margin-bottom: 36px;

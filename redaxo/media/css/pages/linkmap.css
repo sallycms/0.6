@@ -4,6 +4,10 @@ body#rex-page-linkmap {
 
 	div#rex-redaxo-link { display: none; }
 
+	div#rex-wrapper {
+		width: 729px;
+	}
+
 	div#rex-title {
 		background-image: none;
 		height: auto;
@@ -25,6 +29,11 @@ div#rex-linkmap {
 	color: $drk_grey;
 	+border-radius($brd_rad);
 	/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
+	li {
+		list-style: none;
+		background-repeat: no-repeat;
+		line-height: 0.9em;
+	}
 
 	div.rex-area-col-b ul li a {
 		background-image: url(../document.gif);
@@ -69,6 +78,7 @@ div#rex-linkmap {
 
 			a {
 				background-image: url(../folder_off_empty.gif);
+				background-repeat: no-repeat;
 				display: block;
 				margin-bottom: 4px;
 				padding: 4px 0px 4px 35px;
