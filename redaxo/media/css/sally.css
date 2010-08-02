@@ -201,6 +201,7 @@ div.rex-widget {
 
 div#rex-output div.rex-widget p {
 	width: auto;
+	float: left;
 }
 
 div.rex-widget {
