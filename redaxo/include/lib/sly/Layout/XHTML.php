@@ -77,7 +77,7 @@ class sly_Layout_XHTML extends sly_Layout
 		}
 	}
 
-	public static function addMeta($name, $content)	{
+	public function addMeta($name, $content)	{
 		$this->metas[$name] = $content;
 	}
 
