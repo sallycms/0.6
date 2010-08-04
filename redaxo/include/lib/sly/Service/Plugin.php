@@ -124,13 +124,13 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		if (is_readable($uninstallFile)) {
 			$this->mentalGymnasticsInclude($uninstallFile, $plugin);
 
-			$hasError = $config->has('ADDON/installmsg/'.$pluginName);
+			$hasError = $REX['ADDON']['installmsg'][$pluginName];
 
 			if ($hasError) {
 				$state = $this->I18N('no_uninstall', $pluginName).'<br />';
 
 				if ($hasError) {
-					$state .= $config->get('ADDON/installmsg/'.$pluginName);
+					$state .= $REX['ADDON']['installmsg'][$pluginName];
 				}
 				else {
 					$state .= $this->I18N('no_reason');

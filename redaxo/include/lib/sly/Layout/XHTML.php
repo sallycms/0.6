@@ -88,8 +88,6 @@ class sly_Layout_XHTML extends sly_Layout
 	public function addLink($rel, $href) {
 		$this->links[$rel] = $href;
 	}
-
-
 	
 	protected function printFeedFiles() {
 		foreach ($this->feedFiles as $type => $file) {
@@ -118,7 +116,6 @@ class sly_Layout_XHTML extends sly_Layout
 			print $link;
 		}
 	}
-
 
 	protected function printCSS() {
 		$this->cssCode =  rex_register_extension_point('HEADER_CSS', $this->cssCode);
@@ -149,7 +146,6 @@ class sly_Layout_XHTML extends sly_Layout
 			if ($isConditional) print "<![endif]-->\n";
 		}
 	}
-
 
 	protected function printJavaScript() {
 
