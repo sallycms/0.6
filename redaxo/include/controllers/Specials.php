@@ -13,16 +13,16 @@ class sly_Controller_Specials extends sly_Controller_Sally
 {
 	protected $warning;
 	protected $info;
-	
+
 	public function init()
 	{
 		global $I18N;
-		
+
 		$subline = array(
 			array('',          $I18N->msg('main_preferences')),
 			array('languages', $I18N->msg('languages'))
 		);
-		
+
 		rex_title($I18N->msg('specials'), $subline);
 	}
 
@@ -30,13 +30,13 @@ class sly_Controller_Specials extends sly_Controller_Sally
 	{
 		$this->render('views/specials/index.phtml');
 	}
-	
+
 	public function clearcache()
 	{
 		$this->info = rex_generateAll();
 		$this->index();
 	}
-	
+
 	public function update()
 	{
 		$startArticle      = sly_post('start_article',       'int');
@@ -46,12 +46,12 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		$errorEMail        = sly_post('error_email',         'string');
 		$server            = sly_post('server',              'string');
 		$serverName        = sly_post('servername',          'string');
-		$modRewrite        = sly_post('mod_rewrite',         'string');
+		$modRewrite        = strtolower(sly_post('mod_rewrite', 'string'));
 
 		// Änderungen speichern
 
 		$conf = sly_Core::config();
-		
+
 		if (OOArticle::exists($startArticle)) {
 			$conf->set('START_ARTICLE_ID', $startArticle);
 		}
@@ -65,9 +65,9 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		else {
 			$this->warning .= t('settings_invalid_notfound_article').'<br />';
 		}
-		
+
 		// Standard-Artikel
-		
+
 		$sql = sly_DB_Persistence::getInstance();
 		$id  = $sql->fetch('template', 'id', array('id' => $defaultTemplateID));
 
@@ -84,13 +84,13 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		$conf->set('LANG', $backendLocale);
 		$conf->setLocal('SERVER', $server);
 		$conf->setLocal('SERVERNAME', $serverName);
-		$conf->set('MOD_REWRITE', $modRewrite);
+		$conf->set('MOD_REWRITE', $modRewrite === 'true');
 
 		$this->info = t('info_updated');
 
 		$this->index();
 	}
-	
+
 	public function setup()
 	{
 		try{
@@ -99,10 +99,10 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		}catch(Exception $e){
 			$this->warning = t('setup_error2');
 		}
-		
+
 		$this->index();
 	}
-	
+
 	public function checkPermission()
 	{
 		global $REX;
