@@ -168,9 +168,7 @@ class sly_Layout_XHTML extends sly_Layout
 		$this->javaScriptFiles = rex_register_extension_point('HEADER_JAVASCRIPT_FILES', $this->javaScriptFiles);
 
 		foreach ($this->javaScriptFiles as $files) {
-			foreach($files as $file){
-				print "<script type=\"text/javascript\" src=\"".sly_html(trim($file))."\"></script>\n";
-			}
+			print "<script type=\"text/javascript\" src=\"".join("\"></script>\n<script type=\"text/javascript\" src=\"" ,$files)."\"></script>\n";
 		}
 	}
 
