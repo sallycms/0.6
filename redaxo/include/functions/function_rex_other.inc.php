@@ -284,41 +284,7 @@ function rex_message_block($message, $cssClass, $sorroundTag)
 
 function rex_ini_get($val)
 {
-	$val = trim(ini_get($val));
-
-	if (!empty($val)) {
-		$last = $val[strlen($val)-1];
-		$val  = substr($val, 0, -1);
-	}
-	else {
-		$last = '';
-	}
-
-	// Nur, wenn der Teil vor dem letzten Buchstaben numerisch ist,
-	// interpretieren wir den letzten Buchstaben als Einheit. Andernfalls
-	// würde der Code bei einem Wert wie "hallo welt" versuchen, "hallo wel"
-	// mal 1 Billion zu rechnen...
-
-	if (preg_match('#^[0-9]+$#', $val)) {
-		// PHP konvertiert die Werte automatisch in Zahlen.
-
-		$last = strtolower($last);
-
-		switch ($last) {
-			case 'p': $val *= 1024;
-			case 't': $val *= 1024;
-			case 'g': $val *= 1024;
-			case 'm': $val *= 1024;
-			case 'k': $val *= 1024;
-		}
-
-		return $val;
-	}
-
-	// Kein numerischer Wert, also scheint es sich um einen normalen String
-	// zu handeln.
-
-	return $val.$last;
+	return sly_ini_get($key);
 }
 
 /**

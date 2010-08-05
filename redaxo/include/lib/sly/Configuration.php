@@ -22,7 +22,9 @@ class sly_Configuration {
 	private $staticConfig;
 	private $localConfig;
 	private $projectConfig;
-	private $tempConfig;
+
+	private $localConfigModified = false;
+	private $projectConfigModified = false;
 
 	private static $instance;
 
@@ -30,7 +32,6 @@ class sly_Configuration {
 		$this->staticConfig  = new sly_Util_Array();
 		$this->localConfig   = new sly_Util_Array();
 		$this->projectConfig = new sly_Util_Array();
-		$this->tempConfig    = new sly_Util_Array();
 	}
 
 	protected function getCacheDir() {
@@ -225,6 +226,12 @@ class sly_Configuration {
 			return false;
 		}
 
+		if ($mode == sly_Configuration::STORE_PROJECT) {
+			$this->projectConfigModified = true;
+		} elseif ($mode == sly_Configuration::STORE_LOCAL) {
+			$this->localConfigModified = true;
+		}
+
 		// case: sly_Configuration::STORE_PROJECT
 		return $this->projectConfig->set($key, $value);
 	}
@@ -249,17 +256,21 @@ class sly_Configuration {
 	}
 
 	protected function flush() {
-		file_put_contents($this->getLocalCacheFile(), '<?php $config = '.var_export($this->localConfig->get(null), true).';');
-
-		try {
-			sly_Core::getPersistentRegistry()->set('sly_ProjectConfig', $this->projectConfig);
+		if($this->localConfigModified) {
+			file_put_contents($this->getLocalCacheFile(), '<?php $config = '.var_export($this->localConfig->get(null), true).';');
 		}
-		catch (Exception $e) {
-			// Could not save project configuration. This is only "ok" while we're
-			// in setup mode and don't know the correct database name yet.
 
-			if (!sly_Core::config()->get('SETUP')) {
-				trigger_error('Could not save project configuration on script exit.', E_USER_WARNING);
+		if($this->projectConfigModified) {
+			try {
+				sly_Core::getPersistentRegistry()->set('sly_ProjectConfig', $this->projectConfig);
+			}
+			catch (Exception $e) {
+				// Could not save project configuration. This is only "ok" while we're
+				// in setup mode and don't know the correct database name yet.
+
+				if (!sly_Core::config()->get('SETUP')) {
+					trigger_error('Could not save project configuration on script exit.', E_USER_WARNING);
+				}
 			}
 		}
 	}
