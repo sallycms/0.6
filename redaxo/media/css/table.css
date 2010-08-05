@@ -12,17 +12,13 @@ table.rex-table {
 		color: transparent;
 		border: 1px solid $drk_grey;
 		height: 5px;
-		/*height: 1.5em;
-		line-height: 1.5em;
-		color: #fff;
-		padding-left: 10px;*/
 	}
 
 	tr {
 		th {
 			text-align: left;
 			color: #fff;
-			padding: 9px 0 4px 0px;
+			padding: 4px 0 9px 0px;
 			vertical-align: middle;
 			background-color: $drk_grey;
 		}
