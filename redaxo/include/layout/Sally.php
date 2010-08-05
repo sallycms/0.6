@@ -122,7 +122,7 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 					}
 				}
 
-				$link = explode('&', $link, 2);
+				$link   = explode('&', $link, 2);
 				$link   = reset($link); // alles nach dem ersten & abschneiden
 				$active = (empty($cur_subpage) && empty($link)) || (!empty($cur_subpage) && $cur_subpage == $link);
 
