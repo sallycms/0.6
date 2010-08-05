@@ -196,9 +196,7 @@ if($function == 'add_cat' || $function == 'edit_cat')
   <div class="rex-form" id="rex-form-structure-category">
   <form action="index.php" method="post">
     <fieldset>
-      <legend><span>'.$legend .'</span></legend>
       <input type="hidden" name="page" value="structure" />';
-
   if ($function == 'edit_cat')
     echo '<input type="hidden" name="edit_id" value="'. $edit_id .'" />';
 
@@ -464,7 +462,6 @@ if ($category_id > -1)
     <div class="rex-form" id="rex-form-structure-article">
     <form action="index.php" method="post">
       <fieldset>
-        <legend><span>'.$legend .'</span></legend>
         <input type="hidden" name="page" value="structure" />
         <input type="hidden" name="category_id" value="'. $category_id .'" />';
     if ($article_id != "") echo '<input type="hidden" name="article_id" value="'. $article_id .'" />';

@@ -6,6 +6,22 @@
  * @package redaxo4
  * @version svn:$Id$
  */
+function sly_mediapool_get_dimensions($width, $height, $maxWidth, $maxHeight)
+{
+	if ($width > $maxWidth) {
+		$factor  = (float) $maxWidth / $width;
+		$width   = $maxWidth;
+		$height *= $factor;
+	}
+
+	if ($height > $maxHeight) {
+		$factor  = (float) $maxHeight / $height;
+		$height  = $maxHeight;
+		$width  *= $factor;
+	}
+
+	return array(ceil($width), ceil($height));
+}
 
 /**
  * Erstellt einen Filename der eindeutig ist für den Medienpool

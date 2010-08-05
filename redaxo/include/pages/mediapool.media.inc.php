@@ -104,7 +104,7 @@ echo rex_register_extension_point('PAGE_MEDIAPOOL_HEADER', '',
 // ***** formular
 $cat_out = '<div class="rex-form" id="rex-form-mediapool-selectcategory">
               <form action="index.php" method="post">
-                <fieldset class="rex-form-col-1">
+                <fieldset class="rex-form-col-1 num1">
                   <legend>'. $I18N->msg('pool_select_cat') .'</legend>
                   
                   <div class="rex-form-wrapper">
@@ -217,45 +217,42 @@ if ($subpage == "detail")
   $media = OOMedia::getMediaById($file_id);
   if ($media)
   {
-    $TPERM = false;
-    if ($PERMALL || $REX['USER']->hasPerm("media[".$media->getCategoryId()."]")) $TPERM = true;
-
+    $TPERM = $PERMALL || $REX['USER']->hasPerm("media[".$media->getCategoryId()."]");
     echo $cat_out;
-
-    $ftitle = $media->getTitle();
-    $fname = $media->getFileName();
-    $ffiletype = $media->getType();
-    $ffile_size = $media->getSize();
-    $ffile_size = $media->getFormattedSize();
-    $ffile_update = $media->getUpdateDate();
+    $ftitle            = $media->getTitle();
+    $fname             = $media->getFileName();
+    $ffiletype         = $media->getType();
+    $ffile_size        = $media->getSize();
+    $ffile_size        = $media->getFormattedSize();
+    $ffile_update      = $media->getUpdateDate();
     $rex_file_category = $media->getCategoryId();
-
     $encoded_fname = urlencode($fname);
-    $file_ext = substr(strrchr($fname, '.'),1);
-    $icon_src = 'media/mime-default.gif';
-    if (OOMedia::isDocType($file_ext)) $icon_src = 'media/mime-'.$file_ext.'.gif';
-    {
-      $thumbnail = '<img src="'. $icon_src .'" alt="'. htmlspecialchars($ftitle) .'" title="'. htmlspecialchars($ftitle) .'" />';
-    }
+    $file_ext      = substr(strrchr($fname, '.'),1);
+    $icon_src      = 'media/mime-default.gif';
 
+    if (OOMedia::isDocType($file_ext))
+    {
+	   $icon_src = 'media/mime-'.$file_ext.'.gif';
+	 }
+    $thumbnail    = '<img src="'. $icon_src .'" alt="'. sly_html($ftitle) .'" title="'. sly_html($ftitle) .'" />';
     $ffiletype_ii = $media->isImage();
+
     if ($ffiletype_ii)
     {
-      $fwidth = $media->getWidth();
+      $fwidth  = $media->getWidth();
       $fheight = $media->getHeight();
-      if($size = @getimagesize($REX['HTDOCS_PATH'].'/files/'.$fname))
+
+      if ($size = @getimagesize($REX['HTDOCS_PATH'].'/data/mediapool/'.$fname))
       {
-        $fwidth = $size[0];
+        $fwidth  = $size[0];
         $fheight = $size[1];
       }
-
-      if ($fwidth >199) $rfwidth = 200;
-      else $rfwidth = $fwidth;
+      list($rwidth, $rheight) = sly_mediapool_get_dimensions($fwidth, $fheight, 200, 70);
     }
-
-    $add_image = '';
+    $add_image    = '';
     $add_ext_info = '';
-    $style_width = '';
+    $style_width  = '';
+
     if ($ffiletype_ii)
     {
       $add_ext_info = '
@@ -265,24 +262,26 @@ if ($subpage == "detail")
           <span class="rex-form-read" id="fwidth">'. $fwidth .' px / '. $fheight .' px</span>
         </p>
       </div>';
-      $imgn = '../files/'. $encoded_fname .'?t='.$ffile_update.'" width="'. $rfwidth;
+      $imgn = '../data/mediapool/'. $encoded_fname .'?t='.$ffile_update;
 
-      if (!file_exists($REX['INCLUDE_PATH'].'/../../files/'. $fname))
+      if (!file_exists($REX['INCLUDE_PATH'].'/../../data/mediapool/'.$fname))
       {
         $imgn = 'media/mime-error.gif';
-      }else if ($thumbs && $thumbsresize && $rfwidth>199)
-      {
-        $imgn = '../index.php?rex_resize=200a__'. $encoded_fname.'&amp;t='.$ffile_update;
       }
+      else if ($thumbs && $thumbsresize && ($fwidth > 200 || $fheight > 70))
+      {
+        $imgn = '../index.php?rex_resize='.$rwidth.'w__'.$rheight.'h__'.$encoded_fname.'&t='.$ffile_update;
+      }
+      $attrs = array(
+        'src'    => $imgn,
+        'alt'    => $ftitle,
+        'title'  => $ftitle,
+        'width'  => $rwidth,
+        'height' => $rheight
+	   );
 
-      $add_image = '<div class="rex-mediapool-detail-image">
-          <p class="rex-me1">
-            <img src="'. $imgn .'" alt="'. htmlspecialchars($ftitle) .'" title="'. htmlspecialchars($ftitle) .'" />
-          </p>
-          </div>';
-     /* $style_width = ' style="width:64.9%; border-right: 1px solid #FFF;"'; */
+      $add_image = '<p class="rex-me1 rex-mediapool-detail-image"><img '.sly_Util_HTML::buildAttributeString($attrs).' /></p>';
     }
-
     if ($warning != '')
     {
       echo rex_warning($warning);
@@ -341,7 +340,7 @@ if ($subpage == "detail")
         <div id="rex-mediapool-detail-wrapper">
         <div class="rex-form" id="rex-form-mediapool-detail"'.$style_width.'>
           <form action="index.php" method="post" enctype="multipart/form-data">
-            <fieldset class="rex-form-col-1">
+            <fieldset class="rex-form-col-1 num1">
               <legend>'. $I18N->msg('pool_file_edit') . $opener_link.'</legend>
               
               <div class="rex-form-wrapper">
@@ -351,7 +350,8 @@ if ($subpage == "detail")
                 '. $arg_fields .'
 
 
-                  <div class="rex-form-row">
+                  <div class="rex-form-row rex-mediapool-detail-image-container">
+                    '. $add_image .'
                     <p class="rex-form-text">
                       <label for="ftitle">Titel</label>
                       <input class="rex-form-text" type="text" size="20" id="ftitle" name="ftitle" value="'. htmlspecialchars($ftitle) .'" />
@@ -412,8 +412,7 @@ if ($subpage == "detail")
             </fieldset>
           </form>
         </div>
-        '. $add_image .'
-        </div>';
+      </div>';
     }
     else
     {
@@ -685,33 +684,9 @@ if ($subpage == '')
     $file_update = $media->getUpdateDate();
     $file_stamp = $media->getUpdateDate('%a %d. %B %Y');
     $file_updateuser = $media->getUpdateUser();
-
     $encoded_file_name = urlencode($file_name);
-
-    // Eine titel Spalte schützen
-    $alt = '';
-    foreach(array('title', 'med_description') as $col)
-    {
-      if($files->hasValue($col) && $files->getValue($col) != '')
-      {
-        $alt = htmlspecialchars($files->getValue($col));
-        break;
-      }
-    }
-
-    // Eine beschreibende Spalte schützen
+    $alt  = $media->getTitle();
     $desc = '';
-    foreach(array('med_description') as $col)
-    {
-      if($files->hasValue($col) && $files->getValue($col) != '')
-      {
-        $desc = htmlspecialchars($files->getValue($col));
-        break;
-      }
-    }
-    if($desc != '')
-      $desc .= '<br />';
-
     // wenn datei fehlt
     if (!OOMedia::fileExists($file_name))
     {
@@ -719,21 +694,44 @@ if ($subpage == '')
     }
     else
     {
-      $file_ext = substr(strrchr($file_name,'.'),1);
+      $file_ext = substr(strrchr($file_name,'.'), 1);
       $icon_src = 'media/mime-default.gif';
+
       if (OOMedia::isDocType($file_ext))
       {
         $icon_src = 'media/mime-'. $file_ext .'.gif';
       }
-      $thumbnail = '<img src="'. $icon_src .'" width="44" height="38" alt="'. $alt .'" title="'. $alt .'" />';
 
+      $thumbnail = '<img src="'. $icon_src .'" alt="'.sly_html($alt).'" title="'.sly_html($alt).'" />';
       if (OOMedia::_isImage($file_name) && $thumbs)
       {
-        $thumbnail = '<img src="../files/'.$encoded_file_name.'?t='.$file_update.'" width="80" alt="'. $alt .'" title="'. $alt .'" />';
-        if ($thumbsresize) $thumbnail = '<img src="../index.php?rex_resize=80a__'.$encoded_file_name.'&amp;t='.$file_update.'" alt="'. $alt .'" title="'. $alt .'" />';
+        $width  = false;
+        $height = false;
+
+        if ($size = @getimagesize($REX['HTDOCS_PATH'].'/data/mediapool/'.$file_name))
+        {
+          $width  = $size[0];
+          $height = $size[1];
+          list($width, $height) = sly_mediapool_get_dimensions($width, $height, 80, 70);
+        }
+
+        $attrs = array(
+          'alt'    => $alt,
+          'title'  => $alt,
+          'width'  => $width,
+          'height' => $height
+	     );
+
+	     if ($thumbsresize && $width) {
+	     	 $attrs['src'] = '../index.php?rex_resize='.$width.'w__'.$height.'h__'.$encoded_file_name.'&t='.$file_update;
+	     }
+	     else {
+	     	 $attrs['src'] = '../data/mediapool/'.$encoded_file_name.'?t='.$file_update;
+	     }
+
+        $thumbnail = '<img '.sly_Util_HTML::buildAttributeString($attrs).' />';
       }
     }
-
     // ----- get file size
     $size = $file_size;
     $file_size = $media->getFormattedSize();

@@ -12,39 +12,17 @@ tr.rex-has-metainfo input#rex-form-field-name {
 div#rex-form-structure-category tr.rex-metainfo-cat  {
 	div.rex-form-row { border-bottom: 0; }
 	div.rex-widget   { margin-bottom: 0; }
-
-	div.rex-form-checkboxes-wrapper,
-	div.rex-form-radios-wrapper,
-	p.rex-form-label-right label,
-	p.rex-form-read span,
-	p.rex-form-text input,
-	p textarea {
-		width: 340px;
-	}
-
-	p.rex-form-select select {
-		width: 346px;
-	}
-
+	
 	label {
 		padding-left: 0px;
 		margin-right: 5px;
 	}
-
-	div.rex-form-checkboxes-wrapper,
-	div.rex-form-radios-wrapper {
-		p.rex-form-label-right label { width: 296px; }
-	}
-}
-
-/*	Struktur : Metainfo */
-
-div#rex-form-structure-category tr.rex-metainfo-cat {
+	
 	div.rex-form-checkboxes-wrapper,
 	div.rex-form-radios-wrapper {
 		p.rex-form-label-right label { width: 282px; }
 	}
-
+	
 	div.rex-form-checkboxes-wrapper,
 	div.rex-form-radios-wrapper,
 	p.rex-form-label-right label,
@@ -59,9 +37,15 @@ div#rex-form-structure-category tr.rex-metainfo-cat {
 	}
 }
 
+div#rex-form-structure-category,
+div#rex-form-structure-article {
+	input.rex-form-submit {
+		margin-left: 0;
+	}
+}
+
 table.rex-table tr.rex-metainfo-cat {
 	display: none;
-
 	td {
 		padding-top: 4px;
 		padding-bottom: 4px;
