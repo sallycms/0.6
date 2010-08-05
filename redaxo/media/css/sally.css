@@ -147,9 +147,9 @@ table.rex-table, table.sly-table {
 
 		&.rex-colz { width: 153px; }
 	}
+
+	tr:first-child td { border-top: none; }
 }
-
-
 
 /*	Allgemeiner Block (Addon Hilfeseiten) / Addon Seiten */
 

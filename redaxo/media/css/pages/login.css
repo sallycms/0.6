@@ -24,6 +24,7 @@ body#rex-page-login {
 		margin-left: auto;
 	}
 
+	label { margin-left: 10px; }
 	.rex-form-row:first-child { margin-top: 20px; }
 
 	.rex-form {
@@ -37,6 +38,8 @@ body#rex-page-login {
 			.rex-form-text input,.rex-form-password input {
 				width: 250px;
 			}
+
+			label { width:145px; }
 
 			/* Überschrift */
 			legend {
@@ -58,6 +61,10 @@ body#rex-page-login {
 			padding: 7px 0;
 			border-top: 1px dotted $md_grey;
 			border-bottom: 0;
+		}
+
+		&-submit {
+			margin: 2px 0 10px 77px;
 		}
 
 		&-col-a { vertical-aling: middle; }

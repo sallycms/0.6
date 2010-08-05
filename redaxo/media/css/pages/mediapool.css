@@ -46,9 +46,9 @@ div#rex-form-mediapool-selectcategory {
 	margin-bottom: 10px;
 
 	div.rex-form-row p {
-		label                 { font-weight: bold; }
-		select                { width: 330px; }
-		input.rex-form-submit { margin-left: 10px; }
+		label                    { font-weight: bold; line-height:30px; }
+		select#rex_file_category { width: 185px; }
+		input.rex-form-submit    { margin-left: 10px; margin-bottom: 10px; }
 	}
 
 	noscript div.rex-form-row p input.rex-form-submit {
@@ -64,9 +64,11 @@ div#rex-form-mediapool-selectcategory {
 
 body#rex-page-mediapool,
 div#rex-form-mediapool-other {
+	div.rex-form-row:first-child { border-top: none; }
+
 	fieldset.rex-form-col-1 div.rex-form-row {
 		/* nur der absatz soll einen abstand haben, nicht die inputs*/
-		p.rex-form-submit { margin-left: 150px; }
+		p.rex-form-submit { margin-left: 110px; }
 
 		input#file_new .rex-form-file {
 			border: 0;
@@ -86,11 +88,24 @@ div#rex-form-mediapool-other {
 body#rex-page-mediapool,
 div#rex-form-mediapool-other,
 div#rex-form-mediapool-selectcategory {
-	fieldset.rex-form-col-1,
-	fieldset.rex-form-col-2 {
-		background-color: #fff;
-		width: 100%;
-		+border-bottom-radius(4px);
+	fieldset {
+		&.rex-form-col-1, rex-form-col-2 {
+			background-color: #fff;
+			width: 100%;
+			+border-bottom-radius(4px);
+			margin-bottom: 10px;
+		}
+
+		.rex-lgnd {
+			background-color: $md_grey;;
+		}
+
+		.rex-form-wrapper {
+			+border-radius($brd_rad);
+			background-color: #fff;
+			float: left;
+			width: 100%;
+		}
 	}
 
 	div.rex-form-row {
@@ -172,7 +187,7 @@ div#rex-mediapool-detail {
 div#rex-form-mediapool-media,
 div#rex-form-mediapool-categories {
 	legend {
-		font-size: 1.2em;
+		font-size: 1.1em;
 		margin-bottom: 5px;
 	}
 

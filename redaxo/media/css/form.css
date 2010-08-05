@@ -3,6 +3,7 @@ input.rex-form-text {
 	border: 1px solid $lt_grey;
 }
 
+/*
 input.rex-form-submit {
 	background-image: url(../button.gif);
 	background-repeat: repeat-x;
@@ -13,6 +14,16 @@ input.rex-form-submit {
 	+border-radius($brd_rad);
 	cursor: pointer;
 	margin-left: 145px;
+} */
+
+p.rex-button a, input.rex-form-submit {
+	background-image: url(button.gif);
+	background-repeat: repeat-x;
+	padding: 1px 6px;
+	color: $drk_grey;
+	text-decoration: none;
+	border: 1px solid $lt_grey;
+	+border-radius($brd_rad);
 }
 
 div.rex-addon-content,
@@ -132,7 +143,7 @@ div.rex-form-row, div.rex-message {
 		input.rex-form-radio {
 			clear: both;
 			float: left;
-			margin: 5px 5px 0 135px;
+			margin: 5px 5px 0 145px;
 		}
 	}
 }
@@ -286,6 +297,7 @@ div.rex-form input.rex-form-submit {
 		font-size: 1.1em;
 		width: 787px; /* Breite des Loginbereichs abzüglich des padding links*/
 		padding: 8px 0 8px 10px;
+		+border-top-radius(4px);
 	}
 
 	fieldset.sly-num0 legend {

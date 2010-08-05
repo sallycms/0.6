@@ -139,6 +139,10 @@ div.rex-content-body {
 				}
 			}
 		}
+
+		&-col-1 {
+			legend { padding: 10px; font-weight: bold; }
+		}
 	}
 
 	div.rex-message, div.rex-content-body {

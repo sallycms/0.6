@@ -109,7 +109,7 @@ p.rex-button a {
 a {
 	color: $link_color;
 	text-decoration: none;
-	&:hover { text-decoration: underline; }
+	&:hover { text-decoration: none; }
 }
 
 ins {
@@ -439,3 +439,6 @@ p.center, td.center, th.center, div.center {
 	text-align: center;
 }
 
+.rex-me1 {
+	margin: 20px 0 20px 0;
+}
