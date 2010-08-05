@@ -344,10 +344,10 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 
 		if ($icon === null) {
 			if (file_exists($directory.'/images/icon.png')) {
-				$icon = 'images/'.$addon.'/icon.png';
+				$icon = 'images/'.$addonName.'/icon.png';
 			}
 			elseif (file_exists($directory.'/images/icon.gif')) {
-				$icon = 'images/'.$addon.'/icon.gif';
+				$icon = 'images/'.$addonName.'/icon.gif';
 			}
 			elseif (file_exists($base.'/images/icon.png')) {
 				$icon = $base.'/images/icon.png';

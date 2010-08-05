@@ -151,7 +151,7 @@ function rex_no_rewrite($id, $name, $clang, $param_string, $divider)
 		$clangString = $divider.'clang='.$clang;
 	}
 
-	return $REX['FRONTEND_FILE'].'?article_id='.$id.$clangString.$paramString;
+	return $REX['FRONTEND_FILE'].'?article_id='.$id.$clangString.$param_string;
 }
 
 /**

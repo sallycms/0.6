@@ -47,7 +47,19 @@ class sly_Configuration {
 	protected function getCacheFile($filename) {
 		$dir      = $this->getCacheDir();
 		$filename = realpath($filename);
-		$filename = substr($filename, strlen(SLY_BASE) + 1);
+
+		// Es kann sein, dass AddOns über Symlinks eingebunden werden. In diesem
+		// Fall liegt das Verzeichnis ggf. ausßerhalb von SLY_BASE und kann dann
+		// nicht so behandelt werden wie ein "lokales" AddOn.
+
+		if (sly_Util_String::startsWith($filename, SLY_BASE)) {
+			$filename = substr($filename, strlen(SLY_BASE) + 1);
+		}
+		else {
+			// Laufwerk:/.../ korrigieren
+			$filename = str_replace(':', '', $filename);
+		}
+
 		return $dir.DIRECTORY_SEPARATOR.str_replace(DIRECTORY_SEPARATOR, '_', $filename).'.php';
 	}
 
