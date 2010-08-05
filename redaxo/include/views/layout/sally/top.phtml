@@ -15,14 +15,14 @@ $config = sly_Core::config();
 
 <div id="rex-website">
 	<div id="rex-navi-logout" style="height: 88px;">
-		<? $this->renderView('views/layout/sally_navi_logout.phtml') ?>
+		<? $this->renderView('views/layout/sally/navi_logout.phtml') ?>
 	</div>
 	<?php
 	if ($REX['USER'] && !$REX['PAGE_NO_NAVI']):
 	?>
 	<div id="rex-navi-main">
 		<?php
-		$this->renderView('views/layout/sally_navi_main.phtml');
+		$this->renderView('views/layout/sally/navi_main.phtml');
 		?>
 	</div>
 	<?php
