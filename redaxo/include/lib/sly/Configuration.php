@@ -67,6 +67,11 @@ class sly_Configuration {
 		return $this->getCacheDir().DIRECTORY_SEPARATOR.'sly_local.php';
 	}
 
+	//FIXME: protected machen wenn Konfigurationsumbau fertig
+	public function getProjectCacheFile() {
+		return $this->getCacheDir().DIRECTORY_SEPARATOR.'sly_project.php';
+	}
+
 	protected function isCacheValid($origfile, $cachefile) {
 		return file_exists($cachefile) && filemtime($origfile) < filemtime($cachefile);
 	}
@@ -92,8 +97,15 @@ class sly_Configuration {
 	}
 
 	public function loadProjectConfig(){
-		if (sly_Core::getPersistentRegistry()->has('sly_ProjectConfig')) {
-			$this->projectConfig = sly_Core::getPersistentRegistry()->get('sly_ProjectConfig');
+		$file = $this->getProjectCacheFile();
+		if (file_exists($file)) {
+			include $file;
+			$this->projectConfig = new sly_Util_Array($config);
+			//FIXME: else zweig weghauen wenn Konfigurationsumbau fertig
+		} else {
+			if (sly_Core::getPersistentRegistry()->has('sly_ProjectConfig')) {
+				$this->projectConfig = sly_Core::getPersistentRegistry()->get('sly_ProjectConfig');
+			}
 		}
 	}
 
@@ -273,6 +285,8 @@ class sly_Configuration {
 		}
 
 		if($this->projectConfigModified) {
+			file_put_contents($this->getProjectCacheFile(), '<?php $config = '.var_export($this->projectConfig->get(null), true).';');
+			//FIXME: db update weghauen wenn Konfigurationsumbau fertig
 			try {
 				sly_Core::getPersistentRegistry()->set('sly_ProjectConfig', $this->projectConfig);
 			}
