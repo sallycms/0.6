@@ -92,6 +92,9 @@ else {
 		$REX['USER']           = null;
 		$REX['LOGIN']          = null;
 	}
+
+	sly_Core::config()->set('USER', $REX['USER']);
+	sly_Core::config()->set('LOGIN', $REX['LOGIN']);
 }
 
 // Core-Seiten initialisieren
