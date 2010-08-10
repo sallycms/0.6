@@ -122,7 +122,7 @@ class sly_Model_User extends sly_Model_Base {
 	}
 
 	public function getAllowedModules() {
-		preg_match_all('/#module\[(\d+)\]/', $this->getRights(), $matches);
+		preg_match_all('/#module\[(.+?)\]/', $this->getRights(), $matches);
 		return isset($matches[1]) ? $matches[1] : array();
 	}
 

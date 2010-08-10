@@ -212,10 +212,10 @@ class sly_Controller_User extends sly_Controller_Sally
 
 	protected function getBackendLocales()
 	{
-		global $I18N, $REX;
+		global $I18N;
 
 		$cur_htmlcharset = $I18N->msg('htmlcharset');
-		$langpath        = $REX['INCLUDE_PATH'].'/lang';
+		$langpath        = SLY_INCLUDE_PATH.'/lang';
 		$langs           = glob($langpath.'/*.lang');
 		$result          = array('' => 'default');
 
@@ -235,21 +235,21 @@ class sly_Controller_User extends sly_Controller_Sally
 
 	protected function getPossibleStartpages()
 	{
-		global $REX, $I18N;
+		global $I18N;
 
 		$service = sly_Service_Factory::getService('AddOn');
 		$addons  = $service->getAvailableAddons();
 
 		$startpages = array();
-		$startpages['structure'] = $I18N->msg('structure'); // , '');
-		$startpages['profile']   = $I18N->msg('profile'); // ,   '');
+		$startpages['structure'] = $I18N->msg('structure');
+		$startpages['profile']   = $I18N->msg('profile');
 
 		foreach ($addons as $addon) {
 			$perm = $service->getProperty($addon, 'perm', false);
 			$name = $service->getProperty($addon, 'name', false);
 
 			if ($perm && $name) {
-				$startpages[$addon] = $name; // array($name, $perm);
+				$startpages[$addon] = $name;
 			}
 		}
 
@@ -259,12 +259,7 @@ class sly_Controller_User extends sly_Controller_Sally
 	protected function getModules()
 	{
 		$service = sly_Service_Factory::getService('Module');
-		$modules = $service->find(null, null, 'name');
-		$result  = array();
-
-		foreach ($modules as $module) $result[$module->getId()] = $module->getName();
-
-		return $result;
+		return $service->getModules();
 	}
 
 	protected function getRightsFromForm($user)
@@ -288,9 +283,9 @@ class sly_Controller_User extends sly_Controller_Sally
 		foreach (sly_postArray('userperm_ext',   'string') as $perm) $permissions[] = $perm;
 		foreach (sly_postArray('userperm_extra', 'string') as $perm) $permissions[] = $perm;
 
-		foreach (sly_postArray('userperm_media',    'int') as $perm) $permissions[] = 'media['.$perm.']';
-		foreach (sly_postArray('userperm_sprachen', 'int') as $perm) $permissions[] = 'clang['.$perm.']';
-		foreach (sly_postArray('userperm_module',   'int') as $perm) $permissions[] = 'module['.$perm.']';
+		foreach (sly_postArray('userperm_media',    'int') as $perm)    $permissions[] = 'media['.$perm.']';
+		foreach (sly_postArray('userperm_sprachen', 'int') as $perm)    $permissions[] = 'clang['.$perm.']';
+		foreach (sly_postArray('userperm_module',   'string') as $perm) $permissions[] = 'module['.$perm.']';
 
 		// Schreib- und Leserechte für die Kategoriestruktur
 
