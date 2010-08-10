@@ -172,9 +172,10 @@ class sly_Service_Template {
 		$refresh = $force || $this->needsRefresh();
 		if (!$refresh) return true;
 
-		$files   = $this->getTemplateFiles();
-		$newData = array();
-		$oldData = $this->list;
+		$files    = $this->getTemplateFiles();
+		$newData  = array();
+		$oldData  = $this->list;
+		$modified = true;
 
 		foreach ($files as $file) {
 			$basename = basename($file);
@@ -222,19 +223,22 @@ class sly_Service_Template {
 			);
 
 			if ($this->isGenerated($name)) unlink($this->getCacheFile($name));
+			$modified = true;
 		}
 
 		$this->list    = $newData;
 		$this->refresh = time();
-		$config        = sly_Core::config();
 
 		// Wir müssen die Daten erst aus der Konfiguration entfernen, falls sich
 		// der Datentyp geändert hat. Ansonsten wird sich sly_Configuration z. B.
 		// weigern, aus einem Skalar ein Array zu machen.
 
-		$config->remove('TEMPLATES');
-		$config->setLocal('TEMPLATES/list', $this->list);
-		$config->setLocal('TEMPLATES/last_refresh', $this->refresh);
+		if ($modified) {
+			$config = sly_Core::config();
+			$config->remove('TEMPLATES');
+			$config->setLocal('TEMPLATES/list', $this->list);
+			$config->setLocal('TEMPLATES/last_refresh', $this->refresh);
+		}
 	}
 
 	public function findTemplate($filename, $data = null) {
