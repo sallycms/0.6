@@ -5,6 +5,7 @@
 @include 'sally.css';
 @include 'form.css';
 
+@include 'pages/credits.css';
 @include 'pages/linkmap.css';
 @include 'pages/login.css';
 @include 'pages/mediapool.css';
