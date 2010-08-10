@@ -58,7 +58,7 @@
  * @deprecated  sly_Layout_HTML::pageHeader() ist die korrekte Variante.
  */
 function rex_title($head, $subtitle = '') {
-	$layout = sly_Core::getLayout('XHTML');
+	$layout = sly_Core::getLayout();
 	$layout->pageHeader($head, $subtitle);
 }
 
@@ -68,6 +68,6 @@ function rex_title($head, $subtitle = '') {
  * @deprecated  sly_Layout_HTML::getSubtitle() ist die korrekte Variante.
  */
 function rex_get_subtitle($subline, $attr = '') {
-	$layout = sly_Core::getLayout('XHTML');
+	$layout = sly_Core::getLayout();
 	return $layout->getSubtitle($subline, $attr);
 }
