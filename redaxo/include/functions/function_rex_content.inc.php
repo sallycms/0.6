@@ -523,7 +523,7 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 		$insert->setValue('re_article_slice_id', $insert->escape($re_slice_id));
 		$insert->setValue('slice_id', $insert->escape($slice->getId()));
 		$insert->setValue('article_id', $insert->escape($to_id));
-		$insert->setValue('modultyp_id', $insert->escape($slice->getModuleId()));
+		$insert->setValue('module', $insert->escape($slice->getModule()));
 		$insert->setValue('revision', 0);
 		$insert->addGlobalCreateFields();
 		$insert->insert();

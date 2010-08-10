@@ -27,7 +27,7 @@ class sly_Service_Slice extends sly_Service_Model_Base {
 	 */
 	public function copy(sly_Model_Slice $slice) {
 		$valueservice = sly_Service_Factory::getService('SliceValue');
-		$clone        = $this->create(array('module_id' => $slice->getModuleId()));
+		$clone        = $this->create(array('module' => $slice->getModule()));
 
 		foreach ($valueservice->find(array('slice_id' => $slice->getId())) as $sliceValue) {
 			$sliceValue->setId(sly_Model_Base::NEW_ID);

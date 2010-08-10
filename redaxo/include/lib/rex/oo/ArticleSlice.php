@@ -182,7 +182,7 @@ class OOArticleSlice {
 	public function getContent() {
 		global $REX, $I18N;
 
-		$slice_content_file = SLY_DYNFOLDER.'/internal/sally/articles/'.$this->getId().'.slice';
+		$slice_content_file = SLY_DYNFOLDER.'/internal/sally/articles/'.$this->getId().'.slice.php';
 
 		if (!file_exists($slice_content_file)) {
 			$slice_content = $this->getSlice();
@@ -260,7 +260,7 @@ class OOArticleSlice {
 		// Slice-abhängige globale Variablen ersetzen
 
 		$slice   = sly_Service_Factory::getService('Slice')->findById($this->getSliceId());
-		$content = str_replace('REX_MODULE_ID', $slice->getModuleId(), $content);
+		$content = str_replace('REX_MODULE', $slice->getModule(), $content);
 		$content = str_replace('REX_SLICE_ID', $this->getId(), $content);
 		$content = str_replace('REX_CTYPE_ID', $this->getCtype(), $content);
 

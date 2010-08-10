@@ -298,7 +298,7 @@ class rex_article {
 		if ($this->article_id != 0) {
 			global $REX;
 
-			$article_content_file = SLY_DYNFOLDER.'/internal/sally/articles/'.$this->article_id.'.'.$this->clang.'.php';
+			$article_content_file = SLY_DYNFOLDER.'/internal/sally/articles/'.$this->article_id.'.'.$this->clang.'.content.php';
 
 			if (!file_exists($article_content_file)) {
 				include_once SLY_INCLUDE_PATH.'/functions/function_rex_generate.inc.php';

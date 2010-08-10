@@ -186,6 +186,8 @@ class sly_Service_Module {
 				'params'   => $data,
 				'mtime'    => $mtime
 			);
+
+			$this->deleteSliceCache($name);
 		}
 
 		$this->list    = $newData;
@@ -199,6 +201,16 @@ class sly_Service_Module {
 		$config->remove('MODULES');
 		$config->setLocal('MODULES/list', $this->list);
 		$config->setLocal('MODULES/last_refresh', $this->refresh);
+	}
+
+	protected function deleteSliceCache($moduleName) {
+		$sql = sly_DB_Persistence::getInstance();
+		$sql->select('article_slice', 'slice_id', array('module' => $moduleName));
+
+		foreach ($sql as $row) {
+			include_once SLY_INCLUDE_PATH.'/functions/function_rex_generate.inc.php';
+			rex_deleteCacheSliceContent((int) $row['slice_id']);
+		}
 	}
 
 	public function findModule($filename, $data = null) {

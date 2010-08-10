@@ -85,7 +85,7 @@ function rex_deleteCacheArticleContent($id, $clang = null)
 			continue;
 		}
 
-		unlink($cachePath.$id.'.'.$_clang.'.content');
+		unlink($cachePath.$id.'.'.$_clang.'.content.php');
 	}
 
 	error_reporting($level);
@@ -94,7 +94,7 @@ function rex_deleteCacheArticleContent($id, $clang = null)
 function rex_deleteCacheSliceContent($slice_id)
 {
 	$cachePath = SLY_DYNFOLDER.'/internal/sally/articles/';
-	@unlink($cachePath.$slice_id.'.slice');
+	@unlink($cachePath.$slice_id.'.slice.php');
 }
 
 /**
@@ -162,7 +162,7 @@ function rex_generateArticleContent($article_id, $clang = null)
 			$article_content .= '<?php } ?>';
 		}
 
-		$article_content_file = SLY_DYNFOLDER."/internal/sally/articles/$article_id.$_clang.content";
+		$article_content_file = SLY_DYNFOLDER."/internal/sally/articles/$article_id.$_clang.content.php";
 
 		if (rex_put_file_contents($article_content_file, $article_content) === false) {
 			return $I18N->msg('article_could_not_be_generated').' '.$I18N->msg('check_rights_in_directory').SLY_DYNFOLDER.'/internal/sally/articles/';

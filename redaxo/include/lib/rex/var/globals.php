@@ -59,10 +59,10 @@ class rex_var_globals extends rex_var
     // Aktion abgefragt werden können
 	if($artslice && $slice){
 		$REX_ACTION['ARTICLE_ID'] = $artslice->getArticleId();
-		$REX_ACTION['CLANG_ID'] = $artslice->getClang();
-		$REX_ACTION['CTYPE_ID'] = $artslice->getCtype();
-		$REX_ACTION['MODULE_ID'] = $slice->getModuleId();
-		$REX_ACTION['SLICE_ID'] = $artslice->getId();
+		$REX_ACTION['CLANG_ID']   = $artslice->getClang();
+		$REX_ACTION['CTYPE_ID']   = $artslice->getCtype();
+		$REX_ACTION['MODULE']     = $slice->getModule();
+		$REX_ACTION['SLICE_ID']   = $artslice->getId();
 	}
 
     return $REX_ACTION;
