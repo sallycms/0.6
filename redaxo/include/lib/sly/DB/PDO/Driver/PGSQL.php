@@ -8,19 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_DB_PDO_Driver_PGSQL {
-	protected $host;
-	protected $login;
-	protected $password;
-	protected $database;
-
-	public function __construct($host, $login, $password, $database) {
-		$this->host     = $host;
-		$this->login    = $login;
-		$this->password = $password;
-		$this->database = $database;
-	}
-
+class sly_DB_PDO_Driver_PGSQL extends sly_DB_PDO_Driver {
 	public function getDSN() {
 		$format = empty($this->database) ? 'pgsql:host=%s' : 'pgsql:host=%s;dbname=%s';
 		return sprintf($format, $this->host, $this->database);
