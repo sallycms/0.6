@@ -119,7 +119,7 @@ function rex_addCategory($parentID, $data)
 			/*      status */ $data['status'] ? 1 : 0,
 			/*  createdate */ $createTime,
 			/*  updatedate */ $createTime,
-			/*    template */ $template,
+			/*    template */ $sql->escape($template),
 			/*       clang */ (int) $clangID,
 			/*  createuser */ $sql->escape($REX['USER']->getValue('login')),
 			/*  updateuser */ $sql->escape($REX['USER']->getValue('login')),
@@ -508,7 +508,7 @@ function rex_addArticle($data)
 	$success = true;
 	$message = '';
 
-	if (!isset($data['name']) || !isset($data['category_id']) || !isset($data['prior']) || !isset($data['template_id'])) {
+	if (!isset($data['name']) || !isset($data['category_id']) || !isset($data['prior']) || !isset($data['template'])) {
 		trigger_error('Expecting $data to be an array!', E_USER_ERROR);
 	}
 
@@ -520,7 +520,7 @@ function rex_addArticle($data)
 	// Template überprüfen
 
 	$service = sly_Service_Factory::getService('Template');
-	if (!$service->exists($template)) $template = '';
+	if (!$service->exists($templateName)) $templateName = '';
 
 	if ($categoryID == 0) {
 		$categoryData = array('catname' => '', 'path' => '|');
@@ -605,7 +605,7 @@ function rex_addArticle($data)
 			/*      status */ $data['status'] ? 1 : 0,
 			/*  createdate */ $createTime,
 			/*  updatedate */ $createTime,
-			/* template_id */ $sql->escape($template),
+			/*    template */ $sql->escape($templateName),
 			/*       clang */ $clangID,
 			/*  createuser */ $sql->escape($REX['USER']->getValue('login')),
 			/*  updateuser */ $sql->escape($REX['USER']->getValue('login')),
@@ -755,7 +755,7 @@ function rex_editArticle($articleID, $clang, $data)
 			're_id'       => (int) $data['category_id'],
 			'prior'       => (int) $data['prior'],
 			'path'        => $data['path'],
-			'template_'   => $data['template']
+			'template'    => $data['template']
 		));
 	}
 
@@ -803,7 +803,7 @@ function rex_deleteArticleReorganized($articleID)
 	// Prüfen ob der Artikel existiert
 
 	$data = rex_sql::getArrayEx(
-		'SELECT clang, re_id, name, status, prior, path, template_id '.
+		'SELECT clang, re_id, name, status, prior, path, template '.
 		'FROM #_article WHERE id = '.$articleID.' AND startpage = 0', '#_'
 	);
 
@@ -825,14 +825,14 @@ function rex_deleteArticleReorganized($articleID)
 		);
 
 		$return = rex_register_extension_point('ART_DELETED', $return, array(
-			'id'          => $articleID,
-			'clang'       => $clang,
-			'name'        => $article['name'],
-			'path'        => $article['path'],
-			're_id'       => (int) $article['re_id'],
-			'status'      => (int) $article['status'],
-			'prior'       => (int) $article['prior'],
-			'template_id' => (int) $article['template_id']
+			'id'       => $articleID,
+			'clang'    => $clang,
+			'name'     => $article['name'],
+			'path'     => $article['path'],
+			're_id'    => (int) $article['re_id'],
+			'status'   => (int) $article['status'],
+			'prior'    => (int) $article['prior'],
+			'template' => $article['template']
 		));
 
 		$cache->delete('article', $articleID.'_'.$clang);
