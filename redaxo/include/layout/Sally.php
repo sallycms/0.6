@@ -22,7 +22,7 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		$this->addCSSFile('media/css_ie_7.css', 'all', 'if IE 7');
 		$this->addCSSFile('media/css_ie_lte_6.css', 'all', 'if lte IE 6');
 
-		$this->addJavaScriptFile('media/jquery.min.js');
+		//$this->addJavaScriptFile('media/jquery.min.js');
 		$this->addJavaScriptFile('media/standard.min.js');
 
 		$this->setTitle($config->get('SERVERNAME').' - ');
