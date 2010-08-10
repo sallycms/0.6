@@ -163,15 +163,11 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		// nenötigte Tabellen prüfen
 
 		$requiredTables = array (
-			$prefix.'action',
 			$prefix.'article',
 			$prefix.'article_slice',
 			$prefix.'clang',
 			$prefix.'file',
 			$prefix.'file_category',
-			$prefix.'module_action',
-			$prefix.'module',
-			$prefix.'template',
 			$prefix.'user',
 			$prefix.'slice',
 			$prefix.'slice_value',
