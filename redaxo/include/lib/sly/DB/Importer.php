@@ -123,14 +123,14 @@ class sly_DB_Importer
 
 		// ## Redaxo Database Dump Version x.x
 
-		$version = strpos($this->content, '## Redaxo Database Dump Version '.$REX['VERSION']);
+		$version = strpos($this->content, '## Sally Database Dump Version '.$REX['VERSION']);
 
 		if ($version === false) {
 			$this->returnValues['message'] = $I18N->msg('importer_no_valid_import_file').'. [## Redaxo Database Dump Version '.$REX['VERSION'].'] is missing.<br />';
 			throw new Exception('bad version');
 		}
 
-		$this->content = trim(str_replace('## Redaxo Database Dump Version '.$REX['VERSION'], '', $this->content));
+		$this->content = trim(str_replace('## Sally Database Dump Version '.$REX['VERSION'], '', $this->content));
 	}
 
 	protected function checkPrefix()
