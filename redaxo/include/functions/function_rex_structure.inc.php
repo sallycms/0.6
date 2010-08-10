@@ -37,7 +37,7 @@ function rex_addCategory($parentID, $data)
 	if (!empty($parentID)) {
 		// TemplateId vom Startartikel der jeweiligen Sprache vererben
 		$startpageTemplates = rex_sql::getArrayEx(
-			'SELECT clang, template_id FROM #_article '.
+			'SELECT clang, template FROM #_article '.
 			'WHERE id = '.$parentID.' AND startpage = 1', '#_'
 		);
 	}
@@ -100,10 +100,10 @@ function rex_addCategory($parentID, $data)
 	$createTime  = time();
 
 	foreach (array_keys($REX['CLANG']) as $clangID) {
-		$templateID = $REX['DEFAULT_TEMPLATE_ID'];
+		$template = $REX['DEFAULT_TEMPLATE'];
 
 		if (!empty($startpageTemplates[$clangID])) {
-			$templateID = $startpageTemplates[$clangID];
+			$template = $startpageTemplates[$clangID];
 		}
 
 		$records[] = sprintf($sqlTemplate,
@@ -119,18 +119,19 @@ function rex_addCategory($parentID, $data)
 			/*      status */ $data['status'] ? 1 : 0,
 			/*  createdate */ $createTime,
 			/*  updatedate */ $createTime,
-			/* template_id */ (int) $templateID,
+			/*    template */ $template,
 			/*       clang */ (int) $clangID,
 			/*  createuser */ $sql->escape($REX['USER']->getValue('login')),
 			/*  updateuser */ $sql->escape($REX['USER']->getValue('login')),
 			/*    revision */ 0
 		);
+
 		sly_Core::cache()->delete('clist', $parentID.'_'.$clangID);
 	}
 
 	$sql->setQuery('INSERT INTO '.$REX['DATABASE']['TABLE_PREFIX'].'article (id,re_id,name,'.
 		'catname,catprior,attributes,startpage,prior,path,status,createdate,'.
-		'updatedate,template_id,clang,createuser,updateuser,revision) VALUES '.
+		'updatedate,template,clang,createuser,updateuser,revision) VALUES '.
 		implode(',', $records)
 	);
 

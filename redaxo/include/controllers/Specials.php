@@ -38,43 +38,43 @@ class sly_Controller_Specials extends sly_Controller_Sally
 
 	public function update()
 	{
-		$startArticle      = sly_post('start_article',       'int');
-		$notFoundArticle   = sly_post('notfound_article',    'int');
-		$defaultTemplateID = sly_post('default_template_id', 'int');
-		$backendLocale     = sly_post('backend_locale',      'string');
-		$errorEMail        = sly_post('error_email',         'string');
-		$server            = sly_post('server',              'string');
-		$serverName        = sly_post('servername',          'string');
-		$modRewrite        = sly_post('mod_rewrite',         'string');
+		$startArticle    = sly_post('start_article',    'int');
+		$notFoundArticle = sly_post('notfound_article', 'int');
+		$defaultTemplate = sly_post('default_template', 'string');
+		$backendLocale   = sly_post('backend_locale',   'string');
+		$errorEMail      = sly_post('error_email',      'string');
+		$server          = sly_post('server',           'string');
+		$serverName      = sly_post('servername',       'string');
+		$modRewrite      = sly_post('mod_rewrite',      'string');
 
 		// Änderungen speichern
 
 		$conf = sly_Core::config();
+		$this->warning = array();
 
 		if (OOArticle::exists($startArticle)) {
 			$conf->set('START_ARTICLE_ID', $startArticle);
 		}
 		else {
-			$this->warning = t('settings_invalid_sitestart_article');
+			$this->warning[] = t('settings_invalid_sitestart_article');
 		}
 
 		if (OOArticle::exists($notFoundArticle)) {
 			$conf->set('NOTFOUND_ARTICLE_ID', $notFoundArticle);
 		}
 		else {
-			$this->warning .= t('settings_invalid_notfound_article').'<br />';
+			$this->warning[] = t('settings_invalid_notfound_article').'<br />';
 		}
 
 		// Standard-Artikel
 
-		$sql = sly_DB_Persistence::getInstance();
-		$id  = $sql->fetch('template', 'id', array('id' => $defaultTemplateID));
+		$service = sly_Service_Factory::getService('Template');
 
-		if ($id === null && $defaultTemplateID != 0) {
-			$this->warning .= t('settings_invalid_default_template').'<br />';
+		if (!empty($defaultTemplate) && !$service->exists($defaultTemplate)) {
+			$this->warning[] = t('settings_invalid_default_template').'<br />';
 		}
 		else {
-			$conf->set('DEFAULT_TEMPLATE_ID', $defaultTemplateID);
+			$conf->set('DEFAULT_TEMPLATE', $defaultTemplate);
 		}
 
 		//Sonstige Einstellungen
@@ -85,7 +85,8 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		$conf->setLocal('SERVERNAME', $serverName);
 		$conf->set('MOD_REWRITE', $modRewrite);
 
-		$this->info = t('info_updated');
+		$this->info    = t('info_updated');
+		$this->warning = implode("<br />\n", $this->warning);
 
 		$this->index();
 	}

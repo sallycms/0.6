@@ -519,9 +519,11 @@ if ($category_id > -1)
   // --------------------- ARTIKEL ADD FORM
   if ($function == 'add_art' && $KATPERM && !$REX['USER']->hasPerm('editContentOnly[]'))
   {
-    if($REX['DEFAULT_TEMPLATE_ID'] > 0 && isset($templates[$REX['DEFAULT_TEMPLATE_ID']]))
+  	 $default = $REX['DEFAULT_TEMPLATE'];
+
+    if(!empty($default) && isset($templates[$default]))
     {
-      $TMPL_SEL->setSelected($REX['DEFAULT_TEMPLATE_ID']);
+      $TMPL_SEL->setSelected($default);
 
     }else
     {
