@@ -46,9 +46,9 @@ div#rex-form-mediapool-selectcategory {
 	margin-bottom: 10px;
 
 	div.rex-form-row p {
-		label                 { font-weight: bold; }
-		select                { width: 330px; }
-		input.rex-form-submit { margin-left: 10px; }
+		label                    { font-weight: bold; line-height:30px; }
+		select#rex_file_category { width: 185px; }
+		input.rex-form-submit    { margin-left: 10px; margin-bottom: 10px; }
 	}
 
 	noscript div.rex-form-row p input.rex-form-submit {
@@ -64,9 +64,11 @@ div#rex-form-mediapool-selectcategory {
 
 body#rex-page-mediapool,
 div#rex-form-mediapool-other {
+	div.rex-form-row:first-child { border-top: none; }
+
 	fieldset.rex-form-col-1 div.rex-form-row {
 		/* nur der absatz soll einen abstand haben, nicht die inputs*/
-		p.rex-form-submit { margin-left: 150px; }
+		p.rex-form-submit { margin-left: -15px; }
 
 		input#file_new .rex-form-file {
 			border: 0;
@@ -86,19 +88,30 @@ div#rex-form-mediapool-other {
 body#rex-page-mediapool,
 div#rex-form-mediapool-other,
 div#rex-form-mediapool-selectcategory {
-	fieldset.rex-form-col-1,
-	fieldset.rex-form-col-2 {
-		background-color: #fff;
-		width: 100%;
-		+border-bottom-radius(4px);
+	fieldset {
+		&.rex-form-col-1, rex-form-col-2 {
+			background-color: #fff;
+			width: 100%;
+			+border-bottom-radius(4px);
+			margin-bottom: 10px;
+		}
+
+		.rex-lgnd {
+			background-color: $md_grey;;
+		}
+
+		.rex-form-wrapper {
+			+border-radius($brd_rad);
+			background-color: #fff;
+			float: left;
+			width: 100%;
+		}
 	}
-
 	div.rex-form-row {
-		line-height: 30px;
-
-		label  { width: 100px; margin-left: 10px; }
+		line-height: 23px;
+		padding: 6px 0;
+		label  { width: 120px; margin-left: 10px; margin-top: 1px; }
 		select { margin-right: 5px; width: 153px; }
-
 		.rex-form-col-a,
 		.rex-form-col-b {
 			width: auto;
@@ -114,33 +127,48 @@ div#rex-form-mediapool-selectcategory {
 		color: #fff;
 		background-color: $drk_grey;
 		font-size: 1.1em;
-		+border-top-radius(4px);
 		width: 680px;
 		padding: 8px 0 8px 10px;
 	}
-}
 
-div#rex-form-mediapool-detail div.rex-form-row p select {
-	&.rex-form-select-date { width: 45px; }
-	&.rex-form-select-year { width: 65px; }
+	fieldset.num1 {
+		legend { +border-top-radius(4px); }
+	}
 }
+div#rex-form-mediapool-detail {
+	div.rex-form-row p select {
+		&.rex-form-select-date { width: 45px; }
+		&.rex-form-select-year { width: 65px; }
+	}
 
+	fieldset.num1 {
+		div.rex-form-checkboxes-wrapper,
+		div.rex-form-radios-wrapper,
+		p.rex-form-label-right label,
+		p.rex-form-read span,
+		p.rex-form-text input,
+		p.rex-form-password input,
+		p select,
+		p textarea {
+			width: 250px;
+		}
+
+		div.rex-form-row {
+			line-height: 29px;
+		}
+
+		label {
+			margin-top: 4px;
+		}
+	}
+}
 div#rex-mediapool-detail {
 	&-wrapper {
 		float: left;
 		width: 100%;
 		color: $drk_grey;
 	}
-
-	&-image {
-		float: right;
-		width: 34%;
-		padding-top: 5px;
-		text-align: center;
-	}
-
 	.rex-form-submit { margin-left: 75px; }
-
 	div.rex-form-row {
 		div.rex-form-checkboxes-wrapper,
 		div.rex-form-radios-wrapper,
@@ -168,11 +196,26 @@ div#rex-mediapool-detail {
 		}
 	}
 }
+div.rex-mediapool-detail-image-container {
+	position: relative;
+}
+
+p.rex-mediapool-detail-image {
+	position: absolute;
+	right: 8px;
+	top: 8px;
+	max-width: 200px;
+	text-align: right;
+
+	img {
+		max-height: 100px;
+	}
+}
 
 div#rex-form-mediapool-media,
 div#rex-form-mediapool-categories {
 	legend {
-		font-size: 1.2em;
+		font-size: 1.1em;
 		margin-bottom: 5px;
 	}
 

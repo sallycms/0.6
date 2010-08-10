@@ -48,7 +48,7 @@ a.sly-sprite, span.sly-sprite {
 	margin: 0 auto;
 }
 
-.sly-sprite.sly-sprite {
+.sly-sprite {
 	&-article           { background-position: -16px 0;     }
 	&-article-add       { background-position: -16px -16px; }
 	&-article-startpage { background-position: -16px -32px; }
@@ -147,9 +147,9 @@ table.rex-table, table.sly-table {
 
 		&.rex-colz { width: 153px; }
 	}
+
+	tr:first-child td { border-top: none; }
 }
-
-
 
 /*	Allgemeiner Block (Addon Hilfeseiten) / Addon Seiten */
 
@@ -201,6 +201,7 @@ div.rex-widget {
 
 div#rex-output div.rex-widget p {
 	width: auto;
+	float: left;
 }
 
 div.rex-widget {

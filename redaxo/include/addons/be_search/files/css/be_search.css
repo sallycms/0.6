@@ -11,7 +11,7 @@
  */
 
 div#rex-a256-searchbar form {
-	label          { font-weight: bold; }
+	label          { font-weight: bold; margin-right:5px; }
 	input.rex-sbmt { line-height: 1em;  }
 
 	input#rex-a256-article-name {

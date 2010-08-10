@@ -362,8 +362,7 @@ function rex_deleteCategoryReorganized($categoryID)
 
 	$return = rex_deleteArticle($categoryID);
 
-	if($return['state'] != false)
-	{
+	if ($return['state'] != false) {
 		// Kinder neu positionieren
 
 		$cache = sly_Core::cache();
@@ -390,14 +389,17 @@ function rex_deleteCategoryReorganized($categoryID)
 		}
 
 		// remove all caches
+
 		$sql->setQuery('SELECT id FROM #_article WHERE re_id = "'.$parentID.'" AND catprior >= "' .$data['catprior']. '"', '#_');
-		for ($i=0; $i < $sql->getRows(); $i++)
-		{
+		$clangs = array_keys($REX['CLANG']);
+
+		for ($i = 0; $i < $sql->getRows(); ++$i) {
 			$id = $sql->getValue('id');
-			foreach(array_keys($REX['CLANG']) as $clang)
-			{
+
+			foreach ($clangs as $clang) {
 				$cache->delete('category', $id.'_'.$clang);
 			}
+
 			$sql->next();
 		}
 	}

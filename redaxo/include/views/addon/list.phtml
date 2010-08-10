@@ -39,7 +39,8 @@ if (!empty($warning)) print rex_warning($warning);
 
 	foreach ($addonList as $addon) {
 		$base       = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;func=';
-		$pluginList = $plugins->getRegisteredPlugins($addon);
+		$registeredPlugins = $plugins->getRegisteredPlugins($addon);
+		$availablePlugins  = $plugins->getAvailablePlugins($addon);
 
 		if ($addons->isSystemAddon($addon)) {
 			$delete = $I18N->msg('addon_systemaddon');
@@ -51,7 +52,7 @@ if (!empty($warning)) print rex_warning($warning);
 		if ($addons->isInstalled($addon)) {
 			$install = $I18N->msg('addon_yes').' - <a href="'.$base.'install">'.$I18N->msg('addon_reinstall').'</a>';
 
-			if (!empty($pluginList)) {
+			if (!empty($availablePlugins)) {
 				$uninstall = $I18N->msg('plugin_plugins_installed');
 				$delete    = $uninstall;
 			}
@@ -86,7 +87,7 @@ if (!empty($warning)) print rex_warning($warning);
 		<?php
 
 		if ($addons->isAvailable($addon)) {
-			foreach ($pluginList as $plugin) {
+			foreach ($registeredPlugins as $plugin) {
 				$comp   = array($addon, $plugin);
 				$base   = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;plugin='.urlencode($plugin).'&amp;func=';
 				$delete = '<a href="'.$base.'delete" class="sly-delete">'.$I18N->msg('addon_delete').'</a>';

@@ -29,7 +29,6 @@ class sly_Layout_XHTML extends sly_Layout
 			if ($isConditional) print "<![endif]-->\n";
 		}
 	}
-
 	protected function printJavaScriptConcrete() {
 			print '<script type="text/javascript">
 				/* <![CDATA[ */'

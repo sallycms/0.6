@@ -130,7 +130,8 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 					}
 				}
 
-				$link   = reset(explode('&', $link, 2)); // alles nach dem ersten & abschneiden
+				$link   = explode('&', $link, 2);
+				$link   = reset($link); // alles nach dem ersten & abschneiden
 				$active = (empty($cur_subpage) && empty($link)) || (!empty($cur_subpage) && $cur_subpage == $link);
 
 				// Auf der aktiven Seite den Link nicht anzeigen

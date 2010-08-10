@@ -83,7 +83,7 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		$conf->set('LANG', $backendLocale);
 		$conf->setLocal('SERVER', $server);
 		$conf->setLocal('SERVERNAME', $serverName);
-		$conf->set('MOD_REWRITE', $modRewrite);
+		$conf->set('MOD_REWRITE', $modRewrite === 'true');
 
 		$this->info    = t('info_updated');
 		$this->warning = implode("<br />\n", $this->warning);

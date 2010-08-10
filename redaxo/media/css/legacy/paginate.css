@@ -118,7 +118,7 @@ div.rex-navi-slice li {
 
 		/* Editbutton auf Artikelseite */
 		&.rex-tx3 {
-			background-image: url(background_btn_edit.png);
+			background-image: url(../background_btn_edit.png);
 			background-position: 6px 0;
 			background-repeat: no-repeat;
 			width: 60px;
@@ -131,7 +131,7 @@ div.rex-navi-slice li {
 
 		/* Löschen-Button */
 		&.rex-tx2 {
-			background-image: url(background_btn_dlt.png);
+			background-image: url(../background_btn_dlt.png);
 			background-position: 6px 0;
 			background-repeat: no-repeat;
 			width: 55px;
@@ -153,13 +153,13 @@ div.rex-navi-slice li {
 			}
 
 			&move-down {
-				background-image: url(background_btn_down.png);
+				background-image: url(../background_btn_down.png);
 				background-position: 7px 0;
 				background-repeat: no-repeat;
 			}
 
 			&move-up {
-				background-image: url(background_btn_up.png);
+				background-image: url(../background_btn_up.png);
 				background-position: 7px 0;
 				background-repeat: no-repeat;
 			}

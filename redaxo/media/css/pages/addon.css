@@ -1,2 +1,28 @@
 .sly-sprite.sly-sprite-addon  { background-position: 0 -32px;     }
 .sly-sprite.sly-sprite-plugin { background-position: -32px -32px; }
+
+#rex-page-addon {
+	tr.addon {
+		&.activated td {
+			background: #fff;
+		}
+
+		&.installed td, &.notinstalled td {
+			background: #e0e0e0;
+			color: #aca9a9;
+		}
+	}
+
+	tr.rex-plugin.activated td    { background: #fff; }
+	tr.rex-plugin.installed td    { background: #e0e0e0; }
+	tr.rex-plugin.notinstalled td { background: #aca9a9; }
+
+	tr.addon .is-forbidden, tr.rex-plugin .is-forbidden {
+		color: #777;
+	}
+
+	tr.addon .is-help {
+		border-bottom: 1px dotted #777;
+		cursor: help;
+	}
+}
