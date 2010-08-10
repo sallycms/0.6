@@ -282,7 +282,7 @@ function rex_message_block($message, $cssClass, $sorroundTag)
 }
 
 
-function rex_ini_get($val)
+function rex_ini_get($key)
 {
 	return sly_ini_get($key);
 }
