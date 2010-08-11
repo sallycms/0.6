@@ -43,13 +43,13 @@ class sly_Loader
 			return true;
 		}
 
-		$file  = str_replace('_', DIRECTORY_SEPARATOR, $className).'.php';
 		$found = false;
+		$upper = strtoupper($className);
 
 		foreach (self::$loadPaths as $path => $prefix) {
 			// Präfix vom Klassennamen abschneiden, wenn Klasse damit beginnt.
 
-			if (!empty($prefix) && strpos(strtoupper($className), strtoupper($prefix)) === 0) {
+			if (!empty($prefix) && strpos($upper, strtoupper($prefix)) === 0) {
 				$shortClass = substr($className, strlen($prefix));
 			}
 			else {
