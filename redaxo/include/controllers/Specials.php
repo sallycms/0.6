@@ -46,6 +46,7 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		$server          = sly_post('server',           'string');
 		$serverName      = sly_post('servername',       'string');
 		$modRewrite      = sly_post('mod_rewrite',      'string');
+		$cachingStrategy = sly_post('caching_strategy', 'string');
 
 		// Änderungen speichern
 
@@ -84,6 +85,7 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		$conf->setLocal('SERVER', $server);
 		$conf->setLocal('SERVERNAME', $serverName);
 		$conf->set('MOD_REWRITE', $modRewrite === 'true');
+		$conf->setLocal('CACHING_STRATEGY', $cachingStrategy);
 
 		$this->info    = t('info_updated');
 		$this->warning = implode("<br />\n", $this->warning);

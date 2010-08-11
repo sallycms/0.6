@@ -31,16 +31,6 @@ class sly_Core {
 	}
 
 	/**
-	 * Hook Methode für Addons um einen Cache an Redaxo anzumelden,
-	 * der sich um das Metadatencaching kümmert.
-	 *
-	 * @param sly_Cache_IFlushable  $cache  Implementierung des Cache.
-	 */
-	public static function setCache(sly_Cache_IFlushable $cache) {
-		self::getInstance()->cache->setPersistence($cache);
-	}
-
-	/**
 	 * Gibt die angemeldete Cache-Instanz zurück.
 	 *
 	 * @return sly_Cache_IFlushable  Cache-Instanz

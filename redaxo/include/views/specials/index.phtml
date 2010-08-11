@@ -23,6 +23,7 @@ $templates  = $tplService->getTemplates();
 $backendLocale   = new sly_Form_Select_DropDown('backend_locale', '', $config->get('LANG'), $locales, 'rex-form-lang');
 $modRewrite      = new sly_Form_Select_DropDown('mod_rewrite', '', $config->get('MOD_REWRITE') ? 'true' : 'false', $rewrites, 'rex-form-mod-rewrite');
 $defaultTemplate = new sly_Form_Select_DropDown('default_template', '', $config->get('DEFAULT_TEMPLATE'), $templates, 'rex-form-default-template-id');
+$cachingStrategy = new sly_Form_Select_DropDown('caching_strategy', '', sly_Cache::getStrategy(), sly_Cache::getAvailableCacheImpls(), 'rex-form-caching-strategy');
 
 ?>
 
@@ -135,6 +136,12 @@ $defaultTemplate = new sly_Form_Select_DropDown('default_template', '', $config-
 							<p class="rex-form-col-a rex-form-select">
 								<label for="rex-form-mod-rewrite">$REX['MOD_REWRITE']</label>
 								<?= $modRewrite->render() ?>
+							</p>
+						</div>
+						<div class="rex-form-row">
+							<p class="rex-form-col-a rex-form-select">
+								<label for="rex-form-mod-rewrite"><?= t('specials_caching_strategy') ?></label>
+								<?= $cachingStrategy->render() ?>
 							</p>
 						</div>
 

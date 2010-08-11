@@ -359,6 +359,7 @@ clang_function: Funktionen
 version: Version
 host: Host
 database: Datenbank
+specials_caching_strategy: Cache Strategie
 
 # redaxo\include\pages\medienpool.inc.php
 pool_name: Medienpool

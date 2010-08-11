@@ -11,9 +11,36 @@
 abstract class sly_Cache {
 	protected $expiration = 0; // niemals ablaufen (nur, um Platz im Server zu schaffen)
 
-	private static $caches          = null;
+	private static $instances       = null;
 	private static $cachingStrategy = null;
 	private static $cacheDisabled   = false;
+
+	private static $cacheImpls = array(
+		'sly_Cache_APC'          => 'APC',
+		'sly_Cache_Blackhole'    => 'Blackhole',
+		'sly_Cache_Filesystem'   => 'Filesystem',
+		'sly_Cache_eAccelerator' => 'eAccelerator',
+		'sly_Cache_Memcache'     => 'Memcache',
+		'sly_Cache_Memcached'    => 'Memcached',
+		'sly_Cache_Memory'       => 'Memory',
+		'sly_Cache_XCache'       => 'XCache',
+		'sly_Cache_ZendServer'   => 'ZendServer'
+	);
+
+	public static function addCacheImpl($className, $name) {
+		self::$cacheImpls[$className] = $name;
+	}
+
+	public static function getAvailableCacheImpls() {
+		$result = array();
+		foreach(self::$cacheImpls as $cacheimpl => $name) {
+			$available = call_user_func(array($cacheimpl, 'isAvailable'));
+			if($available) {
+				$result[$cacheimpl] = $name;
+			}
+		}
+		return $result;
+	}
 
 	public static function isAvailable() {
 		return true;
@@ -57,8 +84,8 @@ abstract class sly_Cache {
 			$cachingStrategy = self::$cachingStrategy;
 		}
 
-		if (!empty(self::$caches[$cachingStrategy])) {
-			return self::$caches[$cachingStrategy];
+		if (!empty(self::$instances[$cachingStrategy])) {
+			return self::$instances[$cachingStrategy];
 		}
 
 		// Versuchen, den gewählten Cache in der Datei zu finden
@@ -118,11 +145,10 @@ abstract class sly_Cache {
 				break;
 
 			default:
-
 				$cache = new $cachingStrategy();
 		}
 
-		self::$caches[$cachingStrategy] = $cache;
+		self::$instances[$cachingStrategy] = $cache;
 		return $cache;
 	}
 
