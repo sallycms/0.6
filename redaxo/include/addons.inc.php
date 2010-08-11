@@ -13,7 +13,6 @@ $pluginService = sly_Service_Factory::getService('Plugin');
 
 foreach ($addonService->getAvailableAddons() as $addonName) {
 	$addonService->loadConfig($addonName);
-
 	$addonConfig = $addonService->baseFolder($addonName).'config.inc.php';
 
 	if (file_exists($addonConfig)) {
@@ -21,7 +20,7 @@ foreach ($addonService->getAvailableAddons() as $addonName) {
 	}
 
 	foreach ($pluginService->getAvailablePlugins($addonName) as $pluginName) {
-		$addonService->loadConfig(array($addonName, $pluginName));
+		$pluginService->loadConfig(array($addonName, $pluginName));
 		$pluginConfig = $pluginService->baseFolder(array($addonName, $pluginName)).'config.inc.php';
 
 		if (file_exists($pluginConfig)) {

@@ -1,18 +1,18 @@
 # addon:image_resize de_de
 
-iresize_image_resize = Image Resize
-iresize_subpage_desc = Popis
-iresize_subpage_config = Konfigurace
-iresize_subpage_clear_cache = smazat Resize-Cache
+iresize_image_resize: Image Resize
+iresize_subpage_desc: Popis
+iresize_subpage_config: Konfigurace
+iresize_subpage_clear_cache: smazat Resize-Cache
 
-iresize_cache_files_removed = {0} Cache data smaz�na
+iresize_cache_files_removed: {0} Cache data smazána
 
-iresize_config_saved = Konfigurace byla aktualizov�na!
-iresize_config_not_saved = Konfigurace nemohla b�t ulo�ena
-iresize_config_not_writable = Konfigura�n� soubor "{0}" nen� p�episovateln�!
+iresize_config_saved: Konfigurace byla aktualizována!
+iresize_config_not_saved: Konfigurace nemohla být uložena
+iresize_config_not_writable: Konfigurační soubor "{0}" není přepisovatelný!
 
-iresize_max_cache_files = Maxim�ln� po�et Cache dat na 1 soubor
-iresize_max_filters = Maxim�ln� po�et filtru, kter� mohou b�t sou�asne pou�ity na jeden soubor
-iresize_max_resizekb = Maxim�ln� velikost 1 souboru v Kilobytech, kter� sm� b�t zpracov�n pomoc� Image-ResizeMaximale 
-iresize_max_resizepx = Maxim�ln� velikost 1 souboru v Pixelech, kter� sm� b�t zpracov�n pomoc� Image-ResizeMaximale
-iresize_jpg_quality = JPG/JPEG V�stupn� kvalita
+iresize_max_cache_files: Maximální počet Cache dat na 1 soubor
+iresize_max_filters: Maximální počet filtru, které mohou být současne použity na jeden soubor
+iresize_max_resizekb: Maximální velikost 1 souboru v Kilobytech, který smí být zpracován pomocí Image-ResizeMaximale
+iresize_max_resizepx: Maximální velikost 1 souboru v Pixelech, který smí být zpracován pomocí Image-ResizeMaximale
+iresize_jpg_quality: JPG/JPEG Výstupní kvalita

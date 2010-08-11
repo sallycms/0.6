@@ -138,11 +138,6 @@ class sly_Configuration {
 		// konfiguration aus yaml laden
 		else $config = $this->loadYaml($filename, $cachefile);
 
-		//array object um rekussion zu vermeiden
-		if(strlen(trim($key, '/')) > 0){
-			$config = new ArrayObject($config);
-		}
-
 		// geladene konfiguration in globale konfiguration mergen
 		$this->setInternal($key, $config, $mode, $force);
 
