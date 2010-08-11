@@ -48,7 +48,7 @@ class sly_I18N implements sly_I18N_Base {
 			$lines = sly_Util_YAML::load($filename);
 
 			foreach ($lines as $key => $value) {
-				$this->addMsg($prefix.$key, $value);
+				$this->texts[$prefix.$key] = $value;
 			}
 
 			return true;
@@ -83,11 +83,11 @@ class sly_I18N implements sly_I18N_Base {
 
 		// Wir überspringen $key -> $i = 1
 		for ($i = 1; $i < $argc; ++$i) {
-			$patterns[]     = '/\{'.($i-1).'\}/';
+			$patterns[]     = '{'.($i-1).'}';
 			$replacements[] = $argv[$i];
 		}
 
-		return preg_replace($patterns, $replacements, $msg);
+		return str_replace($patterns, $replacements, $msg);
 	}
 
 	/**
