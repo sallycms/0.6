@@ -193,7 +193,7 @@ if ($subpage=="detail" && rex_post('btn_update', 'string')){
       $return = rex_mediapool_updateMedia($_FILES['file_new'],$FILEINFOS,$REX['USER']->getValue("login"));
 		_rex_deleteFileCache($FILEINFOS["filename"]);
 
-		sly_Core::cache()->delete('media', $FILEINFOS["file_id"]);
+		sly_Core::cache()->delete('sly.medium', $FILEINFOS["file_id"]);
 
       $info = $return['msg'];
 

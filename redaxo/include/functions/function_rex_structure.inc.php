@@ -126,7 +126,7 @@ function rex_addCategory($parentID, $data)
 			/*    revision */ 0
 		);
 
-		sly_Core::cache()->delete('clist', $parentID.'_'.$clangID);
+		sly_Core::cache()->delete('sly.category.list', $parentID.'_'.$clangID);
 	}
 
 	$sql->setQuery('INSERT INTO '.$REX['DATABASE']['TABLE_PREFIX'].'article (id,re_id,name,'.
@@ -280,10 +280,10 @@ function rex_editCategory($categoryID, $clang, $data)
 			$sql->setQuery('SELECT id FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE re_id = "'.$parentID.'" AND clang ="'.$clang.'" AND catprior != 0');
 			for ($i=0; $i < $sql->getRows(); $i++)
 			{
-				sly_Core::cache()->delete('category', $sql->getValue('id').'_'.$clang);
+				sly_Core::cache()->delete('sly.category', $sql->getValue('id').'_'.$clang);
 				$sql->next();
 			}
-           	sly_Core::cache()->delete('clist', $parentID.'_'.$clang);
+           	sly_Core::cache()->delete('sly.category.list', $parentID.'_'.$clang);
 		}
 	}
 
@@ -301,7 +301,7 @@ function rex_editCategory($categoryID, $clang, $data)
 		'data'   => $data,
 	));
 
-	sly_Core::cache()->delete('category', $categoryID.'_'.$clang);
+	sly_Core::cache()->delete('sly.category', $categoryID.'_'.$clang);
 	return array(true, $message);
 }
 
@@ -384,8 +384,8 @@ function rex_deleteCategoryReorganized($categoryID)
 				'status' => $data['status']
 			));
 
-			$cache->delete('category', $categoryID.'_'.$clang);
-			$cache->delete('clist', $data['re_id'].'_'.$clang);
+			$cache->delete('sly.category', $categoryID.'_'.$clang);
+			$cache->delete('sly.category.list', $data['re_id'].'_'.$clang);
 		}
 
 		// remove all caches
@@ -397,7 +397,7 @@ function rex_deleteCategoryReorganized($categoryID)
 			$id = $sql->getValue('id');
 
 			foreach ($clangs as $clang) {
-				$cache->delete('category', $id.'_'.$clang);
+				$cache->delete('sly.category', $id.'_'.$clang);
 			}
 
 			$sql->next();
@@ -458,8 +458,8 @@ function rex_categoryStatus($categoryID, $clang, $newStatus = null)
 			));
 
 			$cache = sly_Core::cache();
-			$cache->delete('category', $categoryID.'_'.$clang);
-			$cache->delete('clist', $re_id.'_'.$clang);
+			$cache->delete('sly.category', $categoryID.'_'.$clang);
+			$cache->delete('sly.category.list', $re_id.'_'.$clang);
 		}
 		else {
 			$message = $sql->getError();
@@ -612,7 +612,7 @@ function rex_addArticle($data)
 			/*    revision */ 0
 		);
 
-		$cache->delete('alist', $categoryID.'_'.$clangID);
+		$cache->delete('sly.article.list', $categoryID.'_'.$clangID);
 	}
 
 	$sql->setQuery('INSERT INTO '.$REX['DATABASE']['TABLE_PREFIX'].'article (id,re_id,name,'.
@@ -732,10 +732,10 @@ function rex_editArticle($articleID, $clang, $data)
 			$sql->setQuery('SELECT id FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE re_id = "'.$parentID.'" AND clang ="'.$clang.'" AND catprior = 0');
 			for ($i=0; $i < $sql->getRows(); $i++)
 			{
-				sly_Core::cache()->delete('article', $sql->getValue('id').'_'.$clang);
+				sly_Core::cache()->delete('sly.article', $sql->getValue('id').'_'.$clang);
 				$sql->next();
 			}
-			sly_Core::cache()->delete('alist', $parentID.'_'.$clang);
+			sly_Core::cache()->delete('sly.article.list', $parentID.'_'.$clang);
 		}
 	}
 
@@ -774,8 +774,8 @@ function rex_editArticle($articleID, $clang, $data)
 	}
 
 	$cache = sly_Core::cache();
-	$cache->delete('article', $articleID.'_'.$clang);
-	$cache->delete('alist', $data['category_id'].'_'.$clang);
+	$cache->delete('sly.article', $articleID.'_'.$clang);
+	$cache->delete('sly.article.list', $data['category_id'].'_'.$clang);
 
 	return array(true, $message);
 }
@@ -835,8 +835,8 @@ function rex_deleteArticleReorganized($articleID)
 			'template' => $article['template']
 		));
 
-		$cache->delete('article', $articleID.'_'.$clang);
-		$cache->delete('alist', $article['re_id'].'_'.$clang);
+		$cache->delete('sly.article', $articleID.'_'.$clang);
+		$cache->delete('sly.article.list', $article['re_id'].'_'.$clang);
 	}
 
 	return array($return['state'], $return['message']);
@@ -877,7 +877,7 @@ function rex_articleStatus($articleID, $clang, $newStatus = null)
 		$sql->addGlobalUpdateFields();
 
 		if ($sql->update()) {
-			sly_Core::cache()->delete('article', $articleID.'_'.$clang);
+			sly_Core::cache()->delete('sly.article', $articleID.'_'.$clang);
 
 			$success = true;
 			$message = rex_register_extension_point('ART_STATUS', $I18N->msg('article_status_updated'), array(

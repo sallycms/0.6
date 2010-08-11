@@ -61,7 +61,7 @@ class OOArticleSlice {
 	public static function getArticleSliceById($id, $clang = false, $revision = 0) {
 		if ($clang === false) $clang = sly_Core::getCurrentClang();
 
-		$namespace = 'slice';
+		$namespace = 'sly.slice';
 		$clang     = (int) $clang;
 		$id        = (int) $id;
 		$revision  = (int) $revision;

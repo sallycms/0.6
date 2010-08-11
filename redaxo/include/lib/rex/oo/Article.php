@@ -31,8 +31,7 @@ class OOArticle extends OORedaxo
 		}
 
 		$clang     = (int) $clang;
-		$namespace = $OOCategory ? 'category' : 'article';
-
+		$namespace = $OOCategory ? 'sly.category' : 'sly.article';
 		$key       = $article_id.'_'.$clang;
 		$obj       = sly_Core::cache()->get($namespace, $key, null);
 
@@ -43,10 +42,10 @@ class OOArticle extends OORedaxo
 				$class = $OOCategory ? 'OOCategory' : 'OOArticle';
 				$obj   = new $class($article, $clang);
 
-
 				sly_Core::cache()->set($namespace, $key, $obj);
 			}
 		}
+
 		return $obj;
 	}
 
@@ -81,7 +80,7 @@ class OOArticle extends OORedaxo
 		$category_id = (int) $category_id;
 		$clang       = (int) $clang;
 
-		$namespace = 'alist';
+		$namespace = 'sly.article.list';
 		$key       = $category_id.'_'.$clang.'_'.($ignore_offlines ? 1 : 0);
 		$alist     = sly_Core::cache()->get($namespace, $key, null);
 
@@ -145,15 +144,13 @@ class OOArticle extends OORedaxo
 	 */
 	public static function exists($articleId)
 	{
-		global $REX;
-
-		if (sly_Core::cache()->get('article', $articleId.'_'.sly_Core::getCurrentClang(), null) !== null) {
+		if (sly_Core::cache()->get('sly.article', $articleId.'_'.sly_Core::getCurrentClang(), null) !== null) {
 			return true;
 		}
 
 		// prüfen, ob ID in Content Cache Dateien vorhanden
 
-		$cacheFiles = glob($REX['DYNFOLDER'].'/internal/sally/articles/'.$articleId.'.*');
+		$cacheFiles = glob(SLY_DYNFOLDER.'/internal/sally/articles/'.$articleId.'.*');
 
 		if (!empty($cacheFiles)) {
 			return true;

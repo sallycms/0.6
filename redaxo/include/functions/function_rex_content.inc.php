@@ -399,10 +399,10 @@ function rex_article2startpage($neu_id)
 		$neu->flush();
 
 		$cache = sly_Core::cache();
-       	$cache->delete('article', $neu_id.'_'.$clang);
-		$cache->delete('category', $alt_id.'_'.$clang);
-		$cache->delete('alist', $alt_id.'_'.$clang);
-		$cache->delete('clist', $data[$neu_cat_id]['re_id'].'_'.$clang);
+		$cache->delete('sly.article', $neu_id.'_'.$clang);
+		$cache->delete('sly.category', $alt_id.'_'.$clang);
+		$cache->delete('sly.article.list', $alt_id.'_'.$clang);
+		$cache->delete('sly.category.list', $data[$neu_cat_id]['re_id'].'_'.$clang);
 	}
 
 	$alt = null;
@@ -478,7 +478,7 @@ function rex_copyMeta($from_id, $to_id, $from_clang = 0, $to_clang = 0, $params 
 
 		$update->update();
 
-		sly_Core::cache()->delete('article', $to_id.'_'.$to_clang);
+		sly_Core::cache()->delete('sly.article', $to_id.'_'.$to_clang);
 		return true;
 	}
 
@@ -620,7 +620,7 @@ function rex_copyArticle($id, $to_cat_id)
 				        'template_id' => $from_data['template_id'],
 			      	)
     			);
-    			sly_Core::cache()->delete('alist', $to_cat_id);
+    			sly_Core::cache()->delete('sly.article.list', $to_cat_id);
 
 
 				$art_sql->flush();
@@ -704,9 +704,9 @@ function rex_moveArticle($id, $from_cat_id, $to_cat_id)
 				// Cache aufrÃ¤umen
 				$cache = sly_Core::getInstance()->cache();
 
-				$cache->delete('article', $id.'_'.$clang);
-				$cache->delete('alist', $from_cat_id.'_'.$clang);
-				$cache->delete('alist', $to_cat_id.'_'.$clang);
+				$cache->delete('sly.article', $id.'_'.$clang);
+				$cache->delete('sly.article.list', $from_cat_id.'_'.$clang);
+				$cache->delete('sly.article.list', $to_cat_id.'_'.$clang);
 			}
 			else {
 				return false;
@@ -810,8 +810,8 @@ function rex_moveCategory($from_cat, $to_cat)
 
 				// Cache aufräumen
 				$cache = sly_Core::cache();
-				$cache->delete('category', $from_cat.'_'.$clang);
-				$cache->delete('clist', $to_cat.'_'.$clang);
+				$cache->delete('sly.category', $from_cat.'_'.$clang);
+				$cache->delete('sly.category.list', $to_cat.'_'.$clang);
 			}
 
 			// generiere Artikel neu - ohne neue Inhaltsgenerierung
@@ -861,7 +861,7 @@ function rex_newCatPrio($re_id, $clang, $new_prio, $old_prio)
 			'pid'
 		);
 
-		sly_Core::getInstance()->cache()->delete('clist', $re_id.'_'.$clang);
+		sly_Core::getInstance()->cache()->delete('sly.category.list', $re_id.'_'.$clang);
 	}
 }
 
@@ -898,6 +898,6 @@ function rex_newArtPrio($re_id, $clang, $new_prio, $old_prio)
 			'pid'
 		);
 
-		sly_Core::getInstance()->cache()->delete('alist', $re_id.'_'.$clang);
+		sly_Core::getInstance()->cache()->delete('sly.article.list', $re_id.'_'.$clang);
 	}
 }

@@ -167,8 +167,8 @@ class sly_Configuration {
 		return self::$instance;
 	}
 
-	public function get($key) {
-		if (!$this->has($key)) return null;
+	public function get($key, $default = null) {
+		if (!$this->has($key)) return $default;
 
 		$s = (empty($key) || $this->staticConfig->has($key))  ? $this->staticConfig->get($key)  : array();
 		$l = (empty($key) || $this->localConfig->has($key))   ? $this->localConfig->get($key)   : array();

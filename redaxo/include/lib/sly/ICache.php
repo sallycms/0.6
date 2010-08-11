@@ -36,12 +36,7 @@ interface sly_ICache {
 	 * @param mixed   $default    Defaultwert, der bei einem Cache-Miss zurückgegeben wird
 	 * @return mixed              der gewünschte Wert oder NULL
 	 */
-	public function get($namespace, $key, $default);
-
-	/**
-	 * Leert den Cache
-	 */
-	public function flush();
+	public function get($namespace, $key, $default = null);
 
 	/**
 	 * Löscht einen Eintrag aus dem Cache
@@ -50,4 +45,11 @@ interface sly_ICache {
 	 * @param String  $key        Eindeutiger Identifier unter dem der Cacheeintrag erwartet wird
 	 */
 	public function delete($namespace, $key);
+
+	public function exists($namespace, $key);
+	public function lock($namespace, $key, $duration = 1);
+	public function unlock($namespace, $key);
+	public function waitForObject($namespace, $key, $default = null, $maxWaitTime = 3, $checkInterval = 50);
+
+	public static function isAvailable();
 }

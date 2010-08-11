@@ -59,7 +59,7 @@ class OOMedia
 		$id = (int) $id;
 		if ($id <= 0) return null;
 
-		$media = sly_Core::cache()->get('media', $id, null);
+		$media = sly_Core::cache()->get('sly.medium', $id, null);
 
 		if ($media === null) {
 			$query  = 'SELECT '.self::_getTableName().'.*, '.OOMediaCategory :: _getTableName().'.name catname FROM '.self::_getTableJoin().' WHERE file_id = '.$id;
@@ -96,7 +96,7 @@ class OOMedia
 	      	$media->$var_name = $result[$fieldName];
 	      }
 
-	      sly_Core::cache()->set('media', $id, $media);
+	      sly_Core::cache()->set('sly.medium', $id, $media);
 		}
 
 		return $media;
