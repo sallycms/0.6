@@ -36,7 +36,7 @@ class sly_Util_Array {
 		$res  = &$this->array;
 
 		foreach ($path as $step) {
-			if (!self::isArray($res)) throw new sly_Exception('Cannot make an array out of a scalar value.');
+			if (!is_array($res)) throw new sly_Exception('Cannot make an array out of a scalar value.');
 			if (!array_key_exists($step, $res)) $res[$step] = array();
 			$res = &$res[$step];
 		}
@@ -85,7 +85,7 @@ class sly_Util_Array {
 		$res  = true;
 
 		foreach ($path as $step) {
-			if (!self::isArray($curr) || !array_key_exists($step, $curr)) {
+			if (!is_array($curr) || !array_key_exists($step, $curr)) {
 				$res = false;
 				break;
 			}
@@ -146,11 +146,7 @@ class sly_Util_Array {
 	protected static function getPath($key) {
 		$key = trim($key, '/');
 		// array_filter würde Steps à la "0" fälschlicherweise entfernen!
-		return explode('/', preg_replace('#/+#', '/', $key));
-	}
-
-	protected static function isArray($obj) {
-		return ($obj instanceof ArrayObject) || is_array($obj);
+		return explode('/', preg_replace('#/{2,}#', '/', $key));
 	}
 
 	/**
