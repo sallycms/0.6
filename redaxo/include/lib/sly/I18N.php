@@ -45,12 +45,10 @@ class sly_I18N implements sly_I18N_Base {
 		$filename = $searchPath.'/'.$this->locale.'.lang';
 
 		if (is_readable($filename)) {
-			$lines = array_map('trim', file($filename));
+			$lines = sly_Util_YAML::load($filename);
 
-			foreach ($lines as $line) {
-				if (preg_match('#^(\w*)\s*=\s*(.*)$#', $line, $matches)) {
-					$this->addMsg($prefix.$matches[1], trim($matches[2]));
-				}
+			foreach ($lines as $key => $value) {
+				$this->addMsg($prefix.$key, $value);
 			}
 
 			return true;
