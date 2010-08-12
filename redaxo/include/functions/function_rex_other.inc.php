@@ -38,20 +38,24 @@ function rex_create_lang($locale = 'de_de', $searchpath = '', $setlocale = true)
 	}
 
 	if ($setlocale) {
-		$locales = array();
-
-		foreach (explode(',', $lang_object->msg('setlocale')) as $locale) {
-			$locales[] = $locale.'.UTF-8';
-			$locales[] = $locale.'.UTF8';
-			$locales[] = $locale.'.utf-8';
-			$locales[] = $locale.'.utf8';
-			$locales[] = $locale;
-		}
-
-		setlocale(LC_ALL, $locales);
+		sly_set_locale($lang_object);
 	}
 
 	return $lang_object;
+}
+
+function sly_set_locale(sly_I18N $i18n) {
+	$locales = array();
+
+	foreach (explode(',', $i18n->msg('setlocale')) as $locale) {
+		$locales[] = $locale.'.UTF-8';
+		$locales[] = $locale.'.UTF8';
+		$locales[] = $locale.'.utf-8';
+		$locales[] = $locale.'.utf8';
+		$locales[] = $locale;
+	}
+
+	setlocale(LC_ALL, $locales);
 }
 
 

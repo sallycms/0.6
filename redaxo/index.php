@@ -61,7 +61,10 @@ if (!SLY_IS_TESTING && $config->get('SETUP')) {
 	$_REQUEST['page']      = 'setup';
 }
 else {
-	$I18N = rex_create_lang($REX['LANG']);
+	// Wir vermeiden es, das Locale hier schon zu setzen, da setlocale() sehr
+	// teuer ist und wir es ggf. weiter unten nochmal ändern müssten.
+
+	$I18N = rex_create_lang($REX['LANG'], '', false);
 
 	// Login vorbereiten
 
@@ -82,6 +85,9 @@ else {
 
 		if ($I18N->msg('htmlcharset') == rex_create_lang($lang, '', false)->msg('htmlcharset')) {
 			$I18N = rex_create_lang($lang);
+		}
+		else {
+			sly_set_locale($lang);
 		}
 
 		$REX['USER'] = $REX['LOGIN']->USER;
