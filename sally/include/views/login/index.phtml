@@ -13,6 +13,9 @@ global $rex_user_loginmessage;
 if (!empty($rex_user_loginmessage)) {
 	print rex_warning($rex_user_loginmessage);
 }
+if (!empty($this->message)) {
+	print rex_warning($this->message);
+}
 
 ?>
 <!-- *** OUTPUT OF LOGIN-FORM - START *** -->

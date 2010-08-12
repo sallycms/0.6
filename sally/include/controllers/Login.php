@@ -14,7 +14,10 @@ class sly_Controller_Login extends sly_Controller_Sally
 
 	public function __construct()
 	{
-		$this->action = 'index';
+		parent::__construct();
+		if (!method_exists($this, $this->action)) {
+			$this->action = 'index';
+		}
 	}
 
 	public function init()
@@ -32,6 +35,12 @@ class sly_Controller_Login extends sly_Controller_Sally
 	{
 		$this->render('views/login/index.phtml');
 		return true;
+	}
+
+	public function logout() {
+		$this->message = t('login_logged_out');
+		sly_Service_Factory::getService('User')->logout();
+		$this->index();
 	}
 
 	public function checkPermission()

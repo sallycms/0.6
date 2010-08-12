@@ -155,67 +155,61 @@ class rex_login
 
 		$ok = false;
 
-		if (!$this->logout) {
-			// LoginStatus: 0 = noch checken, 1 = ok, -1 = not ok
-			// checkLogin() schonmal ausgeführt? Gecachte Ausgabe erlaubt?
+		// LoginStatus: 0 = noch checken, 1 = ok, -1 = not ok
+		// checkLogin() schonmal ausgeführt? Gecachte Ausgabe erlaubt?
 
-			if ($this->cache) {
-				if ($this->login_status > 0) return true;
-				if ($this->login_status < 0) return false;
+		if ($this->cache) {
+			if ($this->login_status > 0) return true;
+			if ($this->login_status < 0) return false;
+		}
+
+		if (!empty($this->usr_login)) {
+			// wenn login daten eingegeben dann checken
+			// auf error seite verweisen und message schreiben
+
+			$this->USER = new rex_login_sql($this->DB);
+			$USR_LOGIN  = $this->usr_login;
+			$USR_PSW    = $this->usr_psw;
+			$query      = str_replace('USR_LOGIN', $this->usr_login, $this->login_query);
+			$query      = str_replace('USR_PSW', $this->usr_psw, $query);
+
+			$this->USER->setQuery($query);
+
+			if ($this->USER->getRows() == 1) {
+				$ok = true;
+				$this->setSessionVar('UID', $this->USER->getValue($this->uid));
+				$this->sessionFixation();
 			}
+			else {
+				$this->message = $I18N->msg('login_error', '<strong>'.$REX['RELOGINDELAY'].'</strong>');
+				$this->setSessionVar('UID', '');
+			}
+		}
+		elseif ($this->getSessionVar('UID') != '') {
+			// wenn kein login und kein logout dann nach sessiontime checken
+			// message schreiben und falls falsch auf error verweisen
 
-			if (!empty($this->usr_login)) {
-				// wenn login daten eingegeben dann checken
-				// auf error seite verweisen und message schreiben
+			$this->USER = new rex_login_sql($this->DB);
+			$query      = str_replace('USR_UID', $this->getSessionVar('UID'), $this->user_query);
 
-				$this->USER = new rex_login_sql($this->DB);
-				$USR_LOGIN  = $this->usr_login;
-				$USR_PSW    = $this->usr_psw;
-				$query      = str_replace('USR_LOGIN', $this->usr_login, $this->login_query);
-				$query      = str_replace('USR_PSW', $this->usr_psw, $query);
+			$this->USER->setQuery($query);
 
-				$this->USER->setQuery($query);
-
-				if ($this->USER->getRows() == 1) {
+			if ($this->USER->getRows() == 1) {
+				if (($this->getSessionVar('STAMP') + $this->session_duration) > time()) {
 					$ok = true;
 					$this->setSessionVar('UID', $this->USER->getValue($this->uid));
-					$this->sessionFixation();
 				}
 				else {
-					$this->message = $I18N->msg('login_error', '<strong>'.$REX['RELOGINDELAY'].'</strong>');
-					$this->setSessionVar('UID', '');
-				}
-			}
-			elseif ($this->getSessionVar('UID') != '') {
-				// wenn kein login und kein logout dann nach sessiontime checken
-				// message schreiben und falls falsch auf error verweisen
-
-				$this->USER = new rex_login_sql($this->DB);
-				$query      = str_replace('USR_UID', $this->getSessionVar('UID'), $this->user_query);
-
-				$this->USER->setQuery($query);
-
-				if ($this->USER->getRows() == 1) {
-					if (($this->getSessionVar('STAMP') + $this->session_duration) > time()) {
-						$ok = true;
-						$this->setSessionVar('UID', $this->USER->getValue($this->uid));
-					}
-					else {
-						$this->message = $I18N->msg('login_session_expired');
-					}
-				}
-				else {
-					$this->message = $I18N->msg('login_user_not_found');
+					$this->message = $I18N->msg('login_session_expired');
 				}
 			}
 			else {
-				$this->message = $I18N->msg('login_welcome');
-				$ok = false;
+				$this->message = $I18N->msg('login_user_not_found');
 			}
 		}
 		else {
-			$this->message = $I18N->msg('login_logged_out');
-			$this->setSessionVar('UID', '');
+			$this->message = $I18N->msg('login_welcome');
+			$ok = false;
 		}
 
 		if ($ok) {

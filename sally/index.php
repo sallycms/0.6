@@ -29,6 +29,7 @@ require 'include/master.inc.php';
 // addon/normal page path
 $REX['PAGEPATH'] = '';
 $REX['PAGES']    = array(); // array(name,addon=1,htmlheader=1)
+$REX['PAGES']['login'] = array('login', 0, 1);
 $REX['PAGE']     = '';
 $REX['USER']     = null;
 $REX['LOGIN']    = null;

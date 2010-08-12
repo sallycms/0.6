@@ -30,4 +30,17 @@ class sly_Service_User extends sly_Service_Model_Base {
 		$config = sly_Core::config();
 		return sly_Util_Password::hash($password, $config->get('INSTNAME'));
 	}
+
+	public function logout() {
+		$this->setSessionVar('UID', '');
+	}
+
+	/**
+	 * Setzte eine Session-Variable
+	 */
+	protected function setSessionVar($varname, $value)
+	{
+		$instname = sly_Core::config()->get('INSTNAME');
+		$_SESSION[$instname][$varname] = $value;
+	}
 }
