@@ -19,7 +19,7 @@ class sly_Util_Array {
 	public function set($key, $value) {
 		$key = trim($key, '/');
 
-		if (is_null($key) || strlen($key) == 0) {
+		if (strlen($key) == 0) {
 			throw new sly_Exception('Key must not be empty!');
 		}
 
@@ -144,8 +144,7 @@ class sly_Util_Array {
 	}
 
 	protected static function getPath($key) {
-		// array_filter würde Steps à la "0" fälschlicherweise entfernen!
-		return explode('/', preg_replace('#/{2,}#', '/', $key));
+		return preg_split('#/+#', $key);
 	}
 
 	/**

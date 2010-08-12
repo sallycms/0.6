@@ -138,12 +138,22 @@ class sly_Util_Directory {
 	}
 
 	public static function normalize($path) {
-		$s     = DIRECTORY_SEPARATOR;
-		$isAbs = $path[0] == '/' || $path[0] == '\\';
-		$path  = str_replace(array('/', '\\'), $s, $path);
-		$path  = implode($s, array_filter(explode($s, $path)));
+		static $s = DIRECTORY_SEPARATOR;
+		static $p = null;
 
-		return ($isAbs ? $s : '').$path;
+		if ($p === null) {
+			$p = '#'.preg_quote($s, '#').'+#';
+		}
+
+		$path  = str_replace(array('\\', '/'), $s, $path);
+		$path  = rtrim($path, $s);
+
+		if (strpos($path, $s.$s) === false) {
+			return $path;
+		}
+
+		$parts = preg_split($p, $path);
+		return implode($s, $parts);
 	}
 
 	public static function getRelative($path, $base = null) {
