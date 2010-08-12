@@ -144,7 +144,6 @@ class sly_Util_Array {
 	}
 
 	protected static function getPath($key) {
-		$key = trim($key, '/');
 		// array_filter würde Steps à la "0" fälschlicherweise entfernen!
 		return explode('/', preg_replace('#/{2,}#', '/', $key));
 	}
