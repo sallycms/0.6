@@ -29,8 +29,8 @@ class sly_Form_DateTime extends sly_Form_ElementBase implements sly_Form_IElemen
 		return $this->withTime;
 	}
 
-	public function render($redaxo)
+	public function render($version)
 	{
-		return $this->renderFilename($redaxo, 'element_datetime.phtml');
+		return $this->renderFilename($version, 'element_datetime.phtml');
 	}
 }

@@ -55,7 +55,7 @@ $config['document_root'] = $_SERVER['DOCUMENT_ROOT'];
  * an absolute file path, or even relative to the document root and Scaffold
  * will take care of the rest.
  */
-$config['system'] = $projectBase.'redaxo/include/lib/Scaffold/';
+$config['system'] = $projectBase.'sally/include/lib/Scaffold/';
 
 /**
  * Cache Folder

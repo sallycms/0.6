@@ -13,10 +13,10 @@ phpini_settings: PHP.ini settings
 datetimeformat: %Y-%b-%d %H:%M
 ctrl: multiselect using CTRL
 
-# redaxo/index.php
+# sally/index.php
 start_article_not_selected: start article not selected
 
-# redaxo/redaxo/index.php
+# sally/index.php
 specials: System
 module: Modules
 template: Templates
@@ -31,7 +31,7 @@ logout: Logout
 navigation_basis: Basis Navigation
 navigation_addons: AddOns
 
-# redaxo/include/classes/class.login.inc.php
+# sally/include/classes/class.login.inc.php
 login_name : Username
 password : Password
 new_password: New password
@@ -41,11 +41,11 @@ login_user_not_found: User does not exist.
 login_welcome: Please login.
 login_logged_out: Signed out.
 
-# redaxo/include/layout_redaxo/top.php
+# sally/include/layout/top.php
 logged_out : Not signed in
 logged_in_as : logged in as
 
-# redaxo/include/classes/class.article.inc.php
+# sally/include/classes/class.article.inc.php
 add_block : add slice
 edit : edit
 delete : delete
@@ -59,16 +59,16 @@ update_block: update slice
 save_block: save slice
 edit_block: edit slice
 
-# redaxo/include/classes/class.form.inc.php
+# sally/include/classes/class.form.inc.php
 submit_data : submit data
 file_doesnt_exist : file doesn't exist.
 choose_another_one : please choose another.
 
-# redaxo/include/classes/class.mail_decode.inc.php
+# sally/include/classes/class.mail_decode.inc.php
 download : download
 clipboard : clipboard
 
-# redaxo/include/functions/function_rex_generate.inc.php
+# sally/include/functions/function_rex_generate.inc.php
 article_moved: Article moved!
 article_deleted: Article deleted!
 could_not_move_article: Could not move article.
@@ -79,7 +79,7 @@ category_doesnt_exist : Category doesn't exist!
 cant_delete_startarticle: Start-article can not be deleted!
 cant_delete_notfoundarticle: Not-Found-article can not be deleted
 
-# redaxo\include\pages\content.inc.php
+# sally\include\pages\content.inc.php
 move_slice_up: move up
 move_slice_down: move down
 block_updated: Block updated!
@@ -149,7 +149,7 @@ content_types: Columns
 content_type: Column
 option: optional
 
-# redaxo\include\pages\module.inc.php
+# sally\include\pages\module.inc.php
 modules_not_found: Modules not found
 module_cannot_be_deleted: "Module {0} not deleted, because it is used by following articles:"
 module_deleted: Module deleted!
@@ -201,7 +201,7 @@ action_summary: List of actions
 actions_added_caption: List of assigned actions
 actions_added_summary: List of assigned actions
 
-# redaxo\include\pages\structure.inc.php
+# sally\include\pages\structure.inc.php
 title_structure: Structure management
 no_such_category: Category not found!
 category_updated: Category updated.
@@ -242,7 +242,7 @@ structure_categories_caption: "List of subcategories in {0}"
 structure_articles_summary: "List of all articles in {0}"
 structure_articles_caption: "List of articles in {0}"
 
-# redaxo\include\pages\template.inc.php
+# sally\include\pages\template.inc.php
 templates_not_found: Templates not found
 title_templates: Templates
 cant_delete_default_template: This is the 'default' template and cannot be deleted!
@@ -268,12 +268,12 @@ header_template_summary: List of templates
 modules_available: Only following Modules are available
 modules_available_all: All Modules are available
 
-# redaxo\include\functions\function_rex_category.inc.php
+# sally\include\functions\function_rex_category.inc.php
 article: Article
 start_article: Start-article
 path: Path
 
-# redaxo\include\pages\user.inc.php
+# sally\include\pages\user.inc.php
 title_user: User
 user_data_updated: User data updated!
 user_deleted: User deleted!
@@ -312,7 +312,7 @@ user_status: Status
 backend_language: Backend language
 startpage: Startpage
 
-# redaxo\include\pages\special.inc.php
+# sally\include\pages\special.inc.php
 articles_generated: "Articles and Templates regenerated, cache deleted!"
 old_articles_deleted: "[Old articles and templates deleted]"
 links_ok: All links valid.
@@ -371,7 +371,7 @@ host: Host
 database: Database
 specials_caching_strategy: Cache Strategy
 
-# redaxo\include\pages\medienpool.inc.php
+# sally\include\pages\medienpool.inc.php
 pool_name: Mediapool
 pool_kats: Categories
 pool_kats_no: No category
@@ -467,7 +467,7 @@ pool_max_uploadtime: Max. uploadtime
 pool_upload_disabled: deactivated
 pool_upload: Fileupload
 
-# redaxo/include/pages
+# sally/include/pages
 recommended: recommended
 setup: Setup
 setup_text: You can initiat the setup process here. This is only for emergency and not required on normal conditions.
@@ -538,10 +538,10 @@ entry_count: "{0} entries"
 setup_encryption: password encryption
 setup_no_encryption: no encryption
 setup_psw_encryption: with encryption (sha1)
-setup_security_msg: The folder redaxo/include is insecure. Please protect this folder and run setup again.
-setup_no_js_security_msg: "Please check, if files in the folder redaxo/include are directly accessible! This should be impossible due to security restrictions!"
+setup_security_msg: The folder sally/include is insecure. Please protect this folder and run setup again.
+setup_no_js_security_msg: "Please check, if files in the folder sally/include are directly accessible! This should be impossible due to security restrictions!"
 
-# redaxo\include\pages\addon.inc.php
+# sally\include\pages\addon.inc.php
 addon: AddOn
 addons: AddOns
 addon_help: Help
@@ -578,7 +578,7 @@ addon_caption: List of available addons
 addon_summary: List of addons
 addon_systemaddon: System addOn
 addon_systemaddon_delete_not_allowed: System addons cannot be deleted!
-addon_empty_list: No addOns found. Put new addOns in <strong>redaxo/include/addons</strong>.
+addon_empty_list: No addOns found. Put new addOns in <strong>sally/include/addons</strong>.
 plugin_plugins_installed: PlugIns are installed
 plugin_deactivated: PlugIn deactivated
 plugin_activated: PlugIn activated
@@ -586,7 +586,7 @@ plugin_no_install: PlugIn has not been installed
 plugin_no_reason: ???
 plugin_installed: PlugIn has been installed
 
-# redaxo\include\pages\credits.inc.php
+# sally\include\pages\credits.inc.php
 credits: credits
 credits_name: AddOn
 credits_version: Version
@@ -594,20 +594,20 @@ credits_author: Author
 credits_supportpage: Help
 credits_addon_inactive: Addon inactive
 
-# redaxo\include\pages\profile.inc.php
+# sally\include\pages\profile.inc.php
 profile_myprofile: Edit my profile
 profile_title: My profile
 profile_save: save profile
 profile: Profile
 
-# redaxo\include\pages\linkmap.inc.php
+# sally\include\pages\linkmap.inc.php
 linkmap: Linkmap
 lmap_title: Linkmap
 lmap_categories: Categories
 lmap_articles: Articles
 lmap_has_no_template: has not templates
 
-# redaxo\include\classes\class.rex_list.inc.php
+# sally\include\classes\class.rex_list.inc.php
 list_first: first page
 list_previous: previous page
 list_add: Add new entry
@@ -616,7 +616,7 @@ list_last: last page
 list_rows_found: "{0} eintries found"
 list_no_rows: No data available
 
-# redaxo\include\classes\class.rex_form.inc.php
+# sally\include\classes\class.rex_form.inc.php
 form_save: save and quit
 form_apply: save
 form_delete: delete
@@ -629,7 +629,7 @@ form_deleted: Data has been deleted!
 form_delete_error: Delete has failed!
 form_resetted: Data has been reseted!
 
-# redaxo\include\classes\variables\class.rex_var_media.inc.php
+# sally\include\classes\variables\class.rex_var_media.inc.php
 var_media_open: Choose media
 var_media_new: Add media
 var_media_remove: Delete selected Media

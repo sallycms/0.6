@@ -48,7 +48,7 @@ class RedaxoSync
 	private static $metaInfosCache = array();
 
 	// directories
-	const REDAXO_DIR   = '/redaxo/';
+	const REDAXO_DIR   = '/sally/';
 	const TEMPLATE_DIR = '/develop/templates/';
 	const ACTIONS_DIR  = '/develop/actions/';
 	const MODULES_DIR  = '/develop/modules/';

@@ -86,5 +86,5 @@ abstract class sly_Service_AddOn_Base
 //	abstract public function publicFolder($addonName);    // data/dyn/public/foo
 //	abstract public function internalFolder($addonName);  // data/dyn/internal/foo
 //
-//	abstract protected function baseFolder($addonName);   // redaxo/include/addons/foo
+//	abstract protected function baseFolder($addonName);   // sally/include/addons/foo
 }

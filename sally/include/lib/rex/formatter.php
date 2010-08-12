@@ -182,7 +182,7 @@ abstract class rex_formatter
 		}
 
 		// Protokoll
-		if (!preg_match('@((ht|f)tps?|telnet|redaxo)://@', $value)) {
+		if (!preg_match('@((ht|f)tps?|telnet|redaxo|sally)://@', $value)) {
 			$value = 'http://'.$value;
 		}
 

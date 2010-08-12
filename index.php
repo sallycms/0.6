@@ -26,8 +26,8 @@ $REX['HTDOCS_PATH'] = './';
 
 // Core laden
 
-require_once 'redaxo/include/master.inc.php';
-require_once 'redaxo/include/addons.inc.php';
+require_once 'sally/include/master.inc.php';
+require_once 'sally/include/addons.inc.php';
 
 // Setup?
 if ($config->get('SETUP')) {

@@ -17,7 +17,7 @@ define('SLY_TESTING_USER_ID', 1);   /// int      die ID des Users, der eingelogg
 $sallyRoot = realpath(dirname(__FILE__).'../../../');
 define('SLY_TESTING_ROOT', $sallyRoot);
 
-require SLY_TESTING_ROOT.'/redaxo/index.php';
+require SLY_TESTING_ROOT.'/sally/index.php';
 
 $config = array(
 	'name'          => 'Sally Backend Bootstrap',

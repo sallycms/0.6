@@ -17,10 +17,10 @@ ctrl: Mehrfachauswahl mit STRG
 special_chars: "ä|ö|ü|Ä|Ö|Ü|ß|&"
 special_chars_rewrite: ae|oe|ue|Ae|Oe|Ue|ss|und
 
-# redaxo/index.php
+# sally/index.php
 start_article_not_selected: Kein Startartikel ausgewählt
 
-# redaxo/redaxo/index.php
+# sally/sindex.php
 specials: System
 module: Module
 template: Templates
@@ -36,7 +36,7 @@ logout: abmelden
 navigation_basis: Basis Navigation
 navigation_addons: AddOns
 
-# redaxo/include/classes/class.login.inc.php
+# sally/include/classes/class.login.inc.php
 login_name :  Benutzername
 password :  Passwort
 new_password: Neues Passwort
@@ -46,11 +46,11 @@ login_user_not_found: Benutzer nicht gefunden!
 login_welcome: Bitte anmelden.
 login_logged_out: Abgemeldet.
 
-# redaxo/include/layout_redaxo/top.php
+# sally/include/layout/top.php
 logged_out :  nicht angemeldet
 logged_in_as :  Angemeldet als
 
-# redaxo/include/classes/class.article.inc.php
+# sally/include/classes/class.article.inc.php
 add_block :  Block hinzufügen
 edit :  Editieren
 delete :  Löschen
@@ -64,16 +64,16 @@ update_block: Block übernehmen
 save_block: Block speichern
 edit_block: Block bearbeiten
 
-# redaxo/include/classes/class.form.inc.php
+# sally/include/classes/class.form.inc.php
 submit_data :  Daten absenden
 file_doesnt_exist :  Die Datei existiert nicht.
 choose_another_one :  Bitte wählen sie eine andere.
 
-# redaxo/include/classes/class.mail_decode.inc.php
+# sally/include/classes/class.mail_decode.inc.php
 download :  Download
 clipboard :  Clipboard
 
-# redaxo/include/functions/function_rex_generate.inc.php
+# sally/include/functions/function_rex_generate.inc.php
 article_moved: Artikel wurde verschoben!
 article_deleted: Artikel wurde gelöscht!
 could_not_move_article: Artikel konnte nicht verschoben werden.
@@ -84,7 +84,7 @@ category_doesnt_exist :  Kategorie existiert nicht!
 cant_delete_sitestartarticle: Der Webseiten-Startartikel kann nicht gelöscht werden!
 cant_delete_notfoundarticle: Der "Nicht-gefunden" Artikel kann nicht gelöscht werden!
 
-# redaxo\include\pages\content.inc.php
+# sally\include\pages\content.inc.php
 move_slice_up: Nach oben verschieben
 move_slice_down: Nach unten verschieben
 block_updated: Block wurde aktualisiert!
@@ -154,7 +154,7 @@ content_types: Spalten
 content_type: Spalte
 option: optional
 
-# redaxo\include\pages\module.inc.php
+# sally\include\pages\module.inc.php
 modules_not_found: Es wurden keine Module gefunden
 module_cannot_be_deleted: "Modul '{0}' kann nicht gelöscht werden, da es noch von folgenden Artikeln genutzt wird:"
 module_deleted: Modul wurde gelöscht!
@@ -206,7 +206,7 @@ action_summary: Auflistung aller angelegten Aktionen
 actions_added_caption: Liste der zugewiesenen Aktionen
 actions_added_summary: Auflistung aller zugewiesenen Aktionen
 
-# redaxo\include\pages\structure.inc.php
+# sally\include\pages\structure.inc.php
 title_structure: Strukturverwaltung
 no_such_category: Kategorie nicht vorhanden!
 category_updated: Kategorie wurde aktualisiert.
@@ -247,7 +247,7 @@ structure_categories_caption: "Liste der Unterkategorien der Kategorie '{0}'"
 structure_articles_summary: "Auflistung aller Artikel der Kategorie '{0}'"
 structure_articles_caption: "Liste der Artikel der Kategorie '{0}'"
 
-# redaxo\include\pages\template.inc.php
+# sally\include\pages\template.inc.php
 templates_not_found: Es wurden keine Templates gefunden
 title_templates: Templates
 cant_delete_template_because_its_in_use: "Template '{0}' kann nicht gelöscht werden, da es noch von Artikeln genutzt wird oder das Default Template ist."
@@ -272,12 +272,12 @@ header_template_summary: Auflistung aller Templates
 modules_available: Nur folgende Module sind verfügbar
 modules_available_all: Alle Module verfügbar
 
-# redaxo\include\functions\function_rex_category.inc.php
+# sally\include\functions\function_rex_category.inc.php
 article: Artikel
 start_article: Startartikel
 path: Pfad
 
-# redaxo\include\pages\user.inc.php
+# sally\include\pages\user.inc.php
 title_user: Benutzer
 user_data_updated: Benutzerdaten wurden aktualisiert!
 user_deleted: Benutzer wurde gelöscht!
@@ -316,7 +316,7 @@ user_status: User ist aktiv
 backend_language: Backendsprache
 startpage: Startseite
 
-# redaxo\include\pages\special.inc.php
+# sally\include\pages\special.inc.php
 articles_generated: "Artikel und Templates wurden neu generiert, Cache gelöscht!"
 old_articles_deleted: "[Alte Artikel und Templates wurden gelöscht]"
 links_ok: Alle Links sind ok.
@@ -361,7 +361,7 @@ host: Host
 database: Datenbank
 specials_caching_strategy: Cache Strategie
 
-# redaxo\include\pages\medienpool.inc.php
+# sally\include\pages\medienpool.inc.php
 pool_name: Medienpool
 pool_kats: Kategorien
 pool_kats_no: Keine Kategorie
@@ -457,7 +457,7 @@ pool_max_uploadtime: Maximale Uploadzeit
 pool_upload_disabled: Deaktiviert!
 pool_upload: Dateiupload
 
-# redaxo\include\pages\medienpool.inc.php\setup.inc.php
+# sally\include\pages\medienpool.inc.php\setup.inc.php
 recommended: empfohlen
 setup: Setup
 setup_text: Hier können Sie das Setup erneut starten. Dies sollten Sie nur im Notfall machen. Unter normalen Umständen ist es nicht nötig.
@@ -528,11 +528,11 @@ entry_count: "{0} Einträge"
 setup_encryption: Passwortverschlüsselung
 setup_no_encryption: keine Verschlüsselung
 setup_psw_encryption: mit Verschlüsselung (sha1)
-setup_security_msg: Der Ordner redaxo/include ist unsicher. Bitte schützen Sie diesen Ordner und starten das Setup erneut!
-setup_no_js_security_msg: "Prüfen sie, ob Dateien aus dem Ordner redaxo/include direkt aufrufbar sind! Dies darf aus Sicherheitsgründen nicht möglich sein!"
+setup_security_msg: Der Ordner sally/include ist unsicher. Bitte schützen Sie diesen Ordner und starten das Setup erneut!
+setup_no_js_security_msg: "Prüfen sie, ob Dateien aus dem Ordner sally/include direkt aufrufbar sind! Dies darf aus Sicherheitsgründen nicht möglich sein!"
 setup_create_db: Datenbank anlegen?
 
-# redaxo\include\pages\addon.inc.php
+# sally\include\pages\addon.inc.php
 addon: AddOn
 addons: AddOns
 addon_help: Hilfe für
@@ -571,7 +571,7 @@ addon_systemaddon: System AddOn
 addon_systemaddon_delete_not_allowed: System AddOns dürfen nicht gelöscht werden!
 addon_install_cant_copy_files: Fehler beim Kopieren des /files Ordners!
 addon_install_cant_delete_files: Fehler beim Löschen des /files Ordners!
-addon_empty_list: Keine AddOns gefunden. Laden Sie neue AddOns in den Ordner <strong>redaxo/include/addons</strong>.
+addon_empty_list: Keine AddOns gefunden. Laden Sie neue AddOns in den Ordner <strong>sally/include/addons</strong>.
 plugin_plugins_installed: PlugIn installiert
 plugin_install_not_found: Installationsdatei wurde nicht gefunden (install.inc.php)!
 plugin_uninstall_not_found: Deinstallationsdatei wurde nicht gefunden (uninstall.inc.php)!
@@ -590,7 +590,7 @@ plugin_uninstall_question: "PlugIn {0} de-installieren?"
 plugin_install_cant_copy_files: Fehler beim Kopieren des /files Ordners!
 plugin_install_cant_delete_files: Fehler beim Löschen des /files Ordners!
 
-# redaxo\include\pages\credits.inc.php
+# sally\include\pages\credits.inc.php
 credits: Credits
 credits_name: AddOn
 credits_version: Version
@@ -600,19 +600,19 @@ credits_addon_inactive: Addon inaktiv
 credits_caption: Liste der verwendeten AddOns/PlugIns
 credits_summary: Auflistung aller verwendeten AddOns/PlugIns
 
-# redaxo\include\pages\profile.inc.php
+# sally\include\pages\profile.inc.php
 profile_myprofile: Mein Benutzerprofil bearbeiten
 profile_title: Mein Profil
 profile_save: Profil speichern
 
-# redaxo\include\pages\linkmap.inc.php
+# sally\include\pages\linkmap.inc.php
 linkmap: Linkmap
 lmap_title: Linkmap
 lmap_categories: Kategorien
 lmap_articles: Artikel
 lmap_has_no_template: hat kein Template
 
-# redaxo\include\classes\class.rex_list.inc.php
+# sally\include\classes\class.rex_list.inc.php
 list_first: erste Seite
 list_previous: vorherige Seite
 list_add: Neuen Eintrag einfügen
@@ -621,7 +621,7 @@ list_last: letzte Seite
 list_rows_found: "{0} Einträge gefunden"
 list_no_rows: Keine Einträge vorhanden
 
-# redaxo\include\classes\class.rex_form.inc.php
+# sally\include\classes\class.rex_form.inc.php
 form_save: Speichern
 form_apply: Übernehmen
 form_delete: Löschen
@@ -634,7 +634,7 @@ form_deleted: Eingaben wurden gelöscht!
 form_delete_error: Fehler beim löschen!
 form_resetted: Eingaben wurden verworfen!
 
-# redaxo\include\classes\variables\class.rex_var_media.inc.php
+# sally\include\classes\variables\class.rex_var_media.inc.php
 var_media_open: Medium auswählen
 var_media_new: Neues Medium hinzufügen
 var_media_remove: Ausgewähltes Medium löschen
@@ -643,7 +643,7 @@ var_medialist_move_up: Ausgewähltes Medium nach oben verschieben
 var_medialist_move_down: Ausgewähltes Medium nach unten verschieben
 var_medialist_move_bottom : Ausgewähltes Medium an das Ende verschieben
 
-# redaxo\include\classes\variables\class.rex_var_link.inc.php
+# sally\include\classes\variables\class.rex_var_link.inc.php
 var_link_open: Link auswählen
 var_link_new: Neuen Link hinzufügen
 var_link_remove: Ausgewählten Link löschen

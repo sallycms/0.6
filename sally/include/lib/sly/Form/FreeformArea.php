@@ -24,8 +24,8 @@ class sly_Form_FreeformArea extends sly_Form_ElementBase implements sly_Form_IEl
 		$this->content = $content;
 	}
 
-	public function render($redaxo)
+	public function render($version)
 	{
-		return $this->renderFilename($redaxo, 'element_freeform_area.phtml');
+		return $this->renderFilename($version, 'element_freeform_area.phtml');
 	}
 }

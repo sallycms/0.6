@@ -12,7 +12,6 @@
  */
 
 var
-	redaxo     = true,
 	sally      = true,
 	pageloaded = false;
 

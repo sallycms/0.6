@@ -25,9 +25,9 @@ class sly_Form_Container extends sly_Form_ElementBase implements sly_Form_IEleme
 		$this->content = $content;
 	}
 
-	public function render($redaxo)
+	public function render($version)
 	{
-		return $this->renderFilename($redaxo, 'element_container.phtml');
+		return $this->renderFilename($version, 'element_container.phtml');
 	}
 
 	public function isContainer()

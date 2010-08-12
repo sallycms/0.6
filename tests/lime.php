@@ -49,7 +49,7 @@ foreach ($registration->files as $filename) {
 
 if (SLY_TEST_LIME_XDEBUG) {
 	$exportDir = 'coverage_reports';
-	$baseDir   = realpath(dirname(__FILE__).'/../redaxo/include');
+	$baseDir   = realpath(dirname(__FILE__).'/../sally/include');
 	@mkdir($exportDir, 0777, true);
 
 	$code_coverage = new code_coverage($exportDir.'/raw.php');

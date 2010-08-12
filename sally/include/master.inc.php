@@ -43,7 +43,7 @@ if (ini_get('register_globals')) {
 // Wer das falsch setzt, hat es verdient, dass das Script nicht läuft.
 
 $REX['FRONTEND_PATH'] = realpath($REX['HTDOCS_PATH']);
-$REX['INCLUDE_PATH']  = $REX['FRONTEND_PATH'].DIRECTORY_SEPARATOR.'redaxo'.DIRECTORY_SEPARATOR.'include';
+$REX['INCLUDE_PATH']  = $REX['FRONTEND_PATH'].DIRECTORY_SEPARATOR.'sally'.DIRECTORY_SEPARATOR.'include';
 $REX['DATAFOLDER']    = $REX['FRONTEND_PATH'].DIRECTORY_SEPARATOR.'data';
 $REX['MEDIAFOLDER']   = $REX['DATAFOLDER'].DIRECTORY_SEPARATOR.'mediapool';
 $REX['DYNFOLDER']     = $REX['DATAFOLDER'].DIRECTORY_SEPARATOR.'dyn';

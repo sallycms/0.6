@@ -1,7 +1,7 @@
 syntax:glob
 data/dyn/*
-redaxo/include/addons/error_handler/data/phperror.log
-redaxo/include/tip
+sally/include/addons/error_handler/data/phperror.log
+sally/include/tip
 .project
 .buildpath
 .settings/*

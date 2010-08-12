@@ -319,24 +319,24 @@ class OOArticleSlice {
 		// siehe dazu: http://forum.redaxo.de/ftopic7563.html
 
 		// -- preg match redaxo://[ARTICLEID]-[CLANG] --
-		preg_match_all('@redaxo://([0-9]*)\-([0-9]*)(.){1}/?@im', $content, $matches, PREG_SET_ORDER);
+		preg_match_all('@(redaxo|sally)://([0-9]*)\-([0-9]*)(.){1}/?@im', $content, $matches, PREG_SET_ORDER);
 
 		foreach ($matches as $match) {
 			if (empty($match)) continue;
 
-			$url     = OOArticle::getArticleById($match[1], $match[2])->getUrl();
-			$content = str_replace($match[0],$url.$match[3],$content);
+			$url     = OOArticle::getArticleById($match[2], $match[3])->getUrl();
+			$content = str_replace($match[0],$url.$match[4],$content);
 		}
 
 		// -- preg match redaxo://[ARTICLEID] --
 
-		preg_match_all('@redaxo://([0-9]*)(.){1}/?@im', $content, $matches, PREG_SET_ORDER);
+		preg_match_all('@(redaxo|sally)://([0-9]*)(.){1}/?@im', $content, $matches, PREG_SET_ORDER);
 
 		foreach ($matches as $match) {
 			if (empty($match)) continue;
 
-			$url     = OOArticle::getArticleById($match[1])->getUrl();
-			$content = str_replace($match[0],$url.$match[2],$content);
+			$url     = OOArticle::getArticleById($match[2])->getUrl();
+			$content = str_replace($match[0],$url.$match[3],$content);
 		}
 
 		return $content;
