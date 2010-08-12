@@ -177,7 +177,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		switch ($dbInitFunction) {
 			case 'nop': // Datenbank schon vorhanden, nichts tun
 
-				$error = $this->setupAddOns(true, false);
+				$error = false;
 				break;
 
 			case 'drop': // alte DB löschen
@@ -193,8 +193,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			case 'setup': // leere Datenbank neu einrichten
 
 				$installScript = SLY_INCLUDE_PATH.'/install/sally0_3.sql';
-				if (empty($error)) $error = $this->setupImport($installScript);
-				if (empty($error)) $error = $this->setupAddOns($dbInitFunction == 'drop');
+				$error         = $this->setupImport($installScript);
 
 				break;
 
@@ -327,20 +326,17 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		$writables = array(
 			$REX['DATAFOLDER'],
 			$REX['MEDIAFOLDER'],
-			$REX['DYNFOLDER'],
-			$REX['DYNFOLDER'].$s.'public',
-			$REX['DYNFOLDER'].$s.'internal',
-			$REX['DYNFOLDER'].$s.'internal'.$s.'sally',
-			$REX['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'css-cache',
-			$REX['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'yaml-cache',
-			$REX['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'articles',
-			$REX['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'templates',
-			$REX['DYNFOLDER'].$s.'internal'.$s.'sally'.$s.'files'
+			SLY_INCLUDE_PATH.$s.'addons',
+			SLY_DYNFOLDER,
+			SLY_DYNFOLDER.$s.'public',
+			SLY_DYNFOLDER.$s.'internal',
+			SLY_DYNFOLDER.$s.'internal'.$s.'sally',
+			SLY_DYNFOLDER.$s.'internal'.$s.'sally'.$s.'css-cache',
+			SLY_DYNFOLDER.$s.'internal'.$s.'sally'.$s.'yaml-cache',
+			SLY_DYNFOLDER.$s.'internal'.$s.'sally'.$s.'articles',
+			SLY_DYNFOLDER.$s.'internal'.$s.'sally'.$s.'templates',
+			SLY_DYNFOLDER.$s.'internal'.$s.'sally'.$s.'files'
 		);
-
-		foreach ($REX['SYSTEM_ADDONS'] as $system_addon) {
-			$writables[] = $REX['INCLUDE_PATH'].$s.'addons'.$s.$system_addon;
-		}
 
 		$res = $this->isWritable($writables, true);
 
@@ -417,49 +413,6 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		}
 
 		return $err_msg;
-	}
-
-	/**
-	 * System AddOns prüfen
-	 */
-	protected function setupAddOns($uninstallBefore = false, $installDump = true)
-	{
-		global $REX, $I18N;
-
-		$addonErr     = '';
-		$addonService = sly_Service_Factory::getService('Addon');
-
-		foreach ($REX['SYSTEM_ADDONS'] as $systemAddon) {
-			$state = true;
-
-			if ($state === true && $uninstallBefore && !$addonService->isInstalled($systemAddon)) {
-				$state = $addonService->uninstall($systemAddon);
-			}
-
-			if ($state === true && !$addonService->isInstalled($systemAddon)) {
-				$state = $addonService->install($systemAddon, $installDump);
-			}
-
-			if ($state === true && !$addonService->isActivated($systemAddon)) {
-				$state = $addonService->activate($systemAddon);
-			}
-
-			if ($state !== true) {
-				$addonErr .= '<li>'.$systemAddon.'<ul><li>'.$state.'</li></ul></li>';
-			}
-		}
-
-		if (!empty($addonErr)) {
-			$addonErr = '
-	<ul class="rex-ul1">
-		<li>
-			<h3 class="rex-hl3">'.$I18N->msg('setup_011', '<span class="rex-error">', '</span>').'</h3>
-			<ul>'.$addonErr.'</ul>
-		</li>
-	</ul>';
-		}
-
-		return $addonErr;
 	}
 
 	protected function checkPermission()

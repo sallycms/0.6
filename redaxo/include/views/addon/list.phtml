@@ -125,6 +125,14 @@ if (!empty($warning)) print rex_warning($warning);
 		}
 	}
 
+	if (empty($addonList)) {
+		?>
+		<tr>
+			<td class="rex-col-a center" colspan="6"><?= $I18N->msg('addon_empty_list') ?></td>
+		</tr>
+		<?php
+	}
+
 	?>
 	</tbody>
 </table>

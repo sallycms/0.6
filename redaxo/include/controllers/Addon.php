@@ -20,7 +20,7 @@ class sly_Controller_Addon extends sly_Controller_Sally
 
 	public function init()
 	{
-		rex_title(t('addon'));
+		rex_title(t('addons'));
 		print '<div class="sly-content">';
 
 		$this->addons  = sly_Service_Factory::getService('AddOn');

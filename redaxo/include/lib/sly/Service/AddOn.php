@@ -210,14 +210,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		$state = $this->extend('PRE', 'DELETE', $addonName, true);
 
 		if ($state === true) {
-			$systemAddons = sly_Core::config()->get('SYSTEM_ADDONS');
-
-			if (in_array($addonName, $systemAddons)) {
-				$state = $this->I18N('addon_systemaddon_delete_not_allowed');
-			}
-			else {
-				$state = $this->deleteHelper($addonName);
-			}
+			$state = $this->deleteHelper($addonName);
 		}
 
 		return $this->extend('POST', 'DELETE', $addonName, $state);
@@ -425,13 +418,13 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	/**
 	 * Prüft, ob ein System-Addon vorliegt
 	 *
+	 * @deprecated  Since v0.3 there are no system addOns anymore.
+	 *
 	 * @param  string $addonName  Name des Addons
 	 * @return boolean            true, wenn es sich um ein System-Addon handelt, sonst false
 	 */
 	public function isSystemAddon($addonName)
 	{
-		$systemAddOns = sly_Core::config()->get('SYSTEM_ADDONS');
-		return in_array($addonName, $systemAddOns);
+		return false;
 	}
-
 }

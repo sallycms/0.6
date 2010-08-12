@@ -126,7 +126,7 @@ if ($REX['USER']) {
 
 	if ($REX['USER']->isAdmin()) {
 	  $REX['PAGES']['user']     = array($I18N->msg('user'), 0, false);
-	  $REX['PAGES']['addon']    = array($I18N->msg('addon'), 0, false);
+	  $REX['PAGES']['addon']    = array($I18N->msg('addons'), 0, false);
 	  $REX['PAGES']['specials'] = array($I18N->msg('specials'), 0, false, 'SUBPAGES' => array(array('', $I18N->msg('main_preferences')), array('languages', $I18N->msg('languages'))));
 	}
 }
