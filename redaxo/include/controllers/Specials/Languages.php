@@ -70,18 +70,20 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally
 
 	public function edit()
 	{
-		global $REX, $I18N;
+		global $I18N;
 
 		$this->id = sly_request('clang_id', 'int', -1);
 
 		if (isset($_POST['sly-submit'])) {
-			$clangName = sly_request('clang_name', 'string');
+			$clangName       = sly_request('clang_name', 'string');
 			$languageService = sly_Service_Factory::getService('Language');
-			$clang = $languageService->findById($this->id);
-			if($clang){
+			$clang           = $languageService->findById($this->id);
+
+			if ($clang) {
 				$clang->setName($clangName);
 				$languageService->save($clang);
 
+				sly_Core::cache()->delete('sly.language', 'all');
 				$this->info = $I18N->msg('clang_edited');
 			}
 		}

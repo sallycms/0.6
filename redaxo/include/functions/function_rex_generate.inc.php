@@ -28,6 +28,8 @@ function rex_generateAll()
 	rex_deleteDir(SLY_DYNFOLDER.'/internal/sally/templates', false);
 	rex_deleteDir(SLY_DYNFOLDER.'/internal/sally/files', false);
 
+	sly_Core::cache()->flush('sly', true);
+
 	$MSG = $I18N->msg('delete_cache_message');
 	$MSG = rex_register_extension_point('ALL_GENERATED', $MSG);
 
@@ -470,6 +472,7 @@ function rex_deleteCLang($clang)
 	));
 
 	rex_generateAll();
+	sly_Core::cache()->set('sly.language', 'all', $REX['CLANG']);
 	return true;
 }
 
@@ -505,6 +508,7 @@ function rex_addCLang($id, $name)
 	$sql->setQuery('INSERT INTO '.$REX['DATABASE']['TABLE_PREFIX'].'clang (id,name,revision) VALUES ('.$id.', "'.$sql->escape($name).'", 0)');
 	unset($sql);
 
+	sly_Core::cache()->set('sly.language', 'all', $REX['CLANG']);
 	rex_register_extension_point('CLANG_ADDED', '', array('id' => $id, 'name' => $name));
 	return true;
 }

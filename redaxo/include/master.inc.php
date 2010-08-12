@@ -88,11 +88,18 @@ if (empty($REX['SYNC']) && !$config->get('SETUP')){
 
 	// Sprachen laden
 
-	$clangs = sly_Service_Factory::getService('Language')->find(null, null, 'id');
-	foreach($clangs as $clang){
-		$REX['CLANG'][$clang->getId()] = $clang->getName();
+	$REX['CLANG'] = sly_Core::cache()->get('sly.language', 'all', null);
+
+	if (!is_array($REX['CLANG'])) {
+		$REX['CLANG'] = array();
+		$clangs       = sly_Service_Factory::getService('Language')->find(null, null, 'id');
+
+		foreach ($clangs as $clang) {
+			$REX['CLANG'][$clang->getId()] = $clang->getName();
+		}
+
+		sly_Core::cache()->set('sly.language', 'all', $REX['CLANG']);
 	}
-	unset($clangs);
 
 	$REX = array_merge($REX, $config->get(null));
 
