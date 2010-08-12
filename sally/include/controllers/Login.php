@@ -33,6 +33,7 @@ class sly_Controller_Login extends sly_Controller_Sally
 
 	public function index()
 	{
+		if(empty($this->message)) $this->message = t('login_welcome');
 		$this->render('views/login/index.phtml');
 		return true;
 	}

@@ -10,7 +10,7 @@
 
 global $REX, $I18N;
 
-if ($REX['USER'] && !$REX['PAGE_NO_NAVI']) {
+if ($REX['USER'] && $this->hasNavigation()) {
 	$user_name = $REX['USER']->getValue('name') != '' ? $REX['USER']->getValue('name') : $REX['USER']->getValue('login');
 	?>
 	<ul class="rex-logout">
@@ -21,7 +21,7 @@ if ($REX['USER'] && !$REX['PAGE_NO_NAVI']) {
 	</ul>
 	<?php
 }
-elseif (!$REX['PAGE_NO_NAVI']) {
+elseif ($this->hasNavigation()) {
 	echo '<p class="rex-logout">'.$I18N->msg('logged_out').'</p>';
 }
 else {

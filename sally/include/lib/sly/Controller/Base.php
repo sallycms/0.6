@@ -36,7 +36,7 @@ abstract class sly_Controller_Base
 		// Erst normale Startseite, dann User-Startseite, dann System-Startseite und
 		// zuletzt auf die Profilseite zurückfallen.
 
-		if (!isset($REX['PAGES'][$page])) {
+		if (!isset($REX['PAGES'][$page]) && !class_exists('sly_Controller_'.ucfirst($page))) {
 			$page = strtolower($REX['LOGIN']->getStartpage());
 
 			if (!isset($REX['PAGES'][$page])) {

@@ -29,7 +29,6 @@ require 'include/master.inc.php';
 // addon/normal page path
 $REX['PAGEPATH'] = '';
 $REX['PAGES']    = array(); // array(name,addon=1,htmlheader=1)
-$REX['PAGES']['login'] = array('login', 0, 1);
 $REX['PAGE']     = '';
 $REX['USER']     = null;
 $REX['LOGIN']    = null;
@@ -109,9 +108,14 @@ else {
 	}
 }
 
-// Core-Seiten initialisieren
+// AddOns einbinden
+
+require_once $REX['INCLUDE_PATH'].'/addons.inc.php';
+
+
 
 if ($REX['USER']) {
+	// Core-Seiten initialisieren
 	$REX['PAGES']['profile'] = array($I18N->msg('profile'), 0, false);
 	$REX['PAGES']['credits'] = array($I18N->msg('credits'), 0, false);
 
@@ -130,16 +134,10 @@ if ($REX['USER']) {
 	  $REX['PAGES']['addon']    = array($I18N->msg('addons'), 0, false);
 	  $REX['PAGES']['specials'] = array($I18N->msg('specials'), 0, false, 'SUBPAGES' => array(array('', $I18N->msg('main_preferences')), array('languages', $I18N->msg('languages'))));
 	}
-}
 
-// AddOns einbinden
-
-require_once $REX['INCLUDE_PATH'].'/addons.inc.php';
-
-if ($REX['USER']) {
-
+	// AddOn-Seiten initialisieren
 	$addonService  = sly_Service_Factory::getService('AddOn');
-	// AddOn-Seiten vorbereiten
+	
 	foreach ($addonService->getAvailableAddons() as $addon) {
 		$link = '';
 		$perm = $addonService->getProperty($addon, 'perm', '');
@@ -169,8 +167,6 @@ if ($REX['USER']) {
 		exit();
 	}
 }
-
-$REX['PAGE_NO_NAVI'] = $REX['PAGES'][$REX['PAGE']][2];
 
 // Seite gefunden. AddOns benachrichtigen
 

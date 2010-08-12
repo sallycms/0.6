@@ -18,7 +18,7 @@ $config = sly_Core::config();
 		<? $this->renderView('views/layout/sally/navi_logout.phtml') ?>
 	</div>
 	<?php
-	if ($REX['USER'] && !$REX['PAGE_NO_NAVI']):
+	if ($REX['USER'] && $this->hasNavigation()):
 	?>
 	<div id="rex-navi-main">
 		<?php

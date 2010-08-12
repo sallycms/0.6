@@ -10,9 +10,15 @@
 
 class sly_Layout_Sally extends sly_Layout_XHTML
 {
+	private $hasNavigation = false;
+
 	public function __construct()
 	{
 		global $REX;
+
+		if(isset($REX['PAGES'][$REX['PAGE']])){
+			$this->hasNavigation = (bool) !$REX['PAGES'][$REX['PAGE']][2];
+		}
 
 		$config = sly_Core::config();
 
@@ -44,7 +50,7 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 			$this->setBodyAttr('class', 'rex-popup');
 		}
 
-		if ($config->get('PAGE_NO_NAVI')) {
+		if (!$this->hasNavigation) {
 			$this->setBodyAttr('onunload', 'closeAll()');
 		}
 
@@ -171,5 +177,9 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		}
 
 		return $subtitle_str;
+	}
+
+	public function hasNavigation() {
+		return $this->hasNavigation;
 	}
 }
