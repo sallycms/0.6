@@ -59,7 +59,11 @@ class sly_Loader
 			$file     = str_replace('_', DIRECTORY_SEPARATOR, $shortClass).'.php';
 			$fullPath = $path.DIRECTORY_SEPARATOR.$file;
 
-			if (is_file($fullPath)) {
+			// file_exists + !is_dir is faster than calling is_file and since we
+			// do not care whether the file really has a class in it, we can skip
+			// this check.
+
+			if (file_exists($fullPath) && !is_dir($fullPath)) {
 				$found = true;
 				break;
 			}
