@@ -59,7 +59,7 @@ abstract class sly_DB_Persistence implements Iterator {
 	 *
 	 * @return boolean
 	 */
-	abstract public function select($table, $select = '*', $where = null, $group = null, $order = null, $limit = null, $having = null, $joins = null);
+	abstract public function select($table, $select = '*', $where = null, $group = null, $order = null, $offset = null, $limit = null, $having = null, $joins = null);
 
 	/**
 	 *
