@@ -282,7 +282,13 @@ function rex_message_block($message, $cssClass, $sorroundTag)
 	return implode('', $return);
 }
 
-
+/**
+ *
+ * @deprecated use sly_ini_get
+ * @param <type> $key
+ * @return <type>
+ *
+ */
 function rex_ini_get($key)
 {
 	return sly_ini_get($key);
@@ -413,6 +419,9 @@ function rex_get_file_contents($path)
 	return file_get_contents($path);
 }
 
+/**
+ * @deprecated wir machen sowas nicht!
+ */
 function rex_replace_dynamic_contents($path, $content)
 {
 	if ($fcontent = file_get_contents($path)) {
@@ -508,11 +517,14 @@ function rex_get_clang($clang = false, $default = -1)
 	return (int) $clang;
 }
 
+/**
+ * @deprecated use sly_Util_String::isInteger($value) instead
+ * @param <type> $value
+ * @return <type>
+ */
 function rex_is_int($value)
 {
-	if (is_int($value)) return true;
-	if (is_string($value) && strval(intval($value)) === $value) return true;
-	return false;
+	return sly_Util_String::isInteger($value);
 }
 
 /**
@@ -532,6 +544,7 @@ if (!function_exists('startsWith')) {
 /**
  * Returns true if $string ends with $end
  *
+ * @deprecated
  * @param $string String Searchstring
  * @param $start String Suffix to search for
  * @author Markus Staab <staab@public-4u.de>

@@ -88,7 +88,7 @@ function rex_getUrl($id = 0, $clang = false, $name = 'NoName', $params = '', $di
 	// Die rexExtension muss selbst entscheiden was sie damit macht.
 
 	if ($clangOrig === false && (rex_is_multilingual() || rex_extension_is_registered('URL_REWRITE'))) {
-		$clang = rex_cur_clang();
+		$clang = sly_Core::getCurrentClang();
 	}
 
 	// Die Erzeugung von URLs kann in Abhängigkeit von den installierten

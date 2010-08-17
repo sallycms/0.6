@@ -171,7 +171,7 @@ function rex_slice_module_exists($sliceID, $clang)
 }
 
 /**
- * PrÃ¼ft, ob ein Modul im System bekannt ist.
+ * Prüft, ob ein Modul im System bekannt ist.
  *
  * @return boolean  true oder ... false
  */
@@ -183,7 +183,7 @@ function rex_module_exists($moduleID)
 		return false;
 	}
 
-	return rex_sql::fetch('id', 'module', 'id = '.$moduleID) > 0;
+	return sly_DB_Persistence::getInstance()->magicFetch('module', 'id', array('id' => $moduleID)) > 0;
 }
 
 /**
