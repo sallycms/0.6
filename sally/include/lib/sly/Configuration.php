@@ -234,6 +234,7 @@ class sly_Configuration {
 
 		if ($mode == self::STORE_LOCAL_DEFAULT) {
 			if ($force || !$this->localConfig->has($key)) {
+				$this->localConfigModified = true;
 				return $this->localConfig->set($key, $value);
 			}
 			return false;
@@ -241,13 +242,13 @@ class sly_Configuration {
 
 		if ($mode == self::STORE_PROJECT_DEFAULT) {
 			if ($force || !$this->projectConfig->has($key)) {
+				$this->projectConfigModified = true;
 				return $this->projectConfig->set($key, $value);
 			}
 			return false;
 		}
 
 		// case: sly_Configuration::STORE_PROJECT
-
 		$this->projectConfigModified = true;
 		return $this->projectConfig->set($key, $value);
 	}
