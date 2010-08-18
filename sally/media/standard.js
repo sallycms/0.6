@@ -160,8 +160,8 @@ var
 	};
 
 	deleteREXLink = function(id) {
-		$('LINK_' + id).val('');
-		$('LINK_' + id + '_NAME').val('');
+		$('#LINK_' + id).val('');
+		$('#LINK_' + id + '_NAME').val('');
 	};
 
 	openREXMedialist = function(id) {
