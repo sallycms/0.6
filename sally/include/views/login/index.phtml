@@ -26,6 +26,7 @@ if (!empty($this->message)) {
 			<legend>Login</legend>
 			<div class="rex-form-wrapper">
 				<input type="hidden" name="javascript" value="0" id="javascript" />
+				<input type="hidden" name="referer" value="<?= sly_html($_SERVER['REQUEST_URI']) ?>" />
 				<span id="login_message" class="rex-hidden"><?= sly_html($I18N->msg('login_welcome')) ?></span>
 
 				<div class="rex-form-row">

@@ -71,7 +71,7 @@ else {
 	$REX['LOGIN']   = new rex_backend_login($config->get('DATABASE/TABLE_PREFIX').'user');
 	$rex_user_login = rex_post('rex_user_login', 'string');  // addslashes()!
 	$rex_user_psw   = rex_post('rex_user_psw', 'string');    // addslashes()!
-
+	
 	$REX['LOGIN']->setLogout(rex_get('rex_logout', 'boolean'));
 	$REX['LOGIN']->setLogin($rex_user_login, $rex_user_psw);
 
@@ -80,6 +80,7 @@ else {
 	// Login OK / Session gefunden?
 
 	if ($loginCheck === true) {
+
 		// Userspezifische Sprache einstellen, falls gleicher Zeichensatz
 		$lang = $REX['LOGIN']->getLanguage();
 
@@ -161,6 +162,13 @@ if ($REX['USER']) {
 	// Login OK -> Redirect auf Startseite
 
 	if (!empty($rex_user_login)) {
+		// if relogin, forward to previous page
+		$referer = sly_post('referer', 'string', false);
+		if ($referer && !sly_startsWith(basename($referer), 'index.php?page=login')) {
+			header('Location: '.$referer);
+			exit;
+		}
+
 		$url = 'index.php?page='.urlencode($REX['PAGE']);
 		header('Location: '.$url);
 		exit('Sie werden zur <a href="'.$url.'">Startseite</a> weitergeleitet.');
