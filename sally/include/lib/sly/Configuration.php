@@ -101,11 +101,6 @@ class sly_Configuration {
 		if (file_exists($file)) {
 			include $file;
 			$this->projectConfig = new sly_Util_Array($config);
-			//FIXME: else zweig weghauen wenn Konfigurationsumbau fertig
-		} else {
-			if (sly_Core::getPersistentRegistry()->has('sly_ProjectConfig')) {
-				$this->projectConfig = sly_Core::getPersistentRegistry()->get('sly_ProjectConfig');
-			}
 		}
 	}
 
@@ -279,18 +274,6 @@ class sly_Configuration {
 
 		if($this->projectConfigModified) {
 			file_put_contents($this->getProjectCacheFile(), '<?php $config = '.var_export($this->projectConfig->get(null), true).';');
-			//FIXME: db update weghauen wenn Konfigurationsumbau fertig
-			try {
-				sly_Core::getPersistentRegistry()->set('sly_ProjectConfig', $this->projectConfig);
-			}
-			catch (Exception $e) {
-				// Could not save project configuration. This is only "ok" while we're
-				// in setup mode and don't know the correct database name yet.
-
-				if (!sly_Core::config()->get('SETUP')) {
-					trigger_error('Could not save project configuration on script exit.', E_USER_WARNING);
-				}
-			}
 		}
 	}
 
