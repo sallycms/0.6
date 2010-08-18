@@ -166,6 +166,7 @@ if ($REX['USER']) {
 		$referer = sly_post('referer', 'string', false);
 		if ($referer && !sly_startsWith(basename($referer), 'index.php?page=login')) {
 			header('Location: '.$referer);
+			exit('Sie werden zu Ihrer <a href="'.$referer.'">vorherigen Seite</a> weitergeleitet.');
 			exit;
 		}
 
