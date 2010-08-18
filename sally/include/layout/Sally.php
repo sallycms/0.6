@@ -16,10 +16,6 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 	{
 		global $REX;
 
-		if(isset($REX['PAGES'][$REX['PAGE']])){
-			$this->hasNavigation = (bool) !$REX['PAGES'][$REX['PAGE']][2];
-		}
-
 		$config = sly_Core::config();
 
 		$this->addCSSFile('media/css/import.css');
@@ -36,8 +32,6 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		$popups_arr = array('linkmap', 'mediapool');
 		$config     = sly_Core::config();
 
-		$body_id = str_replace('_', '-', isset($REX['PAGE']) ? $REX['PAGE'] : '');
-		$this->setBodyAttr('id', 'rex-page-'.$body_id);
 		$this->setBodyAttr('class', 'sally sally'.$config->get('VERSION').$config->get('SUBVERSION'));
 
 		// Falls ein AddOn bereits in seiner config.inc.php auf das Layout
@@ -180,6 +174,10 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 	}
 
 	public function hasNavigation() {
-		return $this->hasNavigation;
+		global $REX;
+		if(isset($REX['PAGES'][$REX['PAGE']])){
+			return (bool) !$REX['PAGES'][$REX['PAGE']][2];
+		}
+		return true;
 	}
 }
