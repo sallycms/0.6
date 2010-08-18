@@ -51,6 +51,8 @@ $REX['DYNFOLDER']     = $REX['DATAFOLDER'].DIRECTORY_SEPARATOR.'dyn';
 define('SLY_BASE',         $REX['FRONTEND_PATH']);
 define('SLY_INCLUDE_PATH', $REX['INCLUDE_PATH']);
 define('SLY_DYNFOLDER',    $REX['DYNFOLDER']);
+define('SLY_DATAFOLDER',   $REX['DATAFOLDER']);
+define('SLY_MEDIAFOLDER',  $REX['MEDIAFOLDER']);
 
 // Loader initialisieren
 
