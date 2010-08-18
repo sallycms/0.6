@@ -11,7 +11,7 @@
 class sly_Layout_Sally extends sly_Layout_XHTML
 {
 	private $hasNavigation = false;
-
+	
 	public function __construct()
 	{
 		global $REX;
@@ -29,20 +29,15 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 
 		$this->setTitle($config->get('SERVERNAME').' - ');
 
-		$popups_arr = array('linkmap', 'mediapool');
-		$config     = sly_Core::config();
-
+		$config = sly_Core::config();
 		$this->setBodyAttr('class', 'sally sally'.$config->get('VERSION').$config->get('SUBVERSION'));
 
 		// Falls ein AddOn bereits in seiner config.inc.php auf das Layout
 		// zugegriffen hat, ist $REX['PAGE'] noch nicht bekannt. Wir hängen uns
 		// daher in PAGE_CHECKED, um den Wert später noch einmal zu validieren.
 
+		$this->pageChecked(array('subject' => isset($REX['PAGE']) ? $REX['PAGE'] : ''));
 		rex_register_extension('PAGE_CHECKED', array($this, 'pageChecked'));
-
-		if (in_array($body_id, $popups_arr)) {
-			$this->setBodyAttr('class', 'rex-popup');
-		}
 
 		if (!$this->hasNavigation) {
 			$this->setBodyAttr('onunload', 'closeAll()');
@@ -54,6 +49,11 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 	public function pageChecked($params) {
 		$body_id = str_replace('_', '-', $params['subject']);
 		$this->setBodyAttr('id', 'rex-page-'.$body_id);
+
+		$popups_arr = array('linkmap', 'mediapool');
+		if (in_array($body_id, $popups_arr)) {
+			$this->setBodyAttr('class', 'rex-popup');
+		}
 	}
 
 	public function printHeader() {
