@@ -218,17 +218,18 @@ class Thumbnail
 			return;
 		}
 
-		$this->thumb_width  = (int) $width;
-		$this->thumb_height = (int) $height;
+		$img_ratio  = $this->width / $this->height;
+		$resize_ratio = $width / $height;
 
-		$width_ratio  = $this->width / $this->thumb_width;
-		$height_ratio = $this->height / $this->thumb_height;
-
-		if ($width_ratio > $height_ratio){
-			$this->size_width($width);
+		if ($img_ratio >= $resize_ratio) {
+		  // --- width
+		  $this->thumb_width  = (int) $width;
+		  $this->thumb_height = (int) ($this->thumb_width / $this->width * $this->height);
 		}
 		else {
-			$this->size_height($height);
+		  // --- height
+		  $this->thumb_height = (int) $height;
+		  $this->thumb_width  = (int) ($this->thumb_height / $this->height * $this->width);
 		}
 	}
 
