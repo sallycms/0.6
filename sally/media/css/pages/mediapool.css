@@ -68,7 +68,7 @@ div#rex-form-mediapool-other {
 
 	fieldset.rex-form-col-1 div.rex-form-row {
 		/* nur der absatz soll einen abstand haben, nicht die inputs*/
-		p.rex-form-submit { margin-left: -15px; }
+		p.rex-form-submit { margin-left: 10px; }
 
 		input#file_new .rex-form-file {
 			border: 0;
