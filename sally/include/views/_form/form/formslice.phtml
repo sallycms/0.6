@@ -10,8 +10,8 @@
 
 if (!empty($this->hiddenValues)) print '<div>';
 foreach ($this->hiddenValues as $name => $value) {
-	print '<input type="hidden" name="'.wv_html($name).'" value="'.wv_html($value['value']).'"';
-	if (!empty($value['id'])) print ' id="'.wv_html($value['id']).'"';
+	print '<input type="hidden" name="'.sly_html($name).'" value="'.sly_html($value['value']).'"';
+	if (!empty($value['id'])) print ' id="'.sly_html($value['id']).'"';
 	print ' />'.PHP_EOL;
 }
 if (!empty($this->hiddenValues)) print '</div>';

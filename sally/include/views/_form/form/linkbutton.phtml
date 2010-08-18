@@ -15,7 +15,7 @@ $category = '';
 $params   = '';
 
 if (OOArticle::isValid($art)) {
-	$artName  = wv_html($art->getName());
+	$artName  = sly_html($art->getName());
 	$category = $art->getCategoryId();
 
 	if ($category) {
@@ -25,8 +25,8 @@ if (OOArticle::isValid($art)) {
 
 ?>
 
-<input type="hidden" name="<?= wv_html($this->attributes['id']) ?>" id="LINK_<?= $id ?>" value="<?= wv_html($this->attributes['value']) ?>" />
-  <input type="text" style="width:50%" name="LINK_NAME[<?= $id ?>]" value="<?= $artName; ?>" class="<?= wv_html($this->attributes['class']) ?>" id="LINK_<?= $id ?>_NAME" readonly="readonly" />
+<input type="hidden" name="<?= sly_html($this->attributes['id']) ?>" id="LINK_<?= $id ?>" value="<?= sly_html($this->attributes['value']) ?>" />
+  <input type="text" style="width:50%" name="LINK_NAME[<?= $id ?>]" value="<?= $artName; ?>" class="<?= sly_html($this->attributes['class']) ?>" id="LINK_<?= $id ?>_NAME" readonly="readonly" />
 
   <span class="rex-wdgt-icons">
   	<a href="#" onclick="openLinkMap('LINK_<?= $id ?>', '<?= $params ?>'); return false;"><img src="media/file_open.gif" width="16" height="16" alt="Öffne Strukturansicht" title="Öffne Strukturansicht" /></a>

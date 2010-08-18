@@ -28,8 +28,8 @@ class sly_Form_Input_Checkbox extends sly_Form_Input_Base
 		$attributeString = $this->getAttributeString();
 
 		return
-			'<input '.$attributeString.' /> '.
-			'<label class="inline" style="line-height:'.$lineHeight.'px" for="'.$this->attributes['id'].'">'.sly_html($this->description).'</label>';
+			'<input style="float: left;" '.$attributeString.' /> '.
+			'<label class="inline" style="float: left;line-height:'.$lineHeight.'px" for="'.$this->attributes['id'].'">'.sly_html($this->description).'</label>';
 	}
 
 	public function setChecked($checked)

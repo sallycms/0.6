@@ -42,10 +42,10 @@ $formatJS = str_replace(
 
 $attrs['class'] = 'rex-form-text';
 $attrs['type']  = 'text';
-$attrs['name']  = wv_html($name).'_date';
+$attrs['name']  = sly_html($name).'_date';
 $attrs['id']    = $attrs['name'];
 $attrs['value'] = strftime($dateformat, $value);
-print '<input '.WV_HTML::buildAttributeString($attrs).' />';
+print '<input '.sly_Util_HTML::buildAttributeString($attrs).' />';
 
 if (!WV_Registry::getTemp('devutils_datatypes_datetime_datepicker', false)) {
 	print '<script type="text/javascript" src="include/addons/developer_utils/js/jquery.ui.datepicker.js"></script>';
@@ -71,7 +71,7 @@ if (!WV_Registry::getTemp('devutils_datatypes_datetime_datepicker', false)) {
 <script type="text/javascript">
 <? if ($this->withTime()): ?>
 jQuery(function($) {
-	$('#<?= wv_html($name) ?>_date').datetime({
+	$('#<?= sly_html($name) ?>_date').datetime({
 		dateFormat: '<?= addslashes($formatJS) ?>',
 		// Sicherstellen, dass die Datumsangabe auch ohne korrektes Locale auf PHP-Seite
 		// richtig geparst werden kann.
@@ -80,7 +80,7 @@ jQuery(function($) {
 });
 <? else: ?>
 jQuery(function($) {
-	$('#<?= wv_html($name) ?>_date').datepicker({
+	$('#<?= sly_html($name) ?>_date').datepicker({
 		dateFormat: '<?= addslashes($formatJS) ?>',
 		// Sicherstellen, dass die Datumsangabe auch ohne korrektes Locale auf PHP-Seite
 		// richtig geparst werden kann.
@@ -91,19 +91,19 @@ jQuery(function($) {
 
 &nbsp;&nbsp;um&nbsp;&nbsp;
 
-<select name="<?= wv_html($name) ?>_hour" size="1" style="width:40px">
+<select name="<?= sly_html($name) ?>_hour" size="1" style="width:40px">
 	<? for ($i = 0; $i <= 23; ++$i): ?>
 	<option value="<?= $i ?>"<?= $i == $curHour ? ' selected="selected"' : '' ?>><?= str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
 	<? endfor ?>
 </select>
 :
-<select name="<?= wv_html($name) ?>_minute" size="1" style="width:40px">
+<select name="<?= sly_html($name) ?>_minute" size="1" style="width:40px">
 	<? for ($i = 0; $i < 60; $i += 10): ?>
 	<option value="<?= $i ?>"<?= $i == $curMinute ? ' selected="selected"' : '' ?>><?= str_pad($i, 2, '0', STR_PAD_LEFT) ?></option>
 	<? endfor ?>
 </select>
 
 &nbsp;&nbsp;Uhr&nbsp;&nbsp;(setze auf:
-	<a href="javascript:;" onclick="wv.DateTime.setTo('<?= wv_html($name) ?>', <?= $minYear ?>, 1, 1, 0, 0)">min</a>,
-	<a href="javascript:;" onclick="wv.DateTime.setTo('<?= wv_html($name) ?>', <?= $curYear ?>, <?= $curMonth ?>, <?= $curDay ?>, <?= $curHour ?>, <?= $curMinute ?>)">jetzt</a>,
-	<a href="javascript:;" onclick="wv.DateTime.setTo('<?= wv_html($name) ?>', <?= $maxYear ?>, 12, 31, 23, 50)">max</a>)
+	<a href="javascript:;" onclick="wv.DateTime.setTo('<?= sly_html($name) ?>', <?= $minYear ?>, 1, 1, 0, 0)">min</a>,
+	<a href="javascript:;" onclick="wv.DateTime.setTo('<?= sly_html($name) ?>', <?= $curYear ?>, <?= $curMonth ?>, <?= $curDay ?>, <?= $curHour ?>, <?= $curMinute ?>)">jetzt</a>,
+	<a href="javascript:;" onclick="wv.DateTime.setTo('<?= sly_html($name) ?>', <?= $maxYear ?>, 12, 31, 23, 50)">max</a>)

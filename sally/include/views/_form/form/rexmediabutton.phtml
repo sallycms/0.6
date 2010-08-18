@@ -10,14 +10,14 @@
 
 $id = $this->javascriptID;
 ?>
-<input type="hidden" name="<?= $this->attributes['id'] ?>" id="REX_MEDIALIST_<?= $id ?>" value="<?= wv_html(implode(',', (array)$this->attributes['value'])) ?>" />
-<select name="MEDIALIST_SELECT[<?= $id ?>]" id="REX_MEDIALIST_SELECT_<?= $id ?>" size="8" class="<?= wv_html($this->attributes['class']) ?>">
+<input type="hidden" name="<?= $this->attributes['id'] ?>" id="REX_MEDIALIST_<?= $id ?>" value="<?= sly_html(implode(',', (array)$this->attributes['value'])) ?>" />
+<select name="MEDIALIST_SELECT[<?= $id ?>]" id="REX_MEDIALIST_SELECT_<?= $id ?>" size="8" class="<?= sly_html($this->attributes['class']) ?>">
 <?
 	$files = empty($this->attributes['value']) ? array() : $this->attributes['value'];
 	$files = array_filter($files);
 
 	foreach ($files as $file) {
-		?><option value="<?= wv_html($file) ?>"><?= wv_html($file) ?></option><?
+		?><option value="<?= sly_html($file) ?>"><?= sly_html($file) ?></option><?
 	}
 ?>
 </select>
