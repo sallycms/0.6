@@ -61,6 +61,7 @@ if (!SLY_IS_TESTING && $config->get('SETUP')) {
 	$_REQUEST['page']      = 'setup';
 }
 else {
+
 	// Wir vermeiden es, das Locale hier schon zu setzen, da setlocale() sehr
 	// teuer ist und wir es ggf. weiter unten nochmal ändern müssten.
 
@@ -72,10 +73,13 @@ else {
 	$rex_user_login = rex_post('rex_user_login', 'string');  // addslashes()!
 	$rex_user_psw   = rex_post('rex_user_psw', 'string');    // addslashes()!
 	
-	$REX['LOGIN']->setLogout(rex_get('rex_logout', 'boolean'));
-	$REX['LOGIN']->setLogin($rex_user_login, $rex_user_psw);
-
-	$loginCheck = $REX['LOGIN']->checkLogin();
+	if (sly_get('page', 'string') == 'login' && sly_get('func', 'string') == 'logout') {
+		$loginCheck = false;
+	}
+	else {
+		$REX['LOGIN']->setLogin($rex_user_login, $rex_user_psw);
+		$loginCheck = $REX['LOGIN']->checkLogin();
+	}
 
 	// Login OK / Session gefunden?
 
@@ -106,6 +110,7 @@ else {
 		$REX['PAGE']           = 'login';
 		$REX['USER']           = null;
 		$REX['LOGIN']          = null;
+
 	}
 }
 
