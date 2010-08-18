@@ -1,15 +1,18 @@
-Bevor Sie REDAXO für Ihre eigene Zwecke nutzen möchten, berücksichtigen Sie bitte 
+Bevor Sie SallyCMS für Ihre eigene Zwecke nutzen möchten, berücksichtigen Sie bitte 
 die folgenden lizenzrechtlichen Bestimmungen. Es handelt sich hierbei um eine 
 Open Source Lizenzvereinbarung, die als General Public License (GPL) in 
 englischer Sprache vorliegt.
 
-Folgenden Informationen dürfen beim Einsatz von REDAXO im Impressum oder auf 
+SallyCMS ist ein Fork des CMS REDAXO. Sobald der gesamte ursprüngliche REDAXO-Code 
+durch neuen Code ersetzt wurde, wird das CMS unter MIT-License lizensiert. 
+
+Folgenden Informationen dürfen beim Einsatz von SallyCMS im Impressum oder auf 
 der Kontaktseite aufgenommen werden.
 
-If you use REDAXO you may add these informations in your imprint or contact page
+If you use SallyCMS you may add these informations in your imprint or contact page
 
-CMS: REDAXO - Open Source Content Management System
-LINK: www.redaxo.de
+CMS: SallyCMS - Open Source Content Management System
+LINK: https://projects.webvariants.de/projects/sallycms
 
 
 TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
