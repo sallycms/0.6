@@ -8,12 +8,10 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-global $I18N;
-
 $editID  = sly_request('clang_id', 'int');
 $add_td  = '';
 $add_td  = '';
-$delLink = $I18N->msg('clang_delete');
+$delLink = t('clang_delete');
 
 if ($clangID == 0) {
 	$delLink = '<span class="sly-strike">'.$delLink.'</span>';
@@ -31,7 +29,7 @@ if ($this->func == 'edit' && $editID == $clangID) {
 		<td class="sly-col-a sly-icon"><?= sly_Util_HTML::getSpriteLink('', $name, 'language') ?></td>
 		<td class="sly-col-b"><?= sly_html($clangID) ?></td>
 		<td class="sly-col-c"><input class="sly-form-text" type="text" name="clang_name" value="<?= sly_html($name) ?>" /></td>
-		<td class="sly-col-d"><input class="sly-form-submit" type="submit" name="sly-submit" value="<?= $I18N->msg('clang_update') ?>" /></td>
+		<td class="sly-col-d"><input class="sly-form-submit" type="submit" name="sly-submit" value="<?= t('clang_update') ?>" /></td>
 	</tr>
 	<?php
 }

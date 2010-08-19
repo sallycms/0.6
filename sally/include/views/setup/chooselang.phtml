@@ -18,7 +18,7 @@ $this->title('SETUP: SPRACHAUSWAHL');
 	<ul class="rex-setup-language">
 	<?
 
-	$langpath = $REX['INCLUDE_PATH'].'/lang';
+	$langpath = SLY_INCLUDE_PATH.'/lang';
 
 	foreach ($REX['LANGUAGES'] as $l) {
 		$i18n  = rex_create_lang($l, $langpath, false);

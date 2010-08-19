@@ -679,32 +679,13 @@ if ($article->getRows() == 1) {
 				// INHALTE KOPIEREN START
 
 				if (($REX['USER']->isAdmin() || $REX['USER']->hasPerm('copyContent[]')) && count($REX['CLANG']) > 1) {
-					$lang_a = new rex_select();
-					$lang_a->setStyle('class="rex-form-select"');
-					$lang_a->setId('clang_a');
-					$lang_a->setName('clang_a');
-					$lang_a->setSize('1');
+					$lang_a = new sly_Form_Select_DropDown('clang_a', t('content_contentoflang'), rex_request('clang_a', 'rex-clang-id', null), $REX['CLANG'], 'clang_a');
+					$lang_a->setSize(1);
 					$lang_a->setAttribute('tabindex', rex_tabindex(false));
 
-					foreach ($REX['CLANG'] as $key => $val) {
-						$val = rex_translate($val);
-						$lang_a->addOption($val, $key);
-					}
-
-					$lang_b = new rex_select();
-					$lang_b->setStyle('class="rex-form-select"');
-					$lang_b->setId('clang_b');
-					$lang_b->setName('clang_b');
-					$lang_b->setSize('1');
+					$lang_b = new sly_Form_Select_DropDown('clang_b', t('content_to'), rex_request('clang_b', 'rex-clang-id', null), $REX['CLANG'], 'clang_b');
+					$lang_b->setSize(1);
 					$lang_b->setAttribute('tabindex', rex_tabindex(false));
-
-					foreach ($REX['CLANG'] as $key => $val) {
-						$val = rex_translate($val);
-						$lang_b->addOption($val, $key);
-					}
-
-					$lang_a->setSelected(rex_request('clang_a', 'rex-clang-id', null));
-					$lang_b->setSelected(rex_request('clang_b', 'rex-clang-id', null));
 
 					print '
 				<fieldset class="rex-form-col-2">
@@ -713,11 +694,11 @@ if ($article->getRows() == 1) {
 						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-select">
 								<label for="clang_a">'.$I18N->msg('content_contentoflang').'</label>
-								'.$lang_a->get().'
+								'.$lang_a->render().'
 							</p>
 							<p class="rex-form-col-b rex-form-select">
 								<label for="clang_b">'.$I18N->msg('content_to').'</label>
-								'.$lang_b->get().'
+								'.$lang_b->render().'
 							</p>
 						</div>
 
