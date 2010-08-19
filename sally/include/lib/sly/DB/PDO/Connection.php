@@ -43,7 +43,11 @@ class sly_DB_PDO_Connection {
 		$dsn         = $driverObj->getDSN();
 
 		if (empty(self::$instances[$dsn])) {
-			self::$instances[$dsn] = new self($driver, $dsn, $login, $password);
+			try {
+				self::$instances[$dsn] = new self($driver, $dsn, $login, $password);
+			}catch(PDOException $e) {
+				throw new sly_DB_PDO_Exception($e->getMessage(), $e->getCode(), $e->getPrevious());
+			}
 		}
 
 		return self::$instances[$dsn];
