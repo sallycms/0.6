@@ -13,50 +13,65 @@
  *
  * @author christoph@webvariants.de
  */
-class sly_Service_Template {
-	protected $list    = null;
-	protected $refresh = null;
+class sly_Service_Template extends sly_Service_DevelopBase {
 
-	public function __construct() {
-		$config        = sly_Core::config();
-		$this->list    = $config->get('TEMPLATES/list');
-		$this->refresh = $config->get('TEMPLATES/last_refresh');
+	protected function isFileValid($filename) {
+		return preg_match('#\.php$#i', $filename);
+	}
 
-		if ($this->list === null)    $this->list    = array();
-		if ($this->refresh === null) $this->refresh = 0;
+	protected function getClassIdentifier() {
+		return 'templates';
+	}
+
+	protected function getFileType($filename = '') {
+		return 'default';
+	}
+
+	public function getFileTypes() {
+		return array('default');
+	}
+
+	protected function buildData($filename, $mtime, $data) {
+		$result = array(
+			'filename' => $filename,
+			'title'    => isset($data['title']) ? $data['title'] : $filename,
+			'class'    => isset($data['class']) ? $data['class'] : null,
+			'slots'    => sly_makeArray(isset($data['slots']) ? $data['slots'] : 1),
+			'modules'  => isset($data['modules']) ? $data['modules'] : 'all',
+			'mtime'    => $mtime
+		);
+		unset($data['name'], $data['title'], $data['class'], $data['slots'], $data['modules']);
+		$result['params'] = $data;
+
+		return $result;
+	}
+
+	protected function flush($name = null) {
+		if ($name === null) {
+			$dir   = new sly_Util_Directory($this->getCacheFolder());
+			$files = $dir->listPlain(true, false, false, true, '');
+		}
+		elseif ($this->exists($name)) {
+			$files = array(sly_Util_Directory::join($this->getFolder(), $this->getFilename($name)));
+		}
+		else {
+			return false;
+		}
+
+		array_map('unlink', $files);
+		return true;
 	}
 
 	public function getTemplates() {
 		$result = array();
-		foreach ($this->list as $name => $params) $result[$name] = $params['title'];
+		foreach ($this->getData() as $name => $types) $result[$name] = $types['default']['title'];
 		return $result;
 	}
 
-	public function getFolder() {
-		$dir = sly_Util_Directory::join(SLY_BASE, 'develop/templates');
-		if (!is_dir($dir) && !@mkdir($dir, 0777, true)) throw new sly_Exception('Konnte Template-Verzeichnis '.$dir.' nicht erstellen.');
-		return $dir;
-	}
-
 	public function getCacheFolder() {
-		$dir = sly_Util_Directory::join(SLY_DYNFOLDER, 'internal/sally/templates');
-		if (!is_dir($dir) && !@mkdir($dir, 0777, true)) throw new sly_Exception('Konnte Cache-Verzeichnis '.$dir.' nicht erstellen.');
+		$dir = sly_Util_Directory::join(SLY_DYNFOLDER, 'internal/sally', $this->getClassIdentifier());
+		if (!is_dir($dir) && !@mkdir($dir, sly_Core::config()->get('DIRPERM'), true)) throw new sly_Exception('Konnte Cache-Verzeichnis '.$dir.' nicht erstellen.');
 		return $dir;
-	}
-
-	public function isGenerated($name) {
-		if (!$this->exists($name)) return false;
-		return file_exists($this->getCacheFile($name));
-	}
-
-	public function findById($id) {
-		$id = (int) $id;
-
-		foreach ($this->list as $name => $data) {
-			if ($this->get($name, 'id', null) == $id) return $name;
-		}
-
-		return null;
 	}
 
 	public function generate($name) {
@@ -75,37 +90,6 @@ class sly_Service_Template {
 
 	public function getCacheFile($name) {
 		return sly_Util_Directory::join($this->getCacheFolder(), $name.'.php');
-	}
-
-	public function flush($name = null) {
-		if ($name === null) {
-			$dir   = new sly_Util_Directory($this->getCacheFolder());
-			$files = $dir->listPlain(true, false, false, true, '');
-		}
-		elseif ($this->exists($name)) {
-			$files = array(sly_Util_Directory::join($this->getFolder(), $this->getFilename($name)));
-		}
-		else {
-			return false;
-		}
-
-		array_map('unlink', $files);
-		return true;
-	}
-
-	public function exists($name) {
-		return isset($this->list[$name]);
-	}
-
-	public function getTemplateFiles($absolute = true) {
-		$dir = new sly_Util_Directory($this->getFolder());
-		return $dir->listPlain(true, false, false, $absolute);
-	}
-
-	public function getKnownTemplateFiles() {
-		$known = array();
-		foreach ($this->list as $data) $known[] = $data['filename'];
-		return $known;
 	}
 
 	public function getTitle($name, $default = '') {
@@ -129,127 +113,6 @@ class sly_Service_Template {
 
 	public function getFilename($name, $fullPath) {
 		return $this->get($name, 'filename');
-	}
-
-	public function get($name, $key = null, $default = null) {
-		if ($key == 'name') return $name;
-
-		$this->refresh();
-
-		// Template vorhanden?
-
-		if (!isset($this->list[$name])) return false;
-
-		// Alle Daten zurückgeben?
-
-		$data = $this->list[$name];
-		if ($key === null) return $data;
-
-		// Erst auf Standard-Parameter testen, dann die custom params testen.
-
-		return (isset($data[$key]) ? $data[$key] : (isset($data['params'][$key]) ? $data['params'][$key] : $default));
-	}
-
-	public function getContent($name) {
-		if (!isset($this->list[$name])) return false;
-		$filename = sly_Util_Directory::join($this->getFolder(), $this->list[$name]['filename']);
-		return file_exists($filename) ? file_get_contents($filename) : false;
-	}
-
-	public function needsRefresh() {
-		if ($this->refresh == 0) return true;
-
-		$files = $this->getTemplateFiles();
-		$known = $this->getKnownTemplateFiles();
-
-		return
-			/* Dateien?      */ count($files) > 0 &&
-			/* neuere Daten? */ (max(array_map('filemtime', $files)) > $this->refresh ||
-			/* neue Dateien? */ count(array_diff(array_map('basename', $files), $known)) > 0);
-	}
-
-	public function refresh($force = false) {
-		$refresh = $force || $this->needsRefresh();
-		if (!$refresh) return true;
-
-		$files    = $this->getTemplateFiles();
-		$newData  = array();
-		$oldData  = $this->list;
-		$modified = true;
-
-		foreach ($files as $file) {
-			$basename = basename($file);
-			$mtime    = filemtime($file);
-
-			// Wenn sich die Datei nicht geändert hat, können wir die bekannten
-			// Daten einfach 1:1 übernehmen.
-
-			$known = $this->findTemplate($basename, $oldData);
-
-			if ($known && $oldData[$known]['mtime'] == $mtime) {
-				$newData[$known] = $oldData[$known];
-				continue;
-			}
-
-			$parser = new sly_Util_ParamParser($file);
-			$name   = $parser->get('name', null);
-
-			if ($name === null) {
-				//trigger_error('Template '.$basename.' enthält keinen internen Namen und kann daher nicht geladen werden.', E_USER_WARNING);
-				continue;
-			}
-
-			if (isset($newData[$name])) {
-				//trigger_error('Template '.$basename.' enthält keinen eindeutigen Namen. Template '.$newData[$name]['filename'].' heißt bereits '.$name.'.', E_USER_WARNING);
-				continue;
-			}
-
-			if (preg_match('#[^a-z0-9_.-]#i', $name)) {
-				trigger_error('Der Name des Templates '.$basename.' enthält ungültige Zeichen.', E_USER_WARNING);
-				continue;
-			}
-
-			$data = $parser->get();
-			unset($data['name'], $data['title'], $data['class'], $data['slots'], $data['modules']);
-
-			$newData[$name] = array(
-				'filename' => $basename,
-				'title'    => $parser->get('title', basename($file)),
-				'class'    => $parser->get('class', null),
-				'slots'    => sly_makeArray($parser->get('slots', 1)),
-				'modules'  => $parser->get('modules', 'all'),
-				'params'   => $data,
-				'mtime'    => $mtime
-			);
-
-			if ($this->isGenerated($name)) unlink($this->getCacheFile($name));
-			$modified = true;
-		}
-
-		$this->list    = $newData;
-		$this->refresh = time();
-
-		// Wir müssen die Daten erst aus der Konfiguration entfernen, falls sich
-		// der Datentyp geändert hat. Ansonsten wird sich sly_Configuration z. B.
-		// weigern, aus einem Skalar ein Array zu machen.
-
-		if ($modified) {
-			$config = sly_Core::config();
-			$config->remove('TEMPLATES');
-			$config->setLocal('TEMPLATES/list', $this->list);
-			$config->setLocal('TEMPLATES/last_refresh', $this->refresh);
-		}
-	}
-
-	public function findTemplate($filename, $data = null) {
-		$data     = $data === null ? $this->list : $data;
-		$filename = basename($filename);
-
-		foreach ($data as $name => $properties) {
-			if ($properties['filename'] == $filename) return $name;
-		}
-
-		return false;
 	}
 
 	public function hasModule($template, $ctype, $module) {

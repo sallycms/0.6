@@ -53,6 +53,7 @@ define('SLY_INCLUDE_PATH', $REX['INCLUDE_PATH']);
 define('SLY_DYNFOLDER',    $REX['DYNFOLDER']);
 define('SLY_DATAFOLDER',   $REX['DATAFOLDER']);
 define('SLY_MEDIAFOLDER',  $REX['MEDIAFOLDER']);
+define('SLY_DEVELOPFOLDER', SLY_BASE.DIRECTORY_SEPARATOR.'develop');
 
 // Loader initialisieren
 
@@ -108,11 +109,6 @@ if (empty($REX['SYNC']) && !$config->get('SETUP')){
 	$REX['CUR_CLANG']  = sly_Core::getCurrentClang();
 	$REX['ARTICLE_ID'] = sly_Core::getCurrentArticleId();
 }
-
-// Develop synchronisieren
-
-sly_Service_Factory::getService('Template')->refresh();
-sly_Service_Factory::getService('Module')->refresh();
 
 // REDAXO compatibility
 $config->setLocal('TABLE_PREFIX', $config->get('DATABASE/TABLE_PREFIX'));

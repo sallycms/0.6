@@ -114,8 +114,11 @@ else {
 	}
 }
 
-// AddOns einbinden
+// synchronise develop
+sly_Service_Factory::getService('Template')->refresh();
+sly_Service_Factory::getService('Module')->refresh();
 
+// AddOns einbinden
 require_once $REX['INCLUDE_PATH'].'/addons.inc.php';
 
 
@@ -143,7 +146,7 @@ if ($REX['USER']) {
 
 	// AddOn-Seiten initialisieren
 	$addonService  = sly_Service_Factory::getService('AddOn');
-	
+
 	foreach ($addonService->getAvailableAddons() as $addon) {
 		$link = '';
 		$perm = $addonService->getProperty($addon, 'perm', '');
