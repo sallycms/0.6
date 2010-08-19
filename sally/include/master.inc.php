@@ -63,18 +63,10 @@ if (empty($REX['NOFUNCTIONS'])) {
 // Kernkonfiguration laden
 
 $config = sly_Core::config();
-$config->loadStatic($REX['INCLUDE_PATH'].'/config/sallyStatic.yml');
-$config->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yml');
+$config->loadStatic(SLY_INCLUDE_PATH.'/config/sallyStatic.yml');
+$config->loadLocalDefaults(SLY_INCLUDE_PATH.'/config/sallyDefaults.yml');
 $config->loadLocalConfig();
-
-// nicht unbedingt die beste Lösung, aber praktikabel
-
-try {
-	$config->loadProjectConfig();
-}
-catch (Exception $e) {
-	// geht halt nicht
-}
+$config->loadProjectConfig();
 
 // Sync?
 

@@ -149,13 +149,11 @@ if ($REX['USER']) {
 		$perm = $addonService->getProperty($addon, 'perm', '');
 		$page = $addonService->getProperty($addon, 'page', '');
 
-		if(!empty($page)) $link = '<a href="index.php?page='.urlencode($link).'">';
-
-		if (!empty($link) && (empty($perm) || $REX['USER']->hasPerm($perm) || $REX['USER']->isAdmin())) {
+		if (!empty($page) && (empty($perm) || $REX['USER']->hasPerm($perm) || $REX['USER']->isAdmin())) {
 			$name  = $addonService->getProperty($addon, 'name', '');
 			$name  = rex_translate($name);
 			$popup = $addonService->getProperty($addon, 'popup', false);
-			$REX['PAGES'][strtolower($addon)] = array($name, 1, $popup, $link);
+			$REX['PAGES'][strtolower($addon)] = array($name, 1, $popup, $page);
 		}
 	}
 

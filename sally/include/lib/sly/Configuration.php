@@ -34,6 +34,15 @@ class sly_Configuration {
 		$this->projectConfig = new sly_Util_Array();
 	}
 
+	/**
+	 * @return sly_Configuration
+	 */
+	public static function getInstance() {
+		if (!self::$instance) self::$instance = new self();
+
+		return self::$instance;
+	}
+
 	protected function getCacheDir() {
 		$dir = SLY_DYNFOLDER.DIRECTORY_SEPARATOR.'internal'.DIRECTORY_SEPARATOR.'sally'.DIRECTORY_SEPARATOR.'config';
 
@@ -146,15 +155,6 @@ class sly_Configuration {
 		$config = sfYaml::load($filename);
 		file_put_contents($cachefile, '<?php $config = '.var_export($config, true).';');
 		return $config;
-	}
-
-	/**
-	 * @return sly_Configuration
-	 */
-	public static function getInstance() {
-		if (!self::$instance) self::$instance = new self();
-
-		return self::$instance;
 	}
 
 	public function get($key, $default = null) {
