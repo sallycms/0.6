@@ -197,17 +197,22 @@ if ($controller !== null) {
 	try {
 		$CONTENT = $controller->dispatch();
 	}
-	catch (sly_Authorisation_Exception $e1) {
-		rex_title('Sicherheitsverletzung');
-		print rex_warning($e1->getMessage());
-	}
-	catch (sly_Controller_Exception $e2) {
-		rex_title('Controller-Fehler');
-		print rex_warning($e2->getMessage());
-	}
-	catch (Exception $e3) {
-		rex_title('Ausnahme');
-		print rex_warning('Es ist eine unerwartete Ausnahme aufgetreten: '.$e3->getMessage());
+	catch (sly_Authorisation_Exception $e) {
+		// View laden
+		$layout = sly_Core::getLayout('Sally');
+		$layout->openBuffer();
+
+		if($e instanceof sly_Authorisation_Exception) {
+			rex_title('Sicherheitsverletzung');
+		}elseif($e instanceof sly_Controller_Exception){
+			rex_title('Controller-Fehler');
+		}else {
+			rex_title('Unerwartete Ausnahme');
+		}
+		
+		print rex_warning($e->getMessage());
+		$layout->closeBuffer();
+		$CONTENT = $layout->render();
 	}
 }
 else {
