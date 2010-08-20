@@ -36,13 +36,10 @@ foreach ($REX['USER']->pages as $pageKey => $pageArr) {
 		$subpagesKey  = 'PAGES';
 	}
 	else {
-		// ***** AddOn
-		if (!empty($REX['ADDON']['link'][$pageKey])) {
-			$item['href'] = $REX['ADDON']['link'][$pageKey];
+		if(!empty($pageArr[3])){
+			$pageKey = $pageArr[3];
 		}
-		else {
-			$item['href'] = 'index.php?page='.$pageKey;
-		}
+		$item['href'] = 'index.php?page='.$pageKey;
 
 		$subpagesKey = 'ADDON';
 	}

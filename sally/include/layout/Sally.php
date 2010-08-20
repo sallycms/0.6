@@ -39,20 +39,24 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		$this->pageChecked(array('subject' => isset($REX['PAGE']) ? $REX['PAGE'] : ''));
 		rex_register_extension('PAGE_CHECKED', array($this, 'pageChecked'));
 
-		if (!$this->hasNavigation) {
-			$this->setBodyAttr('onunload', 'closeAll()');
-		}
-
 		$this->addHttpMeta('Content-Type', 'text/html charset='.t('htmlcharset'));
 	}
 
 	public function pageChecked($params) {
+		global $REX;
+
 		$body_id = str_replace('_', '-', $params['subject']);
 		$this->setBodyAttr('id', 'rex-page-'.$body_id);
 
 		$popups_arr = array('linkmap', 'mediapool');
 		if (in_array($body_id, $popups_arr)) {
 			$this->setBodyAttr('class', 'rex-popup');
+		}
+
+		$this->hasNavigation = isset($REX['PAGES'][$REX['PAGE']]) ? (bool) !$REX['PAGES'][$REX['PAGE']][2] : true;
+
+		if (!$this->hasNavigation) {
+			$this->setBodyAttr('onunload', 'closeAll()');
 		}
 	}
 
@@ -174,10 +178,6 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 	}
 
 	public function hasNavigation() {
-		global $REX;
-		if(isset($REX['PAGES'][$REX['PAGE']])){
-			return (bool) !$REX['PAGES'][$REX['PAGE']][2];
-		}
-		return true;
+		return $this->hasNavigation;
 	}
 }

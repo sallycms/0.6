@@ -152,13 +152,11 @@ if ($REX['USER']) {
 		$perm = $addonService->getProperty($addon, 'perm', '');
 		$page = $addonService->getProperty($addon, 'page', '');
 
-		if(!empty($page)) $link = '<a href="index.php?page='.urlencode($link).'">';
-
-		if (!empty($link) && (empty($perm) || $REX['USER']->hasPerm($perm) || $REX['USER']->isAdmin())) {
+		if (!empty($page) && (empty($perm) || $REX['USER']->hasPerm($perm) || $REX['USER']->isAdmin())) {
 			$name  = $addonService->getProperty($addon, 'name', '');
 			$name  = rex_translate($name);
 			$popup = $addonService->getProperty($addon, 'popup', false);
-			$REX['PAGES'][strtolower($addon)] = array($name, 1, $popup, $link);
+			$REX['PAGES'][strtolower($addon)] = array($name, 1, $popup, $page);
 		}
 	}
 
@@ -202,17 +200,22 @@ if ($controller !== null) {
 	try {
 		$CONTENT = $controller->dispatch();
 	}
-	catch (sly_Authorisation_Exception $e1) {
-		rex_title('Sicherheitsverletzung');
-		print rex_warning($e1->getMessage());
-	}
-	catch (sly_Controller_Exception $e2) {
-		rex_title('Controller-Fehler');
-		print rex_warning($e2->getMessage());
-	}
-	catch (Exception $e3) {
-		rex_title('Ausnahme');
-		print rex_warning('Es ist eine unerwartete Ausnahme aufgetreten: '.$e3->getMessage());
+	catch (sly_Authorisation_Exception $e) {
+		// View laden
+		$layout = sly_Core::getLayout('Sally');
+		$layout->openBuffer();
+
+		if($e instanceof sly_Authorisation_Exception) {
+			rex_title('Sicherheitsverletzung');
+		}elseif($e instanceof sly_Controller_Exception){
+			rex_title('Controller-Fehler');
+		}else {
+			rex_title('Unerwartete Ausnahme');
+		}
+		
+		print rex_warning($e->getMessage());
+		$layout->closeBuffer();
+		$CONTENT = $layout->render();
 	}
 }
 else {
