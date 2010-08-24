@@ -24,13 +24,17 @@ class Thumbnail
 	private $imgsrc;
 	private $imgthumb;
 	private $filters;
+	private $origWidth;
+	private	$origHeight;
 	private $width;
 	private	$height;
+	private $quality;
 	private	$thumb_width;
 	private	$thumb_height;
 	private	$thumb_width_offset;
 	private	$thumb_height_offset;
-	private	$quality;
+	private	$thumb_quality;
+	private $upscalingAllowed = false;
 
 	public function __construct($imgfile)
 	{
@@ -51,14 +55,22 @@ class Thumbnail
 			$this->sendError();
 		}
 
-		$this->width               = imagesx($this->imgsrc);
-		$this->height              = imagesy($this->imgsrc);
+		$this->origWidth           = imagesx($this->imgsrc);
+		$this->origHeight          = imagesy($this->imgsrc);
+		$this->width               = $this->origWidth;
+		$this->height              = $this->origHeight;
+		$this->quality             = 100;
+		$this->width_offset        = 0;
+		$this->height_offset       = 0;
 		$this->thumb_width_offset  = 0;
 		$this->thumb_height_offset = 0;
-		$this->quality             = self::QUALITY;
+		$this->thumb_quality       = self::QUALITY;
 
 		if (isset($REX['ADDON']['image_resize']['jpg_quality'])) {
-			$this->quality = (int) $REX['ADDON']['image_resize']['jpg_quality'];
+			$this->thumb_quality = (int) $REX['ADDON']['image_resize']['jpg_quality'];
+		}
+		if (isset($REX['ADDON']['image_resize']['upscaling_allowed'])) {
+			$this->upscalingAllowed = (bool) $REX['ADDON']['image_resize']['upscaling_allowed'];
 		}
 	}
 
@@ -73,6 +85,7 @@ class Thumbnail
 		// => Das Originalbild ausliefern
 
 		if ($this->thumb_width > $this->width && $this->thumb_height > $this->height) {
+
 			$this->thumb_width  = $this->width;
 			$this->thumb_height = $this->height;
 		}
@@ -91,7 +104,18 @@ class Thumbnail
 
 		// Transparenz erhalten
 		$this->keepTransparent();
-		imagecopyresampled($this->imgthumb, $this->imgsrc, 0, 0, $this->thumb_width_offset, $this->thumb_height_offset, $this->thumb_width, $this->thumb_height, $this->width, $this->height);
+		imagecopyresampled(
+				$this->imgthumb,
+				$this->imgsrc,
+				$this->thumb_width_offset,
+				$this->thumb_height_offset,
+				$this->width_offset,
+				$this->height_offset,
+				$this->thumb_width,
+				$this->thumb_height,
+				$this->width,
+				$this->height
+		);
 	}
 
 	/**
@@ -154,28 +178,53 @@ class Thumbnail
 	}
 
 	/**
+	 * determined whether the image need to be modified or not
+	 * @return boolean
+	 */
+	private function imageGetsModified() {
+
+		// if no filter are applied, size is smaller or equal and quality is lower than desired
+		if (empty($this->filters)
+			&& $this->thumb_width >= $this->width && $this->thumb_height >= $this->height
+			&& $this->thumb_quality >= $this->quality) {
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Schreibt das Thumbnail an den durch $file definierten Platz
 	 *
 	 * @param string $file Dateiname des zu generierenden Bildes
 	 * @return void
 	 */
-	public function generateImage($file)
-	{
-		$this->resampleImage();
-		$this->applyFilters();
-		$fileext = strtoupper($this->getFileExtension());
+	public function generateImage($file) {
 
-		if ($fileext == 'JPG' || $fileext == 'JPEG') {
-			imageJPEG($this->imgthumb, $file, $this->quality);
+		if ($this->imageGetsModified()) {
+
+			$this->resampleImage();
+			$this->applyFilters();
+
+			$fileext = strtoupper($this->getFileExtension());
+
+			if ($fileext == 'JPG' || $fileext == 'JPEG') {
+				imageJPEG($this->imgthumb, $file, $this->thumb_quality);
+			}
+			elseif ($fileext == 'PNG') {
+				imagePNG($this->imgthumb, $file);
+			}
+			elseif ($fileext == 'GIF') {
+				imageGIF($this->imgthumb, $file);
+			}
+			elseif ($fileext == 'WBMP') {
+				imageWBMP($this->imgthumb, $file);
+			}
 		}
-		elseif ($fileext == 'PNG') {
-			imagePNG($this->imgthumb, $file);
-		}
-		elseif ($fileext == 'GIF') {
-			imageGIF($this->imgthumb, $file);
-		}
-		elseif ($fileext == 'WBMP') {
-			imageWBMP($this->imgthumb, $file);
+		// just copy the image
+		else {
+			copy($this->fileName, $file);
 		}
 
 		if ($file) {
@@ -210,26 +259,89 @@ class Thumbnail
 	 * @param int $height Höhe des Thumbs
 	 * @return void
 	 */
-	private function size_both($width, $height)
-	{
-		if ($this->width < $width && $this->height < $height) {
-			$this->thumb_width  =  $this->width;
-			$this->thumb_height =  $this->height;
-			return;
+	private function resizeBoth($width, $height) {
+		
+		if (!is_array($width) || !isset($width['value'])
+			|| !is_array($height) || !isset($height['value'])) {
+
+			return false;
 		}
 
-		$img_ratio  = $this->width / $this->height;
-		$resize_ratio = $width / $height;
+		$imgRatio  = $this->origWidth / $this->origHeight;
+		$resizeRatio = $width['value'] / $height['value'];
 
-		if ($img_ratio >= $resize_ratio) {
-		  // --- width
-		  $this->thumb_width  = (int) $width;
-		  $this->thumb_height = (int) ($this->thumb_width / $this->width * $this->height);
+		// if image ratio is wider than thumb ratio
+		if ($imgRatio > $resizeRatio) {
+			// if image should be cropped
+			if (isset($width['crop']) && $width['crop']) {
+				
+				// resize height
+				$this->resizeHeight($height);
+				
+
+				// crop width
+
+				// set new cropped width from original image
+		  		$this->width = (int) round($resizeRatio * $this->origHeight);
+
+				// set width to crop width
+				$this->thumb_width = (int) $width['value'];
+
+				// right offset
+				if (isset($width['offset']['right']) && is_numeric($width['offset']['right'])) {
+					$this->width_offset = (int) ($this->origWidth - $this->width - ($this->origHeight / $this->thumb_height * $width['offset']['right']));
+				}
+				// left offset
+				elseif (isset($width['offset']['left']) && is_numeric($width['offset']['left'])) {
+					$this->width_offset = (int) $width['offset']['left'];
+				}
+				// set offset to center image
+				else {
+					$this->width_offset = (int) (floor($this->origWidth - $this->width) / 2);
+				}
+
+			}
+			// else resize into bounding box
+			else {
+				$this->resizeWidth($width);
+			}
 		}
+		// else image ratio is less wide than thumb ratio
 		else {
-		  // --- height
-		  $this->thumb_height = (int) $height;
-		  $this->thumb_width  = (int) ($this->thumb_height / $this->height * $this->width);
+			// if image should be cropped
+			if (isset($height['crop']) && $height['crop']) {
+
+				// resize width
+				$this->resizeWidth($width);
+
+
+				// crop height
+
+				// set new cropped width from original image
+		  		$this->height = (int) round($this->origWidth / $resizeRatio);
+
+				// set height to crop height
+				$this->thumb_height = (int) $height['value'];
+
+				// bottom offset
+				if (isset($height['offset']['bottom']) && is_numeric($height['offset']['bottom'])) {
+					$this->height_offset = (int) ($this->origHeight - $this->height - ($this->origWidth / $this->thumb_width * $height['offset']['bottom']));
+				}
+				// top offset
+				elseif (isset($height['offset']['top']) && is_numeric($height['offset']['top'])) {
+					$this->height_offset = (int) $height['offset']['top'];
+				}
+				// set offset to center image
+				else {
+					$this->height_offset = (int) (floor($this->origHeight - $this->height) / 2);
+				}
+
+
+			}
+			// else resize into bounding box
+			else {
+				$this->resizeHeight($height);
+			}
 		}
 	}
 
@@ -239,19 +351,16 @@ class Thumbnail
 	 * @param int $size
 	 * @return void
 	 */
-	private function size_height($size)
-	{
-		if ($this->height < $size){
-			$size = $this->height;
-		}
+	private function resizeHeight($size) {
 
-		// --- height
-		$this->thumb_height = (int) $size;
-
-		// siehe http://forum.redaxo.de/ftopic9292.html
-		if ($this->thumb_width == 0) {
-			$this->thumb_width  = (int) ($this->thumb_height / $this->height * $this->width);
+		if (!is_array($size) || !isset($size['value'])) {
+			return false;
 		}
+		if ($this->origHeight < $size['value'] && !$this->upscalingAllowed) {
+			$size['value'] = $this->origHeight;
+		}
+		$this->thumb_height = (int) $size['value'];
+		$this->thumb_width  = (int) round($this->origWidth / $this->origHeight * $this->thumb_height);
 	}
 
 	/**
@@ -260,31 +369,16 @@ class Thumbnail
 	 * @param int $size
 	 * @return void
 	 */
-	private function size_width($size)
-	{
-		if ($this->width < $size) {
-			$size = $this->width;
-		}
+	private function resizeWidth($size) {
 
-		// --- width
-		$this->thumb_width  = (int) $size;
-		$this->thumb_height = (int) ($this->thumb_width / $this->width * $this->height);
-	}
-
-	/**
-	 * Setzt die Höhe und Breite des Thumbnails
-	 *
-	 * @param int $size
-	 * @return void
-	 */
-	private function size_auto($size)
-	{
-		if ($this->width >= $this->height) {
-			$this->size_width($size);
+		if (!is_array($size) || !isset($size['value'])) {
+			return false;
 		}
-		else {
-			$this->size_height($size);
+		if ($this->origWidth < $size['value'] && !$this->upscalingAllowed) {
+			$size['value'] = $this->origWidth;
 		}
+		$this->thumb_width  = (int) $size['value'];
+		$this->thumb_height = (int) ($this->origHeight / $this->origWidth * $this->thumb_width);
 	}
 
 	/**
@@ -374,17 +468,23 @@ class Thumbnail
 	 * @param string $offsetType offset von links, oder rechts, default ist mitte
 	 * @return void
 	 */
-	public function setNewSize($size, $mode, $height, $mode2, $offset, $offsetType)
-	{
-		if ($mode == 'w') {
-			if ($mode2 == 'h') $this->size_both($size, $height);
-			else               $this->size_width($size);
-		}
+	//public function setNewSize($size, $mode, $height, $mode2, $offset, $offsetType)
+	public function setNewSize($params) {
 
-		if ($mode == 'h') $this->size_height($size);
-		if ($mode == 'c') $this->size_crop($size, $height, $offset, $offsetType);
-		if ($mode == 'a') $this->size_auto($size);
-		if ($mode == 'x') $this->size_autocrop($size, $height);
+		if (isset($params['auto'])) {
+			$this->resizeBoth($params['auto'], $params['auto']);
+		}
+		elseif (isset($params['width'])) {
+			if (isset($params['height'])) {
+				$this->resizeBoth($params['width'], $params['height']);
+			}
+			else {
+				$this->resizeWidth($params['width']);
+			}
+		}
+		elseif (isset($params['height'])) {
+			$this->resizeHeight($params['height']);
+		}
 	}
 
 	/**
@@ -392,8 +492,7 @@ class Thumbnail
 	 *
 	 * @return void
 	 */
-	public function addFilters()
-	{
+	public function addFilters() {
 		$this->filters = array_unique(array_filter(rex_get('rex_filter', 'array', array())));
 	}
 
@@ -407,24 +506,89 @@ class Thumbnail
 	{
 		$cachefile = self::getCacheFileName($rex_resize);
 
-		if (!self::USECACHE || !file_exists($cachefile)) {
-			preg_match('@([0-9]*)([awhcx])__(([0-9]*)([h])__)?((\-?[0-9]*)([rlo])__)?(.*)@', $rex_resize, $resize);
-			$size       = $resize[1];
-			$mode       = $resize[2];
-			$height     = $resize[4];
-			$mode2      = $resize[5];
-			$offset     = $resize[7];
-			$offsetType = $resize[8];
-			$imagefile  = $resize[9];
+		if (true || !self::USECACHE || !file_exists($cachefile)) {
 
-			if (empty($imagefile)){
+			// c100w__c200h__20r__20t__filename.jpg
+			
+			// separate filename and parameters
+			preg_match('@((?:c?[0-9]{1,4}[whax]__)*(?:\-?[0-9]{1,4}[orltb]?__)*)(.*)@', $rex_resize, $params);
+			if (!isset($params[1]) || !isset($params[2])) return false;
+
+			// get filename
+			$imageFile = $params[2];
+
+			// trim _ at the end
+			$params = trim($params[1], '_');
+			// split parameters
+			$params = explode('__', $params);
+
+			// iterate parameters
+			$imgParams = array();
+			foreach ($params as $param) {
+				// check crop option
+				$crop = false;
+				$prefix = substr($param, 0, 1);
+				if ($prefix == 'c') {
+					$crop = true;
+					$param = substr($param, 1);
+				}
+				// identify type
+				$suffix = substr($param, strlen($param)-1);
+				// get value
+				$value = substr($param, 0, strlen($param)-1);
+
+				// set parameters for resizing
+				if (in_array($suffix, array('w', 'h', 'a', 'x'))) {
+					switch ($suffix) {
+						case 'w':
+							$suffix = 'width';
+							break;
+						case 'h':
+							$suffix = 'height';
+							break;
+						case 'a':
+							$suffix = 'auto';
+							break;
+						case 'x':
+							$suffix = 'width';
+							$crop = true;
+							break;
+					}
+					$imgParams[$suffix] = array('value' => $value, 'crop' => ($crop));
+				}
+
+				// set parameters for crop offset
+				if (in_array($suffix, array('o', 'r', 'l', 't', 'b'))) {
+					switch ($suffix) {
+						case 'o':
+							$imgParams['width']['offset']['left']    = $value;
+							$imgParams['height']['offset']['top']    = $value;
+							break;
+						case 'r':
+							$imgParams['width']['offset']['right']   = $value;
+							break;
+						case 'l':
+							$imgParams['width']['offset']['left']    = $value;
+							break;
+						case 't':
+							$imgParams['height']['offset']['top']    = $value;
+							break;
+						case 'b':
+							$imgParams['height']['offset']['bottom'] = $value;
+							break;
+					}
+				}
+			}
+
+			if (empty($imageFile)){
 				self::sendError();
 			}
 
-			$thumb = new self($imagefile);
-			$thumb->setNewSize($size, $mode, $height, $mode2, $offset, $offsetType);
+			$thumb = new self($imageFile);
+			$thumb->setNewSize($imgParams);
 			$thumb->addFilters();
 			$thumb->generateImage($cachefile);
+
 		}
 
 		$cachetime = filectime($cachefile);
