@@ -301,10 +301,6 @@ div.rex-form input.rex-form-submit {
 		+border-top-radius(4px);
 	}
 
-	fieldset.sly-num0 legend {
-		+border-top-radius(4px);
-	}
-
 	.rex-form-wrapper {
 		background-color: #fff;
 		+border-bottom-radius(4px);
@@ -312,6 +308,7 @@ div.rex-form input.rex-form-submit {
 		float: left;
 		width: 777px;
 		padding: 0 10px;
+		margin-bottom: 20px;
 	}
 }
 
