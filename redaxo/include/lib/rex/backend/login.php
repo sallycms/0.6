@@ -14,7 +14,7 @@ class rex_backend_login extends rex_login
 		$this->setSessiontime($config->get('SESSION_DURATION'));
 		$this->setUserID($tableName.'.id');
 		$this->setUserquery('SELECT * FROM '.$tableName.' WHERE status = 1 AND id = "USR_UID"');
-		$this->setLoginquery('SELECT * FROM '.$tableName.' WHERE status = 1 AND login = "USR_LOGIN" AND psw = "USR_PSW" AND lasttrydate < '.(time()-$config->get('RELOGINDELAY')).' AND login_tries < '.$config->get('MAXLOGINS'));
+		$this->setLoginquery('SELECT * FROM '.$tableName.' WHERE status = 1 AND login = "USR_LOGIN" AND psw = "USR_PSW" AND lasttrydate < '.(time()-$config->get('RELOGINDELAY')));
 		$this->tableName = $tableName;
 	}
 
