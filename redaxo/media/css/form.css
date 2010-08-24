@@ -24,6 +24,7 @@ p.rex-button a, input.rex-form-submit {
 	text-decoration: none;
 	border: 1px solid $lt_grey;
 	+border-radius($brd_rad);
+	margin-left: 145px;
 }
 
 div.rex-addon-content,
