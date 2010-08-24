@@ -404,6 +404,7 @@ class rex_sql
 		if (is_int($rowNumber)) {
 			$row = $rowNumber;
 		}
+
 		return mysql_result($this->result, $row, $feldname);
 	}
 

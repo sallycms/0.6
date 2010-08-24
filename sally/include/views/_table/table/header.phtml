@@ -17,13 +17,11 @@ $hasDragAndDrop = $this->hasDragAndDrop();
 $this->surroundingHTML = '';
 ob_start();
 
-$style = 'margin-bottom:1em;font-size:11px;line-height:20px';
-
 if (!self::isDragAndDropMode() && $hasPager) {
 	$pager = new sly_Util_Pager($currentPage, $this->totalElements, self::$perPage);
 	$pager = $pager->getHTMLString($_GET, 'p_'.$tableID);
 
-	print '<p style="'.$style.';float:left">Seiten: '.$pager.'</p>';
+	print '<p class="sly-table-extras-pager">Seiten: '.$pager.'</p>';
 }
 
 if ($this->enableDragAndDrop && ($hasSearch || $hasPager)) {
@@ -35,12 +33,12 @@ if ($this->enableDragAndDrop && ($hasSearch || $hasPager)) {
 	if (self::isDragAndDropMode()) {
 		unset($params['tableswitch']);
 		$params = http_build_query($params, '', '&amp;');
-		print '<p style="'.$style.';float:right;margin-left:20px"><a href="index.php?'.$params.'">Sortiermodus beenden</a></p>';
+		print '<p class="sly-table-extras-sorting"><a href="index.php?'.$params.'">Sortiermodus beenden</a></p>';
 	}
 	else {
 		$params['tableswitch'] = 'dodraganddrop';
 		$params = http_build_query($params, '', '&amp;');
-		print '<p style="'.$style.';float:right;margin-left:20px"><a href="index.php?'.$params.'">Tabelle sortieren</a></p>';
+		print '<p class="sly-table-extras-sorting"><a href="index.php?'.$params.'">Tabelle sortieren</a></p>';
 	}
 }
 
@@ -49,7 +47,7 @@ if (!self::isDragAndDropMode() && $hasSearch) {
 	$query = wv_get($key, 'string');
 
 	print '<form method="get" action="index.php">';
-	print '<p style="margin-bottom:1em;font-size:11px;float:right;line-height:20px">Filter: ';
+	print '<p style="sly-table-extras-filter">Filter: ';
 
 	foreach ($_GET as $name => $value) {
 		if ($name != 'p_'.$this->id && $name != $key && is_scalar($value)) {
@@ -57,7 +55,7 @@ if (!self::isDragAndDropMode() && $hasSearch) {
 		}
 	}
 
-	print '<input type="text" name="'.$key.'" value="'.wv_html($query).'" class="filter_input_'.$this->id.'" style="width:150px" />';
+	print '<input type="text" name="'.$key.'" value="'.wv_html($query).'" class="filter_input_'.$this->id.'" />';
 
 	print '</p>';
 	print '</form>';
@@ -68,7 +66,7 @@ print $this->surroundingHTML;
 
 ?>
 
-<table id="<?= $this->id ?>" class="rex-table">
+<table id="<?= $this->id ?>" class="rex-table sly-table">
 	<caption><!-- sort für runde Ecken --></caption>
 	<thead>
 		<tr class="nodrop nodrag">

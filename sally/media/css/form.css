@@ -17,13 +17,14 @@ input.rex-form-submit {
 } */
 
 p.rex-button a, input.rex-form-submit {
-	background-image: url(button.gif);
+	background-image: url(../button.gif);
 	background-repeat: repeat-x;
 	padding: 1px 6px;
 	color: $drk_grey;
 	text-decoration: none;
 	border: 1px solid $lt_grey;
 	+border-radius($brd_rad);
+	margin-left: 145px;
 }
 
 div.rex-addon-content,
@@ -300,10 +301,6 @@ div.rex-form input.rex-form-submit {
 		+border-top-radius(4px);
 	}
 
-	fieldset.sly-num0 legend {
-		+border-top-radius(4px);
-	}
-
 	.rex-form-wrapper {
 		background-color: #fff;
 		+border-bottom-radius(4px);
@@ -311,6 +308,7 @@ div.rex-form input.rex-form-submit {
 		float: left;
 		width: 777px;
 		padding: 0 10px;
+		margin-bottom: 20px;
 	}
 }
 
