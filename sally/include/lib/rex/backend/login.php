@@ -62,23 +62,19 @@ class rex_backend_login extends rex_login
 
 	public function getLanguage()
 	{
-		global $REX;
-
 		if (preg_match('@#be_lang\[(.+?)\]#@', $this->getValue('rights'), $match)) {
 			return $match[1];
 		}
 
-		return $REX['LANG'];
+		return sly_Core::config()->get('LANG');
 	}
 
 	public function getStartpage()
 	{
-		global $REX;
-
 		if (preg_match('@#startpage\[(.+?)\]#@', $this->getValue('rights'), $match)) {
 			return $match[1];
 		}
 
-		return $REX['START_PAGE'];
+		return sly_Core::config()->get('START_PAGE');
 	}
 }
