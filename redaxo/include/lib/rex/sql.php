@@ -11,7 +11,7 @@ class rex_sql
 	 * zugreift, können wir sie nicht protected setzen. REDAXO können wir noch
 	 * patchen, aber nicht fremde AddOns.
 	 */
-	 
+
 	public $values; // Werte von setValue
 	public $fieldnames; // Spalten im ResultSet
 
@@ -28,7 +28,7 @@ class rex_sql
 
 	public $error; // Fehlertext
 	public $errno; // Fehlernummer
-	
+
 	private static $ident = null;
 
 	public function __construct()
@@ -104,7 +104,7 @@ class rex_sql
 			if (!isset($this)) { // Nur bei angelegtem Object
 				return null;
 			}
-			
+
 			$qry = $this->query;
 		}
 
@@ -136,7 +136,7 @@ class rex_sql
 	public static function fetch($what, $from, $where = '1', $mode = MYSQL_ASSOC)
 	{
 		global $REX;
-		
+
 		// Verbindung herstellen
 		self::getInstance(1);
 
@@ -149,7 +149,7 @@ class rex_sql
 		);
 
 		$result = mysql_query($query);
-		
+
 		if ($result === false || mysql_num_rows($result) == 0) {
 			return false;
 		}
@@ -190,12 +190,12 @@ class rex_sql
 	{
 		// Verbindung herstellen
 		self::getInstance(1);
-		
+
 		if (!empty($tablePrefix)) {
 			global $REX;
 			$query = str_replace($tablePrefix, $REX['DATABASE']['TABLE_PREFIX'], $query);
 		}
-		
+
 		$result = mysql_query($query);
 
 		if ($result === false || mysql_num_rows($result) == 0 || mysql_num_fields($result) == 0) {
@@ -239,7 +239,7 @@ class rex_sql
 	{
 		// Verbindung herstellen
 		$this->selectDB($this->DBID);
-		
+
 		if (($qryDBID = self::stripQueryDBID($qry)) !== false) {
 			$this->selectDB($qryDBID);
 		}
@@ -258,10 +258,10 @@ class rex_sql
 	{
 		// Alle Werte zurücksetzen
 		$this->flush();
-		
+
 		// Verbindung herstellen
 		//$this->selectDB($this->DBID);
-		
+
 		if (!empty($tablePrefix)) {
 			global $REX;
 			$qry = str_replace($tablePrefix, $REX['DATABASE']['TABLE_PREFIX'], $qry);
@@ -279,19 +279,19 @@ class rex_sql
 				switch ($qryType) {
 					case 'SELECT':
 					case 'SHOW':
-					
+
 						$this->rows = mysql_num_rows($this->result);
 						break;
-					
+
 					case 'REPLACE':
 					case 'DELETE':
 					case 'UPDATE':
-					
+
 						$this->rows = mysql_affected_rows($this->identifier);
 						break;
-					
+
 					case 'INSERT':
-					
+
 						$this->rows = mysql_affected_rows($this->identifier);
 						$this->last_insert_id = mysql_insert_id($this->identifier);
 				}
@@ -324,7 +324,7 @@ class rex_sql
 			global $REX;
 			$table = $REX['DATABASE']['TABLE_PREFIX'].$table;
 		}
-		
+
 		$this->table = $table;
 	}
 
@@ -351,10 +351,10 @@ class rex_sql
 			foreach ($valueArray as $name => $value) {
 				$this->setValue($name, $value);
 			}
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -368,7 +368,7 @@ class rex_sql
 		if (empty($prop)) {
 			return true;
 		}
-		
+
 		return strpos($this->getValue($feld), $prop) !== false;
 	}
 
@@ -392,10 +392,11 @@ class rex_sql
 		}
 
 		$row = $this->counter;
-		
+
 		if (is_int($rowNumber)) {
 			$row = $rowNumber;
 		}
+
 		return mysql_result($this->result, $row, $feldname);
 	}
 
@@ -457,12 +458,12 @@ class rex_sql
 	public function buildSetQuery()
 	{
 		$sets = array();
-		
+
 		if (is_array($this->values)) {
 			foreach ($this->values as $fld_name => $value) {
 				// Bei <tabelle>.<feld> Notation '.' ersetzen,
 				// da sonst `<tabelle>.<feld>` entsteht
-				
+
 				if (strpos($fld_name, '.') !== false) {
 					$fld_name = str_replace('.', '`.`', $fld_name);
 				}
@@ -577,11 +578,11 @@ class rex_sql
 	public function statusQuery($query, $successMessage = null)
 	{
 		$res = $this->setQuery($query);
-		
+
 		if ($successMessage) {
 			return $res ? $successMessage : $this->getError();
 		}
-		
+
 		return $res;
 	}
 
@@ -755,14 +756,14 @@ class rex_sql
 		if ($this->debugsql) {
 			$newline = "<br />\n";
 			$error   = $this->getError();
-			
+
 			print '<hr />'."\n";
 			print 'Query: '.nl2br(htmlspecialchars($query)).$newline;
 
 			if ($this->getRows() > 0) {
 				print 'Affected Rows: '.$this->getRows().$newline;
 			}
-			
+
 			if (!empty($error)) {
 				print 'Error Message: '.htmlspecialchars($error).$newline;
 				print 'Error Code: '.$this->getErrno().$newline;
@@ -778,7 +779,7 @@ class rex_sql
 	{
 		$sql = new self();
 		$id  = false;
-		
+
 		if ($sql->setQuery('SELECT `'.$field.'` FROM `'.$this->table.'` ORDER BY `'.$field.'` DESC LIMIT 1')) {
 			if ($sql->getRows() == 0) {
 				$id = 1;
@@ -804,7 +805,7 @@ class rex_sql
 				$this->fieldnames[] = mysql_field_name($this->result, $i);
 			}
 		}
-		
+
 		return $this->fieldnames;
 	}
 
@@ -820,7 +821,7 @@ class rex_sql
 		if (!is_numeric($value) && $this->identifier) {
 			$value = $delimiter.mysql_real_escape_string($value, $this->identifier).$delimiter;
 		}
-		
+
 		return $value;
 	}
 
@@ -832,7 +833,7 @@ class rex_sql
 		$config = sly_Core::config();
 		$tables = array();
 		$dbName = $config->get('DATABASE/NAME');
-		
+
 		while ($sql->hasNext()) {
 			$tables[] = $sql->getValue('Tables_in_'.$dbName);
 			$sql->next();
@@ -848,7 +849,7 @@ class rex_sql
 		$sql->setQuery('SHOW COLUMNS FROM `'.$table.'`');
 
 		$columns = array();
-		
+
 		while ($sql->hasNext()) {
 			$columns[] = array(
 				'name'    => $sql->getValue('Field'),
@@ -858,7 +859,7 @@ class rex_sql
 				'default' => $sql->getValue('Default'),
 				'extra'   => $sql->getValue('Extra')
 			);
-			
+
 			$sql->next();
 		}
 
@@ -880,7 +881,7 @@ class rex_sql
 	public static function getInstance($dbID = 1, $createInstance = true)
 	{
 		static $instances = array();
-		
+
 		$dbID = 1;
 
 		if (!empty($instances[$dbID])) {
@@ -902,7 +903,7 @@ class rex_sql
 			mysql_free_result($this->result);
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -917,14 +918,14 @@ class rex_sql
 		$err_msg = true;
 		$level   = error_reporting(0);
 		$link    = mysql_connect($host, $login, $pw);
-		
+
 		if (!$link) {
 			$err_msg = $I18N->msg('setup_021');
 		}
 		elseif (!mysql_select_db($dbname, $link)) {
 			if ($createDb) {
 				mysql_query('CREATE DATABASE `'.$dbname.'`', $link);
-				
+
 				if (mysql_error($link) != '') {
 					$err_msg = $I18N->msg('setup_022');
 				}
@@ -937,7 +938,7 @@ class rex_sql
 		if($link) {
 			mysql_close($link);
 		}
-		
+
 		error_reporting($level);
 		return $err_msg;
 	}

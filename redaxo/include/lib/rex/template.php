@@ -30,15 +30,15 @@ class rex_template
 	public function getFile()
 	{
 		$file = self::getFilePath($this->getId());
-			
+
 		if (!$file) {
 			return false;
 		}
-			
+
 		if (!file_exists($file)&& !$this->generate()) {
 			trigger_error('Unable to generate rexTemplate with ID '.$this->getId(), E_USER_ERROR);
 		}
-			
+
 		return $file;
 	}
 
@@ -94,7 +94,7 @@ class rex_template
 			{
 				$content = $var->getTemplate($content);
 			}
-			
+
 			if(rex_put_file_contents($templateFile, $content) !== FALSE)
 			{
 				return TRUE;
