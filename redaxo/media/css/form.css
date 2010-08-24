@@ -17,7 +17,7 @@ input.rex-form-submit {
 } */
 
 p.rex-button a, input.rex-form-submit {
-	background-image: url(button.gif);
+	background-image: url(../button.gif);
 	background-repeat: repeat-x;
 	padding: 1px 6px;
 	color: $drk_grey;
