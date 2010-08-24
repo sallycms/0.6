@@ -28,11 +28,13 @@
 <p>
 w = width       (max width)<br />
 h = height      (max height)<br />
-c = crop        (resize image to hight and cut it to max width)<br />
-l = crop 		(offset from left) <br />
-r = crop		(offset from right) <br />
-x = crop        (resize and cut image to fill out certain length and height rectangle)<br />
-a = automatic   (longest side will be used)
+a = automatic   (max width and max height are the same)<br />
+c = crop        (optional parameter for w, h and a - resize image width or height and crop if nessessary)<br />
+o = offset      (general offset)<br />
+l = left        (offset from left) <br />
+r = right       (offset from right) <br />
+t = top         (offset from top) <br />
+b = bottom      (offset from bottom) <br />
 </p>
 
 <h3>Default-Filters:</h3>
@@ -65,39 +67,44 @@ resize image to a width of 100px and a heigt of 200px<br />
 or <b>index.php?rex_resize=100w__200h__imagefile</b>
 
 <br /><br />
-resize inner image part to a width of 100px and a heigt of 200px<br />
-<b>imageresize/100c__200h__imagefile</b>
-or <b>index.php?rex_resize=100c__200h__imagefile</b>
+resize image to a heigt of 200px and crop to a width of 100px if nessessary<br />
+<b>imageresize/c100w__200h__imagefile</b>
+or <b>index.php?rex_resize=c100w__200h__imagefile</b>
 
 <br /><br />
-resize inner image part to a width of 100px and a heigt of 200px with an offset of 50px<br />
-<b>imageresize/100c__200h__50o__imagefile</b>
-or <b>index.php?rex_resize=100c__200h__50o__imagefile</b>
+resize image to a width of 100px and crop to a height of 200px if nessessary<br />
+<b>imageresize/100w__c200h__imagefile</b>
+or <b>index.php?rex_resize=100w__c200h__imagefile</b>
 
 <br /><br />
-resize inner image part to a width of 100px and a heigt of 200px with an offset of -150px<br />
-<b>imageresize/100c__200h__-150o__imagefile</b>
-or <b>index.php?rex_resize=100c__200h__-150o__imagefile</b>
+resize and crop image to a width of 100px and a height of 200px<br />
+<b>imageresize/c100w__c200h__imagefile</b>
+or <b>index.php?rex_resize=c100w__c200h__imagefile</b>
 
 <br /><br />
-resize inner image part to a width of 100px and a heigt of 200px with an offset of -150px<br />
-<b>imageresize/100c__200h__-150o__imagefile</b>
-or <b>index.php?rex_resize=100c__200h__-150o__imagefile</b>
+resize image to a heigt of 200px and crop to a width of 100px with an offset of 50px<br />
+<b>imageresize/c100w__200h__50o__imagefile</b>
+or <b>index.php?rex_resize=c100w__200h__50o__imagefile</b>
 
 <br /><br />
-resize inner image part to a width of 100px and a heigt of 200px with an offset of 150px from the right edge<br />
-<b>imageresize/100c__200h__-150o__imagefile</b>
-or <b>index.php?rex_resize=100c__200h__150r__imagefile</b>
+resize image to a heigt of 200px and crop to a width of 100px with an offset of -150px<br />
+<b>imageresize/c100w__200h__-150o__imagefile</b>
+or <b>index.php?rex_resize=c100w__200h__-150o__imagefile</b>
 
 <br /><br />
-resize inner image part to a width of 100px and a heigt of 200px with an offset of 50px from the left edge<br />
-<b>imageresize/100c__200h__-150o__imagefile</b>
-or <b>index.php?rex_resize=100c__200h__50l__imagefile</b>
+resize image to a heigt of 200px and crop to a width of 100px with an offset of 150px from the right edge<br />
+<b>imageresize/c100w__200h__150r__imagefile</b>
+or <b>index.php?rex_resize=c100w__200h__150r__imagefile</b>
 
 <br /><br />
-resize and crop image to a width of 100px and a heigt of 200px<br />
-<b>imageresize/100x__200h__imagefile</b>
-or <b>index.php?rex_resize=100x__200h__imagefile</b>
+resize image to a heigt of 200px and crop to a width of 100px with an offset of 50px from the left edge<br />
+<b>imageresize/c100w__200h__50l__imagefile</b>
+or <b>index.php?rex_resize=c100w__200h__50l__imagefile</b>
+
+<br /><br />
+resize and crop image to a square of 100x100px<br />
+<b>imageresize/c100a__imagefile</b>
+or <b>index.php?rex_resize=c100a__imagefile</b>
 
 <br /><br />
 add filter/s: here blur and sepia<br />
