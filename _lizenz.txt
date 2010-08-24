@@ -12,7 +12,7 @@ der Kontaktseite aufgenommen werden.
 If you use SallyCMS you may add these informations in your imprint or contact page
 
 CMS: SallyCMS - Open Source Content Management System
-LINK: https://projects.webvariants.de/projects/sallycms
+LINK: http://www.sallycms.de
 
 
 TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
