@@ -46,6 +46,34 @@ table.rex-table {
 	}
 }
 
-table.rex-table-mrgn {
+table.rex-table-mrgn, table.sly-table {
 	margin-bottom: 10px;
+}
+
+p.sly-table-extras {
+	&-pager, &-filter, &-sorting {
+		margin-bottom: 1em;
+		font-size: 11px;
+		line-height: 20px;
+	}
+
+	&-pager {
+		float: left;
+
+		span, a {
+			margin: 0 1px;
+			padding: 0 1px;
+		}
+	}
+
+	&-sorting {
+		float: right;
+		margin-left: 20px;
+	}
+
+	&-filter {
+		float: right;
+
+		input { width: 150px; }
+	}
 }
