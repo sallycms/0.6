@@ -13,7 +13,6 @@ abstract class sly_Controller_Base
 	const PAGEPARAM    = 'page';
 	const SUBPAGEPARAM = 'subpage';
 	const ACTIONPARAM  = 'func';
-	const DEFAULTPAGE  = 'structure';
 
 	protected $action;
 
@@ -54,7 +53,8 @@ abstract class sly_Controller_Base
 
 	public static function factory($forcePage = null, $forceSubpage = null)
 	{
-		$page    = $forcePage === null    ? sly_request(self::PAGEPARAM, 'string', self::DEFAULTPAGE) : $forcePage;
+		$config = sly_Core::config();
+		$page    = $forcePage === null    ? sly_request(self::PAGEPARAM, 'string', $config->get('START_PAGE')) : $forcePage;
 		$subpage = $forceSubpage === null ? strtolower(sly_request(self::SUBPAGEPARAM, 'string', '')) : $forceSubpage;
 		$name    = 'sly_Controller_'.ucfirst($page);
 

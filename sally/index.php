@@ -171,21 +171,20 @@ if ($REX['USER']) {
 		// if relogin, forward to previous page
 		$referer = sly_post('referer', 'string', false);
 		if ($referer && !sly_startsWith(basename($referer), 'index.php?page=login')) {
-			header('Location: '.$referer);
-			exit('Sie werden zu Ihrer <a href="'.$referer.'">vorherigen Seite</a> weitergeleitet.');
-			exit;
+			$url = $referer;
+			$msg = 'Sie werden zu Ihrer <a href="'.$referer.'">vorherigen Seite</a> weitergeleitet.';
+		}else {
+			$url = 'index.php?page='.urlencode($REX['PAGE']);
+			$msg = 'Sie werden zur <a href="'.$url.'">Startseite</a> weitergeleitet.';
 		}
 
-		$url = 'index.php?page='.urlencode($REX['PAGE']);
 		header('Location: '.$url);
-		exit('Sie werden zur <a href="'.$url.'">Startseite</a> weitergeleitet.');
-		exit();
+		exit($msg);
 	}
 }
 
 // Seite gefunden. AddOns benachrichtigen
 
-//$config->appendArray($REX);
 rex_register_extension_point('PAGE_CHECKED', $REX['PAGE'], array('pages' => $REX['PAGES']), true);
 
 // Im Testmodus verlassen wir das Script jetzt.
@@ -200,7 +199,7 @@ if ($controller !== null) {
 	try {
 		$CONTENT = $controller->dispatch();
 	}
-	catch (sly_Authorisation_Exception $e) {
+	catch (Exception $e) {
 		// View laden
 		$layout = sly_Core::getLayout('Sally');
 		$layout->openBuffer();
