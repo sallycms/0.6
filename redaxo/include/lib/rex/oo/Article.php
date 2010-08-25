@@ -177,8 +177,8 @@ class OOArticle extends OORedaxo
 		return parent::getValue($value);
 	}
 
-	public function hasValue($value)
+	public function hasValue($value, $prefixes = array())
 	{
-		return parent::hasValue($value, array('art_'));
+		return parent::hasValue($value, array_merge(array('art_'), $prefix));
 	}
 }
