@@ -430,7 +430,7 @@ class Thumbnail
 	{
 		$cachefile = self::getCacheFileName($rex_resize);
 
-		if (true || !self::USECACHE || !file_exists($cachefile)) {
+		if (!self::USECACHE || !file_exists($cachefile)) {
 
 			// c100w__c200h__20r__20t__filename.jpg
 			
