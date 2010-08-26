@@ -65,8 +65,8 @@ if (empty($REX['NOFUNCTIONS'])) {
 
 $config = sly_Core::config();
 $config->loadStatic(SLY_INCLUDE_PATH.'/config/sallyStatic.yml');
-$config->loadLocalDefaults(SLY_INCLUDE_PATH.'/config/sallyDefaults.yml');
 $config->loadLocalConfig();
+$config->loadLocalDefaults(SLY_INCLUDE_PATH.'/config/sallyDefaults.yml');
 $config->loadProjectConfig();
 
 // Sync?
@@ -103,5 +103,5 @@ if (empty($REX['SYNC']) && !$config->get('SETUP')){
 }
 
 // REDAXO compatibility
-$config->setLocal('TABLE_PREFIX', $config->get('DATABASE/TABLE_PREFIX'));
+if(!$config->has('TABLE_PREFIX')) $config->setLocal('TABLE_PREFIX', $config->get('DATABASE/TABLE_PREFIX'));
 $REX = array_merge($REX, $config->get(null));
