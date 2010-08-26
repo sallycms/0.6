@@ -10,7 +10,7 @@
 /**
  * Object Oriented Framework: Bildet ein Medium des Medienpools ab
  *
- * @package redaxo4
+ * @ingroup redaxo2
  */
 class OOMedia
 {

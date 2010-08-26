@@ -11,8 +11,8 @@
 /**
  * Basisklasse für alle Models
  *
- * @author zozi@webvariants.de
- *
+ * @author  zozi@webvariants.de
+ * @ingroup model
  */
 abstract class sly_Model_Base {
 

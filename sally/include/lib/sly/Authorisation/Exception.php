@@ -8,7 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Authorisation_Exception extends Exception
-{
+/**
+ * @ingroup authorisation
+ */
+class sly_Authorisation_Exception extends Exception {
 
 }

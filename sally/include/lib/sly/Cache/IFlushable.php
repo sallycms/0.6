@@ -12,6 +12,9 @@
 // löschen können, aber keine Suchen erlauben, gibt es diese kleine
 // Zwischen-Interface.
 
+/**
+ * @ingroup cache
+ */
 interface sly_Cache_IFlushable extends sly_ICache {
 	public function flush($namespace, $recursive = false);
 }

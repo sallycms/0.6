@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup database
+ */
 class sly_DB_PDO_Driver_OCI extends sly_DB_PDO_Driver {
 	public function getDSN() {
 		$format = empty($this->database) ? 'oci:host=%s' : 'oci:host=%s;dbname=%s';

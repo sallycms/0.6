@@ -16,7 +16,7 @@
  * 'id = IN(:ids)'
  * 'id IN(:subselect)'
  *
- * @package ActiveRecord
+ * @ingroup database
  */
 class sly_DB_PDO_Expression
 {

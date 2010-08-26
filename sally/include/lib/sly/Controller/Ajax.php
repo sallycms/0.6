@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-abstract class sly_Controller_Ajax extends sly_Controller_Base{
+/**
+ * @ingroup controller
+ */
+abstract class sly_Controller_Ajax extends sly_Controller_Base {
 
 }

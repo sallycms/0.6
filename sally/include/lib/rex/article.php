@@ -11,7 +11,7 @@
  * Artikel Objekt.
  * Zuständig für die Verarbeitung eines Artikel
  *
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_article {
 	public $slice_id;

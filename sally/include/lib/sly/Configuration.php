@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup core
+ */
 class sly_Configuration {
 
 	const STORE_PROJECT         = 1;

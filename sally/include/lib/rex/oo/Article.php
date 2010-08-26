@@ -10,7 +10,7 @@
 /**
  * Object Oriented Framework: Bildet einen Artikel der Struktur ab
  *
- * @package redaxo4
+ * @ingroup redaxo2
  */
 class OOArticle extends OORedaxo
 {

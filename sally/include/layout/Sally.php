@@ -8,10 +8,13 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup layout
+ */
 class sly_Layout_Sally extends sly_Layout_XHTML
 {
 	private $hasNavigation = false;
-	
+
 	public function __construct()
 	{
 		global $REX;

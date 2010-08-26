@@ -34,7 +34,7 @@
 /**
  * Klasse zum Erstellen von Navigationen, v0.1
  *
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_navigation
 {

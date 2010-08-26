@@ -10,7 +10,7 @@
 /**
  * Object Oriented Framework: Bildet eine Kategorie im Medienpool ab
  *
- * @package redaxo4
+ * @ingroup redaxo2
  */
 class OOMediaCategory
 {

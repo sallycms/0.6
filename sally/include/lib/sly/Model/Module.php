@@ -11,7 +11,8 @@
 /**
  * Business Model Klasse für Module
  *
- * @author zozi@webvariants.de
+ * @author  zozi@webvariants.de
+ * @ingroup model
  *
  */
 class sly_Model_Module extends sly_Model_Base {

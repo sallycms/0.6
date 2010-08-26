@@ -11,7 +11,8 @@
 /**
  * PDO Persintence Klasse für eine PDO  Verbindung
  *
- * @author zozi@webvariants.de
+ * @author  zozi@webvariants.de
+ * @ingroup database
  */
 class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 	const LOG_UNKNOWN = -1;

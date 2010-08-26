@@ -8,21 +8,21 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-abstract class sly_Controller_Base
-{
+/**
+ * @ingroup controller
+ */
+abstract class sly_Controller_Base {
 	const PAGEPARAM    = 'page';
 	const SUBPAGEPARAM = 'subpage';
 	const ACTIONPARAM  = 'func';
 
 	protected $action;
 
-	protected function __construct()
-	{
+	protected function __construct() {
 		$this->action = rex_request(self::ACTIONPARAM, 'string', 'index');
 	}
 
-	public static function getPage($isLogin = false)
-	{
+	public static function getPage($isLogin = false) {
 		global $REX;
 
 		$config = sly_Core::config();
@@ -51,8 +51,7 @@ abstract class sly_Controller_Base
 		return $page;
 	}
 
-	public static function factory($forcePage = null, $forceSubpage = null)
-	{
+	public static function factory($forcePage = null, $forceSubpage = null) {
 		$config = sly_Core::config();
 		$page    = $forcePage === null    ? sly_request(self::PAGEPARAM, 'string', $config->get('START_PAGE')) : $forcePage;
 		$subpage = $forceSubpage === null ? strtolower(sly_request(self::SUBPAGEPARAM, 'string', '')) : $forceSubpage;
@@ -69,8 +68,7 @@ abstract class sly_Controller_Base
 		return null;
 	}
 
-	public function dispatch()
-	{
+	public function dispatch() {
 		if (!method_exists($this, $this->action)) {
 			throw new sly_Controller_Exception('HTTP 404: Methode '. $this->action .' in '. get_class($this) .' nicht gefunden!');
 		}
@@ -87,8 +85,7 @@ abstract class sly_Controller_Base
 		$this->teardown();
 	}
 
-	protected function render($filename, $params = array())
-	{
+	protected function render($filename, $params = array()) {
 		global $REX, $I18N;
 
 		// Die Parameternamen $params und $filename sind zu kurz, als dass
@@ -107,12 +104,10 @@ abstract class sly_Controller_Base
 		print ob_get_clean();
 	}
 
-	protected function init()
-	{
+	protected function init() {
 	}
 
-	protected function teardown()
-	{
+	protected function teardown() {
 	}
 
 	protected abstract function index();

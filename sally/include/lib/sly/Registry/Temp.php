@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup registry
+ */
 class sly_Registry_Temp implements sly_Registry_Registry {
 
 	private static $instance;

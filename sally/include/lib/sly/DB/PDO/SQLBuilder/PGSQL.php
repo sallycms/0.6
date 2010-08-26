@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup database
+ */
 class sly_DB_PDO_SQLBuilder_PGSQL extends sly_DB_PDO_SQLBuilder{
 
 	public function build_limit($sql, $offset = 0, $limit = -1)

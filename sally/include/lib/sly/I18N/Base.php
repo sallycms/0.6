@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup i18n
+ */
 interface sly_I18N_Base {
 	public function msg($key);
 	public function addMsg($key, $msg);

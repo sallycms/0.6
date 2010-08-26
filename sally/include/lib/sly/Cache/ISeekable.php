@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup cache
+ */
 interface sly_Cache_ISeekable extends sly_Cache_IFlushable {
 	public function find($namespace, $key = '*', $getKey = false, $recursive = false);
 	public function getAll($namespace, $recursive = false);

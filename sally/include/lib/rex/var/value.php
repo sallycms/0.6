@@ -15,7 +15,7 @@
  * REX_HTML,
  * REX_IS_VALUE
  *
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_var_value extends rex_var
 {

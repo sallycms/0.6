@@ -42,7 +42,7 @@
 /**
  * Klasse zum Erstellen von Listen
  *
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_list
 {

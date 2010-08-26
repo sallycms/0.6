@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup form
+ */
 class sly_Form_Input_Button extends sly_Form_Input_Base
 {
 	public function __construct($type, $name, $value)

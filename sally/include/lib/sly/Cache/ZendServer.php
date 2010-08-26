@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup cache
+ */
 class sly_Cache_ZendServer extends sly_Cache_Abstract {
 	public static function getMaxKeyLength() {
 		return 200; // unbekannt -> Schätzwert

@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup form
+ */
 interface sly_Form_IElement
 {
 	public function getID();

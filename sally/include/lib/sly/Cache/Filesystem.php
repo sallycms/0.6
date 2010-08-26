@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup cache
+ */
 class sly_Cache_Filesystem extends sly_Cache implements sly_Cache_IFlushable {
 	protected $dataDir    = '';
 	protected $quickCache = null;

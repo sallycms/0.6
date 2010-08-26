@@ -11,7 +11,8 @@
 /**
  * Service-Klasse für Module
  *
- * @author christoph@webvariants.de
+ * @author  christoph@webvariants.de
+ * @ingroup service
  */
 class sly_Service_Module extends sly_Service_DevelopBase {
 

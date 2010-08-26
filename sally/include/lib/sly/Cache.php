@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup cache
+ */
 abstract class sly_Cache {
 	protected $expiration = 0; // niemals ablaufen (nur, um Platz im Server zu schaffen)
 

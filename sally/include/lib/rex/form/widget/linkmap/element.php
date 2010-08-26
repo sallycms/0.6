@@ -8,7 +8,7 @@
  */
 
 /**
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_form_widget_linkmap_element extends rex_form_element
 {

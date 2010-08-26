@@ -8,7 +8,7 @@
  */
 
 /**
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_category_select extends rex_select
 {

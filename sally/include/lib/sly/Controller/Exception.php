@@ -8,7 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Exception extends Exception
-{
+/**
+ * @ingroup controller
+ */
+class sly_Controller_Exception extends Exception {
 
 }

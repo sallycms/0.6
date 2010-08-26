@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup i18n
+ */
 class sly_I18N implements sly_I18N_Base {
 	protected $locales;
 	protected $searchpath;

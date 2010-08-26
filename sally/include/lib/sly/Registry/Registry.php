@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup registry
+ */
 interface sly_Registry_Registry {
 	public function set($key, $value);
 	public function get($key);

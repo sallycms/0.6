@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup form
+ */
 class sly_Form_Select extends sly_Form_Select_Base implements sly_Form_IElement
 {
 	protected $formElement;

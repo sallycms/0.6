@@ -10,7 +10,7 @@
 /**
  * Klasse zum Erstellen von Formularen
  *
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_form
 {
@@ -67,7 +67,7 @@ class rex_form
 			$this->setEditMode(true);
 		}
 		else {
-			trigger_error('rex_form: Die gegebene WHERE-Bedingung führt nicht zu einem eindeutigen Datensatz!', E_USER_ERROR);
+			trigger_error('rex_form: Die gegebene WHERE-Bedingung fÃ¼hrt nicht zu einem eindeutigen Datensatz!', E_USER_ERROR);
 		}
 	}
 
@@ -129,7 +129,7 @@ class rex_form
 	}
 
 	/**
-	 * Gibt eine URL zurück
+	 * Gibt eine URL zurÃ¼ck
 	 */
 	public function getUrl($params = array(), $escape = true)
 	{
@@ -265,7 +265,7 @@ class rex_form
 		$id        = $this->tableName.'_'.$this->fieldset.'_'.$name;
 		$postValue = $this->elementPostValue($this->getFieldsetName(), $name);
 
-		// evtl. POST-Werte wieder übernehmen (auch externe Werte überschreiben)
+		// evtl. POST-Werte wieder Ã¼bernehmen (auch externe Werte Ã¼berschreiben)
 
 		if ($postValue !== null) {
 			$value = stripslashes($postValue);
@@ -313,9 +313,9 @@ class rex_form
 			unset($attributes['internal::noNameAttribute']);
 		}
 
-		// 1. Array: Eigenschaften, die via Parameter Überschrieben werden können/dürfen
+		// 1. Array: Eigenschaften, die via Parameter Ãœberschrieben werden kÃ¶nnen/dÃ¼rfen
 		// 2. Array: Eigenschaften, via Parameter
-		// 3. Array: Eigenschaften, die hier fest definiert sind / nicht veränderbar via Parameter
+		// 3. Array: Eigenschaften, die hier fest definiert sind / nicht verÃ¤nderbar via Parameter
 
 		$attributes = array_merge(array('id' => $id), $attributes, $internal_attr);
 		$element    = new $class($tag, $this, $attributes, $separateEnding);
@@ -459,7 +459,7 @@ class rex_form
 
 	/**
 	 * Callbackfunktion, damit in Subklassen der Value noch beeinflusst werden kann
-	 * kurz vor'm Löschen
+	 * kurz vor'm LÃ¶schen
 	 */
 	public function preDelete($fieldsetName, $fieldName, $fieldValue, $deleteSql)
 	{
@@ -518,7 +518,7 @@ class rex_form
 
 	/**
 	 * Validiert die Eingaben.
-	 * Gibt true zurück wenn alles ok war, false bei einem allgemeinen Fehler oder
+	 * Gibt true zurÃ¼ck wenn alles ok war, false bei einem allgemeinen Fehler oder
 	 * einen String mit einer Fehlermeldung.
 	 *
 	 * Eingaben sind via
@@ -534,15 +534,15 @@ class rex_form
 	/**
 	 * Speichert das Formular
 	 *
-	 * Gibt true zurück wenn alles ok war, false bei einem allgemeinen Fehler oder
+	 * Gibt true zurÃ¼ck wenn alles ok war, false bei einem allgemeinen Fehler oder
 	 * einen String mit einer Fehlermeldung.
 	 */
 	public function save()
 	{
 		// trigger extensions point
-		// Entscheiden zwischen UPDATE <-> CREATE via editMode möglich
-		// Falls die Extension FALSE zurückgibt, nicht speicher,
-		// um hier die Möglichkeit offen zu haben eigene Validierungen/Speichermechanismen zu implementieren
+		// Entscheiden zwischen UPDATE <-> CREATE via editMode mÃ¶glich
+		// Falls die Extension FALSE zurÃ¼ckgibt, nicht speicher,
+		// um hier die MÃ¶glichkeit offen zu haben eigene Validierungen/Speichermechanismen zu implementieren
 
 		if (rex_register_extension_point('REX_FORM_'.strtoupper($this->getName()).'_SAVE', '', array('form' => $this)) === false) {
 			return;
@@ -556,7 +556,7 @@ class rex_form
 			$fieldValues = $this->fieldsetPostValues($fieldsetName);
 
 			foreach($fieldValues as $fieldName => $fieldValue) {
-				// Callback, um die Values vor dem Speichern noch beeinflussen zu können
+				// Callback, um die Values vor dem Speichern noch beeinflussen zu kÃ¶nnen
 				$fieldValue = $this->preSave($fieldsetName, $fieldName, $fieldValue, $sql);
 
 				if (is_array($fieldValue)) {
@@ -595,7 +595,7 @@ class rex_form
 			$fieldValues = $this->fieldsetPostValues($fieldsetName);
 
 			foreach ($fieldValues as $fieldName => $fieldValue) {
-				// Callback, um die Values vor dem Löschen noch beeinflussen zu können
+				// Callback, um die Values vor dem LÃ¶schen noch beeinflussen zu kÃ¶nnen
 				$fieldValue = $this->preDelete($fieldsetName, $fieldName, $fieldValue, $deleteSql);
 
 				// Element heraussuchen
@@ -634,7 +634,7 @@ class rex_form
 		$this->setApplyUrl($this->getUrl(array('func' => ''), false));
 		$this->handleSubmittedForm();
 
-		// Parameter dem Formular hinzufügen
+		// Parameter dem Formular hinzufÃ¼gen
 
 		foreach($this->getParams() as $name => $value) {
 			$this->addHiddenField($name, $value, array('internal::useArraySyntax' => 'none'));
@@ -665,7 +665,7 @@ class rex_form
 			$s .= '<legend>'.sly_html($fieldsetName).'</legend>';
 			$s .= '<div class="rex-form-wrapper">';
 
-			// Die HeaderElemente nur im 1. Fieldset ganz am Anfang einfügen
+			// Die HeaderElemente nur im 1. Fieldset ganz am Anfang einfÃ¼gen
 
 			if ($i == 0 && $addHeaders) {
 				foreach ($this->getHeaderElements() as $element) {

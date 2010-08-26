@@ -16,6 +16,8 @@
  * Das Cache-Addon muss seine ICache Implementierung über
  * sly_Core::getInstance()->setCache($cache);
  * registrieren.
+ *
+ * @ingroup cache
  */
 interface sly_ICache {
 

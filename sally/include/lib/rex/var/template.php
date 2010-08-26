@@ -10,7 +10,7 @@
 /**
  * REX_TEMPLATE[2]
  *
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_var_template extends rex_var
 {

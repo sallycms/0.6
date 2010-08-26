@@ -8,6 +8,25 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @defgroup redaxo        REDAXO Legacy-API
+ * @defgroup redaxo2       REDAXO OO-API
+ * @defgroup authorisation Authorisation
+ * @defgroup cache         Caches
+ * @defgroup controller    Controller
+ * @defgroup core          Systemkern
+ * @defgroup database      Datenbank
+ * @defgroup event         Eventsystem
+ * @defgroup form          Formular-Framework
+ * @defgroup i18n          I18N
+ * @defgroup layout        Layouts
+ * @defgroup model         Models
+ * @defgroup registry      Registry
+ * @defgroup service       Services
+ * @defgroup table         Tabellen
+ * @defgroup util          Utilities
+ */
+
 function sly_get($name, $type, $default = '')
 {
 	$value = rex_get($name, $type, $default, false);

@@ -11,7 +11,7 @@
 /**
  * Helper class for building sql statements progmatically.
  *
- * @package ActiveRecord
+ * @ingroup database
  */
 abstract class sly_DB_PDO_SQLBuilder
 {

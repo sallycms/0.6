@@ -10,7 +10,7 @@
 /**
  * Object Oriented Framework: Basisklasse für die Strukturkomponenten
  *
- * @package redaxo4
+ * @ingroup redaxo2
  */
 class OORedaxo {
 	/*

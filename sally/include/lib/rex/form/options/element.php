@@ -8,7 +8,7 @@
  */
 
 /**
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_form_options_element extends rex_form_element
 {

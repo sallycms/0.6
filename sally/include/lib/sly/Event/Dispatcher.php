@@ -11,8 +11,9 @@
 /**
  * Event system
  *
- * @author christoph@webvariants.de
- * @since  0.2
+ * @author  christoph@webvariants.de
+ * @since   0.2
+ * @ingroup event
  */
 class sly_Event_Dispatcher
 {

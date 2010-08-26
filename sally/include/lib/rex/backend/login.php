@@ -8,7 +8,7 @@
  */
 
 /**
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_backend_login extends rex_login
 {

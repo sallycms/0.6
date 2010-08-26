@@ -10,7 +10,7 @@
 /**
  * Klasse zur Erstellung eines HTML-Pulldown-Menues (Select-Box)
  *
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_select
 {

@@ -9,7 +9,8 @@
  */
 
 /**
- * @author christoph@webvariants.de
+ * @author  christoph@webvariants.de
+ * @ingroup service
  */
 abstract class sly_Service_AddOn_Base
 {

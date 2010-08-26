@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup cache
+ */
 class sly_Cache_Memory extends sly_Cache implements sly_Cache_ISeekable {
 	protected $data = array();
 

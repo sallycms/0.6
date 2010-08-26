@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup form
+ */
 class sly_Form_Input_Password extends sly_Form_Input_Base
 {
 	public function __construct($name, $label, $value = '', $id = null)

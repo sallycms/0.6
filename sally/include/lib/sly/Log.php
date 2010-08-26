@@ -14,8 +14,9 @@
  * This class provides an easy way to log data to the disk. ALl log files will
  * be placed in data/dyn/internal/sally/logs.
  *
- * @author christoph@webvariants.de
- * @since  0.1
+ * @author  christoph@webvariants.de
+ * @since   0.1
+ * @ingroup core
  */
 class sly_Log {
 	protected $filename;    ///< string  the current target file

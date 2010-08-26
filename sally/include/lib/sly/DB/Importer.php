@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup database
+ */
 class sly_DB_Importer
 {
 	protected $filename;

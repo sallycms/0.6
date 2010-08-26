@@ -16,8 +16,8 @@
  * Kling irgendwie bescheuert, aber ist nicht wirklich zu ändern, da die Codebasis von Redaxo
  * (und wahrscheinlich sehr viele addons) leider kaum Spielraum lässt.
  *
- * @author zozi
- *
+ * @author  zozi
+ * @ingroup database
  */
 class sly_DB_MySQL_Connection{
 

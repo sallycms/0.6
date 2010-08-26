@@ -11,8 +11,8 @@
 /**
  * Stellt eine PDO Verbindung zur Datenbank her und hält sie vor.
  *
- * @author zozi@webvariants.de
- *
+ * @author  zozi@webvariants.de
+ * @ingroup database
  */
 class sly_DB_PDO_Connection {
 

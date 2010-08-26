@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup layout
+ */
 class sly_Layout_XHTML extends sly_Layout
 {
 	protected function printCSSConcrete() {

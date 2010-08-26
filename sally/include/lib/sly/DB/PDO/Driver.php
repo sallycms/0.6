@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup database
+ */
 abstract class sly_DB_PDO_Driver{
 	protected $host;
 	protected $login;

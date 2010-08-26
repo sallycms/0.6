@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup service
+ */
 abstract class sly_Service_Factory {
 
 	private static $services = array();

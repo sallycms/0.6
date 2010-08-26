@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup form
+ */
 abstract class sly_Form_Input_Base extends sly_Form_ElementBase implements sly_Form_IElement
 {
 	public function __construct($name, $label, $value, $id = null, $allowedAttributes = null)

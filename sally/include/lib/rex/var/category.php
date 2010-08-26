@@ -13,7 +13,7 @@
  * REX_CATEGORY[field=xzy id=3]
  * REX_CATEGORY[field=xzy id=3 clang=2]
  *
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_var_category extends rex_var
 {

@@ -9,7 +9,8 @@
  */
 
 /**
- * @author christoph@webvariants.de
+ * @author  christoph@webvariants.de
+ * @ingroup model
  */
 class sly_Model_Language extends sly_Model_Base
 {

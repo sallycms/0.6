@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup cache
+ */
 class sly_Cache_Memcache extends sly_Cache_Abstract {
 	protected $memcached = null;
 

@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup layout
+ */
 abstract class sly_Layout {
 	protected $title = '';
 	protected $cssCode         = '';

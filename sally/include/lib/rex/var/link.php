@@ -14,7 +14,7 @@
  * REX_LINKLIST_BUTTON,
  * REX_LINKLIST
  *
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_var_link extends rex_var
 {

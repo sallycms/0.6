@@ -11,7 +11,8 @@
 /**
  * Business Model Klasse für Mediumkategorien
  *
- * @author christoph@webvariants.de
+ * @author  christoph@webvariants.de
+ * @ingroup model
  */
 class sly_Model_Media_Category extends sly_Model_Base {
 	protected $name;

@@ -10,7 +10,7 @@
 /**
  * Basisklasse für Addons/Plugins
  *
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_addon
 {

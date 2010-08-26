@@ -11,7 +11,7 @@
  * Managerklasse zum handeln von rexAddons
  *
  * @deprecated
- * @package redaxo4
+ * @ingroup redaxo
  */
 abstract class rex_baseManager
 {

@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup authorisation
+ */
 class sly_Authorisation {
 
 	private static $provider;

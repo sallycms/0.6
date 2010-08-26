@@ -11,7 +11,8 @@
 /**
  * Business Model Klasse für Slice Values
  *
- * @author zozi@webvariants.de
+ * @author  zozi@webvariants.de
+ * @ingroup model
  */
 class sly_Model_SliceValue extends sly_Model_Base {
 	protected $slice_id;

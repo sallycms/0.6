@@ -11,7 +11,8 @@
 /**
  * DB Model Klasse für Slice Values
  *
- * @author zozi@webvariants.de
+ * @author  zozi@webvariants.de
+ * @ingroup service
  */
 class sly_Service_SliceValue extends sly_Service_Model_Base {
 	protected $tablename = 'slice_value';

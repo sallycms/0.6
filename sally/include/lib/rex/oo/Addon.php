@@ -10,7 +10,7 @@
 /**
  * Klasse zum Prüfen ob Addons installiert/aktiviert sind
  *
- * @package redaxo4
+ * @ingroup redaxo2
  */
 abstract class OOAddon extends rex_addon
 {

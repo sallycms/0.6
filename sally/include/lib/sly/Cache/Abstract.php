@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup cache
+ */
 abstract class sly_Cache_Abstract extends sly_Cache implements sly_Cache_IFlushable {
 	protected $versions = array();
 

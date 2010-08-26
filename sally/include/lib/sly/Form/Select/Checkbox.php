@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup form
+ */
 class sly_Form_Select_Checkbox extends sly_Form_Select_Base implements sly_Form_IElement
 {
 	public function __construct($name, $label, $value, $values, $id = null)

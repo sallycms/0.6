@@ -11,7 +11,7 @@
  * Template Objekt.
  * Zuständig für die Verarbeitung eines Templates
  *
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_template
 {

@@ -10,7 +10,7 @@
 /**
  * Klasse zum Prüfen ob Plugins installiert/aktiviert sind
  *
- * @package redaxo4
+ * @ingroup redaxo2
  */
 class OOPlugin extends rex_addon
 {

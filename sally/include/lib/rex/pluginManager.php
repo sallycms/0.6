@@ -11,7 +11,7 @@
  * Manager zum Installieren von Plugins
  *
  * @deprecated
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_pluginManager extends rex_baseManager
 {

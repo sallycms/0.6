@@ -11,7 +11,8 @@
 /**
  * Service-Klasse für Templates
  *
- * @author christoph@webvariants.de
+ * @author  christoph@webvariants.de
+ * @ingroup service
  */
 class sly_Service_Template extends sly_Service_DevelopBase {
 

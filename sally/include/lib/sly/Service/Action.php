@@ -11,7 +11,8 @@
 /**
  * DB Model Klasse für Actions
  *
- * @author christoph@webvariants.de
+ * @author  christoph@webvariants.de
+ * @ingroup service
  */
 class sly_Service_Action extends sly_Service_Model_Base
 {

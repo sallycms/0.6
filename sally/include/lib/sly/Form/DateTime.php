@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup form
+ */
 class sly_Form_DateTime extends sly_Form_ElementBase implements sly_Form_IElement
 {
 	protected $withTime;

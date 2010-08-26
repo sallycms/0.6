@@ -11,7 +11,7 @@
  * Manager zum Installieren von OOAddons
  *
  * @deprecated
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_addonManager extends rex_baseManager
 {

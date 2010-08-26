@@ -11,7 +11,8 @@
 /**
  * DB Model Klasse für Medienkategorien
  *
- * @author christoph@webvariants.de
+ * @author  christoph@webvariants.de
+ * @ingroup service
  */
 class sly_Service_Media_Category extends sly_Service_Model_Base {
 	protected $tablename = 'file_category';

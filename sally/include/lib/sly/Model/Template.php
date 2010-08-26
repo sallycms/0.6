@@ -11,7 +11,8 @@
 /**
  * Business Model Klasse für Templates
  *
- * @author christoph@webvariants.de
+ * @author  christoph@webvariants.de
+ * @ingroup model
  */
 class sly_Model_Template extends sly_Model_Base {
 	protected $updateuser;

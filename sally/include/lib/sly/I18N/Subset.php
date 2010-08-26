@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup i18n
+ */
 class sly_I18N_Subset implements sly_I18N_Base {
 	public function __construct($i18nContainer, $prefix) {
 		$this->container = $i18nContainer;

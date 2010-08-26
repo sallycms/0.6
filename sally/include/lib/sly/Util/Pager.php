@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup util
+ */
 class sly_Util_Pager
 {
 	const FIRST_ACTIVE   = -1;

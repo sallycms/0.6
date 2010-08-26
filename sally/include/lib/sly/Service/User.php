@@ -11,7 +11,8 @@
 /**
  * DB Model Klasse für Benutzer
  *
- * @author christoph@webvariants.de
+ * @author  christoph@webvariants.de
+ * @ingroup service
  */
 class sly_Service_User extends sly_Service_Model_Base {
 	protected $tablename = 'user';

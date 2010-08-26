@@ -10,7 +10,7 @@
 /**
  * Abstrakte Basisklasse für REX_VARS
  *
- * @package redaxo4
+ * @ingroup redaxo
  */
 abstract class rex_var
 {

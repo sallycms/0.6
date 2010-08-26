@@ -14,7 +14,7 @@
  * Framework for accessing vital parts of your website.
  * This framework can be used in Modules, Templates and PHP-Slices!
  *
- * @package redaxo4
+ * @ingroup redaxo2
  */
 class OOArticleSlice {
 	private $_id;

@@ -15,6 +15,8 @@
  * anderen Implementierungen, um in nutzendem Code nicht auf null testen muss,
  * sondern einfach diese Klasse angeben kann, wenn man "deaktiviertes Caching"
  * meint.
+ *
+ * @ingroup cache
  */
 class sly_Cache_Blackhole extends sly_Cache implements sly_Cache_ISeekable {
 	public function set($namespace, $key, $value) {

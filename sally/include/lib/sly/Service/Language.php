@@ -9,7 +9,8 @@
  */
 
 /**
- * @author christoph@webvariants.de
+ * @author  christoph@webvariants.de
+ * @ingroup service
  */
 class sly_Service_Language extends sly_Service_Model_Base
 {

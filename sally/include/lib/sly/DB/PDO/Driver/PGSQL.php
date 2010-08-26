@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup database
+ */
 class sly_DB_PDO_Driver_PGSQL extends sly_DB_PDO_Driver {
 	public function getDSN() {
 		$format = empty($this->database) ? 'pgsql:host=%s' : 'pgsql:host=%s;dbname=%s';

@@ -8,4 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup cache
+ */
 class sly_Cache_Exception extends Exception { }

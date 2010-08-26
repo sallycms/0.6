@@ -10,7 +10,7 @@
 /**
  * Klasse zur Formatierung von Strings
  *
- * @package redaxo4
+ * @ingroup redaxo
  */
 abstract class rex_formatter
 {

@@ -11,7 +11,7 @@
 // Nur für internes Handling!
 
 /**
- * @package redaxo4
+ * @ingroup redaxo
  */
 abstract class rex_form_element // seit Sally abstract
 {

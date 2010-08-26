@@ -10,7 +10,7 @@
 /**
  * Klasse zur Verbindung und Interatkion mit der Datenbank
  *
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_sql
 {

@@ -8,6 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/**
+ * @ingroup service
+ */
 abstract class sly_Service_Model_Base
 {
 	protected $tablename;

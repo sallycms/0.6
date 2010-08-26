@@ -10,7 +10,7 @@
 /**
  * Klasse zum Handling des Login/Logout-Mechanismus
  *
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_login
 {

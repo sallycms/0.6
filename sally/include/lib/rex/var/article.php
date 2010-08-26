@@ -17,7 +17,7 @@
  * REX_ARTICLE[field='description' id=3]
  * REX_ARTICLE[field='description' id=3 clang=2]
  *
- * @package redaxo4
+ * @ingroup redaxo
  */
 class rex_var_article extends rex_var
 {
