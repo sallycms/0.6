@@ -133,7 +133,7 @@ function rex_a256_search_structure($params)
 
             $treeLabel = htmlspecialchars($treeLabel);
             $treeLabel = rex_a256_highlight_hit($treeLabel, $needle);
-          
+
             $s .= '<li>'. $prefix .'<a href="'. sprintf($structureUrl, $treeItem->getId(), $a256_clang, urlencode($a256_article_name)) .'">'. $treeLabel .' </a></li>';
           }
 
@@ -146,7 +146,7 @@ function rex_a256_search_structure($params)
 
           $label = htmlspecialchars($label);
           $label = rex_a256_highlight_hit($label, $needle);
-          
+
           $s .= '<li>'. $prefix .'<a href="'. sprintf($editUrl, $search->getValue('id'), $a256_clang, urlencode($a256_article_name)) .'">'. $label .' </a></li>';
 
           $search_result .= '<li><ul class="a256-search-hit">'. $s .'</ul></li>';
@@ -175,6 +175,7 @@ function rex_a256_search_structure($params)
   $category_select->setSize('1');
   $category_select->setAttribute('onchange', 'this.form.submit();');
   $category_select->setSelected($category_id);
+  $category_select->setAttribute('style', 'width: 250px;');
 
   $form =
    '  <div class="rex-form">
@@ -194,7 +195,7 @@ function rex_a256_search_structure($params)
 
         	<label for="rex-a256-article-id">'. $I18N->msg('be_search_article_id') .'</label>
 	        <input class="rex-form-text" type="text" name="a256_article_id" id="rex-a256-article-id"'. rex_tabindex() .' />
-    	    <input class="rex-form-submit" type="submit" name="a256_start_search" value="'. $I18N->msg('be_search_start') .'"'. rex_tabindex() .' />
+    	    <input class="rex-form-submit" type="submit" style="margin-left: 0;" name="a256_start_search" value="'. $I18N->msg('be_search_start') .'"'. rex_tabindex() .' />
 		    </div>
 
     		<div class="rex-fl-rght">
