@@ -5,3 +5,4 @@ sally/include/tip
 .project
 .buildpath
 .settings/*
+docs/*
