@@ -18,7 +18,7 @@ DATABASE:
   NAME: webvariants_sally_base
   PERSISTENT: false
   TABLE_PREFIX: sly_
-PERM: [mediapool]
-EXTPERM: [advancedMode, moveSlice, copyContent, moveArticle, copyArticle, moveCategory, publishArticle, publishCategory, article2startpage]
-EXTRAPERM: [editContentOnly]
+PERM: ["mediapool[]"]
+EXTPERM: ["advancedMode[]", "moveSlice[]", "copyContent[]", "moveArticle[]", "copyArticle[]", "moveCategory[]", "publishArticle[]", "publishCategory[]", "article2startpage[]"]
+EXTRAPERM: ["editContentOnly[]"]
 ADDON: []
