@@ -23,7 +23,9 @@ class sly_Configuration {
 	private $staticConfig;
 	private $localConfig;
 	private $projectConfig;
-	private $tempConfig;
+
+	private $localConfigModified   = false;
+	private $projectConfigModified = false;
 
 	private static $instance;
 
@@ -31,7 +33,6 @@ class sly_Configuration {
 		$this->staticConfig  = new sly_Util_Array();
 		$this->localConfig   = new sly_Util_Array();
 		$this->projectConfig = new sly_Util_Array();
-		$this->tempConfig    = new sly_Util_Array();
 	}
 
 	protected function getCacheDir() {
@@ -85,6 +86,7 @@ class sly_Configuration {
 
 	public function loadLocalConfig(){
 		$file = $this->getLocalCacheFile();
+
 		if (file_exists($file)) {
 			include $file;
 			$this->localConfig = new sly_Util_Array($config);
@@ -221,11 +223,13 @@ class sly_Configuration {
 		}
 
 		if ($mode == self::STORE_LOCAL) {
+			$this->localConfigModified = true;
 			return $this->localConfig->set($key, $value);
 		}
 
 		if ($mode == self::STORE_LOCAL_DEFAULT) {
 			if ($force || !$this->localConfig->has($key)) {
+				$this->localConfigModified = true;
 				return $this->localConfig->set($key, $value);
 			}
 			return false;
@@ -233,12 +237,14 @@ class sly_Configuration {
 
 		if ($mode == self::STORE_PROJECT_DEFAULT) {
 			if ($force || !$this->projectConfig->has($key)) {
+				$this->projectConfigModified = true;
 				return $this->projectConfig->set($key, $value);
 			}
 			return false;
 		}
 
 		// case: sly_Configuration::STORE_PROJECT
+		$this->projectConfigModified = true;
 		return $this->projectConfig->set($key, $value);
 	}
 
@@ -262,17 +268,25 @@ class sly_Configuration {
 	}
 
 	protected function flush() {
-		file_put_contents($this->getLocalCacheFile(), '<?php $config = '.var_export($this->localConfig->get(null), true).';');
+		$conf = $this->localConfig->get(null);
 
-		try {
-			sly_Core::getPersistentRegistry()->set('sly_ProjectConfig', $this->projectConfig);
+		if ($conf != null && $this->localConfigModified) {
+			file_put_contents($this->getLocalCacheFile(), '<?php $config = '.var_export($conf, true).';');
+			$this->localConfigModified = false;
 		}
-		catch (Exception $e) {
-			// Could not save project configuration. This is only "ok" while we're
-			// in setup mode and don't know the correct database name yet.
 
-			if (!sly_Core::config()->get('SETUP')) {
-				trigger_error('Could not save project configuration on script exit.', E_USER_WARNING);
+		if ($this->projectConfigModified) {
+			try {
+				sly_Core::getPersistentRegistry()->set('sly_ProjectConfig', $this->projectConfig);
+				$this->projectConfigModified = false;
+			}
+			catch (Exception $e) {
+				// Could not save project configuration. This is only "ok" while we're
+				// in setup mode and don't know the correct database name yet.
+
+				if (!sly_Core::config()->get('SETUP')) {
+					trigger_error('Could not save project configuration on script exit.', E_USER_WARNING);
+				}
 			}
 		}
 	}

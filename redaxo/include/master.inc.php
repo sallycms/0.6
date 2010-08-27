@@ -63,11 +63,10 @@ if (empty($REX['NOFUNCTIONS'])) {
 
 $config = sly_Core::config();
 $config->loadStatic($REX['INCLUDE_PATH'].'/config/sallyStatic.yml');
-$config->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yml');
 $config->loadLocalConfig();
+$config->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yml');
 
 // nicht unbedingt die beste Lösung, aber praktikabel
-
 try {
 	$config->loadProjectConfig();
 }
@@ -76,7 +75,6 @@ catch (Exception $e) {
 }
 
 // Sync?
-
 if (empty($REX['SYNC']) && !$config->get('SETUP')){
 	// Standard-Variablen
 	sly_Core::registerVarType('rex_var_globals');
@@ -88,19 +86,18 @@ if (empty($REX['SYNC']) && !$config->get('SETUP')){
 	sly_Core::registerVarType('rex_var_media');
 
 	// Sprachen laden
-
 	$clangs = sly_Service_Factory::getService('Language')->find(null, null, 'id');
+
 	foreach($clangs as $clang){
 		$REX['CLANG'][$clang->getId()] = $clang->getName();
 	}
-	unset($clangs);
 
-	$REX = array_merge($REX, $config->get(null));
+	unset($clangs);
 
   	$REX['CUR_CLANG']  = sly_Core::getCurrentClang();
 	$REX['ARTICLE_ID'] = sly_Core::getCurrentArticleId();
 }
 
 // REDAXO compatibility
-$config->setLocal('TABLE_PREFIX', $config->get('DATABASE/TABLE_PREFIX'));
+if (!$config->has('TABLE_PREFIX')) $config->setLocal('TABLE_PREFIX', $config->get('DATABASE/TABLE_PREFIX'));
 $REX = array_merge($REX, $config->get(null));
