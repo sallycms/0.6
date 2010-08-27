@@ -135,7 +135,7 @@ class rex_sql
 	 */
 	public static function fetch($what, $from, $where = '1', $mode = MYSQL_ASSOC)
 	{
-		global $REX;
+		$config = sly_Core::config();
 
 		// Verbindung herstellen
 		self::getInstance(1);
@@ -143,7 +143,7 @@ class rex_sql
 		$query = sprintf(
 			'SELECT %s FROM %s%s WHERE %s LIMIT 1',
 			$what,
-			$REX['DATABASE']['TABLE_PREFIX'],
+			$config->get('DATABASE/TABLE_PREFIX'),
 			$from,
 			$where
 		);
@@ -192,8 +192,8 @@ class rex_sql
 		self::getInstance(1);
 
 		if (!empty($tablePrefix)) {
-			global $REX;
-			$query = str_replace($tablePrefix, $REX['DATABASE']['TABLE_PREFIX'], $query);
+			$config = sly_Core::config();
+			$query  = str_replace($tablePrefix, $config->get('DATABASE/TABLE_PREFIX'), $query);
 		}
 
 		$result = mysql_query($query);
