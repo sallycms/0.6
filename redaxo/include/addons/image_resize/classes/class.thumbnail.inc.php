@@ -515,8 +515,7 @@ class Thumbnail
 
 		}
 
-		$cachetime = filectime($cachefile);
-		self::sendImage($cachefile, $cachetime);
+		self::sendImage($cachefile);
 	}
 
 	/**
@@ -548,7 +547,7 @@ class Thumbnail
 
 		return $c;
 	}
-	
+
 	/**
 	 * @return int
 	 */
@@ -600,11 +599,14 @@ class Thumbnail
 
 		$etag = md5($fileName.filectime($fileName));
 
-		if (isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
-			if ($_SERVER['HTTP_IF_NONE_MATCH'] == $etag) {
-				header('HTTP/1.0 304 Not Modified');
-				exit();
-			}
+		if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] == $etag) {
+			header('HTTP/1.0 304 Not Modified');
+			exit();
+		}
+		if (!is_readable($fileName)) {
+			trigger_error('The Image "'.$fileName.'" cannot be read.', E_USER_WARNING);
+			header('HTTP/1.0 404 Not Found');
+			exit();
 		}
 
 		header('Content-Type: image/'.self::getFileExtensionStatic($fileName));

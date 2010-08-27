@@ -17,10 +17,20 @@ RewriteEngine On
 RewriteRule ^([0-9]*)-([0-9]*)- index.php?article_id=$1&clang=$2&%{QUERY_STRING}
 RewriteRule ^([0-9]*)- index.php?article_id=$1&%{QUERY_STRING}
 
+# Image Resize Cache
+# 1. get filename
+# 2. get document root
+#    %{DOCUMENT_ROOT} is not working on some hosters. we parse the document root out of %{REQUEST_FILENAME}
+#    because the %{REQUEST_FILENAME} might not contain the filename, its given by 1.
+# 3. check for file existence. both ways: with calculated document root and document root variable
+# 4. rewrite!
+
+RewriteCond %{REQUEST_URI} (.*/)?imageresize/(.*)
+RewriteCond %{REQUEST_FILENAME}###%2 (.*/)imageresize.*###(.*)
+RewriteCond %1/data/dyn/public/image_resize/cache__%2 -f [OR]
+RewriteRule imageresize/(.*)$ data/dyn/public/image_resize/cache__$1 [L]
+
 # Image Resize
-RewriteCond %{REQUEST_URI} ^/imageresize/(.*)
-RewriteCond %{DOCUMENT_ROOT}/data/dyn/public/image_resize/image_resize__$1 -f
-RewriteRule ^imageresize/(.*)$ data/dyn/public/image_resize/image_resize__$1 [L]
 
 RewriteRule ^imageresize/(.*)$ index.php?rex_resize=$1 [L]
 
