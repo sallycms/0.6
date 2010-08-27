@@ -1,0 +1,76 @@
+<?
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+global $REX;
+$conf = sly_Core::config();
+?>
+<div class="rex-area rex-mab-10">
+	<h3 class="rex-hl2">SallyCMS <?php echo $conf->get('VERSION').'.'.$conf->get('SUBVERSION').'.'.$conf->get('MINORVERSION') ?></h3>
+
+	<div class="rex-area-content">
+		<p class="rex-tx1">
+			<strong>Das webvariants-Team</strong>, <a href="mailto:info@webvariants.de">info@webvariants</a><br />
+			Kernentwicklung<br />
+			webvariants GbR, <a href="http://www.webvariants.de/" class="sly-blank">www.webvariants.de</a>
+		</p>
+	</div>
+</div>
+
+<div class="rex-area">
+	<table class="rex-table sly-addonlist" summary="">
+		<caption>Liste aller verfügbaren AddOns</caption>
+		<thead><tr>
+			<th class="sly-col-a rex-icon">&nbsp;</th>
+			<th class="sly-col-b"><?= $I18N->msg('credits_name') ?></th>
+			<th class="sly-col-c"><?= $I18N->msg('credits_version') ?></th>
+			<th class="sly-col-d"><?= $I18N->msg('credits_author') ?></th>
+			<th class="sly-col-e"><?= $I18N->msg('credits_supportpage') ?></th>
+		</tr></thead>
+		<tbody>
+
+		<?php
+
+		$addons  = sly_Service_Factory::getService('AddOn');
+		$plugins = sly_Service_Factory::getService('Plugin');
+
+		foreach ($addons->getRegisteredAddons() as $addon) {
+			$params['type']        = 'addon';
+			$params['name']        = $addon;
+			$params['isActive']    = $addons->isActivated($addon);
+			$params['isInstalled'] = $addons->isInstalled($addon);
+			$params['version']     = $addons->getVersion($addon);
+			$params['icon']        = $addons->getIcon($addon);
+			$params['author']      = $addons->getAuthor($addon);
+			$params['supportPage'] = $addons->getSupportPage($addon);
+
+			$this->render('/views/credits/row.phtml', $params);
+
+			if ($params['isActive']) {
+				$params['type'] = 'plugin';
+
+				foreach ($plugins->getAvailablePlugins($addon) as $plugin) {
+					$params['type']        = 'plugin';
+					$params['name']        = $plugin;
+					$params['isActive']    = $plugins->isActivated(array($addon, $plugin));
+					$params['isInstalled'] = $plugins->isInstalled(array($addon, $plugin));
+					$params['version']     = $plugins->getVersion(array($addon, $plugin));
+					$params['icon']        = $plugins->getIcon(array($addon, $plugin));
+					$params['author']      = $plugins->getAuthor(array($addon, $plugin));
+					$params['supportPage'] = $plugins->getSupportPage(array($addon, $plugin));
+
+					$this->render('/views/credits/row.phtml', $params);
+				}
+			}
+		}
+
+		?>
+		</tbody>
+	</table>
+</div>

@@ -1,4 +1,4 @@
 php lime.php
 pause
-php snaptest.php tests/snaptest
+php snaptest.php --out=tap tests/snaptest
 pause

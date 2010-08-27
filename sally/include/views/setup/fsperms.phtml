@@ -1,0 +1,57 @@
+<?php
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+$this->title($I18N->msg('setup_step1'));
+
+if (empty($errors)) {
+	print $I18N->msg('setup_016', '<h2 class="rex-hl2">', '</h2>');
+	print '<div class="rex-area-content">';
+
+	print $I18N->msg('setup_016_1', ' class="rex-ul1"', '<span class="rex-ok">', '</span>');
+
+	?>
+		<div class="rex-message" id="security_warning" style="display:none">
+			<p class="rex-warning"><span><?= $I18N->msg('setup_security_msg') ?></span></p>
+		</div>
+
+		<noscript>
+			<div class="rex-message">
+				<p class="rex-warning"><span><?= $I18N->msg('setup_no_js_security_msg') ?></span></p>
+			</div>
+		</noscript>
+
+		<iframe src="include/views/setup/direct.phtml?lang=<?= urlencode($this->lang) ?>" style="display:none"></iframe>
+	</div>
+
+	<div class="rex-area-footer">
+		<p id="nextstep" class="rex-algn-rght">
+			<a href="index.php?page=setup&amp;func=dbconfig&amp;lang=<?= urlencode($this->lang) ?>">&raquo; <?= $I18N->msg('setup_017') ?></a>
+		</p>
+	</div>
+	<?php
+}
+else {
+	?>
+	<h2 class="rex-hl2"><?= $I18N->msg('setup_headline1') ?></h2>
+
+	<div class="rex-area-content">
+		<ul class="rex-ul1">
+			<li><?= implode("</li>\n\t\t<li>", $errors) ?></li>
+		</ul>
+		<p class="rex-tx1"> <?= $I18N->msg('setup_018') ?></p>
+	</div>
+
+	<div class="rex-area-footer">
+		<p class="rex-algn-rght">
+			<a href="index.php?page=setup&amp;func=fsperms&amp;lang=<?= urlencode($this->lang) ?>">&raquo; <?= $I18N->msg('setup_019') ?></a>
+		</p>
+	</div>
+	<?php
+}

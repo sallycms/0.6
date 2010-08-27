@@ -1,4 +1,12 @@
 <?php
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
 
 $lime->comment('Testing sly_Util_Directory (stateless methods)...');
 $s = DIRECTORY_SEPARATOR;
@@ -33,9 +41,15 @@ $here = realpath(dirname(__FILE__));
 
 $obj = new sly_Util_Directory($here.'/4986z9irugh3wiufzgeu');
 $lime->is($obj->exists(), false, 'exists() returns false on a non-existing directory');
+$lime->isnt((string) $obj, realpath($here).' (not existing)', '__toString() works as expected for non-existing directories');
+
+$obj = new sly_Util_Directory($here.'/4986z9irugh3wiufzgeu', true);
+$lime->ok(is_dir($here.'/4986z9irugh3wiufzgeu'), '__construct() creates the directory for us if we ask');
+@rmdir($here.'/4986z9irugh3wiufzgeu');
 
 $obj = new sly_Util_Directory($here);
 $lime->ok($obj->exists(), 'exists() returns true on an existing directory');
+$lime->is((string) $obj, realpath($here), '__toString() works as espexted');
 
 @mkdir($here.'/tmp/foo/bar', 0777, true);
 @mkdir($here.'/tmp/.blafasel/xy', 0777, true);
@@ -132,6 +146,10 @@ $expected = array(
 );
 
 $lime->is($obj->listRecursive(true, true), $expected, 'listRecursive() returns the absolute paths including dotfiles');
+
+// Test getRelative()
+
+$lime->is(sly_Util_Directory::getRelative(__FILE__, SLY_BASE), 'tests'.$s.'tests'.$s.'lime'.$s.'Util'.$s.'directory.lime.php', 'getRelative() works');
 
 // Clean up
 

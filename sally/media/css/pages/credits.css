@@ -1,0 +1,6 @@
+#rex-page-credits {
+	table.sly-addonlist {
+		td.sly-col-b { white-space: pre; padding-right: 5px; }
+		.sly-col-c { padding-right: 5px; }
+	}
+}

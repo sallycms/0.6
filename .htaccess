@@ -1,10 +1,9 @@
 # Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
 #
-# Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
-# beiliegenden LICENSE Datei und unter:
+# This file is released under the terms of the MIT license. You can find the
+# complete text in the attached LICENSE file or online at:
 #
 # http://www.opensource.org/licenses/mit-license.php
-# http://de.wikipedia.org/wiki/MIT-Lizenz
 
 RewriteEngine On
 # RewriteBase /
@@ -35,18 +34,14 @@ RewriteRule imageresize/(.*)$ data/dyn/public/image_resize/cache__$1 [L]
 RewriteRule ^imageresize/(.*)$ index.php?rex_resize=$1 [L]
 
 # Deployer-AddOn (>= 2.0)
-RewriteRule ^assets/js/([0-9a-f]{6})\.[0-9a-f]+\.min\.js$   gzip.php?file=dyn/public/deployer/compressed_$1.js&forever=1 [L]
-RewriteRule ^assets/css/([0-9a-f]{6})\.[0-9a-f]+\.min\.css$ gzip.php?file=dyn/public/deployer/compressed_$1.css&forever=1 [L]
+RewriteRule ^assets/js/([0-9a-f]{6})\.[0-9a-f]+\.min\.js$   gzip.php?file=data/dyn/public/deployer/compressed_$1.js&forever=1 [L]
+RewriteRule ^assets/css/([0-9a-f]{6})\.[0-9a-f]+\.min\.css$ gzip.php?file=data/dyn/public/deployer/compressed_$1.css&forever=1 [L]
 
 # Scaffold für alle Frontend-CSS-Dateien
 RewriteCond %{REQUEST_FILENAME}  -f
 RewriteCond %{REQUEST_URI}       \.css$
 RewriteCond %{REQUEST_URI}       !wym_styles.css$
-RewriteRule assets/css/(.+)$     redaxo/scaffold.php?f=assets/css/$1&%{QUERY_STRING} [L]
+RewriteRule assets/css/(.+)$     sally/scaffold.php?f=assets/css/$1&%{QUERY_STRING} [L]
 
 # Komprimierung fuer statischen Content
 RewriteRule ^(assets/.*\.(css|js))$  gzip.php?file=$1 [L]
-
-# sally/ anlegen
-
-RewriteRule sally/(.*)$ redaxo/$1 [L,QSA]

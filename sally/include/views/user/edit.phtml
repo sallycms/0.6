@@ -1,0 +1,243 @@
+<?php
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+// Daten vorbereiten
+
+$label     = $I18N->msg($this->func == 'edit' ? 'edit_user' : 'create_user');
+$currentID = $REX['USER']->getValue('id');
+$PERM      = $REX['PERM'];
+$EXTPERM   = empty($REX['EXTPERM']) ? array() : $REX['EXTPERM'];
+$EXTRAPERM = empty($REX['EXTRAPERM']) ? array() : $REX['EXTRAPERM'];
+$rights    = $user ? $user->getRightsAsArray() : array();
+
+sort($PERM);
+sort($EXTPERM);
+sort($EXTRAPERM);
+
+// Dropdowns anlegen und konfigurieren
+
+$allowedCategories      = $user ? $user->getAllowedCategories() : array();
+$allowedModules         = $user ? $user->getAllowedModules() : array();
+$allowedMediaCategories = $user ? $user->getAllowedMediaCategories() : array();
+$startPage              = $user ? $user->getStartPage() : array();
+$backendLocale          = $user ? $user->getBackendLocale() : array();
+$allowedCLangs          = $user ? $user->getAllowedCLangs() : array();
+
+$categorySelect  = new sly_Form_Select_DropDown('userperm_cat',       '', $allowedCategories, $this->getStructure(), 'userperm_cat');
+$moduleSelect    = new sly_Form_Select_DropDown('userperm_module',    '', $allowedModules, $this->getModules(), 'userperm-module');
+$extraPermSelect = new sly_Form_Select_DropDown('userperm_extra',     '', $rights, array_combine($EXTRAPERM, $EXTRAPERM), 'userperm-extra');
+$extPermSelect   = new sly_Form_Select_DropDown('userperm_ext',       '', $rights, array_combine($EXTPERM, $EXTPERM), 'userperm-ext');
+$allPermSelect   = new sly_Form_Select_DropDown('userperm_all',       '', $rights, array_combine($PERM, $PERM), 'userperm-all');
+$mediaCatSelect  = new sly_Form_Select_DropDown('userperm_media',     '', $allowedMediaCategories, $this->getMediaStructure(), 'userperm_media');
+$startpageSelect = new sly_Form_Select_DropDown('userperm_startpage', '', $startPage, $this->getPossibleStartpages(), 'userperm-startpage');
+$localeSelect    = new sly_Form_Select_DropDown('userperm_mylang',    '', $backendLocale, $this->getBackendLocales(), 'userperm-mylang');
+$clangSelect     = new sly_Form_Select_DropDown('userperm_sprachen',  '', $allowedCLangs, $REX['CLANG'], 'userperm-sprachen');
+
+$categorySelect->setSize(20);
+$moduleSelect->setSize(10);
+$extraPermSelect->setSize(10);
+$extPermSelect->setSize(10);
+$allPermSelect->setSize(10);
+$mediaCatSelect->setSize(20);
+$startpageSelect->setMultiple(false);
+$localeSelect->setMultiple(false);
+$clangSelect->setSize(3);
+
+// Checkboxen anlegen und konfigurieren
+
+$userAdmin    = new sly_Form_Input_Checkbox('is_admin', '', '1', $I18N->msg('user_admin'));
+$userStatus   = new sly_Form_Input_Checkbox('userstatus', '', '1', $I18N->msg('user_status'));
+$allCats      = new sly_Form_Input_Checkbox('userperm_cat_all', '', '1', $I18N->msg('all_categories'));
+$allMediaCats = new sly_Form_Input_Checkbox('userperm_media_all', '', '1', $I18N->msg('all_mediafolder'));
+$extraClass   = 'rex-form-checkbox';
+
+$userAdmin->addClass($extraClass);
+$userStatus->addClass($extraClass);
+$allCats->addClass($extraClass);
+$allMediaCats->addClass($extraClass);
+
+if ($user) {
+	$userAdmin->setChecked($user->isAdmin());
+	$userStatus->setChecked($user->getStatus());
+	$allCats->setChecked($user->hasRight('csw[0]'));
+	$allMediaCats->setChecked($user->hasRight('media[0]'));
+
+	if ($currentID == $user->getId()) {
+		$userAdmin->setDisabled(true);
+		$userStatus->setDisabled(true);
+	}
+}
+
+?>
+<div class="rex-addon-output-v2">
+<div class="rex-form" id="rex-form-user-editmode">
+	<form action="index.php" method="post">
+		<fieldset class="rex-form-col-2">
+			<legend><?= $label ?></legend>
+
+			<div class="rex-form-wrapper">
+				<input type="hidden" name="page" value="user" />
+				<input type="hidden" name="save" value="1" />
+				<input type="hidden" name="func" value="<?= $this->func ?>" />
+				<input type="hidden" name="id" value="<?= $user ? $user->getId() : 0 ?>" />
+
+				<!-- LoginTries zurücksetzen -->
+
+				<? if ($user && $user->getLoginTries() > $REX['MAXLOGINS']): ?>
+				<div class="rex-message">
+					<p class="rex-warning rex-form-checkbox rex-form-label-right">
+						<span>
+							<input class="rex-form-checkbox" type="checkbox" name="logintriesreset" id="logintriesreset" value="1" />
+							<label for="logintriesreset"><?= $I18N->msg('user_reset_tries', $REX['MAXLOGINS']) ?></label>
+						</span>
+					</p>
+				</div>
+				<? endif ?>
+
+				<!-- Login und Passwort -->
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a <?= $user ? 'rex-form-read' : 'rex-form-text' ?>">
+						<label for="userlogin"><?= sly_html($I18N->msg('login_name')) ?></label>
+						<? if ($user): ?>
+						<span class="rex-form-read" id="userlogin"><?= sly_html($user->getLogin()) ?></span>
+						<? else: ?>
+						<input class="rex-form-text" type="text" id="userlogin" name="userlogin" value="<?= sly_html(sly_post('userlogin', 'string')) ?>" />
+						<? endif ?>
+					</p>
+					<p class="rex-form-col-b rex-form-text">
+						<label for="userpsw"><?= $I18N->msg('password') ?></label>
+						<input type="text" id="userpsw" name="userpsw" />
+						<span class="rex-form-notice"><?= $I18N->msg('psw_encrypted') ?></span>
+					</p>
+				</div>
+
+				<!-- Name und Beschreibung -->
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-text">
+						<label for="username"><?= $I18N->msg('name') ?></label>
+						<input type="text" id="username" name="username" value="<?= sly_html($user ? $user->getName() : sly_post('username', 'string')) ?>" />
+					</p>
+					<p class="rex-form-col-b rex-form-text">
+						<label for="userdesc"><?= $I18N->msg('description') ?></label>
+						<input type="text" id="userdesc" name="userdesc" value="<?= sly_html($user ? $user->getDescription() : sly_post('userdesc', 'string')) ?>" />
+					</p>
+				</div>
+
+				<!-- Admin und Status -->
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-checkbox rex-form-label-right">
+						<?= $userAdmin->render() ?>
+					</p>
+					<p class="rex-form-col-b rex-form-checkbox rex-form-label-right">
+						<?= $userStatus->render() ?>
+					</p>
+				</div>
+
+				<!-- Frontend- und Backend-Sprachen -->
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-select">
+						<label for="userperm-sprachen"><?= $I18N->msg('user_lang_xs') ?></label>
+						<?= $clangSelect->render() ?>
+						<span class="rex-form-notice"><?= $I18N->msg('ctrl') ?></span>
+					</p>
+					<p class="rex-form-col-b rex-form-select">
+						<label for="userperm-mylang"><?= $I18N->msg('backend_language') ?></label>
+						<?= $localeSelect->render() ?>
+					</p>
+				</div>
+
+				<!-- Backend-Startseite -->
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-select">
+						<label for="userperm-startpage"><?= $I18N->msg('startpage') ?></label>
+						<?= $startpageSelect->render() ?>
+					</p>
+				</div>
+
+				<!-- Allgemeines und Optionen -->
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-select">
+						<label for="userperm-all"><?= $I18N->msg('user_all') ?></label>
+						<?= $allPermSelect->render() ?>
+						<span class="rex-form-notice"><?= $I18N->msg('ctrl') ?></span>
+					</p>
+					<p class="rex-form-col-b rex-form-select">
+						<label for="userperm-ext"><?= $I18N->msg('user_options') ?></label>
+						<?= $extPermSelect->render() ?>
+						<span class="rex-form-notice"><?= $I18N->msg('ctrl') ?></span>
+					</p>
+				</div>
+
+				<!-- Kategorien und Medien-Kategorien -->
+
+				<div class="rex-form-row" id="cats_mcats_box">
+					<p class="rex-form-col-a rex-form-checkbox rex-form-label-right">
+						<?= $allCats->render() ?>
+					</p>
+					<p class="rex-form-col-b rex-form-checkbox rex-form-label-right">
+						<?= $allMediaCats->render() ?>
+					</p>
+				</div>
+
+				<div class="rex-form-row" id="cats_mcats_perms">
+					<p class="rex-form-col-a rex-form-select">
+						<label for="userperm-cat"><?= $I18N->msg('categories') ?></label>
+						<?= $categorySelect->render() ?>
+						<span class="rex-form-notice"><?= $I18N->msg('ctrl') ?></span>
+					</p>
+					<p class="rex-form-col-b rex-form-select">
+						<label for="userperm-media"><?= $I18N->msg('mediafolder') ?></label>
+						<?= $mediaCatSelect->render() ?>
+						<span class="rex-form-notice"><?= $I18N->msg('ctrl') ?></span>
+					</p>
+				</div>
+
+				<!-- Module und Extra-Permissions -->
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-select">
+						<label for="userperm-module"><?= $I18N->msg('modules') ?></label>
+						<?= $moduleSelect->render() ?>
+						<span class="rex-form-notice"><?= $I18N->msg('ctrl') ?></span>
+					</p>
+					<p class="rex-form-col-b rex-form-select">
+						<label for="userperm-extra"><?= $I18N->msg('extras') ?></label>
+						<?= $extraPermSelect->render() ?>
+						<span class="rex-form-notice"><?= $I18N->msg('ctrl') ?></span>
+					</p>
+				</div>
+
+				<!-- Submitbuttons -->
+
+				<? if ($user): ?>
+				<div class="rex-form-row">
+					<p class="rex-form-col-a"><input type="submit" class="rex-form-submit" name="submit" value="<?= $I18N->msg('user_save') ?>" /></p>
+					<p class="rex-form-col-b"><input type="submit" class="rex-form-submit" name="apply" value="<?= $I18N->msg('user_apply') ?>" /></p>
+				</div>
+				<? else: ?>
+				<div class="rex-form-row">
+					<p class="rex-form-submit">
+						<input type="submit" class="rex-form-submit" name="submit" value="<?= $I18N->msg('add_user') ?>" />
+					</p>
+				</div>
+				<? endif ?>
+
+				<div class="rex-clearer"></div>
+			</div>
+		</fieldset>
+	</form>
+</div>
+</div>

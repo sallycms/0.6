@@ -1,0 +1,70 @@
+<?php
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+$localeSelect = new sly_Form_Select_DropDown('userperm_mylang', '', $user->getBackendLocale(), $this->getBackendLocales(), 'userperm-mylang');
+$localeSelect->setMultiple(false);
+
+?>
+
+<div class="rex-addon-output-v2">
+<div class="rex-form" id="rex-form-profile">
+	<form action="index.php" method="post">
+		<fieldset class="rex-form-col-2">
+			<legend><?= $I18N->msg('profile_myprofile') ?></legend>
+
+			<div class="rex-form-wrapper">
+				<input type="hidden" name="page" value="profile" />
+				<input type="hidden" name="func" value="update" />
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-read">
+						<label for="userlogin"><?= $I18N->msg('login_name') ?></label>
+						<span class="rex-form-read" id="userlogin"><?= sly_html($user->getLogin()) ?></span>
+					</p>
+					<p class="rex-form-col-b rex-form-text">
+						<label for="userpsw"><?= $I18N->msg('new_password') ?></label>
+						<input class="rex-form-text" type="text" id="userpsw" name="userpsw" />
+						<span class="rex-form-notice"><?= $I18N->msg('psw_encrypted') ?></span>
+					</p>
+				</div>
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-text">
+						<label for="username"><?= $I18N->msg('name') ?></label>
+						<input class="rex-form-text" type="text" id="username" name="username" value="<?= sly_html($user->getName()) ?>" />
+					</p>
+					<p class="rex-form-col-b rex-form-text">
+						<label for="userdesc"><?= $I18N->msg('description') ?></label>
+						<input class="rex-form-text" type="text" id="userdesc" name="userdesc" value="<?= sly_html($user->getDescription()) ?>" />
+					</p>
+				</div>
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-select">
+						<label for="userperm-mylang"><?= $I18N->msg('backend_language') ?></label>
+						<?= $localeSelect->render() ?>
+					</p>
+				</div>
+
+			</div>
+		</fieldset>
+
+		<fieldset class="rex-form-col-1">
+			<div class="rex-form-wrapper">
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-submit">
+						<input class="rex-form-submit" type="submit" name="submit" value="<?= $I18N->msg('profile_save') ?>" />
+					</p>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+</div>
+</div>

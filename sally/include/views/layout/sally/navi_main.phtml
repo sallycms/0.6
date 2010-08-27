@@ -1,0 +1,123 @@
+<?php
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+global $REX, $I18N;
+
+$naviSystem = array();
+$naviAddOns = array();
+$curPage    = $REX['PAGE'];
+
+// Subpages vorbereiten
+
+foreach ($REX['USER']->pages as $pageKey => $pageArr) {
+	$pageKey = strtolower($pageKey);
+
+	if (in_array($pageKey, array('credits', 'profile', 'content', 'linkmap'))) {
+		continue;
+	}
+
+	$item = array();
+
+	$item['page']  = $pageKey;
+	$item['id']    = 'rex-navi-page-'.$pageKey;
+	$item['class'] = $pageKey == $curPage ? 'rex-active' : '';
+	$subpagesKey   = '';
+
+	if ($pageArr[1] != 1) {
+		// ***** Basis
+		$item['href'] = 'index.php?page='.$pageKey;
+		$subpagesKey  = 'PAGES';
+	}
+	else {
+		if(!empty($pageArr[3])){
+			$pageKey = $pageArr[3];
+		}
+		$item['href'] = 'index.php?page='.$pageKey;
+
+		$subpagesKey = 'ADDON';
+	}
+
+	$item['subpages'] = array();
+
+	if (isset($REX[$subpagesKey][$pageKey]['SUBPAGES'])) {
+		$item['subpages'] = $REX[$subpagesKey][$pageKey]['SUBPAGES'];
+	}
+
+	if (isset($pageArr['NAVI']) && is_array($pageArr['NAVI'])) {
+		foreach ($pageArr['NAVI'] as $k => $v) $item[$k] = $v;
+	}
+
+	if ($pageArr[1] != 1) {
+		$naviSystem[$pageArr[0]] = $item;
+	}
+	else {
+		$naviAddOns[$pageArr[0]] = $item;
+	}
+}
+
+// Navigation erzeugen
+
+print '<dl class="rex-navi">';
+
+$areas = array('system' => $naviSystem, 'addon' => $naviAddOns);
+
+foreach ($areas as $topic => $naviList) {
+	if (empty($naviList)) continue;
+
+	$headline = $topic == 'system' ? $I18N->msg('navigation_basis') : $I18N->msg('navigation_addons');
+
+	print '<dt>'.$headline.'</dt><dd>';
+	print '<ul id="rex-navi-'.$topic.'">';
+
+	$first   = true;
+	$subpage = sly_request('subpage', 'string');
+
+	foreach ($naviList as $pageTitle => $item) {
+		if ($first) $item['class'] .= ' rex-navi-first';
+
+		$p        = $item['page'];
+		$subpages = $item['subpages'];
+		$liAttr   = sly_Util_HTML::buildAttributeString(array('class' => $item['class'], 'id' => $item['id']));
+		$aAttr    = sly_Util_HTML::buildAttributeString(array('class' => $item['class'], 'href' => $item['href']));
+
+		print '<li '.$liAttr.'><a '.$aAttr.'>'.$pageTitle.'</a>';
+
+		// ***** Subnavi
+		if (!empty($subpages)) {
+			print '<ul class="rex-navi-level-2">';
+
+			$subfirst = true;
+
+			foreach ($subpages as $sp) {
+				$class = '';
+				$id    = 'rex-navi-'.$p.'-subpage-'.$sp[0];
+				$href  = 'index.php?page='.$p.'&subpage='.$sp[0];
+
+				if ($subfirst)                            $class .= ' rex-navi-first';
+				if ($p == $curPage && $subpage == $sp[0]) $class .= ' rex-active';
+
+				$liAttr = sly_Util_HTML::buildAttributeString(array('class' => $class, 'id' => $id));
+				$aAttr  = sly_Util_HTML::buildAttributeString(array('class' => $class, 'href' => $href));
+
+				print '<li '.$liAttr.'><a '.$aAttr.'>'.$sp[1].'</a></li>';
+				$subfirst = false;
+			}
+
+			print '</ul>';
+		}
+
+		print '</li>';
+		$first = false;
+	}
+
+	print '</ul></dd>';
+}
+
+print '</dl>';

@@ -1,0 +1,56 @@
+<?php
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+global $rex_user_loginmessage;
+
+if (!empty($rex_user_loginmessage)) {
+	print rex_warning($rex_user_loginmessage);
+}
+if (!empty($this->message)) {
+	print rex_warning($this->message);
+}
+
+?>
+<!-- *** OUTPUT OF LOGIN-FORM - START *** -->
+
+<div class="rex-form rex-form-login">
+	<form action="index.php" method="post" id="loginformular">
+		<fieldset class="rex-form-col-1">
+			<legend>Login</legend>
+			<div class="rex-form-wrapper">
+				<input type="hidden" name="javascript" value="0" id="javascript" />
+				<input type="hidden" name="referer" value="<?= sly_html($_SERVER['REQUEST_URI']) ?>" />
+				<span id="login_message" class="rex-hidden"><?= sly_html($I18N->msg('login_welcome')) ?></span>
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-text">
+						<label for="rex-form-login"><?= $I18N->msg('login_name') ?>:</label>
+						<input type="text" value="<?= sly_html(sly_post('rex_user_login', 'string')) ?>" id="rex-form-login" name="rex_user_login" />
+					</p>
+				</div>
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-password">
+						<label for="REX_UPSW"><?= $I18N->msg('password') ?>:</label>
+						<input class="rex-form-password" type="password" name="rex_user_psw" id="REX_UPSW" />
+					</p>
+				</div>
+				<div class="rex-form-row last">
+					<p class="rex-form-col-a rex-form-submit">
+						<input class="rex-form-submit rex-form-text" type="submit" value="<?= $I18N->msg('login') ?>" />
+					</p>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+</div>
+
+<? if (!empty($rex_user_loginmessage)): ?>
+<script type="text/javascript">sly_startLoginTimer();</script>
+<? endif ?>
