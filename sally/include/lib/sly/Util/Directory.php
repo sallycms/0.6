@@ -170,4 +170,13 @@ class sly_Util_Directory {
 
 		return substr($path, strlen($base) +1);
 	}
+
+	public static function createHttpProtected($path) {
+		$status = self::create($path);
+		if ($status && !file_exists($path.'/.htaccess')) {
+			$htaccess = "order deny,allow\ndeny from all";
+			$status  = @file_put_contents($path.'/.htaccess', $htaccess) > 0;
+		}
+		return $status;
+	}
 }

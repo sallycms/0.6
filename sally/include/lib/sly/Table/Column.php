@@ -41,12 +41,10 @@ class sly_Table_Column
 
 	public function render(sly_Table $table, $index)
 	{
-		global $REX;
-
 		if (!empty($this->width)) {
 			$this->htmlAttributes['style'] = 'width:'.$this->width;
 		}
 
-		include $REX['INCLUDE_PATH'].'/views/_table/table/column.phtml';
+		include SLY_INCLUDE_PATH.'/views/_table/table/column.phtml';
 	}
 }

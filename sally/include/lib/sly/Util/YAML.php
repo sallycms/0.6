@@ -25,7 +25,19 @@ class sly_Util_YAML {
 	protected static function getCacheFile($filename) {
 		$dir      = self::getCacheDir();
 		$filename = realpath($filename);
-		$filename = substr($filename, strlen(SLY_BASE) + 1);
+
+		//  Es kann sein, dass Dateien über Symlinks eingebunden werden. In diesem
+		// Fall liegt das Verzeichnis ggf. ausßerhalb von SLY_BASE und kann dann
+		// nicht so behandelt werden wie ein "lokales" AddOn.
+
+		if (sly_Util_String::startsWith($filename, SLY_BASE)) {
+			$filename = substr($filename, strlen(SLY_BASE) + 1);
+		}
+		else {
+			// Laufwerk:/.../ korrigieren
+			$filename = str_replace(':', '', $filename);
+		}
+		
 		return $dir.DIRECTORY_SEPARATOR.str_replace(DIRECTORY_SEPARATOR, '_', $filename).'.php';
 	}
 
@@ -42,8 +54,8 @@ class sly_Util_YAML {
 	 * @throws InvalidArgumentException
 	 */
 	public static function load($filename) {
-		if (empty($filename) || !is_string($filename)) throw new sly_Exception('Keine Konfigurationsdatei angegeben.');
-		if (!file_exists($filename)) throw new sly_Exception('Konfigurationsdatei '.$filename.' konnte nicht gefunden werden.');
+		if (empty($filename) || !is_string($filename)) throw new sly_Exception('Keine Datei angegeben.');
+		if (!file_exists($filename)) throw new sly_Exception('Datei '.$filename.' konnte nicht gefunden werden.');
 
 		$cachefile = self::getCacheFile($filename);
 		$config = array();
@@ -57,5 +69,10 @@ class sly_Util_YAML {
 		}
 
 		return $config;
+	}
+
+	public static function dump($filename, $data) {
+		$data = sfYaml::dump($data, 5);
+		file_put_contents($filename, $data, LOCK_EX);
 	}
 }
