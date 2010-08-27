@@ -66,11 +66,11 @@ if (empty($REX['NOFUNCTIONS'])) {
 $config = sly_Core::config();
 $config->loadStatic(SLY_INCLUDE_PATH.'/config/sallyStatic.yml');
 $config->loadLocalConfig();
+$config->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yml');
 $config->loadLocalDefaults(SLY_INCLUDE_PATH.'/config/sallyDefaults.yml');
 $config->loadProjectConfig();
 
 // Sync?
-
 if (empty($REX['SYNC']) && !$config->get('SETUP')){
 	// Standard-Variablen
 	sly_Core::registerVarType('rex_var_globals');
@@ -82,7 +82,6 @@ if (empty($REX['SYNC']) && !$config->get('SETUP')){
 	sly_Core::registerVarType('rex_var_media');
 
 	// Sprachen laden
-
 	$REX['CLANG'] = sly_Core::cache()->get('sly.language', 'all', null);
 
 	if (!is_array($REX['CLANG'])) {
@@ -96,7 +95,6 @@ if (empty($REX['SYNC']) && !$config->get('SETUP')){
 		sly_Core::cache()->set('sly.language', 'all', $REX['CLANG']);
 	}
 
-	$REX = array_merge($REX, $config->get(null));
 
 	$REX['CUR_CLANG']  = sly_Core::getCurrentClang();
 	$REX['ARTICLE_ID'] = sly_Core::getCurrentArticleId();

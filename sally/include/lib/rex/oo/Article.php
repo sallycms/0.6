@@ -42,6 +42,7 @@ class OOArticle extends OORedaxo
 				$class = $OOCategory ? 'OOCategory' : 'OOArticle';
 				$obj   = new $class($article, $clang);
 
+				
 				sly_Core::cache()->set($namespace, $key, $obj);
 			}
 		}
@@ -144,6 +145,7 @@ class OOArticle extends OORedaxo
 	 */
 	public static function exists($articleId)
 	{
+		
 		if (sly_Core::cache()->get('sly.article', $articleId.'_'.sly_Core::getCurrentClang(), null) !== null) {
 			return true;
 		}
@@ -180,8 +182,8 @@ class OOArticle extends OORedaxo
 		return parent::getValue($value);
 	}
 
-	public function hasValue($value)
+	public function hasValue($value, $prefixes = array())
 	{
-		return parent::hasValue($value, array('art_'));
+		return parent::hasValue($value, array_merge(array('art_'), $prefixes));
 	}
 }

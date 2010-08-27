@@ -26,7 +26,7 @@ class sly_Configuration {
 	private $localConfig;
 	private $projectConfig;
 
-	private $localConfigModified = false;
+	private $localConfigModified   = false;
 	private $projectConfigModified = false;
 
 	private static $instance;
@@ -102,6 +102,7 @@ class sly_Configuration {
 
 	public function loadLocalConfig(){
 		$file = $this->getLocalCacheFile();
+
 		if (file_exists($file)) {
 			include $file;
 			$this->localConfig = new sly_Util_Array($config);
@@ -271,12 +272,18 @@ class sly_Configuration {
 	}
 
 	protected function flush() {
-		if($this->localConfigModified) {
-			file_put_contents($this->getLocalCacheFile(), '<?php $config = '.var_export($this->localConfig->get(null), true).';');
+		$conf = $this->localConfig->get(null);
+
+		if ($conf && $this->localConfigModified) {
+			file_put_contents($this->getLocalCacheFile(), '<?php $config = '.var_export($conf, true).';');
+			$this->localConfigModified = false;
 		}
 
-		if($this->projectConfigModified) {
-			file_put_contents($this->getProjectCacheFile(), '<?php $config = '.var_export($this->projectConfig->get(null), true).';');
+		$conf = $this->projectConfig->get(null);
+
+		if ($conf && $this->projectConfigModified) {
+			file_put_contents($this->getProjectCacheFile(), '<?php $config = '.var_export($conf, true).';');
+			$this->projectConfigModified = false;
 		}
 	}
 
