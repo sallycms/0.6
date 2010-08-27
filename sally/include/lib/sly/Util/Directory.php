@@ -34,9 +34,15 @@ class sly_Util_Directory {
 			}
 
 			// chmod all path components on their own!
+			// FIXME: do not chmod previously existing folders, concept of this
+			// function is not that good
 
 			$base = '';
-
+			//strip SLY_BASE from path
+			if(startsWith($path, SLY_BASE)) {
+				$base = SLY_BASE;
+				$path = substr($path, strlen(SLY_BASE));
+			}
 			foreach (explode(DIRECTORY_SEPARATOR, $path) as $component) {
 				chmod($base.$component, $perm);
 				$base .= $component.'/';

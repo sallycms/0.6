@@ -26,7 +26,7 @@ class sly_Util_YAML {
 		$dir      = self::getCacheDir();
 		$filename = realpath($filename);
 
-		//  Es kann sein, dass Dateien über Symlinks eingebunden werden. In diesem
+		//Es kann sein, dass Dateien über Symlinks eingebunden werden. In diesem
 		// Fall liegt das Verzeichnis ggf. ausßerhalb von SLY_BASE und kann dann
 		// nicht so behandelt werden wie ein "lokales" AddOn.
 
