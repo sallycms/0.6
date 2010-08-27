@@ -46,4 +46,5 @@ RewriteRule assets/css/(.+)$     redaxo/scaffold.php?f=assets/css/$1&%{QUERY_STR
 RewriteRule ^(assets/.*\.(css|js))$  gzip.php?file=$1 [L]
 
 # sally/ anlegen
+RewriteRule sally$      redaxo    [L]
 RewriteRule sally/(.*)$ redaxo/$1 [L,QSA]
