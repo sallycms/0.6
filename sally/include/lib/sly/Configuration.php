@@ -46,46 +46,22 @@ class sly_Configuration {
 		return self::$instance;
 	}
 
-	protected function getCacheDir() {
-		$dir = SLY_DYNFOLDER.DIRECTORY_SEPARATOR.'internal'.DIRECTORY_SEPARATOR.'sally'.DIRECTORY_SEPARATOR.'config';
+	protected function getConfigDir() {
+		$dir = SLY_DATAFOLDER.DIRECTORY_SEPARATOR.'config';
 
-		if (!sly_Util_Directory::create($dir)) {
-			throw new sly_Exception('Cache-Verzeichnis '.$dir.' konnte nicht erzeugt werden.');
+		if (!sly_Util_Directory::createHttpProtected($dir)) {
+			throw new sly_Exception('Config-Verzeichnis '.$dir.' konnte nicht erzeugt werden.');
 		}
 
 		return $dir;
 	}
 
-	protected function getCacheFile($filename) {
-		$dir      = $this->getCacheDir();
-		$filename = realpath($filename);
-
-		// Es kann sein, dass AddOns über Symlinks eingebunden werden. In diesem
-		// Fall liegt das Verzeichnis ggf. ausßerhalb von SLY_BASE und kann dann
-		// nicht so behandelt werden wie ein "lokales" AddOn.
-
-		if (sly_Util_String::startsWith($filename, SLY_BASE)) {
-			$filename = substr($filename, strlen(SLY_BASE) + 1);
-		}
-		else {
-			// Laufwerk:/.../ korrigieren
-			$filename = str_replace(':', '', $filename);
-		}
-
-		return $dir.DIRECTORY_SEPARATOR.str_replace(DIRECTORY_SEPARATOR, '_', $filename).'.php';
+	protected function getLocalConfigFile() {
+		return $this->getConfigDir().DIRECTORY_SEPARATOR.'sly_local.yml';
 	}
 
-	protected function getLocalCacheFile() {
-		return $this->getCacheDir().DIRECTORY_SEPARATOR.'sly_local.php';
-	}
-
-	//FIXME: protected machen wenn Konfigurationsumbau fertig
-	public function getProjectCacheFile() {
-		return $this->getCacheDir().DIRECTORY_SEPARATOR.'sly_project.php';
-	}
-
-	protected function isCacheValid($origfile, $cachefile) {
-		return file_exists($cachefile) && filemtime($origfile) < filemtime($cachefile);
+	public function getProjectConfigFile() {
+		return $this->getConfigDir().DIRECTORY_SEPARATOR.'sly_project.yml';
 	}
 
 	public function loadStatic($filename, $key = '/') {
@@ -101,18 +77,18 @@ class sly_Configuration {
 	}
 
 	public function loadLocalConfig(){
-		$file = $this->getLocalCacheFile();
-
-		if (file_exists($file)) {
-			include $file;
+		$filename = $this->getLocalConfigFile();
+		if(file_exists($filename)) {
+			$config = sly_Util_YAML::load($filename);
 			$this->localConfig = new sly_Util_Array($config);
+	
 		}
 	}
 
 	public function loadProjectConfig(){
-		$file = $this->getProjectCacheFile();
-		if (file_exists($file)) {
-			include $file;
+		$filename = $this->getProjectConfigFile();
+		if(file_exists($filename)) {
+			$config = sly_Util_YAML::load($filename);
 			$this->projectConfig = new sly_Util_Array($config);
 		}
 	}
@@ -129,7 +105,6 @@ class sly_Configuration {
 		// force gibt es nur bei STORE_*_DEFAULT
 		$force = $force && !$isStatic;
 
-		$cachefile = $this->getCacheFile($filename);
 		// prüfen ob konfiguration in diesem request bereits geladen wurde
 		if (!$force && isset($this->loadedConfigFiles[$filename])) {
 			// statisch geladene konfigurationsdaten werden innerhalb des requests nicht mehr überschrieben
@@ -139,25 +114,13 @@ class sly_Configuration {
 			return false;
 		}
 
-		$config = array();
-
-		// konfiguration aus cache holen, wenn cache aktuell
-		if ($this->isCacheValid($filename, $cachefile)) include $cachefile;
-		// konfiguration aus yaml laden
-		else $config = $this->loadYaml($filename, $cachefile);
+		$config = sly_Util_YAML::load($filename);
 
 		// geladene konfiguration in globale konfiguration mergen
 		$this->setInternal($key, $config, $mode, $force);
 
 		$this->loadedConfigFiles[$filename] = true;
 
-		return $config;
-	}
-
-	protected function loadYaml($filename, $cachefile) {
-		if (!file_exists($filename)) throw new Exception('Konfigurationsdatei '.$filename.' konnte nicht gefunden werden.');
-		$config = sfYaml::load($filename);
-		file_put_contents($cachefile, '<?php $config = '.var_export($config, true).';');
 		return $config;
 	}
 
@@ -272,18 +235,11 @@ class sly_Configuration {
 	}
 
 	protected function flush() {
-		$conf = $this->localConfig->get(null);
-
-		if ($conf && $this->localConfigModified) {
-			file_put_contents($this->getLocalCacheFile(), '<?php $config = '.var_export($conf, true).';');
-			$this->localConfigModified = false;
+		if($this->localConfigModified) {
+			sly_Util_YAML::dump($this->getLocalConfigFile(), $this->localConfig->get(null));
 		}
-
-		$conf = $this->projectConfig->get(null);
-
-		if ($conf && $this->projectConfigModified) {
-			file_put_contents($this->getProjectCacheFile(), '<?php $config = '.var_export($conf, true).';');
-			$this->projectConfigModified = false;
+		if($this->projectConfigModified) {
+			sly_Util_YAML::dump($this->getProjectConfigFile(), $this->projectConfig->get(null));
 		}
 	}
 

@@ -34,9 +34,15 @@ class sly_Util_Directory {
 			}
 
 			// chmod all path components on their own!
+			// FIXME: do not chmod previously existing folders, concept of this
+			// function is not that good
 
 			$base = '';
-
+			//strip SLY_BASE from path
+			if(startsWith($path, SLY_BASE)) {
+				$base = SLY_BASE;
+				$path = substr($path, strlen(SLY_BASE));
+			}
 			foreach (explode(DIRECTORY_SEPARATOR, $path) as $component) {
 				chmod($base.$component, $perm);
 				$base .= $component.'/';
@@ -169,5 +175,14 @@ class sly_Util_Directory {
 		}
 
 		return substr($path, strlen($base) +1);
+	}
+
+	public static function createHttpProtected($path) {
+		$status = self::create($path);
+		if ($status && !file_exists($path.'/.htaccess')) {
+			$htaccess = "order deny,allow\ndeny from all";
+			$status  = @file_put_contents($path.'/.htaccess', $htaccess) > 0;
+		}
+		return $status;
 	}
 }
