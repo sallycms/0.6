@@ -85,7 +85,7 @@ class sly_Controller_Profile extends sly_Controller_Sally
 		global $I18N, $REX;
 
 		$cur_htmlcharset = $I18N->msg('htmlcharset');
-		$langpath        = $REX['INCLUDE_PATH'].'/lang';
+		$langpath        = SLY_INCLUDE_PATH.DIRECTORY_SEPARATOR.'lang';
 		$langs           = glob($langpath.'/*.lang');
 		$result          = array('' => 'default');
 

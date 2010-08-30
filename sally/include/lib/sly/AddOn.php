@@ -19,17 +19,15 @@ class sly_AddOn
 
 	public function __construct($addon)
 	{
-		global $REX;
-
 		$addon = preg_replace('#[^a-z0-9_.,@-]#i', '_', $addon);
-		$base  = $REX['INCLUDE_PATH'].'/addons/';
+		$base  = SLY_INCLUDE_PATH.DIRECTORY_SEPARATOR.'addons';
 
 		if (!is_dir($base.$addon)) {
 			throw new Exception('Konnte AddOn '.$addon.' nicht finden.');
 		}
 
 		$this->name   = $addon;
-		$this->dir    = $base.$addon;
+		$this->dir    = $base.DIRECTORY_SEPARATOR.$addon;
 		$this->config = array();
 
 		$this->loadConfig();

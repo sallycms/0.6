@@ -63,13 +63,13 @@ class sly_Table
 	{
 		global $REX;
 		$this->totalElements = $totalElements;
-		include $REX['INCLUDE_PATH'].'/views/_table/table/header.phtml';
+		include SLY_INCLUDE_PATH.'/views/_table/table/header.phtml';
 	}
 
 	public function renderFooter()
 	{
 		global $REX;
-		include $REX['INCLUDE_PATH'].'/views/_table/table/footer.phtml';
+		include SLY_INCLUDE_PATH.'/views/_table/table/footer.phtml';
 	}
 
 	public function setIsEmpty($isEmpty)

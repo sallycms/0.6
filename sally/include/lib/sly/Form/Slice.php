@@ -41,7 +41,7 @@ class sly_Form_Slice extends sly_Form_Base
 		global $REX;
 
 		if (!$print) ob_start();
-		include $REX['INCLUDE_PATH'].'/views/form/slice.phtml';
+		include SLY_INCLUDE_PATH.'/views/form/slice.phtml';
 		if (!$print) return ob_get_clean();
 	}
 

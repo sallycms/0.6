@@ -132,7 +132,7 @@ abstract class sly_Form_ElementBase
 	{
 		global $REX;
 		ob_start();
-		include $REX['INCLUDE_PATH'].'/views/_form/'.$filename;
+		include SLY_INCLUDE_PATH.'/views/_form/'.$filename;
 		return ob_get_clean();
 	}
 

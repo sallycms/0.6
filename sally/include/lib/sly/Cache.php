@@ -70,8 +70,6 @@ abstract class sly_Cache {
 	 * @return sly_ICache
 	 */
 	public static function factory($forceCache = null) {
-		global $REX;
-
 		if (self::$cacheDisabled && $forceCache != 'sly_Cache_Blackhole') {
 			return self::factory('sly_Cache_Blackhole');
 		}

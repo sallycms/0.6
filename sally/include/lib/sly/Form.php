@@ -115,7 +115,7 @@ class sly_Form extends sly_Form_Base
 	{
 		global $REX;
 
-		$viewRoot = $REX['INCLUDE_PATH'].'/views/_form/';
+		$viewRoot = SLY_INCLUDE_PATH.'/views/_form/';
 
 		if (!$print) ob_start();
 		include $viewRoot.'/form.phtml';

@@ -221,7 +221,7 @@ class sly_DB_Importer
 		$tables = rex_sql::showTables();
 
 		if (!in_array($REX['DATABASE']['TABLE_PREFIX'].'user', $tables)) {
-			$createStmt = file_get_contents($REX['INCLUDE_PATH'].'/install/user.sql');
+			$createStmt = file_get_contents(SLY_INCLUDE_PATH.'/install/user.sql');
 			$createStmt = str_replace('%PREFIX%', $REX['DATABASE']['TABLE_PREFIX'], $createStmt);
 
 			$db = new rex_sql();
