@@ -15,8 +15,6 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 	protected function init() {
 		$this->lang = sly_request('lang', 'string');
-		$layout = sly_Core::getLayout();
-		$layout->appendToTitle(t('setup'));
 	}
 
 	public function index()	{
