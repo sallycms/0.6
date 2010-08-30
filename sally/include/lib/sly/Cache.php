@@ -293,7 +293,7 @@ abstract class sly_Cache {
 					break;
 
 				case 'object':
-					$key[] = 'o'.get_class($var);
+					$key[] = 'o'.substr(md5(print_r($var, true)), 0, 8);
 					break;
 
 				case 'resource':
