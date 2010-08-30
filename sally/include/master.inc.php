@@ -95,11 +95,10 @@ if (empty($REX['SYNC']) && !$config->get('SETUP')){
 		sly_Core::cache()->set('sly.language', 'all', $REX['CLANG']);
 	}
 
-
 	$REX['CUR_CLANG']  = sly_Core::getCurrentClang();
 	$REX['ARTICLE_ID'] = sly_Core::getCurrentArticleId();
 }
 
 // REDAXO compatibility
-if(!$config->has('TABLE_PREFIX')) $config->setLocal('TABLE_PREFIX', $config->get('DATABASE/TABLE_PREFIX'));
+if (!$config->has('TABLE_PREFIX')) $config->setLocal('TABLE_PREFIX', $config->get('DATABASE/TABLE_PREFIX'));
 $REX = array_merge($REX, $config->get(null));

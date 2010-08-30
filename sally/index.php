@@ -72,7 +72,7 @@ else {
 	$REX['LOGIN']   = new rex_backend_login($config->get('DATABASE/TABLE_PREFIX').'user');
 	$rex_user_login = rex_post('rex_user_login', 'string');  // addslashes()!
 	$rex_user_psw   = rex_post('rex_user_psw', 'string');    // addslashes()!
-	
+
 	if (sly_get('page', 'string') == 'login' && sly_get('func', 'string') == 'logout') {
 		$loginCheck = false;
 	}
@@ -114,14 +114,16 @@ else {
 	}
 }
 
-// synchronise develop
-sly_Service_Factory::getService('Template')->refresh();
-sly_Service_Factory::getService('Module')->refresh();
+// synchronize develop
+
+if (!$config->get('SETUP')) {
+	sly_Service_Factory::getService('Template')->refresh();
+	sly_Service_Factory::getService('Module')->refresh();
+}
 
 // AddOns einbinden
+
 require_once $REX['INCLUDE_PATH'].'/addons.inc.php';
-
-
 
 if ($REX['USER']) {
 	// Core-Seiten initialisieren
@@ -211,7 +213,7 @@ if ($controller !== null) {
 		}else {
 			rex_title('Unerwartete Ausnahme');
 		}
-		
+
 		print rex_warning($e->getMessage());
 		$layout->closeBuffer();
 		$CONTENT = $layout->render();
