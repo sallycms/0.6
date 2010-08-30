@@ -20,7 +20,6 @@
 @include 'pages/template.css';
 
 @include 'addons/metainfo.css';
-@include 'addons/import_export.css';
 @include 'addons/image_resize.css';
 
 @include 'legacy/paginate.css';
