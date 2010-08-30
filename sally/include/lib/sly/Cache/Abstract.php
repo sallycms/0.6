@@ -110,7 +110,15 @@ abstract class sly_Cache_Abstract extends sly_Cache implements sly_Cache_IFlusha
 
 	protected function hasLock($key) {
 		$fullKey = $this->namespacePrefix.'/lock:'.$key;
-		return self::hasLocking() ? $this->_lock($key) === false : $this->_isset($fullKey) === true;
+		$hasLock = self::hasLocking() ? $this->_lock($key) === false : $this->_isset($fullKey) === true;
+
+		// If we just created an accidental lock, remove it.
+
+		if (self::hasLocking() && !$hasLock) {
+			$this->_unlock($key);
+		}
+
+		return $hasLock;
 	}
 
 	public function waitForObject($namespace, $key, $default = null, $maxWaitTime = 3, $checkInterval = 50) {
