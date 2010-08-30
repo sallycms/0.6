@@ -308,7 +308,8 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 	}
 
 	protected function title($title) {
-		rex_title($title);
+		$layout = sly_Core::getLayout();
+		$layout->pageHeader($title);
 		print '<div id="rex-setup" class="rex-area">';
 	}
 

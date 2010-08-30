@@ -22,7 +22,8 @@ class sly_Controller_Specials extends sly_Controller_Sally
 			array('languages', $I18N->msg('languages'))
 		);
 
-		rex_title($I18N->msg('specials'), $subline);
+		$layout = sly_Core::getLayout();
+		$layout->pageHeader($I18N->msg('specials'), $subline);
 	}
 
 	public function index()

@@ -14,7 +14,8 @@ class sly_Controller_User extends sly_Controller_Sally
 
 	public function init()
 	{
-		rex_title(t('title_user'));
+		$layout = sly_Core::getLayout();
+		$layout->pageHeader(t('title_user'));
 
 		$layout = sly_Core::getLayout();
 		$layout->appendToTitle(t('title_user'));

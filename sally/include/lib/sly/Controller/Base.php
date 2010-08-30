@@ -19,7 +19,7 @@ abstract class sly_Controller_Base {
 	protected $action;
 
 	protected function __construct() {
-		$this->action = rex_request(self::ACTIONPARAM, 'string', 'index');
+		$this->action = sly_request(self::ACTIONPARAM, 'string', 'index');
 	}
 
 	public static function getPage($isLogin = false) {

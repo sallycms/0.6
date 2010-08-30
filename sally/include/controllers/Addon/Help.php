@@ -20,7 +20,8 @@ class sly_Controller_Addon_Help extends sly_Controller_Sally
 
 	public function init()
 	{
-		rex_title(t('addon'));
+		$layout = sly_Core::getLayout();
+		$layout->pageHeader(t('addon'));
 		print '<div class="sly-content">';
 
 		$this->addons  = sly_Service_Factory::getService('AddOn');

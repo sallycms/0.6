@@ -14,8 +14,8 @@ class sly_Controller_Credits extends sly_Controller_Sally
 
 	public function init()
 	{
-		global $I18N;
-		rex_title($I18N->msg('credits'));
+		$layout = sly_Core::getLayout();
+		$layout->pageHeader(t('credits'));
 		print '<div class="sly-content">';
 	}
 

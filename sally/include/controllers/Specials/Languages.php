@@ -21,14 +21,13 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally
 
 	public function init()
 	{
-		global $I18N;
-
 		$subline = array(
-			array('',          $I18N->msg('main_preferences')),
-			array('languages', $I18N->msg('languages'))
+			array('',          t('main_preferences')),
+			array('languages', t('languages'))
 		);
 
-		rex_title($I18N->msg('specials'), $subline);
+		$layout = sly_Core::getLayout();
+		$layout->pageHeader(t('specials'), $subline);
 	}
 
 	public function index()

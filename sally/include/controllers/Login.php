@@ -22,7 +22,8 @@ class sly_Controller_Login extends sly_Controller_Sally
 
 	public function init()
 	{
-		rex_title('Login');
+		$layout = sly_Core::getLayout();
+		$layout->pageHeader('Login');
 		print '<div class="sly-content">';
 	}
 

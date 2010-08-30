@@ -14,7 +14,8 @@ class sly_Controller_Profile extends sly_Controller_Sally
 
 	public function init()
 	{
-		rex_title(t('profile_title'));
+		$layout = sly_Core::getLayout();
+		$layout->pageHeader(t('profile_title'));
 
 		$layout = sly_Core::getLayout();
 		$layout->appendToTitle(t('profile_title'));
