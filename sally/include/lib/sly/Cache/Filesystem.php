@@ -110,19 +110,25 @@ class sly_Cache_Filesystem extends sly_Cache implements sly_Cache_IFlushable {
 
 	public function delete($namespace, $key) {
 		$this->quickCache->delete(self::getMemNamespace($namespace), $key);
+		clearstatcache();
 		return @unlink($this->getFilename($namespace, $key));
 	}
 
 	public function flush($namespace, $recursive = false) {
+		// flush quick cache
+
+		$this->quickCache->flush(self::getMemNamespace($namespace), $recursive);
+
+		// handle our own cache
+
 		$namespace = self::getDirFromNamespace(self::cleanupNamespace($namespace));
 		$root      = parent::concatPath($this->dataDir, $namespace);
-
-		$this->quickCache->flush($namespace, $recursive);
 
 		// Wenn wir rekursiv löschen, können wir wirklich alles in diesem Verzeichnis
 		// löschen.
 
 		if ($recursive) {
+			clearstatcache();
 			return self::deleteRecursive($root);
 		}
 
@@ -131,107 +137,14 @@ class sly_Cache_Filesystem extends sly_Cache implements sly_Cache_IFlushable {
 
 		else {
 			$dataDir = 'data'.parent::getSafeDirChar();
+			clearstatcache();
 			return self::deleteRecursive(parent::concatPath($root, $dataDir));
 		}
-	}
-
-	public function getElementCount($namespace, $recursive = false) {
-		$namespace = parent::cleanupNamespace($namespace);
-		$nsDir     = self::getDirFromNamespace($namespace);
-		$root      = parent::concatPath($this->dataDir, $nsDir);
-		$level     = error_reporting(0);
-		$count     = 0;
-
-		if ($recursive) {
-			$namespaces = self::getSubNamespaces($namespace);
-
-			foreach ($namespaces as $ns) {
-				$count += self::getElementCount($namespace.'.'.$ns, true);
-			}
-		}
-
-		$dataDir = 'data'.parent::getSafeDirChar();
-		$dir     = parent::concatPath($root, $dataDir);
-		$count  += self::getDirectoryFileCount($dir);
-
-		error_reporting($level);
-		return $count;
-	}
-
-	public function getSize($namespace, $recursive = false) {
-		$namespace = parent::cleanupNamespace($namespace);
-		$nsDir     = self::getDirFromNamespace($namespace);
-		$root      = parent::concatPath($this->dataDir, $nsDir);
-		$level     = error_reporting(0);
-		$size      = 0;
-
-		if ($recursive) {
-			$namespaces = self::getSubNamespaces($namespace);
-
-			foreach ($namespaces as $ns) {
-				$size += self::getSize($namespace.'.'.$ns, true);
-			}
-		}
-
-		$dataDir = 'data'.parent::getSafeDirChar();
-		$dir     = parent::concatPath($root, $dataDir);
-		$size   += self::getDirectorySize($dir);
-
-		error_reporting($level);
-		return $size;
 	}
 
 	protected static function getMemNamespace($namespace) {
 		$namespace = parent::cleanupNamespace($namespace);
 		return 'fscache.'.$namespace;
-	}
-
-	protected static function getDirectoryFileCount($root) {
-		if (!is_dir($root)) {
-			return 0;
-		}
-
-		try {
-			$dirIterator = new RecursiveDirectoryIterator($root);
-			$recIterator = new RecursiveIteratorIterator($dirIterator, RecursiveIteratorIterator::CHILD_FIRST);
-			$count       = 0;
-
-			foreach ($recIterator as $file) {
-				if ($file->isFile()) ++$count;
-			}
-
-			$recIterator = null;
-			$dirIterator = null;
-
-			return $count;
-		}
-		catch (UnexpectedValueException $e) {
-			return 0;
-		}
-	}
-
-	protected static function getDirectorySize($root) {
-		if (!is_dir($root)) {
-			return 0;
-		}
-
-		try {
-			$dirIterator = new RecursiveDirectoryIterator($root);
-			$recIterator = new RecursiveIteratorIterator($dirIterator, RecursiveIteratorIterator::CHILD_FIRST);
-			$size        = 0;
-
-			foreach ($recIterator as $file) {
-				$size += $file->getSize();
-			}
-
-			$recIterator = null;
-			$dirIterator = null;
-
-			return $size;
-		}
-		catch (UnexpectedValueException $e) {
-			return 0;
-		}
 	}
 
 	protected static function createNamespaceDir($namespace, $root, $hash) {

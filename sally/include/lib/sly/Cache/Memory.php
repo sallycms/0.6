@@ -77,9 +77,9 @@ class sly_Cache_Memory extends sly_Cache implements sly_Cache_ISeekable {
 		}
 
 		$namespace = parent::cleanupNamespace($namespace);
+		unset($this->data[$namespace]);
 
 		if (!$recursive) {
-			unset($this->data[$namespace]);
 			return true;
 		}
 
