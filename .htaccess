@@ -23,14 +23,12 @@ RewriteRule ^([0-9]*)- index.php?article_id=$1&%{QUERY_STRING}
 #    because the %{REQUEST_FILENAME} might not contain the filename, its given by 1.
 # 3. check for file existence. both ways: with calculated document root and document root variable
 # 4. rewrite!
-
 RewriteCond %{REQUEST_URI} (.*/)?imageresize/(.*)
 RewriteCond %{REQUEST_FILENAME}###%2 (.*/)imageresize.*###(.*)
-RewriteCond %1/data/dyn/public/image_resize/cache__%2 -f [OR]
+RewriteCond %1/data/dyn/public/image_resize/cache__%2 -f
 RewriteRule imageresize/(.*)$ data/dyn/public/image_resize/cache__$1 [L]
 
 # Image Resize
-
 RewriteRule ^imageresize/(.*)$ index.php?rex_resize=$1 [L]
 
 # Deployer-AddOn (>= 2.0)
