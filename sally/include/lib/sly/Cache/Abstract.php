@@ -33,7 +33,8 @@ abstract class sly_Cache_Abstract extends sly_Cache implements sly_Cache_IFlusha
 
 	protected function getVersion($path) {
 		if (!isset($this->versions[$path])) {
-			$this->versions[$path] = $this->_getRaw($this->namespacePrefix.'/version:'.$path);
+			$version = $this->_getRaw($this->namespacePrefix.'/version:'.$path);
+			$this->versions[$path] = $version === false ? null : $version;
 		}
 
 		return $this->versions[$path];
@@ -144,6 +145,7 @@ abstract class sly_Cache_Abstract extends sly_Cache implements sly_Cache_IFlusha
 		$key  = $this->getFullKey($namespace, $key);
 		$path = $this->createVersionPath($key, true);
 		$path = $this->namespacePrefix.'/'.$path;
+
 
 		if (!$this->_set($path, $value, $this->expiration)) {
 			throw new sly_Cache_Exception('Error setting value @ '.$key.'!');

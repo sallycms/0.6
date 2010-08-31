@@ -50,10 +50,10 @@ class sly_Cache_Memcache extends sly_Cache_Abstract {
 	}
 
 	protected function _getRaw($key) { return $this->memcached->get($key); }
-	protected function _get($key)    { return $this->memcached->get($key); }
+	protected function _get($key)    { return unserialize($this->memcached->get($key)); }
 
 	protected function _setRaw($key, $value, $expiration) { return $this->memcached->set($key, $value, 0, $expiration); }
-	protected function _set($key, $value, $expiration)    { return $this->memcached->set($key, $value, 0, $expiration); }
+	protected function _set($key, $value, $expiration)    { return $this->memcached->set($key, serialize($value), 0, $expiration); }
 
 	protected function _delete($key) { return $this->memcached->delete($key);        }
 	protected function _isset($key)  { return $this->memcached->get($key) !== false; }
