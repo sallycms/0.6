@@ -78,7 +78,7 @@ $dummyEvent = 'SLY_DUMMY_'.strtoupper(uniqid().uniqid());
 
 $lime->ok(sly_Event_Dispatcher::getInstance() === sly_Event_Dispatcher::getInstance(), 'getInstance() works as expected');
 
-$lime->is($dispatcher->hasListeners($dummyEvent), false, 'hasListeners() returns 0 is no listeners are set');
+$lime->is($dispatcher->hasListeners($dummyEvent), false, 'hasListeners() returns 0 if no listeners are set');
 $lime->is($dispatcher->getListeners($dummyEvent), array(), 'getListeners() returns array() is no listeners are set');
 
 $dispatcher->register($dummyEvent, 'listenerA');
