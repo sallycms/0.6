@@ -130,7 +130,6 @@ abstract class sly_Form_ElementBase
 
 	protected function renderFilename($filename)
 	{
-		global $REX;
 		ob_start();
 		include SLY_INCLUDE_PATH.'/views/_form/'.$filename;
 		return ob_get_clean();

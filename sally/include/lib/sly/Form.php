@@ -30,14 +30,12 @@ class sly_Form extends sly_Form_Base
 
 	public function __construct($action, $method = 'POST', $title, $name = '', $id = '')
 	{
-		global $REX;
 
 		$this->action   = $action;
 		$this->method   = strtoupper($method) == 'GET' ? 'GET' : 'POST';
 		$this->title    = $title;
 		$this->name     = $name;
 		$this->id       = $id;
-		$this->redaxo   = intval($REX['VERSION'].$REX['SUBVERSION']);
 		$this->enctype  = false;
 
 		$this->submitButton    = new sly_Form_Input_Button('submit', 'submit', 'Speichern');
@@ -113,8 +111,6 @@ class sly_Form extends sly_Form_Base
 
 	public function render($print = true)
 	{
-		global $REX;
-
 		$viewRoot = SLY_INCLUDE_PATH.'/views/_form/';
 
 		if (!$print) ob_start();

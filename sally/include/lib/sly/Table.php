@@ -61,14 +61,12 @@ class sly_Table
 
 	public function renderHeader($totalElements = null)
 	{
-		global $REX;
 		$this->totalElements = $totalElements;
 		include SLY_INCLUDE_PATH.'/views/_table/table/header.phtml';
 	}
 
 	public function renderFooter()
 	{
-		global $REX;
 		include SLY_INCLUDE_PATH.'/views/_table/table/footer.phtml';
 	}
 

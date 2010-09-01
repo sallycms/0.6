@@ -17,10 +17,7 @@ class sly_Form_Slice extends sly_Form_Base
 
 	public function __construct()
 	{
-		global $REX;
-
 		$this->hiddenValues = array();
-		$this->redaxo       = intval($REX['VERSION'].$REX['SUBVERSION']);
 		$this->elements     = array();
 	}
 

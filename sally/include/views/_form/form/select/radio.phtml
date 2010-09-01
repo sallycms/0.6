@@ -10,7 +10,8 @@
 
 print '<span class="sly-radio-group">';
 
-$selected  = reset(array_keys($this->attributes['value']));
+$selected = array_keys($this->attributes['value']);
+$selected  = reset($selected);
 $elementID = $this->attributes['id'];
 
 foreach ($this->values as $key => $value) {
