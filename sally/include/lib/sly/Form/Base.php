@@ -40,21 +40,6 @@ abstract class sly_Form_Base
 		return $this->render(false);
 	}
 
-	public function getVersion()
-	{
-		return $this->redaxo;
-	}
-
-	public function getNoticeClass()
-	{
-		switch ($this->redaxo) {
-			case 41: return 'rex-notice';
-			case 42: return 'rex-form-notice';
-		}
-
-		return '';
-	}
-
 	public function addHiddenValue($name, $value, $id = null)
 	{
 		$this->hiddenValues[$name] = array('value' => $value, 'id' => $id);
