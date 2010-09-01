@@ -76,8 +76,7 @@ class sly_Controller_Profile extends sly_Controller_Sally
 
 	public function checkPermission()
 	{
-		global $REX;
-		return isset($REX['USER']);
+		return $this->getUser() !== null;
 	}
 
 	protected function getBackendLocales()
