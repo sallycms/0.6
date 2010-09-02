@@ -370,6 +370,8 @@ version: Version
 host: Host
 database: Database
 specials_caching_strategy: Cache Strategy
+specials_start_article: Startpage
+specials_not_found_article: Page not found
 
 # sally\include\pages\medienpool.inc.php
 pool_name: Mediapool

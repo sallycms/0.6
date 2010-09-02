@@ -360,6 +360,8 @@ version: Version
 host: Host
 database: Datenbank
 specials_caching_strategy: Cache Strategie
+specials_start_article: Startseite
+specials_not_found_article: Artikel bei fehlender Seite
 
 # sally\include\pages\medienpool.inc.php
 pool_name: Medienpool

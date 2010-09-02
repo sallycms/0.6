@@ -31,7 +31,7 @@ div#rex-form-system-setup {
 		padding: 5px 0 0;
 
 		label {
-			width: 190px;
+			width: 176px;
 			padding-left: 0;
 			font-weight: normal;
 		}
@@ -54,7 +54,7 @@ div#rex-form-system-setup {
 		/*	Submit */
 
 		p input.rex-form-submit {
-			margin-left: 190px;
+			margin-left: 176px;
 		}
 	}
 }

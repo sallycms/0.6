@@ -80,24 +80,6 @@ $cachingStrategy = new sly_Form_Select_DropDown('caching_strategy', '', sly_Cach
 						</div>
 
 						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-read">
-								<label for="rex_include_path">SLY_INCLUDE_PATH</label>
-								<span class="rex-form-read" id="rex_include_path" title=" <?= $REX['INCLUDE_PATH']  ?>">
-								<?
-								$tmp = $REX['INCLUDE_PATH'];
-
-								// Mitte entfernen, wenn zu lang
-
-								if (strlen($REX['INCLUDE_PATH']) > 24) {
-									$tmp = substr($tmp, 0, 8).'&hellip;'.substr($tmp, strlen($tmp) - 10);
-								}
-
-								print $tmp;
-								?></span>
-							</p>
-						</div>
-
-						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-text">
 								<label for="rex-form-error-email">$REX['ERROR_EMAIL']</label>
 								<input class="rex-form-text" type="text" id="rex-form-error-email" name="error_email" value="<?= sly_html($config->get('ERROR_EMAIL')) ?>" />
@@ -106,15 +88,21 @@ $cachingStrategy = new sly_Form_Select_DropDown('caching_strategy', '', sly_Cach
 
 						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-text">
-								<label for="rex-form-startarticle-id">$REX['START_ARTICLE_ID']</label>
-								<input class="rex-form-text" type="text" id="rex-form-startarticle-id" name="start_article" value="<?= sly_html($config->get('START_ARTICLE_ID')) ?>" />
+								<label for="rex-form-startarticle-id"><?= t('specials_start_article') ?></label>
+								<?php
+									$start_article = new sly_Form_LinkButton('start_article', null, $config->get('START_ARTICLE_ID'), 'START_ART');
+									print $start_article->render();
+								?>
 							</p>
 						</div>
 
 						<div class="rex-form-row">
 							<p class="rex-form-col-a rex-form-text">
-								<label for="rex-form-notfound-article-id">$REX['NOTFOUND_ARTICLE_ID']</label>
-								<input class="rex-form-text" type="text" id="rex-form-notfound-article-id" name="notfound_article" value="<?= sly_html($config->get('NOTFOUND_ARTICLE_ID')) ?>" />
+								<label for="rex-form-notfound-article-id"><?= t('specials_not_found_article') ?></label>
+								<?php
+									$start_article = new sly_Form_LinkButton('notfound_article', null, $config->get('NOTFOUND_ARTICLE_ID'), 'NF_ART');
+									print $start_article->render();
+								?>
 							</p>
 						</div>
 
