@@ -30,6 +30,8 @@ class OOArticleSlice
 	private $_updateuser;
 	private $_revision;
 
+	const CACHE_NS = 'slice';
+
 	/*
 	 * Constructor
 	 */
@@ -65,13 +67,13 @@ class OOArticleSlice
 	public static function getArticleSliceById($an_id, $clang = false, $revision = 0)
 	{
 		if ($clang === false) $clang = sly_Core::getCurrentClang();
-		$namespace = 'slice';
 		$key = $an_id;
 
-		$obj = sly_Core::cache()->get($namespace, $key, null);
+		// Cache is flushed ob article change (see content.inc.php).
+		$obj = sly_Core::cache()->get(self::CACHE_NS, $key, null);
 		if ($obj === null) {
 			$obj = self::_getSliceWhere('id='. $an_id .' AND clang='. $clang.' and revision='.$revision);
-			sly_Core::cache()->set($namespace, $key, $obj);
+			sly_Core::cache()->set(self::CACHE_NS, $key, $obj);
 		}
 		return $obj;
 	}
@@ -83,7 +85,7 @@ class OOArticleSlice
 	 * slices in the order as they appear using the
 	 * getNextSlice() function.
 	 * Returns an OOArticleSlice object
-	 * 
+	 *
 	 * @return OOArticleSlice
 	 */
 	public static function getFirstSliceForArticle($an_article_id, $clang = false, $revision = 0)
@@ -100,10 +102,10 @@ class OOArticleSlice
                                             OR
                                            (b.ctype=2 AND a.ctype=1 AND b.id = a.re_article_slice_id)
                                           )
-                                          AND a.revision='.$revision.' 
+                                          AND a.revision='.$revision.'
                                           AND b.revision='.$revision,
 		$REX['DATABASE']['TABLE_PREFIX'].'article_slice a, '. $REX['DATABASE']['TABLE_PREFIX'].'article_slice b',
-                                          'a.*' 
+                                          'a.*'
                                           );
 	}
 
@@ -128,7 +130,7 @@ class OOArticleSlice
                                             OR
                                            (b.ctype != a.ctype AND b.id = a.re_article_slice_id)
                                           )
-                                          AND a.revision='.$revision.' 
+                                          AND a.revision='.$revision.'
                                           AND b.revision='.$revision,
 		$REX['DATABASE']['TABLE_PREFIX'].'article_slice a, '. $REX['DATABASE']['TABLE_PREFIX'].'article_slice b',
                                           'a.*'
@@ -179,7 +181,7 @@ class OOArticleSlice
 	{
 		$slice = sly_Service_Factory::getService('Slice')->findById($this->getSliceId());
 		$content = $slice->getOutput();
-		
+
 		$content = self::replaceLinks($content);
 		$content = $this->replaceCommonVars($content);
 		$content = $this->replaceGlobals($content);
@@ -203,13 +205,13 @@ class OOArticleSlice
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @param string $where
 	 * @param string $table
 	 * @param string $fields
 	 * @param mixed $default
-	 * 
+	 *
 	 * @return array of OOArticleSlice
 	 */
 	public static function _getSliceWhere($where, $table = null, $fields = null, $default = null)
@@ -281,16 +283,16 @@ class OOArticleSlice
 	{
 		return $this->_id;
 	}
-	
+
 	public function getReId()
 	{
 		return $this->_re_article_slice_id;
 	}
-	
+
 	public function getSliceId(){
 		return $this->_slice_id;
 	}
-	
+
 
 	public function getValue($index)
 	{
@@ -298,7 +300,7 @@ class OOArticleSlice
 		if($value){
 			return $value->getValue();
 		}
-		
+
 		return null;
 	}
 
@@ -308,15 +310,15 @@ class OOArticleSlice
 		if($value){
 			return $value->getValue();
 		}
-		
+
 		return null;
 	}
 
 	public function getLinkUrl($index)
 	{
-		
+
 		return rex_getUrl($this->getLink());
-				
+
 		return null;
 	}
 
@@ -326,7 +328,7 @@ class OOArticleSlice
 		if($value){
 			return $value->getValue();
 		}
-		
+
 		return null;
 	}
 
@@ -336,7 +338,7 @@ class OOArticleSlice
 		if($value){
 			return $value->getValue();
 		}
-		
+
 		return null;
 	}
 
@@ -352,7 +354,7 @@ class OOArticleSlice
 		if($value){
 			return $value->getValue();
 		}
-		
+
 		return null;
 	}
 
@@ -362,7 +364,7 @@ class OOArticleSlice
 		if($value){
 			return $value->getValue();
 		}
-		
+
 		return null;
 	}
 
@@ -372,21 +374,21 @@ class OOArticleSlice
 		if($value){
 			return $value->getValue();
 		}
-		
+
 		return null;
 	}
 
 	private function replaceGlobals($content){
 	    // Articleslice abhängige Globale Variablen ersetzen
 	    $slice = sly_Service_Factory::getService('Slice')->findById($this->getSliceId());
-		
+
     	$content = str_replace('REX_MODULE_ID', $slice->getModuleId(), $content);
 	    $content = str_replace('REX_SLICE_ID', $this->getId(), $content);
     	$content = str_replace('REX_CTYPE_ID', $this->getCtype(), $content);
 
     	return $content;
 	}
-	
+
 	// ---- Artikelweite globale variablen werden ersetzt
 	private function replaceCommonVars($content) {
 		global $REX;
