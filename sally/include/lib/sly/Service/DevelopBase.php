@@ -164,8 +164,6 @@ abstract class sly_Service_DevelopBase {
 	public function get($name, $key = null, $default = null, $type = null) {
 		if ($key == 'name') return $name;
 
-		$this->refresh();
-
 		// module exists?
 		$data = $this->getData();
 		if (!isset($data[$name])) return false;
