@@ -41,8 +41,6 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		// Prüfen des Plugin-Ornders auf Schreibrechte,
 		// damit das Plugin später wieder gelöscht werden kann
 
-		$state = rex_is_writable($pluginDir);
-
 		if ($state) {
 			if (is_readable($installFile)) {
 				$this->mentalGymnasticsInclude($installFile, $plugin);
@@ -213,18 +211,6 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		}
 
 		return $this->extend('POST', 'DEACTIVATE', $plugin, $state);
-	}
-
-	/**
-	 * Löscht ein Plugin
-	 *
-	 * @param array $plugin  Plugin als array(addon, plugin)
-	 */
-	public function delete($plugin)
-	{
-		$state = $this->extend('PRE', 'DELETE', $plugin, true);
-		if ($state === true) $state = $this->deleteHelper($plugin);
-		return $this->extend('POST', 'DELETE', $plugin, $state);
 	}
 
 	public function baseFolder($plugin)

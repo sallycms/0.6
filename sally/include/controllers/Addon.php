@@ -128,7 +128,6 @@ class sly_Controller_Addon extends sly_Controller_Sally
 	public function uninstall()  { return $this->call('uninstall', 'uninstalled');  }
 	public function activate()   { return $this->call('activate', 'activated');     }
 	public function deactivate() { return $this->call('deactivate', 'deactivated'); }
-	public function delete()     { return $this->call('delete', 'deleted');         }
 
 	public function checkPermission()
 	{

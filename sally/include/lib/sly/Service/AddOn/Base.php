@@ -18,19 +18,6 @@ abstract class sly_Service_AddOn_Base
 	protected $data;
 	protected $i18nPrefix;
 
-	protected function deleteHelper($addonORplugin)
-	{
-		$state  = true;
-		$state &= $this->uninstall($addonORplugin);
-		$state &= rex_deleteDir($this->baseFolder($addonORplugin), true);
-
-		if ($state){
-			$this->removeConfig($addonORplugin);
-		}
-
-		return $state;
-	}
-
 	protected function req($filename, $addonName)
 	{
 		global $REX, $I18N; // Nötig damit im Addon verfügbar

@@ -325,7 +325,6 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		$writables = array(
 			$REX['DATAFOLDER'],
 			$REX['MEDIAFOLDER'],
-			SLY_INCLUDE_PATH.$s.'addons',
 			SLY_DYNFOLDER,
 			SLY_DYNFOLDER.$s.'public',
 			SLY_DYNFOLDER.$s.'internal',

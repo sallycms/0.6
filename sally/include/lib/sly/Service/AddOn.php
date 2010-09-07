@@ -35,8 +35,6 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		// Prüfen des Addon Ornders auf Schreibrechte,
 		// damit das Addon später wieder gelöscht werden kann
 
-		$state = rex_is_writable($addonDir);
-
 		if ($state) {
 			if (is_readable($installFile)) {
 				$this->req($installFile, $addonName);
@@ -204,17 +202,6 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		}
 
 		return $this->extend('POST', 'DEACTIVATE', $addonName, $state);
-	}
-
-	public function delete($addonName)
-	{
-		$state = $this->extend('PRE', 'DELETE', $addonName, true);
-
-		if ($state === true) {
-			$state = $this->deleteHelper($addonName);
-		}
-
-		return $this->extend('POST', 'DELETE', $addonName, $state);
 	}
 
 	public function baseFolder($addonName)

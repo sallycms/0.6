@@ -28,7 +28,7 @@ if (!empty($warning)) print rex_warning($warning);
 				<th class="rex-col-b"><?= $I18N->msg('addon_hname') ?></th>
 				<th class="rex-col-c"><?= $I18N->msg('addon_hinstall') ?></th>
 				<th class="rex-col-d"><?= $I18N->msg('addon_hactive') ?></th>
-				<th class="rex-col-e" colspan="2"><?= $I18N->msg('addon_hdelete') ?></th>
+				<th class="rex-col-e"><?= $I18N->msg('addon_hdelete') ?></th>
 			</tr>
 		</thead>
 	<tbody>
@@ -42,19 +42,11 @@ if (!empty($warning)) print rex_warning($warning);
 		$registeredPlugins = $plugins->getRegisteredPlugins($addon);
 		$availablePlugins  = $plugins->getAvailablePlugins($addon);
 
-		if ($addons->isSystemAddon($addon)) {
-			$delete = $I18N->msg('addon_systemaddon');
-		}
-		else {
-			$delete = '<a href="'.$base.'delete" class="sly-delete">'.$I18N->msg('addon_delete').'</a>';
-		}
-
 		if ($addons->isInstalled($addon)) {
 			$install = $I18N->msg('addon_yes').' - <a href="'.$base.'install">'.$I18N->msg('addon_reinstall').'</a>';
 
 			if (!empty($availablePlugins)) {
 				$uninstall = $I18N->msg('plugin_plugins_installed');
-				$delete    = $uninstall;
 			}
 			else {
 				$uninstall = '<a href="'.$base.'uninstall" onclick="return confirm(\''.sly_html($I18N->msg('addon_uninstall_question', $addon)).'\');">'.$I18N->msg('addon_uninstall').'</a>';
@@ -82,15 +74,13 @@ if (!empty($warning)) print rex_warning($warning);
 			<td class="rex-col-c"><?= $install ?></td>
 			<td class="rex-col-d"><?= $status ?></td>
 			<td class="rex-col-e"><?= $uninstall ?></td>
-			<td class="rex-col-f"><?= $delete ?></td>
 		</tr>
 		<?php
 
 		if ($addons->isAvailable($addon)) {
 			foreach ($registeredPlugins as $plugin) {
-				$comp   = array($addon, $plugin);
-				$base   = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;plugin='.urlencode($plugin).'&amp;func=';
-				$delete = '<a href="'.$base.'delete" class="sly-delete">'.$I18N->msg('addon_delete').'</a>';
+				$comp = array($addon, $plugin);
+				$base = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;plugin='.urlencode($plugin).'&amp;func=';
 
 				if ($plugins->isInstalled($comp)) {
 					$install   = $I18N->msg('addon_yes').' - <a href="'.$base.'install">'.$I18N->msg('addon_reinstall').'</a>';
@@ -118,7 +108,6 @@ if (!empty($warning)) print rex_warning($warning);
 					<td class="rex-col-c"><?= $install ?></td>
 					<td class="rex-col-d"><?= $status ?></td>
 					<td class="rex-col-e"><?= $uninstall ?></td>
-					<td class="rex-col-f"><?= $delete ?></td>
 				</tr>
 				<?php
 			}
