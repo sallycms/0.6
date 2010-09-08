@@ -523,10 +523,9 @@ class OOMedia
 		return false;
 	}
 
-	public static function fileExists($filename = null)
+	public static function fileExists($filename)
 	{
-		global $REX;
-		return file_exists($REX['MEDIAFOLDER'].DIRECTORY_SEPARATOR.$filename);
+		return is_string($filename) && strlen($filename) > 0 && file_exists(sly_Util_Directory::join(SLY_MEDIAFOLDER, $filename));
 	}
 
 	// allowed filetypes
@@ -592,14 +591,14 @@ class OOMedia
 
 		// damit alte rex_article felder wie copyright, description
 		// noch funktionieren
-		
+
 		if ($this->hasValue($value)) {
 			return $this->$value;
 		}
 		elseif ($this->hasValue('med_'.$value)) {
 			return $this->getValue('med_'.$value);
 		}
-		
+
 		return null;
 	}
 }
