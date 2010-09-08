@@ -24,7 +24,8 @@ require $REX['INCLUDE_PATH'].'/functions/function_rex_content.inc.php';
 rex_title($I18N->msg('title_structure'), $KATout);
 
 $sprachen_add = '&amp;category_id='.$category_id;
-require $REX['INCLUDE_PATH'].'/functions/function_rex_languages.inc.php';
+$result = require $REX['INCLUDE_PATH'].'/functions/function_rex_languages.inc.php';
+if ($result === false) return;
 
 // -------------- STATUS_TYPE Map
 $catStatusTypes = rex_categoryStatusTypes();

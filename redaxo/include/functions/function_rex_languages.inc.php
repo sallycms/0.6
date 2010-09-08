@@ -24,7 +24,7 @@ if ($num_clang > 1) {
 
 	$stop = false;
 	$i    = 1;
-	
+
 	foreach ($REX['CLANG'] as $clangID => $clangName) {
 		if ($i == 1) {
 			print '<li class="rex-navi-first rex-navi-clang-'.$clangID.'">';
@@ -41,11 +41,11 @@ if ($num_clang > 1) {
 		}
 		else {
 			$class = '';
-			
+
 			if ($clangID == $clang) {
 				$class = ' class="rex-active"';
 			}
-			
+
 			print '<a'.$class.' href="index.php?page='.$REX['PAGE'].'&amp;clang='.$clangID.$sprachen_add.'&amp;ctype='.$ctype.'"'.rex_tabindex().'>'.$clangName.'</a>';
 		}
 
@@ -66,10 +66,11 @@ if ($num_clang > 1) {
 '.rex_warning('You have no permission to this area').'
 <!-- *** OUTPUT OF CLANG-VALIDATE - END *** -->
 ';
-		require $REX['INCLUDE_PATH'].'/layout/bottom.php';
-		exit;
+		return false;
 	}
 }
 else {
 	$clang = 0;
 }
+
+return true;
