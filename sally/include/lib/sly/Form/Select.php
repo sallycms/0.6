@@ -29,12 +29,12 @@ class sly_Form_Select extends sly_Form_Select_Base implements sly_Form_IElement
 	public function setStyle($newStyle)
 	{
 		$name   = $this->attributes['name'];
-		$name   = $this->label;
+		$label  = $this->label;
 		$value  = $this->attributes['value'];
 		$values = $this->values;
 		$id     = $this->attributes['id'];
 
-		switch ($this->style) {
+		switch ($newStyle) {
 			case self::STYLE_CHECKBOX:
 				$this->formElement = new sly_Form_Select_Checkbox($name, $label, $value, $values, $id);
 				break;
