@@ -13,7 +13,7 @@ class sly_Form_LinkButton extends sly_Form_ElementBase implements sly_Form_IElem
 {
 	protected $javascriptID;
 
-	public function __construct($name, $label, $value, $javascriptID, $id = null, $allowedAttributes = null)
+	public function __construct($name, $label, $value, $javascriptID = -1, $id = null, $allowedAttributes = null)
 	{
 		if ($allowedAttributes === null) {
 			$allowedAttributes = array('value', 'name', 'id', 'disabled', 'class', 'maxlength', 'readonly', 'style');
@@ -21,7 +21,18 @@ class sly_Form_LinkButton extends sly_Form_ElementBase implements sly_Form_IElem
 
 		parent::__construct($name, $label, $value, $id, $allowedAttributes);
 		$this->setAttribute('class', 'rex-form-text');
-		$this->javascriptID = $javascriptID;
+
+		$registry = sly_Core::getTempRegistry();
+
+		if ($javascriptID <= 0) {
+			$jsID = $registry->has('sly.form.linkbutton.jsid') ? ($registry->get('sly.form.linkbutton.jsid', 0) + 1) : 1;
+		}
+		else {
+			$jsID = (int) $javascriptID;
+		}
+
+		$this->javascriptID = $jsID;
+		$registry->set('sly.form.linkbutton.jsid', $jsID);
 	}
 
 	public function render()
