@@ -351,6 +351,86 @@ div.rex-form input.rex-form-submit {
 	}
 }
 
+/* sly_Form_DateTime */
+
+.selHrs,.selMins {
+	width: 2.5em;
+}
+
+.selHrs {
+	margin-left: 5px;
+}
+
+.dayPeriod {
+	display: inline-block;
+	width: 20px;
+}
+
+.slider {
+	height: 120px;
+	float: left;
+	margin: 10px
+}
+
+#tpSelectedTime {
+	margin-bottom: 0;
+	border-bottom: 1px solid #A6C9E2;
+	padding: 5px;
+	color: #000;
+	background: #fff;
+	text-transform: none;
+}
+
+#tpSelectedTime span {
+	fon-weight: bold;
+}
+
+#pickerplug {
+	overflow: hidden;
+	display: none;
+	position: absolute;
+	top: 200px;
+	left: 300px;
+	padding: 0;
+	margin: 0;
+	z-index: 500;
+}
+
+#pickerplug li {
+	display: block;
+	float: left;
+}
+
+#timepicker {
+	background: #fff;
+	font-size: 0.8em;
+	padding: 0.2em 0.2em 0;
+}
+
+#timepicker ul {
+	overflow: hidden;
+	padding: 5px;
+}
+
+#timepicker ul li {
+	position: relative;
+	display: block;
+	float: left;
+	width: 50px;
+}
+
+#timepicker ul li h4 {
+	width: 100%;
+	background: transparent;
+	color: #000;
+	text-align: center;
+}
+
+#timepicker ul li .slider {
+	position: relative;
+	left: 10px;
+}
+
 /*	Addons */
 
 div#rex-addon-editmode form div.rex-widget {

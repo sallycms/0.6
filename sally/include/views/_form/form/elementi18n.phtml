@@ -10,10 +10,10 @@
 
 $outerClass  = $element->getOuterClass($this->redaxo);
 $outerClass  = $outerClass ? ' class="'.$outerClass.'"' : '';
-$help        = $element->getHelpText() ? '<span class="rex-form-notice">'.nl2br(wv_html($element->getHelpText())).'</span>' : '';
+$help        = $element->getHelpText() ? '<span class="rex-form-notice">'.nl2br(sly_html($element->getHelpText())).'</span>' : '';
 $isContainer = $element->isContainer();
 $label       = $element->getLabel();
-$label       = empty($label) ? '&nbsp;' : wv_html($label.':');
+$label       = empty($label) ? '&nbsp;' : sly_html($label.':');
 
 // Elemente einrücken
 
