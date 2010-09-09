@@ -11,19 +11,14 @@
 /**
  * @ingroup form
  */
-class sly_Form_MediaButton extends sly_Form_ElementBase implements sly_Form_IElement
+class sly_Form_MediaButton extends sly_Form_Widget implements sly_Form_IElement
 {
-	protected $javascriptID;
-
-	public function __construct($name, $label, $value, $javascriptID, $id = null, $allowedAttributes = null)
+	
+	public function __construct($name, $label, $value, $javascriptID = -1, $id = null, $allowedAttributes = null)
 	{
-		if ($allowedAttributes === null) {
-			$allowedAttributes = array('value', 'name', 'id', 'disabled', 'class', 'maxlength', 'readonly', 'style');
-		}
-
-		parent::__construct($name, $label, $value, $id, $allowedAttributes);
+		
+		parent::__construct($name, $label, $value, $javascriptID, $id, $allowedAttributes, 'mediabutton');
 		$this->setAttribute('class', 'rex-form-text');
-		$this->javascriptID = $javascriptID;
 	}
 
 	public function render()

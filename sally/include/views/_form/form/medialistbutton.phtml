@@ -1,0 +1,32 @@
+<?
+$id    = $this->javascriptID;
+$files = sly_makeArray($this->attributes['value']);
+$files = array_filter($files);
+
+?>
+<span class="sly-widget sly-medialistbutton">
+	<input type="hidden" name="<?= $this->attributes['id'] ?>" id="REX_MEDIALIST_<?= $id ?>" value="<?= sly_html(implode(',', (array)$this->attributes['value'])) ?>" />
+	<?
+
+	$files  = array_combine($files, $files);
+	$select = new sly_Form_Select_DropDown('MEDIALIST_SELECT['.$id.']', '', null, $files, 'REX_MEDIALIST_SELECT_'.$id);
+
+	$select->setAttribute('size', 8);
+	$select->setAttribute('class', $this->attributes['class']);
+	print $select->render();
+
+	?>
+
+	<span class="sly-icons">
+		<a href="#" onclick="moveREXMedialist(<?= $id ?>, 'top'); return false;"><img src="media/file_top.gif" title="Ganz Hoch schieben" alt="Ganz Hoch schieben" /></a>
+		<a href="#" onclick="moveREXMedialist(<?= $id ?>, 'up'); return false;"><img src="media/file_up.gif" title="Hoch schieben" alt="Hoch schieben" /></a>
+		<a href="#" onclick="moveREXMedialist(<?= $id ?>, 'down'); return false;"><img src="media/file_down.gif" title="Runter schieben" alt="Runter schieben" /></a>
+		<a href="#" onclick="moveREXMedialist(<?= $id ?>, 'bottom'); return false;" style="margin-right:2em"><img src="media/file_bottom.gif" title="Ganz runter schieben" alt="Ganz runter schieben" /></a>
+	</span>
+
+	<span class="sly-icons">
+		<a href="#" onclick="openREXMedialist(<?= $id ?>); return false;"><img src="media/file_open.gif" title="Medium öffnen" alt="Medium öffnen" /></a>
+		<a href="#" onclick="addREXMedialist(<?= $id ?>); return false;"><img src="media/file_add.gif" title="Medium hinzufügen" alt="Medium hinzufügen" /></a>
+		<a href="#" onclick="deleteREXMedialist(<?= $id ?>); return false;"><img src="media/file_del.gif" title="Medium entfernen" alt="Medium entfernen" /></a>
+	</span>
+</span>

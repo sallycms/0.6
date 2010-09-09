@@ -247,7 +247,7 @@ if ($subpage == "detail")
       $fwidth  = $media->getWidth();
       $fheight = $media->getHeight();
 
-      if ($size = @getimagesize($REX['HTDOCS_PATH'].'/data/mediapool/'.$fname))
+      if ($size = @getimagesize($REX['MEDIAFOLDER'].'/'.$fname))
       {
         $fwidth  = $size[0];
         $fheight = $size[1];
@@ -269,7 +269,7 @@ if ($subpage == "detail")
       </div>';
       $imgn = '../data/mediapool/'. $encoded_fname .'?t='.$ffile_update;
 
-      if (!file_exists($REX['INCLUDE_PATH'].'/../../data/mediapool/'.$fname))
+      if (!file_exists($REX['MEDIAFOLDER'].'/'.$fname))
       {
         $imgn = 'media/mime-error.gif';
       }
@@ -380,7 +380,7 @@ if ($subpage == "detail")
                   <div class="rex-form-row">
                     <p class="rex-form-read">
                       <label for="flink">'. $I18N->msg('pool_filename') .'</label>
-                      <span class="rex-form-read"><a href="../files/'. $encoded_fname .'" id="flink">'. htmlspecialchars($fname) .'</a> [' . $ffile_size . ']</span>
+                      <span class="rex-form-read"><a href="../data/mediapool/'. $encoded_fname .'" id="flink">'. htmlspecialchars($fname) .'</a> [' . $ffile_size . ']</span>
                     </p>
                   </div>
 
@@ -439,19 +439,19 @@ if ($subpage == "detail")
                   <div class="rex-form-row">
                     <p class="rex-form-read">
                         <label for="ftitle">Titel</label>
-                        <span class="rex-form-read" id="ftitle">'. htmlspecialchars($ftitle) .'</span>
+                        <span class="rex-form-read" id="ftitle">'. sly_html($ftitle) .'</span>
                     </p>
                   </div>
                   <div class="rex-form-row">
                     <p class="rex-form-read">
                         <label for="rex_file_new_category">'. $I18N->msg('pool_file_category') .'</label>
-                        <span class="rex-form-read" id="rex_file_new_category">'. htmlspecialchars($catname) .'</span>
+                        <span class="rex-form-read" id="rex_file_new_category">'. sly_html($catname) .'</span>
                     </p>
                   </div>
                   <div class="rex-form-row">
                     <p class="rex-form-read">
                         <label for="flink">'. $I18N->msg('pool_filename') .'</label>
-                        <a class="rex-form-read" href="../files/'. $encoded_fname .'" id="flink">'. $fname .'</a> [' . $ffile_size . ']
+                        <a class="rex-form-read" href="../data/mediapool/'. $encoded_fname .'" id="flink">'. $fname .'</a> [' . $ffile_size . ']
                     </p>
                   </div>
                   <div class="rex-form-row">
@@ -713,7 +713,7 @@ if ($subpage == '')
         $width  = false;
         $height = false;
 
-        if ($size = @getimagesize($REX['HTDOCS_PATH'].'/data/mediapool/'.$file_name))
+        if ($size = @getimagesize($REX['MEDIAFOLDER'].'/'.$file_name))
         {
           $width  = $size[0];
           $height = $size[1];

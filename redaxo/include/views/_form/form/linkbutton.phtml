@@ -1,0 +1,36 @@
+<?
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+$id       = $this->javascriptID;
+$art      = OOArticle::getArticleById($this->attributes['value']);
+$artName  = '';
+$category = '';
+$params   = '';
+
+if (OOArticle::isValid($art)) {
+	$artName  = sly_html($art->getName());
+	$category = $art->getCategoryId();
+
+	if ($category) {
+		$params = '&category_id='.$category;
+	}
+}
+
+?>
+
+<span class="sly-widget sly-linkbutton">
+	<input type="hidden" name="<?= sly_html($this->attributes['id']) ?>" id="LINK_<?= $id ?>" value="<?= sly_html($this->attributes['value']) ?>" />
+	<input type="text" style="width:50%" name="LINK_NAME[<?= $id ?>]" value="<?= $artName; ?>" class="<?= sly_html($this->attributes['class']) ?>" id="LINK_<?= $id ?>_NAME" readonly="readonly" />
+
+	<span class="sly-icons">
+		<a href="#" onclick="openLinkMap('LINK_<?= $id ?>', '<?= $params ?>'); return false;"><img src="media/file_open.gif" alt="Öffne Strukturansicht" title="Öffne Strukturansicht" /></a>
+		<a href="#" onclick="deleteREXLink('<?= $id ?>'); return false;"><img src="media/file_del.gif" title="Link entfernen" alt="Link entfernen" /></a>
+	</span>
+</span>
