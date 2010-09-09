@@ -130,6 +130,33 @@ input#rex-form-field-prior {
 	p select.rex-form-select-date { width: 50px;  }
 	p select.rex-form-select-year { width: 70px;  }
 	div.rex-form-widget select    { width: 212px; }
+
+	.sly-widget {
+		&.sly-medialistbutton {
+			display: block;
+
+			select {
+				float: left;
+				width: 398px;
+			}
+
+			.sly-icons {
+				float: left;
+				width: 16px;
+				margin-left: 5px;
+
+				img {
+					padding-bottom: 2px;
+				}
+			}
+		}
+
+		&.sly-mediabutton, &.sly-linkbutton {
+			.sly-icons img {
+				padding-bottom: 2px;
+			}
+		}
+	}
 }
 
 /*	Checkbox / Radio */
