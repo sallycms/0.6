@@ -6,7 +6,6 @@ CREATE TABLE `%PREFIX%user` (
 	`psw`         varchar(50) NOT NULL,
 	`status`      varchar(5) NOT NULL,
 	`rights`      text NOT NULL,
-	`login_tries` tinyint(4) UNSIGNED DEFAULT 0,
 	`createuser`  varchar(255) NOT NULL,
 	`updateuser`  varchar(255) NOT NULL,
 	`createdate`  int(11) NOT NULL,
