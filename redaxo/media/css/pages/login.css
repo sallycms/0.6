@@ -43,17 +43,14 @@ body#rex-page-login {
 
 			/* Überschrift */
 			legend {
-				color: #fff;
-				background-color: $drk_grey;
-				font-size: 1.1em;
-				+border-top-radius(4px);
-				width: 630px; /* Breite des Loginbereichs abzüglich des padding links*/
-				padding: 5px 0 8px 20px;
+				width: 640px; /* Breite des Loginbereichs abzüglich des padding links*/
 			}
 		}
 
 		&-wrapper {
-			padding: 0 10px;
+			padding: 0;
+			width: 650px;
+			margin-bottom: 0;
 		}
 
 		&-row {
@@ -64,7 +61,7 @@ body#rex-page-login {
 		}
 
 		&-submit {
-			margin: 2px 0 10px 77px;
+			margin: 2px 0 3px 77px;
 		}
 
 		&-col-a { vertical-aling: middle; }

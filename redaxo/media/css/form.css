@@ -213,6 +213,21 @@ div.rex-form {
 		}
 	}
 
+	div.rex-area-col-b {
+		.rex-form-wrapper {
+			width: 100%;
+			padding: 0;
+		}
+
+		legend {
+			width: auto;
+			background: none;
+			color: $drk_grey;
+			font-size: 100%;
+			padding-bottom: 5px;
+		}
+	}
+
 	/*	rex-form-element-v2 : Standardwerte von label und input vertauscht */
 
 	div.rex-form-element-v2 {

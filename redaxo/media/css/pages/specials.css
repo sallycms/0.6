@@ -57,6 +57,17 @@ div#rex-form-system-setup {
 			margin-left: 190px;
 		}
 	}
+
+	.rex-area-col-b .rex-area-content {
+		padding-bottom: 0;
+	}
+
+	.rex-form-col-1 {
+		padding-bottom: 0;
+		.rex-form-wrapper {
+			margin-bottom: 10px;
+		}
+	}
 }
 
 /*	System : Sprachen */
