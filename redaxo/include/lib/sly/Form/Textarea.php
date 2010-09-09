@@ -16,6 +16,8 @@ class sly_Form_Textarea extends sly_Form_Input_Base
 		$allowed = array('value', 'name', 'id', 'disabled', 'class', 'maxlength', 'readonly', 'style', 'rows', 'cols', 'wrap');
 		parent::__construct($name, $label, $value, $id, $allowed);
 		$this->addClass('rex-form-textarea');
+		$this->setAttribute('rows', 15);
+		$this->setAttribute('cols', 50);
 	}
 
 	public function render()
