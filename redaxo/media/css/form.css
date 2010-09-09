@@ -274,7 +274,7 @@ div.rex-form input.rex-form-submit {
 	border-top: 1px dotted $md_grey;
 }
 
-.rex-addon-output-v2 .rex-form {
+.rex-form {
 	&-row {
 		padding: 7px 0;
 		clear: both;
@@ -294,11 +294,15 @@ div.rex-form input.rex-form-submit {
 	/* Überschrift | dunkelgrau hinterlegt mit runden Ecken*/
 	legend {
 		color: #fff;
-		background-color: $drk_grey;
+		background-color: $md_grey;
 		font-size: 1.1em;
 		width: 787px; /* Breite des Loginbereichs abzüglich des padding links*/
 		padding: 8px 0 8px 10px;
 		+border-top-radius(4px);
+	}
+
+	fieldset.num1 legend {
+		background-color: $drk_grey;
 	}
 
 	.rex-form-wrapper {

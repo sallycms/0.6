@@ -222,7 +222,7 @@ div.rex-content-body {
 				margin-top: -17px; /* Ausgleich für Legend */
 				padding: 0 10px 10px 10px;
 				line-height: 25px;
-				background-color: #fff;;
+				background-color: #fff;
 				margin:0 0 20px -1px;
 				+border-bottom-radius(4px);
 				border: 1px solid #efefef;
@@ -245,7 +245,6 @@ div.rex-content-body {
 
 			legend {
 				color: #fff;
-				background-color: $md_grey;
 				font-size: 1.1em;
 				+border-top-radius(4px);
 				width: 787px; /* Breite des Loginbereichs abzüglich des padding links*/

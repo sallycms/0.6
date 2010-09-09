@@ -35,7 +35,7 @@ function rex_mediapool_filename($filename, $doSubindexing = true)
 	$newFilename = strtolower($filename);
 	$newFilename = str_replace(array('ä','ö', 'ü', 'ß'), array('ae', 'oe', 'ue', 'ss'), $newFilename);
 	$newFilename = preg_replace('/[^a-zA-Z0-9.\-\+]/', '_', $newFilename);
-	
+
 	if (strrpos($newFilename, '.') != '') {
 		$newName = substr($newFilename, 0, strlen($newFilename)-(strlen($newFilename)-strrpos($newFilename, '.')));
 		$newExt  = substr($newFilename, strrpos($newFilename,'.'), strlen($newFilename)-strrpos($newFilename, '.'));
@@ -46,7 +46,7 @@ function rex_mediapool_filename($filename, $doSubindexing = true)
 	}
 
 	// ---- ext checken - alle Scriptendungen rausfiltern
-	
+
 	if (in_array($newExt, $REX['MEDIAPOOL']['BLOCKED_EXTENSIONS'])) {
 		$newName .= $newExt;
 		$newExt   = '.txt';
@@ -56,10 +56,10 @@ function rex_mediapool_filename($filename, $doSubindexing = true)
 
 	if ($doSubindexing) {
 		// ----- Datei schon vorhanden -> Namen ändern -> _1 ..
-		
+
 		if (file_exists($REX['MEDIAFOLDER'].'/'.$newFilename)) {
 			$cnt = 0;
-			
+
 			do {
 				++$cnt;
 				$newFilename = $newName.'_'.$cnt.$newExt;
@@ -88,13 +88,13 @@ function rex_mediapool_saveMedia($fileData, $rex_file_category, $fileInfos, $use
 	$rex_file_category = (int) $rex_file_category;
 
 	$id = rex_sql::fetch('id', 'file_category', 'id = '.$rex_file_category);
-	
+
 	if ($id === false) {
 		$rex_file_category = 0;
 	}
 
 	$isFileUpload = isset($fileData['tmp_name']);
-	
+
 	if ($isFileUpload) {
 		$doSubindexing = true;
 	}
@@ -106,14 +106,14 @@ function rex_mediapool_saveMedia($fileData, $rex_file_category, $fileInfos, $use
 	$message     = '';
 
 	// ----- alter/neuer Dateiname
-	
+
 	$srcFile = $REX['MEDIAFOLDER'].'/'.$filename;
 	$dstFile = $REX['MEDIAFOLDER'].'/'.$newFilename;
 	$success = true;
 	$level   = error_reporting(0);
-	
+
 	// Datei verschieben
-	
+
 	if ($isFileUpload) {
 		if (!move_uploaded_file($fileData['tmp_name'], $dstFile)) {
 			$message .= $I18N->msg('pool_file_movefailed');
@@ -126,7 +126,7 @@ function rex_mediapool_saveMedia($fileData, $rex_file_category, $fileInfos, $use
 			$success  = false;
 		}
 	}
-	
+
 	// Datensatz anlegen
 
 	if ($success) {
@@ -159,7 +159,7 @@ function rex_mediapool_saveMedia($fileData, $rex_file_category, $fileInfos, $use
 
 		$message .= $I18N->msg('pool_file_added');
 	}
-	
+
 	error_reporting($level);
 
 	$return['title']        = $fileInfos['title'];
@@ -208,7 +208,7 @@ function rex_mediapool_updateMedia($fileData, &$fileInfos, $userlogin = null)
 	$updated = false;
 	$level   = error_reporting(0);
 	$return['ok'] = true;
-	
+
 	if (!empty($_FILES['file_new']['name']) && $_FILES['file_new']['name'] != 'none') {
 		$filename = $_FILES['file_new']['tmp_name'];
 		$filetype = $_FILES['file_new']['type'];
@@ -216,7 +216,7 @@ function rex_mediapool_updateMedia($fileData, &$fileInfos, $userlogin = null)
 
 		if ($filetype == $fileInfos['filetype'] || OOMedia::compareImageTypes($filetype, $fileInfos['filetype'])) {
 			$targetFile = $REX['MEDIAFOLDER'].'/'.$fileInfos['filename'];
-			
+
 			if (move_uploaded_file($filename, $targetFile) || copy($filename, $targetFile)) {
 				$return['msg']         = $I18N->msg('pool_file_changed');
 				$fileInfos['filetype'] = addslashes($filetype); // Magic Quotes von REDAXO simulieren
@@ -224,18 +224,18 @@ function rex_mediapool_updateMedia($fileData, &$fileInfos, $userlogin = null)
 
 				$sql->setValue('filetype', $fileInfos['filetype']); // Magic Quotes von REDAXO!
 				$sql->setValue('filesize', (int) $fileInfos['filesize']);
-				
+
 				if ($size = getimagesize($REX['MEDIAFOLDER'].'/'.$fileInfos['filename'])) {
 					$sql->setValue('width', $size[0]);
 					$sql->setValue('height', $size[1]);
 				}
-				
+
 				chmod($REX['MEDIAFOLDER'].'/'.$fileInfos['filename'], $REX['FILEPERM']);
-				
+
 				if (class_exists('Thumbnail')){
 					Thumbnail::deleteCache($fileInfos['filename']);
 				}
-				
+
 				$updated = true;
 			}
 			else {
@@ -248,7 +248,7 @@ function rex_mediapool_updateMedia($fileData, &$fileInfos, $userlogin = null)
 			$return['ok']  = false;
 		}
 	}
-	
+
 	error_reporting($level);
 
 	$sql->addGlobalUpdateFields();
@@ -322,7 +322,7 @@ function rex_mediapool_addMediacatOptions(&$select, &$mediacat, &$mediacat_ids, 
 	}
 
 	$mname = $mediacat->getName();
-	
+
 	if ($REX['USER']->hasPerm('advancedMode[]')) {
 		$mname .= ' ['.$mediacat->getId().']';
 	}
@@ -330,7 +330,7 @@ function rex_mediapool_addMediacatOptions(&$select, &$mediacat, &$mediacat_ids, 
 	$mediacat_ids[] = $mediacat->getId();
 	$select->addOption($mname, $mediacat->getId(), $mediacat->getId(), $mediacat->getParentId());
 	$children = $mediacat->getChildren();
-	
+
 	if (is_array($children)) {
 		foreach ($children as $child) {
 			rex_mediapool_addMediacatOptions($select, $child, $mediacat_ids, $mname);
@@ -356,19 +356,19 @@ function rex_mediapool_addMediacatOptionsWPerm( &$select, &$mediacat, &$mediacat
 	}
 
 	$mname = $mediacat->getName();
-	
+
 	if ($REX['USER']->hasPerm('advancedMode[]')) {
 		$mname .= ' ['.$mediacat->getId().']';
 	}
 
 	$mediacat_ids[] = $mediacat->getId();
-	
+
 	if ($PERMALL || $REX['USER']->hasPerm('media['.$mediacat->getId().']')) {
 		$select->addOption($mname, $mediacat->getId(), $mediacat->getId(), $mediacat->getParentId());
 	}
 
 	$children = $mediacat->getChildren();
-	
+
 	if (is_array($children)) {
 		foreach ($children as $child) {
 			rex_mediapool_addMediacatOptionsWPerm($select, $child, $mediacat_ids, $mname);
@@ -394,13 +394,13 @@ function rex_mediapool_Mediaform($form_title, $button_title, $rex_file_category,
 
 	$mediacat_ids = array();
 	$rootCat      = 0;
-	
+
 	if ($rootCats = OOMediaCategory::getRootCategories()) {
 		foreach ($rootCats as $rootCat) {
 			rex_mediapool_addMediacatOptionsWPerm($cats_sel, $rootCat, $mediacat_ids);
 		}
 	}
-	
+
 	$cats_sel->setSelected($rex_file_category);
 
 	if (!empty($warning)) {
@@ -421,10 +421,10 @@ function rex_mediapool_Mediaform($form_title, $button_title, $rex_file_category,
 	$maxPOST   = rex_ini_get('post_max_size');
 	$maxUpload = rex_ini_get('upload_max_filesize');
 	$maxSize   = min(array($maxPOST, $maxUpload));
-	
+
 	if ($file_chooser) {
 		$devInfos = '';
-		
+
 		if ($REX['USER']->hasPerm('advancedMode[]')) {
 			$devInfos =
 '<span class="rex-form-notice">
@@ -447,7 +447,7 @@ function rex_mediapool_Mediaform($form_title, $button_title, $rex_file_category,
 	}
 
 	$add_submit = '';
-	
+
 	if (rex_session('media[opener_input_field]') != '') {
 		$add_submit = '<input type="submit" class="rex-form-submit" name="saveandexit" value="'.$I18N->msg('pool_file_upload_get').'" />';
 	}
@@ -455,7 +455,7 @@ function rex_mediapool_Mediaform($form_title, $button_title, $rex_file_category,
 	$s .= '
 <div class="rex-form" id="rex-form-mediapool-other">
 	<form action="index.php?page=mediapool&amp;subpage='.$subpage.'&amp;media_method=add_file" method="post" enctype="multipart/form-data">
-		<fieldset class="rex-form-col-1">
+		<fieldset class="rex-form-col-1 num1">
 			<legend>'.$form_title.'</legend>
 			<div class="rex-form-wrapper">
 
@@ -472,7 +472,7 @@ function rex_mediapool_Mediaform($form_title, $button_title, $rex_file_category,
 						'.$cats_sel->get().'
 					</p>
 				</div>
-				
+
 				<div class="rex-clearer"></div>';
 
 	$s .= rex_register_extension_point('MEDIA_FORM_ADD', '');

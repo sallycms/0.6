@@ -280,7 +280,7 @@ if ($subpage == "detail")
         'height' => $rheight
 	   );
 
-      $add_image = '<p class="rex-me1 rex-mediapool-detail-image"><img '.sly_Util_HTML::buildAttributeString($attrs).' /></p>';
+      $add_image = '<p class="rex-mediapool-detail-image"><img '.sly_Util_HTML::buildAttributeString($attrs).' /></p>';
     }
     if ($warning != '')
     {
@@ -340,7 +340,7 @@ if ($subpage == "detail")
         <div id="rex-mediapool-detail-wrapper">
         <div class="rex-form" id="rex-form-mediapool-detail"'.$style_width.'>
           <form action="index.php" method="post" enctype="multipart/form-data">
-            <fieldset class="rex-form-col-1 num1">
+            <fieldset class="rex-form-col-1 num2 sly-file-properties">
               <legend>'. $I18N->msg('pool_file_edit') . $opener_link.'</legend>
 
               <div class="rex-form-wrapper">
@@ -588,7 +588,7 @@ if ($subpage == '')
   //deletefilelist und cat change
   echo '<div class="rex-form" id="rex-form-mediapool-media">
        <form action="index.php" method="post" enctype="multipart/form-data">
-          <fieldset class="rex-form-col-1">
+          <fieldset class="rex-form-col-1 num2">
             <legend class="rex-form-hidden-legend">'. $I18N->msg('pool_selectedmedia') .'</legend>
 
             <div class="rex-form-wrapper">
@@ -596,7 +596,7 @@ if ($subpage == '')
               <input type="hidden" id="media_method" name="media_method" value="" />
               '. $arg_fields .'
 
-              <table class="rex-table" summary="'. htmlspecialchars($I18N->msg('pool_file_summary', $rex_file_category_name)) .'">
+              <table class="rex-table sly-mediapool-list" summary="'. htmlspecialchars($I18N->msg('pool_file_summary', $rex_file_category_name)) .'">
                 <caption>'. $I18N->msg('pool_file_caption', $rex_file_category_name) .'</caption>
                 <colgroup>
                   <col width="40" />

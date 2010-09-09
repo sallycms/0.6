@@ -38,27 +38,23 @@ body#rex-page-mediapool {
 /*	Button - Arrows */
 
 .rex-i- {
-	&mediapool-category     { background-image: url(../folder.gif); }
-	&mediapool-category-add { background-image: url(../folder_plus.gif); }
+	&mediapool-category     { background-position: -32px 0; }
+	&mediapool-category-add { background-position: -32px -16px; }
 }
 
 div#rex-form-mediapool-selectcategory {
-	margin-bottom: 10px;
+	/*  Bspl. Searchbar */
 
 	div.rex-form-row p {
-		label                    { font-weight: bold; line-height:30px; }
-		select#rex_file_category { width: 185px; }
-		input.rex-form-submit    { margin-left: 10px; margin-bottom: 10px; }
+		input.rex-form-submit { margin-left: 10px; }
 	}
-
-	noscript div.rex-form-row p input.rex-form-submit {
-		margin-left: 153px;
-	}
-
-	/*  Bspl. Searchbar */
 
 	fieldset.rex-form-col-2 {
 		margin-bottom: 40px;
+	}
+
+	.rex-form-wrapper {
+		margin-bottom: 10px;
 	}
 }
 
@@ -67,9 +63,6 @@ div#rex-form-mediapool-other {
 	div.rex-form-row:first-child { border-top: none; }
 
 	fieldset.rex-form-col-1 div.rex-form-row {
-		/* nur der absatz soll einen abstand haben, nicht die inputs*/
-		p.rex-form-submit { margin-left: -15px; }
-
 		input#file_new .rex-form-file {
 			border: 0;
 		}
@@ -85,56 +78,6 @@ div#rex-form-mediapool-other {
 	}
 }
 
-body#rex-page-mediapool,
-div#rex-form-mediapool-other,
-div#rex-form-mediapool-selectcategory {
-	fieldset {
-		&.rex-form-col-1, rex-form-col-2 {
-			background-color: #fff;
-			width: 100%;
-			+border-bottom-radius(4px);
-			margin-bottom: 10px;
-		}
-
-		.rex-lgnd {
-			background-color: $md_grey;;
-		}
-
-		.rex-form-wrapper {
-			+border-radius($brd_rad);
-			background-color: #fff;
-			float: left;
-			width: 100%;
-		}
-	}
-	div.rex-form-row {
-		line-height: 23px;
-		padding: 6px 0;
-		label  { width: 120px; margin-left: 10px; margin-top: 1px; }
-		select { margin-right: 5px; width: 153px; }
-		.rex-form-col-a,
-		.rex-form-col-b {
-			width: auto;
-			vertical-align: middle;
-		}
-
-		.rex-form-col-a { float: left;  }
-		.rex-form-col-b { float: right; }
-	}
-
-	/* Überschrift | mittelgrau hinterlegt mit runden Ecken */
-	legend {
-		color: #fff;
-		background-color: $drk_grey;
-		font-size: 1.1em;
-		width: 680px;
-		padding: 8px 0 8px 10px;
-	}
-
-	fieldset.num1 {
-		legend { +border-top-radius(4px); }
-	}
-}
 div#rex-form-mediapool-detail {
 	div.rex-form-row p select {
 		&.rex-form-select-date { width: 45px; }
@@ -162,6 +105,7 @@ div#rex-form-mediapool-detail {
 		}
 	}
 }
+
 div#rex-mediapool-detail {
 	&-wrapper {
 		float: left;
@@ -212,14 +156,10 @@ p.rex-mediapool-detail-image {
 	}
 }
 
-div#rex-form-mediapool-media,
-div#rex-form-mediapool-categories {
-	legend {
-		font-size: 1.1em;
-		margin-bottom: 5px;
-	}
+#rex-page-mediapool .rex-form {
+	width: 690px;
 
-	td { padding: 10px 0 }
+	td { padding: 5px 0 }
 
 	.rex-tx4 {
 		line-height: 1.4em;
@@ -227,8 +167,29 @@ div#rex-form-mediapool-categories {
 	}
 
 	caption { display: none; }
+	legend  { width: 680px;  }
 
-	table.rex-table {
+	.rex-form-wrapper {
+		width: 690px;
+		padding: 0;
+		margin-bottom: 10px;
+
+		.rex-form-row {
+			width: 680px;
+			padding: 7px 5px;
+		}
+	}
+
+	fieldset.sly-file-properties {
+		.rex-form-wrapper {
+			height: 90px;
+		}
+	}
+
+	input.rex-form-text    { width: 400px; }
+	select.rex-form-select { width: 407px; }
+
+	.sly-mediapool-list {
 		width: 690px;
 
 		th, td                   { vertical-align: middle; }
@@ -239,8 +200,30 @@ div#rex-form-mediapool-categories {
 			background-color: #fff;
 			color: $drk_grey;
 			font-weight: bold;
-			padding: 4px 0 9px;
 			vertical-align: middle;
+			border-bottom: 1px dotted $md_grey;
+			padding: 6px 0;
 		}
+
+		td.rex-icon input {
+			margin: 0;
+			width: 20px;
+		}
+
+		select {
+			width: 230px;
+		}
+	}
+}
+
+div#rex-form-mediapool-media {
+	.rex-form-wrapper {
+		padding: 0;
+	}
+}
+
+div#rex-form-mediapool-categories {
+	input.rex-form-submit {
+		margin-left: 0;
 	}
 }
