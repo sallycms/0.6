@@ -32,6 +32,7 @@ class sly_Layout_XHTML extends sly_Layout
 			if ($isConditional) print "<![endif]-->\n";
 		}
 	}
+
 	protected function printJavaScriptConcrete() {
 			print '<script type="text/javascript">
 				/* <![CDATA[ */'
@@ -41,16 +42,9 @@ class sly_Layout_XHTML extends sly_Layout
 	}
 
 	protected function printJavaScriptFilesConcrete() {
-		$list = array("jquery:'media/jquery.min.js'");
-		$i    = 0;
-
 		foreach ($this->javaScriptFiles as $files) {
-			foreach ($files as $file) $list[] = "a$i:'".addslashes(trim($file))."'";
-			++$i;
+			print "<script type=\"text/javascript\" src=\"".join("\"></script>\n<script type=\"text/javascript\" src=\"" , $files)."\"></script>\n";
 		}
-
-		print '<script type="text/javascript" src="media/nbl.min.js"></script>';
-		print '<script type="text/javascript">nbl.run({'.implode(',', $list).'})</script>'."\n";
 	}
 
 	protected function printBodyAttrs() {
