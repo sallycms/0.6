@@ -182,7 +182,7 @@ p.rex-mediapool-detail-image {
 
 	fieldset.sly-file-properties {
 		.rex-form-wrapper {
-			height: 90px;
+			min-height: 90px;
 		}
 	}
 
