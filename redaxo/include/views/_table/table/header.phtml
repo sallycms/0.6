@@ -35,18 +35,18 @@ if ($this->enableDragAndDrop && ($hasSearch || $hasPager)) {
 
 if (!self::isDragAndDropMode() && $hasSearch) {
 	$key   = 'q_'.$tableID;
-	$query = wv_get($key, 'string');
+	$query = sly_get($key, 'string');
 
 	print '<form method="get" action="index.php">';
 	print '<p style="sly-table-extras-filter">Filter: ';
 
 	foreach ($_GET as $name => $value) {
 		if ($name != 'p_'.$this->id && $name != $key && is_scalar($value)) {
-			print '<input type="hidden" name="'.wv_html($name).'" value="'.wv_html($value).'" />';
+			print '<input type="hidden" name="'.sly_html($name).'" value="'.sly_html($value).'" />';
 		}
 	}
 
-	print '<input type="text" name="'.$key.'" value="'.wv_html($query).'" class="filter_input_'.$this->id.'" />';
+	print '<input type="text" name="'.$key.'" value="'.sly_html($query).'" class="filter_input_'.$this->id.'" />';
 
 	print '</p>';
 	print '</form>';

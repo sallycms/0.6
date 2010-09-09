@@ -1,10 +1,10 @@
 <? $id = !empty($this->id) ? ' id="'.$this->id.'"' : ''; ?>
 <div class="rex-addon-output-v2" style="margin-bottom:1em">
 	<div class="rex-form">
-		<form method="<?= strtolower($this->method) ?>" action="<?= wv_html($this->action) ?>"<?= $id ?>>
+		<form method="<?= strtolower($this->method) ?>" action="<?= sly_html($this->action) ?>"<?= $id ?>>
 			<? foreach ($this->fieldsets as $i => $fieldset): ?>
 			<fieldset class="rex-form-col-1">
-				<legend class="rex-lgnd"><?= wv_html($fieldset['title']) ?></legend>
+				<legend class="rex-lgnd"><?= sly_html($fieldset['title']) ?></legend>
 				<div class="rex-form-wrapper">
 
 				<?php
@@ -13,8 +13,8 @@
 
 				if ($i == 0) {
 					foreach ($this->hiddenValues as $name => $value) {
-						print '<input type="hidden" name="'.wv_html($name).'" value="'.wv_html($value['value']).'"';
-						if (!empty($value['id'])) print ' id="'.wv_html($value['id']).'"';
+						print '<input type="hidden" name="'.sly_html($name).'" value="'.sly_html($value['value']).'"';
+						if (!empty($value['id'])) print ' id="'.sly_html($value['id']).'"';
 						print ' />'.PHP_EOL;
 						print "\t\t\t";
 					}
