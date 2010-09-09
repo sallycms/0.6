@@ -119,7 +119,7 @@ function rex_generateArticleContent($article_id, $clang = null)
 		$query =
 			'SELECT id, ctype, re_article_slice_id '.
 			'FROM #_article_slice '.
-			'WHERE article_id = '.$article_id.' AND clang = '.$clang.' '.
+			'WHERE article_id = '.$article_id.' AND clang = '.$_clang.' '.
 			'ORDER BY re_article_slice_id ASC';
 
 		$sql             = new rex_sql();
@@ -157,7 +157,7 @@ function rex_generateArticleContent($article_id, $clang = null)
 				$oldctype = $ctype;
 				$idx      = $id;
 
-				$ctype_content[] = 'OOArticleSlice::getArticleSliceById('.$id.','.$clang.')->getContent()';
+				$ctype_content[] = 'OOArticleSlice::getArticleSliceById('.$id.','.$_clang.')->getContent()';
 			}
 
 			$article_content .= '<?php print '.implode('.', $ctype_content).'; ?>';

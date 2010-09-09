@@ -41,12 +41,12 @@ class rex_backend_login extends rex_login
 				// gelungenen Versuch speichern
 
 				$this->sessionFixation();
-				$fvs->setQuery('UPDATE '.$this->tableName.' SET login_tries = 0, lasttrydate = '.time().', session_id = "'.session_id().'" WHERE login = "'.$this->usr_login.'" LIMIT 1');
+				$fvs->setQuery('UPDATE '.$this->tableName.' SET lasttrydate = '.time().', session_id = "'.session_id().'" WHERE login = "'.$this->usr_login.'" LIMIT 1');
 			}
 			else {
 				// Fehlversuch speichern
 
-				$fvs->setQuery('UPDATE '.$this->tableName.' SET login_tries = login_tries + 1, session_id = "", lasttrydate = '.time().' WHERE login = "'. $this->usr_login .'" LIMIT 1');
+				$fvs->setQuery('UPDATE '.$this->tableName.' SET session_id = "", lasttrydate = '.time().' WHERE login = "'. $this->usr_login .'" LIMIT 1');
 			}
 
 			if ($fvs->hasError()) return $fvs->getError();

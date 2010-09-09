@@ -64,9 +64,10 @@ div.rex-area-scroll {
 			+border-radius(4px);
 			/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
 			background-color: #fff;
-			color: #fff;
 
-			.rex-form-text input,.rex-form-password input {
+			.rex-form-text input,
+			.rex-form-password input,
+			select#driver {
 				width: 250px;
 			}
 
@@ -82,14 +83,11 @@ div.rex-area-scroll {
 		}
 
 		&-wrapper {
-			padding: 0 10px;
+			width: 650px;
 		}
 
 		&-row {
-			color: $drk_grey;
-			padding: 7px 0;
-			border-top: 1px dotted $md_grey;
-			border-bottom: 0;
+			width: 636px;
 		}
 
 		&-col-a { vertical-aling: middle; }
@@ -100,4 +98,10 @@ div.rex-area-scroll {
 
 div.rex-form-setup-step-database div.rex-form-row p.rex-form-label-right label {
 	width: 590px;
+}
+
+#rex-form-setup-step-2 {
+	.rex-form-checkbox {
+		margin-left: 0;
+	}
 }

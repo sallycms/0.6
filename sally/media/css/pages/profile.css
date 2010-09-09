@@ -6,10 +6,6 @@ body#rex-page-profile {
 	}
 
 	.rex-form {
-		&-wrapper {
-			padding: 0 10px;
-		}
-
 		&-col-2 {
 			.rex-form-col-a, .rex-form-col-b {
 				width:49%;
@@ -29,15 +25,5 @@ body#rex-page-profile {
 		&-submit {
 			margin-bottom: 3px;
 		}
-	}
-
-	/* Überschrift | dunkelgrau hinterlegt mit runden Ecken*/
-	legend {
-		color: #fff;
-		background-color: $drk_grey;
-		font-size: 1.1em;
-		+border-top-radius(4px);
-		width: 787px; /* Breite des Loginbereichs abzüglich des padding links*/
-		padding: 8px 0 8px 10px;
 	}
 }

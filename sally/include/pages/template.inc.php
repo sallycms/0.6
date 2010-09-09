@@ -262,7 +262,7 @@ if ($function == "add" or $function == "edit")
     echo '
       <div class="rex-form rex-form-template-editmode">
         <form action="index.php" method="post">
-          <fieldset class="rex-form-col-1">
+          <fieldset class="rex-form-col-1 num1">
             <legend>' . $legend . '</legend>
 
             <div class="rex-form-wrapper">

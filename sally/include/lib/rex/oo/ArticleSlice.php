@@ -108,8 +108,9 @@ class OOArticleSlice {
 	 *
 	 * @return OOArticleSlice
 	 */
-	public static function getFirstSliceForCtype($ctype, $articleID, $clang = false, $revision = 0) {
-		if ($clang === false) $clang = sly_Core::getCurrentClang();
+	public static function getFirstSliceForCtype($ctype, $an_article_id, $clang = false, $revision = 0)
+	{
+		global $REX;
 
 		$prefix    = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 		$articleID = (int) $articleID;
@@ -323,9 +324,8 @@ class OOArticleSlice {
 
 		foreach ($matches as $match) {
 			if (empty($match)) continue;
-
-			$url     = OOArticle::getArticleById($match[2], $match[3])->getUrl();
-			$content = str_replace($match[0],$url.$match[4],$content);
+			$replace = self::getReplacementLink($match[1], $match[2], $match[3]);
+			$content = str_replace($match[0], $replace, $content);
 		}
 
 		// -- preg match redaxo://[ARTICLEID] --
@@ -334,12 +334,18 @@ class OOArticleSlice {
 
 		foreach ($matches as $match) {
 			if (empty($match)) continue;
-
-			$url     = OOArticle::getArticleById($match[2])->getUrl();
-			$content = str_replace($match[0],$url.$match[3],$content);
+			$replace = self::getReplacementLink($match[1], false, $match[2]);
+			$content = str_replace($match[0], $replace, $content);
 		}
 
 		return $content;
+	}
+
+	private static function getReplacementLink($articleID, $clang = false, $params = '')
+	{
+		$art = OOArticle::getArticleById($articleID, $clang);
+		if ($art === null) return '';
+		return $art->getUrl().$params;
 	}
 
 	protected function getRexVarValue($type, $key) {

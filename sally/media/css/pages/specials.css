@@ -31,13 +31,15 @@ div#rex-form-system-setup {
 		padding: 5px 0 0;
 
 		label {
-			width: 176px;
+			width: 210px;
 			padding-left: 0;
 			font-weight: normal;
 		}
 	}
 
 	fieldset.rex-form-col-1 div.rex-form-row {
+		width: 371px;
+
 		p.rex-form-label-right label,
 		p.rex-form-read span,
 		p.rex-form-text input,
@@ -54,7 +56,18 @@ div#rex-form-system-setup {
 		/*	Submit */
 
 		p input.rex-form-submit {
-			margin-left: 176px;
+			margin-left: 210px;
+		}
+	}
+
+	.rex-area-col-b .rex-area-content {
+		padding-bottom: 0;
+	}
+
+	.rex-form-col-1 {
+		padding-bottom: 0;
+		.rex-form-wrapper {
+			margin-bottom: 10px;
 		}
 	}
 }

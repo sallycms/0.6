@@ -136,7 +136,7 @@ if ($PERMALL)
           </colgroup>
           <thead>
             <tr>
-              <th class="rex-icon"><a class="rex-i-element rex-i-mediapool-category-add" href="'. $link . $cat_id .'&amp;media_method=add_cat"><span class="rex-i-element-text">'. $I18N->msg('pool_kat_create') .'</span></a></th>
+              <th class="rex-icon"><a class="rex-i-element rex-i-mediapool-category-add sly-sprite" href="'. $link . $cat_id .'&amp;media_method=add_cat"><span class="rex-i-element-text">'. $I18N->msg('pool_kat_create') .'</span></a></th>
               <th class="rex-small">ID</th>
               <th>'. $I18N->msg('pool_kat_name') .'</th>
               <th colspan="2">'. $I18N->msg('pool_kat_function') .'</th>
@@ -148,7 +148,7 @@ if ($PERMALL)
   {
     echo '
       <tr class="rex-table-row-activ">
-        <td class="rex-icon"><span class="rex-i-element rex-i-mediapool-category"><span class="rex-i-element-text">'.$I18N->msg('pool_kat_create').'</span></span></td>
+        <td class="rex-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text">'.$I18N->msg('pool_kat_create').'</span></span></td>
         <td class="rex-small">-</td>
         <td>
           <label class="rex-form-hidden-label" for="rex-form-field-name">'. $I18N->msg('pool_kat_name') .'</label>
@@ -170,7 +170,7 @@ if ($PERMALL)
       echo '
         <input type="hidden" name="edit_id" value="'. $edit_id .'" />
         <tr class="rex-table-row-activ">
-          <td class="rex-icon"><span class="rex-i-element rex-i-mediapool-category"><span class="rex-i-element-text">'. htmlspecialchars($OOCat->getName()).'</span></span></td>
+          <td class="rex-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text">'. htmlspecialchars($OOCat->getName()).'</span></span></td>
           <td class="rex-small">'. $iid .'</td>
           <td>
             <label class="rex-form-hidden-label" for="rex-form-field-name">'. $I18N->msg('pool_kat_name') .'</label>
@@ -184,7 +184,7 @@ if ($PERMALL)
     }else
     {
       echo '<tr>
-              <td class="rex-icon"><a class="rex-i-element rex-i-mediapool-category" href="'. $link . $iid .'"><span class="rex-i-element-text">'.htmlspecialchars($OOCat->getName()).'</span></a></td>
+              <td class="rex-icon"><a class="rex-i-element rex-i-mediapool-category sly-sprite" href="'. $link . $iid .'"><span class="rex-i-element-text">'.htmlspecialchars($OOCat->getName()).'</span></a></td>
               <td class="rex-small">'. $iid .'</td>
               <td><a href="'. $link . $iid .'">'. htmlspecialchars($OOCat->getName()) .'</a></td>
               <td><a href="'. $link . $cat_id .'&amp;media_method=update_file_cat&amp;edit_id='. $iid .'">'. $I18N->msg('pool_kat_edit').'</a></td>

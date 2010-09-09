@@ -171,7 +171,7 @@ function rex_slice_module_exists($sliceID, $clang)
 }
 
 /**
- * Prüft, ob ein Modul im System bekannt ist.
+ * PrÃ¼ft, ob ein Modul im System bekannt ist.
  *
  * @return boolean  true oder ... false
  */

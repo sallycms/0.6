@@ -21,7 +21,6 @@ class sly_Model_User extends sly_Model_Base {
 	protected $psw;
 	protected $status; // TODO: Ist in der Datenbank noch ein VARCHAR...
 	protected $rights;
-	protected $login_tries;
 	protected $createuser;
 	protected $updateuser;
 	protected $createdate;
@@ -37,7 +36,7 @@ class sly_Model_User extends sly_Model_Base {
 
 	protected $_attributes = array(
 		'name' => 'string', 'description' => 'string', 'login' => 'string', 'psw' => 'string',
-		'status' => 'int', 'rights' => 'string', 'login_tries' => 'int', 'updateuser' => 'string',
+		'status' => 'int', 'rights' => 'string', 'updateuser' => 'string',
 		'updatedate' => 'int', 'createuser' => 'string', 'createdate' => 'int', 'lasttrydate' => 'int',
 		'session_id' => 'string', 'cookiekey' => 'string', 'revision' => 'int'
 	);
@@ -73,7 +72,6 @@ class sly_Model_User extends sly_Model_Base {
 	public function setLogin($login)             { $this->login       = $login;        }
 	public function setPassword($psw)            { $this->psw         = $psw;          }
 	public function setStatus($status)           { $this->status      = (int) $status; }
-	public function setLoginTries($login_tries)  { $this->login_tries = $login_tries;  }
 	public function setCreateDate($createdate)   { $this->createdate  = $createdate;   }
 	public function setUpdateDate($updatedate)   { $this->updatedate  = $updatedate;   }
 	public function setCreateUser($createuser)   { $this->createuser  = $createuser;   }
@@ -89,7 +87,6 @@ class sly_Model_User extends sly_Model_Base {
 	public function getPassword()    { return $this->psw;         }
 	public function getStatus()      { return $this->status;      }
 	public function getRights()      { return $this->rights;      }
-	public function getLoginTries()  { return $this->login_tries; }
 	public function getCreateDate()  { return $this->createdate;  }
 	public function getUpdateDate()  { return $this->updatedate;  }
 	public function getCreateUser()  { return $this->createuser;  }

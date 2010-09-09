@@ -287,6 +287,9 @@ if ($article->getRows() == 1) {
 					}
 				}
 			}
+
+			// Flush slice cache
+			sly_Core::cache()->flush(OOArticleSlice::CACHE_NS);
 		}
 
 		// END: Slice add/edit/delete
@@ -559,6 +562,9 @@ if ($article->getRows() == 1) {
 							$warning = $I18N->msg('no_rights_to_this_function');
 						}
 					}
+
+					// Flush slice cache
+					sly_Core::cache()->flush(OOArticleSlice::CACHE_NS);
 				}
 				else {
 					$warning = $I18N->msg('no_rights_to_this_function');
@@ -599,7 +605,7 @@ if ($article->getRows() == 1) {
 			print '
 		<div class="rex-form" id="rex-form-content-metamode">
 			<form action="index.php" method="post" enctype="multipart/form-data" id="REX_FORM">
-				<fieldset class="rex-form-col-1">
+				<fieldset class="rex-form-col-1 num1">
 					<legend><span>'.$I18N->msg('general').'</span></legend>
 
 					<input type="hidden" name="page" value="content" />

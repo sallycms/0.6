@@ -213,6 +213,21 @@ div.rex-form {
 		}
 	}
 
+	div.rex-area-col-b {
+		.rex-form-wrapper {
+			width: 100%;
+			padding: 0;
+		}
+
+		legend {
+			width: auto;
+			background: none;
+			color: $drk_grey;
+			font-size: 100%;
+			padding-bottom: 5px;
+		}
+	}
+
 	/*	rex-form-element-v2 : Standardwerte von label und input vertauscht */
 
 	div.rex-form-element-v2 {
@@ -265,22 +280,14 @@ div.rex-form input.rex-form-submit {
 	/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
 }
 
-.rex-form-row {
-	padding: 10px 0 0;
-	clear: both;
-	float: left;
-	width: 100%;
-	vertical-align: middle;
-	border-top: 1px dotted $md_grey;
-}
-
-.rex-addon-output-v2 .rex-form {
+.rex-form {
 	&-row {
-		padding: 7px 0;
+		padding: 7px;
 		clear: both;
 		float: left;
-		width: 100%;
+		width: 783px;
 		vertical-align: middle;
+		border-top: 1px dotted $md_grey;
 	}
 
 	textarea { height: 350px; width: 605px; }
@@ -294,11 +301,16 @@ div.rex-form input.rex-form-submit {
 	/* Überschrift | dunkelgrau hinterlegt mit runden Ecken*/
 	legend {
 		color: #fff;
-		background-color: $drk_grey;
+		background-color: $md_grey;
 		font-size: 1.1em;
 		width: 787px; /* Breite des Loginbereichs abzüglich des padding links*/
 		padding: 8px 0 8px 10px;
 		+border-top-radius(4px);
+	}
+
+	fieldset.num1 legend,
+	fieldset.sly-num0 legend {
+		background-color: $drk_grey;
 	}
 
 	.rex-form-wrapper {
@@ -306,8 +318,8 @@ div.rex-form input.rex-form-submit {
 		+border-bottom-radius(4px);
 		clear: both;
 		float: left;
-		width: 777px;
-		padding: 0 10px;
+		width: 797px;
+		padding: 0;
 		margin-bottom: 20px;
 	}
 }

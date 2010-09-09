@@ -461,7 +461,7 @@ function rex_mediapool_Mediaform($form_title, $button_title, $rex_file_category,
 	$s .= '
 <div class="rex-form" id="rex-form-mediapool-other">
 	<form action="index.php?page=mediapool&amp;subpage='.$subpage.'&amp;media_method=add_file" method="post" enctype="multipart/form-data">
-		<fieldset class="rex-form-col-1">
+		<fieldset class="rex-form-col-1 num1">
 			<legend>'.$form_title.'</legend>
 			<div class="rex-form-wrapper">
 

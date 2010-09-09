@@ -12,7 +12,6 @@ TEMP_PREFIX: tmp_
 FRONTEND_FILE: index.php
 FALLBACK_CACHING_STRATEGY: sly_Cache_Filesystem
 RELOGINDELAY: 2
-MAXLOGINS: 50
 START_PAGE: structure
 MEDIAPOOL:
   BLOCKED_EXTENSIONS: [.php, .php3, .php4, .php5, .php6, .phtml, .pl, .asp, .aspx, .cfm, .jsp]

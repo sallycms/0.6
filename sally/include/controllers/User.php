@@ -70,7 +70,6 @@ class sly_Controller_User extends sly_Controller_Sally
 				'name'        => sly_post('username', 'string'),
 				'description' => sly_post('userdesc', 'string'),
 				'status'      => sly_post('userstatus', 'boolean', false) ? 1 : 0,
-				'login_tries' => 0,
 				'lasttrydate' => 0,
 				'createdate'  => time(),
 				'updatedate'  => time(),
@@ -122,12 +121,6 @@ class sly_Controller_User extends sly_Controller_Sally
 			$user->setStatus($status);
 			$user->setUpdateDate(time());
 			$user->setUpdateUser($REX['LOGIN']->getValue('login'));
-
-			// Logins zurücksetzen?
-
-			if (sly_post('logintriesreset', 'boolean', false)) {
-				$user->setLoginTries(0);
-			}
 
 			// Passwort ändern?
 
