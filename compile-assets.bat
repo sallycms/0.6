@@ -1,1 +1,2 @@
-java -jar ../alfred/google-compiler.jar --js redaxo/media/standard.js --js_output_file redaxo/media/standard.min.js
+java -jar Q:\alfred\yuicompressor.jar -v --charset utf8 --type js -o redaxo/media/js/standard.min.js redaxo/media/js/standard.js
+java -jar Q:\alfred\yuicompressor.jar -v --charset utf8 --type js -o redaxo/media/js/jquery.timepicker.min.js redaxo/media/js/jquery.timepicker.js

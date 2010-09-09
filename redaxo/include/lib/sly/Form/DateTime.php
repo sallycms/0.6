@@ -12,7 +12,7 @@
 class sly_Form_DateTime extends sly_Form_ElementBase implements sly_Form_IElement
 {
 	protected $withTime;
-	
+
 	public function __construct($name, $label, $value, $id = null, $allowedAttributes = null, $withTime = true)
 	{
 		if ($allowedAttributes === null) {
@@ -20,7 +20,7 @@ class sly_Form_DateTime extends sly_Form_ElementBase implements sly_Form_IElemen
 		}
 
 		parent::__construct($name, $label, $value, $id, $allowedAttributes);
-		
+
 		$this->withTime   = (boolean) $withTime;
 		$this->outerClass = 'rex-form-text';
 	}
@@ -29,9 +29,9 @@ class sly_Form_DateTime extends sly_Form_ElementBase implements sly_Form_IElemen
 	{
 		return $this->withTime;
 	}
-	
-	public function render($redaxo)
+
+	public function render()
 	{
-		return $this->renderFilename($redaxo, 'element_datetime.phtml');
+		return $this->renderFilename('form/datetime.phtml');
 	}
 }
