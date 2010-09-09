@@ -5,14 +5,8 @@
 	&.sly-template-add { background-position: -48px -16px; }
 }
 
-body#rex-page-template div.rex-form {
-	+border-radius($brd_rad);
-}
-
 .rex-form-template-editmode {
 	textarea         { height: 350px; width: 605px; }
-	.rex-form-col-a  { padding-bottom: 10px; }
-	.rex-form-submit { margin-left: 73px;    }
 
 	input.rex-form-checkbox,
 	input.rex-form-radio {
@@ -24,24 +18,5 @@ body#rex-page-template div.rex-form {
 		p.rex-form-select select { margin-top: 5px;     }
 		legend                   { +border-radius(0px); }
 		.rex-form-row            { margin: 0;           }
-	}
-
-	/* Überschrift | dunkelgrau hinterlegt mit runden Ecken*/
-	legend {
-		color: #fff;
-		background-color: $drk_grey;
-		font-size: 1.1em;
-		+border-top-radius(4px);
-		width: 787px; /* Breite des Loginbereichs abzüglich des padding links*/
-		padding: 8px 0 8px 10px;
-	}
-
-	.rex-form-wrapper {
-		background-color: #fff;
-		+border-bottom-radius($brd_rad);
-		clear: both;
-		float: left;
-		width: 777px;
-		padding: 0 10px;
 	}
 }

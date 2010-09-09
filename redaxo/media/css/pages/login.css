@@ -58,6 +58,7 @@ body#rex-page-login {
 			padding: 7px 0;
 			border-top: 1px dotted $md_grey;
 			border-bottom: 0;
+			width: 650px;
 		}
 
 		&-submit {

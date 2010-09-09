@@ -11,14 +11,14 @@ $this->title($I18N->msg('setup_step4'));
 		<fieldset class="rex-form-col-1">
 			<? $this->printHiddens('createuser') ?>
 			<legend><?= $I18N->msg('setup_045') ?></legend>
-			
+
 			<div class="rex-form-wrapper">
 				<?php
 
 				if (!empty($this->warning)) {
 					print rex_warning($this->warning);
 				}
-				
+
 				?>
 				<div class="rex-form-row">
 					<p class="rex-form-col-a rex-form-text">
@@ -26,14 +26,14 @@ $this->title($I18N->msg('setup_step4'));
 						<input class="rex-form-text" type="text" value="<?= sly_html($adminUser) ?>" id="admin_user" name="admin_user" />
 					</p>
 				</div>
-				
+
 				<div class="rex-form-row">
 					<p class="rex-form-col-a rex-form-text">
 						<label for="admin_pass"><?= $I18N->msg('setup_047') ?>:</label>
 						<input class="rex-form-text" type="password" value="" id="admin_pass" name="admin_pass" />
 					</p>
 				</div>
-				
+
 				<? if ($usersExist): ?>
 				<div class="rex-form-row">
 					<p class="rex-form-col-a rex-form-checkbox rex-form-label-right">
@@ -42,11 +42,7 @@ $this->title($I18N->msg('setup_step4'));
 					</p>
 				</div>
 				<? endif ?>
-			</div>
-		</fieldset>
-		
-		<fieldset class="rex-form-col-1">
-			<div class="rex-form-wrapper">
+
 				<div class="rex-form-row">
 					<p class="rex-form-col-a rex-form-submit">
 						<input class="rex-form-submit" type="submit" name="sly-submit" value="<?= $I18N->msg('setup_049') ?>" />
