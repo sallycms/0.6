@@ -237,10 +237,9 @@ div.rex-form {
 
 	fieldset.rex-form-col-2 div.rex-form-row {
 		/* p.rex-form-col-a, */
-		p.rex-form-col-b {
-			width: 49%;
-
-			/* margin: 0 0 0 15px; */
+		.rex-form-col-a, .rex-form-col-b {
+			width:49%;
+			float: left;
 		}
 	}
 
