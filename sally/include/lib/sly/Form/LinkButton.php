@@ -34,4 +34,8 @@ class sly_Form_LinkButton extends sly_Form_Widget implements sly_Form_IElement {
 		$this->addOuterClass('rex-form-text');
 		return $this->outerClass;
 	}
+
+	public function getID() {
+		return 'LINK_'.$this->javascriptID;
+	}
 }

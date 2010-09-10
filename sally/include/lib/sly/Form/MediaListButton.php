@@ -29,4 +29,8 @@ class sly_Form_MediaListButton extends sly_Form_Widget implements sly_Form_IElem
 
 		return $this->renderFilename('form/medialistbutton.phtml');
 	}
+
+	public function getID() {
+		return 'REX_MEDIALIST_'.$this->javascriptID;
+	}
 }

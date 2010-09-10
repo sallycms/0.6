@@ -29,4 +29,8 @@ class sly_Form_MediaButton extends sly_Form_Widget implements sly_Form_IElement 
 
 		return $this->renderFilename('form/mediabutton.phtml');
 	}
+
+	public function getID() {
+		return 'REX_MEDIA_'.$this->javascriptID;
+	}
 }

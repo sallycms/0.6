@@ -32,4 +32,8 @@ class sly_Form_DateTime extends sly_Form_ElementBase implements sly_Form_IElemen
 	public function render() {
 		return $this->renderFilename('form/datetime.phtml');
 	}
+
+	public function getID() {
+		return trim($this->attributes['name']).'_date';
+	}
 }
