@@ -288,7 +288,7 @@ rewrite (xrstf) / 100711:
 						}
 
 						if (hours < 10) {
-							hours = '0'.concat(hours, 10);
+							hours = '0'.concat(hours);
 						}
 
 						if (fragment < 10) {
