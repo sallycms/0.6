@@ -11,17 +11,13 @@
 /**
  * @ingroup form
  */
-class sly_Form_Input_Text extends sly_Form_Input_Base
-{
-	public function __construct($name, $label, $value = '', $id = null)
-	{
+class sly_Form_Input_Text extends sly_Form_Input_Base {
+	public function __construct($name, $label, $value = '', $id = null) {
 		parent::__construct($name, $label, $value, $id);
 		$this->setAttribute('type', 'text');
 	}
 
-	public function getOuterClass()
-	{
-		$this->addOuterClass('rex-form-col-a');
+	public function getOuterClass() {
 		$this->addOuterClass('rex-form-text');
 		return $this->outerClass;
 	}

@@ -11,10 +11,8 @@
 /**
  * @ingroup form
  */
-abstract class sly_Form_Input_Base extends sly_Form_ElementBase implements sly_Form_IElement
-{
-	public function __construct($name, $label, $value, $id = null, $allowedAttributes = null)
-	{
+abstract class sly_Form_Input_Base extends sly_Form_ElementBase implements sly_Form_IElement {
+	public function __construct($name, $label, $value, $id = null, $allowedAttributes = null) {
 		if ($allowedAttributes === null) {
 			$allowedAttributes = array('value', 'name', 'id', 'disabled', 'class', 'maxlength', 'readonly', 'style', 'type');
 		}
@@ -22,8 +20,7 @@ abstract class sly_Form_Input_Base extends sly_Form_ElementBase implements sly_F
 		parent::__construct($name, $label, $value, $id, $allowedAttributes);
 	}
 
-	public function render()
-	{
+	public function render() {
 		$this->addClass('rex-form-text');
 
 		// Prüfen, ob das Formular bereits abgeschickt und noch einmal angezeigt
@@ -39,8 +36,7 @@ abstract class sly_Form_Input_Base extends sly_Form_ElementBase implements sly_F
 		return '<input '.$attributeString.' />';
 	}
 
-	public function setMaxLength($maxLength)
-	{
+	public function setMaxLength($maxLength) {
 		$maxLength = abs(intval($maxLength));
 
 		if ($maxLength > 0) {
@@ -51,8 +47,7 @@ abstract class sly_Form_Input_Base extends sly_Form_ElementBase implements sly_F
 		}
 	}
 
-	public function setReadOnly($readonly)
-	{
+	public function setReadOnly($readonly) {
 		if ($readonly) {
 			$this->setAttribute('readonly', 'readonly');
 		}
@@ -61,8 +56,7 @@ abstract class sly_Form_Input_Base extends sly_Form_ElementBase implements sly_F
 		}
 	}
 
-	public function setSize($size)
-	{
+	public function setSize($size) {
 		$this->setAttribute('size', abs((int) $size));
 	}
 }

@@ -11,37 +11,41 @@
 /**
  * @ingroup form
  */
-abstract class sly_Form_Base
-{
-	protected $redaxo;
+abstract class sly_Form_Base {
 	protected $hiddenValues;
 
-	abstract public function addElement(sly_Form_IElement $element);
-	abstract public function render($version = false);
+	abstract public function addRow(array $row);
+	abstract public function render($print = true);
 
-	public function addElements($elements)
-	{
+	public function addElements($elements) {
 		$success = true;
-		foreach ($elements as $element) {
-			if ($element != null) {
-				$success &= $this->addElement($element);
-			}
+		foreach (array_filter($elements) as $element) {
+			$success &= $this->addRow(array($element));
 		}
 		return $success;
 	}
 
-	public function add(sly_Form_IElement $element)
-	{
-		return $this->addElement($element);
+	public function addElement(sly_Form_IElement $element) {
+		return $this->addRow(array($element));
 	}
 
-	public function __toString()
-	{
+	public function add(sly_Form_IElement $element) {
+		return $this->addRow(array($element));
+	}
+
+	public function addRows($rows) {
+		$success = true;
+		foreach (array_filter($rows) as $row) {
+			$success &= $this->addRow($row);
+		}
+		return $success;
+	}
+
+	public function __toString() {
 		return $this->render(false);
 	}
 
-	public function addHiddenValue($name, $value, $id = null)
-	{
+	public function addHiddenValue($name, $value, $id = null) {
 		$this->hiddenValues[$name] = array('value' => $value, 'id' => $id);
 	}
 }

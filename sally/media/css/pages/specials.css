@@ -8,7 +8,7 @@ body#rex-page-specials div.rex-form {
 .sly-sprite.sly-sprite {
 	&-language     { background-position: 0 -48px; }
 	&-language-add { background-position: 0 -64px; }
-}s
+}
 
 /* System -> Einstellungen | unterer Abstand zu den gestrichelten Linien in der rechten Box*/
 #rex-page-specials {
@@ -31,9 +31,7 @@ div#rex-form-system-setup {
 		padding: 5px 0 0;
 
 		label {
-			width: 210px;
-			padding-left: 0;
-			font-weight: normal;
+			width: 180px;
 		}
 	}
 
@@ -43,9 +41,12 @@ div#rex-form-system-setup {
 		p.rex-form-label-right label,
 		p.rex-form-read span,
 		p.rex-form-text input,
-		p select,
-		p textarea {
-			width: 40%;
+		p select {
+			width: 180px;
+		}
+
+		.sly-widget.sly-linkbutton {
+			input { width: 140px; }
 		}
 
 		#rex_include_path {
@@ -56,7 +57,7 @@ div#rex-form-system-setup {
 		/*	Submit */
 
 		p input.rex-form-submit {
-			margin-left: 210px;
+			margin-left: 180px;
 		}
 	}
 

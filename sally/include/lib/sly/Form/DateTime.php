@@ -11,12 +11,10 @@
 /**
  * @ingroup form
  */
-class sly_Form_DateTime extends sly_Form_ElementBase implements sly_Form_IElement
-{
+class sly_Form_DateTime extends sly_Form_ElementBase implements sly_Form_IElement {
 	protected $withTime;
 
-	public function __construct($name, $label, $value, $id = null, $allowedAttributes = null, $withTime = true)
-	{
+	public function __construct($name, $label, $value, $id = null, $allowedAttributes = null, $withTime = true) {
 		if ($allowedAttributes === null) {
 			$allowedAttributes = array('value', 'name', 'id', 'class', 'style');
 		}
@@ -27,13 +25,11 @@ class sly_Form_DateTime extends sly_Form_ElementBase implements sly_Form_IElemen
 		$this->outerClass = 'rex-form-text';
 	}
 
-	public function withTime()
-	{
+	public function withTime() {
 		return $this->withTime;
 	}
 
-	public function render()
-	{
+	public function render() {
 		return $this->renderFilename('form/datetime.phtml');
 	}
 }

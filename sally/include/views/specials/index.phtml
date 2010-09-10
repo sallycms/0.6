@@ -20,16 +20,20 @@ $rewrites   = array('true' => 'aktiviert', 'false' => 'deaktiviert');
 $tplService = sly_Service_Factory::getService('Template');
 $templates  = $tplService->getTemplates();
 
-$backendLocale   = new sly_Form_Select_DropDown('backend_locale', '', $config->get('LANG'), $locales, 'rex-form-lang');
-$modRewrite      = new sly_Form_Select_DropDown('mod_rewrite', '', $config->get('MOD_REWRITE') ? 'true' : 'false', $rewrites, 'rex-form-mod-rewrite');
-$defaultTemplate = new sly_Form_Select_DropDown('default_template', '', $config->get('DEFAULT_TEMPLATE'), $templates, 'rex-form-default-template-id');
-$cachingStrategy = new sly_Form_Select_DropDown('caching_strategy', '', sly_Cache::getStrategy(), sly_Cache::getAvailableCacheImpls(), 'rex-form-caching-strategy');
+$backendLocale   = new sly_Form_Select_DropDown('backend_locale', '$REX[LANG]', $config->get('LANG'), $locales, 'rex-form-lang');
+$modRewrite      = new sly_Form_Select_DropDown('mod_rewrite', '$REX[MOD_REWRITE]', $config->get('MOD_REWRITE') ? 'true' : 'false', $rewrites, 'rex-form-mod-rewrite');
+$defaultTemplate = new sly_Form_Select_DropDown('default_template', '$REX[DEFAULT_TEMPLATE]', $config->get('DEFAULT_TEMPLATE'), $templates, 'rex-form-default-template-id');
+$cachingStrategy = new sly_Form_Select_DropDown('caching_strategy', t('specials_caching_strategy'), sly_Cache::getStrategy(), sly_Cache::getAvailableCacheImpls(), 'rex-form-caching-strategy');
+
+$buttonBar = new sly_Form_ButtonBar(array(
+	'submit' => new sly_Form_Input_Button('submit', 'sendit', $I18N->msg('specials_update'))
+));
 
 ?>
 
 <div class="rex-form" id="rex-form-system-setup">
 	<form action="index.php" method="post">
-		<div class="hidden">
+		<div>
 			<input type="hidden" name="page" value="specials" />
 			<input type="hidden" name="func" value="update" />
 		</div>
@@ -61,87 +65,28 @@ $cachingStrategy = new sly_Form_Select_DropDown('caching_strategy', '', sly_Cach
 
 				<div class="rex-area-content">
 
-					<fieldset class="rex-form-col-1">
-					<legend><?= $I18N->msg('general_info_header') ?></legend>
+					<?php
 
-					<div class="rex-form-wrapper">
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-text">
-								<label for="rex-form-server">$REX['SERVER']</label>
-								<input class="rex-form-text" type="text" id="rex-form-server" name="server" value="<?= sly_html($config->get('SERVER')) ?>" />
-							</p>
-						</div>
+					$fieldset = new sly_Form_Fieldset($I18N->msg('general_info_header'));
 
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-text">
-								<label for="rex-form-servername">$REX['SERVERNAME']</label>
-								<input class="rex-form-text" type="text" id="rex-form-servername" name="servername" value="<?= sly_html($config->get('SERVERNAME')) ?>" />
-							</p>
-						</div>
+					$fieldset->addRows(array(
+						new sly_Form_Input_Text('server', '$REX[SERVER]', $config->get('SERVER')),
+						new sly_Form_Input_Text('servername', '$REX[SERVERNAME]', $config->get('SERVERNAME')),
+						new sly_Form_Input_Text('error_email', '$REX[ERROR_EMAIL]', $config->get('ERROR_EMAIL')),
+						new sly_Form_LinkButton('start_article', t('specials_start_article'), $config->get('START_ARTICLE_ID')),
+						new sly_Form_LinkButton('notfound_article', t('specials_not_found_article'), $config->get('NOTFOUND_ARTICLE_ID')),
+						$defaultTemplate,
+						$backendLocale,
+						$modRewrite,
+						$cachingStrategy,
+						$buttonBar
+					));
 
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-text">
-								<label for="rex-form-error-email">$REX['ERROR_EMAIL']</label>
-								<input class="rex-form-text" type="text" id="rex-form-error-email" name="error_email" value="<?= sly_html($config->get('ERROR_EMAIL')) ?>" />
-							</p>
-						</div>
+					$fieldset->render();
 
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-text">
-								<label for="rex-form-startarticle-id"><?= t('specials_start_article') ?></label>
-								<?php
-									$start_article = new sly_Form_LinkButton('start_article', null, $config->get('START_ARTICLE_ID'), 'START_ART');
-									print $start_article->render();
-								?>
-							</p>
-						</div>
-
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-text">
-								<label for="rex-form-notfound-article-id"><?= t('specials_not_found_article') ?></label>
-								<?php
-									$start_article = new sly_Form_LinkButton('notfound_article', null, $config->get('NOTFOUND_ARTICLE_ID'), 'NF_ART');
-									print $start_article->render();
-								?>
-							</p>
-						</div>
-
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-select">
-								<label for="rex-form-default-template-id">$REX['DEFAULT_TEMPLATE']</label>
-								<?= $defaultTemplate->render() ?>
-							</p>
-						</div>
-
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-select">
-								<label for="rex-form-lang">$REX['LANG']</label>
-								<?= $backendLocale->render() ?>
-							</p>
-						</div>
-
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-select">
-								<label for="rex-form-mod-rewrite">$REX['MOD_REWRITE']</label>
-								<?= $modRewrite->render() ?>
-							</p>
-						</div>
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-select">
-								<label for="rex-form-mod-rewrite"><?= t('specials_caching_strategy') ?></label>
-								<?= $cachingStrategy->render() ?>
-							</p>
-						</div>
-
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-submit">
-								<input type="submit" class="rex-form-submit" name="sendit" value="<?= $I18N->msg('specials_update') ?>" />
-							</p>
-						</div>
-					</div>
-					</fieldset>
-				</div> <!-- Ende rex-area-content //-->
-			</div> <!-- Ende rex-area-col-b //-->
-		</div> <!-- Ende rex-area-col-2 //-->
+					?>
+				</div>
+			</div>
+		</div>
 	</form>
 </div>

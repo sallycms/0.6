@@ -11,8 +11,7 @@
 /**
  * @ingroup form
  */
-abstract class sly_Form_ElementBase
-{
+abstract class sly_Form_ElementBase {
 	protected $label;
 	protected $attributes;
 	protected $allowed;
@@ -21,8 +20,7 @@ abstract class sly_Form_ElementBase
 	protected $formRowClass;
 	protected $languageSwitchID;
 
-	public function __construct($name, $label, $value, $id = null, $allowedAttributes = null)
-	{
+	public function __construct($name, $label, $value, $id = null, $allowedAttributes = null) {
 		$this->attributes       = array();
 		$this->label            = $label;
 		$this->allowed          = $allowedAttributes;
@@ -40,13 +38,11 @@ abstract class sly_Form_ElementBase
 	public function getValue() { return $this->getAttribute('value', ''); }
 	public function getLabel() { return $this->label; }
 
-	public function getAttribute($name, $default = null)
-	{
+	public function getAttribute($name, $default = null) {
 		return isset($this->attributes[$name]) ? $this->attributes[$name] : $default;
 	}
 
-	public function setAttribute($name, $value)
-	{
+	public function setAttribute($name, $value) {
 		if ($this->allowed === null || in_array($name, $this->allowed)) {
 			$this->attributes[$name] = $value;
 			return true;
@@ -55,13 +51,11 @@ abstract class sly_Form_ElementBase
 		return false;
 	}
 
-	public function removeAttribute($name)
-	{
+	public function removeAttribute($name) {
 		unset($this->attributes[$name]);
 	}
 
-	public function addClass($className)
-	{
+	public function addClass($className) {
 		$class   = strval($this->getAttribute('class'));
 		$classes = empty($class) ? array() : explode(' ', $class);
 
@@ -72,8 +66,7 @@ abstract class sly_Form_ElementBase
 		$this->setAttribute('class', implode(' ', array_unique($classes)));
 	}
 
-	public function addStyle($style)
-	{
+	public function addStyle($style) {
 		$styles = strval($this->getAttribute('style'));
 		$styles = empty($styles) ? array() : explode(';', $styles);
 
@@ -84,8 +77,7 @@ abstract class sly_Form_ElementBase
 		$this->setAttribute('style', implode(' ', array_unique($styles)));
 	}
 
-	protected function getAttributeString($exclude = array())
-	{
+	protected function getAttributeString($exclude = array()) {
 		if (!is_array($exclude)) $exclude = array($exclude);
 
 		$attributes = array();
@@ -97,46 +89,38 @@ abstract class sly_Form_ElementBase
 		return implode(' ', $attributes);
 	}
 
-	public function setDisabled($disabled)
-	{
+	public function setDisabled($disabled) {
 		if ($disabled) $this->setAttribute('disabled', 'disabled');
 		else $this->removeAttribute('disabled');
 	}
 
-	public function setHelpText($helpText)
-	{
+	public function setHelpText($helpText) {
 		$this->helpText = $helpText;
 	}
 
-	public function getHelpText()
-	{
+	public function getHelpText() {
 		return $this->helpText;
 	}
 
-	public function getOuterClass()
-	{
+	public function getOuterClass() {
 		return $this->outerClass;
 	}
 
-	public function getFormRowClass()
-	{
+	public function getFormRowClass() {
 		return $this->formRowClass;
 	}
 
-	public function isContainer()
-	{
+	public function isContainer() {
 		return false;
 	}
 
-	protected function renderFilename($filename)
-	{
+	protected function renderFilename($filename) {
 		ob_start();
 		include SLY_INCLUDE_PATH.'/views/_form/'.$filename;
 		return ob_get_clean();
 	}
 
-	public function addOuterClass($className)
-	{
+	public function addOuterClass($className) {
 		$class   = strval($this->outerClass);
 		$classes = empty($class) ? array() : explode(' ', $class);
 
@@ -147,8 +131,7 @@ abstract class sly_Form_ElementBase
 		$this->outerClass = implode(' ', array_unique($classes));
 	}
 
-	public function addFormRowClass($className)
-	{
+	public function addFormRowClass($className) {
 		$class   = strval($this->formRowClass);
 		$classes = empty($class) ? array() : explode(' ', $class);
 
@@ -159,13 +142,11 @@ abstract class sly_Form_ElementBase
 		$this->formRowClass = implode(' ', array_unique($classes));
 	}
 
-	public function setLanguageSwitchID($langID)
-	{
+	public function setLanguageSwitchID($langID) {
 		$this->languageSwitchID = $langID;
 	}
 
-	public function getLanguageSwitchID()
-	{
+	public function getLanguageSwitchID() {
 		return $this->languageSwitchID;
 	}
 }

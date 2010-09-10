@@ -11,16 +11,13 @@
 /**
  * @ingroup form
  */
-class sly_Form_LinkButton extends sly_Form_Widget implements sly_Form_IElement
-{
-	public function __construct($name, $label, $value, $javascriptID = -1, $id = null, $allowedAttributes = null)
-	{
+class sly_Form_LinkButton extends sly_Form_Widget implements sly_Form_IElement {
+	public function __construct($name, $label, $value, $javascriptID = -1, $id = null, $allowedAttributes = null) {
 		parent::__construct($name, $label, $value, $javascriptID, $id, $allowedAttributes, 'linkbutton');
 		$this->setAttribute('class', 'rex-form-text');
 	}
 
-	public function render()
-	{
+	public function render() {
 		// Prüfen, ob das Formular bereits abgeschickt und noch einmal angezeigt
 		// werden soll. Falls ja, übernehmen wir den Wert aus den POST-Daten.
 
@@ -31,5 +28,10 @@ class sly_Form_LinkButton extends sly_Form_Widget implements sly_Form_IElement
 		}
 
 		return $this->renderFilename('form/linkbutton.phtml');
+	}
+
+	public function getOuterClass() {
+		$this->addOuterClass('rex-form-text');
+		return $this->outerClass;
 	}
 }

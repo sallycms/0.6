@@ -152,6 +152,10 @@ input#rex-form-field-prior {
 		}
 
 		&.sly-mediabutton, &.sly-linkbutton {
+			input {
+				width: 393px;
+			}
+
 			.sly-icons img {
 				padding-bottom: 2px;
 			}

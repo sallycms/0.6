@@ -11,12 +11,10 @@
 /**
  * @ingroup form
  */
-abstract class sly_Form_Select_Base extends sly_Form_ElementBase
-{
+abstract class sly_Form_Select_Base extends sly_Form_ElementBase {
 	protected $values;
 
-	public function __construct($name, $label, $value, $values, $id = null, $allowedAttributes = null)
-	{
+	public function __construct($name, $label, $value, $values, $id = null, $allowedAttributes = null) {
 		if ($allowedAttributes === null) {
 			$allowedAttributes = array('value', 'name', 'id', 'disabled', 'class', 'style');
 		}
@@ -29,14 +27,12 @@ abstract class sly_Form_Select_Base extends sly_Form_ElementBase
 		}
 	}
 
-	public function setMultiple($multiple)
-	{
+	public function setMultiple($multiple) {
 		if ($multiple) $this->setAttribute('multiple', 'multiple');
 		else $this->removeAttribute('multiple');
 	}
 
-	public function setValues($values)
-	{
+	public function setValues($values) {
 		$this->values = $values;
 	}
 }

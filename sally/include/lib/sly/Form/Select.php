@@ -11,23 +11,20 @@
 /**
  * @ingroup form
  */
-class sly_Form_Select extends sly_Form_Select_Base implements sly_Form_IElement
-{
+class sly_Form_Select extends sly_Form_Select_Base implements sly_Form_IElement {
 	protected $formElement;
 
 	const STYLE_DROPDOWN = 0;
 	const STYLE_RADIO    = 1;
 	const STYLE_CHECKBOX = 2;
 
-	public function __construct($name, $label, $value, $values, $id = null)
-	{
+	public function __construct($name, $label, $value, $values, $id = null) {
 		$allowed = array('value', 'name', 'id', 'disabled', 'class', 'style', 'size', 'multiple', 'onselect', 'onchange');
 		parent::__construct($name, $label, $value, $values, $id, $allowed);
 		$this->setStyle(self::STYLE_DROPDOWN);
 	}
 
-	public function setStyle($newStyle)
-	{
+	public function setStyle($newStyle) {
 		$name   = $this->attributes['name'];
 		$label  = $this->label;
 		$value  = $this->attributes['value'];
@@ -51,13 +48,11 @@ class sly_Form_Select extends sly_Form_Select_Base implements sly_Form_IElement
 		return $this->formElement;
 	}
 
-	public function render()
-	{
+	public function render() {
 		return $this->formElement->render();
 	}
 
-	public function getOuterClass()
-	{
+	public function getOuterClass() {
 		return $this->formElement->getOuterClass();
 	}
 }

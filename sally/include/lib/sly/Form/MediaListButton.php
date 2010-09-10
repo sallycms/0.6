@@ -11,18 +11,13 @@
 /**
  * @ingroup form
  */
-class sly_Form_MediaListButton extends sly_Form_Widget implements sly_Form_IElement
-{
-	
-	public function __construct($name, $label, $value, $javascriptID = -1, $id = null, $allowedAttributes = null)
-	{
-		
+class sly_Form_MediaListButton extends sly_Form_Widget implements sly_Form_IElement {
+	public function __construct($name, $label, $value, $javascriptID = -1, $id = null, $allowedAttributes = null) {
 		parent::__construct($name, $label, $value, $javascriptID, $id, $allowedAttributes, 'medialistbutton');
 		$this->setAttribute('class', 'rex-form-select');
 	}
 
-	public function render()
-	{
+	public function render() {
 		// Prüfen, ob das Formular bereits abgeschickt und noch einmal angezeigt
 		// werden soll. Falls ja, übernehmen wir den Wert aus den POST-Daten.
 

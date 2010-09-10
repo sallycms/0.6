@@ -11,8 +11,7 @@
 /**
  * @ingroup form
  */
-interface sly_Form_IElement
-{
+interface sly_Form_IElement {
 	public function getID();
 	public function getName();
 	public function getLabel();

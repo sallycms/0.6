@@ -11,44 +11,32 @@
 $id  = $this->id ? ' id="'.sly_html($this->id).'"' : '';
 $enc = $this->enctype ? ' enctype="'.sly_html($this->enctype).'"' : '';
 ?>
+
 <div class="rex-addon-output-v2">
-	<div class="rex-form">
+	<div class="rex-form sly-form">
 		<form method="<?= strtolower($this->method) ?>" action="<?= sly_html($this->action) ?>"<?= $id.$enc ?>>
-			<? foreach ($this->fieldsets as $i => $fieldset): ?>
-			<? $id = empty($fieldset['id']) ? '' : ' id="'.sly_html($fieldset['id']).'"'; ?>
-			<fieldset class="rex-form-col-1 sly-num<?= $i ?>"<?= $id ?>>
-				<legend class="rex-lgnd"><?= sly_html($fieldset['title']) ?></legend>
-				<div class="rex-form-wrapper">
-
+			<div>
 				<?php
-
-				// Es reicht, die Daten im ersten Fieldset auszugeben...
-
-				if ($i == 0) {
-					foreach ($this->hiddenValues as $name => $value) {
-						print '<input type="hidden" name="'.sly_html($name).'" value="'.sly_html($value['value']).'"';
-						if (!empty($value['id'])) print ' id="'.sly_html($value['id']).'"';
-						print ' />';
-					}
-				}
-
-				$elementCount = count($fieldset['elements']);
-				$hasButtonBar = $this->submitButton || $this->resetButton || $this->applyButton || $this->deleteButton;
-
-				foreach ($fieldset['elements'] as $x => $element) {
-					$isLast = $i == $this->currentFieldset && $x-1 == $elementCount && !$hasButtonBar;
-					include $viewRoot.'element.phtml';
-				}
-
-				if ($i == $this->currentFieldset && $hasButtonBar) {
-					$isLast = $i == $this->currentFieldset;
-					include $viewRoot.'buttons.phtml';
+				foreach ($this->hiddenValues as $name => $value) {
+					$value['type'] = 'hidden';
+					$value['name'] = $name;
+					print '<input '.sly_Util_HTML::buildAttributeString($value).' />';
 				}
 				?>
+			</div>
 
-				</div>
-			</fieldset>
-			<? endforeach; ?>
+			<?php
+			$hasButtonBar = $this->submitButton || $this->resetButton || $this->applyButton || $this->deleteButton;
+
+			if ($hasButtonBar) {
+				$fieldset = end($this->fieldsets);
+				include $viewRoot.'buttons.phtml';
+			}
+
+			foreach ($this->fieldsets as $i => $fieldset) {
+				$fieldset->render();
+			}
+			?>
 		</form>
 	</div>
 </div>

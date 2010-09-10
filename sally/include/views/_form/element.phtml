@@ -8,17 +8,15 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$outerClass   = $element->getOuterClass();
-$outerClass   = $outerClass ? ' class="'.$outerClass.'"' : '';
-$formRowClass = $element->getFormRowClass();
-$formRowClass = $formRowClass ? ' '.$formRowClass : '';
-$help         = $element->getHelpText() ? '<span class="rex-form-notice">'.nl2br(sly_html($element->getHelpText())).'</span>' : '';
-$isContainer  = $element->isContainer();
-$label        = $element->getLabel();
-$label        = empty($label) ? '&nbsp;' : sly_html($label.':');
-$label        = preg_replace('#\*\*(.*?)\*\*#i', '<strong>$1</strong>', $label);
-$label        = preg_replace('#__(.*?)__#i', '<em>$1</em>', $label);
-$label        = preg_replace('#//(.*?)//#i', '<em>$1</em>', $label);
+$char        = chr(97 + $column);
+$outerClass  = array('rex-form-col-'.$char, $element->getOuterClass());
+$help        = $element->getHelpText() ? '<span class="rex-form-notice">'.nl2br(sly_html($element->getHelpText())).'</span>' : '';
+$isContainer = $element->isContainer();
+$label       = $element->getLabel();
+$label       = empty($label) ? '&nbsp;' : sly_html($label.':');
+$label       = preg_replace('#\*\*(.*?)\*\*#i', '<strong>$1</strong>', $label);
+$label       = preg_replace('#__(.*?)__#i', '<em>$1</em>', $label);
+$label       = preg_replace('#//(.*?)//#i', '<em>$1</em>', $label);
 
 // Elemente einrücken
 
@@ -31,12 +29,10 @@ if ($isContainer) {
 }
 else {
 	?>
-	<div class="rex-form-row<?= $isLast ? ' last' : '' ?><?= $formRowClass ?>">
-		<p<?= $outerClass ?>>
-			<label for="<?= $element->getID() ?>"><?= $label ?></label>
-			<?= $element->render() ?>
-			<?= $help ?>
-		</p>
-	</div>
+	<p class="<?= implode(' ', $outerClass) ?>">
+		<label for="<?= $element->getID() ?>"><?= $label ?></label>
+		<?= $element->render() ?>
+		<?= $help ?>
+	</p>
 	<?
 }

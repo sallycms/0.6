@@ -11,10 +11,8 @@
 /**
  * @ingroup form
  */
-class sly_Form_Textarea extends sly_Form_Input_Base
-{
-	public function __construct($name, $label, $value, $id = null)
-	{
+class sly_Form_Textarea extends sly_Form_Input_Base {
+	public function __construct($name, $label, $value, $id = null) {
 		$allowed = array('value', 'name', 'id', 'disabled', 'class', 'maxlength', 'readonly', 'style', 'rows', 'cols', 'wrap');
 		parent::__construct($name, $label, $value, $id, $allowed);
 		$this->addClass('rex-form-textarea');
@@ -22,8 +20,7 @@ class sly_Form_Textarea extends sly_Form_Input_Base
 		$this->setAttribute('cols', 50);
 	}
 
-	public function render()
-	{
+	public function render() {
 		return $this->renderFilename('form/textarea.phtml');
 	}
 }

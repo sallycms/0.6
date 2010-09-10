@@ -11,30 +11,25 @@
 /**
  * @ingroup form
  */
-class sly_Form_Container extends sly_Form_ElementBase implements sly_Form_IElement
-{
+class sly_Form_Container extends sly_Form_ElementBase implements sly_Form_IElement {
 	protected $content;
 
-	public function __construct($id = null, $class = '', $style = '')
-	{
+	public function __construct($id = null, $class = '', $style = '') {
 		$allowed = array('class', 'id', 'style');
 		parent::__construct('', '', '', $id, $allowed);
 		$this->setAttribute('class', $class);
 		$this->setAttribute('style', $style);
 	}
 
-	public function setContent($content)
-	{
+	public function setContent($content) {
 		$this->content = $content;
 	}
 
-	public function render($version)
-	{
-		return $this->renderFilename($version, 'element_container.phtml');
+	public function render() {
+		return $this->renderFilename('form/container.phtml');
 	}
 
-	public function isContainer()
-	{
+	public function isContainer() {
 		return true;
 	}
 }

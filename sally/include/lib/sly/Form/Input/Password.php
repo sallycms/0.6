@@ -11,23 +11,18 @@
 /**
  * @ingroup form
  */
-class sly_Form_Input_Password extends sly_Form_Input_Base
-{
-	public function __construct($name, $label, $value = '', $id = null)
-	{
+class sly_Form_Input_Password extends sly_Form_Input_Base {
+	public function __construct($name, $label, $value = '', $id = null) {
 		parent::__construct($name, $label, $value, $id);
 		$this->setAttribute('type', 'password');
 	}
 
-	public function getOuterClass()
-	{
-		$this->addOuterClass('rex-form-col-a');
+	public function getOuterClass() {
 		$this->addOuterClass('rex-form-text');
 		return $this->outerClass;
 	}
 
-	public function render()
-	{
+	public function render() {
 		$this->addClass('rex-form-text');
 
 		// Das Passwort-Eingabefeld besitzt eine eigene render()-Implementierung,

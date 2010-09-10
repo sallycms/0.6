@@ -9,20 +9,20 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
-abstract class sly_Form_Widget extends sly_Form_ElementBase
-{
+/**
+ * @ingroup form
+ */
+abstract class sly_Form_Widget extends sly_Form_ElementBase {
 	protected $javascriptID;
 	protected $namespace;
 
-	public function __construct($name, $label, $value, $javascriptID, $id, $allowedAttributes, $namespace)
-	{
+	public function __construct($name, $label, $value, $javascriptID, $id, $allowedAttributes, $namespace) {
 		parent::__construct($name, $label, $value, $id, $allowedAttributes);
 		$this->namespace = 'sly.form.widget.'.$namespace;
 		$this->setJavaScriptID($javascriptID);
 	}
 
-	public function setJavaScriptID($javascriptID)
-	{
+	public function setJavaScriptID($javascriptID) {
 		$registry = sly_Core::getTempRegistry();
 		$key      = $this->namespace.'.jsid';
 

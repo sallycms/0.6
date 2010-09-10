@@ -11,26 +11,21 @@
 /**
  * @ingroup form
  */
-class sly_Form_Select_DropDown extends sly_Form_Select_Base implements sly_Form_IElement
-{
-	public function __construct($name, $label, $value, $values, $id = null)
-	{
+class sly_Form_Select_DropDown extends sly_Form_Select_Base implements sly_Form_IElement {
+	public function __construct($name, $label, $value, $values, $id = null) {
 		$allowed = array('value', 'name', 'id', 'disabled', 'class', 'style', 'size', 'multiple', 'onselect', 'onchange');
 		parent::__construct($name, $label, $value, $values, $id, $allowed);
 	}
 
-	public function setSize($size)
-	{
+	public function setSize($size) {
 		$this->setAttribute('size', $size);
 	}
 
-	public function render()
-	{
+	public function render() {
 		return $this->renderFilename('form/select/dropdown.phtml');
 	}
 
-	public function getOuterClass()
-	{
+	public function getOuterClass() {
 		$this->addOuterClass('rex-form-select');
 		return $this->outerClass;
 	}
