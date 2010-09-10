@@ -1,7 +1,4 @@
 body#rex-page-login {
-
-	p.rex-form-text, p.rex-form-select { padding: 0; }
-
 	div#rex-title, div#rex-output {
 		float: none;
 		width: 650px;
@@ -24,47 +21,21 @@ body#rex-page-login {
 		margin-left: auto;
 	}
 
-	label { margin-left: 10px; }
-	.rex-form-row:first-child { margin-top: 20px; }
-
 	.rex-form {
-		&-login {
-			margin: 7px 0 0 0;
-			+border-radius(4px);
-			/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
-			background-color: #fff;
-			color: #fff;
-
-			.rex-form-text input,.rex-form-password input {
-				width: 250px;
-			}
-
-			label { width:145px; }
-
-			/* Überschrift */
-			legend {
-				width: 640px; /* Breite des Loginbereichs abzüglich des padding links*/
-			}
+		.rex-form-text input,.rex-form-password input {
+			width: 250px;
 		}
 
-		&-wrapper {
-			padding: 0;
-			width: 650px;
-			margin-bottom: 0;
-		}
+		legend { width: 640px; }
+
+		label { width: 145px; margin-left: 10px; }
+		&-wrapper { width: 650px; }
+		&-col-a { vertical-aling: middle; }
+		&-submit { margin: 2px 0 3px 77px; }
 
 		&-row {
-			color: $drk_grey;
 			padding: 7px 0;
-			border-top: 1px dotted $md_grey;
-			border-bottom: 0;
 			width: 650px;
 		}
-
-		&-submit {
-			margin: 2px 0 3px 77px;
-		}
-
-		&-col-a { vertical-aling: middle; }
 	}
 }

@@ -32,6 +32,7 @@ $enc = $this->enctype ? ' enctype="'.sly_html($this->enctype).'"' : '';
 
 			if ($hasButtonBar) {
 				$fieldset = end($this->fieldsets);
+				if (!$fieldset) $fieldset = $this->beginFieldset($this->title);
 				include $viewRoot.'buttons.phtml';
 			}
 

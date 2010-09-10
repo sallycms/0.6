@@ -306,17 +306,18 @@ jQuery.noConflict();
 			setTimeout(sly_disableLogin, 1000, timerElement);
 		}
 		else {
-			$('div.rex-message p span').html($('#login_message').text());
+			$('div.rex-message p span').html($('#loginformular').data('message'));
 			$('#loginformular input:not(:hidden)').attr('disabled', '');
-			$('#rex-form-login').focus();
+			$('#rex_user_login').focus();
 		}
 	};
 
-	sly_startLoginTimer = function() {
+	sly_startLoginTimer = function(message) {
 		var timerElement = $('div.rex-message p span strong');
 
 		if (timerElement.length == 1) {
 			$('#loginformular input:not(:hidden)').attr('disabled', 'disabled');
+			$('#loginformular').data('message', message);
 			setTimeout(sly_disableLogin, 1000, timerElement);
 		}
 	};
