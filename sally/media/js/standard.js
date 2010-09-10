@@ -322,16 +322,17 @@ jQuery.noConflict();
 	};
 
 	sly_catsChecked = function() {
-		var c_checked = $('#allcats').is(':checked');
-		var m_checked = $('#allmcats').is(':checked');
+		var c_checked = $('#userperm_cat_all').is(':checked');
+		var m_checked = $('#userperm_media_all').is(':checked');
+		var slider    = $('#rex-page-user .sly-form .rex-form-wrapper .sly-num7');
 
-		$('#userperm-cat').attr('disabled', c_checked ? 'disabled' : '');
-		$('#userperm-media').attr('disabled', m_checked ? 'disabled' : '');
+		$('#userperm_cat').attr('disabled', c_checked ? 'disabled' : '');
+		$('#userperm_media').attr('disabled', m_checked ? 'disabled' : '');
 
 		if (c_checked && m_checked)
-			$('#cats_mcats_perms').slideUp('slow');
+			slider.slideUp('slow');
 		else
-			$('#cats_mcats_perms').slideDown('slow');
+			slider.slideDown('slow');
 	};
 
 })(jQuery);
@@ -398,35 +399,35 @@ jQuery(function($) {
 
 	// Benutzer-Formular
 
-	if ($('#rex-page-user #rex-form-user-editmode')) {
-		$('#useradmin').click(function() {
+	if ($('#rex-page-user .sly-form').length > 0) {
+		var wrapper = $('#rex-page-user .sly-form .rex-form-wrapper');
+		var sliders = wrapper.find('.sly-num6,.sly-num7');
+
+		$('#is_admin').change(function() {
 			if ($(this).is(':checked')) {
-				$('#userperm-module').attr('disabled', 'disabled');
-				$('#cats_mcats_perms').slideUp('slow');
-				$('#cats_mcats_box').slideUp('slow');
+				$('#userperm_module').attr('disabled', 'disabled');
+				sliders.slideUp('slow');
 			}
 			else {
-				$('#userperm-module').attr('disabled', '');
-				$('#cats_mcats_box').slideDown('slow');
+				$('#userperm_module').attr('disabled', '');
+				sliders.slideDown('slow');
 				sly_catsChecked();
 			}
 		});
 
-		$('#allmcats, #allcats').click(function() {
-			sly_catsChecked();
-		});
+		sly_catsChecked();
+		$('#userperm_cat_all, #userperm_media_all').change(sly_catsChecked);
 
 		// init behaviour
 
-		if ($('#useradmin').is(':checked')) {
-			$('#userperm-module').attr('disabled', 'disabled');
-			$('#cats_mcats_perms').hide();
-			$('#cats_mcats_box').hide();
-		};
+		if ($('#is_admin').is(':checked')) {
+			$('#userperm_module').attr('disabled', 'disabled');
+			sliders.hide();
+		}
 
-		if ($('#allcats').is(':checked') && $('#allmcats').is(':checked')) {
-			$('#cats_mcats_perms').hide();
-		};
+		if ($('#userperm_cat_all').is(':checked') && $('#userperm_media_all').is(':checked')) {
+			wrapper.find('.sly-num7').hide();
+		}
 	}
 
 	// Formularframework

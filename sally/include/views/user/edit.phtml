@@ -56,9 +56,6 @@ $form->addRow(array($name, $description));
 $userAdmin  = new sly_Form_Input_Checkbox('is_admin', '', '1', $I18N->msg('user_admin'));
 $userStatus = new sly_Form_Input_Checkbox('userstatus', '', '1', $I18N->msg('user_status'));
 
-$userAdmin->addOuterClass('rex-form-label-right');
-$userStatus->addOuterClass('rex-form-label-right');
-
 if ($user) {
 	$userAdmin->setChecked($user->isAdmin());
 	$userStatus->setChecked($user->getStatus());
@@ -76,8 +73,8 @@ $form->addRow(array($userAdmin, $userStatus));
 
 $allowedCLangs = $user ? $user->getAllowedCLangs() : array();
 $backendLocale = $user ? $user->getBackendLocale() : array();
-$clangSelect   = new sly_Form_Select_DropDown('userperm_sprachen', $I18N->msg('user_lang_xs'), $allowedCLangs, $REX['CLANG'], 'userperm-sprachen');
-$localeSelect  = new sly_Form_Select_DropDown('userperm_mylang', $I18N->msg('backend_language'), $backendLocale, $this->getBackendLocales(), 'userperm-mylang');
+$clangSelect   = new sly_Form_Select_DropDown('userperm_sprachen', $I18N->msg('user_lang_xs'), $allowedCLangs, $REX['CLANG']);
+$localeSelect  = new sly_Form_Select_DropDown('userperm_mylang', $I18N->msg('backend_language'), $backendLocale, $this->getBackendLocales());
 
 $localeSelect->setMultiple(false);
 $clangSelect->setSize(3);
@@ -89,7 +86,7 @@ $form->addRow(array($clangSelect, $localeSelect));
 // fifth row: backend startpage
 
 $startPage       = $user ? $user->getStartPage() : array();
-$startpageSelect = new sly_Form_Select_DropDown('userperm_startpage', $I18N->msg('startpage'), $startPage, $this->getPossibleStartpages(), 'userperm-startpage');
+$startpageSelect = new sly_Form_Select_DropDown('userperm_startpage', $I18N->msg('startpage'), $startPage, $this->getPossibleStartpages());
 
 $startpageSelect->setMultiple(false);
 $form->addRow(array($startpageSelect));
@@ -101,13 +98,13 @@ sort($PERM);
 sort($EXTPERM);
 sort($EXTRAPERM);
 
-$extPermSelect = new sly_Form_Select_DropDown('userperm_ext', '', $rights, array_combine($EXTPERM, $EXTPERM), 'userperm-ext');
-$allPermSelect = new sly_Form_Select_DropDown('userperm_all', '', $rights, array_combine($PERM, $PERM), 'userperm-all');
+$allPermSelect = new sly_Form_Select_DropDown('userperm_all', $I18N->msg('user_all'), $rights, array_combine($PERM, $PERM));
+$extPermSelect = new sly_Form_Select_DropDown('userperm_ext', $I18N->msg('user_options'), $rights, array_combine($EXTPERM, $EXTPERM));
 
-$extPermSelect->setSize(10);
 $allPermSelect->setSize(10);
-$extPermSelect->setHelpText($I18N->msg('ctrl'));
+$extPermSelect->setSize(10);
 $allPermSelect->setHelpText($I18N->msg('ctrl'));
+$extPermSelect->setHelpText($I18N->msg('ctrl'));
 
 $form->addRow(array($allPermSelect, $extPermSelect));
 
@@ -116,9 +113,6 @@ $form->addRow(array($allPermSelect, $extPermSelect));
 
 $allCats      = new sly_Form_Input_Checkbox('userperm_cat_all', '', '1', $I18N->msg('all_categories'));
 $allMediaCats = new sly_Form_Input_Checkbox('userperm_media_all', '', '1', $I18N->msg('all_mediafolder'));
-
-$allCats->addOuterClass('rex-form-label-right');
-$allMediaCats->addOuterClass('rex-form-label-right');
 
 if ($user) {
 	$allCats->setChecked($user->hasRight('csw[0]'));
@@ -133,8 +127,8 @@ $form->addRow(array($allCats, $allMediaCats));
 $allowedCategories      = $user ? $user->getAllowedCategories() : array();
 $allowedMediaCategories = $user ? $user->getAllowedMediaCategories() : array();
 
-$categorySelect = new sly_Form_Select_DropDown('userperm_cat', $I18N->msg('categories'), $allowedCategories, $this->getStructure(), 'userperm_cat');
-$mediaCatSelect = new sly_Form_Select_DropDown('userperm_media', $I18N->msg('mediafolder'), $allowedMediaCategories, $this->getMediaStructure(), 'userperm_media');
+$categorySelect = new sly_Form_Select_DropDown('userperm_cat', $I18N->msg('categories'), $allowedCategories, $this->getStructure());
+$mediaCatSelect = new sly_Form_Select_DropDown('userperm_media', $I18N->msg('mediafolder'), $allowedMediaCategories, $this->getMediaStructure());
 
 $categorySelect->setSize(20);
 $mediaCatSelect->setSize(20);
@@ -147,8 +141,8 @@ $form->addRow(array($categorySelect, $mediaCatSelect));
 // nineth row: misc
 
 $allowedModules  = $user ? $user->getAllowedModules() : array();
-$moduleSelect    = new sly_Form_Select_DropDown('userperm_module', $I18N->msg('modules'), $allowedModules, $this->getModules(), 'userperm-module');
-$extraPermSelect = new sly_Form_Select_DropDown('userperm_extra', $I18N->msg('extras'), $rights, array_combine($EXTRAPERM, $EXTRAPERM), 'userperm-extra');
+$moduleSelect    = new sly_Form_Select_DropDown('userperm_module', $I18N->msg('modules'), $allowedModules, $this->getModules());
+$extraPermSelect = new sly_Form_Select_DropDown('userperm_extra', $I18N->msg('extras'), $rights, array_combine($EXTRAPERM, $EXTRAPERM));
 
 $moduleSelect->setSize(10);
 $extraPermSelect->setSize(10);
