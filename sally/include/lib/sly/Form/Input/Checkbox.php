@@ -22,14 +22,12 @@ class sly_Form_Input_Checkbox extends sly_Form_Input_Base {
 	}
 
 	public function render() {
-		$this->addStyle('vertical-align:middle');
-
-		$lineHeight      = 21;
+		$this->addClass('sly-form-checkbox');
 		$attributeString = $this->getAttributeString();
 
 		return
-			'<input style="float: left;" '.$attributeString.' /> '.
-			'<label class="inline" style="float: left;line-height:'.$lineHeight.'px" for="'.$this->attributes['id'].'">'.sly_html($this->description).'</label>';
+			'<input '.$attributeString.' /> '.
+			'<label class="sly-inline" for="'.$this->attributes['id'].'">'.sly_html($this->description).'</label>';
 	}
 
 	public function setChecked($checked) {

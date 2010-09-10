@@ -161,6 +161,27 @@ input#rex-form-field-prior {
 			}
 		}
 	}
+
+	label.sly-inline {
+		float: none;
+		display: inline;
+	}
+
+	.sly-form-checkbox {
+		border: 0;
+		vertical-align: middle;
+	}
+
+	.sly-select-group {
+		display: block;
+		line-height: 18px;
+		padding-left: 145px;
+
+		input {
+			vertical-align: middle;
+			border: 0;
+		}
+	}
 }
 
 /*	Checkbox / Radio */

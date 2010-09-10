@@ -428,4 +428,13 @@ jQuery(function($) {
 			$('#cats_mcats_perms').hide();
 		};
 	}
+
+	// Formularframework
+
+	$('.rex-form .sly-select-checkbox-list a').live('click', function() {
+		var rel   = $(this).attr('rel');
+		var boxes = $(this).parents('.rex-form-row').find('.rex-chckbx');
+		boxes.attr('checked', rel === 'all' ? 'checked' : '');
+		return false;
+	});
 });

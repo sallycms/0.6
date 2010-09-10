@@ -8,22 +8,5 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-print '<span class="sly-radio-group">';
-
-$selected = array_keys($this->attributes['value']);
-$selected  = reset($selected);
-$elementID = $this->attributes['id'];
-
-foreach ($this->values as $key => $value) {
-	$sel   = (is_array($selected) && in_array($key, $selected)) || (!is_array($selected) && $key == $selected) ? ' checked="checked"' : '';
-	$key   = htmlspecialchars($key);
-	$name  = htmlspecialchars($this->attributes['name']);
-	$style = empty($this->attributes['style']) ? '' : ' style="'.$this->attributes['style'].'"';
-	$id    = 'autogen_'.$elementID.'_'.$key.'_id';
-
-	print '<input type="radio" value="'.$key.'" id="'.$id.'" name="'.$name.'"'.$sel.' class="rex-chckbx"'.$style.' /> ';
-	print '<label for="'.$id.'">'.htmlspecialchars($value).'</label><br />';
-	print "\n";
-}
-?>
-</span>
+$type = 'radio';
+include 'group.phtml';
