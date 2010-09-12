@@ -59,7 +59,7 @@ function sly_getArray($name, $types, $default = array())
 		}
 
 		$value = _rex_cast_var($value, $types, $default, 'found', false); // $default und 'found' ab REDAXO 4.2
-		$value = strtolower($type) == 'string' ? trim($value) : $value;
+		$value = strtolower($types) == 'string' ? trim($value) : $value;
 	}
 
 	return $values;
