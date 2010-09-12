@@ -53,7 +53,7 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 			$files = $dir->listPlain(true, false, false, true, '');
 		}
 		elseif ($this->exists($name)) {
-			$files = array(sly_Util_Directory::join($this->getFolder(), $this->getFilename($name)));
+			$files = array($this->getCacheFile($name));
 		}
 		else {
 			return false;
@@ -116,7 +116,7 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 		return $this->get($name, 'modules');
 	}
 
-	public function getFilename($name, $fullPath) {
+	public function getFilename($name) {
 		return $this->get($name, 'filename');
 	}
 
