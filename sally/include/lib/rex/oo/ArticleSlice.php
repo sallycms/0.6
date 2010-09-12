@@ -181,7 +181,7 @@ class OOArticleSlice {
 	public function getContent() {
 		global $REX, $I18N;
 
-		$slice_content_file = SLY_DYNFOLDER.'/internal/sally/articles/'.$this->getId().'.slice.php';
+		$slice_content_file = SLY_DYNFOLDER.'/internal/sally/articles/'.$this->getSliceId().'.slice.php';
 
 		if (!file_exists($slice_content_file)) {
 			$slice_content = $this->getSlice();

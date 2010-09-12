@@ -284,37 +284,17 @@ class rex_article {
 	}
 
 	private function printArticleContent() {
+		$result = '';
 		$sql = sly_DB_Persistence::getInstance();
 		$where = array('article_id' => $this->article_id, 'clang' => $this->clang);
 		if($this->ctype != -1) {
 			$where['ctype'] = $this->ctype;
 		}
 		$sql->select('article_slice', 'id', $where, null, 'ctype, prior ASC');
-		foreach($sql as $articleSliceId) {
-			print OOArticleSlice::getArticleSliceById($articleSliceId, $this->clang)->getContent();
+		foreach($sql as $row) {
+			$result .= OOArticleSlice::getArticleSliceById($row['id'], $this->clang)->getContent();
 		}
-/*
-		if ($this->article_id != 0) {
-			global $REX;
-
-			$article_content_file = SLY_DYNFOLDER.'/internal/sally/articles/'.$this->article_id.'.'.$this->clang.'.content.php';
-
-			if (!file_exists($article_content_file)) {
-				include_once SLY_INCLUDE_PATH.'/functions/function_rex_generate.inc.php';
-				$generated = rex_generateArticleContent($this->article_id, $this->clang);
-
-				if ($generated !== true) {
-					// Fehlermeldung ausgeben
-					print $generated;
-				}
-			}
-
-			if (file_exists($article_content_file)) {
-				include $article_content_file;
-			}
-		}
- *
- */
+		return $result;
 	}
 
 	/**
