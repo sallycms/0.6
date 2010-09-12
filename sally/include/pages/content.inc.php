@@ -24,6 +24,7 @@ $article_id  = sly_request('article_id',  'rex-article-id');
 $clang       = sly_request('clang',       'rex-clang-id', $REX['START_CLANG_ID']);
 $slice_id    = sly_request('slice_id',    'rex-slice-id', '');
 $function    = sly_request('function',    'string');
+$ctype       = sly_request('ctype', 'string');
 
 $article_revision = 0;
 $slice_revision   = 0;
@@ -87,6 +88,7 @@ if ($article->getRows() == 1) {
 	$function = sly_request('function', 'string');
 	$warning  = sly_request('warning', 'string');
 	$info     = sly_request('info', 'string');
+
 
 	// Sprachenblock
 
@@ -198,10 +200,11 @@ if ($article->getRows() == 1) {
 								$newsql->setValue('slice_id', $realslice->getId());
 							}
 							elseif ($function == 'add') {
+								$prior = rex_post('prior', 'int');
 								$realslice = sly_Service_Factory::getService('Slice')->create(array('module' => $module));
 
 								$newsql->setValue('slice_id', $realslice->getId());
-								$newsql->setValue('re_article_slice_id', $slice_id);
+								$newsql->setValue('prior', $prior);
 								$newsql->setValue('article_id', $article_id);
 								$newsql->setValue('module', $module);
 								$newsql->setValue('clang', $clang);
@@ -230,16 +233,18 @@ if ($article->getRows() == 1) {
 
 								if ($newsql->insert()) {
 									$last_id = $newsql->getLastId();
+
 									$query   =
 										'UPDATE #_article_slice '.
-										'SET re_article_slice_id = '.$last_id.' '.
-										'WHERE re_article_slice_id = '.$slice_id.' '.
-										'AND id <> '.$last_id.' AND article_id = '.$article_id.' '.
-										'AND clang = '.$clang.' AND revision = '.$slice_revision;
+										'SET prior = prior + 1 WHERE
+											article_id = '.$article_id.' AND
+											clang = '.$clang.' AND
+											ctype = '.$slot.' AND
+											prior >= '.$prior.' AND
+											id != '.$last_id;
 
 									if ($newsql->setQuery($query, '#_')) {
 										$info     = $action_message.$I18N->msg('block_added');
-										$slice_id = $last_id;
 									}
 
 									$function = '';

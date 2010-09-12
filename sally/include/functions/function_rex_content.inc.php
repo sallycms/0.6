@@ -63,63 +63,27 @@ function rex_moveSlice($slice_id, $clang, $direction)
 
 	// Slice finden
 
-	$sliceData = rex_sql::fetch(
-		'id, article_id, re_article_slice_id, ctype',
-		'article_slice',
-		'id = '.$slice_id.' AND clang = '.$clang
-	);
+	$articleSlice = OOArticleSlice::getArticleSliceById($slice_id, $clang);
 
-	if ($sliceData !== false) {
-		$slice_id         = (int) $sliceData['id'];
-		$slice_article_id = (int) $sliceData['article_id'];
-		$re_slice_id      = (int) $sliceData['re_article_slice_id'];
-		$slice_ctype      = (int) $sliceData['ctype'];
+	if ($articleSlice) {
+		$sql        = sly_DB_Persistence::getInstance();
+		$article_id = (int) $articleSlice->getArticleId();
+		$prior       = (int) $articleSlice->getPrior();
+		$ctype      = (int) $articleSlice->getCtype();
+		$newprior    = $direction == 'moveup' ? $prior - 1 : $prior + 1;
+		$sliceCount = $sql->magicFetch('article_slice', 'COUNT(*)', array('article_id' => $article_id, 'clang' => $clang, 'ctype' => $ctype));
+		if($newprior > -1 && $newprior < $sliceCount) {
+			$update  = new rex_sql();
+			$update->setQuery('UPDATE #_article_slice SET prior = '.$prior.' WHERE article_id = '.$article_id.' AND clang = '.$clang.' AND ctype ='.$ctype.' AND prior = '.$newprior, '#_');
+			$update->setQuery('UPDATE #_article_slice SET prior = '.$newprior.' WHERE id = '.$slice_id, '#_');
+			$message = $I18N->msg('slice_moved');
+			$success = true;
 
-		// Finde alle Slices dieses Artikels
+			// Flush slice cache
+			sly_Core::cache()->flush(OOArticleSlice::CACHE_NS);
 
-		$allSlices = rex_sql::getArrayEx(
-			'SELECT id, re_article_slice_id, ctype FROM #_article_slice WHERE article_id = '.$slice_article_id,
-			'#_'
-		);
-
-		$SID    = array();
-		$SREID  = array();
-		$SCTYPE = array();
-
-		foreach ($allSlices as $id => $data) {
-			$re          = (int) $data['re_article_slice_id'];
-			$id          = (int) $id;
-			$SID[$re]    = $id;
-			$SREID[$id]  = $re;
-			$SCTYPE[$id] = (int) $data['ctype'];
+			rex_deleteCacheArticleContent($article_id, $clang);
 		}
-
-		$update  = new rex_sql();
-		$message = $I18N->msg('slice_moved');
-		$success = true;
-
-		if ($direction == 'moveup') {
-			if (isset($SREID[$slice_id]) && $SREID[$slice_id] > 0 && $SCTYPE[$SREID[$slice_id]] == $slice_ctype) {
-				$update->setQuery('UPDATE #_article_slice SET re_article_slice_id = '.$SREID[$SREID[$slice_id]].' WHERE id = '.$slice_id, '#_');
-				$update->setQuery('UPDATE #_article_slice SET re_article_slice_id = '.$slice_id.' WHERE id = '.$SREID[$slice_id], '#_');
-
-				if (isset($SID[$slice_id]) && $SID[$slice_id] > 0) {
-					$update->setQuery('UPDATE #_article_slice SET re_article_slice_id = '.$SREID[$slice_id].' WHERE id = '.$SID[$slice_id], '#_');
-				}
-			}
-		}
-		else {
-			if (isset($SID[$slice_id]) && $SID[$slice_id] > 0 && $SCTYPE[$SID[$slice_id]] == $slice_ctype) {
-				$update->setQuery('UPDATE #_article_slice SET re_article_slice_id = '.$SREID[$slice_id].' WHERE id = '.$SID[$slice_id], '#_');
-				$update->setQuery('UPDATE #_article_slice SET re_article_slice_id = '.$SID[$slice_id].' WHERE id = '.$slice_id, '#_');
-
-				if (isset($SID[$SID[$slice_id]]) && $SID[$SID[$slice_id]] > 0) {
-					$update->setQuery('UPDATE #_article_slice SET re_article_slice_id = '.$slice_id.' WHERE id = '.$SID[$SID[$slice_id]], '#_');
-				}
-			}
-		}
-
-		rex_deleteCacheArticleContent($slice_article_id, $clang);
 	}
 
 	return array($success, $message);
@@ -137,16 +101,20 @@ function rex_deleteSlice($slice_id)
 
 	if ($article_slice !== null) {
 		$sql       = new rex_sql();
-		$nextslice = $article_slice->getNextSlice();
 
-		if ($nextslice !== null){
-			$sql->setQuery('UPDATE #_article_slice SET re_article_slice_id = '.$article_slice->getReId().' WHERE id = '.$nextslice->getId(), '#_');
-		}
+		$sql->setQuery('UPDATE #_article_slice SET prior = prior - 1
+			WHERE article_id = '.$article_slice->getArticleId().'
+				AND clang = '.$article_slice->getClang().'
+				AND ctype = '.$article_slice->getCtype().'
+				AND prior > '.$article_slice->getPrior(), '#_');
 
 		sly_Service_Factory::getService('SliceValue')->delete(array('slice_id' => $article_slice->getSliceId()));
 		sly_Service_Factory::getService('Slice')->delete(array('id' => $article_slice->getSliceId()));
 
 		$sql->setQuery('DELETE FROM #_article_slice WHERE id = '.$slice_id, '#_');
+
+		// TODO delete less entries in cache
+		sly_Core::cache()->flush(OOArticleSlice::CACHE_NS);
 		return $sql->getRows() == 1;
 	}
 
@@ -160,14 +128,11 @@ function rex_deleteSlice($slice_id)
  */
 function rex_slice_module_exists($sliceID, $clang)
 {
-	global $REX;
-
 	$sliceID = (int) $sliceID;
 	$clang   = (int) $clang;
-	$from    = 'article_slice s LEFT JOIN '.$REX['DATABASE']['TABLE_PREFIX'].'module m ON s.modultyp_id = m.id';
-	$id      = rex_sql::fetch('m.id', $from, 's.id = '.$sliceID.' AND s.clang = '.$clang);
-
-	return $id === false ? -1 : $id;
+	$slice   = OOArticleSlice::getArticleSliceById($sliceID, $clang);
+	$module  = $slice->getModuleName();
+	return rex_module_exists($module) ? $module : -1;
 }
 
 /**
@@ -175,15 +140,10 @@ function rex_slice_module_exists($sliceID, $clang)
  *
  * @return boolean  true oder ... false
  */
-function rex_module_exists($moduleID)
+function rex_module_exists($module)
 {
-	$moduleID = (int) $moduleID;
-
-	if ($moduleID < 0) {
-		return false;
-	}
-
-	return sly_DB_Persistence::getInstance()->magicFetch('module', 'id', array('id' => $moduleID)) > 0;
+	$service = sly_Service_Factory::getService('Module');
+	return $service->exists($module);
 }
 
 /**

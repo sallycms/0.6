@@ -23,9 +23,7 @@ class OOArticleSlice {
 	private $_ctype;
 	private $_module;
 	private $_slice_id;
-
-	private $_re_article_slice_id;
-	private $_next_article_slice_id;
+	private $_prior;
 
 	private $_createdate;
 	private $_updatedate;
@@ -33,10 +31,12 @@ class OOArticleSlice {
 	private $_updateuser;
 	private $_revision;
 
+	const CACHE_NS = 'sly.slice';
+
 	/**
 	 * Constructor
 	 */
-	public function __construct($id, $article_id, $clang, $ctype, $module, $re_article_slice_id,
+	public function __construct($id, $article_id, $clang, $ctype, $module, $prior,
 		$next_article_slice_id, $createdate,$updatedate,$createuser,$updateuser,$revision, $slice_id = 0) {
 		$this->_id         = (int) $id;
 		$this->_article_id = (int) $article_id;
@@ -44,9 +44,7 @@ class OOArticleSlice {
 		$this->_ctype      = $ctype;
 		$this->_module     = $module;
 		$this->_slice_id   = (int) $slice_id;
-
-		$this->_re_article_slice_id   = (int) $re_article_slice_id;
-		$this->_next_article_slice_id = (int) $next_article_slice_id;
+		$this->_prior   = (int) $prior;
 
 		$this->_createdate = (int) $createdate;
 		$this->_updatedate = (int) $updatedate;
@@ -70,7 +68,7 @@ class OOArticleSlice {
 
 		if ($obj === null) {
 			$obj = self::_getSliceWhere('id = '.$id.' AND clang = '.$clang.' AND revision = '.$revision);
-			sly_Core::cache()->set($namespace, $key, $obj);
+			sly_Core::cache()->set(self::CACHE_NS, $key, $obj);
 		}
 
 		return $obj;
@@ -95,8 +93,8 @@ class OOArticleSlice {
 
 		return self::_getSliceWhere(
 			'a.article_id = '.$articleID.' AND a.clang = '. $clang .' AND '.
-			'((a.re_article_slice_id = 0 AND a.ctype = 0 AND a.id = b.id) '.
-			'OR (b.ctype = 2 AND a.ctype = 0 AND b.id = a.re_article_slice_id)) '.
+			'((a.prior = 0 AND a.ctype = 0 AND a.id = b.id) '.
+			'OR (b.ctype = 2 AND a.ctype = 0 AND b.id = a.prior)) '.
 			'AND a.revision = '.$revision.' AND b.revision = '.$revision,
 			$prefix.'article_slice a, '.$prefix.'article_slice b',
 			'a.*'
@@ -120,8 +118,8 @@ class OOArticleSlice {
 
 		return self::_getSliceWhere(
 			'a.article_id = '.$articleID.' AND a.clang = "'.$clang.'" AND a.ctype = "'.$ctype.'" AND '.
-			'((a.re_article_slice_id = 0  AND a.id = b.id) '.
-			'OR (b.ctype != a.ctype AND b.id = a.re_article_slice_id)) '.
+			'((a.prior = 0  AND a.id = b.id) '.
+			'OR (b.ctype != a.ctype AND b.id = a.prior)) '.
 			'AND a.revision = '.$revision.' AND b.revision = '.$revision,
 			$prefix.'article_slice a, '.$prefix.'article_slice b',
 			'a.*'
@@ -156,14 +154,14 @@ class OOArticleSlice {
 	 * @return OOArticleSlice
 	 */
 	public function getNextSlice() {
-		return self::_getSliceWhere('re_article_slice_id = '.$this->_id.' AND clang = '.$this->_clang.' AND revision = '.$this->_revision);
+		return self::_getSliceWhere('prior > '.$this->_prior.' AND ctype = '.$this->_ctype.' AND clang = '.$this->_clang.' AND article_id = '.$this->_article_id.' AND clang = '.$this->_clang.' LIMIT 1 ORDER BY prior ASC');
 	}
 
 	/**
 	 * @return OOArticleSlice
 	 */
 	public function getPreviousSlice() {
-		return self::_getSliceWhere('id = '.$this->_re_article_slice_id.' AND clang = '.$this->_clang.' AND revision = '.$this->_revision);
+		return self::_getSliceWhere('prior < '.$this->_prior.' AND ctype = '.$this->_ctype.' AND clang = '.$this->_clang.' AND article_id = '.$this->_article_id.' AND clang = '.$this->_clang.' LIMIT 1 ORDER BY prior DESC');
 	}
 
 	/**
@@ -217,7 +215,7 @@ class OOArticleSlice {
 		foreach ($data as $row) {
 			$slices[] = new OOArticleSlice(
 				$row['id'], $row['article_id'], $row['clang'], $row['ctype'], $row['module'],
-				$row['re_article_slice_id'], $row['next_article_slice_id'], $row['createdate'],
+				$row['prior'], $row['next_article_slice_id'], $row['createdate'],
 				$row['updatedate'], $row['createuser'], $row['updateuser'], $row['revision'],
 				$row['slice_id']
 			);
@@ -237,7 +235,7 @@ class OOArticleSlice {
 	public function getRevision()   { return $this->_revision;            }
 	public function getModuleName() { return $this->_module;              }
 	public function getId()         { return $this->_id;                  }
-	public function getReId()       { return $this->_re_article_slice_id; }
+	public function getPrior()       { return $this->_prior;               }
 	public function getSliceId()    { return $this->_slice_id;            }
 
 	public function getValue($index)     { return $this->getRexVarValue('REX_VALUE', $index);     }
