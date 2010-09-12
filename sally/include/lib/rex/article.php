@@ -189,7 +189,7 @@ class rex_article {
 		return $this->ARTICLE->hasValue($value);
 	}
 
-	public function getArticle($curctype = -1) {
+	public function getArticle($curctype = null) {
 		// Einzelnes Slice ausgeben. Besser: direkt $this->getSliceOutput aufrufen.
 		if ($this->getSlice) return $this->getSliceOutput($this->getSlice);
 		if ($this->content != '') return $this->content;
@@ -284,17 +284,10 @@ class rex_article {
 	}
 
 	private function printArticleContent() {
-		$result = '';
-		$sql = sly_DB_Persistence::getInstance();
-		$where = array('article_id' => $this->article_id, 'clang' => $this->clang);
-		if($this->ctype != -1) {
-			$where['ctype'] = $this->ctype;
+		$ids = OOArticleSlice::getSliceIdsForSlot($this->article_id, $this->clang, $this->ctype);
+		foreach($ids as $id) {
+			print OOArticleSlice::getArticleSliceById($id, $this->clang)->getContent();
 		}
-		$sql->select('article_slice', 'id', $where, null, 'ctype, prior ASC');
-		foreach($sql as $row) {
-			$result .= OOArticleSlice::getArticleSliceById($row['id'], $this->clang)->getContent();
-		}
-		return $result;
 	}
 
 	/**

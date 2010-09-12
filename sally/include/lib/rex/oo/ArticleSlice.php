@@ -74,6 +74,26 @@ class OOArticleSlice {
 		return $obj;
 	}
 
+	public static function getSliceIdsForSlot($article_id, $clang, $slot = null) {
+		$cache    = sly_Cache::factory();
+		$cachekey = "slice_ids_for_slot_$article_id.$clang.$slot";
+		$ids      = $cache->get(self::CACHE_NS, $cachekey);
+		if(is_null($ids)) {
+			$ids = array();
+			$sql = sly_DB_Persistence::getInstance();
+			$where = array('article_id' => $article_id, 'clang' => $clang);
+			if(!is_null($slot)) {
+				$where['ctype'] = $slot;
+			}
+			$sql->select('article_slice', 'id', $where, null, 'ctype, prior ASC');
+			foreach($sql as $row){
+				$ids[] = $row['id'];
+			}
+			$cache->set(self::CACHE_NS, $cachekey, $ids);
+		}
+		return $ids;
+	}
+
 	/**
 	 * Return the first slice for an article.
 	 * This can then be used to iterate over all the
