@@ -89,6 +89,10 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 		return file_put_contents($templateFile, $content) > 0;
 	}
 
+	public function isGenerated($name) {
+		return file_exists($this->getCacheFile($name));
+	}
+
 	public function getCacheFile($name) {
 		return sly_Util_Directory::join($this->getCacheFolder(), $name.'.php');
 	}
