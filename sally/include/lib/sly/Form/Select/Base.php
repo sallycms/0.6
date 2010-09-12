@@ -35,4 +35,16 @@ abstract class sly_Form_Select_Base extends sly_Form_ElementBase {
 	public function setValues($values) {
 		$this->values = $values;
 	}
+
+	public function addValue($key, $value) {
+		$this->values[$key] = $value;
+	}
+
+	public function getValues() {
+		return $this->values;
+	}
+
+	public function getValueCount() {
+		return count($this->values);
+	}
 }

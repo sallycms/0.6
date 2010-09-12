@@ -98,6 +98,10 @@ abstract class sly_Form_ElementBase {
 		$this->helpText = $helpText;
 	}
 
+	public function setLabel($label) {
+		$this->label = $label;
+	}
+
 	public function getHelpText() {
 		return $this->helpText;
 	}
