@@ -268,8 +268,6 @@ class OOArticleSlice {
 	public function getLinkList($index)  { return $this->getRexVarValue('REX_LINKLIST', $index);  }
 	public function getMedia($index)     { return $this->getRexVarValue('REX_MEDIA', $index);     }
 	public function getMediaList($index) { return $this->getRexVarValue('REX_MEDIALIST', $index); }
-	public function getHtml()            { return $this->getRexVarValue('REX_HTML', $index);      }
-	public function getPhp()             { return $this->getRexVarValue('REX_PHP', $index);       }
 
 	public function getLinkUrl($index) {
 		return rex_getUrl($this->getLink());
