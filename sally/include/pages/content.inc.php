@@ -277,7 +277,7 @@ if ($article->getRows() == 1) {
 						$update->update();
 						$update = null;
 
-						rex_deleteCacheArticleContent($article_id, $clang);
+						//rex_deleteCacheArticleContent($article_id, $clang);
 						rex_deleteCacheSliceContent($slice_id);
 
 						// POST SAVE ACTION [ADD/EDIT/DELETE]

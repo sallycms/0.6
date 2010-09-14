@@ -90,6 +90,11 @@ class OOArticleSlice {
 				$ids[] = $row['id'];
 			}
 			$cache->set(self::CACHE_NS, $cachekey, $ids);
+
+			rex_register_extension_point('CLANG_ARTICLE_GENERATED', '', array(
+				'id'      => $article_id,
+				'clang'   => $clang
+			));
 		}
 		return $ids;
 	}

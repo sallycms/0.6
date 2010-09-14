@@ -58,13 +58,20 @@ function rex_deleteCacheArticle($id, $clang = null)
 			continue;
 		}
 
-		rex_deleteCacheArticleContent($id, $clang);
+		//rex_deleteCacheArticleContent($id, $clang);
 
 		$cache->delete('sly.article', $id.'_'.$clang);
 		$cache->delete('sly.article.list', $id.'_'.$clang);
 		$cache->delete('sly.category.list', $id.'_'.$clang);
 	}
 }
+
+function rex_deleteCacheSliceContent($slice_id)
+{
+	$cachePath = SLY_DYNFOLDER.'/internal/sally/articles/';
+	@unlink($cachePath.$slice_id.'.slice.php');
+}
+
 
 /**
  * Löscht die gecachten Content-Dateien eines Artikels. Wenn keine clang angegeben, wird
@@ -75,7 +82,7 @@ function rex_deleteCacheArticle($id, $clang = null)
  *
  * @return void
  */
-function rex_deleteCacheArticleContent($id, $clang = null)
+/*function rex_deleteCacheArticleContent($id, $clang = null)
 {
 	global $REX;
 
@@ -91,13 +98,7 @@ function rex_deleteCacheArticleContent($id, $clang = null)
 	}
 
 	error_reporting($level);
-}
-
-function rex_deleteCacheSliceContent($slice_id)
-{
-	$cachePath = SLY_DYNFOLDER.'/internal/sally/articles/';
-	@unlink($cachePath.$slice_id.'.slice.php');
-}
+}*/
 
 /**
  * Generiert den Artikel-Cache des Artikelinhalts.
@@ -107,7 +108,7 @@ function rex_deleteCacheSliceContent($slice_id)
  *
  * @return true bei Erfolg, false wenn eine ungütlige article_id übergeben wird, sonst eine Fehlermeldung
  */
-function rex_generateArticleContent($article_id, $clang = null)
+/*function rex_generateArticleContent($article_id, $clang = null)
 {
 	global $REX, $I18N;
 
@@ -178,7 +179,7 @@ function rex_generateArticleContent($article_id, $clang = null)
 	}
 
 	return true;
-}
+}*/
 
 
 /**

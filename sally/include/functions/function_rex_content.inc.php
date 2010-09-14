@@ -82,7 +82,7 @@ function rex_moveSlice($slice_id, $clang, $direction)
 			// Flush slice cache
 			sly_Core::cache()->flush(OOArticleSlice::CACHE_NS);
 
-			rex_deleteCacheArticleContent($article_id, $clang);
+			//rex_deleteCacheArticleContent($article_id, $clang);
 		}
 	}
 
