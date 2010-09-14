@@ -58,8 +58,6 @@ function rex_deleteCacheArticle($id, $clang = null)
 			continue;
 		}
 
-		//rex_deleteCacheArticleContent($id, $clang);
-
 		$cache->delete('sly.article', $id.'_'.$clang);
 		$cache->delete('sly.article.list', $id.'_'.$clang);
 		$cache->delete('sly.category.list', $id.'_'.$clang);
@@ -71,115 +69,6 @@ function rex_deleteCacheSliceContent($slice_id)
 	$cachePath = SLY_DYNFOLDER.'/internal/sally/articles/';
 	@unlink($cachePath.$slice_id.'.slice.php');
 }
-
-
-/**
- * Löscht die gecachten Content-Dateien eines Artikels. Wenn keine clang angegeben, wird
- * der Artikel in allen Sprachen gelöscht.
- *
- * @param $id ArtikelId des Artikels
- * @param [$clang ClangId des Artikels]
- *
- * @return void
- */
-/*function rex_deleteCacheArticleContent($id, $clang = null)
-{
-	global $REX;
-
-	$cachePath = SLY_DYNFOLDER.'/internal/sally/articles/';
-	$level     = error_reporting(0);
-
-	foreach (array_keys($REX['CLANG']) as $_clang) {
-		if ($clang !== null && $clang != $_clang) {
-			continue;
-		}
-
-		unlink($cachePath.$id.'.'.$_clang.'.content.php');
-	}
-
-	error_reporting($level);
-}*/
-
-/**
- * Generiert den Artikel-Cache des Artikelinhalts.
- *
- * @param $article_id Id des zu generierenden Artikels
- * @param [$clang ClangId des Artikels]
- *
- * @return true bei Erfolg, false wenn eine ungütlige article_id übergeben wird, sonst eine Fehlermeldung
- */
-/*function rex_generateArticleContent($article_id, $clang = null)
-{
-	global $REX, $I18N;
-
-	foreach (array_keys($REX['CLANG']) as $_clang) {
-		if ($clang !== null && $clang != $_clang) {
-			continue;
-		}
-
-		$query =
-			'SELECT id, ctype, re_article_slice_id '.
-			'FROM #_article_slice '.
-			'WHERE article_id = '.$article_id.' AND clang = '.$_clang.' '.
-			'ORDER BY re_article_slice_id ASC';
-
-		$sql             = new rex_sql();
-		$slices          = $sql->getArray(str_replace('#_', $REX['DATABASE']['TABLE_PREFIX'], $query));
-		$article_content = '';
-
-		if (!empty($slices)) {
-			$sliceArray = array();
-
-			foreach ($slices as $slice) {
-				$re_id = $slice['re_article_slice_id'];
-
-				$sliceArray[$re_id]['id'] = $slice['id'];
-				$sliceArray[$re_id]['ctype'] = $slice['ctype'];
-			}
-
-			$oldctype      = null;
-			$ctype_content = array();
-			$idx           = 0;
-			$sliceCount    = count($sliceArray);
-
-			for ($i = 0; $i < $sliceCount; ++$i) {
-				$ctype = $sliceArray[$idx]['ctype'];
-				$id    = $sliceArray[$idx]['id'];
-
-				if (!$oldctype) {
-					$article_content .= '<?php if ($this->ctype == '.$ctype.' || $this->ctype == -1) { ?>';
-				}
-				elseif ($oldctype !== $ctype) {
-					$article_content .= '<?php print '.implode('.', $ctype_content).'; ?>';
-					$ctype_content    = array();
-					$article_content .= '<?php } elseif ($this->ctype == '.$ctype.' || $this->ctype == -1) { ?>';
-				}
-
-				$oldctype = $ctype;
-				$idx      = $id;
-
-				$ctype_content[] = 'OOArticleSlice::getArticleSliceById('.$id.','.$_clang.')->getContent()';
-			}
-
-			$article_content .= '<?php print '.implode('.', $ctype_content).'; ?>';
-			$article_content .= '<?php } ?>';
-		}
-
-		$article_content_file = SLY_DYNFOLDER."/internal/sally/articles/$article_id.$_clang.content.php";
-
-		if (rex_put_file_contents($article_content_file, $article_content) === false) {
-			return $I18N->msg('article_could_not_be_generated').' '.$I18N->msg('check_rights_in_directory').SLY_DYNFOLDER.'/internal/sally/articles/';
-		}
-
-		rex_register_extension_point('CLANG_ARTICLE_GENERATED', '', array(
-			'id'      => $article_id,
-			'clang'   => $clang
-		));
-		rex_register_extension_point('ARTICLE_GENERATED', '', array('id' => $article_id));
-	}
-
-	return true;
-}*/
 
 
 /**
