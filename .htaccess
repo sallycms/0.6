@@ -35,6 +35,7 @@ RewriteRule ^imageresize/(.*)$ index.php?rex_resize=$1 [L]
 # Deployer-AddOn (>= 2.0)
 RewriteRule ^assets/js/([0-9a-f]{6})\.[0-9a-f]+\.min\.js$   gzip.php?file=dyn/public/deployer/compressed_$1.js&forever=1 [L]
 RewriteRule ^assets/css/([0-9a-f]{6})\.[0-9a-f]+\.min\.css$ gzip.php?file=dyn/public/deployer/compressed_$1.css&forever=1 [L]
+RewriteRule ^assets/css/((\d+_){4}grid\.png)$               data/dyn/public/deployer/$1 [L]
 
 # Scaffold für alle Frontend-CSS-Dateien
 RewriteCond %{REQUEST_FILENAME}  -f
