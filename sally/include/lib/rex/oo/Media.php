@@ -62,7 +62,7 @@ class OOMedia
 		$media = sly_Core::cache()->get('sly.medium', $id, null);
 
 		if ($media === null) {
-			$query  = 'SELECT '.self::_getTableName().'.*, '.OOMediaCategory :: _getTableName().'.name catname FROM '.self::_getTableJoin().' WHERE file_id = '.$id;
+			$query  = 'SELECT '.self::_getTableName().'.*, '.OOMediaCategory :: _getTableName().'.name catname FROM '.self::_getTableJoin().' WHERE '.self::_getTableName().'.id = '.$id;
 			$sql    = new rex_sql();
 			$result = $sql->getArray($query);
 
@@ -73,7 +73,6 @@ class OOMedia
 			$result = $result[0];
 
 			static $aliasMap = array(
-				'file_id'      => 'id',
 				're_file_id'   => 'parent_id',
 				'category_id'  => 'cat_id',
 				'catname'      => 'cat_name',
@@ -113,14 +112,14 @@ class OOMedia
 	 */
 	public static function getMediaByExtension($extension)
 	{
-		$query  = 'SELECT file_id FROM '.self::_getTableName().' WHERE SUBSTRING(filename, LOCATE(".", filename) + 1) = "'.$extension.'"';
+		$query  = 'SELECT id FROM '.self::_getTableName().' WHERE SUBSTRING(filename, LOCATE(".", filename) + 1) = "'.$extension.'"';
 		$sql    = new rex_sql();
 		$result = $sql->getArray($query);
 		$media  = array();
 
 		if (is_array($result)) {
 			foreach ($result as $row) {
-				$media[] = self::getMediaById($row['file_id']);
+				$media[] = self::getMediaById($row['id']);
 			}
 		}
 
@@ -132,13 +131,13 @@ class OOMedia
 	 */
 	public static function getMediaByFileName($name)
 	{
-		$query  = 'SELECT file_id FROM '.self::_getTableName().' WHERE filename = "'.$name.'" LIMIT 1';
+		$query  = 'SELECT id FROM '.self::_getTableName().' WHERE filename = "'.$name.'" LIMIT 1';
 		$sql    = new rex_sql();
 		$result = $sql->getArray($query);
 
 		if (is_array($result)) {
 			foreach ($result as $line) {
-				return self::getMediaById($line['file_id']);
+				return self::getMediaById($line['id']);
 			}
 		}
 
@@ -497,7 +496,7 @@ class OOMedia
 
 		if ($this->getId() !== null) {
 			$sql->addGlobalUpdateFields();
-			$sql->setWhere('file_id = '.$this->getId().' LIMIT 1');
+			$sql->setWhere('id = '.$this->getId().' LIMIT 1');
 			return $sql->update();
 		}
 		else {
@@ -515,7 +514,7 @@ class OOMedia
 			if ($OOMed) return $OOMed->delete();
 		}
 		else {
-			$qry = 'DELETE FROM '.$this->_getTableName().' WHERE file_id = '.$this->getId().' LIMIT 1';
+			$qry = 'DELETE FROM '.$this->_getTableName().' WHERE id = '.$this->getId().' LIMIT 1';
 			$sql = new rex_sql();
 			$sql->setQuery($qry);
 

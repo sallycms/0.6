@@ -202,13 +202,13 @@ class OOMediaCategory
 		if ($this->files === null) {
 			$this->files = array();
 
-			$qry    = 'SELECT file_id FROM '.OOMedia::_getTableName().' WHERE category_id = '.$this->getId();
+			$qry    = 'SELECT id FROM '.OOMedia::_getTableName().' WHERE category_id = '.$this->getId();
 			$sql    = rex_sql::getInstance();
 			$result = $sql->getArray($qry);
 
 			if (is_array($result)) {
 				foreach ($result as $line) {
-					$this->files[] = OOMedia::getMediaById($line['file_id']);
+					$this->files[] = OOMedia::getMediaById($line['id']);
 				}
 			}
 		}
