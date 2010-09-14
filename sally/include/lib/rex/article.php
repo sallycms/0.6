@@ -562,7 +562,7 @@ class rex_article {
 			// ----- / PRE VIEW ACTION
 
 			$moduleInput    = $moduleService->getContent($currentSlice['Module'], 'input');
-			$slice_content .= $this->editSlice($currentSlice['ID'], $moduleInput, $currentSlice['CType'], $currentSlice['Module']);
+			$slice_content .= $this->editSlice($currentSlice['ID'], $moduleInput, $currentSlice['CType'], $currentSlice['Module'], $currentSlice['sliceId']);
 			$slice_content  = $this->triggerSliceShowEP($slice_content, $currentSlice);
 		}
 		else {
@@ -695,20 +695,20 @@ class rex_article {
   }
 
   // ----- EDIT Slice
-  public function editSlice($sliceID, $moduleInput, $ctype, $module)
+  public function editSlice($articleSliceID, $moduleInput, $ctype, $module, $slice_id)
   {
     global $REX, $I18N;
 
     $slice_content = '
       <a name="editslice"></a>
       <div class="rex-form rex-form-content-editmode-edit-slice">
-      <form enctype="multipart/form-data" action="index.php#slice'.$sliceID.'" method="post" id="REX_FORM">
+      <form enctype="multipart/form-data" action="index.php#slice'.$articleSliceID.'" method="post" id="REX_FORM">
         <fieldset class="rex-form-col-1">
           <legend><span>'. $I18N->msg('edit_block') .'</span></legend>
           <input type="hidden" name="article_id" value="'.$this->article_id.'" />
           <input type="hidden" name="page" value="content" />
           <input type="hidden" name="mode" value="'.$this->mode.'" />
-          <input type="hidden" name="slice_id" value="'.$sliceID.'" />
+          <input type="hidden" name="slice_id" value="'.$articleSliceID.'" />
           <input type="hidden" name="ctype" value="'.$ctype.'" />
           <input type="hidden" name="function" value="edit" />
           <input type="hidden" name="save" value="1" />
@@ -746,7 +746,7 @@ class rex_article {
          //-->
       </script>';
 
-		return $this->replaceVars($sliceID, $slice_content);
+		return $this->replaceVars($slice_id, $slice_content);
 	}
 
 	/**
