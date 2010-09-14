@@ -11,25 +11,21 @@
 /**
  * @ingroup service
  */
-abstract class sly_Service_Model_Base
-{
+abstract class sly_Service_Model_Base {
 	protected $tablename;
 
 	protected abstract function makeObject(array $params);
 
-	protected function getTableName()
-	{
+	protected function getTableName() {
 		return $this->tablename;
 	}
 
-	public function create($params)
-	{
+	public function create($params) {
 		$model = $this->makeObject($params);
 		return $this->save($model);
 	}
 
-	public function save(sly_Model_Base $model)
-	{
+	public function save(sly_Model_Base $model) {
 		$persistence = sly_DB_Persistence::getInstance();
 
 		if ($model->getId() == sly_Model_Base::NEW_ID) {
@@ -45,15 +41,13 @@ abstract class sly_Service_Model_Base
 		return $model;
 	}
 
-	public function findById($id)
-	{
+	public function findById($id) {
 		$res = $this->find(array('id' => (int)$id));
 		if (count($res) == 1) return $res[0];
 		return null;
 	}
 
-	public function find($where = null, $group = null, $order = null, $limit = null, $having = null)
-	{
+	public function find($where = null, $group = null, $order = null, $limit = null, $having = null) {
 		$return      = array();
 		$persistence = sly_DB_Persistence::getInstance();
 		$persistence->select($this->getTableName(), '*', $where, $group, $order, $limit, $having);
@@ -65,8 +59,7 @@ abstract class sly_Service_Model_Base
 		return $return;
 	}
 
-	public function delete($where)
-	{
+	public function delete($where) {
 		$persistence = sly_DB_Persistence::getInstance();
 		return $persistence->delete($this->getTableName(), $where);
 	}
