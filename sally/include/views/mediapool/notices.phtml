@@ -1,0 +1,22 @@
+<?php
+
+foreach (array('warning', 'info') as $type) {
+	if (empty($this->$type)) continue;
+
+	if (is_array($this->$type)) {
+		if (count($this->$type) > 1) {
+			$function = 'rex_'.$type.'_block';
+			$message  = implode('<br />', $this->$type);
+		}
+		else {
+			$function = 'rex_'.$type;
+			$message  = reset($this->$type);
+		}
+	}
+	elseif (is_string($this->$type)) {
+		$function = 'rex_'.$type;
+		$message  = $this->$type;
+	}
+
+	print call_user_func_array($function, array($message));
+}

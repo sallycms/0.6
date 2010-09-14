@@ -341,24 +341,9 @@ jQuery.noConflict();
 jQuery(function($) {
 	pageloaded = true;
 
-	// Medienpool-Events
-
-	$('#rex-form-mediapool-media .sly-button-delete').click(function() {
-		if (confirm($(this).attr('rel')+'?')) {
-			$('#media_method').val('delete_selectedmedia');
-		}
-		else {
-			return false;
-		}
-	});
-
-	$('#rex-form-mediapool-media .sly-button-changecat').click(function() {
-		$('#media_method').val('updatecat_selectedmedia');
-	});
-
 	// Lösch-Links in Tabellen
 
-	$('table.rex-table').delegate('a.sly-delete', 'click', function() {
+	$('table.rex-table').delegate('a.sly-delete, input.sly-button-delete', 'click', function() {
 		var table    = $(this).parents('table');
 		var question = table.attr('rel');
 

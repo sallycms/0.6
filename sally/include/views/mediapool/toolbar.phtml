@@ -1,0 +1,44 @@
+<?php
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+$selected   = $this->getCurrentCategory();
+$dispatcher = sly_Core::dispatcher();
+
+////////////////////////////////////////////////////////
+// header
+
+print $dispatcher->filter('PAGE_MEDIAPOOL_HEADER', '', array('category_id' => $selected));
+
+////////////////////////////////////////////////////////
+// category selection form
+
+$form = new sly_Form('index.php', 'POST', $I18N->msg('pool_select_cat'), '', 'rex-form-mediapool-selectcategory');
+$form->addHiddenValue('page', 'mediapool');
+
+// additional arguments
+
+foreach ($this->args as $name => $value) {
+	$form->addHiddenValue('args['.$name.']', $value);
+}
+
+// category select
+
+$select = $this->getCategorySelect();
+$select->setAttribute('onchange', 'this.form.submit()');
+
+$form->add($select);
+$form->setResetButton(null);
+$form->setSubmitButton(null);
+
+$form = $dispatcher->filter('SLY_MEDIA_LIST_TOOLBAR', $form, array('category_id' => $selected));
+
+if ($form instanceof sly_Form) {
+	$form->render();
+}

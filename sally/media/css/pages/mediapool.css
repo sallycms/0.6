@@ -7,10 +7,10 @@ body#rex-page-mediapool {
 	div#rex-footer { display:none; }
 
 	div#rex-wrapper {
-		float:none;
-		margin:0 auto;
-		padding-top:20px;
-		width:690px;
+		float: none;
+		margin: 0 auto;
+		padding-top: 20px;
+		width: 690px;
 	}
 
 	/*	Rundungen */
@@ -112,7 +112,9 @@ div#rex-mediapool-detail {
 		width: 100%;
 		color: $drk_grey;
 	}
+
 	.rex-form-submit { margin-left: 75px; }
+
 	div.rex-form-row {
 		div.rex-form-checkboxes-wrapper,
 		div.rex-form-radios-wrapper,
@@ -138,21 +140,6 @@ div#rex-mediapool-detail {
 		div.rex-form-widget select {
 			width: 212px;
 		}
-	}
-}
-div.rex-mediapool-detail-image-container {
-	position: relative;
-}
-
-p.rex-mediapool-detail-image {
-	position: absolute;
-	right: 8px;
-	top: 8px;
-	max-width: 200px;
-	text-align: right;
-
-	img {
-		max-height: 100px;
 	}
 }
 
@@ -186,7 +173,7 @@ p.rex-mediapool-detail-image {
 		}
 	}
 
-	input.rex-form-text    { width: 400px; }
+	.rex-form-text input   { width: 400px; }
 	select.rex-form-select { width: 407px; }
 
 	.sly-mediapool-list {
@@ -214,10 +201,33 @@ p.rex-mediapool-detail-image {
 			width: 230px;
 		}
 	}
+
+	div.rex-form-row.sly-mediapool-detail-image {
+		position: relative;
+		height: 0;
+		border: 0 none;
+		padding: 0;
+
+		div {
+			position: absolute;
+			right: 0;
+			top: 8px;
+			max-width: 200px;
+			text-align: right;
+
+			img {
+				max-height: 100px;
+			}
+		}
+	}
+
+	div.rex-form-row.sly-mediapool-detail-title {
+		border-top: 0 none;
+	}
 }
 
-div#rex-form-mediapool-media {
-	.rex-form-wrapper {
+form#rex-form-mediapool-media {
+	.rex-form-wrapper .rex-form-row.sly-num0 {
 		padding: 0;
 	}
 }

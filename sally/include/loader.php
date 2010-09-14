@@ -34,6 +34,5 @@ if ($REX['REDAXO']) {
 	require_once SLY_INCLUDE_PATH.'/functions/function_rex_time.inc.php';
 	require_once SLY_INCLUDE_PATH.'/functions/function_rex_title.inc.php';
 	require_once SLY_INCLUDE_PATH.'/functions/function_rex_generate.inc.php';
-	require_once SLY_INCLUDE_PATH.'/functions/function_rex_mediapool.inc.php';
 	require_once SLY_INCLUDE_PATH.'/functions/function_rex_structure.inc.php';
 }

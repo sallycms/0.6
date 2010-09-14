@@ -1,0 +1,54 @@
+<?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
+?>
+<script type="text/javascript">
+function selectMedia(filename) {
+	<?	if (!empty($this->opener)): ?>
+	opener.document.getElementById('<?= addslashes($this->opener) ?>').value = filename;
+	<? endif ?>
+	self.close();
+}
+
+function selectMedialist(filename) {
+	<?php
+	if (substr($this->opener, 0, 14) == 'REX_MEDIALIST_') {
+		$id = substr($this->opener, 14);
+
+		?>
+		var medialist    = 'REX_MEDIALIST_SELECT_<?= $id ?>';
+		var source       = opener.document.getElementById(medialist);
+		var sourcelength = source.options.length;
+
+		option = opener.document.createElement('OPTION');
+		option.text  = filename;
+		option.value = filename;
+
+		source.options.add(option, sourcelength);
+		opener.writeREXMedialist('<?= $id ?>');
+		<?php
+	}
+	?>
+}
+
+function insertImage(src, alt) {
+	window.opener.insertImage('data/mediapool/' + src, alt);
+	self.close();
+}
+
+function insertLink(src) {
+	window.opener.insertFileLink('data/mediapool/' + src);
+	self.close();
+}
+
+function openPage(src) {
+	window.opener.location.href = src;
+	self.close();
+}
+</script>

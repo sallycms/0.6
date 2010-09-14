@@ -20,7 +20,7 @@ abstract class sly_Model_Base {
 
 	protected $id = self::NEW_ID;
 
-	public function __construct($params) {
+	public function __construct($params = array()) {
 		if (isset($params['id'])) $this->id = $params['id'];
 
 		foreach ($this->_attributes as $name => $type){
@@ -39,5 +39,28 @@ abstract class sly_Model_Base {
 		}
 
 		return $return;
+	}
+
+	public function setUpdateColumns($user = null) {
+		global $REX;
+
+		if (!$user) {
+			$user = $REX['USER']->getValue('login');
+		}
+
+		$this->setUpdateDate(time());
+		$this->setUpdateUser($user);
+	}
+
+	public function setCreateColumns($user = null) {
+		global $REX;
+
+		if (!$user) {
+			$user = $REX['USER']->getValue('login');
+		}
+
+		$this->setCreateDate(time());
+		$this->setCreateUser($user);
+		$this->setUpdateColumns($user);
 	}
 }
