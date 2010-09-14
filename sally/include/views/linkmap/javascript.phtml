@@ -1,0 +1,56 @@
+<?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
+$openerField     = $this->getGlobals('opener_input_field', '');
+$openerFieldName = $this->getGlobals('opener_input_field_name', '');
+$htmlArea        = $this->getGlobals('HTMLArea', '');
+
+// default value for opener field names
+if (!empty($openerField) && empty($openerFieldName)) {
+	$openerFieldName = $openerField.'_NAME';
+}
+
+// constructing JS via PHP code sucks...
+
+?>
+
+<script type="text/javascript">
+function insertLink(link, name) {
+<? if (!empty($htmlArea)): ?>
+	<? if ($htmlArea == 'TINY'): ?>
+	window.opener.tinyMCE.insertLink(link);
+	<? else: ?>
+	window.opener.<?= preg_replace('#[^a-z0-9-_.]#i', '', $htmlArea) ?>.surroundHTML("<a href="+link+">","</a>");
+	<? endif ?>
+<? endif ?>
+
+<? if ($openerField == 'TINY'): ?>
+	window.opener.insertLink(link,name);
+	self.close();
+<? elseif (substr($openerField, 0, 13) == 'REX_LINKLIST_'): $id = substr($openerField, 13); ?>
+
+	var linklist     = 'REX_LINKLIST_SELECT_<?= $id ?>';
+	var linkid       = link.replace('sally://', '');
+	var source       = opener.document.getElementById(linklist);
+	var sourcelength = source.options.length;
+
+	option = opener.document.createElement("OPTION");
+	option.text  = name;
+	option.value = linkid;
+
+	source.options.add(option, sourcelength);
+	opener.writeREXLinklist('<?= $id ?>');
+<? else: ?>
+	var linkid = link.replace('sally://', '');
+	window.opener.document.getElementById('<?= $openerField ?>').value = linkid;
+	window.opener.document.getElementById('<?= $openerFieldName ?>').value = name;
+	self.close();
+<? endif ?>
+}
+</script>

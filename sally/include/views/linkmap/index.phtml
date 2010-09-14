@@ -1,0 +1,55 @@
+<?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
+?>
+<div id="rex-linkmap">
+	<div class="rex-area-col-2">
+		<div class="rex-area-col-a">
+			<h3 class="rex-hl2"><?= $I18N->msg('lmap_categories') ?></h3>
+			<div class="rex-area-content">
+			<?php
+			$roots = OOCategory::getRootCategories();
+			print $this->tree($roots);
+			?>
+			</div>
+		</div>
+
+		<div class="rex-area-col-b">
+			<h3 class="rex-hl2"><?= $I18N->msg('lmap_articles') ?></h3>
+			<div class="rex-area-content">
+				<ul>
+				<?php
+
+				$category_id = $this->getGlobals('category_id', 0);
+				$isRoot      = $category_id == 0;
+				$category    = OOCategory::getCategoryById($category_id);
+
+				if ($isRoot) $articles = OOArticle::getRootArticles();
+				elseif ($category) $articles = $category->getArticles();
+				else $articles = array();
+
+				foreach ($articles as $article) {
+					if ($article->isStartpage() && $article->getId() != $category_id) {
+						continue;
+					}
+
+					$label    = $this->formatLabel($article);
+					$selected = $article->getId() == $this->getGlobals('category_id', 0);
+					$url      = $this->backlink($article->getId(), sly_html($article->getName()));
+					$liAttr   = $selected ? ' id="rex-linkmap-active"' : '';
+					$linkAttr = 'class="'.($article->isOnline() ? 'rex-online' : 'rex-offine').'" href="'.$url.'"';
+
+					print '<li '.$liAttr.'><a '.$linkAttr.'>'.sly_html($label).'</a></li>';
+				}
+				?>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
