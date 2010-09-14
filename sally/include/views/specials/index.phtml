@@ -1,0 +1,92 @@
+<?php
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+global $REX, $I18N;
+
+$config = sly_Core::config();
+
+if (!empty($this->warning)) print rex_warning($this->warning);
+if (!empty($this->info))    print rex_info($this->info);
+
+$locales    = array_combine($REX['LOCALES'], $REX['LOCALES']);
+$rewrites   = array('true' => 'aktiviert', 'false' => 'deaktiviert');
+$tplService = sly_Service_Factory::getService('Template');
+$templates  = $tplService->getTemplates();
+
+$backendLocale   = new sly_Form_Select_DropDown('backend_locale', '$REX[LANG]', $config->get('LANG'), $locales, 'rex-form-lang');
+$modRewrite      = new sly_Form_Select_DropDown('mod_rewrite', '$REX[MOD_REWRITE]', $config->get('MOD_REWRITE') ? 'true' : 'false', $rewrites, 'rex-form-mod-rewrite');
+$defaultTemplate = new sly_Form_Select_DropDown('default_template', '$REX[DEFAULT_TEMPLATE]', $config->get('DEFAULT_TEMPLATE'), $templates, 'rex-form-default-template-id');
+$cachingStrategy = new sly_Form_Select_DropDown('caching_strategy', t('specials_caching_strategy'), sly_Cache::getStrategy(), sly_Cache::getAvailableCacheImpls(), 'rex-form-caching-strategy');
+
+$buttonBar = new sly_Form_ButtonBar(array(
+	'submit' => new sly_Form_Input_Button('submit', 'sendit', $I18N->msg('specials_update'))
+));
+
+?>
+
+<div class="rex-form" id="rex-form-system-setup">
+	<form action="index.php" method="post">
+		<div>
+			<input type="hidden" name="page" value="specials" />
+			<input type="hidden" name="func" value="update" />
+		</div>
+
+		<div class="rex-area-col-2">
+			<div class="rex-area-col-a">
+
+				<h3 class="rex-hl2"><?= $I18N->msg('specials_features') ?></h3>
+
+				<div class="rex-area-content">
+					<h4 class="rex-hl3"><?= $I18N->msg('delete_cache') ?></h4>
+					<p class="rex-tx1"><?= $I18N->msg('delete_cache_description') ?></p>
+					<p class="rex-button"><a class="rex-button" href="index.php?page=specials&amp;func=clearcache"><?= $I18N->msg('delete_cache') ?></a></p>
+
+					<h4 class="rex-hl3"><?= $I18N->msg('setup') ?></h4>
+					<p class="rex-tx1"><?= $I18N->msg('setup_text') ?></p>
+					<p class="rex-button"><a class="rex-button" href="index.php?page=specials&amp;func=setup" onclick="return confirm(\'<?= $I18N->msg('setup') ?>?\');"><?= $I18N->msg('setup') ?></a></p>
+
+					<h4 class="rex-hl3"><?= $I18N->msg('version') ?></h4>
+					<p class="rex-tx1">SallyCMS <?= $config->get('VERSION') ?>.<?= $config->get('SUBVERSION') ?>.<?= $config->get('MINORVERSION') ?></p>
+
+					<h4 class="rex-hl3"><?= $I18N->msg('database') ?></h4>
+					<p class="rex-tx1"><?= $I18N->msg('name') ?>: <?= sly_html($config->get('DATABASE/NAME')) ?><br /><?= $I18N->msg('host') ?>: <?= sly_html($config->get('DATABASE/HOST')) ?></p>
+				</div>
+			</div>
+
+			<div class="rex-area-col-b">
+				<h3 class="rex-hl2"><?= $I18N->msg('specials_settings') ?></h3>
+
+				<div class="rex-area-content">
+
+					<?php
+
+					$fieldset = new sly_Form_Fieldset($I18N->msg('general_info_header'));
+
+					$fieldset->addRows(array(
+						new sly_Form_Input_Text('server', '$REX[SERVER]', $config->get('SERVER')),
+						new sly_Form_Input_Text('servername', '$REX[SERVERNAME]', $config->get('SERVERNAME')),
+						new sly_Form_Input_Text('error_email', '$REX[ERROR_EMAIL]', $config->get('ERROR_EMAIL')),
+						new sly_Form_LinkButton('start_article', t('specials_start_article'), $config->get('START_ARTICLE_ID')),
+						new sly_Form_LinkButton('notfound_article', t('specials_not_found_article'), $config->get('NOTFOUND_ARTICLE_ID')),
+						$defaultTemplate,
+						$backendLocale,
+						$modRewrite,
+						$cachingStrategy,
+						$buttonBar
+					));
+
+					$fieldset->render();
+
+					?>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

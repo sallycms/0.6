@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<coco keep="yes">
+	<title>SallyCMS</title>
+	<briefdescription>API-Dokumentation</briefdescription>
+	<basedir>../</basedir>
+	<include menu="Lizenz" target="license.html" type="framed" builder="license" pos="bottom" keep="yes">../LICENSE</include>
+	<versionfile type="plain">../version</versionfile>
+	<doxyfile keep="yes">doxyfile</doxyfile>
+</coco>

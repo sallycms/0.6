@@ -1,0 +1,239 @@
+body#rex-page-mediapool {
+	div#rex-website { width: 100%; }
+	div#rex-title div.rex-title-row { width: 100%; }
+	div#rex-title { background-image: none; }
+	div#rex-redaxo-link { display: none; }
+	div#rex-navi-logout { display: none; }
+	div#rex-footer { display:none; }
+
+	div#rex-wrapper {
+		float: none;
+		margin: 0 auto;
+		padding-top: 20px;
+		width: 690px;
+	}
+
+	/*	Rundungen */
+	div.rex-form, div#rex-mediapool-detail-wrapper {
+		+border-radius($brd_rad);
+	}
+
+	/* Pfadangabe im Medienpool */
+	div#rex-navi-path ul {
+		border: 0;
+		list-style: none;
+		margin: 0 0 10px 0;
+		padding: 0;
+		font-size: 1em;
+
+		& li {
+			display: inline;
+			font-weight: normal;
+
+			a.rex-active { color: $drk_grey; }
+		}
+	}
+}
+
+/*	Button - Arrows */
+
+.rex-i- {
+	&mediapool-category     { background-position: -32px 0; }
+	&mediapool-category-add { background-position: -32px -16px; }
+}
+
+div#rex-form-mediapool-selectcategory {
+	/*  Bspl. Searchbar */
+
+	div.rex-form-row p {
+		input.rex-form-submit { margin-left: 10px; }
+	}
+
+	fieldset.rex-form-col-2 {
+		margin-bottom: 40px;
+	}
+
+	.rex-form-wrapper {
+		margin-bottom: 10px;
+	}
+}
+
+body#rex-page-mediapool,
+div#rex-form-mediapool-other {
+	div.rex-form-row:first-child { border-top: none; }
+
+	fieldset.rex-form-col-1 div.rex-form-row {
+		input#file_new .rex-form-file {
+			border: 0;
+		}
+
+		p.rex-form-label-right {
+			input.rex-form-checkbox,
+			input.rex-form-radio {
+				margin-left: 5px;
+			}
+
+			label { width: 426px; }
+		}
+	}
+}
+
+div#rex-form-mediapool-detail {
+	div.rex-form-row p select {
+		&.rex-form-select-date { width: 45px; }
+		&.rex-form-select-year { width: 65px; }
+	}
+
+	fieldset.num1 {
+		div.rex-form-checkboxes-wrapper,
+		div.rex-form-radios-wrapper,
+		p.rex-form-label-right label,
+		p.rex-form-read span,
+		p.rex-form-text input,
+		p.rex-form-password input,
+		p select,
+		p textarea {
+			width: 250px;
+		}
+
+		div.rex-form-row {
+			line-height: 29px;
+		}
+
+		label {
+			margin-top: 4px;
+		}
+	}
+}
+
+div#rex-mediapool-detail {
+	&-wrapper {
+		float: left;
+		width: 100%;
+		color: $drk_grey;
+	}
+
+	.rex-form-submit { margin-left: 75px; }
+
+	div.rex-form-row {
+		div.rex-form-checkboxes-wrapper,
+		div.rex-form-radios-wrapper,
+		p.rex-form-label-right label,
+		p.rex-form-read span,
+		p.rex-form-text input,
+		p.rex-form-password input,
+		p select,
+		p textarea {
+			width: 244px;
+		}
+
+		p select.rex-form-select-date {
+			width: 50px;
+		}
+
+		p select.rex-form-select-year {
+			width: 70px;
+		}
+
+		div.rex-form-checkboxes-wrapper p.rex-form-label-right label,
+		div.rex-form-radios-wrapper p.rex-form-label-right label,
+		div.rex-form-widget select {
+			width: 212px;
+		}
+	}
+}
+
+#rex-page-mediapool .rex-form {
+	width: 690px;
+
+	td { padding: 5px 0 }
+
+	.rex-tx4 {
+		line-height: 1.4em;
+		margin: 0;
+	}
+
+	caption { display: none; }
+	legend  { width: 680px;  }
+
+	.rex-form-wrapper {
+		width: 690px;
+		padding: 0;
+		margin-bottom: 10px;
+
+		.rex-form-row {
+			width: 680px;
+			padding: 7px 5px;
+		}
+	}
+
+	fieldset.sly-file-properties {
+		.rex-form-wrapper {
+			min-height: 90px;
+		}
+	}
+
+	.rex-form-text input   { width: 400px; }
+	select.rex-form-select { width: 407px; }
+
+	.sly-mediapool-list {
+		width: 690px;
+
+		th, td                   { vertical-align: middle; }
+		th.rex-icon, td.rex-icon { padding-bottom: 6px;    }
+		th.sly-icon, td.sly-icon { padding-bottom: 6px;    }
+
+		tr th {
+			background-color: #fff;
+			color: $drk_grey;
+			font-weight: bold;
+			vertical-align: middle;
+			border-bottom: 1px dotted $md_grey;
+			padding: 6px 0;
+		}
+
+		td.rex-icon input {
+			margin: 0;
+			width: 20px;
+		}
+
+		select {
+			width: 230px;
+		}
+	}
+
+	div.rex-form-row.sly-mediapool-detail-image {
+		position: relative;
+		height: 0;
+		border: 0 none;
+		padding: 0;
+
+		div {
+			position: absolute;
+			right: 0;
+			top: 8px;
+			max-width: 200px;
+			text-align: right;
+
+			img {
+				max-height: 100px;
+			}
+		}
+	}
+
+	div.rex-form-row.sly-mediapool-detail-title {
+		border-top: 0 none;
+	}
+}
+
+form#rex-form-mediapool-media {
+	.rex-form-wrapper .rex-form-row.sly-num0 {
+		padding: 0;
+	}
+}
+
+div#rex-form-mediapool-categories {
+	input.rex-form-submit {
+		margin-left: 0;
+	}
+}

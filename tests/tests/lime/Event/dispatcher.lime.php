@@ -1,4 +1,12 @@
 <?php
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
 
 $lime->comment('Testing sly_Event_Dispatcher...');
 
@@ -50,16 +58,16 @@ function listenerG($params) {
 
 function runEventDispatcherTest($listeners, $method, $subject, $event = null) {
 	global $___STATE, $lime, $dummyEvent, $dispatcher;
-	
+
 	$dispatcher->clear($dummyEvent);
-	
+
 	foreach (array_filter(explode(',', $listeners)) as $listener) {
 		$dispatcher->register($dummyEvent, 'listener'.strtoupper($listener));
 	}
 
 	$___STATE = array();
 	$result   = $dispatcher->$method($event === null ? $dummyEvent : $event, $subject);
-	
+
 	return $result;
 }
 
@@ -70,7 +78,7 @@ $dummyEvent = 'SLY_DUMMY_'.strtoupper(uniqid().uniqid());
 
 $lime->ok(sly_Event_Dispatcher::getInstance() === sly_Event_Dispatcher::getInstance(), 'getInstance() works as expected');
 
-$lime->is($dispatcher->hasListeners($dummyEvent), false, 'hasListeners() returns 0 is no listeners are set');
+$lime->is($dispatcher->hasListeners($dummyEvent), false, 'hasListeners() returns 0 if no listeners are set');
 $lime->is($dispatcher->getListeners($dummyEvent), array(), 'getListeners() returns array() is no listeners are set');
 
 $dispatcher->register($dummyEvent, 'listenerA');
@@ -114,10 +122,6 @@ $lime->is(implode(',', $___STATE), $listeners, 'notifyUntil() calls the listener
 $result = runEventDispatcherTest('a,c,b', 'notifyUntil', 'foo');
 $lime->is($result, true, 'notifyUntil() returns true because listenerC returned true');
 $lime->is($___STATE, array('a', 'c'), 'notifyUntil() really stopped at listenerC');
-
-
-
-
 
 // filter() ====================================================================
 

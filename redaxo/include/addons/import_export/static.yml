@@ -1,6 +1,0 @@
-rxid: "1"
-page: "import_export"
-name: "translate:im_export_importexport"
-perm: "import_export[export]"
-author: "Christoph Mewes, Jan Kristinus"
-supportpage: "www.webvariants.de"

@@ -1,0 +1,28 @@
+<?
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+$id = $this->id ? ' id="'.sly_html($this->id).'"' : '';
+?>
+
+<fieldset class="rex-form-col-<?= $this->columns ?> sly-num<?= ($this->num-1) ?>"<?= $id ?>>
+	<legend class="rex-lgnd"><?= sly_html($this->legend) ?></legend>
+	<div class="rex-form-wrapper">
+		<?php
+
+		$rowCount = count($this->rows);
+		$columns  = $this->columns;
+
+		foreach ($this->rows as $rowNum => $elements) {
+			include SLY_INCLUDE_PATH.'/views/_form/row.phtml';
+		}
+
+		?>
+	</div>
+</fieldset>

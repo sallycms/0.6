@@ -1,0 +1,41 @@
+body#rex-page-login {
+	div#rex-title, div#rex-output {
+		float: none;
+		width: 650px;
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	div#rex-wrapper {
+		width: 100%;
+		margin-right: 0px;
+		&2 { padding: 0 16px; }
+	}
+
+	/* Anpassung der Footerbreite nur für Login-Seite */
+
+	div#rex-footer {
+		width: 650px;
+		float: none;
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	.rex-form {
+		.rex-form-text input,.rex-form-password input {
+			width: 250px;
+		}
+
+		legend { width: 640px; }
+
+		label { width: 145px; margin-left: 10px; }
+		&-wrapper { width: 650px; }
+		&-col-a { vertical-aling: middle; }
+		&-submit { margin: 2px 0 3px 77px; }
+
+		&-row {
+			padding: 7px 0;
+			width: 650px;
+		}
+	}
+}

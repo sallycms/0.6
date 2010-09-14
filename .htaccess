@@ -1,10 +1,9 @@
 # Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
 #
-# Diese Datei steht unter der MIT-Lizenz. Der Lizenztext befindet sich in der
-# beiliegenden LICENSE Datei und unter:
+# This file is released under the terms of the MIT license. You can find the
+# complete text in the attached LICENSE file or online at:
 #
 # http://www.opensource.org/licenses/mit-license.php
-# http://de.wikipedia.org/wiki/MIT-Lizenz
 
 RewriteEngine On
 # RewriteBase /
@@ -41,11 +40,7 @@ RewriteRule ^assets/css/((\d+_){4}grid\.png)$               data/dyn/public/depl
 RewriteCond %{REQUEST_FILENAME}  -f
 RewriteCond %{REQUEST_URI}       \.css$
 RewriteCond %{REQUEST_URI}       !wym_styles.css$
-RewriteRule assets/css/(.+)$     redaxo/scaffold.php?f=assets/css/$1&%{QUERY_STRING} [L]
+RewriteRule assets/css/(.+)$     sally/scaffold.php?f=assets/css/$1&%{QUERY_STRING} [L]
 
 # Komprimierung fuer statischen Content
 RewriteRule ^(assets/.*\.(css|js))$  gzip.php?file=$1 [L]
-
-# sally/ anlegen
-RewriteRule sally$      redaxo    [L]
-RewriteRule sally/(.*)$ redaxo/$1 [L,QSA]

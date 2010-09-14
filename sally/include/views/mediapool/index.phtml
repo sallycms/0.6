@@ -1,0 +1,215 @@
+<?php
+/*
+ * Copyright (C) 2009 REDAXO
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License Version 2 as published by the
+ * Free Software Foundation.
+ */
+
+/**
+ * @package redaxo4
+ */
+
+$thumbs       = true;
+$thumbsresize = sly_Service_Factory::getService('AddOn')->isAvailable('image_resize');
+$selected     = $this->getCurrentCategory();
+
+////////////////////////////////////////////////////////
+// info and error messages
+
+$this->render('views/mediapool/javascript.phtml');
+$this->render('views/mediapool/notices.phtml');
+
+////////////////////////////////////////////////////////
+// if file types are restricted, inform the user
+
+if (!empty($args['types'])) {
+	print rex_info($I18N->msg('pool_file_filter', $args['types']));
+}
+
+////////////////////////////////////////////////////////
+// list all files in the current category
+
+$form = new sly_Form('index.php', 'POST', $I18N->msg('pool_selectedmedia'), '', 'rex-form-mediapool-media');
+$form->addHiddenValue('page', 'mediapool');
+$form->addHiddenValue('func', 'batch');
+
+// additional arguments
+
+foreach ($this->args as $name => $value) {
+	$form->addHiddenValue('args['.$name.']', $value);
+}
+
+$isAdmin = $REX['USER']->hasPerm('admin[]') || $REX['USER']->hasPerm('media[0]');
+
+ob_start();
+
+?>
+<table class="rex-table sly-mediapool-list" summary="">
+	<caption><?= $I18N->msg('pool_selectedmedia') ?></caption>
+	<colgroup>
+		<col width="40" />
+		<col width="110" />
+		<col width="*" />
+		<col width="153" />
+	</colgroup>
+	<thead><tr>
+		<th class="rex-icon">-</th>
+		<th><?= $I18N->msg('pool_file_thumbnail') ?></th>
+		<th><?= $I18N->msg('pool_file_info') ?> / <?= $I18N->msg('pool_file_description') ?></th>
+		<th><?= $I18N->msg('pool_file_functions') ?></th>
+	</tr></thead>
+	<?php
+
+	// move and delete selected items
+
+	if ($isAdmin) {
+		$add_input = '';
+		$select    = $this->getCategorySelect();
+
+		if ($select->getValueCount() > 1) {
+			$select->setAttribute('id', 'rex_move_file_dest_category');
+			$select->setAttribute('onchange', '');
+
+			$add_input =
+				'<label for="rex_move_file_dest_category">'.$I18N->msg('pool_selectedmedia').'</label>'.
+				$select->render().
+				'<input class="rex-form-submit rex-form-submit-2 sly-button-changecat" type="submit" name="move" value="'.$I18N->msg('pool_changecat_selectedmedia').'" />';
+		}
+
+		$add_input .= '<input class="rex-form-submit rex-form-submit-2 sly-button-delete" type="submit" name="delete" value="'.$I18N->msg('pool_delete_selectedmedia').'" />';
+
+		?>
+		<tfoot><tr>
+			<td class="rex-icon">
+				<label class="rex-form-hidden-label" for="checkie"><?= $I18N->msg('pool_select_all') ?></label>
+				<input class="rex-form-checkbox" type="checkbox" name="checkie" id="checkie" value="0" onclick="setAllCheckBoxes('selectedmedia[]', this)" />
+			</td>
+			<td colspan="3"><?= $add_input ?></td>
+		</tr></tfoot>
+		<?
+	}
+
+	print '<tbody>';
+
+	$files  = $this->getFiles();
+	$argUrl = $this->getArgumentString();
+
+	foreach ($files as $file) {
+		$id                = $file->getId();
+		$file_name         = $file->getFileName();
+		$file_oname        = $file->getOrgFileName();
+		$file_title        = $file->getTitle();
+		$file_type         = $file->getValue('filetype');
+		$file_size         = $file->getValue('filesize');
+		$file_update       = $file->getUpdateDate();
+		$file_stamp        = $file->getUpdateDate('%a %d. %B %Y');
+		$file_updateuser   = $file->getUpdateUser();
+		$encoded_file_name = urlencode($file_name);
+		$alt               = $file->getTitle();
+		$desc              = '';
+
+		// missing file?
+
+		if (!OOMedia::fileExists($file_name)) {
+			$thumbnail = '<img src="media/mime-error.gif" width="44" height="38" alt="file does not exist" />';
+		}
+		else {
+			$file_ext = substr(strrchr($file_name, '.'), 1);
+			$icon_src = 'media/mime-default.gif';
+
+			if (OOMedia::isDocType($file_ext)) {
+				$icon_src = 'media/mime-'.$file_ext.'.gif';
+			}
+
+			$thumbnail = '<img src="'.$icon_src.'" alt="'.sly_html($alt).'" title="'.sly_html($alt).'" />';
+
+			if (OOMedia::_isImage($file_name) && $thumbs) {
+				$width  = false;
+				$height = false;
+
+				if ($size = @getimagesize($REX['MEDIAFOLDER'].'/'.$file_name)) {
+					$width  = $size[0];
+					$height = $size[1];
+					list($width, $height) = $this->getDimensions($width, $height, 80, 70);
+				}
+
+				$attrs = array(
+					'alt'    => $alt,
+					'title'  => $alt,
+					'width'  => $width,
+					'height' => $height
+				);
+
+				if ($thumbsresize && $width) {
+					$attrs['src'] = '../index.php?rex_resize='.$width.'w__'.$height.'h__'.$encoded_file_name.'&t='.$file_update;
+				}
+				else {
+					$attrs['src'] = '../data/mediapool/'.$encoded_file_name.'?t='.$file_update;
+				}
+
+				$thumbnail = '<img '.sly_Util_HTML::buildAttributeString($attrs).' />';
+			}
+		}
+
+		// get file size
+
+		$size      = $file_size;
+		$file_size = $file->getFormattedSize();
+
+		if ($file_title == '') $file_title = '['.$I18N->msg('pool_file_notitle').']';
+		if ($REX['USER']->hasPerm('advancedMode[]')) $file_title .= ' ['.$id.']';
+
+		$ilink  = 'index.php?page=mediapool&amp;subpage=detail&amp;file_id='.$id.'&amp;rex_file_category='.$selected.$argUrl;
+		$add_td = '<td>&nbsp;</td>';
+
+		if ($isAdmin) {
+			$add_td = '<td class="rex-icon"><input class="rex-form-checkbox" type="checkbox" name="selectedmedia[]" value="'.$id.'" /></td>';
+		}
+
+		?>
+		<tr>
+			<?= $add_td ?>
+			<td class="rex-thumbnail"><a href="<?= $ilink ?>"><?= $thumbnail ?></a></td>
+			<td>
+				<p class="rex-tx4"><a href="<?= $ilink ?>"><?= sly_html($file_title) ?></a></p>
+				<p class="rex-tx4"><?= $desc ?><span class="rex-suffix"><?= sly_html($file_name) ?> [<?= $file_size ?>]</span></p>
+				<p class="rex-tx1"><?= $file_stamp ?> | <?= sly_html($file_updateuser) ?></p>
+			</td>
+			<td><?
+
+			$opener_link = $this->getOpenerLink($file);
+			print rex_register_extension_point('MEDIA_LIST_FUNCTIONS', $opener_link, array(
+				'id'              => $id,
+				'file_name'       => $file_name,
+				'file_oname'      => $file_oname,
+				'file_title'      => $file_title,
+				'file_type'       => $file_type,
+				'file_size'       => $file_size,
+				'file_stamp'      => $file->getUpdateDate(),
+				'file_updateuser' => $file_updateuser
+			));
+
+			?></td>
+		</tr>
+		<?
+	}
+
+	if (empty($files)): ?>
+		<tr>
+			<td></td>
+			<td colspan="3"><?= $I18N->msg('pool_nomediafound') ?></td>
+		</tr>
+	<? endif ?>
+	</tbody>
+</table>
+<?
+
+$container = new sly_Form_Container();
+$container->setContent(ob_get_clean());
+
+$form->add($container);
+$form->setResetButton(null);
+$form->setSubmitButton(null);
+$form->render();

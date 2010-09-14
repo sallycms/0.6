@@ -1,0 +1,83 @@
+<?php
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+global $I18N;
+
+////////////////////////////////////////////////////////
+// info and error messages
+
+$this->render('views/mediapool/notices.phtml');
+
+////////////////////////////////////////////////////////
+// init form
+
+$form = new sly_Form('index.php', 'POST', $I18N->msg('pool_sync_title'));
+
+$form->addHiddenValue('page', 'mediapool');
+$form->addHiddenValue('subpage', 'sync');
+$form->addHiddenValue('func', 'sync');
+
+////////////////////////////////////////////////////////
+// files title
+
+$title = new sly_Form_Input_Text('ftitle', $I18N->msg('pool_file_title'));
+$form->add($title);
+
+////////////////////////////////////////////////////////
+// category select box
+
+$select = $this->getCategorySelect();
+$select->setLabel($I18N->msg('pool_file_category'));
+$select->setAttribute('value', $this->getCurrentCategory());
+
+$form->add($select);
+
+////////////////////////////////////////////////////////
+// setup buttons
+
+
+$submit = $form->getSubmitButton();
+$submit->setAttribute('name', 'save');
+$submit->setAttribute('value', $I18N->msg('pool_sync_button'));
+
+$form->setResetButton(null);
+$form->setSubmitButton(null);
+
+$buttons['submit'] = $submit;
+$form->add(new sly_Form_ButtonBar($buttons));
+
+////////////////////////////////////////////////////////
+// start list of dangling files
+
+$diffFiles = $this->getFileDiff();
+$diffCount = count($diffFiles);
+$label     = $I18N->msg('pool_sync_affected_files');
+
+$title = $label;
+if ($diffCount) $title .= ' ('.$diffCount.')';
+
+$form->beginFieldset($title);
+
+if ($diffCount) {
+	$diffFiles = array_combine($diffFiles, $diffFiles);
+	$form->add(new sly_Form_Select_Checkbox('sync_files', $label, array(), $diffFiles));
+}
+else {
+	$form->add(new sly_Form_Text($label, $I18N->msg('pool_sync_no_diffs')));
+}
+
+////////////////////////////////////////////////////////
+// and here we go!
+
+$form = rex_register_extension_point('SLY_MEDIA_FORM_SYNC', $form);
+
+if ($form instanceof sly_Form) {
+	$form->render();
+}

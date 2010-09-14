@@ -1,0 +1,50 @@
+<?
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+//$element = $type == 'addon' ? $addon : $plugin;
+$class   = $isActive ? 'rex-clr-grn' : 'rex-clr-red';
+$author  = is_array($author) ? sly_Util_String::humanImplode($author) : $author;
+$author  = $isActive ? sly_html($author) : $I18N->msg('credits_addon_inactive');
+
+if ($isActive) $class .= ' sly-activated';
+elseif ($isInstalled) $class .= ' sly-installed';
+else $class .= ' sly-notinstalled';
+
+if ($supportPage) {
+	$supportPages = sly_makeArray($supportPage);
+	$links        = array();
+
+	foreach ($supportPages as $page) {
+		$infos = parse_url($page);
+		if (!isset($infos['host'])) $infos = parse_url('http://'.$page);
+		if (!isset($infos['host'])) continue;
+
+		$page = sprintf('%s://%s%s', $infos['scheme'], $infos['host'], isset($infos['path']) ? $infos['path'] : '');
+		$host = substr($infos['host'], 0, 4) == 'www.' ? substr($infos['host'], 4) : $infos['host'];
+
+		$links[] = '<a href="'.sly_html($page).'" class="sly-blank">'.sly_html($host).'</a>';
+	}
+
+	$supportPage = implode(', ', $links);
+}
+
+if (!$icon) {
+	$icon = 'media/'.$type.'.gif';
+}
+
+?>
+
+<tr class="rex-<?= $type ?> sly-<?= $type ?> <?= $class ?>">
+	<td class="sly-col-a rex-icon"><?= sly_Util_HTML::getSpriteLink('', $name, 'addon') ?></td>
+	<td class="sly-col-b"><?= sly_html($name) ?> [<a href="index.php?page=addon&amp;subpage=help&amp;addonname=<?= urlencode($name) ?>">?</a>]</td>
+	<td class="sly-col-c"><?= sly_html($version) ?></td>
+	<td class="sly-col-d"><?= $author ?></td>
+	<td class="sly-col-e"><?= $supportPage ?></td>
+</tr>

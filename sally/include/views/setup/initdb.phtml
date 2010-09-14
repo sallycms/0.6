@@ -1,0 +1,143 @@
+<?php
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+global $I18N;
+
+$this->title($I18N->msg('setup_step3'));
+
+?>
+<div class="rex-form rex-form-setup-step-database">
+	<form action="index.php" method="post">
+		<fieldset class="rex-form-col-1">
+			<? $this->printHiddens('initdb') ?>
+			<legend><?= $I18N->msg('setup_030_headline') ?></legend>
+			<div class="rex-form-wrapper">
+				<?php
+
+				if (!empty($this->warning)) {
+					print rex_warning($this->warning.'<br />'.$I18N->msg('setup_033'));
+				}
+
+//	// Vorhandene Exporte auslesen
+//	$sel_export = new rex_select();
+//	$sel_export->setName('import_name');
+//	$sel_export->setId('import_name');
+//	$sel_export->setStyle('class="rex-form-select"');
+//	$sel_export->setAttribute('onclick', 'checkInput(\'dbanlegen_3\')');
+//	$export_dir = getImportDir();
+//	$exports_found = false;
+//
+//	if (is_dir($export_dir)) {
+//		if ($handle = opendir($export_dir))
+//		{
+//		$export_archives = array ();
+//		$export_sqls = array ();
+//
+//		while (($file = readdir($handle)) !== false)
+//		{
+//		if ($file == '.' || $file == '..')
+//		{
+//		continue;
+//		}
+//
+//		$isSql = (substr($file, strlen($file) - 4) == '.sql');
+//		$isArchive = (substr($file, strlen($file) - 7) == '.tar.gz');
+//
+//		if ($isSql)
+//		{
+//		// endung .sql abschneiden
+//		$export_sqls[] = substr($file, 0, -4);
+//		$exports_found = true;
+//		}
+//		elseif ($isArchive)
+//		{
+//		// endung .tar.gz abschneiden
+//		$export_archives[] = substr($file, 0, -7);
+//		$exports_found = true;
+//		}
+//		}
+//		closedir($handle);
+//		}
+//
+//		foreach ($export_sqls as $sql_export)
+//		{
+//		// Es ist ein Export Archiv + SQL File vorhanden
+//		if (in_array($sql_export, $export_archives))
+//		{
+//		$sel_export->addOption($sql_export, $sql_export);
+//		}
+//		}
+//	}
+
+				$checks = array();
+
+				if (!in_array($dbInitFunction, $dbInitFunctions)) {
+					$dbInitFunction = 'setup';
+				}
+
+				foreach ($dbInitFunctions as $func) {
+					$checks[$func] = $dbInitFunction == $func ? ' checked="checked"' : '';
+				}
+
+				?>
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-radio rex-form-label-right">
+						<input class="rex-form-radio" type="radio" id="func_setup" name="db_init_function" value="setup"<?= $checks['setup'] ?> />
+						<label for="func_setup"><?= $I18N->msg('setup_034') ?></label>
+					</p>
+				</div>
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-radio rex-form-label-right">
+						<input class="rex-form-radio" type="radio" id="func_drop" name="db_init_function" value="drop"<?= $checks['drop'] ?> />
+						<label for="func_drop"><?= $I18N->msg('setup_035', '<b>', '</b>') ?></label>
+					</p>
+				</div>
+
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-radio rex-form-label-right">
+						<input class="rex-form-radio" type="radio" id="func_nop" name="db_init_function" value="nop"<?= $checks['nop'] ?> />
+						<label for="func_nop"><?= $I18N->msg('setup_036') ?></label>
+					</p>
+				</div>
+
+				<? rex_register_extension_point('SLY_SETUP_INIT_FUNCTIONS_FORM', $dbInitFunction); ?>
+
+				<?php
+				/*
+				if ($exports_found) {
+					print '
+					<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-radio rex-form-label-right">
+					<input class="rex-form-radio" type="radio" id="dbanlegen_3" name="dbanlegen" value="3"'.$dbchecked[3] .' />
+					<label for="dbanlegen_3">'.$I18N->msg('setup_037').'</label>
+					</p>
+					<p class="rex-form-col-a rex-form-select rex-form-radio-select">'. $sel_export->get() .'</p>
+					</div>';
+				}
+				*/
+				?>
+
+			</div>
+		</fieldset>
+
+		<fieldset class="rex-form-col-1">
+			<div class="rex-form-wrapper">
+				<div class="rex-form-row">
+					<p class="rex-form-col-a rex-form-submit">
+						<input class="rex-form-submit" type="submit" name="sly-submit" value="<?= $I18N->msg('setup_039') ?>" />
+					</p>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+</div>
+

@@ -1,0 +1,204 @@
+<?php
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+$fileID = $this->getCurrentFile();
+$media  = OOMedia::getMediaById($fileID);
+
+$ftitle            = $media->getTitle();
+$fname             = $media->getFileName();
+$ffiletype         = $media->getType();
+$ffile_size        = $media->getSize();
+$ffile_size        = $media->getFormattedSize();
+$ffile_update      = $media->getUpdateDate();
+$rex_file_category = $media->getCategoryId();
+$encoded_fname     = urlencode($fname);
+$file_ext          = substr(strrchr($fname, '.'),1);
+$icon_src          = 'media/mime-default.gif';
+
+if (OOMedia::isDocType($file_ext)) {
+	$icon_src = 'media/mime-'.$file_ext.'.gif';
+}
+
+$thumbnail = '<img src="'.$icon_src.'" alt="'.sly_html($ftitle).'" title="'.sly_html($ftitle).'" />';
+$isImage   = $media->isImage();
+
+if ($isImage) {
+	$fwidth  = $media->getWidth();
+	$fheight = $media->getHeight();
+
+	if ($size = @getimagesize($REX['MEDIAFOLDER'].'/'.$fname)) {
+		$fwidth  = $size[0];
+		$fheight = $size[1];
+	}
+
+	list($rwidth, $rheight) = $this->getDimensions($fwidth, $fheight, 200, 70);
+}
+
+$thumbs       = true;
+$thumbsresize = sly_Service_Factory::getService('AddOn')->isAvailable('image_resize');
+
+////////////////////////////////////////////////////////
+// info and error messages
+
+$this->render('views/mediapool/javascript.phtml');
+$this->render('views/mediapool/notices.phtml');
+
+////////////////////////////////////////////////////////
+// wysi-whatever integration
+
+// disabled until we find a nice way to include this link in our form
+// (legends do not allow HTML)
+
+// $opener_link = $this->getOpenerLink($media);
+// if (!empty($opener_link)) $opener_link = ' | '.$opener_link;
+
+////////////////////////////////////////////////////////
+// start forms
+
+if ($this->canAccessFile($media)) {
+	$form = new sly_Form('index.php', 'POST', $I18N->msg('pool_file_edit'), '', 'rex-form-mediapool-detail');
+	$form->setEncType('multipart/form-data');
+
+	$form->addHiddenValue('page', 'mediapool');
+	$form->addHiddenValue('subpage', 'detail');
+	$form->addHiddenValue('func', 'save');
+	$form->addHiddenValue('file_id', $fileID);
+
+	// additional arguments
+
+	foreach (sly_requestArray('args', 'string') as $name => $value) {
+		$form->addHiddenValue('args['.$name.']', $value);
+	}
+}
+else {
+	$form = new sly_Form('index.php', 'POST', $I18N->msg('pool_file_details'), '', 'rex-form-mediapool-detail');
+}
+
+////////////////////////////////////////////////////////
+// image container (same for both forms)
+
+if ($isImage) {
+	$imgn = '../data/mediapool/'.$encoded_fname.'?t='.$ffile_update;
+
+	if (!file_exists($REX['MEDIAFOLDER'].'/'.$fname)) {
+		$imgn = 'media/mime-error.gif';
+	}
+	else if ($thumbs && $thumbsresize && ($fwidth > 200 || $fheight > 70)) {
+		$imgn = '../index.php?rex_resize='.$rwidth.'w__'.$rheight.'h__'.$encoded_fname.'&t='.$ffile_update;
+	}
+
+	$attrs = array(
+		'src'    => $imgn,
+		'alt'    => $ftitle,
+		'title'  => $ftitle,
+		'width'  => $rwidth,
+		'height' => $rheight
+	);
+
+	$imageContainer = new sly_Form_Container();
+	$imageContainer->setContent('<img '.sly_Util_HTML::buildAttributeString($attrs).' />');
+	$imageContainer->addFormRowClass('sly-mediapool-detail-image');
+	$form->add($imageContainer);
+}
+
+////////////////////////////////////////////////////////
+// add more elements to our forms
+
+if ($this->canAccessFile($media)) {
+	// title
+
+	$title = new sly_Form_Input_Text('ftitle', 'Titel', $ftitle);
+	$title->addFormRowClass('sly-mediapool-detail-title');
+	$form->add($title);
+
+	// category
+
+	$select = $this->getCategorySelect();
+	$select->setLabel($I18N->msg('pool_file_category'));
+	$select->setAttribute('id', 'rex_file_new_category');
+	$select->setAttribute('onchange', '');
+	$select->setAttribute('value', $rex_file_category);
+	$form->add($select);
+
+	// extensions
+
+	$form = sly_Core::dispatcher()->filter('SLY_MEDIA_FORM_EDIT', $form, array('file_id' => $fileID, 'media' => $media));
+
+	// setup buttons
+
+	$submit = $form->getSubmitButton();
+	$submit->setAttribute('value', $I18N->msg('pool_file_update'));
+	$submit->setAttribute('name', 'update');
+
+	$delete = new sly_Form_Input_Button('submit', 'delete', $I18N->msg('pool_file_delete'));
+	$form->setApplyButton($delete);
+	$form->setResetButton(null);
+}
+else {
+	$catname = $I18N->msg('pool_kats_no');
+	$cat     = $rex_file_category != 0 ? OOMediaCategory::getCategoryById($rex_file_category) : null;
+
+	if ($cat) {
+		$catname = $cat->getName();
+	}
+
+	if ($REX['USER']->hasPerm('advancedMode[]')) {
+		$ftitle  .= ' ['.$file_id.']';
+		$catname .= ' ['.$rex_file_category.']';
+	}
+
+	// title & cat
+
+	$title = new sly_Form_Text('Titel', $ftitle);
+	$title->addFormRowClass('sly-mediapool-detail-title');
+
+	$form->add($title);
+	$form->add(new sly_Form_Text($I18N->msg('pool_file_category'), $catname));
+
+	// setup buttons
+
+	$form->setSubmitButton(null);
+	$form->setResetButton(null);
+}
+
+// file dimensions, if image
+
+if ($isImage) {
+	$label      = $I18N->msg('pool_img_width') .' / '.$I18N->msg('pool_img_height');
+	$dimensions = $fwidth .' px / '. $fheight .' px';
+	$dimensions = new sly_Form_Text($label, $dimensions);
+	$form->add($dimensions);
+}
+
+// display filename
+
+$filename = '<a href="../data/mediapool/'.$encoded_fname.'">'.sly_html($fname).'</a> ['.$ffile_size.']';
+$filename = new sly_Form_Text($I18N->msg('pool_filename'), $filename);
+$filename->setIsHTML(true);
+$form->add($filename);
+
+// display update date
+
+$updated = $media->getUpdateDate('%a %d. %B %Y').' ['.$media->getUpdateUser().']';
+$updated = new sly_Form_Text($I18N->msg('pool_last_update'), $updated);
+$form->add($updated);
+
+// display creation date
+
+$created = $media->getCreateDate('%a %d. %B %Y').' ['.$media->getCreateUser().']';
+$created = new sly_Form_Text($I18N->msg('pool_created'), $created);
+$form->add($created);
+
+if ($this->canAccessFile($media)) {
+	$file = new sly_Form_Input_File('file_new', $I18N->msg('pool_file_exchange'));
+	$form->add($file);
+}
+
+$form->render();
