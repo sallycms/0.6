@@ -16,8 +16,6 @@ body#rex-page-linkmap {
 	div#rex-title {
 		background-image: none;
 		height: auto;
-		min-height: 31px;
-		height: 31px;
 
 		&-row { width: 100%; }
 		p { display: none; }
@@ -31,10 +29,7 @@ div#rex-linkmap {
 	position: relative;
 	float: left;
 	width: 100%;
-	color: $drk_grey;
-	margin-top: 70px;
 	+border-radius($brd_rad);
-	/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
 
 	h3 {
 		width: 94%;
