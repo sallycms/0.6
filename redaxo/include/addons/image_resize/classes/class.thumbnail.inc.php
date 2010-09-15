@@ -260,7 +260,7 @@ class Thumbnail
 	 * @return void
 	 */
 	private function resizeBoth($width, $height) {
-		
+
 		if (!is_array($width) || !isset($width['value'])
 			|| !is_array($height) || !isset($height['value'])) {
 
@@ -274,10 +274,10 @@ class Thumbnail
 		if ($imgRatio > $resizeRatio) {
 			// if image should be cropped
 			if (isset($width['crop']) && $width['crop']) {
-				
+
 				// resize height
 				$this->resizeHeight($height);
-				
+
 
 				// crop width
 
@@ -433,7 +433,7 @@ class Thumbnail
 		if (!self::USECACHE || !file_exists($cachefile)) {
 
 			// c100w__c200h__20r__20t__filename.jpg
-			
+
 			// separate filename and parameters
 			preg_match('@((?:c?[0-9]{1,4}[whax]__)*(?:\-?[0-9]{1,4}[orltb]?__)*)(.*)@', $rex_resize, $params);
 			if (!isset($params[1]) || !isset($params[2])) return false;
@@ -504,7 +504,7 @@ class Thumbnail
 				}
 			}
 
-			if (empty($imageFile)){
+			if (empty($imageFile) || !file_exists($imageFile)) {
 				self::sendError();
 			}
 
