@@ -10,7 +10,17 @@
 
 class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 	public function index() {
-		$this->render('views/mediapool/sync.phtml');
+		global $I18N;
+
+		$diff = $this->getFileDiff();
+
+		if (empty($diff)) {
+			$this->info = $I18N->msg('pool_sync_no_diffs');
+			$this->render('views/mediapool/notices.phtml');
+		}
+		else {
+			$this->render('views/mediapool/sync.phtml');
+		}
 	}
 
 	public function sync() {
