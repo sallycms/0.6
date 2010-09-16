@@ -41,7 +41,7 @@ class sly_Model_User extends sly_Model_Base {
 		'session_id' => 'string', 'cookiekey' => 'string', 'revision' => 'int'
 	);
 
-	public function __construct($params) {
+	public function __construct($params = array()) {
 		parent::__construct($params);
 		$this->evalRights();
 	}
