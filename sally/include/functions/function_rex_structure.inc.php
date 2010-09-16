@@ -625,7 +625,8 @@ function rex_addArticle($data)
 			/*    revision */ 0
 		);
 
-		$cache->delete('sly.article.list', $categoryID.'_'.$clangID);
+		$cache->delete('sly.article.list', $categoryID.'_'.$clangID.'_0'); // offline
+		$cache->delete('sly.article.list', $categoryID.'_'.$clangID.'_1'); // online
 	}
 
 	$sql->setQuery('INSERT INTO '.$REX['DATABASE']['TABLE_PREFIX'].'article (id,re_id,name,'.
@@ -788,7 +789,8 @@ function rex_editArticle($articleID, $clang, $data)
 
 	$cache = sly_Core::cache();
 	$cache->delete('sly.article', $articleID.'_'.$clang);
-	$cache->delete('sly.article.list', $data['category_id'].'_'.$clang);
+	$cache->delete('sly.article.list', $data['category_id'].'_'.$clang.'_0');
+	$cache->delete('sly.article.list', $data['category_id'].'_'.$clang.'_1');
 
 	return array(true, $message);
 }
@@ -849,7 +851,8 @@ function rex_deleteArticleReorganized($articleID)
 		));
 
 		$cache->delete('sly.article', $articleID.'_'.$clang);
-		$cache->delete('sly.article.list', $article['re_id'].'_'.$clang);
+		$cache->delete('sly.article.list', $article['re_id'].'_'.$clang.'_0');
+		$cache->delete('sly.article.list', $article['re_id'].'_'.$clang.'_1');
 	}
 
 	return array($return['state'], $return['message']);
@@ -874,9 +877,11 @@ function rex_articleStatus($articleID, $clang, $newStatus = null)
 	$clang          = (int) $clang;
 
 	$sql       = new rex_sql();
-	$oldStatus = rex_sql::fetch('status', 'article', 'id = '.$articleID.' AND clang = '.$clang);
+	$oldStatus = rex_sql::fetch('status,re_id', 'article', 'id = '.$articleID.' AND clang = '.$clang);
 
 	if ($oldStatus !== false) {
+		list($oldStatus, $category) = array_values($oldStatus);
+
 		// Status wurde nicht von außen vorgegeben,
 		// => zyklisch auf den nächsten weiterschalten
 
@@ -891,6 +896,8 @@ function rex_articleStatus($articleID, $clang, $newStatus = null)
 
 		if ($sql->update()) {
 			sly_Core::cache()->delete('sly.article', $articleID.'_'.$clang);
+			sly_Core::cache()->delete('sly.article.list', $category.'_'.$clang.'_0');
+			sly_Core::cache()->delete('sly.article.list', $category.'_'.$clang.'_1');
 
 			$success = true;
 			$message = rex_register_extension_point('ART_STATUS', $I18N->msg('article_status_updated'), array(
