@@ -607,235 +607,120 @@ if ($article->getRows() == 1) {
 		elseif ($mode == 'meta') {
 			// START: META VIEW
 
-			print '
-		<div class="rex-form" id="rex-form-content-metamode">
-			<form action="index.php" method="post" enctype="multipart/form-data" id="REX_FORM">
-				<fieldset class="rex-form-col-1 num1">
-					<legend><span>'.$I18N->msg('general').'</span></legend>
+			$params = array('id' => $article_id, 'clang' => $clang, 'article' => $article);
+			$form   = new sly_Form('index.php', 'POST', $I18N->msg('general'), '', 'REX_FORM');
 
-					<input type="hidden" name="page" value="content" />
-					<input type="hidden" name="article_id" value="'.$article_id.'" />
-					<input type="hidden" name="mode" value="meta" />
-					<input type="hidden" name="save" value="1" />
-					<input type="hidden" name="clang" value="'.$clang.'" />
-					<input type="hidden" name="ctype" value="'.$slot.'" />
+			/////////////////////////////////////////////////////////////////
+			// init form
 
-					<div class="rex-form-wrapper">
+			$form->setEncType('multipart/form-data');
+			$form->addHiddenValue('page', 'content');
+			$form->addHiddenValue('article_id', $article_id);
+			$form->addHiddenValue('mode', 'meta');
+			$form->addHiddenValue('save', 1);
+			$form->addHiddenValue('clang', $clang);
+			$form->addHiddenValue('ctype', $slot);
+			$form->setSubmitButton(null);
+			$form->setResetButton(null);
 
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-text">
-								<label for="rex-form-meta-article-name">'.$I18N->msg('name_description').'</label>
-								<input class="rex-form-text" type="text" id="rex-form-meta-article-name" name="meta_article_name" value="'.htmlspecialchars($article->getValue('name')).'" size="30"'.rex_tabindex().' />
-							</p>
-							<div class="rex-clearer"></div>
-						</div>
+			/////////////////////////////////////////////////////////////////
+			// article name / metadata
 
-						<div class="rex-clearer"></div>
-						';
+			$name = new sly_Form_Input_Text('meta_article_name', $I18N->msg('name_description'), $article->getValue('name'), 'rex-form-meta-article-name');
+			$form->add($name);
 
-			print rex_register_extension_point('ART_META_FORM', '', array(
-				'id'      => $article_id,
-				'clang'   => $clang,
-				'article' => $article
-			));
+			$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM', $form, $params);
 
-			print '
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-submit">
-								<input class="rex-form-submit" type="submit" name="savemeta" value="'.$I18N->msg('update_metadata').'" />
-							</p>
-						</div>
+			$button = new sly_Form_Input_Button('submit', 'savemeta', t('update_metadata'));
+			$form->add(new sly_Form_ButtonBar(array('submit' => $button)));
 
-						<div class="rex-clearer"></div>
-					</div>
-				</fieldset>';
+			$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM_FIELDSET', $form, $params);
 
-			print rex_register_extension_point('ART_META_FORM_SECTION', '', array(
-				'id'    => $article_id,
-				'clang' => $clang
-			));
+			/////////////////////////////////////////////////////////////////
+			// misc
 
-			// SONSTIGES START
+			function addButtonBar($form, $label, $name) {
+				$button = new sly_Form_Input_Button('submit', $name, $label);
+				$button->setAttribute('onclick', 'return confirm(\''.$label.'?\')');
+				$form->add(new sly_Form_ButtonBar(array('submit' => $button)));
+			}
 
 			if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('article2startpage[]') || $REX['USER']->hasPerm('moveArticle[]') || $REX['USER']->hasPerm('copyArticle[]') || ($REX['USER']->hasPerm('copyContent[]') && count($REX['CLANG']) > 1)) {
-				// ZUM STARTARTICLE MACHEN START
+				// ZUM STARTARTIKEL MACHEN
 
 				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('article2startpage[]')) {
-					print '
-				<fieldset class="rex-form-col-1">
-					<legend>'.$I18N->msg('content_startarticle').'</legend>
-					<div class="rex-form-wrapper">
-
-						<div class="rex-form-row">
-							<p class="rex-form-col-a';
+					$form->beginFieldset(t('content_startarticle'));
 
 					if ($article->getValue('startpage') == 0 && $article->getValue('re_id') == 0) {
-						print ' rex-form-read"><span class="rex-form-read">'.$I18N->msg('content_nottostartarticle').'</span>';
+						$form->add(new sly_Form_Text('', t('content_nottostartarticle')));
 					}
-					else if ($article->getValue('startpage')==1) {
-						print ' rex-form-read"><span class="rex-form-read">'.$I18N->msg('content_isstartarticle').'</span>';
+					else if ($article->getValue('startpage') == 1) {
+						$form->add(new sly_Form_Text('', t('content_isstartarticle')));
 					}
 					else {
-						print ' rex-form-submit"><input class="rex-form-submit" type="submit" name="article2startpage" value="'.$I18N->msg('content_tostartarticle').'"'.rex_tabindex().' onclick="return confirm(\''.$I18N->msg('content_tostartarticle').'?\')" />';
+						addButtonBar($form, t('content_tostartarticle'), 'article2startpage');
 					}
-
-					print '
-							</p>
-						</div>
-					</div>
-				</fieldset>';
 				}
 
-				// ZUM STARTARTICLE MACHEN END
-				// INHALTE KOPIEREN START
+				// INHALTE KOPIEREN
 
 				if (($REX['USER']->isAdmin() || $REX['USER']->hasPerm('copyContent[]')) && count($REX['CLANG']) > 1) {
-					$lang_a = new sly_Form_Select_DropDown('clang_a', t('content_contentoflang'), rex_request('clang_a', 'rex-clang-id', null), $REX['CLANG'], 'clang_a');
+					$lang_a = new sly_Form_Select_DropDown('clang_a', t('content_contentoflang'), sly_request('clang_a', 'rex-clang-id', null), $REX['CLANG'], 'clang_a');
 					$lang_a->setSize(1);
 					$lang_a->setAttribute('tabindex', rex_tabindex(false));
 
-					$lang_b = new sly_Form_Select_DropDown('clang_b', t('content_to'), rex_request('clang_b', 'rex-clang-id', null), $REX['CLANG'], 'clang_b');
+					$lang_b = new sly_Form_Select_DropDown('clang_b', t('content_to'), sly_request('clang_b', 'rex-clang-id', null), $REX['CLANG'], 'clang_b');
 					$lang_b->setSize(1);
 					$lang_b->setAttribute('tabindex', rex_tabindex(false));
 
-					print '
-				<fieldset class="rex-form-col-2">
-					<legend>'.$I18N->msg('content_submitcopycontent').'</legend>
-					<div class="rex-form-wrapper">
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-select">
-								<label for="clang_a">'.$I18N->msg('content_contentoflang').'</label>
-								'.$lang_a->render().'
-							</p>
-							<p class="rex-form-col-b rex-form-select">
-								<label for="clang_b">'.$I18N->msg('content_to').'</label>
-								'.$lang_b->render().'
-							</p>
-						</div>
+					$form->beginFieldset(t('content_submitcopycontent'), null, 2);
+					$form->addRow(array($lang_a, $lang_b));
 
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-submit">
-								<input class="rex-form-submit" type="submit" name="copycontent" value="'.$I18N->msg('content_submitcopycontent').'"'.rex_tabindex().' onclick="return confirm(\''.$I18N->msg('content_submitcopycontent').'?\')" />
-							</p>
-						</div>
-
-						<div class="rex-clearer"></div>
-					</div>
-				</fieldset>';
+					addButtonBar($form, t('content_submitcopycontent'), 'copycontent');
 				}
 
-				// INHALTE KOPIEREN ENDE
-				// ARTIKEL VERSCHIEBEN START
+				// ARTIKEL VERSCHIEBEN
 
 				if ($article->getValue('startpage') == 0 && ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveArticle[]'))) {
-					// Wenn Artikel kein Startartikel dann Selectliste darstellen, sonst...
-					$move_a = new rex_category_select();
-					$move_a->setStyle('class="rex-form-select"');
-					$move_a->setId('category_id_new');
-					$move_a->setName('category_id_new');
-					$move_a->setSize('1');
-					$move_a->setAttribute('tabindex', rex_tabindex(false));
-					$move_a->setSelected($category_id);
+					$select = sly_Form_Helper::getCategorySelect('category_id_new', false, false, null, $REX['USER']);
+					$select->setAttribute('value', $category_id);
+					$select->setLabel(t('move_article'));
 
-					print '
-				<fieldset class="rex-form-col-1">
-					<legend>'.$I18N->msg('content_submitmovearticle').'</legend>
-					<div class="rex-form-wrapper">
+					$form->beginFieldset(t('content_submitmovearticle'));
+					$form->add($select);
 
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-select">
-								<label for="category_id_new">'.$I18N->msg('move_article').'</label>
-								'.$move_a->get().'
-							</p>
-						</div>
-
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-submit">
-								<input class="rex-form-submit" type="submit" name="movearticle" value="'.$I18N->msg('content_submitmovearticle').'"'.rex_tabindex().' onclick="return confirm(\''.$I18N->msg('content_submitmovearticle').'?\')" />
-							</p>
-						</div>
-
-						<div class="rex-clearer"></div>
-					</div>
-				</fieldset>';
+					addButtonBar($form, t('content_submitmovearticle'), 'movearticle');
 				}
 
-				// ARTIKEL VERSCHIEBEN ENDE
-				// ARTIKEL KOPIEREN START
+				// ARTIKEL KOPIEREN
 
 				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('copyArticle[]')) {
-					$move_a = new rex_category_select();
-					$move_a->setStyle('class="rex-form-select"');
-					$move_a->setName('category_copy_id_new');
-					$move_a->setId('category_copy_id_new');
-					$move_a->setSize('1');
-					$move_a->setSelected($category_id);
-					$move_a->setAttribute('tabindex', rex_tabindex(false));
+					$select = sly_Form_Helper::getCategorySelect('category_copy_id_new', false, false, null, $REX['USER']);
+					$select->setAttribute('value', $category_id);
+					$select->setLabel(t('copy_article'));
 
-					print '
-				<fieldset class="rex-form-col-1">
-					<legend>'.$I18N->msg('content_submitcopyarticle').'</legend>
-					<div class="rex-form-wrapper">
+					$form->beginFieldset(t('content_submitcopyarticle'));
+					$form->add($select);
 
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-select">
-								<label for="category_copy_id_new">'.$I18N->msg('copy_article').'</label>
-								'.$move_a->get().'
-							</p>
-						</div>
-
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-submit">
-								<input class="rex-form-submit" type="submit" name="copyarticle" value="'.$I18N->msg('content_submitcopyarticle').'"'.rex_tabindex().' onclick="return confirm(\''.$I18N->msg('content_submitcopyarticle').'?\')" />
-							</p>
-						</div>
-
-						<div class="rex-clearer"></div>
-					</div>
-				</fieldset>';
+					addButtonBar($form, t('content_submitcopyarticle'), 'copyarticle');
 				}
 
-				// ARTIKEL KOPIEREN ENDE
-				// KATEGORIE/STARTARTIKEL VERSCHIEBEN START
+				// KATEGORIE/STARTARTIKEL VERSCHIEBEN
 
 				if ($article->getValue('startpage') == 1 && ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveCategory[]'))) {
-					$move_a = new rex_category_select();
-					$move_a->setStyle('class="rex-form-select"');
-					$move_a->setId('category_id_new');
-					$move_a->setName('category_id_new');
-					$move_a->setSize('1');
-					$move_a->setSelected($article_id);
-					$move_a->setAttribute('tabindex', rex_tabindex(false));
+					$select = sly_Form_Helper::getCategorySelect('category_id_new', false, false, null, $REX['USER']);
+					$select->setAttribute('value', $category_id);
+					$select->setLabel(t('move_category'));
 
-					print '
-				<fieldset class="rex-form-col-1">
-					<legend>'.$I18N->msg('content_submitmovecategory').'</legend>
-					<div class="rex-form-wrapper">
+					$form->beginFieldset(t('content_submitmovecategory'));
+					$form->add($select);
 
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-select">
-								<label for="category_id_new">'.$I18N->msg('move_category').'</label>
-								'.$move_a->get().'
-							</p>
-						</div>
-
-						<div class="rex-form-row">
-							<p class="rex-form-col-a rex-form-submit">
-								<input class="rex-form-submit" type="submit" name="movecategory" value="'.$I18N->msg('content_submitmovecategory').'"'.rex_tabindex().' onclick="return confirm(\''.$I18N->msg('content_submitmovecategory').'?\')" />
-							</p>
-						</div>
-
-						<div class="rex-clearer"></div>
-					</div>
-				</fieldset>';
+					addButtonBar($form, t('content_submitmovecategory'), 'movecategory');
 				}
-				// KATEGROIE/STARTARTIKEL VERSCHIEBEN ENDE
 			}
 			// SONSTIGES ENDE
 
-			print '
-			</form>
-		</div>';
+			$form->render();
 
 			// END: META VIEW
 		}
