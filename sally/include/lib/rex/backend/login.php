@@ -24,17 +24,17 @@ class rex_backend_login extends rex_login
 		$this->setSessiontime($config->get('SESSION_DURATION'));
 		$this->setUserID($tableName.'.id');
 		$this->setUserquery('SELECT * FROM '.$tableName.' WHERE status = 1 AND id = "USR_UID"');
-		$this->setLoginquery('SELECT * FROM '.$tableName.' WHERE status = 1 AND login = "USR_LOGIN" AND psw = "USR_PSW" AND lasttrydate < '.(time()-$config->get('RELOGINDELAY')));
+		$this->setLoginquery('SELECT * FROM '.$tableName.' WHERE status = 1 AND login = "USR_LOGIN" AND lasttrydate < '.(time()-$config->get('RELOGINDELAY')));
 		$this->tableName = $tableName;
 	}
 
-	public function checkLogin()
+	public function checkLogin($password)
 	{
 		global $REX;
 
 		$fvs    = new rex_sql();
 		$userId = $this->getSessionVar('UID');
-		$check  = parent::checkLogin();
+		$check  = parent::checkLogin($password);
 
 		if (!empty($this->usr_login)) {
 			if ($check) {
@@ -62,7 +62,7 @@ class rex_backend_login extends rex_login
 
 	public function getLanguage()
 	{
-		if (preg_match('@#be_lang\[(.+?)\]#@', $this->getValue('rights'), $match)) {
+		if (preg_match('@#be_lang\[([^\]]+?)\]#@', $this->getValue('rights'), $match)) {
 			return $match[1];
 		}
 

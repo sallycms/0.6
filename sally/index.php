@@ -77,8 +77,8 @@ else {
 		$loginCheck = false;
 	}
 	else {
-		$REX['LOGIN']->setLogin($rex_user_login, $rex_user_psw);
-		$loginCheck = $REX['LOGIN']->checkLogin();
+		$REX['LOGIN']->setLogin($rex_user_login);
+		$loginCheck = $REX['LOGIN']->checkLogin($rex_user_psw);
 	}
 
 	// Login OK / Session gefunden?

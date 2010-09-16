@@ -70,7 +70,22 @@ class sly_Model_User extends sly_Model_Base {
 	public function setName($name)               { $this->name        = $name;         }
 	public function setDescription($description) { $this->description = $description;  }
 	public function setLogin($login)             { $this->login       = $login;        }
-	public function setPassword($psw)            { $this->psw         = $psw;          }
+	/**
+	 * Sets a password into the user model.
+	 *
+	 * This method is doing the hashing. Mage sure, the createdate is set before.
+	 *
+	 * @param string $password  The password (plain)
+	 */
+	public function setPassword($password) {
+		$this->setHashedPassword(sly_Util_User::getPasswordHash($this, $password));
+	}
+	/**
+	 * Sets a password into the user model, where hashing is already done
+	 *
+	 * @param string $psw  The hashed password
+	 */
+	public function setHashedPassword($psw)      { $this->psw         = $psw;          }
 	public function setStatus($status)           { $this->status      = (int) $status; }
 	public function setCreateDate($createdate)   { $this->createdate  = $createdate;   }
 	public function setUpdateDate($updatedate)   { $this->updatedate  = $updatedate;   }
@@ -142,4 +157,5 @@ class sly_Model_User extends sly_Model_Base {
 	public function delete() {
 		return sly_Service_Factory::getService('User')->delete(array('id' => $this->id));
 	}
+
 }

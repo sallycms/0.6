@@ -75,7 +75,7 @@ class sly_Controller_User extends sly_Controller_Sally
 				'updatedate'  => time(),
 				'createuser'  => $REX['LOGIN']->getValue('login'),
 				'updateuser'  => $REX['LOGIN']->getValue('login'),
-				'psw'         => $service->hashPassword($password),
+				'psw'         => $password,
 				'rights'      => $this->getRightsFromForm(null),
 				'revision'    => 0
 			);
@@ -126,8 +126,8 @@ class sly_Controller_User extends sly_Controller_Sally
 
 			$password = sly_post('userpsw', 'string');
 
-			if ($password && $password != $user->getPassword()) {
-				$user->setPassword($service->hashPassword($password));
+			if (!empty($password) && $password != $user->getPassword()) {
+				$user->setPassword($password);
 			}
 
 			$user->setRights($this->getRightsFromForm($user));

@@ -21,15 +21,22 @@ class sly_Service_User extends sly_Service_Model_Base {
 		return new sly_Model_User($params);
 	}
 
+	public function create($params) {
+		$model = $this->makeObject($params);
+		if (isset($params['psw'])) $model->setPassword($params['psw']);
+		return $this->save($model);
+	}
+
+	public function findByLogin($login) {
+		$res = $this->find(array('login' => $login));
+		if (count($res) == 1) return $res[0];
+		return null;
+	}
+
 	public function getCurrentUser() {
 		global $REX;
 		$userID = $REX['LOGIN']->getValue('id');
 		return $this->findById($userID);
-	}
-
-	public function hashPassword($password) {
-		$config = sly_Core::config();
-		return sly_Util_Password::hash($password, $config->get('INSTNAME'));
 	}
 
 	public function logout() {
@@ -44,4 +51,16 @@ class sly_Service_User extends sly_Service_Model_Base {
 		$instname = sly_Core::config()->get('INSTNAME');
 		$_SESSION[$instname][$varname] = $value;
 	}
+
+	/**
+	 * Checks if the given password matches to the users password
+	 *
+	 * @param  sly_Model_User  $user      The user object
+	 * @param  string          $password  Password to check
+	 * @return boolean                    true if the passwords match, otherwise false.
+	 */
+	public function checkPassword(sly_Model_User $user, $password) {
+		return sly_Util_User::getPasswordHash($user, $password) == $user->getPassword();
+	}
+
 }

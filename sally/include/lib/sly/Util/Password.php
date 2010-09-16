@@ -23,6 +23,7 @@ class sly_Util_Password {
 		}
 
 		foreach ($salts as $salt) {
+			if (is_numeric($salt)) $salt = strval($salt); // for numeric salts
 			if (!is_string($salt) || empty($salt)) continue;
 			$password = self::iteratedHash($password.str_repeat($salt, 15));
 		}

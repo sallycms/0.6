@@ -254,20 +254,20 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 				}
 
 				if (empty($error)) {
-					$service   = sly_Service_Factory::getService('User');
-					$user      = $service->find(array('login' => $adminUser));
-					$user      = empty($user) ? new sly_Model_User() : reset($user);
-					$adminPass = $service->hashPassword($adminPass);
+					$service    = sly_Service_Factory::getService('User');
+					$user       = $service->find(array('login' => $adminUser));
+					$user       = empty($user) ? new sly_Model_User() : reset($user);
 
 					$user->setName(ucfirst(strtolower($adminUser)));
 					$user->setLogin($adminUser);
-					$user->setPassword($adminPass);
 					$user->setRights('#admin[]#');
 					$user->setStatus(true);
 					$user->setCreateDate(time());
 					$user->setUpdateDate(time());
+					$user->setLastTryDate(0);
 					$user->setCreateUser('setup');
 					$user->setUpdateUser('setup');
+					$user->setPassword($adminPass); // call this after $user->setCreateDate();
 					$user->setRevision(0);
 
 					if (!$service->save($user)) {

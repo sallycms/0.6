@@ -22,13 +22,14 @@ class rex_login
 	public $user_query;
 	public $system_id;
 	public $usr_login;
-	public $usr_psw;
 	public $logout;
 	public $message;
 	public $uid;
 	public $USER;
 	public $cache;
 	public $login_status;
+
+	private $slyUser;
 
 	public function __construct()
 	{
@@ -77,13 +78,9 @@ class rex_login
 	}
 
 	/**
-	 * Setzt den Login und das Password
+	 * Setzt den Login
 	 */
-	public function setLogin($usr_login, $usr_psw)
-	{
-		$this->usr_login = $usr_login;
-		$this->usr_psw   = $this->encryptPassword($usr_psw);
-	}
+	public function setLogin($usr_login) { $this->usr_login = $usr_login; }
 
 	/**
 	 * Markiert die aktuelle Session als ausgeloggt
@@ -140,12 +137,12 @@ class rex_login
 	}
 
 	/**
-	 * Prüft die mit setLogin() und setPassword() gesetzten Werte
+	 * Prüft die mit setLogin() per $password übergebenen Werte
 	 * anhand des LoginQueries/UserQueries und gibt den Status zurück.
 	 *
 	 * @return boolean  true bei Erfolg, sonst false
 	 */
-	public function checkLogin()
+	public function checkLogin($password)
 	{
 		global $REX, $I18N;
 
@@ -168,19 +165,24 @@ class rex_login
 			// auf error seite verweisen und message schreiben
 
 			$this->USER = new rex_login_sql($this->DB);
-			$USR_LOGIN  = $this->usr_login;
-			$USR_PSW    = $this->usr_psw;
 			$query      = str_replace('USR_LOGIN', $this->usr_login, $this->login_query);
-			$query      = str_replace('USR_PSW', $this->usr_psw, $query);
 
-			$this->USER->setQuery($query);
+			$user    = $this->getUser();
+			$service = sly_Service_Factory::getService('User');
 
-			if ($this->USER->getRows() == 1) {
-				$ok = true;
-				$this->setSessionVar('UID', $this->USER->getValue($this->uid));
-				$this->sessionFixation();
+			$error = false;
+			if ($service->checkPassword($user, $password)) {
+				$this->USER->setQuery($query);
+
+				if ($this->USER->getRows() == 1) {
+					$ok = true;
+					$this->setSessionVar('UID', $this->USER->getValue($this->uid));
+					$this->sessionFixation();
+				}
+				else $error = true;
 			}
-			else {
+
+			if ($error) {
 				$this->message = $I18N->msg('login_error', '<strong>'.$REX['RELOGINDELAY'].'</strong>');
 				$this->setSessionVar('UID', '');
 			}
@@ -245,18 +247,6 @@ class rex_login
 	}
 
 	/**
-	 * Verschlüsselt den übergebnen String, falls eine Passwort-Funktion gesetzt ist.
-	 *
-	 * @deprecated  Zum Hashen von Passwörtern sollte immer
-	 *              sly_Service_User::hashPassword() verwendet werden.
-	 */
-	public function encryptPassword($psw)
-	{
-		$service = sly_Service_Factory::getService('User');
-		return $service->hashPassword($psw);
-	}
-
-	/**
 	 * Setzte eine Session-Variable
 	 */
 	public function setSessionVar($varname, $value)
@@ -293,4 +283,10 @@ class rex_login
 			session_regenerate_id();
 		}
 	}
+
+	public function getUser() {
+		if (empty($this->slyUser)) $this->slyUser = sly_Service_Factory::getService('User')->findByLogin($this->usr_login);
+		return $this->slyUser;
+	}
+
 }

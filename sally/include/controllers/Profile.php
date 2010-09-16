@@ -61,8 +61,8 @@ class sly_Controller_Profile extends sly_Controller_Sally
 		$password = sly_post('userpsw', 'string');
 		$service  = sly_Service_Factory::getService('User');
 
-		if ($password && $password != $user->getPassword()) {
-			$user->setPassword($service->hashPassword($password));
+		if (!empty($password) && $password != $user->getPassword()) {
+			$user->setPassword($password);
 		}
 
 		// Speichern, fertig.
