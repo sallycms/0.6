@@ -46,8 +46,6 @@ $enc = $this->enctype ? ' enctype="'.sly_html($this->enctype).'"' : '';
 
 <? if (!empty($this->focussedElement)): ?>
 <script type="text/javascript">
-// <[!CDATA[
 jQuery('#<?= $this->focussedElement ?>').focus();
-// ]]>
 </script>
 <? endif ?>
