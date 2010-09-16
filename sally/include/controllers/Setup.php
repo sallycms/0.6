@@ -38,53 +38,53 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 	}
 
 	protected function fsperms() {
-		global $I18N;
+		$errors  = false;
+		$results = array();
+		$tester  = new sly_Util_Requirements();
+		$level   = error_reporting(0);
 
-		$errors = array();
+		$results['php_version']       = array('5.1', $tester->phpVersion());
+		$results['mysql_version']     = array('5.0', $tester->mySQLVersion());
+		$results['php_time_limit']    = array('20s', $tester->execTime());
+		$results['php_mem_limit']     = array('16MB / 64MB', $tester->memoryLimit());
+		$results['php_pseudo']        = array('translate:none', $tester->nonsenseSecurity());
+		$results['php_short']         = array('translate:activated', $tester->shortOpenTags());
+		$results['apache_modrewrite'] = array('translate:required', $tester->modRewrite());
 
-		// Versionscheck
+		error_reporting($level);
 
-		if (version_compare(PHP_VERSION, '5.1.0', '<')) {
-			$errors[] = $I18N->msg('setup_010', phpversion());
-		}
-
-		// Extensions prüfen
-
-		foreach (array('session', 'mysql', 'pcre', 'pdo') as $extension) {
-			if (!extension_loaded($extension)) {
-				$errors[] = $I18N->msg('setup_010_1', $extension);
+		foreach ($results as $result) {
+			if ($result[1]['status'] == sly_Util_Requirements::FAILED) {
+				$errors = true;
+				break;
 			}
 		}
 
-		$errorMsg = $this->checkDirsAndFiles();
+		// init directories
 
-		// Verzeichnisse schützen
+		$cantCreate = $this->checkDirsAndFiles();
+		$protected  = array('../develop', '../data/dyn/internal');
+		$protects   = array();
 
-		$protected = array('../develop', '../data/dyn/internal');
-		$htaccess  = 'include/.htaccess';
-
-		foreach ($protected as $directory) {
-			if (
-				is_dir($directory) &&
-				!file_exists($directory.'/.htaccess') &&
-				!copy($htaccess, $directory.'/.htaccess') &&
-				!chmod($directory.'/.htaccess', 0777)
-			) {
-				$errors[] = 'Vezeichnis '.realpath($directory).' konnte nicht gegen HTTP-Zugriffe geschützt werden.';
+		foreach ($protected as $i => $directory) {
+			if (!sly_Util_Directory::createHttpProtected($directory)) {
+				$protects['htaccess_'.$i] = realpath($directory);
+				$errors = true;
 			}
 		}
 
-		if ($errorMsg !== true) {
-			$errors[] = $errorMsg;
+		if (!empty($cantCreate)) {
+			$errors = true;
 		}
 
-		$this->render('views/setup/fsperms.phtml', array('errors' => $errors));
+		$params = compact('results', 'protects', 'errors', 'cantCreate', 'tester');
+		$this->render('views/setup/fsperms.phtml', $params);
 	}
 
 	protected function dbconfig() {
 		$config = sly_Core::config();
 		$data   = $config->get('DATABASE');
-		$isSent = isset($_POST['sly-submit']);
+		$isSent = isset($_POST['submit']);
 
 		if ($isSent) {
 			$data['TABLE_PREFIX'] = sly_post('prefix', 'string');
@@ -105,7 +105,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 				}
 
 				$config->setLocal('DATABASE', $data);
-				unset($_POST['sly-submit']);
+				unset($_POST['submit']);
 				$this->initdb();
 				return;
 			}
@@ -128,7 +128,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		global $I18N;
 
 		$config = sly_Core::config();
-		$isSent = isset($_POST['sly-submit']);
+		$isSent = isset($_POST['submit']);
 
 		if ($isSent) {
 			$config->setLocal('SERVER', sly_post('server', 'string'));
@@ -138,7 +138,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 			$config->set('LANG', $this->lang);
 
-			unset($_POST['sly-submit']);
+			unset($_POST['submit']);
 			$this->createUser();
 			return;
 		}
@@ -242,7 +242,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		$adminPass   = sly_post('admin_pass', 'string');
 		$error       = '';
 
-		if (isset($_POST['sly-submit'])) {
+		if (isset($_POST['submit'])) {
 			if ($createAdmin) {
 				if (empty($adminUser)) {
 					$error = $I18N->msg('setup_040');
@@ -254,27 +254,24 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 				}
 
 				if (empty($error)) {
-					$userOK = $pdo->listTables($prefix.'user') && $pdo->magicFetch('user', 'id', array('login' => $adminUser)) > 0;
+					$service   = sly_Service_Factory::getService('User');
+					$user      = $service->find(array('login' => $adminUser));
+					$user      = empty($user) ? new sly_Model_User() : reset($user);
+					$adminPass = $service->hashPassword($adminPass);
 
-					if ($userOK) {
-						$error = $I18N->msg('setup_042'); // Dieses Login existiert schon!
-					}
-					else {
-						$service   = sly_Service_Factory::getService('User');
-						$adminPass = $service->hashPassword($adminPass);
-						$affected  = $pdo->insert('user', array(
-							'name'       => 'Administrator',
-							'login'      => $adminUser,
-							'psw'        => $adminPass,
-							'rights'     => '#admin[]#',
-							'createdate' => time(),
-							'createuser' => 'setup',
-							'status'     => 1
-						));
+					$user->setName(ucfirst(strtolower($adminUser)));
+					$user->setLogin($adminUser);
+					$user->setPassword($adminPass);
+					$user->setRights('#admin[]#');
+					$user->setStatus(true);
+					$user->setCreateDate(time());
+					$user->setUpdateDate(time());
+					$user->setCreateUser('setup');
+					$user->setUpdateUser('setup');
+					$user->setRevision(0);
 
-						if ($affected == 0) {
-							$error = $I18N->msg('setup_043');
-						}
+					if (!$service->save($user)) {
+						$error = $I18N->msg('setup_043');
 					}
 				}
 			}
@@ -283,7 +280,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			}
 
 			if (empty($error)) {
-				unset($_POST['sly-submit']);
+				unset($_POST['submit']);
 				$this->finish();
 				return;
 			}
@@ -292,36 +289,23 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		$this->warning = $error;
 		$this->render('views/setup/createuser.phtml', array(
 			'usersExist' => $usersExist,
-			'adminUser'  => $adminUser,
-			'adminPass'  => $adminPass
+			'adminUser'  => $adminUser
 		));
 	}
 
 	public function finish() {
-		global $I18N, $REX;
-
 		sly_Core::config()->setLocal('SETUP', false);
-
 		$this->render('views/setup/finish.phtml');
 	}
 
 	protected function title($title) {
 		$layout = sly_Core::getLayout();
 		$layout->pageHeader($title);
-		print '<div id="rex-setup" class="rex-area">';
-	}
-
-	protected function teardown()	{
-		print '</div>'; // rex_setup_title() schließen
 	}
 
 	protected function checkDirsAndFiles() {
-		global $REX;
-
-		// Schreibrechte
-
-		$s = DIRECTORY_SEPARATOR;
-
+		$s         = DIRECTORY_SEPARATOR;
+		$errors    = array();
 		$writables = array(
 			SLY_DATAFOLDER,
 			SLY_MEDIAFOLDER,
@@ -340,64 +324,38 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			SLY_DYNFOLDER.$s.'internal'.$s.'sally'.$s.'files'
 		);
 
-		$res = $this->isWritable($writables, true);
+		$level = error_reporting(0);
 
-		if (!empty($res)) {
-			$errors = array();
-
-			foreach ($res as $type => $messages) {
-				$error = array();
-
-				if (!empty($messages)) {
-					$error[] = _rex_is_writable_info($type);
-					$error[] = '<ul>';
-
-					foreach ($messages as $message) {
-						$error[] = '<li>'.$message.'</li>';
-					}
-
-					$error[] = '</ul>';
-				}
-
-				$errors[] = implode("\n", $error);
+		foreach ($writables as $dir) {
+			if (!$this->isWritable($dir)) {
+				$errors[] = $dir;
 			}
-
-			return implode("</li><li>\n", $errors);
 		}
 
-		return true;
+		error_reporting($level);
+		return $errors;
 	}
 
-	protected function isWritable($elements, $elementsAreDirs)
-	{
-		global $REX;
+	protected function isWritable($dir) {
+		return is_dir($dir) || (mkdir($dir) && chmod($dir, 0777));
+	}
 
-		$res = array();
-
-		foreach ($elements as $element) {
-			if ($elementsAreDirs && !is_dir($element)) {
-				mkdir($element);
-				chmod($element, 0777);
-			}
-
-			$writable = _rex_is_writable($element);
-			if ($writable != 0) $res[$writable][] = $element;
+	protected function printHiddens($func, $form = null) {
+		if ($form instanceof sly_Form) {
+			$form->addHiddenValue('page', 'setup');
+			$form->addHiddenValue('func', $func);
+			$form->addHiddenValue('lang', $this->lang);
 		}
-
-		return $res;
+		else {
+			?>
+			<input type="hidden" name="page" value="setup" />
+			<input type="hidden" name="func" value="<?= sly_html($func) ?>" />
+			<input type="hidden" name="lang" value="<?= sly_html($this->lang) ?>" />
+			<?php
+		}
 	}
 
-	protected function printHiddens($func)
-	{
-		?>
-		<input type="hidden" name="page" value="setup" />
-		<input type="hidden" name="func" value="<?= sly_html($func) ?>" />
-		<input type="hidden" name="lang" value="<?= sly_html($this->lang) ?>" />
-		<?php
-	}
-
-	protected function setupImport($sqlScript)
-	{
+	protected function setupImport($sqlScript) {
 		global $I18N;
 
 		$err_msg = '';
@@ -417,8 +375,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		return $err_msg;
 	}
 
-	protected function checkPermission()
-	{
-		return true;
+	protected function checkPermission() {
+		return sly_Core::config()->get('SETUP') === true;
 	}
 }

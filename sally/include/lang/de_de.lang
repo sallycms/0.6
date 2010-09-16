@@ -475,7 +475,8 @@ setup_011: "{0}Fehler{1} | Benötigte System-Addons fehlen, oder haben einen Feh
 setup_012: "{0}Fehler{1} | Das Verzeichnis {2} ist weder beschreibar noch ausführbar!"
 setup_014: "{0}Fehler{1} | Die Datei {2} ist nicht beschreibbar!"
 setup_015: "{0}Fehler{1} | Die aufgelisteten Dateien und/oder Verzeichnisse existieren nicht oder es besteht keine Schreibberechtigung. {2} Bitte korrigieren Sie dies und starten das Setup erneut."
-setup_016: "{0}PHP-Versionscheck | Rechteüberprüfung{1}"
+setup_015_1: Die aufgelisteten Dateien und/oder Verzeichnisse existieren nicht oder es besteht keine Schreibberechtigung.
+setup_016: Systemvoraussetzungen
 setup_016_1: "<ul{0}><li>PHP-Version {1}ok{2}</li><li>Ordnerrechte {1}ok{2}</li></ul>"
 setup_017: Weiter mit Schritt 2
 setup_018: Bitte beheben Sie die aufgelisteten Fehler und starten Sie das Setup erneut.
@@ -486,9 +487,9 @@ setup_020: "{0}include/master.inc.php{1} konnte nicht geschrieben werden."
 setup_021: Es konnte keine Verbindung zur Datenbank hergestellt werden!
 setup_022: Die angegebene Datenbank konnte nicht geöffnet werden!
 setup_023: Schreiben der 'include/master.inc.php'
-setup_024: "Serverdomain [optional]"
-setup_025: "Serverbezeichnung [optional]"
-setup_026: "Fehler E-Mailadresse [optional]"
+setup_024: "Serverdomain"
+setup_025: "Serverbezeichnung"
+setup_026: "Fehler E-Mailadresse"
 setup_027: Name der Datenbank
 setup_028: Passwort
 setup_029: Weiter zu Schritt 3
@@ -532,7 +533,7 @@ setup_no_encryption: keine Verschlüsselung
 setup_psw_encryption: mit Verschlüsselung (sha1)
 setup_security_msg: Der Ordner sally/include ist unsicher. Bitte schützen Sie diesen Ordner und starten das Setup erneut!
 setup_no_js_security_msg: "Prüfen sie, ob Dateien aus dem Ordner sally/include direkt aufrufbar sind! Dies darf aus Sicherheitsgründen nicht möglich sein!"
-setup_create_db: Datenbank anlegen?
+setup_create_db: anlegen
 
 # sally\include\pages\addon.inc.php
 addon: AddOn
@@ -653,3 +654,36 @@ var_linklist_move_top: Ausgewählten Link an den Anfang verschieben
 var_linklist_move_up: Ausgewählten Link nach oben verschieben
 var_linklist_move_down: Ausgewählten Link nach unten verschieben
 var_linklist_move_bottom : Ausgewählten Link an das Ende verschieben
+
+available: verfügbar
+unavailable: nicht verfügbar
+required: benötigt
+activated: aktiviert
+optional: optional
+deactivated: deaktiviert
+allowed: erlaubt
+disallowed: verboten
+any: beliebig
+none: nichts
+
+php_version: PHP-Version
+mysql_version: MySQL-Version
+php_time_limit: PHP Laufzeitlimit
+php_mem_limit: PHP Speicherlimit
+php_pseudo: PHP Pseudosicherheit (open_basedir, safe_mode)
+php_gd: PHP::gd
+php_xmlreader: PHP::xmlreader
+php_xmlwriter: PHP::xmlwriter
+php_curl: PHP::curl
+php_short: PHP Short Open Tags
+php_globals: PHP Register Globals
+php_magic: PHP Magic Quotes
+php_urlopening: PHP URL opening
+apache_modrewrite: Apache ModRewrite
+no_mysql_mysqli: weder MySQL noch MySQLi
+available: verfügbar
+not_available: nicht verfügbar
+timeout: Timeout
+exec_time: "{0}s, änderbar"
+memory: "{0}B, änderbar"
+safemode_openbasedir: safe_mode und open_basedir

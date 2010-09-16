@@ -8,11 +8,8 @@ body#rex-page-login {
 
 	div#rex-wrapper {
 		width: 100%;
-		margin-right: 0px;
 		&2 { padding: 0 16px; }
 	}
-
-	/* Anpassung der Footerbreite nur für Login-Seite */
 
 	div#rex-footer {
 		width: 650px;

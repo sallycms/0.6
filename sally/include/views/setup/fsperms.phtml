@@ -10,48 +10,60 @@
 
 $this->title($I18N->msg('setup_step1'));
 
-if (empty($errors)) {
-	print $I18N->msg('setup_016', '<h2 class="rex-hl2">', '</h2>');
-	print '<div class="rex-area-content">';
+?>
 
-	print $I18N->msg('setup_016_1', ' class="rex-ul1"', '<span class="rex-ok">', '</span>');
+<div class="rex-message" id="security_warning" style="display:none">
+	<p class="rex-warning"><span><?= $I18N->msg('setup_security_msg') ?></span></p>
+</div>
 
-	?>
-		<div class="rex-message" id="security_warning" style="display:none">
-			<p class="rex-warning"><span><?= $I18N->msg('setup_security_msg') ?></span></p>
-		</div>
+<h2 class="rex-hl2"><?= t('setup_016') ?></h2>
 
-		<noscript>
-			<div class="rex-message">
-				<p class="rex-warning"><span><?= $I18N->msg('setup_no_js_security_msg') ?></span></p>
-			</div>
-		</noscript>
+<div class="rex-area-content sly-setup-requirements">
+	<table summary="">
+		<thead><tr>
+			<th class="sly-testcase">Eigenschaft</th>
+			<th class="sly-recommended">empfohlen</th>
+			<th class="sly-status">Status</th>
+		</tr></thead>
+		<tbody><? foreach ($results as $type => $result): ?><tr class="<?= $tester->getClassName($result[1]) ?>">
+			<td class="sly-testcase"><?= rex_translate('translate:'.$type) ?></td>
+			<td class="sly-recommended"><?= rex_translate($result[0]) ?></td>
+			<td class="sly-status"><?= sly_html($result[1]['text']) ?></td>
+		</tr><? endforeach ?></tbody>
+	</table>
+</div>
 
-		<iframe src="include/views/setup/direct.phtml?lang=<?= urlencode($this->lang) ?>" style="display:none"></iframe>
-	</div>
+<? if ($errors): ?>
+<div class="rex-area-footer sly-fs-errors">
+	<p class="rex-algn-rght">Bitte beheben Sie die o.g. Probleme um fortzufahren.</p>
+</div>
+<? endif ?>
 
-	<div class="rex-area-footer">
-		<p id="nextstep" class="rex-algn-rght">
-			<a href="index.php?page=setup&amp;func=dbconfig&amp;lang=<?= urlencode($this->lang) ?>">&raquo; <?= $I18N->msg('setup_017') ?></a>
-		</p>
-	</div>
-	<?php
-}
-else {
-	?>
-	<h2 class="rex-hl2"><?= $I18N->msg('setup_headline1') ?></h2>
+<? if (!empty($cantCreate) || !empty($protects)): ?>
+<h2 class="rex-hl2 sly-setup-fs-problems">Dateisystemprobleme</h2>
+<div class="rex-area-content sly-setup-fs-problems">
+	<? if (!empty($cantCreate)): ?>
+	<p class="rex-tx1"><?= $I18N->msg('setup_015_1') ?></p>
 
-	<div class="rex-area-content">
-		<ul class="rex-ul1">
-			<li><?= implode("</li>\n\t\t<li>", $errors) ?></li>
-		</ul>
-		<p class="rex-tx1"> <?= $I18N->msg('setup_018') ?></p>
-	</div>
+	<ul class="rex-ul1">
+		<li><?= implode('</li><li>', $cantCreate) ?></li>
+	</ul>
+	<? endif ?>
 
-	<div class="rex-area-footer">
-		<p class="rex-algn-rght">
-			<a href="index.php?page=setup&amp;func=fsperms&amp;lang=<?= urlencode($this->lang) ?>">&raquo; <?= $I18N->msg('setup_019') ?></a>
-		</p>
-	</div>
-	<?php
-}
+	<? if (!empty($protects)): ?>
+	<p class="rex-tx1">Die folgenden Vezeichnisse konnten nicht gegen HTTP-Zugriffe geschützt werden.</p>
+
+	<ul class="rex-ul1">
+		<li><?= implode('</li><li>', $protects) ?></li>
+	</ul>
+	<? endif ?>
+
+	<iframe src="include/views/setup/direct.phtml?lang=<?= urlencode($this->lang) ?>" style="display:none"></iframe>
+</div>
+<? elseif (!$errors): ?>
+<div class="rex-area-footer">
+	<p id="nextstep" class="rex-algn-rght">
+		<a href="index.php?page=setup&amp;func=dbconfig&amp;lang=<?= urlencode($this->lang) ?>">&raquo; <?= $I18N->msg('setup_017') ?></a>
+	</p>
+</div>
+<? endif ?>

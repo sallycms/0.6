@@ -1,7 +1,3 @@
-div#rex-form-system-setup {
-	background-color: #fff;
-}
-
 div.rex-form-setup-step-database div.rex-form-row {
 	p.rex-form-label-right label { width: 630px; }
 
@@ -17,7 +13,7 @@ div.rex-form-setup-admin div.rex-form-row p.rex-form-text input {
 
 /* Language */
 
-div#rex-setup ul.rex-setup-language {
+ul.rex-setup-language {
 	font-weight: bold;
 	text-align: center;
 
@@ -54,51 +50,78 @@ div.rex-area-scroll {
 
 	div#rex-wrapper {
 		width: 100%;
-		margin-right: 0px;
 		&2 { padding: 0 16px; }
 	}
 
+	div#rex-footer {
+		width: 650px;
+		float: none;
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	.rex-area-content {
+		width: 100%;
+	}
+
+	h2.sly-setup-fs-problems {
+		margin-top: 10px;
+	}
+
+	.sly-fs-errors {
+		color: white;
+	}
+
+	.sly-setup-requirements {
+		padding: 0;
+
+		table {
+			width: 100%;
+		}
+
+		th, td {
+			line-height: 14px;
+			padding: 6px 5px;
+		}
+
+		th { font-weight: bold; }
+		td { border-top: 1px dotted #ACA9A9; }
+
+		td.sly-status, td.sly-recommended {
+			width: 110px;
+			text-align: center;
+		}
+
+		td.sly-status { color: white; }
+
+		tr.ok      .sly-status { background-color: green;  }
+		tr.warning .sly-status { background-color: orange; }
+		tr.failed  .sly-status { background-color: red;    }
+	}
+
 	.rex-form {
-		& {
-			margin: 7px 0 0 0;
-			+border-radius(4px);
-			/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
-			background-color: #fff;
-
-			.rex-form-text input,
-			.rex-form-password input,
-			select#driver {
-				width: 250px;
-			}
-
-			/* Überschrift */
-			legend {
-				color: #fff;
-				background-color: $drk_grey;
-				font-size: 1.1em;
-				+border-top-radius(4px);
-				width: 630px; /* Breite des Loginbereichs abzüglich des padding links*/
-				padding: 5px 0 8px 20px;
-			}
+		.rex-form-text input,
+		.rex-form-password input,
+		select#driver {
+			width: 250px;
 		}
 
-		&-wrapper {
-			width: 650px;
+		legend { width: 640px; }
+		&-wrapper { width: 650px; }
+		&-row { width: 636px; }
+	}
+
+	#sly-setup-dbsetup {
+		.rex-form-wrapper {
+			margin-bottom: 0;
 		}
 
-		&-row {
-			width: 636px;
-		}
-
-		&-col-a { vertical-aling: middle; }
+		#prefix { width: 50px; }
+		#create_db { width: auto; }
 	}
 }
 
 /*	Formulare */
-
-div.rex-form-setup-step-database div.rex-form-row p.rex-form-label-right label {
-	width: 590px;
-}
 
 #rex-form-setup-step-2 {
 	.rex-form-checkbox {

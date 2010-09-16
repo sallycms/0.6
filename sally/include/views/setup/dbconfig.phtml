@@ -10,89 +10,43 @@
 
 $this->title(t('setup_step2'));
 
-?>
-	<div class="rex-message" style="outline:0">
-		<p class="rex-warning">
-			<span>Alle Datenbanken außer MySQL sind als hoch experimentell anzusehen und dienen zu Testzwecken!</span>
-		</p>
-	</div>
-</div>
+if (!empty($this->warning)) print rex_warning($this->warning);
 
-<div id="rex-setup" class="rex-area">
-	<div class="rex-form" id="rex-form-setup-step-2">
-		<form action="index.php" method="post">
-			<fieldset class="rex-form-col-1">
-				<? $this->printHiddens('dbconfig') ?>
-				<?php
-					if (!empty($this->warning)) print rex_warning($this->warning);
-				?>
-				<legend><?= t('setup_0202') ?></legend>
+$form = new sly_Form('index.php', 'POST', t('setup_0202'), '', 'sly-setup-dbsetup');
+$this->printHiddens('dbconfig', $form);
 
-				<div class="rex-form-wrapper">
-					<div class="rex-form-row">
-						<p class="rex-form-col-a rex-form-text">
-							<label for="driver">Datenbank-Typ:</label>
-							<select name="driver" id="driver">
-								<option value="mysql">MySQL</option>
-								<option value="pgsql">PostgreSQL</option>
-								<option value="oci">Oracle</option>
-								<option value="sqlite">SQLite</option>
-							</select>
-						</p>
-					</div>
-					<div class="rex-form-row">
-						<p class="rex-form-col-a rex-form-text">
-							<label for="host">Host:</label>
-							<input class="rex-form-text" type="text" id="host" name="host" value="<?= sly_html($host) ?>" />
-						</p>
-					</div>
+// database driver
 
-					<div class="rex-form-row">
-						<p class="rex-form-col-a rex-form-text">
-							<label for="user">Login:</label>
-							<input class="rex-form-text" type="text" id="user" name="user" value="<?= sly_html($user) ?>" />
-						</p>
-					</div>
+$drivers = array('mysql' => 'MySQL', 'pgsql' => 'PostgreSQL', 'oci' => 'Oracle', 'sqlite' => 'SQLite');
+$drivers = new sly_Form_Select_DropDown('driver', 'Datenbank-Typ', null, $drivers);
+$drivers->setHelpText('Alle Datenbanken außer MySQL sind als hoch experimentell anzusehen und dienen zu Testzwecken!');
+$form->add($drivers);
 
-					<div class="rex-form-row">
-						<p class="rex-form-col-a rex-form-text">
-							<label for="pass"><?= t('setup_028') ?>:</label>
-							<input class="rex-form-text" type="text" id="pass" name="pass" value="<?= sly_html($pass) ?>" />
-						</p>
-					</div>
+// database infos
 
-					<div class="rex-form-row">
-						<p class="rex-form-col-a rex-form-text">
-							<label for="dbname"><?= t('setup_027') ?>:</label>
-							<input class="rex-form-text" type="text" id="dbname" name="dbname" value="<?= sly_html($dbname) ?>" />
-						</p>
-					</div>
-					<div class="rex-form-row">
-						<p class="rex-form-col-a rex-form-text">
-							<label for="prefix">Tabellen Präfix:</label>
-							<input class="rex-form-text" type="text" id="prefix" name="prefix" value="<?= sly_html($prefix) ?>" />
-						</p>
-					</div>
-					<div class="rex-form-row">
-						<p class="rex-form-col-a rex-form-checkbox">
-							<label for="create_db"><?= t('setup_create_db') ?>:</label>
-							<input class="rex-form-checkbox" type="checkbox" id="create_db" name="create_db" value="1" />
-						</p>
-					</div>
-					<div class="rex-form-row">
-						<p class="rex-form-col-a rex-form-submit">
-							<input class="rex-form-submit" type="submit" name="sly-submit" value="<?= t('setup_029') ?>" />
-						</p>
-					</div>
-				</div>
-			</fieldset>
-		</form>
-	</div>
+$prefix = new sly_Form_Input_Text('prefix', 'Tabellen Präfix', $prefix);
+$prefix->setHelpText('Ermöglicht es, mehrere Sally-Installationen in einer Datenbank parallel zu verwalten.');
 
-	<script type="text/javascript">
-	<!--
-	jQuery(function($) {
-		$('#driver').focus();
-	});
-	//-->
-	</script>
+$form->add(new sly_Form_Input_Text('host', 'Host', $host));
+$form->add(new sly_Form_Input_Text('user', 'Login', $user));
+$form->add(new sly_Form_Input_Text('pass', t('setup_028'), $pass));
+
+// slightly more complex input for the target database
+
+$dbname = new sly_Form_Input_Text('dbname', t('setup_027'), $dbname);
+$create = new sly_Form_Input_Checkbox('create_db', '', '1', t('setup_create_db'));
+$name   = new sly_Form_Freeform('dbname', t('setup_027'), $dbname->render().' '.$create->render());
+
+$name->addFormRowClass('rex-form-text'); // so that the styles for the input box apply
+$form->add($name);
+$form->add($prefix);
+
+// button config
+
+$form->setResetButton(null);
+$form->getSubmitButton()->setAttribute('value', t('setup_029'));
+
+// render it!
+
+$form->setFocus('driver');
+$form->render();
