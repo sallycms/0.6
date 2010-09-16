@@ -73,11 +73,6 @@ input#rex-form-field-prior {
 		padding: 0;
 	}
 
-	p.rex-form-checkbox,
-	p.rex-form-radio {
-		input { float: none; margin-top: 4px; }
-	}
-
 	p {
 		span.rex-form-read,
 		span.rex-form-notice {
@@ -167,7 +162,7 @@ input#rex-form-field-prior {
 		display: inline;
 	}
 
-	.sly-form-checkbox {
+	.sly-form-checkbox, .sly-form-radio {
 		border: 0;
 		vertical-align: middle;
 	}
