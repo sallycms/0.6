@@ -1,7 +1,6 @@
 syntax:glob
 data/dyn/*
 data/config/*
-sally/include/addons/error_handler/data/phperror.log
 sally/include/tip
 .project
 .buildpath
