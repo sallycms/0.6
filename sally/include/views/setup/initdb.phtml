@@ -12,66 +12,38 @@ global $I18N;
 
 $this->title($I18N->msg('setup_step3'));
 
-?>
-<div class="rex-form rex-form-setup-step-database">
-	<form action="index.php" method="post">
-		<fieldset class="rex-form-col-1">
-			<? $this->printHiddens('initdb') ?>
-			<legend><?= $I18N->msg('setup_030_headline') ?></legend>
-			<div class="rex-form-wrapper">
-				<?php
+// init page
 
-				if (!empty($this->warning)) {
-					print rex_warning($this->warning.'<br />'.$I18N->msg('setup_033'));
-				}
+if (!empty($this->warning)) {
+	print rex_warning($this->warning.'<br />'.$I18N->msg('setup_033'));
+}
 
-				$checks = array();
+if (!in_array($dbInitFunction, $dbInitFunctions)) {
+	$dbInitFunction = 'setup';
+}
 
-				if (!in_array($dbInitFunction, $dbInitFunctions)) {
-					$dbInitFunction = 'setup';
-				}
+// create form
 
-				foreach ($dbInitFunctions as $func) {
-					$checks[$func] = $dbInitFunction == $func ? ' checked="checked"' : '';
-				}
+$form = new sly_Form('index.php', 'POST', t('setup_030_headline'), '', 'sly-setup-initdb');
+$this->printHiddens('initdb', $form);
 
-				?>
+// create radios for possible init functions
 
-				<div class="rex-form-row">
-					<p class="rex-form-col-a rex-form-radio rex-form-label-right">
-						<input class="rex-form-radio" type="radio" id="func_setup" name="db_init_function" value="setup"<?= $checks['setup'] ?> />
-						<label for="func_setup"><?= $I18N->msg('setup_034') ?></label>
-					</p>
-				</div>
+$inputs['setup'] = new sly_Form_Input_Radio('db_init_function', '', 'setup', $I18N->msg('setup_034'), 'func_setup');
+$inputs['drop']  = new sly_Form_Input_Radio('db_init_function', '', 'drop', $I18N->msg('setup_035'), 'func_drop');
+$inputs['nop']   = new sly_Form_Input_Radio('db_init_function', '', 'nop', $I18N->msg('setup_036'), 'func_nop');
 
-				<div class="rex-form-row">
-					<p class="rex-form-col-a rex-form-radio rex-form-label-right">
-						<input class="rex-form-radio" type="radio" id="func_drop" name="db_init_function" value="drop"<?= $checks['drop'] ?> />
-						<label for="func_drop"><?= $I18N->msg('setup_035', '<b>', '</b>') ?></label>
-					</p>
-				</div>
+$inputs['drop']->setHelpText('Vorsicht - Alte Seite wird komplett gelöscht!');
+$inputs[$dbInitFunction]->setChecked(true);
 
-				<div class="rex-form-row">
-					<p class="rex-form-col-a rex-form-radio rex-form-label-right">
-						<input class="rex-form-radio" type="radio" id="func_nop" name="db_init_function" value="nop"<?= $checks['nop'] ?> />
-						<label for="func_nop"><?= $I18N->msg('setup_036') ?></label>
-					</p>
-				</div>
+$inputs = sly_Core::dispatcher()->filter('SLY_SETUP_INIT_FUNCTIONS_FORM', $inputs);
+$form->addElements($inputs);
 
-				<? rex_register_extension_point('SLY_SETUP_INIT_FUNCTIONS_FORM', $dbInitFunction); ?>
+// button config
 
-			</div>
-		</fieldset>
+$form->setResetButton(null);
+$form->getSubmitButton()->setAttribute('value', t('setup_039'));
 
-		<fieldset class="rex-form-col-1">
-			<div class="rex-form-wrapper">
-				<div class="rex-form-row">
-					<p class="rex-form-col-a rex-form-submit">
-						<input class="rex-form-submit" type="submit" name="sly-submit" value="<?= $I18N->msg('setup_039') ?>" />
-					</p>
-				</div>
-			</div>
-		</fieldset>
-	</form>
-</div>
+// render it!
 
+$form->render();

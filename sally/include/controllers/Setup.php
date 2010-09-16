@@ -218,7 +218,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		}
 
 		if (empty($error)) {
-			unset($_POST['sly-submit']);
+			unset($_POST['submit']);
 			$this->config();
 		}
 		else {

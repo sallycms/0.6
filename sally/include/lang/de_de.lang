@@ -502,7 +502,7 @@ setup_031: "Tabelle {0} wurde nicht gefunden!"
 setup_032: Die Tabellen konnten nicht erstellt werden.
 setup_033: Bitte richten Sie die Datenbank erneut ein.
 setup_034: Datenbank einrichten
-setup_035: "Datenbank einrichten und alte überschreiben falls vorhanden [{0}Vorsicht{1} - Alte Seite wird komplett gelöscht!]"
+setup_035: Datenbank einrichten und alte überschreiben falls vorhanden
 setup_036: "Datenbank existiert schon [Weiter ohne Datenbankimport]"
 setup_037: "Vorhandenen Export einspielen [Demo einspielen]:"
 setup_03701: Bitte wählen sie einen Export aus!
