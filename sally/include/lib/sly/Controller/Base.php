@@ -28,6 +28,12 @@ abstract class sly_Controller_Base {
 		$config = sly_Core::config();
 		$page   = strtolower(sly_request(self::PAGEPARAM, 'string'));
 
+		// do not allow any access to setup controller when SETUP=false
+
+		if ($config->get('SETUP') !== true && $page == 'setup') {
+			$page = 'profile';
+		}
+
 		if ($isLogin) {
 			$page = strtolower($REX['LOGIN']->getStartpage());
 		}
