@@ -17,4 +17,10 @@ class sly_Form_Input_Button extends sly_Form_Input_Base {
 		parent::__construct($name, '', $value, null, $allowed);
 		$this->setAttribute('type', in_array($type, array('button', 'reset', 'submit')) ? $type : 'button');
 	}
+
+	public function render() {
+		$this->addClass('rex-form-text');
+		$attributeString = $this->getAttributeString();
+		return '<input '.$attributeString.' />';
+	}
 }
