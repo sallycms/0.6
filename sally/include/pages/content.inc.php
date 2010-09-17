@@ -24,7 +24,6 @@ $article_id  = sly_request('article_id',  'rex-article-id');
 $clang       = sly_request('clang',       'rex-clang-id', $REX['START_CLANG_ID']);
 $slice_id    = sly_request('slice_id',    'rex-slice-id', '');
 $function    = sly_request('function',    'string');
-$ctype       = sly_request('ctype', 'string');
 
 $article_revision = 0;
 $slice_revision   = 0;
@@ -44,10 +43,10 @@ if ($article->getRows() == 1) {
 
 	// Slot validieren
 
-	$REX['CTYPE'] = $service->getSlots($templateName);
-	$slot         = rex_request('ctype', 'rex-ctype-id', 0);
+	$curSlots = $service->getSlots($templateName);
+	$slot     = sly_request('ctype', 'int', 0);
 
-	if (!array_key_exists($slot, $REX['CTYPE'])) {
+	if (!array_key_exists($slot, $curSlots)) {
 		$slot = 0;
 	}
 
@@ -58,7 +57,7 @@ if ($article->getRows() == 1) {
 
 	// Kategoriepfad und -rechte
 
-	require $REX['INCLUDE_PATH'].'/functions/function_rex_category.inc.php';
+	require SLY_INCLUDE_PATH.'/functions/function_rex_category.inc.php';
 	// $KATout kommt aus dem include
 	// $KATPERM
 
@@ -93,7 +92,7 @@ if ($article->getRows() == 1) {
 	// Sprachenblock
 
 	$sprachen_add = '&amp;mode='.$mode.'&amp;category_id='.$category_id.'&amp;article_id='.$article_id;
-	require $REX['INCLUDE_PATH'].'/functions/function_rex_languages.inc.php';
+	require SLY_INCLUDE_PATH.'/functions/function_rex_languages.inc.php';
 
 	// EXTENSION POINT
 
@@ -433,13 +432,13 @@ if ($article->getRows() == 1) {
 		}
 		// START: CONTENT HEAD MENUE
 
-		$numSlots = count($REX['CTYPE']);
+		$numSlots = count($curSlots);
 		$slotMenu = '';
 
 		if ($numSlots > 0) {
 			$listElements = array($I18N->msg($numSlots > 1 ? 'content_types' : 'content_type').' : ');
 
-			foreach ($REX['CTYPE'] as $key => $val) {
+			foreach ($curSlots as $key => $val) {
 				$s     = '';
 				$class = '';
 
