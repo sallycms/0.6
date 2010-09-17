@@ -19,7 +19,7 @@ $KAT->setQuery('SELECT catname, path FROM '.$REX['DATABASE']['TABLE_PREFIX'].'ar
 
 if ($KAT->getRows() != 1) {
 	// Kategorie existiert nicht
-	
+
 	if ($category_id != 0) {
 		$category_id = 0;
 		$article_id  = 0;
@@ -28,15 +28,16 @@ if ($KAT->getRows() != 1) {
 else {
 	$pathElements = trim($KAT->getValue('path'), '|');
 	$pathElements = empty($pathElements) ? array(): explode('|', $pathElements);
-	
+
 	// Informationen über den Pfad sammeln
-	
+
 	if (!empty($pathElements)) {
-		$path         = implode(',', $pathElements);
-		$query        = 'SELECT id, catname FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE id IN ('.$path.') AND startpage = 1 AND clang = '.$clang;
-		$pathElements = rex_sql::getArrayEx($query);
-		
-		foreach ($pathElements as $catID => $catName) {
+		$path     = implode(',', $pathElements);
+		$query    = 'SELECT id, catname FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE id IN ('.$path.') AND startpage = 1 AND clang = '.$clang;
+		$pathData = rex_sql::getArrayEx($query);
+
+		foreach ($pathElements as $catID) {
+			$catName = $pathData[$catID];
 			$catName = str_replace(' ', '&nbsp;', htmlspecialchars($catName));
 
 			if ($KATPERM || $REX['USER']->hasPerm('csw['.$catID.']') || $REX['USER']->hasPerm('csr['.$catID.']'))
@@ -50,7 +51,7 @@ else {
 			}
 		}
 	}
-	
+
 	$pathElements = null;
 	unset($pathElements);
 
