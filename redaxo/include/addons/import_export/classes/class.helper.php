@@ -5,24 +5,25 @@ class sly_A1_Helper
 	public static function getIteratedFilename($directory, $filename, $ext)
 	{
 		$directory = rtrim($directory, '/\\').'/';
-		
+
 		if (file_exists($directory.$filename.$ext)) {
 			$i = 1;
 			while (file_exists($directory.$filename.'_'.$i.$ext)) $i++;
 			$filename = $filename.'_'.$i;
 		}
-		
+
 		return $filename;
 	}
-	
+
 	public static function readFolder($dir)
 	{
-		$dir     = rtrim($dir, '/\\');
-		$entries = array_map('basename', glob($dir.'/{,.}*', GLOB_BRACE | GLOB_NOSORT));
+		$dir = rtrim($dir, '/\\');
+		$dir = new sly_Util_Directory($dir);
+		$entries = array_map('basename', $dir->listPlain(true, false));
 		sort($entries);
 		return $entries;
 	}
-	
+
 	public static function readFilteredFolder($dir, $suffix)
 	{
 		$folder   = self::readFolder($dir);
@@ -36,7 +37,7 @@ class sly_A1_Helper
 
 		return $filtered;
 	}
-	
+
 	public static function getDatabaseDumps($dir)
 	{
 		$files = array();
@@ -45,7 +46,7 @@ class sly_A1_Helper
 		$files = array_merge($files, self::readFilteredFolder($dir, '.sql.bz2'));
 		return $files;
 	}
-	
+
 	public static function getFileArchives($dir)
 	{
 		$files = array();
@@ -54,7 +55,7 @@ class sly_A1_Helper
 		$files = array_merge($files, self::readFilteredFolder($dir, '.tar.bz2'));
 		return $files;
 	}
-	
+
 	public static function getFileInfo($filename)
 	{
 		$result = array(
@@ -67,32 +68,32 @@ class sly_A1_Helper
 			'type'        => '',
 			'description' => ''
 		);
-		
+
 		if (!$result['exists']) {
 			return $result;
 		}
-		
+
 		$result['date'] = filectime($filename);
 		$result['size'] = filesize($filename);
-		
+
 		// Komprimierung erkennen
-		
+
 		if (endsWith($filename, '.gz'))  $result['compression'] = 'gz';
 		if (endsWith($filename, '.bz2')) $result['compression'] = 'bz2';
-		
+
 		// Komprimierung entfernen
-		
+
 		if (!empty($result['compression'])) {
 			$result['filename'] = substr($result['filename'], 0, -strlen($result['compression']) - 1);
 		}
-		
+
 		// Erweiterung finden
-		
+
 		$result['type']     = substr($result['filename'], strrpos($result['filename'], '.') + 1);
 		$result['filename'] = substr($result['filename'], 0, strrpos($result['filename'], '.'));
-		
+
 		// Entspricht der Dateiname einem bekannten Muster?
-		
+
 		if (preg_match('#^(sly_\d{8})_(.*?)$#i', $result['filename'], $matches)) {
 			$result['filename']    = $matches[1];
 			$result['description'] = str_replace('_', ' ', $matches[2]);
@@ -101,17 +102,17 @@ class sly_A1_Helper
 			$result['filename']    = $matches[1].'_'.$matches[3];
 			$result['description'] = str_replace('_', ' ', $matches[2]);
 		}
-		
+
 		return $result;
 	}
-	
+
 	protected static function matchFilename($filename)
 	{
-		
-		
+
+
 		return $filename;
 	}
-	
+
 	public static function readFolderFiles($dir)
 	{
 		$dir    = rtrim($dir, '/\\');
@@ -126,7 +127,7 @@ class sly_A1_Helper
 
 		return $files;
 	}
-	
+
 	public static function readSubFolders($dir, $ignoreDots = true)
 	{
 		$dir     = rtrim($dir, '/\\');
@@ -139,7 +140,7 @@ class sly_A1_Helper
 			if ($ignoreDots && ($file == '.' || $file == '..')) {
 				continue;
 			}
-			
+
 			if (is_dir($dir.'/'.$file)) {
 				$folders[] = $file;
 			}
