@@ -17,11 +17,8 @@ class sly_A1_Helper
 
 	public static function readFolder($dir)
 	{
-		$dir = rtrim($dir, '/\\');
 		$dir = new sly_Util_Directory($dir);
-		$entries = array_map('basename', $dir->listPlain(true, false));
-		sort($entries);
-		return $entries;
+		return $dir->listPlain(true, false, false, false, 'sort');
 	}
 
 	public static function readFilteredFolder($dir, $suffix)
