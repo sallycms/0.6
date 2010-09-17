@@ -45,7 +45,10 @@ class Thumbnail
 		$this->filters    = array();
 
 		if (!$this->isExternal) {
-			$this->fileName = $REX['MEDIAFOLDER'].'/'.$this->fileName;
+			$this->fileName = $REX['MEDIAFOLDER'].DIRECTORY_SEPARATOR.$this->fileName;
+			if(!file_exists($this->fileName)) {
+				$this->sendError();
+			}
 		}
 
 		$data = file_get_contents($this->fileName);
@@ -504,7 +507,7 @@ class Thumbnail
 				}
 			}
 
-			if (empty($imageFile) || !file_exists($imageFile)) {
+			if (empty($imageFile)) {
 				self::sendError();
 			}
 

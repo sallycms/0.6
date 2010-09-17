@@ -30,7 +30,7 @@ class OOArticleSlice
 	private $_updateuser;
 	private $_revision;
 
-	const CACHE_NS = 'slice';
+	const CACHE_NS = 'sly.slice';
 
 	/*
 	 * Constructor
