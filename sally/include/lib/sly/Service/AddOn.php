@@ -14,6 +14,8 @@
  */
 class sly_Service_AddOn extends sly_Service_AddOn_Base
 {
+	protected static $addonsLoaded = array();
+
 	public function __construct()
 	{
 		$this->data       = sly_Core::config()->get('ADDON');
@@ -32,20 +34,39 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 
 		$state = $this->extend('PRE', 'INSTALL', $addonName, true);
 
+		// check requirements
+		if($state) {
+			$this->loadConfig($addonName);
+			$requires = $this->getProperty($addonName, 'requires');
+			if(!empty($requires)) {
+				if(!is_array($requires)) $requires = sly_makeArray($requires);
+				foreach($requires as $requiredAddon) {
+					if(!$this->isAvailable($requiredAddon)) {
+						//TODO I18n
+						return 'The Addon '.$requiredAddon.' is required to install this Addon';
+					}
+				}
+			}
+		}
+
 		// Prüfen des Addon Ornders auf Schreibrechte,
 		// damit das Addon später wieder gelöscht werden kann
 
 		if ($state) {
 			if (is_readable($installFile)) {
-				$this->req($installFile, $addonName);
+				try {
+					$this->req($installFile, $addonName);
+				}catch (Exception $e) {
+					$installError = 'Es ist eine unerwartete Ausnahme während der Installation aufgetreten: '.$e->getMessage();
+				}
 
-				$hasError = !empty($REX['ADDON']['installmsg'][$addonName]);
+				$hasError = !empty($installError);
 
 				if ($hasError) {
 					$state = t('no_install', $addonName).'<br />';
 
 					if ($hasError) {
-						$state .= $REX['ADDON']['installmsg'][$addonName];
+						$state .= $installError;
 					}
 					else {
 						$state .= $this->I18N('no_reason');
@@ -417,12 +438,25 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	}
 
 	public function loadAddon($addonName) {
+		if(in_array($addonName, self::$addonsLoaded)) return true;
+
 		$this->loadConfig($addonName);
+
+		$requires = $this->getProperty($addonName, 'requires');
+		if(!empty($requires)) {
+			if(!is_array($requires)) $requires = sly_makeArray($requires);
+			foreach($requires as $requiredAddon) {
+				$this->loadAddon($requiredAddon);
+			}
+		}
+
 		$addonConfig = $this->baseFolder($addonName).'config.inc.php';
 
 		if (file_exists($addonConfig)) {
 			global $REX, $I18N;
 			require_once $addonConfig;
 		}
+
+		self::$addonsLoaded[] = $addonName;
 	}
 }

@@ -43,15 +43,19 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 
 		if ($state) {
 			if (is_readable($installFile)) {
-				$this->mentalGymnasticsInclude($installFile, $plugin);
-
-				$hasError = !empty($REX['ADDON']['installmsg'][$pluginName]);
+				try {
+					$this->mentalGymnasticsInclude($installFile, $plugin);
+				}catch (Exception $e) {
+					$installError = 'Es ist eine unerwartete Ausnahme während der Installation aufgetreten: '.$e->getMessage();
+				}
+				
+				$hasError = !empty($installError);
 
 				if ($hasError) {
 					$state = $this->I18N('no_install', $pluginName).'<br />';
 
 					if ($hasError) {
-						$state .= $state .= $REX['ADDON']['installmsg'][$pluginName];
+						$state .= $state .= $installError;
 					}
 					else {
 						$state .= $this->I18N('no_reason');
@@ -447,45 +451,39 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		$REX['ADDON'] = array();
 		$__TMP        = array('filename' => $filename, 'plugin' => $plugin);
 
-		try {
-			require $filename;
+		require $filename;
 
-			$plugin       = $__TMP['plugin'];
-			$pluginConfig = array();
+		$plugin       = $__TMP['plugin'];
+		$pluginConfig = array();
 
-			list($addonName, $pluginName) = $plugin;
+		list($addonName, $pluginName) = $plugin;
 
-			if (isset($ADDONSsic['plugins'][$addonName])) {
-				$pluginConfig = $ADDONSsic['plugins'][$addonName];
-			}
+		if (isset($ADDONSsic['plugins'][$addonName])) {
+			$pluginConfig = $ADDONSsic['plugins'][$addonName];
+		}
 
-			if (isset($REX['ADDON']) && is_array($REX['ADDON'])) {
-				foreach (array_keys($REX['ADDON']) as $key) {
-					// alle Eigenschaften, die das Plugin betreffen, verschieben
+		if (isset($REX['ADDON']) && is_array($REX['ADDON'])) {
+			foreach (array_keys($REX['ADDON']) as $key) {
+				// alle Eigenschaften, die das Plugin betreffen, verschieben
 
-					if (isset($REX['ADDON'][$key][$pluginName])) {
-						$pluginConfig[$key][$pluginName] = $REX['ADDON'][$key][$pluginName];
-						unset($REX['ADDON'][$key][$pluginName]);
+				if (isset($REX['ADDON'][$key][$pluginName])) {
+					$pluginConfig[$key][$pluginName] = $REX['ADDON'][$key][$pluginName];
+					unset($REX['ADDON'][$key][$pluginName]);
 
-						// ggf leeres Array löschen,
-						// damit es beim Merge später nicht ein Vorhandenes überschreibt
+					// ggf leeres Array löschen,
+					// damit es beim Merge später nicht ein Vorhandenes überschreibt
 
-						if (empty($REX['ADDON'][$key])) {
-							unset($REX['ADDON'][$key]);
-						}
+					if (empty($REX['ADDON'][$key])) {
+						unset($REX['ADDON'][$key]);
 					}
 				}
 			}
+		}
 
-			// Addoneinstellungen als Plugindaten speichern
-			$ADDONSsic['plugins'][$addonName] = $pluginConfig;
-			// Alle überbleibenden Keys die ggf. andere Addons beinflussen einfließen lassen
-			$REX['ADDON'] = array_merge_recursive($ADDONSsic, $REX['ADDON']);
-		}
-		catch (Exception $e) {
-			$REX['ADDON']['installmsg'][$pluginName] =
-				'Es ist eine unerwartete Ausnahme während der Installation aufgetreten: '.$e->getMessage();
-		}
+		// Addoneinstellungen als Plugindaten speichern
+		$ADDONSsic['plugins'][$addonName] = $pluginConfig;
+		// Alle überbleibenden Keys die ggf. andere Addons beinflussen einfließen lassen
+		$REX['ADDON'] = array_merge_recursive($ADDONSsic, $REX['ADDON']);
 	}
 
 }

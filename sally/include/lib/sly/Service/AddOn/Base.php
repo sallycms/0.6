@@ -22,13 +22,7 @@ abstract class sly_Service_AddOn_Base
 	{
 		global $REX, $I18N; // Nötig damit im Addon verfügbar
 
-		try {
-			require $filename;
-		}
-		catch (Exception $e) {
-			$REX['ADDON']['installmsg'][$addonName] =
-				'Es ist eine unerwartete Ausnahme während der Installation aufgetreten: '.$e->getMessage();
-		}
+		require $filename;
 	}
 
 	private function getConfPath($addonORplugin) {
