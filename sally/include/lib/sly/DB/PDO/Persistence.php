@@ -18,11 +18,13 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 	const LOG_UNKNOWN = -1;
 	const LOG_ERROR   = -2;
 
+	protected $driver;
 	private $connection = null;
 	private $statement  = null;
 	private $currentRow = null;
 
 	public function __construct($driver, $host, $login, $password, $database = null) {
+		$this->driver = $driver;
 		$this->connection = sly_DB_PDO_Connection::getInstance($driver, $host, $login, $password, $database);
 	}
 
@@ -44,7 +46,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 	}
 
 	public function insert($table, $values) {
-		$sql = $this->connection->getSQLbuilder(self::getPrefix().$table);
+		$sql = $this->getSQLbuilder(self::getPrefix().$table);
 		$sql->insert($values);
 		$this->query($sql->to_s(), $sql->bind_values());
 
@@ -52,7 +54,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 	}
 
 	public function update($table, $newValues, $where = null) {
-		$sql = $this->connection->getSQLbuilder(self::getPrefix().$table);
+		$sql = $this->getSQLbuilder(self::getPrefix().$table);
 		$sql->update($newValues);
 		$sql->where($where);
 		$this->query($sql->to_s(), $sql->bind_values());
@@ -69,7 +71,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 	 * @return int            affected rows
 	 */
 	public function select($table, $select = '*', $where = null, $group = null, $order = null, $offset = null, $limit = null, $having = null, $joins = null) {
-		$sql = $this->connection->getSQLbuilder(self::getPrefix().$table);
+		$sql = $this->getSQLbuilder(self::getPrefix().$table);
 		$sql->select($select);
 
 		if ($where) $sql->where($where);
@@ -91,7 +93,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 	 * @return int            affected rows
 	 */
 	public function delete($table, $where = null) {
-		$sql = $this->connection->getSQLbuilder(self::getPrefix().$table);
+		$sql = $this->getSQLbuilder(self::getPrefix().$table);
 		$sql->delete($where);
 		$this->query($sql->to_s(), $sql->bind_values());
 
@@ -99,7 +101,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 	}
 
 	public function listTables($find = null) {
-		$sql = $this->connection->getSQLbuilder('');
+		$sql = $this->getSQLbuilder('');
 		$sql->list_tables();
 		$this->query($sql->to_s(), $sql->bind_values());
 
@@ -304,6 +306,12 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 	protected function getErrno() {
 		return $this->statement ? $this->statement->errorCode() : -1;
 	}
+
+	protected function getSQLbuilder($table) {
+		$classname = 'sly_DB_PDO_SQLBuilder_'.strtoupper($this->driver);
+		return new $classname($this->connection->getPDO(), $table);
+	}
+
 
 	// =========================================================================
 	// ITERATOR-METHODEN

@@ -53,11 +53,6 @@ class sly_DB_PDO_Connection {
 		return self::$instances[$dsn];
 	}
 
-	public function getSQLbuilder($table) {
-		$classname = 'sly_DB_PDO_SQLBuilder_'.strtoupper($this->driver);
-		return new $classname($this->pdo, $table);
-	}
-
 	/**
 	 *
 	 * @return PDO instance
