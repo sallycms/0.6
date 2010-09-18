@@ -415,4 +415,14 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	{
 		return false;
 	}
+
+	public function loadAddon($addonName) {
+		$this->loadConfig($addonName);
+		$addonConfig = $this->baseFolder($addonName).'config.inc.php';
+
+		if (file_exists($addonConfig)) {
+			global $REX, $I18N;
+			require_once $addonConfig;
+		}
+	}
 }

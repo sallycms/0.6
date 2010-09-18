@@ -12,12 +12,7 @@ $addonService  = sly_Service_Factory::getService('AddOn');
 $pluginService = sly_Service_Factory::getService('Plugin');
 
 foreach ($addonService->getAvailableAddons() as $addonName) {
-	$addonService->loadConfig($addonName);
-	$addonConfig = $addonService->baseFolder($addonName).'config.inc.php';
-
-	if (file_exists($addonConfig)) {
-		require_once $addonConfig;
-	}
+	$addonService->loadAddon($addonName);
 
 	foreach ($pluginService->getAvailablePlugins($addonName) as $pluginName) {
 		$pluginService->loadConfig(array($addonName, $pluginName));
