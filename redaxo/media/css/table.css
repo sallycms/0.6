@@ -9,7 +9,7 @@ table.rex-table {
 		+border-top-radius(4px);
 		text-align: left;
 		background-color: $drk_grey;
-		color: transparent;
+		color: #4D4646; /* 'transparant' would be CSS3 and fail in IE */
 		border: 1px solid $drk_grey;
 		height: 5px;
 	}
