@@ -70,6 +70,14 @@ $conf = sly_Core::config();
 			}
 		}
 
+		if (count($addons->getRegisteredAddons()) == 0) {
+			?>
+			<tr>
+				<td class="rex-col-a center" colspan="5"><?= t('addon_empty_list') ?></td>
+			</tr>
+			<?php
+		}
+
 		?>
 		</tbody>
 	</table>
