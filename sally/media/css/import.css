@@ -21,5 +21,3 @@
 
 @include 'addons/metainfo.css';
 @include 'addons/image_resize.css';
-
-@include 'legacy/paginate.css';
