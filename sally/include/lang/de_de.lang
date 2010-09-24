@@ -38,8 +38,8 @@ navigation_basis: Basis Navigation
 navigation_addons: AddOns
 
 # sally/include/classes/class.login.inc.php
-login_name :  Benutzername
-password :  Passwort
+login_name: Benutzername
+password: Passwort
 new_password: Neues Passwort
 login_error: "Fehler bei der Anmeldung. Bitte vor dem nächsten Versuch {0} Sekunden warten."
 login_session_expired: Session beendet.
@@ -48,40 +48,35 @@ login_welcome: Bitte anmelden.
 login_logged_out: Abgemeldet.
 
 # sally/include/layout/top.php
-logged_out :  nicht angemeldet
-logged_in_as :  Angemeldet als
+logged_out: nicht angemeldet
+logged_in_as: Angemeldet als
 
 # sally/include/classes/class.article.inc.php
-add_block :  Block hinzufügen
-edit :  Editieren
-delete :  Löschen
+add_block: Block hinzufügen
+edit: Editieren
+delete: Löschen
 no_editing_rights: Keine Editiererlaubnis
-no_article_available :  Kein Artikel vorhanden
-module_doesnt_exist:  Dieses Modul existiert nicht!
-dont_delete_block :  Block nicht löschen
-delete_block :  Block sicher löschen
-submit :  abschicken
+no_article_available: Kein Artikel vorhanden
+module_doesnt_exist: Dieses Modul existiert nicht!
+dont_delete_block: Block nicht löschen
+delete_block: Block sicher löschen
+submit: abschicken
 update_block: Block übernehmen
 save_block: Block speichern
 edit_block: Block bearbeiten
 
-# sally/include/classes/class.form.inc.php
-submit_data :  Daten absenden
-file_doesnt_exist :  Die Datei existiert nicht.
-choose_another_one :  Bitte wählen sie eine andere.
-
 # sally/include/classes/class.mail_decode.inc.php
-download :  Download
-clipboard :  Clipboard
+download: Download
+clipboard: Clipboard
 
 # sally/include/functions/function_rex_generate.inc.php
 article_moved: Artikel wurde verschoben!
 article_deleted: Artikel wurde gelöscht!
 could_not_move_article: Artikel konnte nicht verschoben werden.
-article_could_not_be_generated :  Artikel konnte nicht erstellt werden.
-check_rights_in_directory :  Bitte überprüfen Sie die Rechte im Ordner
-category_deleted :  Kategorie wurde gelöscht!
-category_doesnt_exist :  Kategorie existiert nicht!
+article_could_not_be_generated: Artikel konnte nicht erstellt werden.
+check_rights_in_directory: Bitte überprüfen Sie die Rechte im Ordner
+category_deleted: Kategorie wurde gelöscht!
+category_doesnt_exist: Kategorie existiert nicht!
 cant_delete_sitestartarticle: Der Webseiten-Startartikel kann nicht gelöscht werden!
 cant_delete_notfoundarticle: Der "Nicht-gefunden" Artikel kann nicht gelöscht werden!
 
@@ -377,28 +372,6 @@ lmap_categories: Kategorien
 lmap_articles: Artikel
 lmap_has_no_template: hat kein Template
 
-# sally\include\classes\class.rex_list.inc.php
-list_first: erste Seite
-list_previous: vorherige Seite
-list_add: Neuen Eintrag einfügen
-list_next: nächste Seite
-list_last: letzte Seite
-list_rows_found: "{0} Einträge gefunden"
-list_no_rows: Keine Einträge vorhanden
-
-# sally\include\classes\class.rex_form.inc.php
-form_save: Speichern
-form_apply: Übernehmen
-form_delete: Löschen
-form_reset: Zurücksetzen
-form_abort: Abbrechen
-form_saved: Eingaben wurden gespeichert!
-form_save_error: Fehler beim speichern!
-form_applied: Eingaben wurden übernommen!
-form_deleted: Eingaben wurden gelöscht!
-form_delete_error: Fehler beim löschen!
-form_resetted: Eingaben wurden verworfen!
-
 # sally\include\classes\variables\class.rex_var_media.inc.php
 var_media_open: Medium auswählen
 var_media_new: Neues Medium hinzufügen
@@ -406,7 +379,7 @@ var_media_remove: Ausgewähltes Medium löschen
 var_medialist_move_top: Ausgewähltes Medium an den Anfang verschieben
 var_medialist_move_up: Ausgewähltes Medium nach oben verschieben
 var_medialist_move_down: Ausgewähltes Medium nach unten verschieben
-var_medialist_move_bottom : Ausgewähltes Medium an das Ende verschieben
+var_medialist_move_bottom: Ausgewähltes Medium an das Ende verschieben
 
 # sally\include\classes\variables\class.rex_var_link.inc.php
 var_link_open: Link auswählen
@@ -415,7 +388,7 @@ var_link_remove: Ausgewählten Link löschen
 var_linklist_move_top: Ausgewählten Link an den Anfang verschieben
 var_linklist_move_up: Ausgewählten Link nach oben verschieben
 var_linklist_move_down: Ausgewählten Link nach unten verschieben
-var_linklist_move_bottom : Ausgewählten Link an das Ende verschieben
+var_linklist_move_bottom: Ausgewählten Link an das Ende verschieben
 
 available: verfügbar
 unavailable: nicht verfügbar
