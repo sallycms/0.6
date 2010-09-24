@@ -24,7 +24,7 @@ $this->title('Setup: Sprachauswahl');
 		$i18n  = rex_create_lang($l, $langpath, false);
 		$label = $i18n->msg('lang');
 
-		print '<li><a href="index.php?func=license&amp;lang='.urlencode($l).'">'.$label.'</a></li>';
+		print '<li><a href="index.php?func=license&amp;lang='.urlencode($l).'">'.sly_html($label).'</a></li>';
 	}
 
 	unset($i18n);
@@ -32,4 +32,3 @@ $this->title('Setup: Sprachauswahl');
 	?>
 	</ul>
 </div>
-

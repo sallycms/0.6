@@ -8,29 +8,29 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$this->title(t('setup_step4'));
+$this->title(t('setup_createuser_title'));
 
 if (!empty($this->warning)) print rex_warning($this->warning);
 
-$form = new sly_Form('index.php', 'POST', t('setup_045'));
+$form = new sly_Form('index.php', 'POST', t('setup_createuser_header'));
 $this->printHiddens('createuser', $form);
 
 // fields
 
-$user = new sly_Form_Input_Text('admin_user', t('setup_046'), $adminUser);
+$user = new sly_Form_Input_Text('admin_user', t('setup_createuser_login'), $adminUser);
 
 $form->add($user);
-$form->add(new sly_Form_Input_Password('admin_pass', t('setup_047')));
+$form->add(new sly_Form_Input_Password('admin_pass', t('setup_createuser_password')));
 
 if ($usersExist) {
-	$form->add(new sly_Form_Input_Checkbox('no_admin', '', '1', t('setup_048')));
-	$user->setHelpText('Geben Sie einen bereits bestehenden Benutzernamen ein, um dessen Passwort zu überschreiben.');
+	$form->add(new sly_Form_Input_Checkbox('no_admin', '', '1', t('setup_createuser_no_admin')));
+	$user->setHelpText(t('setup_createuser_no_admin_notice'));
 }
 
 // button config
 
 $form->setResetButton(null);
-$form->getSubmitButton()->setAttribute('value', t('setup_049'));
+$form->getSubmitButton()->setAttribute('value', t('setup_createuser_continue'));
 
 // render it!
 

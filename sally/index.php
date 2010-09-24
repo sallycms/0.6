@@ -56,7 +56,7 @@ if (!SLY_IS_TESTING && $config->get('SETUP')) {
 
 	$I18N = rex_create_lang($REX['LANG']);
 
-	$REX['PAGES']['setup'] = array($I18N->msg('setup'), 0, 1);
+	$REX['PAGES']['setup'] = array(t('setup'), 0, 1);
 	$REX['PAGE']           = 'setup';
 	$_REQUEST['page']      = 'setup';
 }
@@ -88,7 +88,7 @@ else {
 		// Userspezifische Sprache einstellen, falls gleicher Zeichensatz
 		$lang = $REX['LOGIN']->getLanguage();
 
-		if ($I18N->msg('htmlcharset') == rex_create_lang($lang, '', false)->msg('htmlcharset')) {
+		if (t('htmlcharset') == rex_create_lang($lang, '', false)->msg('htmlcharset')) {
 			$I18N = rex_create_lang($lang);
 		}
 		else {
@@ -127,27 +127,27 @@ require_once $REX['INCLUDE_PATH'].'/addons.inc.php';
 
 if ($REX['USER']) {
 	// Core-Seiten initialisieren
-	$REX['PAGES']['profile'] = array($I18N->msg('profile'), 0, false);
-	$REX['PAGES']['credits'] = array($I18N->msg('credits'), 0, false);
+	$REX['PAGES']['profile'] = array(t('profile'), 0, false);
+	$REX['PAGES']['credits'] = array(t('credits'), 0, false);
 
 	if ($REX['USER']->isAdmin() || $REX['USER']->hasStructurePerm()) {
-		$REX['PAGES']['structure'] = array($I18N->msg('structure'), 0, false);
-		$REX['PAGES']['mediapool'] = array($I18N->msg('mediapool'), 0, true, 'NAVI' => array('href' =>'#', 'onclick' => 'openMediaPool()', 'class' => ' rex-popup'));
-		$REX['PAGES']['linkmap']   = array($I18N->msg('linkmap'), 0, true);
-		$REX['PAGES']['content']   = array($I18N->msg('content'), 0, false);
+		$REX['PAGES']['structure'] = array(t('structure'), 0, false);
+		$REX['PAGES']['mediapool'] = array(t('mediapool'), 0, true, 'NAVI' => array('href' =>'#', 'onclick' => 'openMediaPool()', 'class' => ' rex-popup'));
+		$REX['PAGES']['linkmap']   = array(t('linkmap'), 0, true);
+		$REX['PAGES']['content']   = array(t('content'), 0, false);
 	}
 	elseif ($REX['USER']->hasPerm('mediapool[]')) {
-		$REX['PAGES']['mediapool'] = array($I18N->msg('mediapool'), 0, true, 'NAVI' => array('href' =>'#', 'onclick' => 'openMediaPool()', 'class' => ' rex-popup'));
+		$REX['PAGES']['mediapool'] = array(t('mediapool'), 0, true, 'NAVI' => array('href' =>'#', 'onclick' => 'openMediaPool()', 'class' => ' rex-popup'));
 	}
 
 	if ($REX['USER']->isAdmin()) {
-	  $REX['PAGES']['user']     = array($I18N->msg('user'), 0, false);
-	  $REX['PAGES']['addon']    = array($I18N->msg('addons'), 0, false);
-	  $REX['PAGES']['specials'] = array($I18N->msg('specials'), 0, false, 'SUBPAGES' => array(array('', $I18N->msg('main_preferences')), array('languages', $I18N->msg('languages'))));
+	  $REX['PAGES']['user']     = array(t('user'), 0, false);
+	  $REX['PAGES']['addon']    = array(t('addons'), 0, false);
+	  $REX['PAGES']['specials'] = array(t('specials'), 0, false, 'SUBPAGES' => array(array('', t('main_preferences')), array('languages', t('languages'))));
 	}
 
 	// AddOn-Seiten initialisieren
-	$addonService  = sly_Service_Factory::getService('AddOn');
+	$addonService = sly_Service_Factory::getService('AddOn');
 
 	foreach ($addonService->getAvailableAddons() as $addon) {
 		$link = '';
@@ -172,10 +172,12 @@ if ($REX['USER']) {
 	if (!empty($rex_user_login)) {
 		// if relogin, forward to previous page
 		$referer = sly_post('referer', 'string', false);
+
 		if ($referer && !sly_startsWith(basename($referer), 'index.php?page=login')) {
 			$url = $referer;
 			$msg = 'Sie werden zu Ihrer <a href="'.$referer.'">vorherigen Seite</a> weitergeleitet.';
-		}else {
+		}
+		else {
 			$url = 'index.php?page='.urlencode($REX['PAGE']);
 			$msg = 'Sie werden zur <a href="'.$url.'">Startseite</a> weitergeleitet.';
 		}

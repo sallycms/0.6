@@ -152,6 +152,12 @@ class sly_Core {
 		return defined('IS_SALLY_BACKEND') && IS_SALLY_BACKEND == true;
 	}
 
+	public static function getI18N() {
+		global $I18N;
+		if (!isset($I18N)) $I18N = rex_create_lang();
+		return $I18N;
+	}
+
 	/**
 	 * Get persistent registry instance
 	 *

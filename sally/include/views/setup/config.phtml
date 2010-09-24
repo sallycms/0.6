@@ -8,23 +8,23 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$this->title($I18N->msg('setup_step4'));
+$this->title(t('setup_config_title'));
 
 if (!empty($this->warning)) print rex_warning($this->warning);
 
-$form = new sly_Form('index.php', 'POST', t('setup_0201'), '', 'rex-form-setup-step-4');
+$form = new sly_Form('index.php', 'POST', t('setup_config_header'), '', 'rex-form-setup-step-4');
 $this->printHiddens('config', $form);
 
 // fields
 
-$form->add(new sly_Form_Input_Text('server', t('setup_024'), $server));
-$form->add(new sly_Form_Input_Text('servername', t('setup_024'), $serverName));
-$form->add(new sly_Form_Input_Text('error_email', t('setup_026'), $errorEMail));
+$form->add(new sly_Form_Input_Text('server', t('setup_config_server'), $server));
+$form->add(new sly_Form_Input_Text('servername', t('setup_config_servername'), $serverName));
+$form->add(new sly_Form_Input_Text('error_email', t('setup_config_error_email'), $errorEMail));
 
 // button config
 
 $form->setResetButton(null);
-$form->getSubmitButton()->setAttribute('value', t('setup_049'));
+$form->getSubmitButton()->setAttribute('value', t('setup_config_continue'));
 
 // render it!
 

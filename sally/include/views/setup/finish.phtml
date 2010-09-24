@@ -8,15 +8,12 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-global $I18N;
-
-$this->title($I18N->msg('setup_step5'));
-
-print $I18N->msg('setup_051', '<h2 class="rex-hl2">', '</h2>');
-print '<div class="rex-area-content">';
-print $I18N->msg('setup_052', '<h3 class="rex-hl3">', '</h3>', ' class="rex-ul1"', '<a href="index.php">', '</a>');
-print '<p class="rex-tx1">'.$I18N->msg('setup_053').'</p>';
-print '</div>';
-
+$this->title(t('setup_finish_title'));
 
 ?>
+<h2 class="rex-hl2"><?= t('setup_finish_header') ?></h2>
+<div class="rex-area-content">
+	<h3 class="rex-hl3"><?= t('setup_finish_done') ?></h3>
+	<p class="rex-tx1"><?= t('setup_finish_login') ?></p>
+	<p class="rex-tx1"><?= nl2br(t('setup_finish_signature')) ?></p>
+</div>

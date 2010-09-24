@@ -19,6 +19,7 @@ special_chars_rewrite: ae|oe|ue|Ae|Oe|Ue|ss|und
 
 # sally/index.php
 start_article_not_selected: Kein Startartikel ausgewählt
+redirect_previous_page: "Sie werden zu Ihrer <a href=\"{0}\">vorherigen Seite</a> weitergeleitet."
 
 # sally/sindex.php
 specials: System
@@ -154,57 +155,10 @@ content_types: Spalten
 content_type: Spalte
 option: optional
 
-# sally\include\pages\module.inc.php
-modules_not_found: Es wurden keine Module gefunden
-module_cannot_be_deleted: "Modul '{0}' kann nicht gelöscht werden, da es noch von folgenden Artikeln genutzt wird:"
-module_deleted: Modul wurde gelöscht!
-module_added: Modul wurde hinzugefügt
-module_updated: Modul wurde aktualisiert
-module_caption: Liste der angelegten Module
-module_summary: Auflistung aller angelegten Module
-articel_updated: Artikel wurden aktualisiert
-create_module: Neues Modul erstellen
 input: Eingabe
 output: Ausgabe
-module_name: Name
-accessible: Barrierefrei
-save_module_and_quit: Modul speichern
-save_module_and_continue: Modul übernehmen
-module_description: Modulbezeichnung
-module_functions: Funktionen
-delete_module: Modul löschen
-module_edit: Modul editieren
-action_taken: Aktion wurde übernommen
-action_deleted_from_modul: Aktion wurde aus dem Modul gelöscht!
 action: Aktion
 actions: Aktionen
-action_cannot_be_deleted: "Aktion '{0}' kann nicht gelöscht werden, da es noch von folgenden Modulen genutzt wird:"
-action_deleted: Aktion wurde gelöscht
-action_added: Aktion wurde hinzugefügt
-action_updated: Aktion wurde aktualisiert
-action_create: Aktion erstellen
-action_name: Aktionsname
-save_action_and_quit: Aktion speichern
-save_action_and_continue: Aktion übernehmen
-action_functions: Funktionen
-action_event_edit: Beim Bearbeiten des Moduls
-action_event_delete: Beim Löschen des Moduls
-action_event_add: Beim Hinzufügen des Moduls
-action_event: zugewiesene(s) Event(s)
-action_mode_preview: Wird vor dem Anzeigen des Moduls ausgeführt
-action_mode_presave: Wird vor dem Speichern des Moduls ausgeführt
-action_mode_postsave: Wird nach dem Speichern des Moduls ausgeführt
-action_time: Zeitpunkt
-action_time_pre: Vor dem Speichern des Blocks in die Datenbank
-action_time_post: Nach dem Speichern des Blocks in die Datenbank
-action_delete: Aktion löschen
-action_edit: Aktion bearbeiten
-action_add: Aktion hinzufügen
-action_hint: Alle Werte sind in $REX_ACTION verfügbar
-action_caption: Liste der angelegten Aktionen
-action_summary: Auflistung aller angelegten Aktionen
-actions_added_caption: Liste der zugewiesenen Aktionen
-actions_added_summary: Auflistung aller zugewiesenen Aktionen
 
 # sally\include\pages\structure.inc.php
 title_structure: Strukturverwaltung
@@ -246,31 +200,6 @@ structure_categories_summary: "Auflistung aller Unterkategorien der Kategorie '{
 structure_categories_caption: "Liste der Unterkategorien der Kategorie '{0}'"
 structure_articles_summary: "Auflistung aller Artikel der Kategorie '{0}'"
 structure_articles_caption: "Liste der Artikel der Kategorie '{0}'"
-
-# sally\include\pages\template.inc.php
-templates_not_found: Es wurden keine Templates gefunden
-title_templates: Templates
-cant_delete_template_because_its_in_use: "Template '{0}' kann nicht gelöscht werden, da es noch von Artikeln genutzt wird oder das Default Template ist."
-template_deleted: Template wurde gelöscht.
-template_added: Template wurde hinzugefügt
-template_updated: Template wurde aktualisiert
-edit_template: Template editieren
-create_template: Neues Template erstellen
-template_name: Name
-checkbox_template_active: Aktiv
-checkbox_template_active_info: "[Erscheint bei den Artikeln als Auswahl]"
-save_template_and_quit: Template speichern
-save_template_and_continue: Template übernehmen
-header_template: Template
-header_template_id: Id
-header_template_description: Templatebezeichnung
-header_template_active: Aktiv
-header_template_functions: Funktionen
-delete_template: Template löschen
-header_template_caption: Liste der verfügbaren Templates
-header_template_summary: Auflistung aller Templates
-modules_available: Nur folgende Module sind verfügbar
-modules_available_all: Alle Module verfügbar
 
 # sally\include\functions\function_rex_category.inc.php
 article: Artikel
@@ -363,177 +292,10 @@ specials_caching_strategy: Cache Strategie
 specials_start_article: Startseite
 specials_not_found_article: Artikel bei fehlender Seite
 
-# sally\include\pages\medienpool.inc.php
-pool_name: Medienpool
-pool_kats: Kategorien
-pool_kats_no: Keine Kategorie
-pool_search: suchen
-pool_media: Medienpool
-pool_file_list: Medien
-pool_file_insert: Medium hinzufügen
-pool_cat_list: Medienkategorien verwalten
-pool_select_cat: Medienkategorie auswählen
-pool_sync_files: Dateien Synchronisieren
-pool_sync_button: Synchronisieren
-pool_sync_title: Dateien Synchronisieren
-pool_sync_affected_files: Betroffene Dateien
-pool_sync_no_diffs: keine Unterschiede festgestellt!
-pool_sync_files_synced: Dateien wurden synchronisiert.
-pool_file_not_found: Datei wurde nicht gefunden
-pool_file_upload_error: Fehler beim Upload der Datei
-pool_file_upload_errortype: "Diese Datei kann nicht zum Austausch benutzt werden, da sie von einem anderen Dateityp ist"
-pool_file_title: Titel
-pool_file_file: Datei
-pool_file_infos_updated: Dateiinformationen wurden aktualisiert!
-pool_file_upload: Hinzufügen
-pool_file_upload_get: Hinzufügen und übernehmen
-pool_file_filter: "Ansicht beschränkt auf Dateien vom Typ {0}!"
-pool_upload_get: Speichern und übernehmen
-pool_kat_saved: "Medienkategorie {0} wurde angelegt"
-pool_kat_updated: "Medienkategorie {0} wurde aktualisiert"
-pool_kat_deleted: Medienkategorie wurde gelöscht
-pool_kat_create_label: Neue Medienkategorie anlegen
-pool_kat_create: Medienkategorie hinzufügen
-pool_kat_edit: Medienkategorie bearbeiten
-pool_kat_id: ID
-pool_kat_not_deleted: "Kategorie kann nicht gelöscht werden, da sich noch Dateien in dieser Kategorie befinden!"
-pool_kat_name: Name
-pool_kat_function: Funktion
-pool_kat_add: Erstellen
-pool_kat_update: Aktualisieren
-pool_kat_edit: Editieren
-pool_kat_delete: Löschen
-pool_kat_hide: Thumbnail
-pool_kat_path: Pfad
-pool_kat_caption: Liste der Medienkategorien
-pool_kat_summary: Auflistung der Medienkategorien
-pool_file_detail: Medien: Detailansicht
-pool_file_is_resized: File wurde resized
-pool_filename: Dateiname
-pool_file_exchange: Datei austauschen
-pool_file_update: Aktualisieren
-pool_file_delete: Löschen
-pool_file_edit: Medium bearbeiten
-pool_file_details: Detailinformationen
-pool_file_thumbnail: Thumbnail
-pool_file_info: Dateiinfo
-pool_file_description: Beschreibung
-pool_file_functions: Funktionen
-pool_file_noshow: Keine Anzeige möglich
-pool_file_notitle: Kein Titel eingegeben
-pool_file_nodescription: Keine Beschreibung eingegeben
-pool_file_edit: Medium bearbeiten
-pool_file_caption: "Liste der Medien der Medienkategorie {0}"
-pool_file_summary: "Auflistung der Medien der Medienkategorie {0}"
-pool_file_ins: Einfügen
-pool_file_category: Medienkategorie
-pool_file_description: Beschreibung
-pool_file_copyright: Copyright
-pool_file_deleted: Datei wurde gelöscht
-pool_file_delete_error_1: "Die Datei {0} kann nicht gelöscht werden"
-pool_file_delete_error_2: Sie wird derzeit von folgenden Artikeln verwendet
-pool_file_changed: Die Datei wurde ausgetauscht!
-pool_file_added: Datei wurde hinzugefügt.
-pool_file_movefailed: Dateiupload ist fehlgeschlagen.
-pool_img_width: Breite
-pool_img_height: Höhe
-pool_import_list: Media-Import
-pool_import_help: Quell-Ordner für Medien Import (Ordner im Verzeichnis /files)
-pool_import_target_info: Ziel-Kategorie für den Import auswählen
-pool_selectedmedia: Ausgewählte Medien:
-pool_delete_selectedmedia: löschen
-pool_changecat_selectedmedia: in Kategorie verschieben
-pool_selectedmedia_error: Keine Medien ausgewählt
-pool_selectedmedia_moved: Selektierte Medien sind verschoben worden
-pool_select_all: Alle
-pool_nomediafound: Keine Dateien in dieser Medienkategorie gefunden
-pool_image_get: Bild einfügen
-pool_link_get: Link einsetzen
-pool_file_get: Datei übernehmen
-pool_last_update: Letztes Update
-pool_created: Erstellt am
-pool_select_all: Alle markieren
-pool_file_not_writable: Datei ist nicht beschreibbar!
-pool_max_uploadsize: Maximale Uploadgröße
-pool_max_uploadtime: Maximale Uploadzeit
-pool_upload_disabled: Deaktiviert!
-pool_upload: Dateiupload
-
-# sally\include\pages\medienpool.inc.php\setup.inc.php
-recommended: empfohlen
 setup: Setup
 setup_text: Hier können Sie das Setup erneut starten. Dies sollten Sie nur im Notfall machen. Unter normalen Umständen ist es nicht nötig.
 setup_error1: "Setup aktiviert. Bitte klicken Sie auf auf {0}>weiter<{1} und führen das Setup aus."
 setup_error2: "Leider konnte die master.inc.php nicht beschrieben werden. Bitte tragen Sie dort in der SETUP: true ein"
-setup_005: "{0}Willkommen beim Setup von SallyCMS.{1}"
-setup_005_1: "{0}Was passiert jetzt:{1}<ul{2}><li>Die Dateirechte werden überprüft</li><li>Der Datenbankzugang wird überprüft und in die master.inc.php eingetragen</li><li>Die Datenbank wird (neu) eingerichtet.</li><li>Ein Adminzugang wird eingerichtet</li></ul>"
-setup_006: Setup starten und Lizenzbestimmungen akzeptieren
-setup_step1: Setup: Schritt 1 von 5
-setup_010: "Die PHP-Version des Servers ist zu alt ({0}), bitte aktualisieren Sie auf eine höhere Version (mindestens 5.1.0, neueste empfohlen)"
-setup_010_1: "Die benötigte PHP-Extension <strong>{0}</strong> wurde nicht gefunden!"
-setup_011: "{0}Fehler{1} | Benötigte System-Addons fehlen, oder haben einen Fehler verursacht."
-setup_012: "{0}Fehler{1} | Das Verzeichnis {2} ist weder beschreibar noch ausführbar!"
-setup_014: "{0}Fehler{1} | Die Datei {2} ist nicht beschreibbar!"
-setup_015: "{0}Fehler{1} | Die aufgelisteten Dateien und/oder Verzeichnisse existieren nicht oder es besteht keine Schreibberechtigung. {2} Bitte korrigieren Sie dies und starten das Setup erneut."
-setup_015_1: Die aufgelisteten Dateien und/oder Verzeichnisse existieren nicht oder es besteht keine Schreibberechtigung.
-setup_016: Systemvoraussetzungen
-setup_016_1: "<ul{0}><li>PHP-Version {1}ok{2}</li><li>Ordnerrechte {1}ok{2}</li></ul>"
-setup_017: Weiter mit Schritt 2
-setup_018: Bitte beheben Sie die aufgelisteten Fehler und starten Sie das Setup erneut.
-setup_019: Schritt 1 erneut durchführen
-setup_headline1: PHP-Versionscheck | Rechteüberprüfung
-setup_step2: Setup: Schritt 2 von 5
-setup_020: "{0}include/master.inc.php{1} konnte nicht geschrieben werden."
-setup_021: Es konnte keine Verbindung zur Datenbank hergestellt werden!
-setup_022: Die angegebene Datenbank konnte nicht geöffnet werden!
-setup_023: Schreiben der 'include/master.inc.php'
-setup_024: "Serverdomain"
-setup_025: "Serverbezeichnung"
-setup_026: "Fehler E-Mailadresse"
-setup_027: Name der Datenbank
-setup_028: Passwort
-setup_029: Weiter zu Schritt 3
-setup_0201: Allgemeine SallyCMS-Einstellungen
-setup_0202: Datenbankinformationen
-setup_step3: Setup: Schritt 3 von 5
-setup_030_headline: Datenbank anlegen
-setup_030: Folgender Fehler tauchte beim Update auf.
-setup_031: "Tabelle {0} wurde nicht gefunden!"
-setup_032: Die Tabellen konnten nicht erstellt werden.
-setup_033: Bitte richten Sie die Datenbank erneut ein.
-setup_034: Datenbank einrichten
-setup_035: Datenbank einrichten und alte überschreiben falls vorhanden
-setup_036: "Datenbank existiert schon [Weiter ohne Datenbankimport]"
-setup_037: "Vorhandenen Export einspielen [Demo einspielen]:"
-setup_03701: Bitte wählen sie einen Export aus!
-setup_03702: Export-Dateien konnten nicht gefunden werden!
-setup_03703: Import/Export AddOn wurde nicht gefunden!
-setup_038: "Datenbank aktualisieren von SallyCMS 4.0/4.1 [vorher Sichern!]"
-setup_039: Weiter zu Schritt 4
-setup_step4: Setup: Schritt 4 von 5
-setup_040: Bitte geben Sie das Administratorlogin ein!
-setup_041: Bitte geben Sie das Administratorpasswort ein!
-setup_042: Dieses Login existiert schon!
-setup_043: Der Administrator konnte nicht angelegt werden.
-setup_044: Es existiert noch kein User. Bitte legen Sie einen an.
-setup_045: Administrator anlegen
-setup_046: Login
-setup_047: Passwort
-setup_048: Keinen User anlegen
-setup_049: Weiter zu Schritt 5
-setup_step5: Setup: Schritt 5 von 5
-setup_050: Leider konnte die master.inc.php nicht beschrieben werden. Bitte ändern Sie die Datei manuell über FTP.
-setup_051: "{0}Herzlichen Glückwunsch zu Ihrem SallyCMS!{1}"
-setup_052: "{0}Bitte noch dieses beachten:{1}<ul{2}><li>1. Mit dem {3}eingerichtetem Zugang einloggen{4}</li><li>2. Importieren einer Demo über [wenn eingeloggt]: Import/Export und dort jeweils die Datenbank und Files installieren.</li></ul>"
-setup_053: Viel Spaß und Erfolg<br />Das SallyCMS-Team
-database_imported: Datenbank wurde importiert.
-entry_count: "{0} Einträge"
-setup_encryption: Passwortverschlüsselung
-setup_no_encryption: keine Verschlüsselung
-setup_psw_encryption: mit Verschlüsselung (sha1)
-setup_security_msg: Der Ordner sally/include ist unsicher. Bitte schützen Sie diesen Ordner und starten das Setup erneut!
-setup_no_js_security_msg: "Prüfen sie, ob Dateien aus dem Ordner sally/include direkt aufrufbar sind! Dies darf aus Sicherheitsgründen nicht möglich sein!"
-setup_create_db: anlegen
 
 # sally\include\pages\addon.inc.php
 addon: AddOn
@@ -665,25 +427,4 @@ allowed: erlaubt
 disallowed: verboten
 any: beliebig
 none: nichts
-
-php_version: PHP-Version
-mysql_version: MySQL-Version
-php_time_limit: PHP Laufzeitlimit
-php_mem_limit: PHP Speicherlimit
-php_pseudo: PHP Pseudosicherheit (open_basedir, safe_mode)
-php_gd: PHP::gd
-php_xmlreader: PHP::xmlreader
-php_xmlwriter: PHP::xmlwriter
-php_curl: PHP::curl
-php_short: PHP Short Open Tags
-php_globals: PHP Register Globals
-php_magic: PHP Magic Quotes
-php_urlopening: PHP URL opening
-apache_modrewrite: Apache ModRewrite
-no_mysql_mysqli: weder MySQL noch MySQLi
-available: verfügbar
-not_available: nicht verfügbar
-timeout: Timeout
-exec_time: "{0}s, änderbar"
-memory: "{0}B, änderbar"
-safemode_openbasedir: safe_mode und open_basedir
+recommended: empfohlen

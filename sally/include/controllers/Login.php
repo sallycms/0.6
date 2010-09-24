@@ -8,32 +8,30 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Login extends sly_Controller_Sally
-{
+class sly_Controller_Login extends sly_Controller_Sally {
 	protected $func = '';
 
-	public function __construct()
-	{
+	public function __construct() {
 		parent::__construct();
+
 		if (!method_exists($this, $this->action)) {
 			$this->action = 'index';
 		}
+
+		sly_Core::getI18N()->appendFile(SLY_INCLUDE_PATH.'/lang/pages/login/');
 	}
 
-	public function init()
-	{
+	public function init() {
 		$layout = sly_Core::getLayout();
-		$layout->pageHeader('Login');
+		$layout->pageHeader(t('login_title'));
 		print '<div class="sly-content">';
 	}
 
-	public function teardown()
-	{
+	public function teardown() {
 		print '</div>';
 	}
 
-	public function index()
-	{
+	public function index() {
 		if(empty($this->message)) $this->message = t('login_welcome');
 		$this->render('views/login/index.phtml');
 		return true;
@@ -45,8 +43,7 @@ class sly_Controller_Login extends sly_Controller_Sally
 		$this->index();
 	}
 
-	public function checkPermission()
-	{
+	public function checkPermission() {
 		return true;
 	}
 }

@@ -15,6 +15,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 	protected function init() {
 		$this->lang = sly_request('lang', 'string');
+		sly_Core::getI18N()->appendFile(SLY_INCLUDE_PATH.'/lang/pages/setup/');
 	}
 
 	public function index()	{
@@ -125,8 +126,6 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 	}
 
 	protected function config() {
-		global $I18N;
-
 		$config = sly_Core::config();
 		$isSent = isset($_POST['submit']);
 
@@ -151,7 +150,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 	}
 
 	protected function initdb() {
-		global $I18N, $REX;
+		global $REX;
 
 		$config         = sly_Core::config();
 		$prefix         = $config->get('DATABASE/TABLE_PREFIX');
@@ -213,7 +212,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			}
 
 			foreach (array_diff($requiredTables, $existingTables) as $missingTable) {
-				$error .= t('setup_031', $missingTable).'<br />';
+				$error .= t('setup_initdb_table_not_found', $missingTable).'<br />';
 			}
 		}
 
@@ -231,8 +230,6 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 	}
 
 	protected function createuser() {
-		global $I18N;
-
 		$config      = sly_Core::config();
 		$prefix      = $config->get('DATABASE/TABLE_PREFIX');
 		$pdo         = sly_DB_Persistence::getInstance();
@@ -245,12 +242,12 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		if (isset($_POST['submit'])) {
 			if ($createAdmin) {
 				if (empty($adminUser)) {
-					$error = $I18N->msg('setup_040');
+					$error = t('setup_createuser_no_admin_given');
 				}
 
 				if (empty($adminPass)) {
 					if (!empty($error)) $error .= ' ';
-					$error .= $I18N->msg('setup_041');
+					$error .= t('setup_createuser_no_password_given');
 				}
 
 				if (empty($error)) {
@@ -271,12 +268,12 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 					$user->setRevision(0);
 
 					if (!$service->save($user)) {
-						$error = $I18N->msg('setup_043');
+						$error = t('setup_createuser_cant_create_admin');
 					}
 				}
 			}
 			elseif (!$usersExist) {
-				$error = $I18N->msg('setup_044');
+				$error = t('setup_createuser_no_users_found');
 			}
 
 			if (empty($error)) {
@@ -356,8 +353,6 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 	}
 
 	protected function setupImport($sqlScript) {
-		global $I18N;
-
 		$err_msg = '';
 
 		if (file_exists($sqlScript)) {
@@ -365,11 +360,11 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			$result   = $importer->import($sqlScript);
 
 			if ($result['state'] === false) {
-				$err_msg = nl2br($result['message']) .'<br />';
+				$err_msg = $result['message'];
 			}
 		}
 		else {
-			$err_msg = $I18N->msg('setup_03702').'<br />';
+			$err_msg = t('setup_import_cant_find_exports').'<br />';
 		}
 
 		return $err_msg;

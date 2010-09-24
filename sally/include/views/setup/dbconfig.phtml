@@ -8,34 +8,34 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$this->title(t('setup_step2'));
+$this->title(t('setup_dbconfig_title'));
 
 if (!empty($this->warning)) print rex_warning($this->warning);
 
-$form = new sly_Form('index.php', 'POST', t('setup_0202'), '', 'sly-setup-dbsetup');
+$form = new sly_Form('index.php', 'POST', t('setup_dbconfig_header'), '', 'sly-setup-dbsetup');
 $this->printHiddens('dbconfig', $form);
 
 // database driver
 
 $drivers = array('mysql' => 'MySQL', 'pgsql' => 'PostgreSQL', 'oci' => 'Oracle', 'sqlite' => 'SQLite');
-$drivers = new sly_Form_Select_DropDown('driver', 'Datenbank-Typ', null, $drivers);
-$drivers->setHelpText('Alle Datenbanken außer MySQL sind als hoch experimentell anzusehen und dienen zu Testzwecken!');
+$drivers = new sly_Form_Select_DropDown('driver', t('setup_dbconfig_driver'), null, $drivers);
+$drivers->setHelpText(t('setup_dbconfig_driver_notice'));
 $form->add($drivers);
 
 // database infos
 
-$prefix = new sly_Form_Input_Text('prefix', 'Tabellen Präfix', $prefix);
-$prefix->setHelpText('Ermöglicht es, mehrere Sally-Installationen in einer Datenbank parallel zu verwalten.');
+$prefix = new sly_Form_Input_Text('prefix', t('setup_dbconfig_prefix'), $prefix);
+$prefix->setHelpText(t('setup_dbconfig_prefix_notice'));
 
-$form->add(new sly_Form_Input_Text('host', 'Host', $host));
-$form->add(new sly_Form_Input_Text('user', 'Login', $user));
-$form->add(new sly_Form_Input_Text('pass', t('setup_028'), $pass));
+$form->add(new sly_Form_Input_Text('host', t('setup_dbconfig_host'), $host));
+$form->add(new sly_Form_Input_Text('user', t('setup_dbconfig_login'), $user));
+$form->add(new sly_Form_Input_Text('pass', t('setup_dbconfig_password'), $pass));
 
 // slightly more complex input for the target database
 
-$dbname = new sly_Form_Input_Text('dbname', t('setup_027'), $dbname);
-$create = new sly_Form_Input_Checkbox('create_db', '', '1', t('setup_create_db'));
-$name   = new sly_Form_Freeform('dbname', t('setup_027'), $dbname->render().' '.$create->render());
+$dbname = new sly_Form_Input_Text('dbname', '', $dbname);
+$create = new sly_Form_Input_Checkbox('create_db', '', '1', t('setup_dbconfig_create_db'));
+$name   = new sly_Form_Freeform('dbname', t('setup_dbconfig_database'), $dbname->render().' '.$create->render());
 
 $name->addFormRowClass('rex-form-text'); // so that the styles for the input box apply
 $form->add($name);
@@ -44,7 +44,7 @@ $form->add($prefix);
 // button config
 
 $form->setResetButton(null);
-$form->getSubmitButton()->setAttribute('value', t('setup_029'));
+$form->getSubmitButton()->setAttribute('value', t('setup_dbconfig_continue'));
 
 // render it!
 

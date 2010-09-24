@@ -8,27 +8,30 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-global $REX, $I18N;
+global $REX;
 
-$this->title('Setup: Lizenz');
+$this->title(t('setup_license_title'));
 
 $REX['LANG'] = $this->lang;
 
-print $I18N->msg('setup_005', '<h2 class="rex-hl2">', '</h2>');
-print '<div class="rex-area-content">';
-
-print $I18N->msg('setup_005_1', '<h3 class="rex-hl3">', '</h3>', ' class="rex-ul1"');
-print '<div class="rex-area-scroll">';
-
-$basedir = $REX['FRONTEND_PATH'];
-$license = '<p class="rex-tx1">'.nl2br(file_get_contents($basedir.'/_lizenz.txt')).'</p>';
-
-print $license;
+$license = SLY_BASE.'/_lizenz.txt';
+$license = file_exists($license) ? file_get_contents($license) : t('setup_license_not_found');
 
 ?>
+<h2 class="rex-hl2"><?= t('setup_license_header') ?></h2>
+<div class="rex-area-content">
+	<h3 class="rex-hl3"><?= t('setup_license_whats_next') ?></h3>
+	<ul class="rex-ul1">
+		<li><?= t('setup_license_whats_next_1') ?></li>
+		<li><?= t('setup_license_whats_next_2') ?></li>
+		<li><?= t('setup_license_whats_next_3') ?></li>
+		<li><?= t('setup_license_whats_next_4') ?></li>
+	</ul>
+	<div class="rex-area-scroll">
+		<p class="rex-tx1"><?= nl2br($license) ?></p>
 	</div>
 </div>
 
 <div class="rex-area-footer">
-	<p class="rex-algn-rght"><a href="index.php?page=setup&amp;func=fsperms&amp;lang=<?= urlencode($this->lang) ?>">&raquo; <?= $I18N->msg('setup_006') ?></a></p>
+	<p class="rex-algn-rght"><a href="index.php?page=setup&amp;func=fsperms&amp;lang=<?= urlencode($this->lang) ?>">&raquo; <?= t('setup_license_accept') ?></a></p>
 </div>

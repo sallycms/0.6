@@ -8,14 +8,12 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-global $I18N;
-
-$this->title($I18N->msg('setup_step3'));
+$this->title(t('setup_initdb_title'));
 
 // init page
 
 if (!empty($this->warning)) {
-	print rex_warning($this->warning.'<br />'.$I18N->msg('setup_033'));
+	print rex_warning($this->warning.'<br /><br />'.t('setup_initdb_reinit'));
 }
 
 if (!in_array($dbInitFunction, $dbInitFunctions)) {
@@ -24,16 +22,17 @@ if (!in_array($dbInitFunction, $dbInitFunctions)) {
 
 // create form
 
-$form = new sly_Form('index.php', 'POST', t('setup_030_headline'), '', 'sly-setup-initdb');
+$form = new sly_Form('index.php', 'POST', t('setup_initdb_header'), '', 'sly-setup-initdb');
 $this->printHiddens('initdb', $form);
 
 // create radios for possible init functions
 
-$inputs['setup'] = new sly_Form_Input_Radio('db_init_function', '', 'setup', $I18N->msg('setup_034'), 'func_setup');
-$inputs['drop']  = new sly_Form_Input_Radio('db_init_function', '', 'drop', $I18N->msg('setup_035'), 'func_drop');
-$inputs['nop']   = new sly_Form_Input_Radio('db_init_function', '', 'nop', $I18N->msg('setup_036'), 'func_nop');
+foreach (array('setup', 'drop', 'nop') as $func) {
+	$label         = t('setup_initdb_func_'.$func);
+	$inputs[$func] = new sly_Form_Input_Radio('db_init_function', '', $func, $label, 'func_'.$func);
+}
 
-$inputs['drop']->setHelpText('Vorsicht - Alte Seite wird komplett gelöscht!');
+$inputs['drop']->setHelpText(t('setup_initdb_func_drop_notice'));
 $inputs[$dbInitFunction]->setChecked(true);
 
 $inputs = sly_Core::dispatcher()->filter('SLY_SETUP_INIT_FUNCTIONS_FORM', $inputs);
@@ -42,7 +41,7 @@ $form->addElements($inputs);
 // button config
 
 $form->setResetButton(null);
-$form->getSubmitButton()->setAttribute('value', t('setup_039'));
+$form->getSubmitButton()->setAttribute('value', t('setup_initdb_continue'));
 
 // render it!
 

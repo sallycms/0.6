@@ -27,29 +27,25 @@
  * @defgroup util          Utilities
  */
 
-function sly_get($name, $type, $default = '')
-{
+function sly_get($name, $type, $default = '') {
 	$value = rex_get($name, $type, $default, false);
 	$value = strtolower($type) == 'string' ? trim($value) : $value;
 	return $value;
 }
 
-function sly_post($name, $type, $default = '')
-{
+function sly_post($name, $type, $default = '') {
 	$value = rex_post($name, $type, $default, false);
 	$value = strtolower($type) == 'string' ? trim($value) : $value;
 	return $value;
 }
 
-function sly_request($name, $type, $default = '')
-{
+function sly_request($name, $type, $default = '') {
 	$value = rex_request($name, $type, $default, false);
 	$value = strtolower($type) == 'string' ? trim($value) : $value;
 	return $value;
 }
 
-function sly_getArray($name, $types, $default = array())
-{
+function sly_getArray($name, $types, $default = array()) {
 	$values = sly_makeArray(isset($_GET[$name]) ? $_GET[$name] : $default);
 
 	foreach ($values as &$value) {
@@ -65,8 +61,7 @@ function sly_getArray($name, $types, $default = array())
 	return $values;
 }
 
-function sly_postArray($name, $types, $default = array())
-{
+function sly_postArray($name, $types, $default = array()) {
 	$values = sly_makeArray(isset($_POST[$name]) ? $_POST[$name] : $default);
 
 	foreach ($values as $idx => &$value) {
@@ -82,25 +77,21 @@ function sly_postArray($name, $types, $default = array())
 	return $values;
 }
 
-function sly_requestArray($name, $types, $default = array())
-{
+function sly_requestArray($name, $types, $default = array()) {
 	return isset($_POST[$name]) ?
 		sly_postArray($name, $types, $default) :
 		isset($_GET[$name]) ? sly_getArray($name, $types, $default) : $default;
 }
 
-function sly_isEmpty($var)
-{
+function sly_isEmpty($var) {
 	return empty($var);
 }
 
-function sly_startsWith($haystack, $needle)
-{
+function sly_startsWith($haystack, $needle) {
 	return strlen($needle) <= strlen($haystack) && substr($haystack, 0, strlen($needle)) == $needle;
 }
 
-function sly_html($string)
-{
+function sly_html($string) {
 	return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 }
 
@@ -113,8 +104,7 @@ function sly_html($string)
  * @param  array $array2  das zweite Array
  * @return array          das Array mit den Werten aus beiden Arrays
  */
-function sly_merge($array1, $array2)
-{
+function sly_merge($array1, $array2) {
 	$result = $array1;
 	foreach ($array2 as $key => $value) {
 		if (!in_array($key, array_keys($result),true)) $result[$key] = $value;
@@ -133,8 +123,7 @@ function sly_merge($array1, $array2)
  * @param  mixed $replacement  der Ersetzungswert
  * @return array               das resultierende Array
  */
-function sly_arrayReplace($array, $needle, $replacement)
-{
+function sly_arrayReplace($array, $needle, $replacement) {
 	$i = array_search($needle, $array);
 	if ($i === false) return $array;
 	$array[$i] = $replacement;
@@ -151,8 +140,7 @@ function sly_arrayReplace($array, $needle, $replacement)
  * @param  mixed $needle  der zu suchende Wert
  * @return array          das resultierende Array
  */
-function sly_arrayDelete($array, $needle)
-{
+function sly_arrayDelete($array, $needle) {
 	$i = array_search($needle, $array);
 	if ($i === false) return $array;
 	unset($array[$i]);
@@ -169,8 +157,7 @@ function sly_arrayDelete($array, $needle)
  * @param  array  $array      das Such-Array
  * @return bool               true, wenn das Prädikat mindestens 1x zutrifft
  */
-function sly_arrayAny($predicate, $array)
-{
+function sly_arrayAny($predicate, $array) {
 	foreach ($array as $element) if ($predicate($element)) return true;
 	return false;
 }
@@ -185,8 +172,7 @@ function sly_arrayAny($predicate, $array)
  * @param  array  $array      das Such-Array
  * @return bool               true, wenn das Prädikat mindestens 1x zutrifft
  */
-function sly_arrayAnyKey($predicate, $array)
-{
+function sly_arrayAnyKey($predicate, $array) {
 	return sly_arrayAny($predicate, array_keys($array));
 }
 
@@ -197,8 +183,7 @@ function sly_arrayAnyKey($predicate, $array)
  * @return array           leeres Array für $element = null, einelementiges
  *                         Array für $element = Skalar, sonst direkt $element
  */
-function sly_makeArray($element)
-{
+function sly_makeArray($element) {
 	if ($element === null)  return array();
 	if (is_array($element)) return $element;
 	return array($element);
@@ -210,22 +195,22 @@ function sly_makeArray($element)
  * @param  string $index  der zu übersetzende Begriff
  * @return string         die Übersetzung
  */
-function t($index)
-{
-	global $REX;
+function t($index) {
+	$args = func_get_args();
+	$func = null;
 
-	if ($REX['REDAXO']) {
+	if (sly_Core::isBackend()) {
 		global $I18N;
-		return $I18N->msg($index);
+		$func = array($I18N, 'msg');
 	}
 	else {
+		// TODO: remove addon specific code
 		if (class_exists('WV9_Language')) {
-			$wv9 = WV9_Language::getInstance();
-			return $wv9->translate($index);
+			$func = array(WV9_Language::getInstance(), 'translate');
 		}
 	}
 
-	return $index;
+	return $func !== null ? call_user_func_array($func, $args) : $index;
 }
 
 /**
@@ -234,8 +219,7 @@ function t($index)
  * @param  string $index  der zu übersetzende Begriff
  * @return string         die Übersetzung, direkt mit htmlspecialchars() behandelt
  */
-function ht($index)
-{
+function ht($index) {
 	return sly_html(t($index));
 }
 

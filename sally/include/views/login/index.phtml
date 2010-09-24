@@ -17,20 +17,20 @@ elseif (!empty($this->message)) {
 	print rex_warning($this->message);
 }
 
-$form = new sly_Form('index.php', 'POST', 'Login', '', 'loginformular');
+$form = new sly_Form('index.php', 'POST', t('login_title'), '', 'loginformular');
 $form->addHiddenValue('javascript', 0, 'javascript');
 $form->addHiddenValue('referer', isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '');
 
 $form->beginFieldset('Login');
-$form->add(new sly_Form_Input_Text('rex_user_login', $I18N->msg('login_name'), ''));
-$form->add(new sly_Form_Input_Password('rex_user_psw', $I18N->msg('password'), ''));
+$form->add(new sly_Form_Input_Text('rex_user_login', t('login_name'), ''));
+$form->add(new sly_Form_Input_Password('rex_user_psw', t('login_password'), ''));
 
 $form->setResetButton(null);
-$form->getSubmitButton()->setAttribute('value', $I18N->msg('login'));
+$form->getSubmitButton()->setAttribute('value', t('login'));
 $form->render();
 
 ?>
 
 <? if (!empty($rex_user_loginmessage)): ?>
-<script type="text/javascript">sly_startLoginTimer('<?= addslashes($I18N->msg('login_welcome')) ?>');</script>
+<script type="text/javascript">sly_startLoginTimer('<?= addslashes(t('login_welcome')) ?>');</script>
 <? endif ?>
