@@ -199,43 +199,48 @@ if (SLY_IS_TESTING) return;
 $forceLogin = !$REX['SETUP'] && !$REX['USER'];
 $controller = sly_Controller_Base::factory($forceLogin ? 'login' : null, $forceLogin ? 'index' : null);
 
-if ($controller !== null) {
-	try {
+// View laden
+$layout = sly_Core::getLayout('Sally');
+$layout->openBuffer();
+
+try {
+	if ($controller !== null) {
 		$CONTENT = $controller->dispatch();
 	}
-	catch (Exception $e) {
-		// View laden
-		$layout = sly_Core::getLayout('Sally');
-		$layout->openBuffer();
+	else {
+		$filename = '';
 
-		if($e instanceof sly_Authorisation_Exception) {
-			rex_title('Sicherheitsverletzung');
-		}elseif($e instanceof sly_Controller_Exception){
-			rex_title('Controller-Fehler');
-		}else {
-			rex_title('Unerwartete Ausnahme');
+		if (!empty($REX['PAGES'][$REX['PAGE']]['PATH'])) { // If page has a new/overwritten path
+			$filename = $REX['PAGES'][$REX['PAGE']]['PATH'];
+		}
+		elseif ($REX['PAGES'][strtolower($REX['PAGE'])][1]) { // Addon Page
+			$filename = SLY_INCLUDE_PATH.'/addons/'.$REX['PAGE'].'/pages/index.inc.php';
+		}
+		else { // Core Page
+			$filename = $REX['INCLUDE_PATH'].'/pages/'.$REX['PAGE'].'.inc.php';
 		}
 
-		print rex_warning($e->getMessage());
+		if (empty($filename) || !file_exists($filename)) {
+			throw new sly_Controller_Exception('Unknown Page');
+		}
+
+		include $filename;
 		$layout->closeBuffer();
 		$CONTENT = $layout->render();
 	}
 }
-else {
-	// View laden
-	$layout = sly_Core::getLayout('Sally');
-	$layout->openBuffer();
-
-	if (!empty($REX['PAGES'][$REX['PAGE']]['PATH'])) { // If page has a new/overwritten path
-		require $REX['PAGES'][$REX['PAGE']]['PATH'];
+catch (Exception $e) {
+	if ($e instanceof sly_Authorisation_Exception) {
+		$layout->pageHeader('Sicherheitsverletzung');
 	}
-	elseif ($REX['PAGES'][strtolower($REX['PAGE'])][1]) { // Addon Page
-		require $REX['INCLUDE_PATH'].'/addons/'. $REX['PAGE'] .'/pages/index.inc.php';
+	elseif ($e instanceof sly_Controller_Exception) {
+		$layout->pageHeader('Controller-Fehler');
 	}
-	else { // Core Page
-		require $REX['INCLUDE_PATH'].'/pages/'.$REX['PAGE'].'.inc.php';
+	else {
+		$layout->pageHeader('Unerwartete Ausnahme');
 	}
 
+	print rex_warning($e->getMessage());
 	$layout->closeBuffer();
 	$CONTENT = $layout->render();
 }
