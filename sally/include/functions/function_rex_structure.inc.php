@@ -109,7 +109,7 @@ function rex_addCategory($parentID, $data)
 	// Kategorie in allen Sprachen anlegen
 
 	$records     = array();
-	$sqlTemplate = '(%d,%d,"%s","%s",%d,"%s",%d,%d,"%s",%d,%d,%d,%d,%d,"%s","%s",%d)';
+	$sqlTemplate = '(%d,%d,"%s","%s",%d,"%s",%d,%d,"%s",%d,%d,%d,"%s",%d,"%s","%s",%d)';
 	$createTime  = time();
 
 	foreach (array_keys($REX['CLANG']) as $clangID) {
