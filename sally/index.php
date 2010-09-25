@@ -175,15 +175,14 @@ if ($REX['USER']) {
 
 		if ($referer && !sly_startsWith(basename($referer), 'index.php?page=login')) {
 			$url = $referer;
-			$msg = 'Sie werden zu Ihrer <a href="'.$referer.'">vorherigen Seite</a> weitergeleitet.';
+			$msg = t('redirect_previous_page', $referer);
 		}
 		else {
 			$url = 'index.php?page='.urlencode($REX['PAGE']);
-			$msg = 'Sie werden zur <a href="'.$url.'">Startseite</a> weitergeleitet.';
+			$msg = t('redirect_startpage', $url);
 		}
 
-		header('Location: '.$url);
-		exit($msg);
+		sly_Util_HTTP::redirect($url, array(), $msg);
 	}
 }
 
@@ -221,7 +220,7 @@ try {
 		}
 
 		if (empty($filename) || !file_exists($filename)) {
-			throw new sly_Controller_Exception('Unknown Page');
+			throw new sly_Controller_Exception(t('unknown_page'));
 		}
 
 		include $filename;
@@ -231,13 +230,13 @@ try {
 }
 catch (Exception $e) {
 	if ($e instanceof sly_Authorisation_Exception) {
-		$layout->pageHeader('Sicherheitsverletzung');
+		$layout->pageHeader(t('security_violation'));
 	}
 	elseif ($e instanceof sly_Controller_Exception) {
-		$layout->pageHeader('Controller-Fehler');
+		$layout->pageHeader(t('controller_error'));
 	}
 	else {
-		$layout->pageHeader('Unerwartete Ausnahme');
+		$layout->pageHeader(t('unexpected_exception'));
 	}
 
 	print rex_warning($e->getMessage());

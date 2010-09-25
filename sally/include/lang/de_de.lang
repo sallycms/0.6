@@ -20,6 +20,11 @@ special_chars_rewrite: ae|oe|ue|Ae|Oe|Ue|ss|und
 # sally/index.php
 start_article_not_selected: Kein Startartikel ausgewählt
 redirect_previous_page: "Sie werden zu Ihrer <a href=\"{0}\">vorherigen Seite</a> weitergeleitet."
+redirect_startpage: "Sie werden zu Ihrer <a href=\"{0}\">Startseite</a> weitergeleitet."
+unknown_page: Unbekannte Seite
+security_violation: Sicherheitsverletzung
+controller_error: Controller-Fehler
+unexpected_exception: Unerwartete Ausnahme
 
 # sally/sindex.php
 specials: System
