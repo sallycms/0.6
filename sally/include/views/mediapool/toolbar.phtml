@@ -19,7 +19,7 @@ print $dispatcher->filter('PAGE_MEDIAPOOL_HEADER', '', array('category_id' => $s
 ////////////////////////////////////////////////////////
 // category selection form
 
-$form = new sly_Form('index.php', 'POST', $I18N->msg('pool_select_cat'), '', 'rex-form-mediapool-selectcategory');
+$form = new sly_Form('index.php', 'POST', t('pool_select_cat'), '', 'rex-form-mediapool-selectcategory');
 $form->addHiddenValue('page', 'mediapool');
 
 // additional arguments

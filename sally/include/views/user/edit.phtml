@@ -10,7 +10,7 @@
 
 // Daten vorbereiten
 
-$label     = $I18N->msg($this->func == 'edit' ? 'edit_user' : 'create_user');
+$label     = t($this->func == 'edit' ? 'edit_user' : 'create_user');
 $currentID = $REX['USER']->getValue('id');
 $PERM      = $REX['PERM'];
 $EXTPERM   = empty($REX['EXTPERM']) ? array() : $REX['EXTPERM'];
@@ -30,14 +30,14 @@ $form->addHiddenValue('id', $user ? $user->getId() : 0);
 // first row: login and password
 
 if ($user) {
-	$login = new sly_Form_Text($I18N->msg('login_name'), $user->getLogin());
+	$login = new sly_Form_Text(t('login_name'), $user->getLogin());
 }
 else {
-	$login = new sly_Form_Input_Text('userlogin', $I18N->msg('login_name'), '');
+	$login = new sly_Form_Input_Text('userlogin', t('login_name'), '');
 }
 
-$password = new sly_Form_Input_Text('userpsw', $I18N->msg('password'), '');
-$password->setHelpText($I18N->msg('psw_encrypted'));
+$password = new sly_Form_Input_Text('userpsw', t('password'), '');
+$password->setHelpText(t('psw_encrypted'));
 
 $form->beginFieldset($label, '', 2);
 $form->addRow(array($login, $password));
@@ -45,16 +45,16 @@ $form->addRow(array($login, $password));
 //////////////////////////////////////////////////////////////////
 // second row: name and description
 
-$name        = new sly_Form_Input_Text('username', $I18N->msg('name'), $user ? $user->getName() : '');
-$description = new sly_Form_Input_Text('userdesc', $I18N->msg('description'), $user ? $user->getDescription() : '');
+$name        = new sly_Form_Input_Text('username', t('name'), $user ? $user->getName() : '');
+$description = new sly_Form_Input_Text('userdesc', t('description'), $user ? $user->getDescription() : '');
 
 $form->addRow(array($name, $description));
 
 //////////////////////////////////////////////////////////////////
 // third row: admin and status
 
-$userAdmin  = new sly_Form_Input_Checkbox('is_admin', '', '1', $I18N->msg('user_admin'));
-$userStatus = new sly_Form_Input_Checkbox('userstatus', '', '1', $I18N->msg('user_status'));
+$userAdmin  = new sly_Form_Input_Checkbox('is_admin', '', '1', t('user_admin'));
+$userStatus = new sly_Form_Input_Checkbox('userstatus', '', '1', t('user_status'));
 
 if ($user) {
 	$userAdmin->setChecked($user->isAdmin());
@@ -73,12 +73,12 @@ $form->addRow(array($userAdmin, $userStatus));
 
 $allowedCLangs = $user ? $user->getAllowedCLangs() : array();
 $backendLocale = $user ? $user->getBackendLocale() : array();
-$clangSelect   = new sly_Form_Select_DropDown('userperm_sprachen', $I18N->msg('user_lang_xs'), $allowedCLangs, $REX['CLANG']);
-$localeSelect  = new sly_Form_Select_DropDown('userperm_mylang', $I18N->msg('backend_language'), $backendLocale, $this->getBackendLocales());
+$clangSelect   = new sly_Form_Select_DropDown('userperm_sprachen', t('user_lang_xs'), $allowedCLangs, $REX['CLANG']);
+$localeSelect  = new sly_Form_Select_DropDown('userperm_mylang', t('backend_language'), $backendLocale, $this->getBackendLocales());
 
 $localeSelect->setMultiple(false);
 $clangSelect->setSize(3);
-$clangSelect->setHelpText($I18N->msg('ctrl'));
+$clangSelect->setHelpText(t('ctrl'));
 
 $form->addRow(array($clangSelect, $localeSelect));
 
@@ -86,7 +86,7 @@ $form->addRow(array($clangSelect, $localeSelect));
 // fifth row: backend startpage
 
 $startPage       = $user ? $user->getStartPage() : array();
-$startpageSelect = new sly_Form_Select_DropDown('userperm_startpage', $I18N->msg('startpage'), $startPage, $this->getPossibleStartpages());
+$startpageSelect = new sly_Form_Select_DropDown('userperm_startpage', t('startpage'), $startPage, $this->getPossibleStartpages());
 
 $startpageSelect->setMultiple(false);
 $form->addRow(array($startpageSelect));
@@ -98,21 +98,21 @@ sort($PERM);
 sort($EXTPERM);
 sort($EXTRAPERM);
 
-$allPermSelect = new sly_Form_Select_DropDown('userperm_all', $I18N->msg('user_all'), $rights, array_combine($PERM, $PERM));
-$extPermSelect = new sly_Form_Select_DropDown('userperm_ext', $I18N->msg('user_options'), $rights, array_combine($EXTPERM, $EXTPERM));
+$allPermSelect = new sly_Form_Select_DropDown('userperm_all', t('user_all'), $rights, array_combine($PERM, $PERM));
+$extPermSelect = new sly_Form_Select_DropDown('userperm_ext', t('user_options'), $rights, array_combine($EXTPERM, $EXTPERM));
 
 $allPermSelect->setSize(10);
 $extPermSelect->setSize(10);
-$allPermSelect->setHelpText($I18N->msg('ctrl'));
-$extPermSelect->setHelpText($I18N->msg('ctrl'));
+$allPermSelect->setHelpText(t('ctrl'));
+$extPermSelect->setHelpText(t('ctrl'));
 
 $form->addRow(array($allPermSelect, $extPermSelect));
 
 //////////////////////////////////////////////////////////////////
 // seventh row: cats checkboxes
 
-$allCats      = new sly_Form_Input_Checkbox('userperm_cat_all', '', '1', $I18N->msg('all_categories'));
-$allMediaCats = new sly_Form_Input_Checkbox('userperm_media_all', '', '1', $I18N->msg('all_mediafolder'));
+$allCats      = new sly_Form_Input_Checkbox('userperm_cat_all', '', '1', t('all_categories'));
+$allMediaCats = new sly_Form_Input_Checkbox('userperm_media_all', '', '1', t('all_mediafolder'));
 
 if ($user) {
 	$allCats->setChecked($user->hasRight('csw[0]'));
@@ -127,13 +127,13 @@ $form->addRow(array($allCats, $allMediaCats));
 $allowedCategories      = $user ? $user->getAllowedCategories() : array();
 $allowedMediaCategories = $user ? $user->getAllowedMediaCategories() : array();
 
-$categorySelect = new sly_Form_Select_DropDown('userperm_cat', $I18N->msg('categories'), $allowedCategories, $this->getStructure());
-$mediaCatSelect = new sly_Form_Select_DropDown('userperm_media', $I18N->msg('mediafolder'), $allowedMediaCategories, $this->getMediaStructure());
+$categorySelect = new sly_Form_Select_DropDown('userperm_cat', t('categories'), $allowedCategories, $this->getStructure());
+$mediaCatSelect = new sly_Form_Select_DropDown('userperm_media', t('mediafolder'), $allowedMediaCategories, $this->getMediaStructure());
 
 $categorySelect->setSize(20);
 $mediaCatSelect->setSize(20);
-$categorySelect->setHelpText($I18N->msg('ctrl'));
-$mediaCatSelect->setHelpText($I18N->msg('ctrl'));
+$categorySelect->setHelpText(t('ctrl'));
+$mediaCatSelect->setHelpText(t('ctrl'));
 
 $form->addRow(array($categorySelect, $mediaCatSelect));
 
@@ -141,13 +141,13 @@ $form->addRow(array($categorySelect, $mediaCatSelect));
 // nineth row: misc
 
 $allowedModules  = $user ? $user->getAllowedModules() : array();
-$moduleSelect    = new sly_Form_Select_DropDown('userperm_module', $I18N->msg('modules'), $allowedModules, $this->getModules());
-$extraPermSelect = new sly_Form_Select_DropDown('userperm_extra', $I18N->msg('extras'), $rights, array_combine($EXTRAPERM, $EXTRAPERM));
+$moduleSelect    = new sly_Form_Select_DropDown('userperm_module', t('modules'), $allowedModules, $this->getModules());
+$extraPermSelect = new sly_Form_Select_DropDown('userperm_extra', t('extras'), $rights, array_combine($EXTRAPERM, $EXTRAPERM));
 
 $moduleSelect->setSize(10);
 $extraPermSelect->setSize(10);
-$moduleSelect->setHelpText($I18N->msg('ctrl'));
-$extraPermSelect->setHelpText($I18N->msg('ctrl'));
+$moduleSelect->setHelpText(t('ctrl'));
+$extraPermSelect->setHelpText(t('ctrl'));
 
 $form->addRow(array($moduleSelect, $extraPermSelect));
 
@@ -159,13 +159,13 @@ $form->setResetButton(null);
 
 if ($user) {
 	$form->addRow(array(
-		new sly_Form_ButtonBar(array('submit' => new sly_Form_Input_Button('submit', 'submit', $I18N->msg('user_save')))),
-		new sly_Form_ButtonBar(array('apply' => new sly_Form_Input_Button('submit', 'apply', $I18N->msg('user_apply'))))
+		new sly_Form_ButtonBar(array('submit' => new sly_Form_Input_Button('submit', 'submit', t('user_save')))),
+		new sly_Form_ButtonBar(array('apply' => new sly_Form_Input_Button('submit', 'apply', t('user_apply'))))
 	));
 }
 else {
 	$form->addRow(array(
-		new sly_Form_ButtonBar(array('submit' => new sly_Form_Input_Button('submit', 'submit', $I18N->msg('add_user'))))
+		new sly_Form_ButtonBar(array('submit' => new sly_Form_Input_Button('submit', 'submit', t('add_user'))))
 	));
 }
 

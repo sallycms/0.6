@@ -63,7 +63,7 @@ $this->render('views/mediapool/notices.phtml');
 // start forms
 
 if ($this->canAccessFile($media)) {
-	$form = new sly_Form('index.php', 'POST', $I18N->msg('pool_file_edit'), '', 'rex-form-mediapool-detail');
+	$form = new sly_Form('index.php', 'POST', t('pool_file_edit'), '', 'rex-form-mediapool-detail');
 	$form->setEncType('multipart/form-data');
 
 	$form->addHiddenValue('page', 'mediapool');
@@ -78,7 +78,7 @@ if ($this->canAccessFile($media)) {
 	}
 }
 else {
-	$form = new sly_Form('index.php', 'POST', $I18N->msg('pool_file_details'), '', 'rex-form-mediapool-detail');
+	$form = new sly_Form('index.php', 'POST', t('pool_file_details'), '', 'rex-form-mediapool-detail');
 }
 
 ////////////////////////////////////////////////////////
@@ -121,7 +121,7 @@ if ($this->canAccessFile($media)) {
 	// category
 
 	$select = $this->getCategorySelect();
-	$select->setLabel($I18N->msg('pool_file_category'));
+	$select->setLabel(t('pool_file_category'));
 	$select->setAttribute('id', 'rex_file_new_category');
 	$select->setAttribute('onchange', '');
 	$select->setAttribute('value', $rex_file_category);
@@ -134,15 +134,15 @@ if ($this->canAccessFile($media)) {
 	// setup buttons
 
 	$submit = $form->getSubmitButton();
-	$submit->setAttribute('value', $I18N->msg('pool_file_update'));
+	$submit->setAttribute('value', t('pool_file_update'));
 	$submit->setAttribute('name', 'update');
 
-	$delete = new sly_Form_Input_Button('submit', 'delete', $I18N->msg('pool_file_delete'));
+	$delete = new sly_Form_Input_Button('submit', 'delete', t('pool_file_delete'));
 	$form->setApplyButton($delete);
 	$form->setResetButton(null);
 }
 else {
-	$catname = $I18N->msg('pool_kats_no');
+	$catname = t('pool_kats_no');
 	$cat     = $rex_file_category != 0 ? OOMediaCategory::getCategoryById($rex_file_category) : null;
 
 	if ($cat) {
@@ -160,7 +160,7 @@ else {
 	$title->addFormRowClass('sly-mediapool-detail-title');
 
 	$form->add($title);
-	$form->add(new sly_Form_Text($I18N->msg('pool_file_category'), $catname));
+	$form->add(new sly_Form_Text(t('pool_file_category'), $catname));
 
 	// setup buttons
 
@@ -171,7 +171,7 @@ else {
 // file dimensions, if image
 
 if ($isImage) {
-	$label      = $I18N->msg('pool_img_width') .' / '.$I18N->msg('pool_img_height');
+	$label      = t('pool_img_width') .' / '.t('pool_img_height');
 	$dimensions = $fwidth .' px / '. $fheight .' px';
 	$dimensions = new sly_Form_Text($label, $dimensions);
 	$form->add($dimensions);
@@ -180,24 +180,24 @@ if ($isImage) {
 // display filename
 
 $filename = '<a href="../data/mediapool/'.$encoded_fname.'">'.sly_html($fname).'</a> ['.$ffile_size.']';
-$filename = new sly_Form_Text($I18N->msg('pool_filename'), $filename);
+$filename = new sly_Form_Text(t('pool_filename'), $filename);
 $filename->setIsHTML(true);
 $form->add($filename);
 
 // display update date
 
 $updated = $media->getUpdateDate('%a %d. %B %Y').' ['.$media->getUpdateUser().']';
-$updated = new sly_Form_Text($I18N->msg('pool_last_update'), $updated);
+$updated = new sly_Form_Text(t('pool_last_update'), $updated);
 $form->add($updated);
 
 // display creation date
 
 $created = $media->getCreateDate('%a %d. %B %Y').' ['.$media->getCreateUser().']';
-$created = new sly_Form_Text($I18N->msg('pool_created'), $created);
+$created = new sly_Form_Text(t('pool_created'), $created);
 $form->add($created);
 
 if ($this->canAccessFile($media)) {
-	$file = new sly_Form_Input_File('file_new', $I18N->msg('pool_file_exchange'));
+	$file = new sly_Form_Input_File('file_new', t('pool_file_exchange'));
 	$form->add($file);
 }
 

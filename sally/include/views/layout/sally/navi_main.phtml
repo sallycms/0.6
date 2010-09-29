@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-global $REX, $I18N;
+global $REX;
 
 $naviSystem = array();
 $naviAddOns = array();
@@ -71,7 +71,7 @@ $areas = array('system' => $naviSystem, 'addon' => $naviAddOns);
 foreach ($areas as $topic => $naviList) {
 	if (empty($naviList)) continue;
 
-	$headline = $topic == 'system' ? $I18N->msg('navigation_basis') : $I18N->msg('navigation_addons');
+	$headline = $topic == 'system' ? t('navigation_basis') : t('navigation_addons');
 
 	print '<dt>'.$headline.'</dt><dd>';
 	print '<ul id="rex-navi-'.$topic.'">';

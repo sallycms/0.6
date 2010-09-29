@@ -35,7 +35,7 @@ else {
 ?>
 <div id="rex-navi-path">
 	<ul>
-		<li><?= $I18N->msg('pool_kat_path') ?></li>
+		<li><?= t('pool_kat_path') ?></li>
 		<?= $textpath ?>
 	</ul>
 </div>
@@ -53,7 +53,7 @@ $editID = sly_request('edit_id', 'int');
 
 if ($this->action == 'add' || $this->action == 'edit') {
 	$addMode = $this->action == 'add';
-	$legend  = $addMode ? $I18N->msg('pool_kat_create_label') : $I18N->msg('pool_kat_edit');
+	$legend  = $addMode ? t('pool_kat_create_label') : t('pool_kat_edit');
 
 	$form = new sly_Form('index.php', 'POST', '');
 	$form->addHiddenValue('page', 'mediapool');
@@ -77,8 +77,8 @@ if ($this->action == 'add' || $this->action == 'edit') {
 }
 
 ?>
-<table class="rex-table" summary="<?= sly_html($I18N->msg('pool_kat_summary')) ?>">
-	<caption class="rex-hide"><?= sly_html($I18N->msg('pool_kat_caption')) ?></caption>
+<table class="rex-table" summary="<?= sly_html(t('pool_kat_summary')) ?>">
+	<caption class="rex-hide"><?= sly_html(t('pool_kat_caption')) ?></caption>
 	<colgroup>
 		<col width="40" />
 		<col width="40" />
@@ -89,25 +89,25 @@ if ($this->action == 'add' || $this->action == 'edit') {
 	<thead><tr>
 		<th class="rex-icon">
 			<a class="rex-i-element rex-i-mediapool-category-add sly-sprite" href="<?= $base.$catID ?>&amp;func=add">
-				<span class="rex-i-element-text"><?= $I18N->msg('pool_kat_create') ?></span>
+				<span class="rex-i-element-text"><?= t('pool_kat_create') ?></span>
 			</a>
 		</th>
 		<th class="rex-small">ID</th>
-		<th><?= $I18N->msg('pool_kat_name') ?></th>
-		<th colspan="2"><?= $I18N->msg('pool_kat_function') ?></th>
+		<th><?= t('pool_kat_name') ?></th>
+		<th colspan="2"><?= t('pool_kat_function') ?></th>
 	</tr></thead>
 	<tbody><?php
 
 	if ($this->action == 'add') {
 		?><tr class="rex-table-row-activ">
-			<td class="rex-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?= $I18N->msg('pool_kat_create') ?></span></span></td>
+			<td class="rex-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?= t('pool_kat_create') ?></span></span></td>
 			<td class="rex-small">-</td>
 			<td>
-				<label class="rex-form-hidden-label" for="rex-form-field-name"><?= $I18N->msg('pool_kat_name') ?></label>
+				<label class="rex-form-hidden-label" for="rex-form-field-name"><?= t('pool_kat_name') ?></label>
 				<input class="rex-form-text" type="text" size="10" id="rex-form-field-name" name="catname" value="" />
 			</td>
 			<td colspan="2">
-				<input type="submit" class="rex-form-submit" value="<?= $I18N->msg('pool_kat_create') ?>" />
+				<input type="submit" class="rex-form-submit" value="<?= t('pool_kat_create') ?>" />
 			</td>
 		</tr><?php
 	}
@@ -120,11 +120,11 @@ if ($this->action == 'add' || $this->action == 'edit') {
 			<td class="rex-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?= sly_html($cat->getName())?></span></span></td>
 			<td class="rex-small"><?= $id ?></td>
 			<td>
-				<label class="rex-form-hidden-label" for="rex-form-field-name"><?= $I18N->msg('pool_kat_name') ?></label>
+				<label class="rex-form-hidden-label" for="rex-form-field-name"><?= t('pool_kat_name') ?></label>
 				<input class="rex-form-text" type="text" id="rex-form-field-name" name="catname" value="<?= sly_html($cat->getName()) ?>" />
 			</td>
 			<td colspan="2">
-				<input type="submit" class="rex-form-submit" value="<?= $I18N->msg('pool_kat_update') ?>" />
+				<input type="submit" class="rex-form-submit" value="<?= t('pool_kat_update') ?>" />
 			</td>
 			</tr><?php
 		}
@@ -133,8 +133,8 @@ if ($this->action == 'add' || $this->action == 'edit') {
 			<td class="rex-icon"><a class="rex-i-element rex-i-mediapool-category sly-sprite" href="<?= $base.$id ?>"><span class="rex-i-element-text"><?= sly_html($cat->getName())?></span></a></td>
 			<td class="rex-small"><?= $id ?></td>
 			<td><a href="<?= $base.$id ?>"><?= sly_html($cat->getName()) ?></a></td>
-			<td><a href="<?= $base.$catID ?>&amp;func=edit&amp;edit_id=<?= $id ?>"><?= $I18N->msg('pool_kat_edit')?></a></td>
-			<td><a href="<?= $base.$catID ?>&amp;func=delete&amp;edit_id=<?= $id ?>" class="sly-delete"><?= $I18N->msg('pool_kat_delete') ?></a></td>
+			<td><a href="<?= $base.$catID ?>&amp;func=edit&amp;edit_id=<?= $id ?>"><?= t('pool_kat_edit')?></a></td>
+			<td><a href="<?= $base.$catID ?>&amp;func=delete&amp;edit_id=<?= $id ?>" class="sly-delete"><?= t('pool_kat_delete') ?></a></td>
 			</tr><?php
 		}
 	}

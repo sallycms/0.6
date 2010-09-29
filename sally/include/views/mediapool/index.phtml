@@ -25,13 +25,13 @@ $this->render('views/mediapool/notices.phtml');
 // if file types are restricted, inform the user
 
 if (!empty($args['types'])) {
-	print rex_info($I18N->msg('pool_file_filter', $args['types']));
+	print rex_info(t('pool_file_filter', $args['types']));
 }
 
 ////////////////////////////////////////////////////////
 // list all files in the current category
 
-$form = new sly_Form('index.php', 'POST', $I18N->msg('pool_selectedmedia'), '', 'rex-form-mediapool-media');
+$form = new sly_Form('index.php', 'POST', t('pool_selectedmedia'), '', 'rex-form-mediapool-media');
 $form->addHiddenValue('page', 'mediapool');
 $form->addHiddenValue('func', 'batch');
 
@@ -47,7 +47,7 @@ ob_start();
 
 ?>
 <table class="rex-table sly-mediapool-list" summary="">
-	<caption><?= $I18N->msg('pool_selectedmedia') ?></caption>
+	<caption><?= t('pool_selectedmedia') ?></caption>
 	<colgroup>
 		<col width="40" />
 		<col width="110" />
@@ -56,9 +56,9 @@ ob_start();
 	</colgroup>
 	<thead><tr>
 		<th class="rex-icon">-</th>
-		<th><?= $I18N->msg('pool_file_thumbnail') ?></th>
-		<th><?= $I18N->msg('pool_file_info') ?> / <?= $I18N->msg('pool_file_description') ?></th>
-		<th><?= $I18N->msg('pool_file_functions') ?></th>
+		<th><?= t('pool_file_thumbnail') ?></th>
+		<th><?= t('pool_file_info') ?> / <?= t('pool_file_description') ?></th>
+		<th><?= t('pool_file_functions') ?></th>
 	</tr></thead>
 	<?php
 
@@ -73,17 +73,17 @@ ob_start();
 			$select->setAttribute('onchange', '');
 
 			$add_input =
-				'<label for="rex_move_file_dest_category">'.$I18N->msg('pool_selectedmedia').'</label>'.
+				'<label for="rex_move_file_dest_category">'.t('pool_selectedmedia').'</label>'.
 				$select->render().
-				'<input class="rex-form-submit rex-form-submit-2 sly-button-changecat" type="submit" name="move" value="'.$I18N->msg('pool_changecat_selectedmedia').'" />';
+				'<input class="rex-form-submit rex-form-submit-2 sly-button-changecat" type="submit" name="move" value="'.t('pool_changecat_selectedmedia').'" />';
 		}
 
-		$add_input .= '<input class="rex-form-submit rex-form-submit-2 sly-button-delete" type="submit" name="delete" value="'.$I18N->msg('pool_delete_selectedmedia').'" />';
+		$add_input .= '<input class="rex-form-submit rex-form-submit-2 sly-button-delete" type="submit" name="delete" value="'.t('pool_delete_selectedmedia').'" />';
 
 		?>
 		<tfoot><tr>
 			<td class="rex-icon">
-				<label class="rex-form-hidden-label" for="checkie"><?= $I18N->msg('pool_select_all') ?></label>
+				<label class="rex-form-hidden-label" for="checkie"><?= t('pool_select_all') ?></label>
 				<input class="rex-form-checkbox" type="checkbox" name="checkie" id="checkie" value="0" onclick="setAllCheckBoxes('selectedmedia[]', this)" />
 			</td>
 			<td colspan="3"><?= $add_input ?></td>
@@ -158,7 +158,7 @@ ob_start();
 		$size      = $file_size;
 		$file_size = $file->getFormattedSize();
 
-		if ($file_title == '') $file_title = '['.$I18N->msg('pool_file_notitle').']';
+		if ($file_title == '') $file_title = '['.t('pool_file_notitle').']';
 		if ($REX['USER']->hasPerm('advancedMode[]')) $file_title .= ' ['.$id.']';
 
 		$ilink  = 'index.php?page=mediapool&amp;subpage=detail&amp;file_id='.$id.'&amp;rex_file_category='.$selected.$argUrl;
@@ -199,7 +199,7 @@ ob_start();
 	if (empty($files)): ?>
 		<tr>
 			<td></td>
-			<td colspan="3"><?= $I18N->msg('pool_nomediafound') ?></td>
+			<td colspan="3"><?= t('pool_nomediafound') ?></td>
 		</tr>
 	<? endif ?>
 	</tbody>

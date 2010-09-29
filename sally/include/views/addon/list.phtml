@@ -24,10 +24,10 @@ if (!empty($warning)) print rex_warning($warning);
 		<thead>
 			<tr>
 				<th class="rex-icon rex-col-a">&nbsp;</th>
-				<th class="rex-col-b"><?= $I18N->msg('addon_hname') ?></th>
-				<th class="rex-col-c"><?= $I18N->msg('addon_hinstall') ?></th>
-				<th class="rex-col-d"><?= $I18N->msg('addon_hactive') ?></th>
-				<th class="rex-col-e"><?= $I18N->msg('addon_hdelete') ?></th>
+				<th class="rex-col-b"><?= t('addon_hname') ?></th>
+				<th class="rex-col-c"><?= t('addon_hinstall') ?></th>
+				<th class="rex-col-d"><?= t('addon_hactive') ?></th>
+				<th class="rex-col-e"><?= t('addon_hdelete') ?></th>
 			</tr>
 		</thead>
 	<tbody>
@@ -42,28 +42,28 @@ if (!empty($warning)) print rex_warning($warning);
 		$availablePlugins  = $plugins->getAvailablePlugins($addon);
 
 		if ($addons->isInstalled($addon)) {
-			$install = $I18N->msg('addon_yes').' - <a href="'.$base.'install">'.$I18N->msg('addon_reinstall').'</a>';
+			$install = t('addon_yes').' - <a href="'.$base.'install">'.t('addon_reinstall').'</a>';
 
 			if (!empty($availablePlugins)) {
-				$uninstall = $I18N->msg('plugin_plugins_installed');
+				$uninstall = t('plugin_plugins_installed');
 			}
 			else {
-				$uninstall = '<a href="'.$base.'uninstall" onclick="return confirm(\''.sly_html($I18N->msg('addon_uninstall_question', $addon)).'\');">'.$I18N->msg('addon_uninstall').'</a>';
+				$uninstall = '<a href="'.$base.'uninstall" onclick="return confirm(\''.sly_html(t('addon_uninstall_question', $addon)).'\');">'.t('addon_uninstall').'</a>';
 			}
 		}
 		else {
-			$install   = $I18N->msg('addon_no').' - <a href="'.$base.'install">'.$I18N->msg('addon_install').'</a>';
-			$uninstall = $I18N->msg('addon_notinstalled');
+			$install   = t('addon_no').' - <a href="'.$base.'install">'.t('addon_install').'</a>';
+			$uninstall = t('addon_notinstalled');
 		}
 
 		if ($addons->isActivated($addon)) {
-			$status = $I18N->msg('addon_yes').' - <a href="'.$base.'deactivate">'.$I18N->msg('addon_deactivate').'</a>';
+			$status = t('addon_yes').' - <a href="'.$base.'deactivate">'.t('addon_deactivate').'</a>';
 		}
 		elseif ($addons->isInstalled($addon)) {
-			$status = $I18N->msg('addon_no').' - <a href="'.$base.'activate">'.$I18N->msg('addon_activate').'</a>';
+			$status = t('addon_no').' - <a href="'.$base.'activate">'.t('addon_activate').'</a>';
 		}
 		else {
-			$status = $I18N->msg('addon_notinstalled');
+			$status = t('addon_notinstalled');
 		}
 
 		?>
@@ -82,22 +82,22 @@ if (!empty($warning)) print rex_warning($warning);
 				$base = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;plugin='.urlencode($plugin).'&amp;func=';
 
 				if ($plugins->isInstalled($comp)) {
-					$install   = $I18N->msg('addon_yes').' - <a href="'.$base.'install">'.$I18N->msg('addon_reinstall').'</a>';
-					$uninstall = '<a href="'. $base .'uninstall" onclick="return confirm(\''.htmlspecialchars($I18N->msg('plugin_uninstall_question', $addon)).'\');">'.$I18N->msg('addon_uninstall').'</a>';
+					$install   = t('addon_yes').' - <a href="'.$base.'install">'.t('addon_reinstall').'</a>';
+					$uninstall = '<a href="'. $base .'uninstall" onclick="return confirm(\''.htmlspecialchars(t('plugin_uninstall_question', $addon)).'\');">'.t('addon_uninstall').'</a>';
 				}
 				else {
-					$install   = $I18N->msg('addon_no').' - <a href="'.$base.'install">'.$I18N->msg('addon_install').'</a>';
-					$uninstall = $I18N->msg('addon_notinstalled');
+					$install   = t('addon_no').' - <a href="'.$base.'install">'.t('addon_install').'</a>';
+					$uninstall = t('addon_notinstalled');
 				}
 
 				if ($plugins->isActivated($comp)) {
-					$status = $I18N->msg('addon_yes').' - <a href="'.$base.'deactivate">'.$I18N->msg('addon_deactivate').'</a>';
+					$status = t('addon_yes').' - <a href="'.$base.'deactivate">'.t('addon_deactivate').'</a>';
 				}
 				elseif ($plugins->isInstalled($comp)) {
-					$status = $I18N->msg('addon_no').' - <a href="'.$base.'activate">'.$I18N->msg('addon_activate').'</a>';
+					$status = t('addon_no').' - <a href="'.$base.'activate">'.t('addon_activate').'</a>';
 				}
 				else {
-					$status = $I18N->msg('addon_notinstalled');
+					$status = t('addon_notinstalled');
 				}
 
 				?>
@@ -116,7 +116,7 @@ if (!empty($warning)) print rex_warning($warning);
 	if (empty($addonList)) {
 		?>
 		<tr>
-			<td class="rex-col-a center" colspan="5"><?= $I18N->msg('addon_empty_list') ?></td>
+			<td class="rex-col-a center" colspan="5"><?= t('addon_empty_list') ?></td>
 		</tr>
 		<?php
 	}

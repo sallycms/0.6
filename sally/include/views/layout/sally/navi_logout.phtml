@@ -8,21 +8,21 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-global $REX, $I18N;
+global $REX;
 
 if ($REX['USER'] && $this->hasNavigation()) {
 	$user_name = $REX['USER']->getValue('name') != '' ? $REX['USER']->getValue('name') : $REX['USER']->getValue('login');
 	?>
 	<ul class="rex-logout">
-		<li class="rex-navi-first"><span><?= $I18N->msg('logged_in_as').' '.htmlspecialchars($user_name) ?></span></li>
-		<li><a href="index.php?page=profile"><?= $I18N->msg('profile_title') ?></a></li>
-		<li><a href="index.php?page=login&amp;func=logout"><?= $I18N->msg('logout') ?></a></li>
+		<li class="rex-navi-first"><span><?= t('logged_in_as').' '.htmlspecialchars($user_name) ?></span></li>
+		<li><a href="index.php?page=profile"><?= t('profile_title') ?></a></li>
+		<li><a href="index.php?page=login&amp;func=logout"><?= t('logout') ?></a></li>
 		<li><a href="../">zur Website</a></li>
 	</ul>
 	<?php
 }
 elseif ($this->hasNavigation()) {
-	echo '<p class="rex-logout">'.$I18N->msg('logged_out').'</p>';
+	echo '<p class="rex-logout">'.t('logged_out').'</p>';
 }
 else {
 	echo '<p class="rex-logout">&nbsp;</p>';

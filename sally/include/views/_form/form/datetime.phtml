@@ -8,8 +8,6 @@
  * null   => ''                   (kein Datum ausgeben)
  */
 
-global $I18N;
-
 $name     = $this->getAttribute('name');
 $id       = $this->getAttribute('id');
 $minYear  = 1970; // Und es machte Booom im UNIX-Universum...
@@ -26,7 +24,7 @@ if ($value !== null) {
 
 // JavaScript-Version
 
-$dateformat = $I18N->msg('dateformat');
+$dateformat = t('dateformat');
 $formatJS   = $dateformat;
 $formatJS   = str_replace(
 	array('%a', '%A', '%d', '%e', '%j', '%b', '%B', '%h', '%m', '%y', '%Y'),
@@ -43,7 +41,7 @@ $attrs['value'] = $value === null ? '' : strftime($dateformat.($this->withTime()
 print '<input '.sly_Util_HTML::buildAttributeString($attrs).' />';
 
 $registry = sly_Core::getTempRegistry();
-$locale   = $I18N->msg('htmllang');
+$locale   = t('htmllang');
 
 if (!$registry->has('sly.form.datetime.links')) {
 	$path   = 'media/js/';

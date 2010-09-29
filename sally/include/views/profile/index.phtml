@@ -12,20 +12,20 @@ $form = new sly_Form('index.php', 'POST', '');
 $form->addHiddenValue('page', 'profile');
 $form->addHiddenValue('func', 'update');
 
-$login        = new sly_Form_Text($I18N->msg('login_name'), $user->getLogin());
-$password     = new sly_Form_Input_Text('userpsw', $I18N->msg('new_password'), '');
-$username     = new sly_Form_Input_Text('username', $I18N->msg('name'), $user->getName());
-$userdesc     = new sly_Form_Input_Text('userdesc', $I18N->msg('description'), $user->getDescription());
-$localeSelect = new sly_Form_Select_DropDown('userperm_mylang', $I18N->msg('backend_language'), $user->getBackendLocale(), $this->getBackendLocales(), 'userperm-mylang');
+$login        = new sly_Form_Text(t('login_name'), $user->getLogin());
+$password     = new sly_Form_Input_Text('userpsw', t('new_password'), '');
+$username     = new sly_Form_Input_Text('username', t('name'), $user->getName());
+$userdesc     = new sly_Form_Input_Text('userdesc', t('description'), $user->getDescription());
+$localeSelect = new sly_Form_Select_DropDown('userperm_mylang', t('backend_language'), $user->getBackendLocale(), $this->getBackendLocales(), 'userperm-mylang');
 
-$password->setHelpText($I18N->msg('psw_encrypted'));
+$password->setHelpText(t('psw_encrypted'));
 $localeSelect->setMultiple(false);
 
-$form->beginFieldset($I18N->msg('profile_myprofile'), '', 2);
+$form->beginFieldset(t('profile_myprofile'), '', 2);
 $form->addRow(array($login, $password));
 $form->addRow(array($username, $userdesc));
 $form->addRow(array($localeSelect));
 
-$form->getSubmitButton()->setAttribute('value', $I18N->msg('profile_save'));
+$form->getSubmitButton()->setAttribute('value', t('profile_save'));
 $form->setResetButton(null);
 $form->render();
