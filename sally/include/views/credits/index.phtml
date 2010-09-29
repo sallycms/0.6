@@ -8,7 +8,6 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-global $REX;
 $conf = sly_Core::config();
 ?>
 <div class="rex-area rex-mab-10">
@@ -28,10 +27,10 @@ $conf = sly_Core::config();
 		<caption>Liste aller verfügbaren AddOns</caption>
 		<thead><tr>
 			<th class="sly-col-a rex-icon">&nbsp;</th>
-			<th class="sly-col-b"><?= $I18N->msg('credits_name') ?></th>
-			<th class="sly-col-c"><?= $I18N->msg('credits_version') ?></th>
-			<th class="sly-col-d"><?= $I18N->msg('credits_author') ?></th>
-			<th class="sly-col-e"><?= $I18N->msg('credits_supportpage') ?></th>
+			<th class="sly-col-b"><?= t('credits_name') ?></th>
+			<th class="sly-col-c"><?= t('credits_version') ?></th>
+			<th class="sly-col-d"><?= t('credits_author') ?></th>
+			<th class="sly-col-e"><?= t('credits_supportpage') ?></th>
 		</tr></thead>
 		<tbody>
 

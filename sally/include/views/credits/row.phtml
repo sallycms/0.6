@@ -11,7 +11,7 @@
 //$element = $type == 'addon' ? $addon : $plugin;
 $class   = $isActive ? 'rex-clr-grn' : 'rex-clr-red';
 $author  = is_array($author) ? sly_Util_String::humanImplode($author) : $author;
-$author  = $isActive ? sly_html($author) : $I18N->msg('credits_addon_inactive');
+$author  = $isActive ? sly_html($author) : t('credits_addon_inactive');
 
 if ($isActive) $class .= ' sly-activated';
 elseif ($isInstalled) $class .= ' sly-installed';
