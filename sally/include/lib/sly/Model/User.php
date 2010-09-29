@@ -152,6 +152,24 @@ class sly_Model_User extends sly_Model_Base {
 		return in_array($right, $this->rightsArray);
 	}
 
+	public function toggleRight($right, $switch = true) {
+		$right = trim($right, '#');
+
+		foreach ($this->rightsArray as $idx => $iRight) {
+			if ($right == $iRight && !$switch) {
+				unset($this->rightsArray[$idx]);
+				break;
+			}
+		}
+
+		if ($switch) {
+			$this->rightsArray[] = $right;
+		}
+
+		$this->rightsArray = array_unique($this->rightsArray);
+		$this->setRights(implode('#', $this->rightsArray));
+	}
+
 	// Misc
 
 	public function delete() {

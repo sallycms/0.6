@@ -8,82 +8,64 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Profile extends sly_Controller_Sally
-{
+class sly_Controller_Profile extends sly_Controller_Sally {
 	protected $func = '';
 
-	public function init()
-	{
+	public function init() {
 		$layout = sly_Core::getLayout();
 		$layout->pageHeader(t('profile_title'));
-
-		$layout = sly_Core::getLayout();
-		$layout->appendToTitle(t('profile_title'));
-
 		print '<div class="sly-content">';
 	}
 
-	public function teardown()
-	{
+	public function teardown() {
 		print '</div>';
 	}
 
-	public function index()
-	{
+	public function index() {
 		$this->render('views/profile/index.phtml', array('user' => $this->getUser()));
 		return true;
 	}
 
-	public function update()
-	{
-		global $I18N, $REX;
-
+	public function update() {
 		$user = $this->getUser();
 
 		$user->setName(sly_post('username', 'string'));
-		$user->setDescription(sly_post('userdesc', 'string'));
+		$user->setDescription(sly_post('description', 'string'));
 		$user->setUpdateDate(time());
 		$user->setUpdateUser($user->getLogin());
 
 		// Backend-Sprache
 
-		$backendLocale  = sly_post('userperm_mylang', 'string');
+		$backendLocale  = sly_post('locale', 'string');
 		$backendLocales = $this->getBackendLocales();
 
 		if (isset($backendLocales[$backendLocale])) {
-			$rights = $user->getRights();
-			$rights = preg_replace('/#be_lang\[.*?\]/', '#be_lang['.$backendLocale.']', $rights);
-			$user->setRights($rights);
+			$user->toggleRight('#be_lang['.$user->getBackendLocale().']', false);
+			$user->toggleRight('#be_lang['.$backendLocale.']');
 		}
 
 		// Passwort ändern?
 
-		$password = sly_post('userpsw', 'string');
+		$password = sly_post('password', 'string');
 		$service  = sly_Service_Factory::getService('User');
 
-		if (!empty($password) && $password != $user->getPassword()) {
+		if (!empty($password)) {
 			$user->setPassword($password);
 		}
 
 		// Speichern, fertig.
 
-		$service = sly_Service_Factory::getService('User');
 		$service->save($user);
-
-		print rex_info($I18N->msg('user_data_updated'));
+		print rex_info(t('user_data_updated'));
 		return $this->index();
 	}
 
-	public function checkPermission()
-	{
+	public function checkPermission() {
 		return $this->getUser() !== null;
 	}
 
-	protected function getBackendLocales()
-	{
-		global $I18N, $REX;
-
-		$cur_htmlcharset = $I18N->msg('htmlcharset');
+	protected function getBackendLocales() {
+		$cur_htmlcharset = t('htmlcharset');
 		$langpath        = SLY_INCLUDE_PATH.DIRECTORY_SEPARATOR.'lang';
 		$langs           = glob($langpath.'/*.lang');
 		$result          = array('' => 'default');
