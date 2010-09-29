@@ -175,4 +175,14 @@ class sly_Core {
 	public static function getTempRegistry() {
 		return sly_Registry_Temp::getInstance();
 	}
+
+	public static function getVersion($pattern = 'X.Y.Z') {
+		$config  = self::config();
+		$pattern = str_replace('s', 'sly', $pattern);
+		$pattern = str_replace('S', 'sally', $pattern);
+		$pattern = str_replace('X', $config->get('VERSION'), $pattern);
+		$pattern = str_replace('Y', $config->get('SUBVERSION'), $pattern);
+		$pattern = str_replace('Z', $config->get('MINORVERSION'), $pattern);
+		return $pattern;
+	}
 }

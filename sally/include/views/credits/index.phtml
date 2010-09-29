@@ -7,11 +7,9 @@
  *
  * http://www.opensource.org/licenses/mit-license.php
  */
-
-$conf = sly_Core::config();
 ?>
 <div class="rex-area rex-mab-10">
-	<h3 class="rex-hl2">SallyCMS <?php echo $conf->get('VERSION').'.'.$conf->get('SUBVERSION').'.'.$conf->get('MINORVERSION') ?></h3>
+	<h3 class="rex-hl2">SallyCMS <?= sly_Core::getVersion() ?></h3>
 
 	<div class="rex-area-content">
 		<p class="rex-tx1">

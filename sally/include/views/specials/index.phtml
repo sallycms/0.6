@@ -26,7 +26,7 @@ $defaultTemplate = new sly_Form_Select_DropDown('default_template', '$REX[DEFAUL
 $cachingStrategy = new sly_Form_Select_DropDown('caching_strategy', t('specials_caching_strategy'), sly_Cache::getStrategy(), sly_Cache::getAvailableCacheImpls(), 'rex-form-caching-strategy');
 
 $buttonBar = new sly_Form_ButtonBar(array(
-	'submit' => new sly_Form_Input_Button('submit', 'sendit', $I18N->msg('specials_update'))
+	'submit' => new sly_Form_Input_Button('submit', 'sendit', t('specials_update'))
 ));
 
 ?>
@@ -41,33 +41,33 @@ $buttonBar = new sly_Form_ButtonBar(array(
 		<div class="rex-area-col-2">
 			<div class="rex-area-col-a">
 
-				<h3 class="rex-hl2"><?= $I18N->msg('specials_features') ?></h3>
+				<h3 class="rex-hl2"><?= t('specials_features') ?></h3>
 
 				<div class="rex-area-content">
-					<h4 class="rex-hl3"><?= $I18N->msg('delete_cache') ?></h4>
-					<p class="rex-tx1"><?= $I18N->msg('delete_cache_description') ?></p>
-					<p class="rex-button"><a class="rex-button" href="index.php?page=specials&amp;func=clearcache"><?= $I18N->msg('delete_cache') ?></a></p>
+					<h4 class="rex-hl3"><?= t('delete_cache') ?></h4>
+					<p class="rex-tx1"><?= t('delete_cache_description') ?></p>
+					<p class="rex-button"><a class="rex-button" href="index.php?page=specials&amp;func=clearcache"><?= t('delete_cache') ?></a></p>
 
-					<h4 class="rex-hl3"><?= $I18N->msg('setup') ?></h4>
-					<p class="rex-tx1"><?= $I18N->msg('setup_text') ?></p>
-					<p class="rex-button"><a class="rex-button" href="index.php?page=specials&amp;func=setup" onclick="return confirm(\'<?= $I18N->msg('setup') ?>?\');"><?= $I18N->msg('setup') ?></a></p>
+					<h4 class="rex-hl3"><?= t('setup') ?></h4>
+					<p class="rex-tx1"><?= t('setup_text') ?></p>
+					<p class="rex-button"><a class="rex-button" href="index.php?page=specials&amp;func=setup" onclick="return confirm(\'<?= t('setup') ?>?\');"><?= t('setup') ?></a></p>
 
-					<h4 class="rex-hl3"><?= $I18N->msg('version') ?></h4>
-					<p class="rex-tx1">SallyCMS <?= $config->get('VERSION') ?>.<?= $config->get('SUBVERSION') ?>.<?= $config->get('MINORVERSION') ?></p>
+					<h4 class="rex-hl3"><?= t('version') ?></h4>
+					<p class="rex-tx1">SallyCMS <?= sly_Core::getVersion() ?></p>
 
-					<h4 class="rex-hl3"><?= $I18N->msg('database') ?></h4>
-					<p class="rex-tx1"><?= $I18N->msg('name') ?>: <?= sly_html($config->get('DATABASE/NAME')) ?><br /><?= $I18N->msg('host') ?>: <?= sly_html($config->get('DATABASE/HOST')) ?></p>
+					<h4 class="rex-hl3"><?= t('database') ?></h4>
+					<p class="rex-tx1"><?= t('name') ?>: <?= sly_html($config->get('DATABASE/NAME')) ?><br /><?= t('host') ?>: <?= sly_html($config->get('DATABASE/HOST')) ?></p>
 				</div>
 			</div>
 
 			<div class="rex-area-col-b">
-				<h3 class="rex-hl2"><?= $I18N->msg('specials_settings') ?></h3>
+				<h3 class="rex-hl2"><?= t('specials_settings') ?></h3>
 
 				<div class="rex-area-content">
 
 					<?php
 
-					$fieldset = new sly_Form_Fieldset($I18N->msg('general_info_header'));
+					$fieldset = new sly_Form_Fieldset(t('general_info_header'));
 
 					$fieldset->addRows(array(
 						new sly_Form_Input_Text('server', '$REX[SERVER]', $config->get('SERVER')),
