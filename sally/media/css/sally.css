@@ -184,6 +184,10 @@ div.rex-addon-col {
 
 	&-b {
 		float: right;
+
+		.rex-hl2, .rex-area-content {
+			float: right;
+		}
 	}
 }
 
@@ -346,14 +350,14 @@ div.rex-addon-output {
 }
 
 div.rex-area-col-2 .rex-hl2 {
-	width: 93%;
+	width: 94%;
 }
 
 .rex-area-content {
 	padding: 10px 0;
 	+border-bottom-radius($brd_rad);
 	background-color: #fff;
-	width: 98%;
+	width: 99%;
 
 	h3.rex-hl3, h4.rex-hl3, legend {
 		margin: 0 10px 0 10px;
