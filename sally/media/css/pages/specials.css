@@ -1,8 +1,3 @@
-body#rex-page-specials div.rex-form {
-	+border-radius($brd_rad);
-	/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
-}
-
 /* Sprites */
 
 .sly-sprite.sly-sprite {
@@ -10,13 +5,14 @@ body#rex-page-specials div.rex-form {
 	&-language-add { background-position: 0 -64px; }
 }
 
-/* System -> Einstellungen | unterer Abstand zu den gestrichelten Linien in der rechten Box*/
+/* System: Einstellungen | unterer Abstand zu den gestrichelten Linien in der rechten Box*/
+
 #rex-page-specials {
-	p.rex-form-text, p.rex-form-select, p.rex-form-read { padding-bottom: 5px; }
+	p.rex-form-text, p.rex-form-select { padding-bottom: 5px; }
 	#languages .sly-col-d { width: 130px; }
 }
 
-/*	System : Einstellungen */
+/*	System: Einstellungen */
 
 div#rex-form-system-setup {
 	fieldset { padding-bottom: 1em; }
@@ -30,16 +26,12 @@ div#rex-form-system-setup {
 		border-bottom-width: 0;
 		padding: 5px 0 0;
 
-		label {
-			width: 180px;
-		}
+		label { width: 180px; }
 	}
 
 	fieldset.rex-form-col-1 div.rex-form-row {
 		width: 371px;
 
-		p.rex-form-label-right label,
-		p.rex-form-read span,
 		p.rex-form-text input,
 		p select {
 			width: 180px;
@@ -49,16 +41,13 @@ div#rex-form-system-setup {
 			input { width: 140px; }
 		}
 
-		#rex_include_path {
-			display: inline;
-			line-height: 21px;
-		}
-
 		/*	Submit */
 
 		p input.rex-form-submit {
 			margin-left: 180px;
 		}
+
+		label { line-height: 23px; }
 	}
 
 	.rex-area-col-b .rex-area-content {
@@ -67,27 +56,11 @@ div#rex-form-system-setup {
 
 	.rex-form-col-1 {
 		padding-bottom: 0;
-		.rex-form-wrapper {
-			margin-bottom: 10px;
-		}
+		.rex-form-wrapper { margin-bottom: 10px; }
 	}
 }
 
-/*	System : Sprachen */
-
-div#rex-form-system-language input.rex-form-text {
-	width: 98%;
-}
-
-div#rex-form, div#sly-form {
-	&-system-language {
-		table.rex-table {
-			th, td                   { vertical-align: middle; }
-			th.rex-icon, td.rex-icon { padding-bottom: 6px;    }
-			th.sly-icon, td.sly-icon { padding-bottom: 6px;    }
-		}
-	}
-}
+/*	System: Sprachen */
 
 #rex-form-specials-languages {
 	fieldset table {
@@ -101,9 +74,4 @@ div#rex-form, div#sly-form {
 		input.rex-form-text { width: 96%; }
 		input.rex-form-submit { margin-left: 0; }
 	}
-}
-
-div#rex-form-system-setup {
-	background-color: #fff;
-	color: $drk_grey;
 }
