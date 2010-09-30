@@ -19,26 +19,28 @@ print $dispatcher->filter('PAGE_MEDIAPOOL_HEADER', '', array('category_id' => $s
 ////////////////////////////////////////////////////////
 // category selection form
 
-$form = new sly_Form('index.php', 'POST', t('pool_select_cat'), '', 'rex-form-mediapool-selectcategory');
-$form->addHiddenValue('page', 'mediapool');
-
-// additional arguments
-
-foreach ($this->args as $name => $value) {
-	$form->addHiddenValue('args['.$name.']', $value);
-}
-
-// category select
-
 $select = $this->getCategorySelect();
-$select->setAttribute('onchange', 'this.form.submit()');
+$values = $select->getValues();
 
-$form->add($select);
-$form->setResetButton(null);
-$form->setSubmitButton(null);
+if (count($values) > 1) { // empty / 'no category' will hide the form
+	$select->setAttribute('onchange', 'this.form.submit()');
 
-$form = $dispatcher->filter('SLY_MEDIA_LIST_TOOLBAR', $form, array('category_id' => $selected));
+	$form = new sly_Form('index.php', 'POST', t('pool_select_cat'), '', 'rex-form-mediapool-selectcategory');
+	$form->addHiddenValue('page', 'mediapool');
 
-if ($form instanceof sly_Form) {
-	$form->render();
+	// additional arguments
+
+	foreach ($this->args as $name => $value) {
+		$form->addHiddenValue('args['.$name.']', $value);
+	}
+
+	$form->add($select);
+	$form->setResetButton(null);
+	$form->setSubmitButton(null);
+
+	$form = $dispatcher->filter('SLY_MEDIA_LIST_TOOLBAR', $form, array('category_id' => $selected));
+
+	if ($form instanceof sly_Form) {
+		$form->render();
+	}
 }
