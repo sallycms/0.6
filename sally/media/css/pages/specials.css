@@ -89,6 +89,20 @@ div#rex-form, div#sly-form {
 	}
 }
 
+#rex-form-specials-languages {
+	fieldset table {
+		caption {
+			+border-radius(0);
+			background: $md_grey;
+			border: 1px solid $md_grey;
+		}
+
+		th { background: $md_grey; }
+		input.rex-form-text { width: 96%; }
+		input.rex-form-submit { margin-left: 0; }
+	}
+}
+
 div#rex-form-system-setup {
 	background-color: #fff;
 	color: $drk_grey;

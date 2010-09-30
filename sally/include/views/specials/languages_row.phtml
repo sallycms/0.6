@@ -25,11 +25,11 @@ if ($this->func == 'edit' && $editID == $clangID) {
 	$name = sly_post('clang_name', 'string', $clangName);
 
 	?>
-	<tr class="sly-active">
+	<tr class="rex-table-row-activ">
 		<td class="sly-col-a sly-icon"><?= sly_Util_HTML::getSpriteLink('', $name, 'language') ?></td>
-		<td class="sly-col-b"><?= sly_html($clangID) ?></td>
-		<td class="sly-col-c"><input class="sly-form-text" type="text" name="clang_name" value="<?= sly_html($name) ?>" /></td>
-		<td class="sly-col-d"><input class="sly-form-submit" type="submit" name="sly-submit" value="<?= t('clang_update') ?>" /></td>
+		<td class="sly-col-b center"><?= sly_html($clangID) ?></td>
+		<td class="sly-col-c"><input class="rex-form-text" type="text" name="clang_name" value="<?= sly_html($name) ?>" /></td>
+		<td class="sly-col-d"><input class="rex-form-submit" type="submit" name="sly-submit" value="<?= t('clang_update') ?>" /></td>
 	</tr>
 	<?php
 }
@@ -39,7 +39,7 @@ else {
 	?>
 	<tr>
 		<td class="sly-col-a sly-icon"><?= sly_Util_HTML::getSpriteLink($editLink, $clangName, 'language') ?></td>
-		<td class="sly-col-b"><?= sly_html($clangID) ?></td>
+		<td class="sly-col-b center"><?= sly_html($clangID) ?></td>
 		<td class="sly-col-c"><a href="<?= sly_html($editLink) ?>"><?= sly_html($clangName) ?></a></td>
 		<td class="sly-col-d"><?= $delLink ?></td>
 	</tr>
