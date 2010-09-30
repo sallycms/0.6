@@ -288,8 +288,14 @@ clang_function: Funktionen
 version: Version
 host: Host
 database: Datenbank
-specials_caching_strategy: Cache Strategie
+specials_caching_strategy: Cache-Strategie
+specials_server: Server
+specials_servername: Projektname
+specials_error_email: Fehler-E-Mail
 specials_start_article: Startseite
+specials_default_template: Standardtemplate
+specials_lang: Standard BE-Locale
+specials_mod_rewrite: mod_rewrite verwenden
 specials_not_found_article: Artikel bei fehlender Seite
 
 setup: Setup
