@@ -160,37 +160,6 @@ function sly_arrayDelete($array, $needle)
 }
 
 /**
- * Hilfsfunktion: Anwenden eines Prädikats auf ein Array
- *
- * Gibt true zurück, wenn das Prädikat auf mindestens ein
- * Element des Arrays zutrifft.
- *
- * @param  string $predicate  das Prädikat (Funktionsname als String)
- * @param  array  $array      das Such-Array
- * @return bool               true, wenn das Prädikat mindestens 1x zutrifft
- */
-function sly_arrayAny($predicate, $array)
-{
-	foreach ($array as $element) if ($predicate($element)) return true;
-	return false;
-}
-
-/**
- * Hilfsfunktion: Anwenden eines Prädikats auf ein Array
- *
- * Gibt true zurück, wenn das Prädikat auf mindestens einen
- * Schlüssel des Arrays zutrifft.
- *
- * @param  string $predicate  das Prädikat (Funktionsname als String)
- * @param  array  $array      das Such-Array
- * @return bool               true, wenn das Prädikat mindestens 1x zutrifft
- */
-function sly_arrayAnyKey($predicate, $array)
-{
-	return sly_arrayAny($predicate, array_keys($array));
-}
-
-/**
  * Macht aus einem Skalar ein Array
  *
  * @param  mixed $element  das Element
