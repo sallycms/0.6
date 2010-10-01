@@ -25,3 +25,10 @@ body#rex-page-structure div.rex-form {
 		border: 0;
 	}
 }
+
+div#rex-form-structure-category,
+div#rex-form-structure-article {
+	input.rex-form-submit {
+		margin-left: 0;
+	}
+}
