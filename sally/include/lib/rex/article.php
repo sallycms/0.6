@@ -381,25 +381,23 @@ class rex_article {
 		if (empty($moduleSelect)) {
 			global $REX, $I18N;
 
-			$moduleService   = sly_Service_Factory::getService('Module');
 			$templateService = sly_Service_Factory::getService('Template');
-			$modules         = $moduleService->getModules();
 			$slots           = $templateService->getSlots($this->template);
 			$moduleSelect    = array();
 
-			foreach (array_keys($slots) as $slotID) {
-				$moduleSelect[$slotID] = new rex_select();
-				$moduleSelect[$slotID]->setName('module');
-				$moduleSelect[$slotID]->setSize('1');
-				$moduleSelect[$slotID]->setStyle('class="rex-form-select"');
-				$moduleSelect[$slotID]->setAttribute('onchange', 'this.form.submit();');
-				$moduleSelect[$slotID]->addOption('----------------------------  '.$I18N->msg('add_block'),'');
+			foreach ($slots as $slot) {
+				$modules = $templateService->getModules($this->template, $slot);
+
+				$moduleSelect[$slot] = new rex_select();
+				$moduleSelect[$slot]->setName('module');
+				$moduleSelect[$slot]->setSize('1');
+				$moduleSelect[$slot]->setStyle('class="rex-form-select"');
+				$moduleSelect[$slot]->setAttribute('onchange', 'this.form.submit();');
+				$moduleSelect[$slot]->addOption('----------------------------  '.$I18N->msg('add_block'),'');
 
 				foreach ($modules as $module => $moduleTitle) {
 					if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('module['.$module.']')) {
-						if ($templateService->hasModule($this->template, $slotID, $module)) {
-							$moduleSelect[$slotID]->addOption(rex_translate($moduleTitle, null, false), $module);
-						}
+						$moduleSelect[$slot]->addOption(rex_translate($moduleTitle, null, false), $module);
 					}
 				}
 			}
@@ -414,7 +412,6 @@ class rex_article {
 		$formURL      = 'index.php';
 		$moduleSelect = $this->getModuleSelect();
 		$formID       = ' id="slice'.$prior.'"';
-
 		$moduleSelect[$this->ctype]->setId('module'.$prior);
 
 		$sliceContent = '
@@ -588,16 +585,12 @@ class rex_article {
 
 		if (!empty($this->template) && $this->article_id != 0) {
 			$service  = sly_Service_Factory::getService('Template');
-			$template = $this->template;
 
-			if (!$service->isGenerated($template)) $service->generate($template);
-			$templateFile = $service->getCacheFile($template);
-
-			unset($service, $template);
+			$params['rex_article'] = $this;
 
 			ob_start();
 			ob_implicit_flush(0);
-			include $templateFile;
+			$service->includeFile($this->template, $params);
 			$content = ob_get_clean();
 		}
 		else {

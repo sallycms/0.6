@@ -34,10 +34,11 @@ class sly_Service_Module extends sly_Service_DevelopBase {
 
 	protected function buildData($filename, $mtime, $data) {
 		$result = array(
-			'filename' => $filename,
-			'title'    => isset($data['title']) ? $data['title'] : $filename,
-			'actions'  => isset($data['actions']) ? $data['actions'] : array(),
-			'mtime'    => $mtime
+			'filename'  => $filename,
+			'title'     => isset($data['title']) ? $data['title'] : $filename,
+			'actions'   => isset($data['actions']) ? $data['actions'] : array(),
+			'templates' => isset($data['templates']) ? $data['templates'] : 'all',
+			'mtime'     => $mtime
 		);
 		unset($data['name'], $data['title'], $data['actions']);
 		$result['params'] = $data;
@@ -79,6 +80,10 @@ class sly_Service_Module extends sly_Service_DevelopBase {
 
 	public function getOutputFilename($name, $fullPath) {
 		return $this->get($name, 'filename', false, 'output');
+	}
+
+	public function hasTemplate($name) {
+		return true;
 	}
 
 }

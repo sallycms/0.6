@@ -16,6 +16,8 @@
  */
 class sly_Service_Template extends sly_Service_DevelopBase {
 
+	const DEFAULT_TYPE = 'default';
+
 	protected function isFileValid($filename) {
 		return preg_match('#\.php$#i', $filename);
 	}
@@ -25,20 +27,20 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	}
 
 	protected function getFileType($filename = '') {
-		return 'default';
+		return self::DEFAULT_TYPE;
 	}
 
 	public function getFileTypes() {
-		return array('default');
+		return array(self::DEFAULT_TYPE);
 	}
 
 	protected function buildData($filename, $mtime, $data) {
 		$result = array(
 			'filename' => $filename,
-			'title'    => isset($data['title']) ? $data['title'] : $filename,
+			'title'    => isset($data['title']) ? $data['title'] : $data['name'],
 			'class'    => isset($data['class']) ? $data['class'] : null,
-			'slots'    => sly_makeArray(isset($data['slots']) ? $data['slots'] : 1),
-			'modules'  => isset($data['modules']) ? $data['modules'] : 'all',
+			'slots'    => sly_makeArray(isset($data['slots']) ? $data['slots'] : 0),
+			'modules'  => isset($data['modules']) ? $data['modules'] : array(),
 			'mtime'    => $mtime
 		);
 		unset($data['name'], $data['title'], $data['class'], $data['slots'], $data['modules']);
@@ -59,13 +61,27 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 			return false;
 		}
 
-		array_map('unlink', $files);
+		array_map('unlink', array_filter($files, 'file_exists'));
 		return true;
 	}
 
-	public function getTemplates() {
+	/**
+	 * Get available templates from this service
+	 *
+	 * Templates may be filtered by a class parameter. If class is set, only
+	 * the from this class will be returned. If class is null, all templates
+	 * will be returned.
+	 *
+	 * @param  string  $class  The class to filter. (default: null - no filtering)
+	 * @return array           List of templates of the form: array('NAME' => 'TITLE', ...)
+	 */
+	public function getTemplates($class = null) {
 		$result = array();
-		foreach ($this->getData() as $name => $types) $result[$name] = $types['default']['title'];
+		foreach ($this->getData() as $name => $types) {
+			if (empty($class) || $this->getClass($name) == $class) {
+				$result[$name] = $types[self::DEFAULT_TYPE]['title'];
+			}
+		}
 		return $result;
 	}
 
@@ -76,10 +92,9 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	}
 
 	public function generate($name) {
-		if (!$this->exists($name)) return false;
+		if (!$this->exists($name)) throw new sly_Exception("Template '$name' does not exist.");
 
 		$content = $this->getContent($name);
-		if ($content === false) return false;
 
 		foreach (sly_Core::getVarTypes() as $var) {
 			$content = $var->getTemplate($content);
@@ -97,23 +112,119 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 		return sly_Util_Directory::join($this->getCacheFolder(), $name.'.php');
 	}
 
+	/**
+	 * Return the title of the template
+	 *
+	 * @param  string  $name     Unique template name
+	 * @param  string  $default  Default return value
+	 * @return string            The Template title
+	 */
 	public function getTitle($name, $default = '') {
 		return $this->get($name, 'title', $default);
 	}
 
+	/**
+	 * Returns the class of a template
+	 *
+	 * The class may be used for classification and filtering
+	 *
+	 * @param  string  $name     Unique template name
+	 * @param  string  $default  Default return value
+	 * @return string            The templates class
+	 */
 	public function getClass($name, $default = '') {
 		return $this->get($name, 'class', $default);
 	}
 
+	/**
+	 * Gets the slots for a template
+	 *
+	 * The slots will be returned as an associative array.
+	 *
+	 * If the slots were defined as a list of titles it might look like:
+	 * array(0 => 'Slot Title 1', 1 => 'Slot Title 2')
+	 *
+	 * If the slots were defined with names, it may look like:
+	 * array('slot1' => 'Slot Title 1', 'slot2' => 'Slot Title 2')
+	 *
+	 * @param  string  $name  Template name
+	 * @return array          Array of slots
+	 */
 	public function getSlots($name) {
-		$slots = $this->get($name, 'slots', array());
-		$slots = sly_makeArray($slots);
-		if (empty($slots)) $slots = array(0 => 'default');
-		return $slots;
+		return $this->get($name, 'slots', array(0));
 	}
 
-	public function getModules($name) {
-		return $this->get($name, 'modules');
+	/**
+	 * Checks, if the given template has a given slot
+	 *
+	 * @param  string  $name  Template name
+	 * @param  string  $slot  Slot name
+	 * @return boolean        true, when the template has this slot
+	 */
+	public function hasSlot($name, $slot) {
+		$slots = $this->getSlots($name);
+		return isset($slots[$slot]);
+	}
+
+	/**
+	 * Get the valid modules for the given template and slot
+	 *
+	 * The modules are filtered by the constraints of the template and the
+	 * modules.
+	 *
+	 * @param  string  $name  Template name
+	 * @param  string  $slot  Slot identifier
+	 * @return array          Array of module names
+	 */
+	public function getModules($name, $slot = null) {
+		$moduleService = sly_Service_Factory::getService('Module');
+		$modules       = sly_makeArray($this->get($name, 'modules'));
+		$slots         = $this->getSlots($name);
+
+		// only use _ALL_ keyword, when ther is no _ALL_ slot
+		$checkAll      = array_search('_ALL_', $slots) === false;
+
+		$result = array();
+
+		// check if slot is valid
+		if (empty($slot) || array_search($slot, $slots) !== false) {
+			$allModules = array_keys($moduleService->getModules());
+
+			// find modules for this template
+			if (empty($modules)) $modules = $allModules;
+			elseif ($this->isModulesDefComplex($modules)) {
+				$tmp = array();
+				foreach ($modules as $key => $value) {
+					$value = sly_makeArray($value);
+					if (empty($slot) || $slot == $key || ($checkAll && $key == '_ALL_')) {
+						$tmp = array_merge($tmp, array_values($value));
+					}
+				}
+				$modules = $tmp;
+			}
+
+			// filter modules by their constraints
+			foreach ($modules as $module) {
+				if ($moduleService->exists($module) && $moduleService->hasTemplate($module, $name)) {
+					$result[$module] = $moduleService->getTitle($module);
+				}
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Checks, if the modules definitions are complex in the template
+	 *
+	 * complex: {slot1: wymeditor, slot2: [module1, module2]}
+	 * simple:  [wymeditor, module1]
+	 *
+	 * @param  array  $modules  Array of modules parsed from the template
+	 * @return boolean          true, when the definition is complex
+	 */
+	private function isModulesDefComplex($modules) {
+		return sly_Util_Array::isAssoc($modules) || sly_Util_Array::isMultiDim($modules);
 	}
 
 	public function getFilename($name) {
@@ -131,4 +242,12 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 			/* 'all' oder [all] angegeben   */ sly_makeArray($modules[$ctype]) == array('all') ||
 			/* Modulkennung angegeben       */ in_array($module, sly_makeArray($modules[$ctype]));
 	}
+
+	public function includeFile($name, $params = array()) {
+		if (!$this->isGenerated($name)) $this->generate($name);
+		$templateFile_C3476zz3g21ug327ur623 = $this->getCacheFile($name);
+		if (!empty($params)) extract($params);
+		include $templateFile_C3476zz3g21ug327ur623;
+	}
+
 }
