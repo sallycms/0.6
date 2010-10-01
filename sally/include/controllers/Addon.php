@@ -8,8 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Addon extends sly_Controller_Sally
-{
+class sly_Controller_Addon extends sly_Controller_Sally {
 	protected $func    = '';
 	protected $addons  = null;
 	protected $plugins = null;
@@ -18,8 +17,7 @@ class sly_Controller_Addon extends sly_Controller_Sally
 	protected $info    = '';
 	protected $warning = '';
 
-	public function init()
-	{
+	public function init() {
 		$layout = sly_Core::getLayout();
 		$layout->pageHeader(t('addons'));
 		print '<div class="sly-content">';
@@ -42,13 +40,11 @@ class sly_Controller_Addon extends sly_Controller_Sally
 		}
 	}
 
-	public function teardown()
-	{
+	public function teardown() {
 		print '</div>';
 	}
 
-	public function index()
-	{
+	public function index() {
 		$this->checkForNewComponents();
 
 		$this->render('views/addon/list.phtml', array(
@@ -59,16 +55,14 @@ class sly_Controller_Addon extends sly_Controller_Sally
 		));
 	}
 
-	protected function prepareAction()
-	{
+	protected function prepareAction() {
 		return array(
 			$this->plugin ? $this->plugins : $this->addons,
 			$this->plugin ? array($this->addon, $this->plugin) : $this->addon
 		);
 	}
 
-	protected function checkForNewComponents()
-	{
+	protected function checkForNewComponents() {
 		$config  = sly_Core::config();
 		$addons  = rex_read_addons_folder();
 		$plugins = array();
@@ -82,10 +76,11 @@ class sly_Controller_Addon extends sly_Controller_Sally
 
 		$knownAddons = $this->addons->getRegisteredAddOns();
 
-		foreach(array_diff($addons, $knownAddons) as $addon){
+		foreach (array_diff($addons, $knownAddons) as $addon){
 			$this->addons->add($addon);
 		}
-		foreach(array_diff($knownAddons, $addons) as $addon){
+
+		foreach (array_diff($knownAddons, $addons) as $addon){
 			$this->addons->removeConfig($addon);
 		}
 
@@ -94,25 +89,23 @@ class sly_Controller_Addon extends sly_Controller_Sally
 		foreach ($addons as $addon) {
 			$knownPlugins = $this->plugins->getRegisteredPlugins($addon);
 
-			foreach(array_diff($plugins[$addon], $knownPlugins) as $plugin){
+			foreach (array_diff($plugins[$addon], $knownPlugins) as $plugin){
 				$this->plugins->add(array($addon, $plugin));
 			}
-			foreach(array_diff($knownPlugins, $plugins[$addon]) as $plugin){
+
+			foreach (array_diff($knownPlugins, $plugins[$addon]) as $plugin){
 				$this->addons->removeConfig(array($addon, $plugin));
 			}
 		}
 	}
 
-	protected function t($key, $param = null)
-	{
-		global $I18N;
+	protected function t($key, $param = null) {
 		$prefix = $this->plugin ? 'plugin_' : 'addon_';
 		if ($this->plugin && is_array($param)) $param = $param[1];
-		return $I18N->msg($prefix.$key, $param);
+		return t($prefix.$key, $param);
 	}
 
-	protected function call($method, $i18n)
-	{
+	protected function call($method, $i18n) {
 		list($service, $component) = $this->prepareAction();
 		$this->warning = $service->$method($component);
 
@@ -129,8 +122,7 @@ class sly_Controller_Addon extends sly_Controller_Sally
 	public function activate()   { return $this->call('activate', 'activated');     }
 	public function deactivate() { return $this->call('deactivate', 'deactivated'); }
 
-	public function checkPermission()
-	{
+	public function checkPermission() {
 		global $REX;
 		return isset($REX['USER']) && $REX['USER']->isAdmin();
 	}

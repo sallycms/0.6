@@ -306,7 +306,7 @@ setup_error2: "Leider konnte die master.inc.php nicht beschrieben werden. Bitte 
 # sally\include\pages\addon.inc.php
 addon: AddOn
 addons: AddOns
-addon_help: Hilfe für
+addon_help: "Hilfe für {0}"
 addon_no_help_file: Keine Hilfedatei gefunden
 addon_back: zurück
 addon_install_not_found: Installationsdatei wurde nicht gefunden (install.inc.php)!

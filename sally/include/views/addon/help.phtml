@@ -13,27 +13,27 @@ $component   = $plugin ? array($addon, $plugin) : $addon;
 $helpfile    = $service->baseFolder($component).'/help.inc.php';
 $version     = $service->getVersion($component);
 $author      = $service->getAuthor($component);
-$supportPage = $service->getSupportPage($component);
+$supportPage = $service->getSupportPageEx($component);
 $name        = $plugin ? $addon.' / '.$plugin : $addon;
-$credits     = t('credits_name').': <span>'.sly_html($name).'</span><br />';
+$format      = '<dt>%s:</dt><dd>%s</dd>';
+$credits     = sprintf($format, t('credits_name'), sly_html($name));
 
-if ($version)     $credits .= t('credits_version').': <span>'.sly_html($version).'</span><br />';
-if ($author)      $credits .= t('credits_author').': <span>'.sly_html($author).'</span><br />';
-if ($supportPage) $credits .= t('credits_supportpage').': <span><a href="http://'.$supportPage.'" class="sly-blank">'.sly_html($supportPage).'</a></span><br />';
+if ($version)     $credits .= sprintf($format, t('credits_version'), sly_html($version));
+if ($author)      $credits .= sprintf($format, t('credits_author'), sly_html($author));
+if ($supportPage) $credits .= sprintf($format, t('credits_supportpage'), $supportPage);
 
 ?>
-<div class="rex-area">
-	<h3 class="rex-hl2"><?= t('addon_help').' '.sly_html($name) ?></h3>
+<div class="rex-area sly-addon-help">
+	<h3 class="rex-hl2"><?= t('addon_help', $name) ?></h3>
 	<div class="rex-area-content">
 		<? if (!is_file($helpfile)): ?>
-		<p><?= t('addon_no_help_file') ?></p>
+		<p class="rex-tx1"><?= t('addon_no_help_file') ?></p>
 		<? else: ?>
 		<? include $helpfile ?>
 		<? endif ?>
-		<br />
-		<p id="rex-addon-credits"><?= $credits ?></p>
+		<dl class="rex-dl"><?= $credits ?></dl>
 	</div>
 	<div class="rex-area-footer">
-		<p><a href="JavaScript:history.back();"><?= t('addon_back') ?></a></p>
+		<p><a href="#" onclick="history.go(-1); return false"><?= t('addon_back') ?></a></p>
 	</div>
 </div>

@@ -6,21 +6,19 @@
 }
 
 .sly-addonlist {
-	tr.sly-addon {
-		&.sly-installed td, &.sly-not-installed td {
-			background: #e0e0e0;
-			color: #aca9a9;
-		}
-
-		&.sly-activated td { background: #fff; }
+	tr.sly-addon, tr.sly-plugin {
+		&.sly-not-installed td { background: #ddd; color: #8D8686; }
+		&.sly-installed td     { background: #eee; color: #6D6666; }
+		&.sly-activated td     { background: #fff; color: #4D4646; }
 	}
-
-	tr.sly-plugin.sly-activated td     { background: #fff; }
-	tr.sly-plugin.sly-installed td     { background: #e0e0e0; }
-	tr.sly-plugin.sly-not-installed td { background: #aca9a9; }
 
 	tr.sly-addon .is-help {
 		border-bottom: 1px dotted #777;
 		cursor: help;
 	}
+}
+
+.sly-addon-help {
+	dl { margin:0 10px 5px; }
+	dt { width: 100px; float: left; }
 }

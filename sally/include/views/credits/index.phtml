@@ -45,14 +45,14 @@
 			$params['version']     = $addons->getVersion($addon);
 			$params['icon']        = $addons->getIcon($addon);
 			$params['author']      = $addons->getAuthor($addon);
-			$params['supportPage'] = $addons->getSupportPage($addon);
+			$params['supportPage'] = $addons->getSupportPageEx($addon);
 
 			$this->render('/views/credits/row.phtml', $params);
 
-			if ($params['isActive']) {
+			if ($addons->isAvailable($addon)) {
 				$params['type'] = 'plugin';
 
-				foreach ($plugins->getAvailablePlugins($addon) as $plugin) {
+				foreach ($plugins->getRegisteredPlugins($addon) as $plugin) {
 					$params['type']        = 'plugin';
 					$params['name']        = $plugin;
 					$params['isActive']    = $plugins->isActivated(array($addon, $plugin));
@@ -60,7 +60,7 @@
 					$params['version']     = $plugins->getVersion(array($addon, $plugin));
 					$params['icon']        = $plugins->getIcon(array($addon, $plugin));
 					$params['author']      = $plugins->getAuthor(array($addon, $plugin));
-					$params['supportPage'] = $plugins->getSupportPage(array($addon, $plugin));
+					$params['supportPage'] = $plugins->getSupportPageEx(array($addon, $plugin));
 
 					$this->render('/views/credits/row.phtml', $params);
 				}

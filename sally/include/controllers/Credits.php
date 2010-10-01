@@ -8,30 +8,25 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Credits extends sly_Controller_Sally
-{
+class sly_Controller_Credits extends sly_Controller_Sally {
 	protected $func = '';
 
-	public function init()
-	{
+	public function init() {
 		$layout = sly_Core::getLayout();
 		$layout->pageHeader(t('credits'));
 		print '<div class="sly-content">';
 	}
 
-	public function teardown()
-	{
+	public function teardown() {
 		print '</div>';
 	}
 
-	public function index()
-	{
+	public function index() {
 		$this->render('views/credits/index.phtml');
 		return true;
 	}
 
-	public function checkPermission()
-	{
+	public function checkPermission() {
 		return true;
 	}
 }

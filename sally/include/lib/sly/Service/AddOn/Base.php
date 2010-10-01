@@ -12,16 +12,13 @@
  * @author  christoph@webvariants.de
  * @ingroup service
  */
-abstract class sly_Service_AddOn_Base
-{
+abstract class sly_Service_AddOn_Base {
 	protected $addons;
 	protected $data;
 	protected $i18nPrefix;
 
-	protected function req($filename, $addonName)
-	{
+	protected function req($filename, $addonName) {
 		global $REX, $I18N; // Nötig damit im Addon verfügbar
-
 		require $filename;
 	}
 
@@ -35,28 +32,51 @@ abstract class sly_Service_AddOn_Base
 		}
 	}
 
-	public function loadConfig($addonORplugin)
-	{
+	public function loadConfig($addonORplugin) {
 		$config       = sly_Core::config();
 		$staticFile   = $this->baseFolder($addonORplugin).'/static.yml';
 		$defaultsFile = $this->baseFolder($addonORplugin).'/defaults.yml';
 
-		if (file_exists($staticFile)){
+		if (file_exists($staticFile)) {
 			$config->loadStatic($staticFile, $this->getConfPath($addonORplugin));
 		}
 
-		if (file_exists($defaultsFile)){
+		if (file_exists($defaultsFile)) {
 			$config->loadProjectDefaults($defaultsFile, false, $this->getConfPath($addonORplugin));
 		}
 	}
 
-	public function add($addonORplugin){
+	public function add($addonORplugin) {
 		$this->setProperty($addonORplugin, 'install', false);
 	}
 
-	public function removeConfig($addonORplugin){
+	public function removeConfig($addonORplugin) {
 		$config = sly_Core::config();
 		$config->remove($this->getConfPath($addonORplugin));
+	}
+
+	public function getSupportPageEx($addonORplugin) {
+		$supportPage = $this->getSupportPage($addonORplugin, '');
+
+		if ($supportPage) {
+			$supportPages = sly_makeArray($supportPage);
+			$links        = array();
+
+			foreach ($supportPages as $page) {
+				$infos = parse_url($page);
+				if (!isset($infos['host'])) $infos = parse_url('http://'.$page);
+				if (!isset($infos['host'])) continue;
+
+				$page = sprintf('%s://%s%s', $infos['scheme'], $infos['host'], isset($infos['path']) ? $infos['path'] : '');
+				$host = substr($infos['host'], 0, 4) == 'www.' ? substr($infos['host'], 4) : $infos['host'];
+
+				$links[] = '<a href="'.sly_html($page).'" class="sly-blank">'.sly_html($host).'</a>';
+			}
+
+			$supportPage = implode(', ', $links);
+		}
+
+		return $supportPage;
 	}
 
 //	abstract public function install($addonName);         // Installieren
