@@ -32,13 +32,13 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 		// -------------- Header
 
 		$subline = array(
-			array('',       $this->i18n->msg('file_list')),
-			array('upload', $this->i18n->msg('file_insert'))
+			array('',       $this->t('file_list')),
+			array('upload', $this->t('file_insert'))
 		);
 
 		if ($this->isMediaAdmin()) {
-			$subline[] = array('structure', $this->i18n->msg('cat_list'));
-			$subline[] = array('sync',      $this->i18n->msg('sync_files'));
+			$subline[] = array('structure', $this->t('cat_list'));
+			$subline[] = array('sync',      $this->t('sync_files'));
 		}
 
 		// ArgUrl an Menü anhängen
@@ -53,7 +53,12 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 		$subline = rex_register_extension_point('PAGE_MEDIAPOOL_MENU', $subline);
 		$layout  = sly_Core::getLayout();
 
-		$layout->pageHeader($this->i18n->msg('media'), $subline);
+		$layout->pageHeader($this->t('media'), $subline);
+	}
+
+	protected function t($args) {
+		$args = func_get_args();
+		return call_user_func_array(array($this->i18n, 'msg'), $args);
 	}
 
 	protected function getArgumentString($separator = '&amp;') {
@@ -93,8 +98,6 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 	}
 
 	protected function getOpenerLink(/* OOMedia | sly_Model_Media_Medium */ $file) {
-		global $I18N;
-
 		$field    = $this->opener;
 		$link     = '';
 		$title    = sly_html($file->getTitle());
@@ -103,17 +106,17 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 
 		if ($field == 'TINYIMG') {
 			if (OOMedia::_isImage($filename)) {
-				$link = '<a href="javascript:insertImage(\''.$uname.'\',\''.$title.'\')">'.$I18N->msg('pool_image_get').'</a> | ';
+				$link = '<a href="javascript:insertImage(\''.$uname.'\',\''.$title.'\')">'.$this->t('image_get').'</a> | ';
 			}
 		}
 		elseif ($field == 'TINY') {
-			$link = '<a href="javascript:insertLink(\''.$uname.'\')">'.$I18N->msg('pool_link_get').'</a>';
+			$link = '<a href="javascript:insertLink(\''.$uname.'\')">'.$this->t('link_get').'</a>';
 		}
 		elseif ($field != '') {
-			$link = '<a href="javascript:selectMedia(\''.$uname.'\')">'.$I18N->msg('pool_file_get').'</a>';
+			$link = '<a href="javascript:selectMedia(\''.$uname.'\')">'.$this->t('file_get').'</a>';
 
 			if (substr($field, 0, 14) == 'REX_MEDIALIST_') {
-				$link = '<a href="javascript:selectMedialist(\''.$uname.'\')">'.$I18N->msg('pool_file_get').'</a>';
+				$link = '<a href="javascript:selectMedialist(\''.$uname.'\')">'.$this->t('file_get').'</a>';
 			}
 		}
 
@@ -163,7 +166,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 	}
 
 	public function move() {
-		global $I18N, $REX;
+		global $REX;
 
 		if (!$this->isMediaAdmin()) {
 			return $this->index();
@@ -172,7 +175,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 		$files = sly_postArray('selectedmedia', 'int', array());
 
 		if (empty($files)) {
-			$this->warning = $I18N->msg('pool_selectedmedia_error');
+			$this->warning = $this->t('selectedmedia_error');
 			return $this->index();
 		}
 
@@ -180,13 +183,11 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 		$what = array('category_id' => $this->category, 'updateuser' => $REX['USER']->getValue('login'), 'updatedate' => time());
 		$db->update('file', $what, array('id' => $files));
 
-		$this->info = $I18N->msg('pool_selectedmedia_moved');
+		$this->info = $this->t('selectedmedia_moved');
 		$this->index();
 	}
 
 	public function delete() {
-		global $I18N, $REX;
-
 		if (!$this->isMediaAdmin()) {
 			return $this->index();
 		}
@@ -194,7 +195,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 		$files = sly_postArray('selectedmedia', 'int', array());
 
 		if (empty($files)) {
-			$this->warning = $I18N->msg('pool_selectedmedia_error');
+			$this->warning = $this->t('selectedmedia_error');
 			return $this->index();
 		}
 
@@ -205,7 +206,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 				$retval = $this->deleteMedia($media);
 			}
 			else {
-				$this->warning[] = $I18N->msg('pool_file_not_found');
+				$this->warning[] = $this->t('file_not_found');
 			}
 		}
 
@@ -213,7 +214,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 	}
 
 	protected function deleteMedia(OOMedia $media) {
-		global $I18N, $REX;
+		global $REX;
 
 		$filename = $media->getFileName();
 
@@ -225,15 +226,15 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 			if ($usages === false) {
 				if ($media->delete() !== false) {
 					sly_Core::dispatcher()->notify('SLY_MEDIA_DELETED', $media);
-					$this->info[] = $I18N->msg('pool_file_deleted');
+					$this->info[] = $this->t('file_deleted');
 				}
 				else {
-					$this->warning[] = $I18N->msg('pool_file_delete_error_1', $filename);
+					$this->warning[] = $this->t('file_delete_error_1', $filename);
 				}
 			}
 			else {
 				$tmp   = array();
-				$tmp[] = $I18N->msg('pool_file_delete_error_1', $filename).'. '.$I18N->msg('pool_file_delete_error_2').':<br />';
+				$tmp[] = $this->t('file_delete_error_1', $filename).'. '.$this->t('file_delete_error_2').':<br />';
 				$tmp[] = '<ul>';
 
 				foreach ($usages as $usage) {
@@ -250,7 +251,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 			}
 		}
 		else {
-			$this->warning[] = $I18N->msg('no_permission');
+			$this->warning[] = t('no_permission');
 		}
 	}
 
@@ -274,11 +275,11 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 	}
 
 	protected function getCategorySelect() {
-		global $REX, $I18N;
+		global $REX;
 
 		if ($this->selectBox === null) {
 			$this->selectBox = sly_Form_Helper::getMediaCategorySelect('rex_file_category', null, $REX['USER']);
-			$this->selectBox->setLabel($I18N->msg('pool_kats'));
+			$this->selectBox->setLabel($this->t('kats'));
 			$this->selectBox->setMultiple(false);
 			$this->selectBox->setAttribute('value', $this->getCurrentCategory());
 		}

@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$service     = $plugin ? $plugins : $addons;
+$service     = sly_Service_Factory::getService($plugin ? 'Plugin' : 'AddOn');
 $component   = $plugin ? array($addon, $plugin) : $addon;
 $helpfile    = $service->baseFolder($component).'/help.inc.php';
 $version     = $service->getVersion($component);

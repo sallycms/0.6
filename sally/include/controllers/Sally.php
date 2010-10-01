@@ -8,10 +8,8 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-abstract class sly_Controller_Sally extends sly_Controller_Base
-{
-	public function dispatch()
-	{
+abstract class sly_Controller_Sally extends sly_Controller_Base {
+	public function dispatch() {
 		$layout = sly_Core::getLayout('Sally');
 
 		$layout->openBuffer();

@@ -8,31 +8,26 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_User extends sly_Controller_Sally
-{
+class sly_Controller_User extends sly_Controller_Sally {
 	protected $func = '';
 
-	public function init()
-	{
+	public function init() {
 		$layout = sly_Core::getLayout();
 		$layout->pageHeader(t('title_user'));
 		print '<div class="sly-content">';
 	}
 
-	public function teardown()
-	{
+	public function teardown() {
 		print '</div>';
 	}
 
-	public function index()
-	{
+	public function index() {
 		$this->listUsers();
 		return true;
 	}
 
-	public function add()
-	{
-		global $I18N, $REX;
+	public function add() {
+		global $REX;
 
 		if (sly_post('save', 'boolean', false)) {
 			$password = sly_post('userpsw', 'string');
@@ -51,7 +46,7 @@ class sly_Controller_User extends sly_Controller_Sally
 			}
 
 			if ($service->find(array('login' => $login))) {
-				print rex_warning($I18N->msg('user_login_exists'));
+				print rex_warning(t('user_login_exists'));
 				$error = true;
 			}
 
@@ -80,7 +75,7 @@ class sly_Controller_User extends sly_Controller_Sally
 
 			$service->create($params);
 
-			print rex_info($I18N->msg('user_added'));
+			print rex_info(t('user_added'));
 			$this->listUsers();
 			return true;
 		}
@@ -90,9 +85,8 @@ class sly_Controller_User extends sly_Controller_Sally
 		return true;
 	}
 
-	public function edit()
-	{
-		global $I18N, $REX;
+	public function edit() {
+		global $REX;
 
 		$user = $this->getUser();
 
@@ -133,7 +127,7 @@ class sly_Controller_User extends sly_Controller_Sally
 			$user = $service->save($user);
 			$goon = sly_post('apply', 'string');
 
-			print rex_info($I18N->msg('user_data_updated'));
+			print rex_info(t('user_data_updated'));
 
 			if (!$goon) {
 				$this->listUsers();
@@ -148,9 +142,8 @@ class sly_Controller_User extends sly_Controller_Sally
 		return true;
 	}
 
-	public function delete()
-	{
-		global $REX, $I18N;
+	public function delete() {
+		global $REX;
 
 		$user = $this->getUser();
 
@@ -163,32 +156,29 @@ class sly_Controller_User extends sly_Controller_Sally
 		$current = $REX['USER'];
 
 		if ($current->getValue('id') == $user->getId()) {
-			print rex_warning($I18N->msg('user_notdeleteself'));
+			print rex_warning(t('user_notdeleteself'));
 			return false;
 		}
 
 		$user->delete();
-		print rex_info($I18N->msg('user_deleted'));
+		print rex_info(t('user_deleted'));
 
 		$this->listUsers();
 		return true;
 	}
 
-	public function checkPermission()
-	{
+	public function checkPermission() {
 		global $REX;
 		return isset($REX['USER']) && $REX['USER']->isAdmin();
 	}
 
-	protected function listUsers()
-	{
+	protected function listUsers() {
 		$service = sly_Service_Factory::getService('User');
 		$users   = $service->find(null, null, 'name', null, null);
 		$this->render('views/user/list.phtml', array('users' => $users));
 	}
 
-	protected function getUser()
-	{
+	protected function getUser() {
 		$userID = sly_request('id', 'int', 0);
 		$service  = sly_Service_Factory::getService('User');
 		$user   = $service->findById($userID);
@@ -200,20 +190,17 @@ class sly_Controller_User extends sly_Controller_Sally
 		return $user;
 	}
 
-	protected function getBackendLocales()
-	{
-		global $I18N;
-
-		$cur_htmlcharset = $I18N->msg('htmlcharset');
-		$langpath        = SLY_INCLUDE_PATH.'/lang';
-		$langs           = glob($langpath.'/*.lang');
-		$result          = array('' => 'default');
+	protected function getBackendLocales() {
+		$curCharset = t('htmlcharset');
+		$langpath   = SLY_INCLUDE_PATH.'/lang';
+		$langs      = glob($langpath.'/*.lang');
+		$result     = array('' => 'default');
 
 		foreach ($langs as $file) {
 			$locale  = substr(basename($file), 0, -5);
 			$tmpI18N = rex_create_lang($locale, $langpath, false); // Locale nicht neu setzen
 
-			if ($cur_htmlcharset == $tmpI18N->msg('htmlcharset')) {
+			if ($curCharset == $tmpI18N->msg('htmlcharset')) {
 				$result[$locale] = $tmpI18N->msg('lang');
 			}
 
@@ -223,16 +210,13 @@ class sly_Controller_User extends sly_Controller_Sally
 		return $result;
 	}
 
-	protected function getPossibleStartpages()
-	{
-		global $I18N;
-
+	protected function getPossibleStartpages() {
 		$service = sly_Service_Factory::getService('AddOn');
 		$addons  = $service->getAvailableAddons();
 
 		$startpages = array();
-		$startpages['structure'] = $I18N->msg('structure');
-		$startpages['profile']   = $I18N->msg('profile');
+		$startpages['structure'] = t('structure');
+		$startpages['profile']   = t('profile');
 
 		foreach ($addons as $addon) {
 			$perm = $service->getProperty($addon, 'perm', false);
@@ -246,14 +230,12 @@ class sly_Controller_User extends sly_Controller_Sally
 		return $startpages;
 	}
 
-	protected function getModules()
-	{
+	protected function getModules() {
 		$service = sly_Service_Factory::getService('Module');
 		return $service->getModules();
 	}
 
-	protected function getRightsFromForm($user)
-	{
+	protected function getRightsFromForm($user) {
 		global $REX;
 
 		$permissions = array();
@@ -323,8 +305,7 @@ class sly_Controller_User extends sly_Controller_Sally
 		return '#'.implode('#', $permissions).'#';
 	}
 
-	protected function getStructure()
-	{
+	protected function getStructure() {
 		$rootCats        = OOCategory::getRootCategories();
 		$this->structure = array();
 
@@ -337,8 +318,7 @@ class sly_Controller_User extends sly_Controller_Sally
 		return $this->structure;
 	}
 
-	protected function getMediaStructure()
-	{
+	protected function getMediaStructure() {
 		$rootCats          = OOMediaCategory::getRootCategories();
 		$this->mediaStruct = array();
 
@@ -351,8 +331,7 @@ class sly_Controller_User extends sly_Controller_Sally
 		return $this->mediaStruct;
 	}
 
-	protected function walkTree($category, $depth, &$target)
-	{
+	protected function walkTree($category, $depth, &$target) {
 		if (empty($category)) return;
 
 		$target[$category->getId()] = str_repeat(' ', $depth*2).$category->getName();

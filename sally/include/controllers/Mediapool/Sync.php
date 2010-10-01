@@ -10,12 +10,10 @@
 
 class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 	public function index() {
-		global $I18N;
-
 		$diff = $this->getFileDiff();
 
 		if (empty($diff)) {
-			$this->info = $I18N->msg('pool_sync_no_diffs');
+			$this->info = $this->t('sync_no_diffs');
 			$this->render('views/mediapool/notices.phtml');
 		}
 		else {
@@ -24,8 +22,6 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 	}
 
 	public function sync() {
-		global $I18N;
-
 		$selected = sly_postArray('sync_files', 'string');
 		$title    = sly_post('ftitle', 'string');
 		$diff     = $this->getFileDiff();
@@ -37,7 +33,7 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 
 			if ($this->syncMedium($file, $cat, $title)) {
 				unset($diff[$idx]);
-				$this->info = $I18N->msg('pool_sync_files_synced');
+				$this->info = $this->t('sync_files_synced');
 			}
 		}
 

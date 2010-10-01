@@ -8,37 +8,30 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Specials extends sly_Controller_Sally
-{
+class sly_Controller_Specials extends sly_Controller_Sally {
 	protected $warning;
 	protected $info;
 
-	public function init()
-	{
-		global $I18N;
-
+	public function init() {
 		$subline = array(
-			array('',          $I18N->msg('main_preferences')),
-			array('languages', $I18N->msg('languages'))
+			array('',          t('main_preferences')),
+			array('languages', t('languages'))
 		);
 
 		$layout = sly_Core::getLayout();
-		$layout->pageHeader($I18N->msg('specials'), $subline);
+		$layout->pageHeader(t('specials'), $subline);
 	}
 
-	public function index()
-	{
+	public function index() {
 		$this->render('views/specials/index.phtml');
 	}
 
-	public function clearcache()
-	{
+	public function clearcache() {
 		$this->info = rex_generateAll();
 		$this->index();
 	}
 
-	public function update()
-	{
+	public function update() {
 		$startArticle    = sly_post('start_article',    'int');
 		$notFoundArticle = sly_post('notfound_article', 'int');
 		$defaultTemplate = sly_post('default_template', 'string');
@@ -94,20 +87,19 @@ class sly_Controller_Specials extends sly_Controller_Sally
 		$this->index();
 	}
 
-	public function setup()
-	{
-		try{
+	public function setup() {
+		try {
 			sly_Core::config()->setLocal('SETUP', true);
 			$this->info = t('setup_error1', '<a href="index.php">', '</a>');
-		}catch(Exception $e){
+		}
+		catch (Exception $e) {
 			$this->warning = t('setup_error2');
 		}
 
 		$this->index();
 	}
 
-	public function checkPermission()
-	{
+	public function checkPermission() {
 		global $REX;
 		return !empty($REX['USER']);
 	}

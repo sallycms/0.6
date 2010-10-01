@@ -14,8 +14,6 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 	}
 
 	public function add() {
-		global $I18N;
-
 		if (!empty($_POST)) {
 			$service  = sly_Service_Factory::getService('Media_Category');
 			$category = new sly_Model_Media_Category();
@@ -29,7 +27,7 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 
 			$service->save($category);
 
-			$this->info   = $I18N->msg('pool_kat_saved', $name);
+			$this->info   = $this->t('kat_saved', $name);
 			$this->action = '';
 		}
 
@@ -37,8 +35,6 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 	}
 
 	public function edit() {
-		global $I18N;
-
 		if (!empty($_POST)) {
 			$editID   = sly_request('edit_id', 'int');
 			$service  = sly_Service_Factory::getService('Media_Category');
@@ -51,7 +47,7 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 				$category->setUpdateColumns();
 				$service->save($category);
 
-				$this->info   = $I18N->msg('pool_kat_updated', $name);
+				$this->info   = $this->t('kat_updated', $name);
 				$this->action = '';
 			}
 		}
@@ -60,8 +56,6 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 	}
 
 	public function delete() {
-		global $I18N;
-
 		$editID   = sly_request('edit_id', 'int');
 		$service  = sly_Service_Factory::getService('Media_Category');
 		$category = $service->findById($editID);
@@ -75,10 +69,10 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 
 			if ($files == 0 && $children == 0) {
 				$service->delete(array('id' => $editID));
-				$this->info = $I18N->msg('pool_kat_deleted');
+				$this->info = $this->t('kat_deleted');
 			}
 			else {
-				$this->warning = $I18N->msg('pool_kat_not_deleted');
+				$this->warning = $this->t('kat_not_deleted');
 			}
 		}
 

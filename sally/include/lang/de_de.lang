@@ -26,6 +26,8 @@ security_violation: Sicherheitsverletzung
 controller_error: Controller-Fehler
 unexpected_exception: Unerwartete Ausnahme
 
+homepage: Homepage
+
 # sally/sindex.php
 specials: System
 module: Module

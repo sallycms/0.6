@@ -13,16 +13,14 @@ class sly_Controller_Linkmap extends sly_Controller_Sally {
 	protected $tree;
 
 	public function init() {
-		global $REX, $I18N;
-
 		$catID     = $this->getGlobals('category_id', 0);
 		$naviPath = '<ul id="rex-navi-path">';
 		$isRoot    = $catID === 0;
 		$category  = OOCategory::getCategoryById($catID);
 		$link      = $this->url(array('category_id' => 0));
 
-		$naviPath .= '<li>'.$I18N->msg('path').' </li>';
-		$naviPath .= '<li>: <a href="'.$link.'">Homepage</a> </li>';
+		$naviPath .= '<li>'.t('path').' </li>';
+		$naviPath .= '<li>: <a href="'.$link.'">'.t('homepage').'</a> </li>';
 
 		$this->tree = array();
 
@@ -37,7 +35,7 @@ class sly_Controller_Linkmap extends sly_Controller_Sally {
 		$naviPath .= '</ul>';
 		$layout    = sly_Core::getLayout();
 
-		$layout->pageHeader('Linkmap', $naviPath);
+		$layout->pageHeader(t('linkmap'), $naviPath);
 	}
 
 	protected function getGlobals($key = null, $default = null) {
@@ -78,7 +76,7 @@ class sly_Controller_Linkmap extends sly_Controller_Sally {
 	}
 
 	protected function formatLabel($object) {
-		global $REX, $I18N;
+		global $REX;
 
 		$label = trim($object->getName());
 		if (empty($label)) $label = '&nbsp;';
@@ -88,7 +86,7 @@ class sly_Controller_Linkmap extends sly_Controller_Sally {
 		}
 
 		if (OOArticle::isValid($object) && !$object->hasTemplate()) {
-			$label .= ' ['.$I18N->msg('lmap_has_no_template').']';
+			$label .= ' ['.t('lmap_has_no_template').']';
 		}
 
 		return $label;

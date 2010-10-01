@@ -12,14 +12,12 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 	protected $file;
 
 	public function index() {
-		global $I18N;
-
 		$fileID = $this->getCurrentFile();
 
 		$this->render('views/mediapool/toolbar.phtml');
 
 		if ($fileID == -1) {
-			$this->warning = $I18N->msg('pool_file_not_found');
+			$this->warning = $this->t('file_not_found');
 			return $this->render('views/mediapool/index.phtml');
 		}
 
@@ -63,7 +61,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 	}
 
 	public function update() {
-		global $I18N, $REX;
+		global $REX;
 
 		$fileID = $this->getCurrentFile();
 		$media  = OOMedia::getMediaById($fileID);
@@ -73,7 +71,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 		// to the target category
 
 		if (!$media || !$this->canAccessFile($media) || !$this->canAccessCategory($target)) {
-			$this->warning = $I18N->msg('no_permission');
+			$this->warning = t('no_permission');
 			return $this->index();
 		}
 
@@ -85,7 +83,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 		$fileObj->setTitle(sly_request('ftitle', 'string'));
 		$fileObj->setCategoryId($target);
 
-		$msg = $I18N->msg('pool_file_infos_updated');
+		$msg = $this->t('pool_file_infos_updated');
 		$ok  = true;
 
 		if (!empty($_FILES['file_new']['name']) && $_FILES['file_new']['name'] != 'none') {
@@ -98,7 +96,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 				$targetFile = $REX['MEDIAFOLDER'].'/'.$fileObj->getFilename();
 
 				if (@move_uploaded_file($filename, $targetFile)) {
-					$msg = $I18N->msg('pool_file_changed');
+					$msg = $this->t('file_changed');
 
 					$fileObj->setFiletype($filetype);
 					$fileObj->setFilesize($filesize);
@@ -111,12 +109,12 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 					@chmod($targetFile, $REX['FILEPERM']);
 				}
 				else {
-					$msg = $I18N->msg('pool_file_upload_error');
+					$msg = $this->t('file_upload_error');
 					$ok  = false;
 				}
 			}
 			else {
-				$msg = $I18N->msg('pool_file_upload_errortype');
+				$msg = $this->t('file_upload_errortype');
 				$ok  = false;
 			}
 		}
@@ -140,15 +138,13 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 	}
 
 	public function delete() {
-		global $I18N;
-
 		$fileID = $this->getCurrentFile();
 		$media  = OOMedia::getMediaById($fileID);
 
 		// only continue if a file was found and we can access it
 
 		if (!$media || !$this->canAccessFile($media)) {
-			$this->warning = $I18N->msg('no_permission');
+			$this->warning = t('no_permission');
 			return $this->index();
 		}
 

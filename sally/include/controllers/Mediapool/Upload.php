@@ -14,7 +14,7 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 	}
 
 	public function upload() {
-		global $REX, $I18N;
+		global $REX;
 
 		if (!empty($_FILES['file_new']['name']) && $_FILES['file_new']['name'] != 'none') {
 			$title = sly_request('ftitle', 'string');
@@ -39,14 +39,14 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 			}
 		}
 		else {
-			$this->warning = $I18N->msg('pool_file_not_found').'. Vielleicht war sie zu groß?';
+			$this->warning = $this->t('file_not_found_maybe_too_big');
 		}
 
 		$this->index();
 	}
 
 	protected function saveMedium($fileData, $category, $title) {
-		global $REX, $I18N;
+		global $REX;
 
 		// check category
 
@@ -68,7 +68,7 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 		// move uploaded file
 
 		if (!@move_uploaded_file($fileData['tmp_name'], $dstFile)) {
-			$this->warning = $I18N->msg('pool_file_movefailed');
+			$this->warning = $this->t('file_movefailed');
 		}
 		else {
 			@chmod($dstFile, $REX['FILEPERM']);
@@ -83,7 +83,7 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 			// notify the system
 
 			sly_Core::dispatcher()->notify('SLY_MEDIA_ADDED', $file);
-			$this->info = $I18N->msg('pool_file_added');
+			$this->info = $this->t('file_added');
 		}
 
 		// return the new file

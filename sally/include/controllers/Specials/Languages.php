@@ -8,8 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Specials_Languages extends sly_Controller_Sally
-{
+class sly_Controller_Specials_Languages extends sly_Controller_Sally {
 	// for now just copy those two fields and the init() method, until
 	// I find a nice way to generalize it into. --xrstf
 
@@ -19,8 +18,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally
 	protected $id        = '';
 	protected $languages = array();
 
-	public function init()
-	{
+	public function init() {
 		$subline = array(
 			array('',          t('main_preferences')),
 			array('languages', t('languages'))
@@ -30,16 +28,14 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally
 		$layout->pageHeader(t('specials'), $subline);
 	}
 
-	public function index()
-	{
+	public function index() {
 		$languageService = sly_Service_Factory::getService('Language');
 		$this->languages = $languageService->find(null, null, 'id');
 		$this->render('views/specials/languages.phtml');
 	}
 
-	public function add()
-	{
-		global $REX, $I18N;
+	public function add() {
+		global $REX;
 
 		if (isset($_POST['sly-submit'])) {
 			$this->id  = sly_request('clang_id', 'int', -1);
@@ -48,15 +44,15 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally
 			if (!empty($clangName)) {
 				if (!isset($REX['CLANG'][$this->id]) && $this->id > 0) {
 					rex_addCLang($this->id, $clangName);
-					$this->info = $I18N->msg('clang_edited');
+					$this->info = t('clang_edited');
 				}
 				else {
-					$this->warning = $I18N->msg('id_exists');
+					$this->warning = t('id_exists');
 					$this->func    = 'add';
 				}
 			}
 			else {
-				$this->warning = $I18N->msg('enter_name');
+				$this->warning = t('enter_name');
 				$this->func    = 'add';
 			}
 		}
@@ -67,10 +63,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally
 		$this->index();
 	}
 
-	public function edit()
-	{
-		global $I18N;
-
+	public function edit() {
 		$this->id = sly_request('clang_id', 'int', -1);
 
 		if (isset($_POST['sly-submit'])) {
@@ -83,7 +76,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally
 				$languageService->save($clang);
 
 				sly_Core::cache()->delete('sly.language', 'all');
-				$this->info = $I18N->msg('clang_edited');
+				$this->info = t('clang_edited');
 			}
 		}
 		else {
@@ -93,22 +86,21 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally
 		$this->index();
 	}
 
-	public function delete()
-	{
-		global $REX, $I18N;
+	public function delete() {
+		global $REX;
 
 		$clangID = sly_request('clang_id', 'int', -1);
 
 		if (isset($REX['CLANG'][$clangID])) {
 			rex_deleteCLang($clangID);
-			$this->info = $I18N->msg('clang_deleted');
+			$this->info = t('clang_deleted');
 		}
 
 		$this->index();
 	}
 
-	public function checkPermission()
-	{
-		return true;
+	public function checkPermission() {
+		global $REX;
+		return !empty($REX['USER']);
 	}
 }
