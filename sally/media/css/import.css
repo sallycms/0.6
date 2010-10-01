@@ -9,15 +9,12 @@
 @include 'pages/linkmap.css';
 @include 'pages/login.css';
 @include 'pages/mediapool.css';
-@include 'pages/module.css';
-@include 'pages/profile.css';
 @include 'pages/setup.css';
 @include 'pages/specials.css';
 @include 'pages/structure.css';
 @include 'pages/content.css';
 @include 'pages/addon.css';
 @include 'pages/user.css';
-@include 'pages/template.css';
 
 @include 'addons/metainfo.css';
 @include 'addons/image_resize.css';

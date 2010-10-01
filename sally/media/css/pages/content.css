@@ -21,8 +21,10 @@ div#rex-output div.rex-content-header {
 	}
 
 	&-2 ul {
-		float: right;
 		padding: 5px 0; /*  Abstand oben und unten */
+
+		&#rex-navi-ctype { float: left; }
+		&.rex-navi-content { float: right; }
 
 		& li {
 			liste-style: none;

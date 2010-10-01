@@ -460,19 +460,21 @@ if ($article->getRows() == 1) {
 				'slice_id'   => $slice_id
 			));
 
-			$slotMenu  .= '<ul id="rex-navi-ctype">';
+			if (count($listElements) > 1) { // skip the label
+				$slotMenu = '<ul id="rex-navi-ctype">';
 
-			foreach ($listElements as $idx => $listElement) {
-				$class = '';
+				foreach ($listElements as $idx => $listElement) {
+					$class = '';
 
-				if ($idx == 1) { // das erste Element ist nur Beschriftung -> überspringen
-					$class = ' class="rex-navi-first"';
+					if ($idx == 1) { // das erste Element ist nur Beschriftung -> überspringen
+						$class = ' class="rex-navi-first"';
+					}
+
+					$slotMenu .= '<li'.$class.'>'.$listElement.'</li>';
 				}
 
-				$slotMenu .= '<li'.$class.'>'.$listElement.'</li>';
+				$slotMenu .= '</ul>';
 			}
-
-			$slotMenu .= '</ul>';
 		}
 
 		$menu         = $slotMenu;

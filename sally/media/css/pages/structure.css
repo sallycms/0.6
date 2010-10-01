@@ -6,13 +6,6 @@ div#rex-form-structure-category {
 	}
 }
 
-#rex-form-structure-category, #rex-form-structure-article {
-	legend span {
-		font-weight: bold;
-		text-transform: uppercase;
-	}
-}
-
 div#rex-form, div#sly-form {
 	&-structure-article,
 	&-structure-category {
