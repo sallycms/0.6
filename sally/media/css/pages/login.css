@@ -27,7 +27,7 @@ body#rex-page-login {
 
 		label { width: 145px; margin-left: 10px; }
 		&-wrapper { width: 650px; }
-		&-col-a { vertical-aling: middle; }
+		&-col-a { vertical-align: middle; }
 		&-submit { margin: 2px 0 3px 77px; }
 
 		&-row {

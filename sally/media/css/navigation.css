@@ -56,7 +56,7 @@ div#rex-navi-main {
 					background-image: url(../background_menu_arrow.sld.png);
 					background-position: 10px 0;
 					background-repeat: no-repeat;
-					vertical-align: center; /* zentriert, zusammen mit line-height aus oberem element, die links */
+					vertical-align: middle; /* zentriert, zusammen mit line-height aus oberem element, die links */
 
 					&:hover {
 						color: #fff;
