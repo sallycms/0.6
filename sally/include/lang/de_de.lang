@@ -26,6 +26,12 @@ security_violation: Sicherheitsverletzung
 controller_error: Controller-Fehler
 unexpected_exception: Unerwartete Ausnahme
 
+importer_bad_version: In der Importdatei konnte keine gültige Version gefunden werden.
+importer_no_valid_charset: In der Importdatei konnte keine Angabe über die Kodierung gefunden werden.
+importer_charset_mismatch: Die in der Importdatei angegebene Kodierung weicht von der dieses Projekts ab.
+importer_no_valid_import_file_version: "Die Importdatei ist ungültig: Versionsstempel von Version {0} gefunden, aber {1} erwartet."
+importer_no_valid_import_file_prefix: Die Importdatei ist ungültig: Es wurde kein Tabellenpräfix angegeben.
+
 homepage: Homepage
 
 # sally/sindex.php

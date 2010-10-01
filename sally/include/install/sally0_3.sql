@@ -1,5 +1,6 @@
 ## Sally Database Dump Version 0
 ## Prefix sly_
+## Charset utf-8
 
 CREATE TABLE `sly_action` ( `id` int(11) NOT NULL  auto_increment, `name` varchar(255) NOT NULL  , `preview` text NULL  , `presave` text NULL  , `postsave` text NULL  , `previewmode` tinyint(4) NULL  , `presavemode` tinyint(4) NULL  , `postsavemode` tinyint(4) NULL  , `createuser` varchar(255) NOT NULL  , `createdate` int(11) NOT NULL  , `updateuser` varchar(255) NOT NULL  , `updatedate` int(11) NOT NULL  , `revision` int(11) NOT NULL  , PRIMARY KEY (`id`)) TYPE=MyISAM;
 CREATE TABLE `sly_article` ( `pid` int(11) NOT NULL  auto_increment, `id` int(11) NOT NULL  , `re_id` int(11) NOT NULL  , `name` varchar(255) NOT NULL  , `catname` varchar(255) NOT NULL  , `catprior` int(11) NOT NULL  , `attributes` text NOT NULL  , `startpage` tinyint(1) NOT NULL  , `prior` int(11) NOT NULL  , `path` varchar(255) NOT NULL  , `status` tinyint(1) NOT NULL  , `createdate` int(11) NOT NULL  , `updatedate` int(11) NOT NULL  , `template` varchar(64) NOT NULL  , `clang` int(11) NOT NULL  , `createuser` varchar(255) NOT NULL  , `updateuser` varchar(255) NOT NULL  , `revision` int(11) NOT NULL  , PRIMARY KEY (`pid`)) TYPE=MyISAM DEFAULT CHARSET=utf8;
