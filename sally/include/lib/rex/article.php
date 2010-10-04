@@ -14,48 +14,29 @@
  * @ingroup redaxo
  */
 class rex_article {
-	public $slice_id;
-	public $article_id;
-	public $mode;
-	public $content;
+	public $slice_id         = 0;
+	public $article_id       = 0;
+	public $mode             = 'view';
+	public $content          = '';
+	public $template         = '';
+	public $slot             = null;
+	public $eval             = false;
+	public $viasql           = false;
+	public $article_revision = 0;
+	public $slice_revision   = 0;
+	public $debug            = false;
 	public $function;
 	public $category_id;
-	public $template;
 	public $save;
-	public $ctype;
 	public $clang;
 	public $getSlice;
-	public $eval;
-	public $viasql;
-	public $article_revision;
-	public $slice_revision;
 	public $warning;
 	public $info;
-	public $debug;
 
-	private $slices       = array();
+	private $slices          = array();
+	private $ARTICLE         = null;
 
 	public function __construct($article_id = null, $clang = null) {
-		$this->article_id = 0;
-		$this->template   = '';
-		$this->ctype      = -1; // zeigt alles an
-		$this->slice_id   = 0;
-
-		$this->mode    = 'view';
-		$this->content = '';
-		$this->eval    = false;
-		$this->viasql  = false;
-
-		$this->article_revision = 0;
-		$this->slice_revision   = 0;
-
-		$this->debug   = false;
-		$this->ARTICLE = null;
-
-		if ($clang === null) {
-			$clang = sly_Core::getCurrentClang();
-		}
-
 		$this->setClang($clang);
 
 		rex_register_extension_point('ART_INIT', "", array(
@@ -64,9 +45,7 @@ class rex_article {
 			'clang'      => $this->clang
 		));
 
-		if ($article_id !== null) {
-			$this->setArticleId($article_id);
-		}
+		if ($article_id !== null) $this->setArticleId($article_id);
 	}
 
 	public function setSliceRevision($sr) {
@@ -136,8 +115,7 @@ class rex_article {
 	}
 
 	public function setTemplateName($template) {
-		$service = sly_Service_Factory::getService('Template');
-		$this->template = $service->exists($template) ? $template : '';
+		$this->template = sly_Service_Factory::getTemplateService()->exists($template) ? $template : '';
 		return $this->template;
 	}
 
@@ -171,16 +149,12 @@ class rex_article {
 	}
 
 	protected function _getValue($value) {
-		global $REX;
 		$value = $this->correctValue($value);
 		return $this->ARTICLE->getValue($value);
 	}
 
 	public function getValue($value) {
-		if ($this->hasValue($value)) {
-			return $this->_getValue($value);
-		}
-
+		if ($this->hasValue($value)) return $this->_getValue($value);
 		return '['.$value.' not found]';
 	}
 
@@ -189,16 +163,16 @@ class rex_article {
 		return $this->ARTICLE->hasValue($value);
 	}
 
-	public function getArticle($curctype = null) {
+	public function getArticle($slot = null) {
 		// Einzelnes Slice ausgeben. Besser: direkt $this->getSliceOutput aufrufen.
 		if ($this->getSlice) return $this->getSliceOutput($this->getSlice);
 		if ($this->content != '') return $this->content;
 
 		global $REX, $I18N;
 
-		$this->ctype = $curctype;
+		$this->slot  = $slot;
 		$module      = sly_request('module', 'string');
-		$prior        = sly_request('prior', 'int', 0);
+		$prior       = sly_request('prior', 'int', 0);
 		// article caching
 		ob_start();
 		ob_implicit_flush(0);
@@ -249,10 +223,9 @@ class rex_article {
 
 					// --------------- ENDE EINZELNER SLICE
 
-					// ---------- Slice in Ausgabe speichern wenn ctype richtig
-					if ($this->ctype == -1 or $this->ctype == $currentSlice['CType']) {
+					// ---------- Slice in Ausgabe speichern wenn slot richtig
+					if ($this->slot === null || $this->slot == $currentSlice['Slot']) {
 						$this->content .= $slice_content;
-
 					}
 
 					// zum nächsten Slice
@@ -284,8 +257,8 @@ class rex_article {
 	}
 
 	private function printArticleContent() {
-		$ids = OOArticleSlice::getSliceIdsForSlot($this->article_id, $this->clang, $this->ctype);
-		foreach($ids as $id) {
+		$ids = OOArticleSlice::getSliceIdsForSlot($this->article_id, $this->clang, $this->slot);
+		foreach ($ids as $id) {
 			print OOArticleSlice::getArticleSliceById($id, $this->clang)->getContent();
 		}
 	}
@@ -303,7 +276,7 @@ class rex_article {
 			'LEFT JOIN '.$prefix.'article a ON slices.article_id = a.id '.
 			'WHERE '.
 				'slices.article_id = '.intval($this->article_id).' AND '.
-				'slices.ctype = '.intval($this->ctype).' AND '.
+				'slices.slot = "'.$this->slot.'" AND '.
 				'slices.clang = '.intval($this->clang).' AND a.clang = '.intval($this->clang).' AND '.
 				'slices.revision = '.intval($this->slice_revision).' '.
 			'ORDER BY slices.prior';
@@ -318,19 +291,17 @@ class rex_article {
 
 		$this->fetchArticleSlices();
 
-		$slices       = array();
-		$service      = sly_Service_Factory::getService('Module');
+		$slices = array();
 
 		// SLICE IDS/MODUL SETZEN - Speichern der Daten
-
 		for ($i = 0; $i < $this->CONT->getRows(); $i++) {
 			$sliceId         = $this->CONT->getValue('slices.id');
 
 			$slices[$sliceId]['ID']           = $sliceId;
-			$slices[$sliceId]['CType']        = $this->CONT->getValue('slices.ctype');
+			$slices[$sliceId]['Slot']         = $this->CONT->getValue('slices.slot');
 			$slices[$sliceId]['sliceId']      = $this->CONT->getValue('slices.slice_id');
 			$slices[$sliceId]['Module']       = $this->CONT->getValue('slices.module');
-			$slices[$sliceId]['ModuleName']   = $service->getTitle($slices[$sliceId]['Module']);
+			$slices[$sliceId]['ModuleName']   = sly_Service_Factory::getModuleService()->getTitle($slices[$sliceId]['Module']);
 			$slices[$sliceId]['Counter']      = $i;
 
 
@@ -368,7 +339,8 @@ class rex_article {
 		return rex_register_extension_point('SLICE_SHOW', $content, array(
 			'article_id'        => $this->article_id,
 			'clang'             => $this->clang,
-			'ctype'             => $slice['CType'],
+			'ctype'             => $slice['Slot'],
+			'slot'              => $slice['Slot'],
 			'module'            => $slice['Module'],
 			'slice_id'          => $slice['ID'],
 			'function'          => $this->function,
@@ -381,25 +353,23 @@ class rex_article {
 		if (empty($moduleSelect)) {
 			global $REX, $I18N;
 
-			$moduleService   = sly_Service_Factory::getService('Module');
-			$templateService = sly_Service_Factory::getService('Template');
-			$modules         = $moduleService->getModules();
+			$templateService = sly_Service_Factory::getTemplateService();
 			$slots           = $templateService->getSlots($this->template);
 			$moduleSelect    = array();
 
-			foreach (array_keys($slots) as $slotID) {
-				$moduleSelect[$slotID] = new rex_select();
-				$moduleSelect[$slotID]->setName('module');
-				$moduleSelect[$slotID]->setSize('1');
-				$moduleSelect[$slotID]->setStyle('class="rex-form-select"');
-				$moduleSelect[$slotID]->setAttribute('onchange', 'this.form.submit();');
-				$moduleSelect[$slotID]->addOption('----------------------------  '.$I18N->msg('add_block'),'');
+			foreach ($slots as $slot) {
+				$modules = $templateService->getModules($this->template, $slot);
+
+				$moduleSelect[$slot] = new rex_select();
+				$moduleSelect[$slot]->setName('module');
+				$moduleSelect[$slot]->setSize('1');
+				$moduleSelect[$slot]->setStyle('class="rex-form-select"');
+				$moduleSelect[$slot]->setAttribute('onchange', 'this.form.submit();');
+				$moduleSelect[$slot]->addOption('----------------------------  '.$I18N->msg('add_block'),'');
 
 				foreach ($modules as $module => $moduleTitle) {
 					if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('module['.$module.']')) {
-						if ($templateService->hasModule($this->template, $slotID, $module)) {
-							$moduleSelect[$slotID]->addOption(rex_translate($moduleTitle, null, false), $module);
-						}
+						$moduleSelect[$slot]->addOption(rex_translate($moduleTitle, null, false), $module);
 					}
 				}
 			}
@@ -415,7 +385,7 @@ class rex_article {
 		$moduleSelect = $this->getModuleSelect();
 		$formID       = ' id="slice'.$prior.'"';
 
-		$moduleSelect[$this->ctype]->setId('module'.$prior);
+		$moduleSelect[$this->slot]->setId('module'.$prior);
 
 		$sliceContent = '
 			<div class="rex-form rex-form-content-editmode">
@@ -428,12 +398,12 @@ class rex_article {
 						<input type="hidden" name="prior" value="'.$prior.'" />
 						<input type="hidden" name="function" value="add" />
 						<input type="hidden" name="clang" value="'.$this->clang.'" />
-						<input type="hidden" name="ctype" value="'.$this->ctype.'" />
+						<input type="hidden" name="slot" value="'.$this->slot.'" />
 
 						<div class="rex-form-wrapper">
 							<div class="rex-form-row">
 								<p class="rex-form-col-a rex-form-select">
-									'.$moduleSelect[$this->ctype]->get().'
+									'.$moduleSelect[$this->slot]->get().'
 									<noscript><input class="rex-form-submit" type="submit" name="btn_add" value="'.$I18N->msg("add_block").'" /></noscript>
 								</p>
 							</div>
@@ -454,7 +424,7 @@ class rex_article {
 			if (!empty($this->info))    $msg .= rex_info($this->info);
 		}
 
-		$sliceUrl = 'index.php?page=content&amp;article_id='.$this->article_id.'&amp;mode=edit&amp;slice_id='.$currentSlice['ID'].'&amp;clang='.$this->clang.'&amp;ctype='.$this->ctype.'%s#slice'.$currentSlice['Counter'];
+		$sliceUrl = 'index.php?page=content&amp;article_id='.$this->article_id.'&amp;mode=edit&amp;slice_id='.$currentSlice['ID'].'&amp;clang='.$this->clang.'&amp;slot='.$this->slot.'%s#slice'.$currentSlice['Counter'];
 		$listElements = array();
 		$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;function=edit').'" class="rex-tx3">'.$I18N->msg('edit').' <span>'.sly_html($currentSlice['ModuleName']).'</span></a>';
 		$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;function=delete&amp;save=1').'" class="rex-tx2" onclick="return confirm(\''.$I18N->msg('delete').' ?\')">'.$I18N->msg('delete').' <span>'.sly_html($currentSlice['ModuleName']).'</span></a>';
@@ -474,7 +444,8 @@ class rex_article {
 		$listElements = rex_register_extension_point('ART_SLICE_MENU', $listElements, array(
 			'article_id' => $this->article_id,
 			'clang'      => $this->clang,
-			'ctype'      => $currentSlice['CType'],
+			'ctype'      => $currentSlice['Slot'],
+			'slot'       => $currentSlice['Slot'],
 			'module'     => $currentSlice['Module'],
 			'slice_id'   => $currentSlice['ID']
 		));
@@ -562,7 +533,7 @@ class rex_article {
 			// ----- / PRE VIEW ACTION
 
 			$moduleInput    = $moduleService->getContent($currentSlice['Module'], 'input');
-			$slice_content .= $this->editSlice($currentSlice['ID'], $moduleInput, $currentSlice['CType'], $currentSlice['Module'], $currentSlice['sliceId']);
+			$slice_content .= $this->editSlice($currentSlice['ID'], $moduleInput, $currentSlice['Slot'], $currentSlice['Module'], $currentSlice['sliceId']);
 			$slice_content  = $this->triggerSliceShowEP($slice_content, $currentSlice);
 		}
 		else {
@@ -587,17 +558,10 @@ class rex_article {
 		global $REX;
 
 		if (!empty($this->template) && $this->article_id != 0) {
-			$service  = sly_Service_Factory::getService('Template');
-			$template = $this->template;
-
-			if (!$service->isGenerated($template)) $service->generate($template);
-			$templateFile = $service->getCacheFile($template);
-
-			unset($service, $template);
-
+			$params['rex_article'] = $this;
 			ob_start();
 			ob_implicit_flush(0);
-			include $templateFile;
+			sly_Service_Factory::getTemplateService()->includeFile($this->template, $params);
 			$content = ob_get_clean();
 		}
 		else {
@@ -634,7 +598,7 @@ class rex_article {
             <input type="hidden" name="module" value="'.sly_html($module).'" />
             <input type="hidden" name="save" value="1" />
             <input type="hidden" name="clang" value="'.$this->clang.'" />
-            <input type="hidden" name="ctype" value="'.$this->ctype.'" />
+            <input type="hidden" name="slot" value="'.$this->slot.'" />
 
             <div class="rex-content-editmode-module-name">
               <h3 class="rex-hl4">
@@ -695,7 +659,7 @@ class rex_article {
   }
 
   // ----- EDIT Slice
-  public function editSlice($articleSliceID, $moduleInput, $ctype, $module, $slice_id)
+  public function editSlice($articleSliceID, $moduleInput, $slot, $module, $slice_id)
   {
     global $REX, $I18N;
 
@@ -709,7 +673,7 @@ class rex_article {
           <input type="hidden" name="page" value="content" />
           <input type="hidden" name="mode" value="'.$this->mode.'" />
           <input type="hidden" name="slice_id" value="'.$articleSliceID.'" />
-          <input type="hidden" name="ctype" value="'.$ctype.'" />
+          <input type="hidden" name="slot" value="'.$slot.'" />
           <input type="hidden" name="function" value="edit" />
           <input type="hidden" name="save" value="1" />
           <input type="hidden" name="update" value="0" />

@@ -129,14 +129,14 @@ class rex_template
 		return @unlink($file);
 	}
 
-	public static function hasModule($template_attributes, $ctype, $module_id)
+	public static function hasModule($template_attributes, $slot, $module_id)
 	{
 		$template_modules = rex_getAttributes('modules', $template_attributes, array());
 
-		if (!isset($template_modules[$ctype]['all']) || $template_modules[$ctype]['all'] == 1)
+		if (!isset($template_modules[$slot]['all']) || $template_modules[$slot]['all'] == 1)
 			return true;
 
-		if (in_array($module_id, $template_modules[$ctype]))
+		if (in_array($module_id, $template_modules[$slot]))
 			return true;
 
 		return false;

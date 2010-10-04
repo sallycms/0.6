@@ -14,7 +14,7 @@
 $category_id = rex_request('category_id', 'rex-category-id');
 $article_id  = rex_request('article_id',  'rex-article-id');
 $clang       = rex_request('clang',       'rex-clang-id', $REX['START_CLANG_ID']);
-$slot        = rex_request('ctype',       'rex-ctype-id');
+$slot        = rex_request('slot',        'rex-slot');
 $edit_id     = rex_request('edit_id',     'rex-category-id');
 $function    = rex_request('function',    'string');
 

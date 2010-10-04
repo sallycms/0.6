@@ -1,0 +1,22 @@
+/* Sprites */
+
+.sly-sprite {
+	&.sly-template     { background-position: -48px 0; }
+	&.sly-template-add { background-position: -48px -16px; }
+}
+
+.rex-form-template-editmode {
+	textarea         { height: 350px; width: 605px; }
+
+	input.rex-form-checkbox,
+	input.rex-form-radio {
+		clear: both;
+		margin: 0 0 0 21px;
+	}
+
+	div#rex-form-template-slot {
+		p.rex-form-select select { margin-top: 5px;     }
+		legend                   { +border-radius(0px); }
+		.rex-form-row            { margin: 0;           }
+	}
+}

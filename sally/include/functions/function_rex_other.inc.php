@@ -587,10 +587,11 @@ function rex_exception(Exception $e)
 
 /**
  * Somewhat naive way to determine if an array is a hash.
+ * @deprecated check sly_Util_Array::isAssoc() instead
  */
 function is_hash($array)
 {
-	return is_array($array) && sly_arrayAnyKey('is_string', $array);
+	return is_array($array) && sly_Util_Array::anyKey('is_string', $array);
 }
 
 // http://snippets.dzone.com/posts/show/4660

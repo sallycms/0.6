@@ -75,3 +75,23 @@ $obj->remove('////');
 $lime->is($obj->get(''), array(), 'remove() can completely wipe the object');
 
 unset($testCasesTrue, $testCasesFalse, $obj);
+
+
+// test static methods
+
+$predicate = create_function('$x', 'return $x % 2 == 0;');
+
+$lime->ok(sly_Util_Array::any($predicate,  array(1,2,3)), 'sly_Util_Array::any(array(1,2,3))');
+$lime->ok(sly_Util_Array::any($predicate,  array(2)),     'sly_Util_Array::any(array(2))');
+$lime->ok(!sly_Util_Array::any($predicate, array(1)),     'sly_Util_Array::any(array(1))');
+$lime->ok(!sly_Util_Array::any($predicate, array()),      'sly_Util_Array::any(array())');
+
+$predicate = create_function('$x', 'return true;');
+
+$lime->ok(sly_Util_Array::any($predicate,  array(null)), 'sly_Util_Array::any("return true;", array(null))');
+$lime->ok(!sly_Util_Array::any($predicate, array()),     'sly_Util_Array::any("return true;", array())');
+
+$predicate = create_function('$x', 'return false;');
+
+$lime->ok(!sly_Util_Array::any($predicate, array(null)), 'sly_Util_Array::any("return false;", array(null))');
+$lime->ok(!sly_Util_Array::any($predicate, array()),     'sly_Util_Array::any("return false;", array())');

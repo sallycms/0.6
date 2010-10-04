@@ -24,6 +24,7 @@ $article_id  = sly_request('article_id',  'rex-article-id');
 $clang       = sly_request('clang',       'rex-clang-id', $REX['START_CLANG_ID']);
 $slice_id    = sly_request('slice_id',    'rex-slice-id', '');
 $function    = sly_request('function',    'string');
+$slot        = sly_request('slot',        'string');
 
 $article_revision = 0;
 $slice_revision   = 0;
@@ -38,20 +39,16 @@ $article = new rex_sql();
 $article->setQuery('SELECT startpage, name, re_id, template FROM #_article a WHERE a.id = '.$article_id.' AND clang = '.$clang, '#_');
 
 if ($article->getRows() == 1) {
-	$service      = sly_Service_Factory::getService('Template');
-	$templateName = $article->getValue('template');
+	$templateService = sly_Service_Factory::getTemplateService();
+	$moduleService   = sly_Service_Factory::getModuleService();
+	$templateName    = $article->getValue('template');
 
 	// Slot validieren
-
 	$curSlots = $service->getSlots($templateName);
-	$slot     = sly_request('ctype', 'int', 0);
-
-	if (!array_key_exists($slot, $curSlots)) {
-		$slot = 0;
-	}
+	$slot     = sly_request('ctype', 'string', '');
+	if (!$templateService->hasSlot($templateName, $slot)) $slot = $templateService->getFirstSlot($templateName);
 
 	// Artikel wurde gefunden - Kategorie holen
-
 	$OOArt       = OOArticle::getArticleById($article_id, $clang);
 	$category_id = $OOArt->getCategoryId();
 
@@ -118,9 +115,6 @@ if ($article->getRows() == 1) {
 	}
 	else {
 		// Slice add/edit/delete
-
-		$moduleService = sly_Service_Factory::getService('Module');
-
 		if (rex_request('save', 'boolean') && in_array($function, array('add', 'edit', 'delete'))) {
 			// check module
 
@@ -138,9 +132,6 @@ if ($article->getRows() == 1) {
 			}
 			else {
 				// Rechte am Modul
-
-				$templateService = sly_Service_Factory::getService('Template');
-
 				if (!$templateService->hasModule($templateName, $slot, $module)) {
 					$global_warning = $I18N->msg('no_rights_to_this_function');
 					$slice_id       = '';
@@ -192,7 +183,7 @@ if ($article->getRows() == 1) {
 
 							if ($function == 'edit') {
 								$ooslice = OOArticleSlice::getArticleSliceById($slice_id);
-								$realslice = sly_Service_Factory::getService('Slice')->findById($ooslice->getSliceId());
+								$realslice = sly_Service_Factory::getSliceService()->findById($ooslice->getSliceId());
 								$realslice->flushValues();
 								unset($ooslice);
 								$newsql->setWhere('id = '.$slice_id);
@@ -200,15 +191,15 @@ if ($article->getRows() == 1) {
 							}
 							elseif ($function == 'add') {
 								$prior = rex_post('prior', 'int');
-								$realslice = sly_Service_Factory::getService('Slice')->create(array('module' => $module));
+								$realslice = sly_Service_Factory::getSliceService()->create(array('module' => $module));
 
-								$newsql->setValue('slice_id', $realslice->getId());
-								$newsql->setValue('prior', $prior);
+								$newsql->setValue('slice_id',   $realslice->getId());
+								$newsql->setValue('prior',      $prior);
 								$newsql->setValue('article_id', $article_id);
-								$newsql->setValue('module', $module);
-								$newsql->setValue('clang', $clang);
-								$newsql->setValue('ctype', $slot);
-								$newsql->setValue('revision', $slice_revision);
+								$newsql->setValue('module',     $module);
+								$newsql->setValue('clang',      $clang);
+								$newsql->setValue('slot',       $slot);
+								$newsql->setValue('revision',   $slice_revision);
 							}
 
 							// ****************** SPEICHERN FALLS NÖTIG
@@ -238,7 +229,7 @@ if ($article->getRows() == 1) {
 										'SET prior = prior + 1 WHERE
 											article_id = '.$article_id.' AND
 											clang = '.$clang.' AND
-											ctype = '.$slot.' AND
+											slot = "'.$slot.'" AND
 											prior >= '.$prior.' AND
 											id != '.$last_id;
 
@@ -305,7 +296,7 @@ if ($article->getRows() == 1) {
 					if (rex_article2startpage($article_id)) {
 						$info = $I18N->msg('content_tostartarticle_ok');
 						while (ob_get_level()) ob_end_clean();
-						header('Location: index.php?page=content&mode=meta&clang='.$clang.'&ctype='.$slot.'&article_id='.$article_id.'&info='.urlencode($info));
+						header('Location: index.php?page=content&mode=meta&clang='.$clang.'&slot='.$slot.'&article_id='.$article_id.'&info='.urlencode($info));
 						exit;
 					}
 					else {
@@ -341,7 +332,7 @@ if ($article->getRows() == 1) {
 					if (rex_moveArticle($article_id, $category_id, $category_id_new)) {
 						$info = $I18N->msg('content_articlemoved');
 						while (ob_get_level()) ob_end_clean();
-						header('Location: index.php?page=content&article_id='.$article_id.'&mode=meta&clang='.$clang.'&ctype='.$slot.'&info='.urlencode($info));
+						header('Location: index.php?page=content&article_id='.$article_id.'&mode=meta&clang='.$clang.'&slot='.$slot.'&info='.urlencode($info));
 						exit;
 					}
 					else {
@@ -363,7 +354,7 @@ if ($article->getRows() == 1) {
 					if (($new_id = rex_copyArticle($article_id, $category_copy_id_new)) !== false) {
 						$info = $I18N->msg('content_articlecopied');
 						while (ob_get_level()) ob_end_clean();
-						header('Location: index.php?page=content&article_id='.$new_id.'&mode=meta&clang='.$clang.'&ctype='.$slot.'&info='.urlencode($info));
+						header('Location: index.php?page=content&article_id='.$new_id.'&mode=meta&clang='.$clang.'&slot='.$slot.'&info='.urlencode($info));
 						exit;
 					}
 					else {
@@ -385,7 +376,7 @@ if ($article->getRows() == 1) {
 					if ($category_id != $category_id_new && rex_moveCategory($category_id, $category_id_new)) {
 						$info = $I18N->msg('category_moved');
 						while (ob_get_level()) ob_end_clean();
-						header('Location: index.php?page=content&article_id='.$category_id.'&mode=meta&clang='.$clang.'&ctype='.$slot.'&info='.urlencode($info));
+						header('Location: index.php?page=content&article_id='.$category_id.'&mode=meta&clang='.$clang.'&slot='.$slot.'&info='.urlencode($info));
 						exit;
 					}
 					else {
@@ -438,18 +429,10 @@ if ($article->getRows() == 1) {
 		if ($numSlots > 0) {
 			$listElements = array($I18N->msg($numSlots > 1 ? 'content_types' : 'content_type').' : ');
 
-			foreach ($curSlots as $key => $val) {
-				$s     = '';
-				$class = '';
-
-				if ($key == $slot && $mode == 'edit') {
-					$class = ' class="rex-active"';
-				}
-
-				$val = rex_translate($val);
-				$s  .= '<a href="index.php?page=content&amp;article_id='.$article_id.'&amp;clang='.$clang.'&amp;ctype='.$key.'&amp;mode=edit"'.$class.''.rex_tabindex().'>'.$val.'</a>';
-
-				$listElements[] = $s;
+			foreach ($curSlots as $tmpSlot) {
+				$class = ($tmpSlot == $slot && $mode == 'edit') ? ' class="rex-active"' : '';
+				$slotTitle = rex_translate($templateService->getSlotTitle($templateName, $tmpSlot));
+				$listElements[] = '<a href="index.php?page=content&amp;article_id='.$article_id.'&amp;clang='.$clang.'&amp;slot='.$tmpSlot.'&amp;mode=edit"'.$class.''.rex_tabindex().'>'.$slotTitle.'</a>';
 			}
 
 			$listElements = rex_register_extension_point('PAGE_CONTENT_CTYPE_MENU', $listElements, array(
@@ -459,27 +442,32 @@ if ($article->getRows() == 1) {
 				'mode'       => $mode,
 				'slice_id'   => $slice_id
 			));
+			$listElements = rex_register_extension_point('PAGE_CONTENT_SLOT_MENU', $listElements, array(
+				'article_id' => $article_id,
+				'clang'      => $clang,
+				'function'   => $function,
+				'mode'       => $mode,
+				'slice_id'   => $slice_id
+			));
 
-			if (count($listElements) > 1) { // skip the label
-				$slotMenu = '<ul id="rex-navi-ctype">';
+			$slotMenu  .= '<ul id="rex-navi-slots">';
 
-				foreach ($listElements as $idx => $listElement) {
-					$class = '';
+			foreach ($listElements as $idx => $listElement) {
+				$class = '';
 
-					if ($idx == 1) { // das erste Element ist nur Beschriftung -> überspringen
-						$class = ' class="rex-navi-first"';
-					}
-
-					$slotMenu .= '<li'.$class.'>'.$listElement.'</li>';
+				if ($idx == 1) { // das erste Element ist nur Beschriftung -> überspringen
+					$class = ' class="rex-navi-first"';
 				}
 
-				$slotMenu .= '</ul>';
+				$slotMenu .= '<li'.$class.'>'.$listElement.'</li>';
 			}
+
+			$slotMenu .= '</ul>';
 		}
 
 		$menu         = $slotMenu;
 		$listElements = array();
-		$baseURL      = 'index.php?page=content&amp;article_id='.$article_id.'&amp;clang='.$clang.'&amp;ctype='.$slot;
+		$baseURL      = 'index.php?page=content&amp;article_id='.$article_id.'&amp;clang='.$clang.'&amp;slot='.$slot;
 
 		if ($mode == 'edit') {
 			$listElements[] = '<a href="'.$baseURL.'&amp;mode=edit" class="rex-active"'.rex_tabindex().'>'.$I18N->msg('edit_mode').'</a>';
@@ -615,12 +603,12 @@ if ($article->getRows() == 1) {
 			// init form
 
 			$form->setEncType('multipart/form-data');
-			$form->addHiddenValue('page', 'content');
+			$form->addHiddenValue('page',       'content');
 			$form->addHiddenValue('article_id', $article_id);
-			$form->addHiddenValue('mode', 'meta');
-			$form->addHiddenValue('save', 1);
-			$form->addHiddenValue('clang', $clang);
-			$form->addHiddenValue('ctype', $slot);
+			$form->addHiddenValue('mode',       'meta');
+			$form->addHiddenValue('save',       1);
+			$form->addHiddenValue('clang',      $clang);
+			$form->addHiddenValue('slot',       $slot);
 			$form->setSubmitButton(null);
 			$form->setResetButton(null);
 

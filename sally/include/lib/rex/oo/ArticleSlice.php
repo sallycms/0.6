@@ -20,7 +20,7 @@ class OOArticleSlice {
 	private $_id;
 	private $_article_id;
 	private $_clang;
-	private $_ctype;
+	private $_slot;
 	private $_module;
 	private $_slice_id;
 	private $_prior;
@@ -36,12 +36,12 @@ class OOArticleSlice {
 	/**
 	 * Constructor
 	 */
-	public function __construct($id, $article_id, $clang, $ctype, $module, $prior,
+	public function __construct($id, $article_id, $clang, $slot, $module, $prior,
 		$next_article_slice_id, $createdate,$updatedate,$createuser,$updateuser,$revision, $slice_id = 0) {
 		$this->_id         = (int) $id;
 		$this->_article_id = (int) $article_id;
 		$this->_clang      = (int) $clang;
-		$this->_ctype      = $ctype;
+		$this->_slot       = $slot;
 		$this->_module     = $module;
 		$this->_slice_id   = (int) $slice_id;
 		$this->_prior   = (int) $prior;
@@ -83,9 +83,9 @@ class OOArticleSlice {
 			$sql = sly_DB_Persistence::getInstance();
 			$where = array('article_id' => $article_id, 'clang' => $clang);
 			if(!is_null($slot)) {
-				$where['ctype'] = $slot;
+				$where['slot'] = $slot;
 			}
-			$sql->select('article_slice', 'id', $where, null, 'ctype, prior ASC');
+			$sql->select('article_slice', 'id', $where, null, 'slot, prior ASC');
 			foreach($sql as $row){
 				$ids[] = $row['id'];
 			}
@@ -101,15 +101,23 @@ class OOArticleSlice {
 
 	/**
 	 * Return the first slice for an article.
+	 *
 	 * This can then be used to iterate over all the
 	 * slices in the order as they appear using the
 	 * getNextSlice() function.
 	 * Returns an OOArticleSlice object
 	 *
+	 * @param  int     $articleID  The article id
+	 * @param  string  $slot       The slot (if null, the first defined slot will be used)
+	 * @param  int     $clang      The desired content language (if null, the current language will be used)
 	 * @return OOArticleSlice
 	 */
-	public static function getFirstSliceForArticle($articleID, $clang = false, $revision = 0) {
-		if ($clang === false) $clang = sly_Core::getCurrentClang();
+	public static function getFirstSliceForArticle($articleID, $slot = null, $clang = null, $revision = 0) {
+		if ($clang === null) $clang = sly_Core::getCurrentClang();
+		if ($slot  === null) {
+			$template = self::getArticle()->getTemplateName();
+			$slot = sly_Service_Factory::getService('Template')->getFirstSlot($template);
+		}
 
 		$prefix    = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 		$articleID = (int) $articleID;
@@ -117,34 +125,9 @@ class OOArticleSlice {
 		$revision  = (int) $revision;
 
 		return self::_getSliceWhere(
-			'a.article_id = '.$articleID.' AND a.clang = '. $clang .' AND '.
-			'((a.prior = 0 AND a.ctype = 0 AND a.id = b.id) '.
-			'OR (b.ctype = 2 AND a.ctype = 0 AND b.id = a.prior)) '.
-			'AND a.revision = '.$revision.' AND b.revision = '.$revision,
-			$prefix.'article_slice a, '.$prefix.'article_slice b',
-			'a.*'
-		);
-	}
-
-	/**
-	 * Returns the first slice of the given ctype of an article
-	 *
-	 * @return OOArticleSlice
-	 */
-	public static function getFirstSliceForCtype($ctype, $an_article_id, $clang = false, $revision = 0)
-	{
-		global $REX;
-
-		$prefix    = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
-		$articleID = (int) $articleID;
-		$clang     = (int) $clang;
-		$revision  = (int) $revision;
-		$ctype     = mysql_real_escape_string($ctype);
-
-		return self::_getSliceWhere(
-			'a.article_id = '.$articleID.' AND a.clang = "'.$clang.'" AND a.ctype = "'.$ctype.'" AND '.
+			'a.article_id = '.$articleID.' AND a.clang = "'.$clang.'" AND a.slot = "'.mysql_real_escape_string($slot).'" AND '.
 			'((a.prior = 0  AND a.id = b.id) '.
-			'OR (b.ctype != a.ctype AND b.id = a.prior)) '.
+			'OR (b.slot != a.slot AND b.id = a.prior)) '.
 			'AND a.revision = '.$revision.' AND b.revision = '.$revision,
 			$prefix.'article_slice a, '.$prefix.'article_slice b',
 			'a.*'
@@ -179,14 +162,14 @@ class OOArticleSlice {
 	 * @return OOArticleSlice
 	 */
 	public function getNextSlice() {
-		return self::_getSliceWhere('prior > '.$this->_prior.' AND ctype = '.$this->_ctype.' AND clang = '.$this->_clang.' AND article_id = '.$this->_article_id.' AND clang = '.$this->_clang.' LIMIT 1 ORDER BY prior ASC');
+		return self::_getSliceWhere('prior > '.$this->_prior.' AND slot = "'.mysql_real_escape_string($this->_slot).'" AND clang = '.$this->_clang.' AND article_id = '.$this->_article_id.' AND clang = '.$this->_clang.' LIMIT 1 ORDER BY prior ASC');
 	}
 
 	/**
 	 * @return OOArticleSlice
 	 */
 	public function getPreviousSlice() {
-		return self::_getSliceWhere('prior < '.$this->_prior.' AND ctype = '.$this->_ctype.' AND clang = '.$this->_clang.' AND article_id = '.$this->_article_id.' AND clang = '.$this->_clang.' LIMIT 1 ORDER BY prior DESC');
+		return self::_getSliceWhere('prior < '.$this->_prior.' AND slot = "'.mysql_real_escape_string($this->_slot).'" AND clang = '.$this->_clang.' AND article_id = '.$this->_article_id.' AND clang = '.$this->_clang.' LIMIT 1 ORDER BY prior DESC');
 	}
 
 	/**
@@ -239,7 +222,7 @@ class OOArticleSlice {
 
 		foreach ($data as $row) {
 			$slices[] = new OOArticleSlice(
-				$row['id'], $row['article_id'], $row['clang'], $row['ctype'], $row['module'],
+				$row['id'], $row['article_id'], $row['clang'], $row['slot'], $row['module'],
 				$row['prior'], $row['next_article_slice_id'], $row['createdate'],
 				$row['updatedate'], $row['createuser'], $row['updateuser'], $row['revision'],
 				$row['slice_id']
@@ -256,11 +239,11 @@ class OOArticleSlice {
 
 	public function getArticleId()  { return $this->_article_id;          }
 	public function getClang()      { return $this->_clang;               }
-	public function getCtype()      { return $this->_ctype;               }
+	public function getSlot()       { return $this->_slot;                }
 	public function getRevision()   { return $this->_revision;            }
 	public function getModuleName() { return $this->_module;              }
 	public function getId()         { return $this->_id;                  }
-	public function getPrior()       { return $this->_prior;               }
+	public function getPrior()      { return $this->_prior;               }
 	public function getSliceId()    { return $this->_slice_id;            }
 
 	public function getValue($index)     { return $this->getRexVarValue('REX_VALUE', $index);     }
@@ -282,9 +265,10 @@ class OOArticleSlice {
 		// Slice-abhängige globale Variablen ersetzen
 
 		$slice   = sly_Service_Factory::getService('Slice')->findById($this->getSliceId());
-		$content = str_replace('REX_MODULE', $slice->getModule(), $content);
-		$content = str_replace('REX_SLICE_ID', $this->getId(), $content);
-		$content = str_replace('REX_CTYPE_ID', $this->getCtype(), $content);
+		$content = str_replace('REX_MODULE',   $slice->getModule(), $content);
+		$content = str_replace('REX_SLICE_ID', $this->getId(),      $content);
+		$content = str_replace('REX_CTYPE_ID', $this->getSlot(),    $content);
+		$content = str_replace('REX_SLOT',     $this->getSlot(),    $content);
 
 		return $content;
 	}

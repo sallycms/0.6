@@ -160,4 +160,49 @@ class sly_Util_Array {
 		return is_array($array) && (empty($array) || 0 !== count(array_diff_key($array, array_keys(array_keys($array)))));
 	}
 
+	/**
+	 * Returns true, when the predicate matches at least one element of the array.
+	 *
+	 * @param  string $predicate  The predicate (callback function as a string)
+	 * @param  array  $array      Array to search in
+	 * @return boolean            true, when the predicate matches at least once
+	 */
+	public static function any($predicate, $array) {
+		foreach ($array as $element) if ($predicate($element)) return true;
+		return false;
+	}
+
+	/**
+	 * Returns true, when the predicate matches ALL elements of the array.
+	 *
+	 * @param  string $predicate  The predicate (callback function as a string)
+	 * @param  array  $array      Array to search in
+	 * @return boolean            true, when the predicate matches all
+	 */
+	public static function all($predicate, $array) {
+		foreach ($array as $element) if (!$predicate($element)) return false;
+		return true;
+	}
+
+	/**
+	 * Returns true, when the predicate matches at least one key of the array.
+	 *
+	 * @param  string $predicate  The predicate (callback function as a string)
+	 * @param  array  $array      Array to search in
+	 * @return boolean            true, when the predicate matches at least one key
+	 */
+	public static function anyKey($predicate, $array) {
+		return self::any($predicate, array_keys($array));
+	}
+
+	/**
+	 * Checks, if an array is multidimensional
+	 *
+	 * @param  array    $array  The array to check
+	 * @return boolean          true, when the array is multidimensional
+	 */
+	public static function isMultiDim($array) {
+		return self::any('is_array', $array);
+	}
+
 }

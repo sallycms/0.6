@@ -10,7 +10,8 @@
 /**
  * REX_MODULE_ID,
  * REX_SLICE_ID,
- * REX_CTYPE_ID
+ * REX_CTYPE_ID,
+ * REX_SLOT
  *
  * @ingroup redaxo
  */
@@ -42,9 +43,10 @@ class rex_var_globals extends rex_var
     // Variablen hier einfuegen, damit sie in einer
     // Aktion abgefragt werden können
     $REX_ACTION['ARTICLE_ID'] = rex_request('article_id', 'int');
-    $REX_ACTION['CLANG_ID'] = rex_request('clang', 'int');
-    $REX_ACTION['CTYPE_ID'] = rex_request('ctype', 'int');
-    $REX_ACTION['MODULE_ID'] = rex_request('module_id', 'int');
+    $REX_ACTION['CLANG_ID']   = rex_request('clang', 'int');
+    $REX_ACTION['CTYPE_ID']   = rex_request('slot', 'string');
+    $REX_ACTION['SLOT']       = rex_request('slot', 'string');
+    $REX_ACTION['MODULE_ID']  = rex_request('module_id', 'int');
 
     return $REX_ACTION;
   }
@@ -53,14 +55,15 @@ class rex_var_globals extends rex_var
   {
 
 	$artslice = OOArticleSlice::_getSliceWhere('slice_id = $slice_id');
-	$slice = sly_Service_Factory::getService('Slice')->findById($slice_id);
+	$slice = sly_Service_Factory::getSliceService()->findById($slice_id);
 
     // Variablen hier einfuegen, damit sie in einer
     // Aktion abgefragt werden können
 	if($artslice && $slice){
 		$REX_ACTION['ARTICLE_ID'] = $artslice->getArticleId();
 		$REX_ACTION['CLANG_ID']   = $artslice->getClang();
-		$REX_ACTION['CTYPE_ID']   = $artslice->getCtype();
+		$REX_ACTION['CTYPE_ID']   = $artslice->getSlot();
+		$REX_ACTION['SLOT']       = $artslice->getSlot();
 		$REX_ACTION['MODULE']     = $slice->getModule();
 		$REX_ACTION['SLICE_ID']   = $artslice->getId();
 	}
