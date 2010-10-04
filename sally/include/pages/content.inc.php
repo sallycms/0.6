@@ -44,8 +44,8 @@ if ($article->getRows() == 1) {
 	$templateName    = $article->getValue('template');
 
 	// Slot validieren
-	$curSlots = $service->getSlots($templateName);
-	$slot     = sly_request('ctype', 'string', '');
+	$curSlots = $templateService->getSlots($templateName);
+	$slot     = sly_request('slot', 'string', '');
 	if (!$templateService->hasSlot($templateName, $slot)) $slot = $templateService->getFirstSlot($templateName);
 
 	// Artikel wurde gefunden - Kategorie holen
