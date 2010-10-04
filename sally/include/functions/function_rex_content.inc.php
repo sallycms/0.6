@@ -54,7 +54,7 @@ function rex_moveSlice($slice_id, $clang, $direction)
 		trigger_error('rex_moveSlice: Unsupported direction "'.$direction.'"!', E_USER_ERROR);
 	}
 
-	// ctype beachten
+	// slot beachten
 	// verschieben / vertauschen
 	// article regenerieren.
 
@@ -68,13 +68,13 @@ function rex_moveSlice($slice_id, $clang, $direction)
 	if ($articleSlice) {
 		$sql        = sly_DB_Persistence::getInstance();
 		$article_id = (int) $articleSlice->getArticleId();
-		$prior       = (int) $articleSlice->getPrior();
-		$ctype      = (int) $articleSlice->getCtype();
-		$newprior    = $direction == 'moveup' ? $prior - 1 : $prior + 1;
-		$sliceCount = $sql->magicFetch('article_slice', 'COUNT(*)', array('article_id' => $article_id, 'clang' => $clang, 'ctype' => $ctype));
+		$prior      = (int) $articleSlice->getPrior();
+		$slot       = $articleSlice->getSlot();
+		$newprior   = $direction == 'moveup' ? $prior - 1 : $prior + 1;
+		$sliceCount = $sql->magicFetch('article_slice', 'COUNT(*)', array('article_id' => $article_id, 'clang' => $clang, 'slot' => $slot));
 		if($newprior > -1 && $newprior < $sliceCount) {
 			$update  = new rex_sql();
-			$update->setQuery('UPDATE #_article_slice SET prior = '.$prior.' WHERE article_id = '.$article_id.' AND clang = '.$clang.' AND ctype ='.$ctype.' AND prior = '.$newprior, '#_');
+			$update->setQuery('UPDATE #_article_slice SET prior = '.$prior.' WHERE article_id = '.$article_id.' AND clang = '.$clang.' AND slot = "'.$slot.'" AND prior = '.$newprior, '#_');
 			$update->setQuery('UPDATE #_article_slice SET prior = '.$newprior.' WHERE id = '.$slice_id, '#_');
 			$message = $I18N->msg('slice_moved');
 			$success = true;
@@ -105,7 +105,7 @@ function rex_deleteSlice($slice_id)
 		$sql->setQuery('UPDATE #_article_slice SET prior = prior - 1
 			WHERE article_id = '.$article_slice->getArticleId().'
 				AND clang = '.$article_slice->getClang().'
-				AND ctype = '.$article_slice->getCtype().'
+				AND slot = "'.$article_slice->getSlot().'"
 				AND prior > '.$article_slice->getPrior(), '#_');
 
 		sly_Service_Factory::getService('SliceValue')->delete(array('slice_id' => $article_slice->getSliceId()));
@@ -479,7 +479,7 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 		$insert = new rex_sql();
 		$insert->setTable('article_slice', true);
 		$insert->setValue('clang', $insert->escape($to_clang));
-		$insert->setValue('ctype', $insert->escape($article_slice->getCtype()));
+		$insert->setValue('slot', $insert->escape($article_slice->getSlot()));
 		$insert->setValue('re_article_slice_id', $insert->escape($re_slice_id));
 		$insert->setValue('slice_id', $insert->escape($slice->getId()));
 		$insert->setValue('article_id', $insert->escape($to_id));

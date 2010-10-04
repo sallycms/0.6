@@ -11,7 +11,7 @@
  * REX_ARTICLE[1]
  * REX_ARTICLE[id=1]
  *
- * REX_ARTICLE[id=1 ctype=2 clang=1]
+ * REX_ARTICLE[id=1 slot=2 clang=1] or REX_ARTICLE[id=1 ctype=2 clang=1]
  *
  * REX_ARTICLE[field='id']
  * REX_ARTICLE[field='description' id=3]
@@ -45,8 +45,9 @@ class rex_var_article extends rex_var
         $args['clang'] = (int) $value;
         break;
       case '2' :
+      case 'slot' :
       case 'ctype' :
-        $args['ctype'] = (int) $value;
+        $args['slot'] = $value;
         break;
       case 'field' :
         $args['field'] = (string) $value;
@@ -70,7 +71,7 @@ class rex_var_article extends rex_var
       list ($param_str, $args)  = $match;
       list ($article_id, $args) = $this->extractArg('id',    $args, 0);
       list ($clang, $args)      = $this->extractArg('clang', $args, '$REX[\'CUR_CLANG\']');
-      list ($ctype, $args)      = $this->extractArg('ctype', $args, -1);
+      list ($slot,  $args)      = $this->extractArg('slot',  $args, '');
       list ($field, $args)      = $this->extractArg('field', $args, '');
 
       $tpl = '';
@@ -91,7 +92,7 @@ class rex_var_article extends rex_var
 	      	{
 	          // aktueller Artikel darf nur in Templates, nicht in Modulen eingebunden werden
 	          // => endlossschleife
-	          $tpl = '<?php print '. $this->handleGlobalVarParamsSerialized($var, $args, '$this->getArticle('. $ctype .')') .'; ?>';
+	          $tpl = '<?php print '. $this->handleGlobalVarParamsSerialized($var, $args, '$this->getArticle('.$slot.')') .'; ?>';
 	      	}
 	      }
       }
@@ -119,7 +120,7 @@ class rex_var_article extends rex_var
 	        $varname = '$__rex_art';
 	        $tpl = '<?php
 	        '. $varname .' = new rex_article('.$article_id.', '.$clang.');
-          print '. $this->handleGlobalVarParamsSerialized($var, $args, $varname .'->getArticle('. $ctype .')') .';
+          print '. $this->handleGlobalVarParamsSerialized($var, $args, $varname .'->getArticle('.$slot.')') .';
 	        ?>';
         }
       }

@@ -243,3 +243,10 @@ function sly_ini_get($key, $default = null) {
 
 	return $res;
 }
+
+function sly_dump() {
+	print '<pre>';
+	$args = func_get_args();
+	call_user_func_array('var_dump', $args);
+	print '</pre>';
+}

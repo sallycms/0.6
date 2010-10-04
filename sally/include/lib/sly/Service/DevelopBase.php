@@ -256,7 +256,7 @@ abstract class sly_Service_DevelopBase {
 	 *
 	 * @param  string  $name     Name of the item
 	 * @param  string  $key      Key of the desired parameter. null gets all. (default: null)
-	 * @param  string  $default  Default value, if this parameter is not set (default: null)
+	 * @param  string  $default  Default value, if the desired parameter is not set (default: null)
 	 * @param  string  $type     Filetype if necessary (default: null)
 	 * @return mixed             array with all user defined parameters or string with the desired parameter
 	 * @throws sly_Exception     When the resource with the given name is not available
@@ -265,7 +265,7 @@ abstract class sly_Service_DevelopBase {
 		if ($key == 'name') return $name;
 
 		$data = $this->getData();
-		if (!isset($data[$name])) throw new sly_Exception('The development '.$name.' is not available.');
+		if (!isset($data[$name])) throw new sly_Exception('The development resource "'.$name.'" is not available.');
 		if ($type !== null && !isset($data[$name][$type])) return $default;
 
 		// get default type if necessary

@@ -35,7 +35,7 @@ class sly_Service_Module extends sly_Service_DevelopBase {
 	protected function buildData($filename, $mtime, $data) {
 		$result = array(
 			'filename'  => $filename,
-			'title'     => isset($data['title']) ? $data['title'] : $filename,
+			'title'     => isset($data['title']) ? $data['title'] : $data['name'],
 			'actions'   => isset($data['actions']) ? $data['actions'] : array(),
 			'templates' => isset($data['templates']) ? $data['templates'] : 'all',
 			'mtime'     => $mtime
@@ -56,6 +56,11 @@ class sly_Service_Module extends sly_Service_DevelopBase {
 		}
 	}
 
+	/**
+	 * Get available modules from the service
+	 *
+	 * @return array  Array of modules
+	 */
 	public function getModules() {
 		$result = array();
 
@@ -66,24 +71,74 @@ class sly_Service_Module extends sly_Service_DevelopBase {
 		return $result;
 	}
 
-	public function getTitle($name, $default = '') {
-		return $this->get($name, 'title', $default);
+	/**
+	 * Get the title of a module
+	 *
+	 * @param  string  $name  Unique module name
+	 * @return string         The title of the module
+	 */
+	public function getTitle($name) {
+		return $this->get($name, 'title', '');
 	}
 
+	/**
+	 * Get the available actions for this module
+	 *
+	 * @param  string  $name  Unique module name
+	 * @return array          Array of action names
+	 */
 	public function getActions($name) {
 		return sly_makeArray($this->get($name, 'actions', array()));
 	}
 
-	public function getInputFilename($name, $fullPath) {
-		return $this->get($name, 'filename', false, 'input');
+	/**
+	 * Get the filename of the modules input file
+	 *
+	 * @param  string  $name  Unique module name
+	 * @return string         The filename of the input file
+	 */
+	public function getInputFilename($name) {
+		return $this->get($name, 'filename', null, 'input');
 	}
 
-	public function getOutputFilename($name, $fullPath) {
-		return $this->get($name, 'filename', false, 'output');
+	/**
+	 * Get the filename of the modules output file
+	 *
+	 * @param  string  $name  Unique module name
+	 * @return string         The filename of the output file
+	 */
+	public function getOutputFilename($name) {
+		return $this->get($name, 'filename', null, 'output');
 	}
 
-	public function hasTemplate($name) {
-		return true;
+	/**
+	 * Get a list of templates where this module may be used
+	 *
+	 * This list is NOT affected by constraints made in template configuration.
+	 *
+	 * @param  string  $name  Unique module name
+	 * @return string         List of templates
+	 */
+	public function getTemplates($name) {
+		static $templates;
+		if (!isset($templates[$name])) {
+			$t = $this->get($name, 'templates');
+			if ($t === 'all') $t = array_keys(sly_Service_Factory::getTemplateService()->getTemplates());
+			$templates[$name] = sly_makeArray($t);
+		}
+		return $templates[$name];
+	}
+
+	/**
+	 * Checks, if a module may be used with a given template
+	 *
+	 * @param  string  $name          Unique module name
+	 * @param  string  $templateName  Unique template name
+	 * @return boolean                true, when the module may be used in the given template
+	 */
+	public function hasTemplate($name, $templateName) {
+		$templates = self::getTemplates($name);
+		return array_search($templateName, $templates) !== false;
 	}
 
 }

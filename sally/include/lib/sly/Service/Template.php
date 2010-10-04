@@ -37,9 +37,10 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	protected function buildData($filename, $mtime, $data) {
 		$result = array(
 			'filename' => $filename,
-			'title'    => isset($data['title']) ? $data['title'] : $data['name'],
-			'class'    => isset($data['class']) ? $data['class'] : null,
-			'slots'    => sly_makeArray(isset($data['slots']) ? $data['slots'] : 0),
+			'title'    => isset($data['title'])  ? $data['title']  : $data['name'],
+			'class'    => isset($data['class'])  ? $data['class']  : null,
+			'active'   => isset($data['active']) ? $data['active'] : false,
+			'slots'    => sly_makeArray(isset($data['slots']) ? $data['slots'] : array(0 => 'default')),
 			'modules'  => isset($data['modules']) ? $data['modules'] : array(),
 			'mtime'    => $mtime
 		);
@@ -85,12 +86,24 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 		return $result;
 	}
 
+	/**
+	 * Get the cache folder where template cache-files are stored
+	 *
+	 * @throws sly_Exception  When no cache folder is available and could not be created
+	 */
 	public function getCacheFolder() {
 		$dir = sly_Util_Directory::join(SLY_DYNFOLDER, 'internal/sally', $this->getClassIdentifier());
 		if (!is_dir($dir) && !@mkdir($dir, sly_Core::config()->get('DIRPERM'), true)) throw new sly_Exception('Konnte Cache-Verzeichnis '.$dir.' nicht erstellen.');
 		return $dir;
 	}
 
+	/**
+	 * Generate the template cache-file for a template
+	 *
+	 * @param  string  $name  Unique template name
+	 * @return int            Returns the number of bytes that were written to the cache file, or false on failure.
+	 * @throws sly_Exception  When the given template does ot exist
+	 */
 	public function generate($name) {
 		if (!$this->exists($name)) throw new sly_Exception("Template '$name' does not exist.");
 
@@ -104,6 +117,12 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 		return file_put_contents($templateFile, $content) > 0;
 	}
 
+	/**
+	 * Checks, if a cache file is already generated
+	 *
+	 * @param  string  $name  Unique template name
+	 * @return boolean        true, when the cache file exists.
+	 */
 	public function isGenerated($name) {
 		return file_exists($this->getCacheFile($name));
 	}
@@ -116,11 +135,10 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 * Return the title of the template
 	 *
 	 * @param  string  $name     Unique template name
-	 * @param  string  $default  Default return value
 	 * @return string            The Template title
 	 */
-	public function getTitle($name, $default = '') {
-		return $this->get($name, 'title', $default);
+	public function getTitle($name) {
+		return $this->get($name, 'title');
 	}
 
 	/**
@@ -137,21 +155,42 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	}
 
 	/**
-	 * Gets the slots for a template
+	 * Gets a list of the slot names for a template
 	 *
-	 * The slots will be returned as an associative array.
-	 *
-	 * If the slots were defined as a list of titles it might look like:
-	 * array(0 => 'Slot Title 1', 1 => 'Slot Title 2')
-	 *
-	 * If the slots were defined with names, it may look like:
-	 * array('slot1' => 'Slot Title 1', 'slot2' => 'Slot Title 2')
+	 * The slots will be returned as an array. Only the names of the slots
+	 * will be contained. To get the title for a slot, use
+	 * sly_Service_Template::getSlotTitle($slotName);
 	 *
 	 * @param  string  $name  Template name
 	 * @return array          Array of slots
 	 */
 	public function getSlots($name) {
-		return $this->get($name, 'slots', array(0));
+		return array_keys($this->get($name, 'slots', array(0)));
+	}
+
+	/**
+	 * Gets the title for a slot
+	 *
+	 * This title may be used for visualization
+	 *
+	 * @param  string  $name      Unique template name
+	 * @param  string  $slotName  The slot name
+	 * @return string             The slot title or an empty string
+	 */
+	public function getSlotTitle($name, $slotName) {
+		$slots = $this->get($name, 'slots', array(0 => 'default'));
+		return empty($slots[$slotName]) ? '' : $slots[$slotName];
+	}
+
+	/**
+	 * Gets the first slot from the template
+	 *
+	 * @param  string  $name  Unique template name
+	 * @return string         The first slot (name) or the default slot if no slot is given
+	 */
+	public function getFirstSlot($name) {
+		$slots = $this->getSlots($name);
+		return $slots[0];
 	}
 
 	/**
@@ -163,31 +202,27 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 */
 	public function hasSlot($name, $slot) {
 		$slots = $this->getSlots($name);
-		return isset($slots[$slot]);
+		return array_search($slot, $slots) !== false;
 	}
 
 	/**
 	 * Get the valid modules for the given template and slot
 	 *
-	 * The modules are filtered by the constraints of the template and the
-	 * modules.
+	 * The modules are filtered by the constraints that are made in the
+	 * template configuration AND the module configuration.
 	 *
 	 * @param  string  $name  Template name
 	 * @param  string  $slot  Slot identifier
 	 * @return array          Array of module names
 	 */
 	public function getModules($name, $slot = null) {
-		$moduleService = sly_Service_Factory::getService('Module');
+		$moduleService = sly_Service_Factory::getModuleService();
 		$modules       = sly_makeArray($this->get($name, 'modules'));
 		$slots         = $this->getSlots($name);
-
-		// only use _ALL_ keyword, when ther is no _ALL_ slot
-		$checkAll      = array_search('_ALL_', $slots) === false;
-
-		$result = array();
+		$result        = array();
 
 		// check if slot is valid
-		if (empty($slot) || array_search($slot, $slots) !== false) {
+		if (empty($slot) || self::hasSlot($name, $slot)) {
 			$allModules = array_keys($moduleService->getModules());
 
 			// find modules for this template
@@ -196,7 +231,7 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 				$tmp = array();
 				foreach ($modules as $key => $value) {
 					$value = sly_makeArray($value);
-					if (empty($slot) || $slot == $key || ($checkAll && $key == '_ALL_')) {
+					if ($slot === null || $slot === $key || ($key === '_ALL_' && !self::hasSlot($name, '_ALL_'))) {
 						$tmp = array_merge($tmp, array_values($value));
 					}
 				}
@@ -227,22 +262,51 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 		return sly_Util_Array::isAssoc($modules) || sly_Util_Array::isMultiDim($modules);
 	}
 
+	/**
+	 * Checks, if the given template is active
+	 *
+	 * @param  string  $name  Unique template name
+	 * @return boolean        true, if the template is active
+	 */
+	public function isActive($name) {
+		return (boolean)$this->get($name, 'active', false);
+	}
+
+	/**
+	 * Get the filename of the template
+	 *
+	 * @param  string  $name  Unique template name
+	 * @return string         The templates filename
+	 */
 	public function getFilename($name) {
 		return $this->get($name, 'filename');
 	}
 
-	public function hasModule($template, $ctype, $module) {
-		if (!$this->exists($template)) return false;
+	/**
+	 * Checks, if the template has a specific module
+	 *
+	 * @param  string  $name    Unique template name
+	 * @param  string  $module  Module name to check
+	 * @param  string  $slot    The template slot to check
+	 * @return boolean          true, when the module is allowed in the given template and slot
+	 */
+	public function hasModule($name, $module, $slot = null) {
+		if (!$this->exists($name)) return false;
 
-		$modules = $this->getModules($template);
-		$modules = sly_makeArray($modules);
+		$modules = $this->getModules($name, $slot);
 
-		return
-			/* keine Angabe -> alle erlaubt */ !isset($modules[$ctype]) ||
-			/* 'all' oder [all] angegeben   */ sly_makeArray($modules[$ctype]) == array('all') ||
-			/* Modulkennung angegeben       */ in_array($module, sly_makeArray($modules[$ctype]));
+		return in_array($module, $modules[$slot]);
 	}
 
+	/**
+	 * Performs an include for the given template
+	 *
+	 * A given params array will be extracted to variables and is available
+	 * in the template code.
+	 *
+	 * @param  string  $name    Unique template name
+	 * @param  array   $params  Array of params to be available in the template
+	 */
 	public function includeFile($name, $params = array()) {
 		if (!$this->isGenerated($name)) $this->generate($name);
 		$templateFile_C3476zz3g21ug327ur623 = $this->getCacheFile($name);

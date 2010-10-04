@@ -143,7 +143,7 @@ class sly_Controller_Module extends sly_Controller_Sally
 					$label = '('.rex_translate($languages[$clangID]).') '.$label;
 				}
 
-				$errormsg[] = '<li><a href="index.php?page=content&amp;article_id='.$aID.'&amp;clang='.$clangID.'&amp;ctype='.$usage['ctype'].'">'.sly_html($label).'</a></li>';
+				$errormsg[] = '<li><a href="index.php?page=content&amp;article_id='.$aID.'&amp;clang='.$clangID.'&amp;slot='.$usage['slot'].'">'.sly_html($label).'</a></li>';
 			}
 
 			$moduleName = sly_html($module->getName());

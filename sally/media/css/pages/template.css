@@ -14,7 +14,7 @@
 		margin: 0 0 0 21px;
 	}
 
-	div#rex-form-template-ctype {
+	div#rex-form-template-slot {
 		p.rex-form-select select { margin-top: 5px;     }
 		legend                   { +border-radius(0px); }
 		.rex-form-row            { margin: 0;           }

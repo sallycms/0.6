@@ -41,4 +41,26 @@ abstract class sly_Service_Factory {
 
 		return self::$services[$modelName];
 	}
+
+
+	/**
+	 * @return sly_Service_Slice  The slice service instance
+	 */
+	public static function getSliceService() {
+		return self::getService('Slice');
+	}
+
+	/**
+	 * @return sly_Service_Template  The template service instance
+	 */
+	public static function getTemplateService() {
+		return self::getService('Template');
+	}
+
+	/**
+	 * @return sly_Service_Module  The module service instance
+	 */
+	public static function getModuleService() {
+		return self::getService('Module');
+	}
 }

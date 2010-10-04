@@ -177,7 +177,7 @@ function _rex_array_key_cast($haystack, $needle, $vartype, $default = '', $addsl
  *  - rex-category-id
  *  - rex-clang-id
  *  - rex-template-id
- *  - rex-ctype-id
+ *  - rex-slot
  *  - rex-slice-id
  *  - rex-module-id
  *  - rex-action-id
@@ -224,7 +224,6 @@ function _rex_cast_var($var, $vartype, $default, $mode, $addslashes = true)
 			break;
 
 		case 'rex-template-id':
-		case 'rex-ctype-id':
 		case 'rex-slice-id':
 		case 'rex-module-id':
 		case 'rex-action-id':
@@ -269,6 +268,8 @@ function _rex_cast_var($var, $vartype, $default, $mode, $addslashes = true)
 			$var = abs((float) $var);
 			break;
 
+		case 'rex-slot':
+		case 'rex-ctype-id':
 		case 'string':
 			// Alte REDAXO-AddOns verlassen sich auf die Magic Quotes, die aus
 			// dieser Funktion rauskommen sollten. Neue AddOns verwenden sly_*.
