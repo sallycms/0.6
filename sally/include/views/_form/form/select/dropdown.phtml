@@ -9,7 +9,7 @@
  */
 
 $name     = $this->getAttribute('name');
-$selected = $this->attributes['value'];
+$selected = sly_makeArray($this->getDisplayValue()); // list of selected keys
 
 if ($this->getAttribute('multiple') == 'multiple') {
 	$this->setAttribute('name', $name.'[]');
@@ -20,7 +20,7 @@ $this->addClass('rex-form-select');
 print '<select '.$this->getAttributeString('value').'>';
 
 foreach ($this->values as $key => $value) {
-	$sel   = (is_array($selected) && in_array($key, $selected)) || (!is_array($selected) && $key == $selected) ? ' selected="selected"' : '';
+	$sel   = in_array($key, $selected) ? ' selected="selected"' : '';
 	$value = sly_html($value);
 
 	if (preg_match('#^( *)#', $value, $matches)) {

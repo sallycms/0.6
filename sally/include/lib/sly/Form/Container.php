@@ -32,4 +32,8 @@ class sly_Form_Container extends sly_Form_ElementBase implements sly_Form_IEleme
 	public function isContainer() {
 		return true;
 	}
+
+	public function getDisplayValue() {
+		return md5($this->content);
+	}
 }

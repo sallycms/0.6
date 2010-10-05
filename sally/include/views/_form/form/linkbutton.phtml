@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
@@ -8,8 +8,8 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$id       = $this->javascriptID;
-$art      = OOArticle::getArticleById($this->attributes['value']);
+$id       = $this->getWidgetID();
+$art      = OOArticle::getArticleById($this->getDisplayValue());
 $artName  = '';
 $category = '';
 $params   = '';
@@ -22,6 +22,8 @@ if (OOArticle::isValid($art)) {
 		$params = '&category_id='.$category;
 	}
 }
+
+$this->consumeWidgetID();
 
 ?>
 

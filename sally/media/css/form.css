@@ -457,3 +457,17 @@ div#rex-addon-editmode form div.rex-widget {
 	margin-left: 155px;
 	margin-bottom: 0px;
 }
+
+/* Mehrsprachige Formulare */
+
+.sly-form-i18n-switch {
+	float: right;
+	position: relative;
+	width: 15px !important;
+	margin-right: 5px;
+	line-height: 22px;
+	z-index: 100;
+
+	input { width: 15px !important; }
+	img   { vertical-align: top; cursor: pointer; }
+}

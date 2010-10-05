@@ -12,7 +12,7 @@ $name     = $this->getAttribute('name');
 $id       = $this->getAttribute('id');
 $minYear  = 1970; // Und es machte Booom im UNIX-Universum...
 $maxYear  = date('Y') + 20;
-$value    = $this->attributes['value'];
+$value    = $this->getDisplayValue();
 
 if ($value === false) {
 	$value = time();
@@ -24,7 +24,7 @@ if ($value !== null) {
 
 // JavaScript-Version
 
-$dateformat = t('dateformat');
+$dateformat = '%d.%m.%Y'; // t('dateformat');
 $formatJS   = $dateformat;
 $formatJS   = str_replace(
 	array('%a', '%A', '%d', '%e', '%j', '%b', '%B', '%h', '%m', '%y', '%Y'),
@@ -33,7 +33,7 @@ $formatJS   = str_replace(
 
 $attrs['class'] = 'rex-form-text';
 $attrs['type']  = 'text';
-$attrs['name']  = sly_html($name).'_date';
+$attrs['name']  = $name;
 $attrs['id']    = $attrs['name'];
 $attrs['style'] = 'width:150px';
 $attrs['value'] = $value === null ? '' : strftime($dateformat.($this->withTime() ? ' %H:%M' : ''), $value);
@@ -70,12 +70,12 @@ if (!$registry->has('sly.form.datetime.links')) {
 <script type="text/javascript">
 jQuery(function($) {
 <? if ($this->withTime()): ?>
-	$('#<?= sly_html($name) ?>_date').datetime({
+	$('#<?= sly_html($name) ?>').datetime({
 		dateFormat: '<?= addslashes($formatJS) ?>',
 		userLang: '<?= $locale ?>'
 	});
 <? else: ?>
-	$('#<?= sly_html($name) ?>_date').datepicker({dateFormat: '<?= addslashes($formatJS) ?>'});
+	$('#<?= sly_html($name) ?>').datepicker({dateFormat: '<?= addslashes($formatJS) ?>'});
 <? endif ?>
 });
 </script>

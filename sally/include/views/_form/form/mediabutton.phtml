@@ -1,4 +1,16 @@
-<? $id = $this->javascriptID; ?>
+<?php
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+$id = $this->getWidgetID();
+$this->consumeWidgetID();
+?>
 
 <span class="sly-widget sly-mediabutton">
 	<input type="text" size="30" name="<?= sly_html($this->attributes['id']) ?>" value="<?= sly_html($this->attributes['value']) ?>" class="<?= sly_html($this->attributes['class']) ?>" id="REX_MEDIA_<?= $id ?>" readonly="readonly" />

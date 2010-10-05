@@ -36,4 +36,8 @@ class sly_Form_Text extends sly_Form_ElementBase implements sly_Form_IElement {
 		$this->addOuterClass('rex-form-read');
 		return $this->outerClass;
 	}
+
+	public function getDisplayValue() {
+		return md5($this->content);
+	}
 }

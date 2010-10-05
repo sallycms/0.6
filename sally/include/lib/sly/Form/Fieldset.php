@@ -28,8 +28,26 @@ class sly_Form_Fieldset {
 	}
 
 	public function addRow($row) {
-		$this->rows[] = sly_makeArray($row);
+		$row = sly_makeArray($row);
+
+		if ($this->columns > 1 && $this->isMultilingual($row)) {
+			throw new sly_Exception('Mehrsprachige Elemente können nicht in mehrspaltige Fieldsets eingefügt werden.');
+		}
+
+		$this->rows[] = $row;
 		return true;
+	}
+
+	public function isMultilingual($row = null) {
+		$rows = $row ? array($row) : $this->rows;
+
+		foreach ($rows as $row) {
+			foreach ($row as $element) {
+				if ($element->isMultilingual()) return true;
+			}
+		}
+
+		return false;
 	}
 
 	public function addRows($rows) {
@@ -69,7 +87,13 @@ class sly_Form_Fieldset {
 	}
 
 	public function setColumns($num) {
-		$this->columns = ($num > 0 && $num < 26) ? $num : 1;
+		$num = ($num > 0 && $num < 26) ? $num : 1;
+
+		if ($num > 1 && $this->isMultilingual()) {
+			throw new sly_Exception('Dieses Fieldset enthält mehrsprachige Elemente und muss daher einspaltig sein.');
+		}
+
+		$this->columns = $num;
 		return $this->columns;
 	}
 

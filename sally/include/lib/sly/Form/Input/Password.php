@@ -12,9 +12,12 @@
  * @ingroup form
  */
 class sly_Form_Input_Password extends sly_Form_Input_Base {
+	protected $redisplay;
+
 	public function __construct($name, $label, $value = '', $id = null) {
 		parent::__construct($name, $label, $value, $id);
 		$this->setAttribute('type', 'password');
+		$this->redisplay = false;
 	}
 
 	public function getOuterClass() {
@@ -22,14 +25,15 @@ class sly_Form_Input_Password extends sly_Form_Input_Base {
 		return $this->outerClass;
 	}
 
-	public function render() {
-		$this->addClass('rex-form-text');
+	public function setPasswordReDisplay($redisplay) {
+		$this->redisplay = (boolean) $redisplay;
+	}
 
-		// Das Passwort-Eingabefeld besitzt eine eigene render()-Implementierung,
-		// damit bei abgeschickte und erneut angezeigten Formularen eben NICHT
-		// die übermittelten POST-Daten (= Passwörter) wieder eingesetzt werden.
+	public function getDisplayValue() {
+		if ($this->redisplay) {
+			return parent::getDisplayValue();
+		}
 
-		$attributeString = $this->getAttributeString();
-		return '<input '.$attributeString.' />';
+		return $this->attributes['value'];
 	}
 }

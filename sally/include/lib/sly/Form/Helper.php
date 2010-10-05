@@ -127,4 +127,24 @@ abstract class sly_Form_Helper {
 				return true;
 		}
 	}
+
+	public static function parseFormValue($name, $default = null, $multilingual = false) {
+		global $REX;
+
+		$monoValue = isset($_POST[$name]) ? $_POST[$name] : $default;
+
+		if (!$multilingual || count($REX['CLANG']) == 1) {
+			return $monoValue;
+		}
+
+		$equal  = sly_post('equal__'.$name, 'boolean', false);
+		$values = array();
+
+		foreach (array_keys($REX['CLANG']) as $clangID) {
+			$key              = $name.'__clang_'.$clangID;
+			$values[$clangID] = $equal ? $monoValue : (isset($_POST[$key]) ? $_POST[$key] : $default);
+		}
+
+		return $values;
+	}
 }

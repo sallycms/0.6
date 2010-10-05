@@ -18,15 +18,15 @@ abstract class sly_Form_ElementBase {
 	protected $helpText;
 	protected $outerClass;
 	protected $formRowClass;
-	protected $languageSwitchID;
+	protected $multilingual;
 
 	public function __construct($name, $label, $value, $id = null, $allowedAttributes = null) {
-		$this->attributes       = array();
-		$this->label            = $label;
-		$this->allowed          = $allowedAttributes;
-		$this->languageSwitchID = '';
-		$this->outerClass       = '';
-		$this->formRowClass     = '';
+		$this->attributes   = array();
+		$this->label        = $label;
+		$this->allowed      = $allowedAttributes;
+		$this->outerClass   = '';
+		$this->formRowClass = '';
+		$this->multilingual = false;
 
 		$this->setAttribute('name',  $name);
 		$this->setAttribute('value', $value);
@@ -118,6 +118,36 @@ abstract class sly_Form_ElementBase {
 		return false;
 	}
 
+	public function isMultilingual() {
+		return $this->multilingual;
+	}
+
+	public function setMultilingual($multilingual = true) {
+		$this->multilingual = (boolean) $multilingual;
+		return $this->multilingual;
+	}
+
+	public function getDisplayValueHelper($type = 'string', $asArray = false) {
+		// Prüfen, ob das Formular bereits abgeschickt und noch einmal angezeigt
+		// werden soll. Falls ja, übernehmen wir den Wert aus den POST-Daten.
+
+		$name = $this->attributes['name'];
+
+		if (isset($_POST[$name]) && !$asArray) {
+			return sly_post($name, $type);
+		}
+
+		if (isset($_POST[$name]) && $asArray && is_array($_POST[$name])) {
+			return sly_postArray($name, $type);
+		}
+
+		return $this->attributes['value'];
+	}
+
+	public function getDisplayName() {
+		return $this->getAttribute('name');
+	}
+
 	protected function renderFilename($filename) {
 		ob_start();
 		include SLY_INCLUDE_PATH.'/views/_form/'.$filename;
@@ -144,13 +174,5 @@ abstract class sly_Form_ElementBase {
 		}
 
 		$this->formRowClass = implode(' ', array_unique($classes));
-	}
-
-	public function setLanguageSwitchID($langID) {
-		$this->languageSwitchID = $langID;
-	}
-
-	public function getLanguageSwitchID() {
-		return $this->languageSwitchID;
 	}
 }

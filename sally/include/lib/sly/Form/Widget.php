@@ -13,29 +13,28 @@
  * @ingroup form
  */
 abstract class sly_Form_Widget extends sly_Form_ElementBase {
-	protected $javascriptID;
 	protected $namespace;
 
-	public function __construct($name, $label, $value, $javascriptID, $id, $allowedAttributes, $namespace) {
+	public function __construct($name, $label, $value, $id, $allowedAttributes, $namespace) {
 		parent::__construct($name, $label, $value, $id, $allowedAttributes);
 		$this->namespace = 'sly.form.widget.'.$namespace;
-		$this->setJavaScriptID($javascriptID);
 	}
 
-	public function setJavaScriptID($javascriptID) {
+	public function getWidgetID() {
 		$registry = sly_Core::getTempRegistry();
-		$key      = $this->namespace.'.jsid';
+		$key      = $this->namespace.'.counter';
 
-		if ($javascriptID <= 0) {
-			$jsID = $registry->has($key) ? ($registry->get($key) + 1) : 1;
-		}
-		else {
-			$jsID = (int) $javascriptID;
+		if (!$registry->has($key)) {
+			$registry->set($key, 1);
 		}
 
-		$this->javascriptID = $jsID;
-		$registry->set($key, $jsID);
+		return $registry->get($key);
+	}
 
-		return $jsID;
+	public function consumeWidgetID() {
+		$registry = sly_Core::getTempRegistry();
+		$key      = $this->namespace.'.counter';
+
+		$registry->set($key, $this->getWidgetID() + 1);
 	}
 }

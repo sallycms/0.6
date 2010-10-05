@@ -13,16 +13,20 @@
  */
 class sly_Form_Input_Radio extends sly_Form_Input_Base {
 	protected $description;
+	protected $checks;
 
 	public function __construct($name, $label, $value, $description = 'ja', $id = null) {
 		$allowed = array('value', 'name', 'id', 'disabled', 'class', 'style', 'type', 'checked');
 		parent::__construct($name, $label, $value, $id, $allowed);
 		$this->description = $description;
+		$this->checks      = array();
 		$this->setAttribute('type', 'radio');
 	}
 
 	public function render() {
 		$this->addClass('sly-form-radio');
+
+		$this->attributes['checked'] = $this->getDisplayValue() ? 'checked' : '';
 		$attributeString = $this->getAttributeString();
 
 		return
@@ -35,8 +39,21 @@ class sly_Form_Input_Radio extends sly_Form_Input_Base {
 		return $this->outerClass;
 	}
 
+	public function getDisplayValue() {
+		$name = $this->getAttribute('name');
+		return isset($_POST[$name]) ? $_POST[$name] : $this->getAttribute('checked') == 'checked';
+	}
+
 	public function setChecked($checked) {
 		if ($checked) $this->setAttribute('checked', 'checked');
 		else $this->removeAttribute('checked');
+	}
+
+	public function setChecks($checks) {
+		$this->checks = sly_makeArray($checks);
+	}
+
+	public function getChecks() {
+		return $this->checks;
 	}
 }

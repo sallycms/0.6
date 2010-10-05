@@ -424,4 +424,52 @@ jQuery(function($) {
 		boxes.attr('checked', rel === 'all' ? 'checked' : '');
 		return false;
 	});
+
+	// Mehrsprachige Formulare initialisieren
+
+	// Checkboxen erzeugen
+
+	$('.rex-form-row.sly-form-multilingual').each(function() {
+		var
+			$this   = $(this),
+			equal   = $this.is(':visible'),
+			id      = $this.attr('rel'),
+			checked = equal ? ' checked="checked"': '',
+			span    = '<span class="sly-form-i18n-switch"><input type="checkbox" name="equal__'+id+'" id="equal__'+id+'" value="1"'+checked+' /><\/span>'
+
+		if (equal) {
+			$('label:first', this).after(span);
+		}
+		else {
+			var container = $this.next('div.sly-form-i18n-container');
+			$('label:first', container).after(span);
+		}
+	});
+
+	// Checkboxen initialisieren
+
+	var checkboxes = $('.sly-form-i18n-switch input[id^=equal__]');
+
+	if (checkboxes.length > 0) {
+		checkboxes.CheckImg('off.png', 'on.png', 'media/form-i18n-switch-').next().click(function() {
+			var
+				checkbox       = $(this).prev('input'),
+				shown          = !checkbox[0].checked, // was already changed before this event handler
+				id             = checkbox.attr('id').replace(/^equal__/, ''),
+				container      = $('div[rel="'+id+'"]'),
+				span           = checkbox.parent('span'),
+				equalcontainer = $('div.sly-form-i18n-container.c-'+id);
+
+			if (shown) {
+				container.hide();
+				equalcontainer.show();
+				$('label:first', equalcontainer).after(span);
+			}
+			else {
+				container.show();
+				equalcontainer.hide();
+				$('label:first', container).after(span);
+			}
+		});
+	}
 });

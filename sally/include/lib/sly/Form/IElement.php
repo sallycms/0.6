@@ -24,4 +24,6 @@ interface sly_Form_IElement {
 	public function addOuterClass($className);
 	public function getOuterClass();
 	public function isContainer();
+	public function getDisplayValue();
+	public function isMultilingual();
 }

@@ -27,4 +27,10 @@ class sly_Form_ButtonBar extends sly_Form_ElementBase implements sly_Form_IEleme
 	public function isContainer() {
 		return true;
 	}
+
+	public function getDisplayValue() {
+		$name = array();
+		foreach ($this->buttons as $button) $name[] = $button->getDisplayValue();
+		return $name;
+	}
 }

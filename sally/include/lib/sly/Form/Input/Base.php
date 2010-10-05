@@ -23,17 +23,13 @@ abstract class sly_Form_Input_Base extends sly_Form_ElementBase implements sly_F
 	public function render() {
 		$this->addClass('rex-form-text');
 
-		// Prüfen, ob das Formular bereits abgeschickt und noch einmal angezeigt
-		// werden soll. Falls ja, übernehmen wir den Wert aus den POST-Daten.
-
-		$name = $this->attributes['name'];
-
-		if (isset($_POST[$name]) && strlen($_POST[$name]) > 0) {
-			$this->attributes['value'] = sly_post($name, 'string');
-		}
-
+		$this->attributes['value'] = $this->getDisplayValue();
 		$attributeString = $this->getAttributeString();
 		return '<input '.$attributeString.' />';
+	}
+
+	public function getDisplayValue() {
+		return $this->getDisplayValueHelper('string', false);
 	}
 
 	public function setMaxLength($maxLength) {

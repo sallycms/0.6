@@ -27,4 +27,8 @@ class sly_Form_Freeform extends sly_Form_ElementBase implements sly_Form_IElemen
 	public function render() {
 		return $this->renderFilename('form/freeform.phtml');
 	}
+
+	public function getDisplayValue() {
+		return md5($this->content);
+	}
 }

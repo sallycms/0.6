@@ -32,6 +32,10 @@ abstract class sly_Form_Select_Base extends sly_Form_ElementBase {
 		else $this->removeAttribute('multiple');
 	}
 
+	public function getDisplayValue() {
+		return $this->getDisplayValueHelper('string', true);
+	}
+
 	public function setValues($values) {
 		$this->values = $values;
 	}

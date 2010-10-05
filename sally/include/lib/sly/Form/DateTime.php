@@ -33,7 +33,7 @@ class sly_Form_DateTime extends sly_Form_ElementBase implements sly_Form_IElemen
 		return $this->renderFilename('form/datetime.phtml');
 	}
 
-	public function getID() {
-		return trim($this->attributes['name']).'_date';
+	public function getDisplayValue() {
+		return $this->getDisplayValueHelper('string', false);
 	}
 }

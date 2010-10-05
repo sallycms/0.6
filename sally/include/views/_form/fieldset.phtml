@@ -9,10 +9,11 @@
  */
 
 $id = $this->id ? ' id="'.sly_html($this->id).'"' : '';
+
 ?>
 
 <fieldset class="rex-form-col-<?= $this->columns ?> sly-num<?= ($this->num-1) ?>"<?= $id ?>>
-	<legend class="rex-lgnd"><?= sly_html($this->legend) ?></legend>
+	<legend class="rex-lgnd"><?= sly_html(rex_translate($this->legend)) ?></legend>
 	<div class="rex-form-wrapper">
 		<?php
 
@@ -20,7 +21,19 @@ $id = $this->id ? ' id="'.sly_html($this->id).'"' : '';
 		$columns  = $this->columns;
 
 		foreach ($this->rows as $rowNum => $elements) {
-			include SLY_INCLUDE_PATH.'/views/_form/row.phtml';
+			if ($this->isMultilingual($elements)) {
+				include SLY_INCLUDE_PATH.'/views/_form/row_i18n.phtml';
+			}
+			else {
+				include SLY_INCLUDE_PATH.'/views/_form/row.phtml';
+			}
+		}
+
+		$registry = sly_Core::getTempRegistry();
+
+		if ($this->isMultilingual() && count($REX['CLANG']) > 1 && !$registry->has('sly.form.i18n.checkimg')) {
+			sly_Core::getLayout()->addJavaScriptFile('media/js/jquery.checkimg.min.js');
+			$registry->set('sly.form.i18n.checkimg', true);
 		}
 
 		?>

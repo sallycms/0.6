@@ -1,0 +1,105 @@
+<?
+/*
+ * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+$type         = count($REX['CLANG']) == 1 ? 'monolingual' : 'multilingual';
+$formRowClass = array('rex-form-row', 'sly-num'.$rowNum, 'sly-form-'.$type);
+$element      = reset($elements); // in multilingual rows, there can only be one...
+$containerID  = $element->getDisplayName();
+$values       = sly_makeArray($element->getAttribute('value'));
+$origElement  = $element;
+$elements     = array();
+$isEqual      = wv_post('equal__'.$origElement->getDisplayName(), 'boolean', false);
+
+if (method_exists($element, 'getChecks')) {
+	$values = $element->getChecks();
+}
+
+$origElement->setAttribute('value', reset($values));
+$equalValue = $origElement->getDisplayValue();
+
+foreach (array_keys($REX['CLANG']) as $clangID) {
+	if (!isset($values[$clangID])) {
+		$values[$clangID] = $equalValue;
+	}
+
+	$element = clone $origElement;
+	$suffix  = '__clang_'.$clangID;
+	$newName = $element->getAttribute('name').$suffix;
+
+	$element->setAttribute('name', $newName);
+	$element->setAttribute('id', $element->getAttribute('id').$suffix);
+
+	if (method_exists($element, 'getChecks')) {
+		$element->setChecked($values[$clangID]);
+	}
+	else {
+		$element->setAttribute('value', $isEqual ? $equalValue : $values[$clangID]);
+	}
+
+	$elements[$clangID] = $element;
+}
+
+if (!$isEqual) {
+	$isEqual = true;
+	$compare = reset($elements)->getDisplayValue();
+
+	foreach ($elements as $element) {
+		$isEqual &= $element->getDisplayValue() == $compare;
+	}
+}
+
+$element = $origElement;
+
+// print the normal monolingual view
+
+if ($isEqual) {
+	$element->setAttribute('value', reset($values));
+
+	// disable the automatic detection of POST values
+
+	foreach ($elements as $element) {
+		unset($_POST[$element->getDisplayName()]);
+	}
+
+	$element = $origElement;
+}
+else {
+	$element->setAttribute('value', null);
+}
+
+$rel   = count($REX['CLANG']) == 1 ? '' : $containerID;
+$style = $rel && !$isEqual ? 'display:none' : '';
+include SLY_INCLUDE_PATH.'/views/_form/row_i18n_helper.phtml';
+
+// print the extended multilingual view
+
+if (count($REX['CLANG']) > 1) {
+	$style = $isEqual ? ' style="display:none"' : '';
+	print '<div class="sly-form-i18n-container c-'.$containerID.'"'.$style.'>';
+
+	$element      = new sly_Form_Text($element->getLabel(), $element->getHelpText());
+	$formRowClass = array('rex-form-row', 'sly-num'.$rowNum);
+	$rel          = '';
+	$style        = '';
+	include SLY_INCLUDE_PATH.'/views/_form/row_i18n_helper.phtml';
+
+	foreach ($elements as $clangID => $element) {
+		$formRowClass = array('rex-form-row', 'sly-num'.$rowNum, 'clang-'.$clangID);
+
+		$element->setLabel('      '.$REX['CLANG'][$clangID]);
+		$element->setHelpText(''); // is displayed in the filler row we created above
+
+		include SLY_INCLUDE_PATH.'/views/_form/row_i18n_helper.phtml';
+
+		$element = null;
+	}
+
+	print '</div>';
+}

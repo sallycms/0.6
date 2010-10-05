@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
@@ -9,5 +9,5 @@
  */
 
 print '<textarea '.$this->getAttributeString('value').'>';
-print sly_html($this->attributes['value']);
+print sly_html($this->getDisplayValue());
 print '</textarea>';
