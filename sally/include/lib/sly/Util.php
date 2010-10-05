@@ -21,11 +21,7 @@ class sly_Util {
 	 * @param array $params    Template variables as an associative array of parameters
 	 */
 	public static function includeTemplate($name, $params = array()) {
-		if ($template instanceof sly_Model_Template) {
-			$template = $template->getName();
-		}
-
-		$service = sly_Service_Factory::getService('Template');
+		$service = sly_Service_Factory::getTemplateService();
 		if ($service instanceof sly_Service_Template) {
 			$service->includeFile($name, $params);
 		}
