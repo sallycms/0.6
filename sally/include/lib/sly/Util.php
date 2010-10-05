@@ -17,7 +17,6 @@ class sly_Util {
 	 * array in the second parameter. The parameters will be extracted to
 	 * variables.
 	 *
-	 * @param mixed $template  Name of the template or an object of sly_Model_Template
 	 * @param array $params    Template variables as an associative array of parameters
 	 */
 	public static function includeTemplate($name, $params = array()) {
