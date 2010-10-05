@@ -32,16 +32,11 @@ abstract class sly_Service_Factory {
 
 			$service = new $serviceName();
 
-//			if (!$service instanceof sly_Service_Base){
-//				throw new Exception('sly_Service '.$serviceName.' is no inheriting Class of Service_Base.');
-//			}
-
 			self::$services[$modelName] = $service;
 		}
 
 		return self::$services[$modelName];
 	}
-
 
 	/**
 	 * @return sly_Service_Slice  The slice service instance
@@ -62,5 +57,19 @@ abstract class sly_Service_Factory {
 	 */
 	public static function getModuleService() {
 		return self::getService('Module');
+	}
+
+	/**
+	 * @return sly_Service_AddOn  The module service instance
+	 */
+	public static function getAddOnService() {
+		return self::getService('AddOn');
+	}
+
+	/**
+	 * @return sly_Service_Plugin  The module service instance
+	 */
+	public static function getPluginService() {
+		return self::getService('Plugin');
 	}
 }

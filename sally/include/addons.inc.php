@@ -8,19 +8,14 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$addonService  = sly_Service_Factory::getService('AddOn');
-$pluginService = sly_Service_Factory::getService('Plugin');
+$addonService  = sly_Service_Factory::getAddOnService();
+$pluginService = sly_Service_Factory::getPluginService();
 
 foreach ($addonService->getAvailableAddons() as $addonName) {
 	$addonService->loadAddon($addonName);
 
 	foreach ($pluginService->getAvailablePlugins($addonName) as $pluginName) {
-		$pluginService->loadConfig(array($addonName, $pluginName));
-		$pluginConfig = $pluginService->baseFolder(array($addonName, $pluginName)).'config.inc.php';
-
-		if (file_exists($pluginConfig)) {
-			$pluginService->mentalGymnasticsInclude($pluginConfig, array($addonName, $pluginName));
-		}
+		$pluginService->loadPlugin(array($addonName, $pluginName));
 	}
 }
 
