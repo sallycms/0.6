@@ -237,7 +237,7 @@ jQuery.noConflict();
 			return arr;
 		}
 
-		tmp = arr[from];
+		var tmp = arr[from];
 
 		if (from > to) {
 			for (index = from; index > to; index--) {
