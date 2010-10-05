@@ -3,7 +3,7 @@ table.rex-table {
 	width: 100%;
 	background-color: #fff;
 	border-spacing: 0;
-	border-collapse: collapse;
+	*border-collapse: collapse; /* hack for IE7 */
 	+border-bottom-radius(5px);
 
 	caption {
@@ -27,7 +27,7 @@ table.rex-table {
 		td {
 			height: 40px;
 			border-top: 1px dotted $md_grey;
-
+			*position: relative;
 
 			&.rex-colored {
 				background-color: $drk_grey;
