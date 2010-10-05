@@ -37,7 +37,7 @@ $usage = sly_Util_String::formatFilesize($usage);
 				<? endif ?>
 			</ul>
 			<p id="rex-scripttime"><!--DYN-->
-			<span title="<?= sly_html($usage) ?>"><?= rex_showScriptTime() ?> Sek</a> |
+			<span title="<?= sly_html($usage) ?>"><?= rex_showScriptTime() ?> Sek</span> |
 			<?= rex_formatter::format(time(), 'strftime', 'date'); ?>
 			<!--/DYN--></p>
 		</div>
