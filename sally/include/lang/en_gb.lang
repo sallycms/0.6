@@ -14,17 +14,17 @@ datetimeformat: '%Y-%b-%d %H:%M'
 ctrl: 'multiselect using CTRL'
 
 # Sprachspezifische Sonderzeichen für Url-Umschreibung
-special_chars: 'translate:special_chars' # ä|ö|ü|Ä|Ö|Ü|ß|&
-special_chars_rewrite: 'translate:special_chars_rewrite' # ae|oe|ue|Ae|Oe|Ue|ss|und
+special_chars: 'ä|ö|ü|Ä|Ö|Ü|ß|&'
+special_chars_rewrite: 'ae|oe|ue|Ae|Oe|Ue|ss|and'
 
 # sally/index.php
 start_article_not_selected: 'start article not selected'
-redirect_previous_page: 'translate:redirect_previous_page' # Sie werden zu Ihrer <a href="{0}">vorherigen Seite</a> weitergeleitet.
-redirect_startpage: 'translate:redirect_startpage' # Sie werden zu Ihrer <a href="{0}">Startseite</a> weitergeleitet.
-unknown_page: 'translate:unknown_page' # Unbekannte Seite
-security_violation: 'translate:security_violation' # Sicherheitsverletzung
-controller_error: 'translate:controller_error' # Controller-Fehler
-unexpected_exception: 'translate:unexpected_exception' # Unerwartete Ausnahme
+redirect_previous_page: 'You are being redirected to your <a href="{0}">previous page</a>.'
+redirect_startpage: 'You are being redirected to your <a href="{0}">homepage</a>.'
+unknown_page: 'Unknown Page'
+security_violation: 'Security Violation'
+controller_error: 'Controller Error'
+unexpected_exception: 'Unexpected Exception'
 
 importer_bad_version: 'translate:importer_bad_version' # In der Importdatei konnte keine gültige Version gefunden werden.
 importer_no_valid_charset: 'translate:importer_no_valid_charset' # In der Importdatei konnte keine Angabe über die Kodierung gefunden werden.
@@ -32,7 +32,7 @@ importer_charset_mismatch: 'translate:importer_charset_mismatch' # Die in der Im
 importer_no_valid_import_file_version: 'translate:importer_no_valid_import_file_version' # Die Importdatei ist ungültig: Versionsstempel von Version {0} gefunden, aber {1} erwartet.
 importer_no_valid_import_file_prefix: 'translate:importer_no_valid_import_file_prefix' # Die Importdatei ist ungültig: Es wurde kein Tabellenpräfix angegeben.
 
-homepage: 'translate:homepage' # Homepage
+homepage: 'Homepage'
 
 # sally/sindex.php
 specials: System
@@ -90,8 +90,8 @@ article_could_not_be_generated: 'Article could not be generated.'
 check_rights_in_directory: 'Check folder permissions.'
 category_deleted: 'Category deleted!'
 category_doesnt_exist: 'Category doesn''t exist!'
-cant_delete_sitestartarticle: 'translate:cant_delete_sitestartarticle' # Der Webseiten-Startartikel kann nicht gelöscht werden!
-cant_delete_notfoundarticle: 'Not-Found-article can not be deleted'
+cant_delete_sitestartarticle: 'Start Article can not be deleted.'
+cant_delete_notfoundarticle: 'Not-Found-article can not be deleted.'
 
 # sally\include\pages\content.inc.php
 move_slice_up: 'move up'
@@ -264,9 +264,9 @@ delete_cache_description: 'Templates and languages files will be created, articl
 delete_cache_message: 'Cache deleted'
 specials_features: Features
 specials_settings: Settings
-settings_invalid_sitestart_article: 'translate:settings_invalid_sitestart_article' # Ungültige Startartikel Id!
-settings_invalid_notfound_article: 'translate:settings_invalid_notfound_article' # Ungültige Not-Found-Artikel Id!
-settings_invalid_default_template: 'translate:settings_invalid_default_template' # Ungültige Default-Template Id!
+settings_invalid_sitestart_article: 'Invalid ID for not-found article!'
+settings_invalid_notfound_article: 'Invalid ID for start article!'
+settings_invalid_default_template: 'Invalid default template!'
 regenerate_article: 'Regenerate articles & cache'
 regeneration_message: 'Categories, articles and templates are regenerated. Cache will be deleted. Might take longer. Don''t abort process!'
 general_info_header: 'General information:'
@@ -297,14 +297,14 @@ version: Version
 host: Host
 database: Database
 specials_caching_strategy: 'Cache Strategy'
-specials_server: 'translate:specials_server' # Server
-specials_servername: 'translate:specials_servername' # Projektname
-specials_error_email: 'translate:specials_error_email' # Fehler-E-Mail
+specials_server: 'Server'
+specials_servername: 'Project Name'
+specials_error_email: 'Error eMail'
 specials_start_article: Startpage
-specials_default_template: 'translate:specials_default_template' # Standardtemplate
-specials_lang: 'translate:specials_lang' # Standard BE-Locale
-specials_mod_rewrite: 'translate:specials_mod_rewrite' # mod_rewrite verwenden
-specials_not_found_article: 'Page not found'
+specials_default_template: 'Default Template'
+specials_lang: 'Default Backend Locale'
+specials_mod_rewrite: 'use mod_rewrite'
+specials_not_found_article: 'Not-Found Article'
 
 setup: Setup
 setup_text: 'You can initiat the setup process here. This is only for emergency and not required on normal conditions.'
