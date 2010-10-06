@@ -24,7 +24,7 @@
  *   > window > preferences > run/debug > string substitution
  *   variable = "PHP_PATH", value = "path/to/your/php/installation/"
  *   variable = "PHP_INI", value = "path/to/your/php.ini"
- *   
+ *
  *   (Attention: WAMP uses wamp\Apache\bin\php.ini, not wamp\php\php.ini!)
  *
  * OPEN TODOs:
@@ -68,12 +68,12 @@ class RedaxoSync
 			// suppress errors in REDAXO
 			error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED);
 		}
-		
+
 		$configFile = 'data/dyn/internal/sally/config/sly_local.php';
-		
+
 		if (file_exists($configFile)) {
 			include_once $configFile;
-			
+
 			self::$REX = $config;
 			self::debug('sly_local.php successfully included', true);
 			self::openDBConnection();
@@ -128,17 +128,17 @@ class RedaxoSync
 	private static function synchronizeDir($dirname, $suffix)
 	{
 		$location = dirname(__FILE__).$dirname;
-		
+
 		if (is_dir($location)) {
 			$files = glob("$location/*$suffix");
-			
+
 			foreach ($files as $file) {
 				self::debug('found file '.$file, true);
 				self::processFile($location, $suffix, basename($file));
 			}
 		}
 		else {
-			self::debug($location.' is not a directory');
+			self::debug($location.' is not a directory', true);
 		}
 	}
 
@@ -170,7 +170,7 @@ class RedaxoSync
 			self::debug(mysql_error());
 			return;
 		}
-		
+
 		$contentField = self::getDBContentFieldName($type, $subtype);
 		if ($data = mysql_fetch_assoc($res)) {
 			if (!empty($contentField)) {
@@ -190,7 +190,7 @@ class RedaxoSync
 		if ($type == 'action')   $res = self::updateAction($subtype, $content, $contentField, $objectName, $id);
 		if ($type == 'module')   $res = self::updateModule($subtype, $content, $contentField, $objectName, $id);
 		if ($type == 'template') $res = self::updateTemplate($subtype, $content, $contentField, $objectName, $id);
-		
+
 		if (is_string($res)) {
 			self::debug('error while updating '.$type.' ('.$subtype.'): "'.$objectName.'":   '.$res);
 		}
@@ -209,20 +209,20 @@ class RedaxoSync
 		$title   = self::getMetaInfo($content, 'param', 'name');
 		$actions = self::getMetaInfo($content, 'param', 'actions');
 		if (empty($title)) $title = $objectName;
-		
+
 		ob_start();
-		
+
 		if (false && eval("return true; ?> $content") == false) {
 			$error = ob_get_clean();
 			$error = trim(str_replace("Parse error: syntax error, ", "", $error));
 			$error = preg_replace("/in .:[^:]+ : eval\\(\\)'d code/s","in $objectName.module.php", $error);
 			return $error;
 		}
-		
+
 		ob_end_clean();
 
 		$res = mysql_query(
-			'UPDATE '.self::$REX['DATABASE']['TABLE_PREFIX'].'module '. 
+			'UPDATE '.self::$REX['DATABASE']['TABLE_PREFIX'].'module '.
 			'SET '.$contentField.' = "'.addslashes($content).'", '.
 			'updatedate = UNIX_TIMESTAMP() '.
 			(!empty($title) ? ', name = "'.trim($title).'" ' : '').
@@ -238,12 +238,12 @@ class RedaxoSync
 	{
 		$oldActions = array();
 		$res        = mysql_query('SELECT action_id, id FROM '.self::$REX['DATABASE']['TABLE_PREFIX'].'module_action WHERE module_id = '.$id.'');
-		
+
 		if (!$res) {
 			self::debug(mysql_error());
 			return;
 		}
-		
+
 		while ($action = mysql_fetch_assoc($res)) {
 			$oldActions[$action['action_id']] = $action['id'];
 		}
@@ -258,7 +258,7 @@ class RedaxoSync
 				}
 			}
 		}
-		
+
 		$res = true;
 
 		foreach ($oldActions as $action => $module) {
@@ -282,20 +282,20 @@ class RedaxoSync
 		$attributes = array();
 		if (is_array($ctype)) $attributes['ctype'] = $ctype;
 		else $attributes['ctype'] = array();
-		
+
 		ob_start();
-		
+
 		if (false && eval("return true; ?> $content") == false) {
 			$error = ob_get_clean();
 			$error = trim(str_replace("Parse error: syntax error, ", "", $error));
 			$error = preg_replace("/in .:[^:]+ : eval\\(\\)'d code/s","in $objectName.template.php", $error);
 			return $error;
 		}
-		
+
 		ob_end_clean();
 
 		return mysql_query(
-			'UPDATE '.self::$REX['DATABASE']['TABLE_PREFIX'].'template '. 
+			'UPDATE '.self::$REX['DATABASE']['TABLE_PREFIX'].'template '.
 			'SET name = "'.trim($title).'", '.
 			'content = "'.addslashes($content).'", '.
 		    'updatedate = UNIX_TIMESTAMP()'.
@@ -316,10 +316,10 @@ class RedaxoSync
 		$bitmask = ($add == 1 ? 1 : 0) + ($edit == 1 ? 2 : 0) + ($delete == 1 ? 4 : 0);
 
 		return mysql_query(
-			'UPDATE '.self::$REX['DATABASE']['TABLE_PREFIX'].'action '. 
+			'UPDATE '.self::$REX['DATABASE']['TABLE_PREFIX'].'action '.
 			'SET '.$contentField.' = "'.addslashes($content).'", updatedate = UNIX_TIMESTAMP() '.
 			(!empty($title) ? ', name = "'.trim($title).'" ' : '').
-			', '.$contentField.'mode = "'.$bitmask.'" '. 
+			', '.$contentField.'mode = "'.$bitmask.'" '.
 			'WHERE id = '.$id
 		);
 	}
@@ -330,7 +330,7 @@ class RedaxoSync
 		if ($type == 'action')   $res = self::insertAction($subtype, $content, $contentField, $objectName, $id);
 		if ($type == 'module')   $res = self::insertModule($subtype, $content, $contentField, $objectName, $id);
 		if ($type == 'template') $res = self::insertTemplate($subtype, $content, $contentField, $objectName, $id);
-		
+
 		if (is_string($res)) {
 			self::debug('error while updating '.$type.' ('.$subtype.'): "'.$objectName.'":   '.$res);
 		}
@@ -350,20 +350,20 @@ class RedaxoSync
 		$title   = self::getMetaInfo($content, 'param', 'name');
 		$actions = self::getMetaInfo($content, 'param', 'actions');
 		if (empty($title)) $title = $objectName;
-		
+
 		ob_start();
-		
+
 		if (false && eval("return true; ?> $content") == false) {
 			$error = ob_get_clean();
 			$error = trim(str_replace("Parse error: syntax error, ", "", $error));
 			$error = preg_replace("/in .:[^:]+ : eval\\(\\)'d code/s","in $objectName.module.php", $error);
 			return $error;
 		}
-		
+
 		ob_end_clean();
 
 		$res = mysql_query(
-			'INSERT INTO '.self::$REX['DATABASE']['TABLE_PREFIX'].'module ' . 
+			'INSERT INTO '.self::$REX['DATABASE']['TABLE_PREFIX'].'module ' .
 			'(id, name, '.$contentField.', createdate, createuser) VALUES '.
 			'('.$id.', "'.trim($title).'", "'.addslashes($content).'", UNIX_TIMESTAMP(), "admin")'
 		);
@@ -383,22 +383,22 @@ class RedaxoSync
 		$attributes = array();
 		if (is_array($ctype)) $attributes['ctype'] = $ctype;
 		else $attributes['ctype'] = array();
-		
+
 		ob_start();
-		
+
 		if (false && eval("return true; ?> $content") == false) {
 			$error = ob_get_clean();
 			$error = trim(str_replace("Parse error: syntax error, ", "", $error));
 			$error = preg_replace("/in .:[^:]+ : eval\\(\\)'d code/s","in $objectName.template.php", $error);
 			return $error;
 		}
-		
+
 		ob_end_clean();
 
 		$attributesString = (!empty($attributes) ? addslashes(serialize($attributes)) : '');
 
 		return mysql_query(
-			'INSERT INTO '.self::$REX['DATABASE']['TABLE_PREFIX'].'template ' . 
+			'INSERT INTO '.self::$REX['DATABASE']['TABLE_PREFIX'].'template ' .
 			'(id, name, content, createdate, createuser, active, label, attributes) VALUES ' .
 			'('.$id.', "'.trim($title).'", "'. addslashes($content) .'", NOW(), "admin", '.(isset($active) ? intval($active) : 0).', "", "'.$attributesString.'")'
 		);
@@ -415,7 +415,7 @@ class RedaxoSync
 		$bitmask = ($add == 1 ? 1 : 0) + ($edit == 1 ? 2 : 0) + ($delete == 1 ? 4 : 0);
 
 		return mysql_query(
-			'INSERT INTO '.self::$REX['DATABASE']['TABLE_PREFIX'].'action ' . 
+			'INSERT INTO '.self::$REX['DATABASE']['TABLE_PREFIX'].'action ' .
 			'(id, name, '.$contentField.', '.$contentField.'mode, createdate, createuser) VALUES '.
 			'('.$id.', "'.trim($title).'", "'.addslashes($content).'", '.$bitmask.', UNIX_TIMESTAMP(), "admin")'
 		);
@@ -424,16 +424,16 @@ class RedaxoSync
 	private static function getDBContentFieldName($type, $subtype)
 	{
 		if ($type == 'template') return 'content';
-		
+
 		if ($type == 'module') {
 			if ($subtype == 'input') return 'eingabe';
 			if ($subtype == 'output') return 'ausgabe';
 		}
-		
+
 		if ($type == 'action') {
 			if (!empty($subtype)) return $subtype;
 		}
-		
+
 		return null;
 	}
 
@@ -443,7 +443,7 @@ class RedaxoSync
 
 		$id  = null;
 		$res = mysql_query('SELECT id FROM '.self::$REX['DATABASE']['TABLE_PREFIX'].$type.' WHERE name = "'.$onjectName.'"');
-		
+
 		if (!$res) {
 			self::debug(mysql_error());
 		}
@@ -451,7 +451,7 @@ class RedaxoSync
 			$id = $row['id'];
 			mysql_free_result($res);
 		}
-		
+
 		return $id;
 	}
 
@@ -460,7 +460,7 @@ class RedaxoSync
 		if (preg_match('/.*(template|module|action)\.php/', $suffix, $result) > 0) {
 			return $result[1];
 		}
-		
+
 		return null;
 	}
 
@@ -469,7 +469,7 @@ class RedaxoSync
 		if (preg_match('/.*(postsave|presave|preview|input|output)\.'.$type.'.php/', $suffix, $result) > 0) {
 			return $result[1];
 		}
-		
+
 		return null;
 	}
 
@@ -477,14 +477,14 @@ class RedaxoSync
 	{
 		$path = dirname(__FILE__).'/data/dyn/internal/sally/templates/';
 		self::removeAllFiles($path, 'template');
-		
+
 		$path = dirname(__FILE__).'/data/dyn/internal/sally/articles/';
 		self::removeAllFiles($path, 'alist');
 		self::removeAllFiles($path, 'clist');
 		self::removeAllFiles($path, 'article');
 		self::removeAllFiles($path, 'content');
 		self::removeAllFiles($path, 'slice');
-		
+
 		self::debug('cleared templates and articles cache');
 	}
 
@@ -499,11 +499,11 @@ class RedaxoSync
 	private static function getMetaInfo($content, $token, $param)
 	{
 		$hash = md5($content);
-		
+
 		if (!isset(self::$metaInfosCache[$hash])) {
 			self::$metaInfosCache[$hash] = self::getAllMetaInfos($content);
 		}
-		
+
 		if (isset(self::$metaInfosCache[$hash][$token][$param])) {
 			return self::$metaInfosCache[$hash][$token][$param];
 		}
@@ -514,10 +514,10 @@ class RedaxoSync
 	private static function getAllMetaInfos($content)
 	{
 		static $regex = '/@rex_(\w+)\s+(\w+)\s+(.+)/';
-		
+
 		$infos = array();
 		$lines = explode("\n", $content);
-		
+
 		foreach ($lines as $line) {
 			if (preg_match($regex, $line, $result) > 0) {
 				if ($result[1] == 'attribute' || $result[2] == 'actions') eval('$r = '.$result[3].';');
@@ -525,7 +525,7 @@ class RedaxoSync
 				$infos[$result[1]][$result[2]] = $r;
 			}
 		}
-		
+
 		return $infos;
 	}
 }
