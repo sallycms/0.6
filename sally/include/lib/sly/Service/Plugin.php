@@ -432,6 +432,15 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		return $avail;
 	}
 
+	public function loadPlugin($plugin) {
+		$this->loadConfig($plugin);
+		$pluginConfig = $this->baseFolder($plugin).'config.inc.php';
+
+		if (file_exists($pluginConfig)) {
+			$this->mentalGymnasticsInclude($pluginConfig, $plugin);
+		}
+	}
+
 	/**
 	 * So sieht eine Methode aus, die sich auf ihr Refactoring freut.
 	 *
