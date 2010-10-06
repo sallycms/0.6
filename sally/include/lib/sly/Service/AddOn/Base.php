@@ -17,7 +17,7 @@ abstract class sly_Service_AddOn_Base {
 	protected $data;
 	protected $i18nPrefix;
 
-	protected function req($filename, $addonName) {
+	protected function req($filename) {
 		global $REX, $I18N; // Nötig damit im Addon verfügbar
 		require $filename;
 	}

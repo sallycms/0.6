@@ -55,7 +55,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		if ($state) {
 			if (is_readable($installFile)) {
 				try {
-					$this->req($installFile, $addonName);
+					$this->req($installFile);
 				}catch (Exception $e) {
 					$installError = 'Es ist eine unerwartete Ausnahme während der Installation aufgetreten: '.$e->getMessage();
 				}
@@ -75,7 +75,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 				else {
 					if (is_readable($configFile)) {
 						if (!$this->isActivated($addonName)) {
-							$this->req($configFile, $addonName);
+							$this->req($configFile);
 						}
 					}
 					else {
@@ -132,7 +132,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		$state = $this->extend('PRE', 'UNINSTALL', $addonName, true);
 
 		if (is_readable($uninstallFile)) {
-			$this->req($uninstallFile, $addonName);
+			$this->req($uninstallFile);
 
 			$hasError = $config->has('ADDON/installmsg/'.$addonName);
 
