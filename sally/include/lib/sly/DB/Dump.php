@@ -109,7 +109,7 @@ class sly_DB_Dump {
 	protected function replacePrefix() {
 		$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 
-		if ($prefix != $this->prefix) {
+		if ($this->prefix && $prefix != $this->prefix) {
 			// Hier case-insensitive ersetzen, damit alle möglich Schreibweisen (TABLE TablE, tAblE,..) ersetzt werden
 			// Dies ist wichtig, da auch SQL innerhalb von Ein/Ausgabe der Module vom rex-admin verwendet werden
 			$this->content = preg_replace('/(TABLE `?)'.preg_quote($this->prefix, '/').'/i',  '$1'.$prefix, $this->content);
