@@ -30,7 +30,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		$installFile = $addonDir.'install.inc.php';
 		$installSQL  = $addonDir.'install.sql';
 		$configFile  = $addonDir.'config.inc.php';
-		$filesDir    = $addonDir.'files';
+		$filesDir    = $addonDir.'assets';
 
 		$state = $this->extend('PRE', 'INSTALL', $addonName, true);
 
@@ -105,6 +105,17 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		if ($state === true && is_dir($filesDir)) {
 			if (!rex_copyDir($filesDir, $this->publicFolder($addonName), $REX['MEDIAFOLDER'])) {
 				$state = t('install_cant_copy_files');
+			}
+			else {
+				$targetDir = new sly_Util_Directory($this->publicFolder($addonName));
+				$files     = $targetDir->listRecursive(false, true);
+
+				foreach ($files as $filename) {
+					if (sly_Util_String::endsWith($filename, '.css')) {
+						$css = sly_Util_Scaffold::process($filename);
+						file_put_contents($filename, $css);
+					}
+				}
 			}
 		}
 
