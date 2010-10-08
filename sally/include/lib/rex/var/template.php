@@ -41,11 +41,13 @@ class rex_var_template extends rex_var
 
       if($template_id > 0)
       {
+		$tplService = sly_Service_Factory::getTemplateService();
+
         $varname = '$__rex_tpl'.$template_id;
-        $tpl     = "<?php\n$varname = new rex_template($template_id);";
+        $tpl     = "<?php\n\$tplService = sly_Service_Factory::getTemplateService();";
 
         if (isset($args['callback'])) {
-        	$tpl .= "\n".'$args[\'subject\'] = file_get_contents('.$varname.'->getFile());';
+        	$tpl .= "\n".'$args[\'subject\'] = file_get_contents($tplService->getContent($template_id));';
         	$tpl .= "\n".'eval(\'?>\'.rex_call_func(unserialize("'.serialize($args['callback']).'", $args));';
         }
         else {
@@ -54,8 +56,7 @@ class rex_var_template extends rex_var
 
         	$tpl .= $prefix;
 
-        	$filename = rex_template::getFilePath($template_id);
-        	$exists   = file_exists($filename) && filesize($filename) > 0;
+        	$exists   = $tplService->exists($template_id);
 
         	if (isset($args['instead']) && $exists) { // Bescheuertes Verhalten von REDAXO beibehalten.
         		$tpl .= "\n".'eval("'.addslashes($args['instead']).'");';
@@ -64,7 +65,7 @@ class rex_var_template extends rex_var
         		$tpl .= "\n".'eval("'.addslashes($args['ifempty']).'");';
         	}
         	else {
-        		$tpl .= "\n".'include '.$varname.'->getFile();';
+        		$tpl .= "\n".'$tplService->includeFile('.$template_id.');';
         	}
 
         	$tpl .= $suffix;
