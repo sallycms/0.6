@@ -14,8 +14,8 @@
 abstract class sly_Cache_Abstract extends sly_Cache implements sly_Cache_IFlushable {
 	protected $versions = array();
 
-	abstract protected static function getMaxKeyLength();
-	abstract protected static function hasLocking();
+	abstract public function getMaxKeyLength();
+	abstract public function hasLocking();
 
 	abstract protected function _get($key);
 	abstract protected function _getRaw($key);
@@ -76,7 +76,7 @@ abstract class sly_Cache_Abstract extends sly_Cache implements sly_Cache_IFlusha
 	public function lock($namespace, $key, $duration = 1) {
 		$key = $this->getFullKey($namespace, $key);
 
-		if (self::hasLocking()) {
+		if ($this->hasLocking()) {
 			return $this->_lock($key);
 		}
 		else {
@@ -94,7 +94,7 @@ abstract class sly_Cache_Abstract extends sly_Cache implements sly_Cache_IFlusha
 	public function unlock($namespace, $key) {
 		$key = $this->getFullKey($namespace, $key);
 
-		if (self::hasLocking()) {
+		if ($this->hasLocking()) {
 			return $this->_unlock($key);
 		}
 		else {
@@ -111,11 +111,11 @@ abstract class sly_Cache_Abstract extends sly_Cache implements sly_Cache_IFlusha
 
 	protected function hasLock($key) {
 		$fullKey = $this->namespacePrefix.'/lock:'.$key;
-		$hasLock = self::hasLocking() ? $this->_lock($key) === false : $this->_isset($fullKey) === true;
+		$hasLock = $this->hasLocking() ? $this->_lock($key) === false : $this->_isset($fullKey) === true;
 
 		// If we just created an accidental lock, remove it.
 
-		if (self::hasLocking() && !$hasLock) {
+		if ($this->hasLocking() && !$hasLock) {
 			$this->_unlock($key);
 		}
 

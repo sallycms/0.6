@@ -12,11 +12,11 @@
  * @ingroup cache
  */
 class sly_Cache_eAccelerator extends sly_Cache_Abstract {
-	public static function getMaxKeyLength() {
+	public function getMaxKeyLength() {
 		return 200; // unbekannt -> Schätzwert
 	}
 
-	public static function hasLocking() {
+	public function hasLocking() {
 		return true;
 	}
 
