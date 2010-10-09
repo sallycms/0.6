@@ -23,7 +23,7 @@ div#rex-output div.rex-content-header {
 	&-2 ul {
 		padding: 5px 0; /*  Abstand oben und unten */
 
-		&#rex-navi-ctype { float: left; }
+		&#rex-navi-slots { float: left; }
 		&.rex-navi-content { float: right; }
 
 		& li {
