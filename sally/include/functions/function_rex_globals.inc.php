@@ -57,42 +57,34 @@ function rex_server($varname, $vartype = '', $default = '')
  * Gibt die Superglobale variable $varname des Array $_SESSION zurück und castet dessen Wert ggf.
  *
  * Falls die Variable nicht vorhanden ist, wird $default zurückgegeben
+ *
+ * @deprecated use sly_Util_Session::get() instead
  */
 function rex_session($varname, $vartype = '', $default = '')
 {
-	global $REX;
-
-	if (isset($_SESSION[$varname][$REX['INSTNAME']])) {
-		return _rex_cast_var($_SESSION[$varname][$REX['INSTNAME']], $vartype, $default, 'found', false);
-	}
-
-	if ($default === '') {
-		return _rex_cast_var($default, $vartype, $default, 'default', false);
-	}
-
-	return $default;
+	return sly_Util_Session::get($varname, $vartype, $default);
 }
 
 /**
  * Setzt den Wert einer Session Variable.
  *
  * Variablen werden Instanzabhängig gespeichert.
+ * @deprecated use sly_Util_Session::set() instead
  */
 function rex_set_session($varname, $value)
 {
-	global $REX;
-	$_SESSION[$varname][$REX['INSTNAME']] = $value;
+	sly_Util_Session::set($varname, $value);
 }
 
 /**
  * Löscht den Wert einer Session Variable.
  *
  * Variablen werden Instanzabhängig gelöscht.
+ * @deprecated use sly_Util_Session::reset() instead
  */
 function rex_unset_session($varname)
 {
-	global $REX;
-	unset($_SESSION[$varname][$REX['INSTNAME']]);
+	sly_Util_Session::reset($varname);
 }
 
 /**
