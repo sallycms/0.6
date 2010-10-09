@@ -44,7 +44,7 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 			'modules'  => isset($data['modules']) ? $data['modules'] : array(),
 			'mtime'    => $mtime
 		);
-		unset($data['name'], $data['title'], $data['class'], $data['slots'], $data['modules']);
+		unset($data['name'], $data['title'], $data['class'], $data['active'], $data['slots'], $data['modules']);
 		$result['params'] = $data;
 
 		return $result;
@@ -201,8 +201,8 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 * @return boolean        true, when the template has this slot
 	 */
 	public function hasSlot($name, $slot) {
-		$slots = $this->getSlots($name);
-		return array_search($slot, $slots) !== false;
+		$slots = array_map('strval', $this->getSlots($name));
+		return in_array($slot, $slots);
 	}
 
 	/**

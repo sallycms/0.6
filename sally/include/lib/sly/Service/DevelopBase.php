@@ -88,7 +88,7 @@ abstract class sly_Service_DevelopBase {
 			if (empty($data) && $known) $modified = true;
 			$name   = $parser->get('name', null);
 
-			if (!$this->areParamsValid($name, $data, $newData, $basename)) continue;
+			if (!$this->areParamsValid($name, $data, $newData, $basename, $type)) continue;
 
 			$newData[$name][$type] = $this->buildData($basename, $mtime, $parser->get());
 
@@ -139,7 +139,7 @@ abstract class sly_Service_DevelopBase {
 	 * @param  array   $newData  Array with the parameters of all previous iterated files
 	 * @return boolean           true, when the parameters are valid. false for invalid.
 	 */
-	protected function areParamsValid($name, $params, $newData, $filename) {
+	protected function areParamsValid($name, $params, $newData, $filename, $type) {
 		$result = true;
 
 		if ($name === null) {

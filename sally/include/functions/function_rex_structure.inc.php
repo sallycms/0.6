@@ -844,28 +844,30 @@ function rex_deleteArticleReorganized($articleID)
 	$cache  = sly_Core::cache();
 	$sql    = new rex_sql();
 
-	foreach ($data as $clang => $article) {
-		$sql->setQuery(
-			'UPDATE #_article SET prior = prior - 1 '.
-			'WHERE prior > '.$article['prior'].' '.
-			'AND ((re_id = '.$article['re_id'].' AND catprior = 0) OR id = '.$article['re_id'].') '.
-			'AND clang = '.$clang, '#_'
-		);
+	if($return['state'] === 'true') {
+		foreach ($data as $clang => $article) {
+			$sql->setQuery(
+				'UPDATE #_article SET prior = prior - 1 '.
+				'WHERE prior > '.$article['prior'].' '.
+				'AND ((re_id = '.$article['re_id'].' AND catprior = 0) OR id = '.$article['re_id'].') '.
+				'AND clang = '.$clang, '#_'
+			);
 
-		$return = rex_register_extension_point('ART_DELETED', $return, array(
-			'id'       => $articleID,
-			'clang'    => $clang,
-			'name'     => $article['name'],
-			'path'     => $article['path'],
-			're_id'    => (int) $article['re_id'],
-			'status'   => (int) $article['status'],
-			'prior'    => (int) $article['prior'],
-			'template' => $article['template']
-		));
+			$return = rex_register_extension_point('ART_DELETED', $return, array(
+				'id'       => $articleID,
+				'clang'    => $clang,
+				'name'     => $article['name'],
+				'path'     => $article['path'],
+				're_id'    => (int) $article['re_id'],
+				'status'   => (int) $article['status'],
+				'prior'    => (int) $article['prior'],
+				'template' => $article['template']
+			));
 
-		$cache->delete('sly.article', $articleID.'_'.$clang);
-		$cache->delete('sly.article.list', $article['re_id'].'_'.$clang.'_0');
-		$cache->delete('sly.article.list', $article['re_id'].'_'.$clang.'_1');
+			$cache->delete('sly.article', $articleID.'_'.$clang);
+			$cache->delete('sly.article.list', $article['re_id'].'_'.$clang.'_0');
+			$cache->delete('sly.article.list', $article['re_id'].'_'.$clang.'_1');
+		}
 	}
 
 	return array($return['state'], $return['message']);

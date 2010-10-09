@@ -45,8 +45,9 @@ if ($article->getRows() == 1) {
 
 	// Slot validieren
 	$curSlots = $templateService->getSlots($templateName);
-	$slot     = sly_request('slot', 'string', '');
-	if (!$templateService->hasSlot($templateName, $slot)) $slot = $templateService->getFirstSlot($templateName);
+
+	if (!$templateService->hasSlot($templateName, $slot))
+		$slot = $templateService->getFirstSlot($templateName);
 
 	// Artikel wurde gefunden - Kategorie holen
 	$OOArt       = OOArticle::getArticleById($article_id, $clang);
