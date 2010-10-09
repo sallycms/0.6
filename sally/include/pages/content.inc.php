@@ -133,7 +133,7 @@ if ($article->getRows() == 1) {
 			}
 			else {
 				// Rechte am Modul
-				if (!$templateService->hasModule($templateName, $slot, $module)) {
+				if (!$templateService->hasModule($templateName, $module, $slot)) {
 					$global_warning = $I18N->msg('no_rights_to_this_function');
 					$slice_id       = '';
 					$function       = '';

@@ -222,7 +222,7 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 		$result        = array();
 
 		// check if slot is valid
-		if (empty($slot) || self::hasSlot($name, $slot)) {
+		if (isset($slot) || self::hasSlot($name, $slot)) {
 			$allModules = array_keys($moduleService->getModules());
 
 			// find modules for this template
@@ -294,8 +294,7 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 		if (!$this->exists($name)) return false;
 
 		$modules = $this->getModules($name, $slot);
-
-		return in_array($module, $modules[$slot]);
+		return array_key_exists($module, $modules);
 	}
 
 	/**

@@ -138,7 +138,10 @@ class sly_Service_Module extends sly_Service_DevelopBase {
 	 */
 	public function hasTemplate($name, $templateName) {
 		$templates = self::getTemplates($name);
-		return array_search($templateName, $templates) !== false;
+		if(!empty($templates))
+			return in_array($templateName, $templates);
+
+		return true;
 	}
 
 }
