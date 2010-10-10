@@ -241,7 +241,7 @@ if ($article->getRows() == 1) {
 									$function = '';
 								}
 								else {
-									$warning = $action_message.$newsql->getError();
+									$global_warning = $action_message.$newsql->getError();
 								}
 							}
 
