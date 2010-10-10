@@ -13,16 +13,14 @@
  */
 class sly_Util_Scaffold {
 	/**
-	 * Verarbeitet eine CSS-Datei mit CSScaffold
+	 * This method processes a file with CSScaffold.
 	 *
-	 * In dieser Methode wird ein externes Scaffold (standardmäßig in
-	 * assets/css/scaffold) eingebunden und zur Verarbeitung von CSS genutzt.
-	 * Dabei wird explizit nicht gecached, da der Deployer diese Aufgabe
-	 * übernimmt.
+	 * The generated css content will not be cached so care about is
+	 * by yourselves.
 	 *
 	 * @uses   Scaffold
-	 * @param  string $cssFile  der Dateiname
-	 * @return string           der fertig verarbeitete CSS-Code
+	 * @param  string $cssFile  the file to process
+	 * @return string           the processed css code
 	 */
 	public static function process($cssFile) {
 		static $isScaffoldInit = false;
@@ -38,7 +36,7 @@ class sly_Util_Scaffold {
 			$config = array(
 				'document_root'    => $_SERVER['DOCUMENT_ROOT'],
 				'system'           => $scaffoldBase,
-				'cache'            => sly_Util_Directory::join($scaffoldBase, 'cache'),
+				'cache'            => false,
 				'cache_lifetime'   => false,
 				'disable_flags'    => true,
 				'enable_log'       => false,
