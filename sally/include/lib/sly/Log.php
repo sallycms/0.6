@@ -23,6 +23,7 @@ class sly_Log {
 	protected $format;      ///< string  the line format to use
 
 	private static $instances = array();
+	private static $targetDir = null;
 
 	const LEVEL_INFO    = 0;
 	const LEVEL_WARNING = 1;
@@ -33,13 +34,41 @@ class sly_Log {
 	const FORMAT_CALLER   = '[%date% %time%] %typename%: %message% (%caller%, %called%)';
 
 	/**
-	 * Constructor
+	 * Set the log directory
 	 *
-	 * @param string  $filename  the filename to use
+	 * This sets where the newly created logfiles will be placed. Pass a directory
+	 * (will automatically be converted to an absolute path) or null to reset
+	 * the dir to the internal default.
+	 *
+	 * @param  string $dir  the directory or null to reset to factory defaults
+	 * @return string       the new directory which is being used from then on
 	 */
-	private function __construct($filename) {
-		$this->filename = $filename;
-		$this->format   = self::FORMAT_SIMPLE;
+	public static function setLogDirectory($dir) {
+		self::$targetDir = null;
+
+		if ($dir !== null) {
+			if (!sly_Util_Directory::create($dir)) {
+				throw new sly_Exception('Could not create logging directory in '.$dir.'.');
+			}
+
+			self::$targetDir = rtrim(realpath($dir), DIRECTORY_SEPARATOR);
+		}
+
+		return self::$targetDir;
+	}
+
+	/**
+	 * The directory where the logfile will be put
+	 *
+	 * If not set, this will return DYNFOLDER/internal/sally/logs, else the
+	 * absolute path to the directory of your choice.
+	 *
+	 * @return string  the absolute path to the log dir
+	 */
+	public static function getLogDirectory() {
+		return self::$targetDir === null ?
+			self::setLogDirectory(SLY_DYNFOLDER.'/internal/sally/logs') :
+			self::$targetDir;
 	}
 
 	/**
@@ -55,13 +84,19 @@ class sly_Log {
 	 */
 	public static function getInstance($name) {
 		$name = preg_replace('#[^a-z0-9-_]#i', '_', $name);
-		$dir  = SLY_DYNFOLDER.'/internal/sally/logs';
-
-		if (!sly_Util_Directory::create($dir)) {
-			throw new sly_Exception('Could not create logging directory in '.$dir.'.');
-		}
+		$dir  = self::getLogDirectory();
 
 		return new self($dir.'/'.$name.'.log');
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @param string  $filename  the filename to use
+	 */
+	private function __construct($filename) {
+		$this->filename = $filename;
+		$this->format   = self::FORMAT_SIMPLE;
 	}
 
 	/**
@@ -172,7 +207,7 @@ class sly_Log {
 		$line = str_replace('%message%', $message, $line);
 		$line = trim($line);
 
-		return file_put_contents($this->filename, $line."\n", FILE_APPEND) > 0;
+		return $this->write($line);
 	}
 
 	/**
@@ -238,6 +273,40 @@ class sly_Log {
 
 		$line = str_replace('%message%', '$'.$name.' = '.$value, $line);
 		$line = trim($line);
+
+		return $this->write($line);
+	}
+
+	/**
+	 * Clears the logfile
+	 */
+	public function clear() {
+		file_exists($this->filename) && file_put_contents($this->filename, '');
+	}
+
+	/**
+	 * Removes the logfile
+	 *
+	 * @return boolean  true if successful, else false
+	 */
+	public function remove() {
+		return @unlink($this->filename);
+	}
+
+	/**
+	 * Get the filename
+	 *
+	 * @return string  the absolute path to the logfile
+	 */
+	public function getFilename() {
+		return $this->filename;
+	}
+
+	protected function write($line) {
+		if (!file_exists($this->filename)) {
+			@touch($this->filename);
+			@chmod($this->filename, 0777);
+		}
 
 		return file_put_contents($this->filename, $line."\n", FILE_APPEND) > 0;
 	}
