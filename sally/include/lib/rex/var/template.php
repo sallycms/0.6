@@ -39,15 +39,15 @@ class rex_var_template extends rex_var
       list ($param_str, $args) = $match;
       list ($template_id, $args) = $this->extractArg('id', $args, 0);
 
-      if($template_id > 0)
-      {
-		$tplService = sly_Service_Factory::getTemplateService();
+	  $tplService = sly_Service_Factory::getTemplateService();
 
+      if(!empty($template_id) && $tplService->exists($template_id))
+      {
         $varname = '$__rex_tpl'.$template_id;
         $tpl     = "<?php\n\$tplService = sly_Service_Factory::getTemplateService();";
 
         if (isset($args['callback'])) {
-        	$tpl .= "\n".'$args[\'subject\'] = file_get_contents($tplService->getContent($template_id));';
+        	$tpl .= "\n".'$args[\'subject\'] = file_get_contents($tplService->getContent(\'$template_id\'));';
         	$tpl .= "\n".'eval(\'?>\'.rex_call_func(unserialize("'.serialize($args['callback']).'", $args));';
         }
         else {
@@ -65,7 +65,7 @@ class rex_var_template extends rex_var
         		$tpl .= "\n".'eval("'.addslashes($args['ifempty']).'");';
         	}
         	else {
-        		$tpl .= "\n".'$tplService->includeFile('.$template_id.');';
+        		$tpl .= "\n".'$tplService->includeFile(\''.$template_id.'\');';
         	}
 
         	$tpl .= $suffix;
