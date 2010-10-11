@@ -40,38 +40,27 @@ class sly_Log {
 	 * Set the log directory
 	 *
 	 * This sets where the newly created logfiles will be placed. Pass a directory
-	 * (will automatically be converted to an absolute path) or null to reset
-	 * the dir to the internal default.
+	 * (will automatically be converted to an absolute path).
 	 *
-	 * @param  string $dir  the directory or null to reset to factory defaults
+	 * @param  string $dir  the directory
 	 * @return string       the new directory which is being used from then on
 	 */
 	public static function setLogDirectory($dir) {
-		self::$targetDir = null;
-
-		if ($dir !== null) {
-			if (!sly_Util_Directory::create($dir)) {
-				throw new sly_Exception('Could not create logging directory in '.$dir.'.');
-			}
-
-			self::$targetDir = rtrim(realpath($dir), DIRECTORY_SEPARATOR);
+		if (!sly_Util_Directory::create($dir)) {
+			throw new sly_Exception('Could not create logging directory in '.$dir.'.');
 		}
 
+		self::$targetDir = rtrim(realpath($dir), DIRECTORY_SEPARATOR);
 		return self::$targetDir;
 	}
 
 	/**
 	 * The directory where the logfile will be put
 	 *
-	 * If not set, this will return DYNFOLDER/internal/sally/logs, else the
-	 * absolute path to the directory of your choice.
-	 *
 	 * @return string  the absolute path to the log dir
 	 */
 	public static function getLogDirectory() {
-		return self::$targetDir === null ?
-			self::setLogDirectory(SLY_DYNFOLDER.'/internal/sally/logs') :
-			self::$targetDir;
+		return self::$targetDir;
 	}
 
 	/**

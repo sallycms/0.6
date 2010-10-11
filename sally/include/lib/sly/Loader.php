@@ -74,6 +74,15 @@ class sly_Loader
 
 		if ($found) {
 			include_once $fullPath;
+
+			// init classes
+
+			switch ($className) {
+				case 'sly_Log':
+					sly_Log::setLogDirectory(SLY_DYNFOLDER.'/internal/sally/logs');
+					break;
+			}
+
 			return $fullPath;
 		}
 
