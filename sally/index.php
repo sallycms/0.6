@@ -195,7 +195,7 @@ if ($REX['USER']) {
 
 // Seite gefunden. AddOns benachrichtigen
 
-rex_register_extension_point('PAGE_CHECKED', $REX['PAGE'], array('pages' => $REX['PAGES']), true);
+sly_Core::dispatcher()->notify('PAGE_CHECKED', $REX['PAGE']);
 
 // Im Testmodus verlassen wir das Script jetzt.
 
