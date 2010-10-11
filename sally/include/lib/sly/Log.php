@@ -21,6 +21,9 @@
 class sly_Log {
 	protected $filename;    ///< string  the current target file
 	protected $format;      ///< string  the line format to use
+	protected $maxFiles;
+	protected $maxSize;
+	protected $enableRotation;
 
 	private static $instances = array();
 	private static $targetDir = null;
@@ -95,8 +98,11 @@ class sly_Log {
 	 * @param string  $filename  the filename to use
 	 */
 	private function __construct($filename) {
-		$this->filename = $filename;
-		$this->format   = self::FORMAT_SIMPLE;
+		$this->filename       = $filename;
+		$this->format         = self::FORMAT_SIMPLE;
+		$this->maxFiles       = 10;
+		$this->maxSize        = 1048576;
+		$this->enableRotation = false;
 	}
 
 	/**
@@ -302,12 +308,35 @@ class sly_Log {
 		return $this->filename;
 	}
 
+	public function enableRotation($maxSize = 1048576, $maxFiles = 10) {
+		$this->enableRotation = true;
+		$this->maxFiles       = $maxFiles < 1 ? 1 : (int) $maxFiles;
+		$this->maxSize        = $maxSize < 512 ? 512 : (int) $maxSize;
+	}
+
+	public function disableRotation() {
+		$this->enableRotation = false;
+	}
+
+	public function getMaxFiles() {
+		return $this->maxFiles;
+	}
+
+	public function getMaxSize() {
+		return $this->maxSize;
+	}
+
+	public function isRotating() {
+		return $this->enableRotation;
+	}
+
 	protected function write($line) {
 		if (!file_exists($this->filename)) {
 			@touch($this->filename);
 			@chmod($this->filename, 0777);
 		}
 
+		$this->rotate();
 		return file_put_contents($this->filename, $line."\n", FILE_APPEND) > 0;
 	}
 
@@ -393,5 +422,86 @@ class sly_Log {
 		}
 
 		return $calledBy;
+	}
+
+	/**
+	 * @author Zozi
+	 */
+	private function rotate() {
+		$logfile = $this->filename;
+		$canGZip = function_exists('gzencode');
+
+		clearstatcache();
+
+		if (file_exists($logfile) && filesize($logfile) > $this->maxSize) {
+			if ($this->maxFiles == 0) {
+				unlink($logfile);
+				return;
+			}
+
+			$files = glob($logfile.'*'); // may be unsorted
+			rsort($files);               // ..., log.3.gz, log.2.gz, log.1.gz, log
+
+			foreach ($files as $filename) {
+				if ($filename == $logfile) {
+					$num         = $this->getFileNum(1);
+					$newFilename = sprintf('%s.%s', $filename, $num);
+
+					rename($filename, $newFilename);
+					if ($canGZip) $this->compressLogfile($newFilename);
+				}
+				else {
+					$newFilename = $this->getIteratedFilename($filename);
+
+					if ($newFilename === null) unlink($filename);
+					else rename($filename, $newFilename);
+				}
+			}
+		}
+	}
+
+	private function getIteratedFilename($filename) {
+		$logfile = $this->filename;
+		$canGZip = function_exists('gzencode');
+
+		if ($canGZip) {
+			$filename = str_replace('.gz', '', $filename);
+		}
+
+		$num = substr($filename, strrpos($filename, '.') + 1);
+
+		// signal to delete this file
+		if ($num == $this->maxFiles) return null;
+
+		// create new filename
+		$next = $this->getFileNum($num + 1);
+		$frmt = $canGZip ? '%s.%s.gz' : '%s.%s';
+
+		return sprintf($frmt, $logfile, $next);
+	}
+
+	private function getFileNum($i) {
+		return str_pad($i, strlen($this->maxFiles), '0', STR_PAD_LEFT);
+	}
+
+	private function compressLogfile($filename) {
+		if (!function_exists('gzencode')) return;
+
+		if ($this->maxSize > 2097152) { // 2 MB
+			$in  = fopen($filename, 'rb');
+			$out = gzopen($filename.'.gz', 'wb');
+
+			while (!feof($in)) {
+				gzwrite($out, fread($in, 32768)); // 32 KB
+			}
+
+			gzclose($out);
+			fclose($in);
+		}
+		else {
+			file_put_contents($filename.'.gz', gzencode(file_get_contents($filename), 9));
+		}
+
+		unlink($filename);
 	}
 }
