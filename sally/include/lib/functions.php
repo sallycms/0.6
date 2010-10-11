@@ -195,9 +195,9 @@ function ht($index) {
 }
 
 function sly_ini_get($key, $default = null) {
-	if (empty($key)) return $default;
-
-	$res = trim(ini_get($key));
+	$res = ini_get($key);
+	if (empty($res)) return $default;
+	$res = trim($res);
 
 	// interpret numeric values
 	if (preg_match('#(^[0-9]+)([ptgmk])$#i', $res, $matches)) {
