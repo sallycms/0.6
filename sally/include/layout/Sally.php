@@ -55,10 +55,14 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 			$this->setBodyAttr('class', 'rex-popup');
 		}
 
-		$this->hasNavigation = isset($REX['PAGES'][$REX['PAGE']]) ? (bool) !$REX['PAGES'][$REX['PAGE']][2] : true;
+		$active = sly_Core::getNavigation()->getActivePage();
 
-		if (!$this->hasNavigation) {
+		if ($active && $active->isPopup()) {
+			$this->hasNavigation = false;
 			$this->setBodyAttr('onunload', 'closeAll()');
+		}
+		else {
+			$this->hasNavigation = true;
 		}
 	}
 

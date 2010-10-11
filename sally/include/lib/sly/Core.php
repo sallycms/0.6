@@ -18,6 +18,7 @@ class sly_Core {
 	private $curArticleId;
 	private $varTypes;
 	private $layout;
+	private $navigation;
 
 	private function __construct() {
 		$this->cache = sly_Cache::factory();
@@ -184,5 +185,20 @@ class sly_Core {
 		$pattern = str_replace('Y', $config->get('SUBVERSION'), $pattern);
 		$pattern = str_replace('Z', $config->get('MINORVERSION'), $pattern);
 		return $pattern;
+	}
+
+	/**
+	 * Returns the backend navigation
+	 *
+	 * @return sly_Layout_Navigation_Sally  the navigation object used for the backend menu
+	 */
+	public static function getNavigation() {
+		$instance = self::getInstance();
+
+		if (!isset($instance->navigation)) {
+			$instance->navigation = new sly_Layout_Navigation_Sally();
+		}
+
+		return $instance->navigation;
 	}
 }

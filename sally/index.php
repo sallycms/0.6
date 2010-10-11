@@ -28,10 +28,11 @@ require 'include/master.inc.php';
 
 // addon/normal page path
 $REX['PAGEPATH'] = '';
-$REX['PAGES']    = array(); // array(name,addon=1,htmlheader=1)
 $REX['PAGE']     = '';
 $REX['USER']     = null;
 $REX['LOGIN']    = null;
+
+$navigation = sly_Core::getNavigation();
 
 // Setup vorbereiten
 
@@ -56,9 +57,10 @@ if (!SLY_IS_TESTING && $config->get('SETUP')) {
 
 	$I18N = rex_create_lang($REX['LANG']);
 
-	$REX['PAGES']['setup'] = array(t('setup'), 0, 1);
-	$REX['PAGE']           = 'setup';
-	$_REQUEST['page']      = 'setup';
+	$navigation->addPage('setup', 'setup', false);
+
+	$REX['PAGE']      = 'setup';
+	$_REQUEST['page'] = 'setup';
 }
 else {
 
@@ -106,10 +108,11 @@ else {
 			$rex_user_loginmessage = $loginCheck;
 		}
 
-		$REX['PAGES']['login'] = array('login', 0, 1);
-		$REX['PAGE']           = 'login';
-		$REX['USER']           = null;
-		$REX['LOGIN']          = null;
+		$navigation->addPage('system', 'login', false);
+
+		$REX['PAGE']  = 'login';
+		$REX['USER']  = null;
+		$REX['LOGIN'] = null;
 
 	}
 }
@@ -127,23 +130,28 @@ require_once $REX['INCLUDE_PATH'].'/addons.inc.php';
 
 if ($REX['USER']) {
 	// Core-Seiten initialisieren
-	$REX['PAGES']['profile'] = array(t('profile'), 0, false);
-	$REX['PAGES']['credits'] = array(t('credits'), 0, false);
+
+	$navigation->addPage('system', 'profile');
+	$navigation->addPage('system', 'credits');
 
 	if ($REX['USER']->isAdmin() || $REX['USER']->hasStructurePerm()) {
-		$REX['PAGES']['structure'] = array(t('structure'), 0, false);
-		$REX['PAGES']['mediapool'] = array(t('mediapool'), 0, true, 'NAVI' => array('href' =>'#', 'onclick' => 'openMediaPool()', 'class' => ' rex-popup'));
-		$REX['PAGES']['linkmap']   = array(t('linkmap'), 0, true);
-		$REX['PAGES']['content']   = array(t('content'), 0, false);
+		$navigation->addPage('system', 'structure');
+		$navigation->addPage('system', 'mediapool', null, true);
+		$navigation->addPage('system', 'linkmap', null, true);
+		$navigation->addPage('system', 'content');
 	}
 	elseif ($REX['USER']->hasPerm('mediapool[]')) {
-		$REX['PAGES']['mediapool'] = array(t('mediapool'), 0, true, 'NAVI' => array('href' =>'#', 'onclick' => 'openMediaPool()', 'class' => ' rex-popup'));
+		$navigation->addPage('system', 'mediapool', null, true);
 	}
 
 	if ($REX['USER']->isAdmin()) {
-	  $REX['PAGES']['user']     = array(t('user'), 0, false);
-	  $REX['PAGES']['addon']    = array(t('addons'), 0, false);
-	  $REX['PAGES']['specials'] = array(t('specials'), 0, false, 'SUBPAGES' => array(array('', t('main_preferences')), array('languages', t('languages'))));
+		$navigation->addPage('system', 'user');
+		$navigation->addPage('system', 'addon', 'translate:addons', false);
+
+		$specials = $navigation->createPage('specials');
+		$specials->addSubpage('', t('main_preferences'));
+		$specials->addSubpage('languages', t('languages'));
+		$navigation->addPageObj('system', $specials);
 	}
 
 	// AddOn-Seiten initialisieren
@@ -156,16 +164,15 @@ if ($REX['USER']) {
 
 		if (!empty($page) && (empty($perm) || $REX['USER']->hasPerm($perm) || $REX['USER']->isAdmin())) {
 			$name  = $addonService->getProperty($addon, 'name', '');
-			$name  = rex_translate($name);
 			$popup = $addonService->getProperty($addon, 'popup', false);
-			$REX['PAGES'][strtolower($addon)] = array($name, 1, $popup, $page);
+
+			$navigation->addPage('addon', strtolower($addon), $name, $popup, $page);
 		}
 	}
 
 	// Startseite ermitteln
 
-	$REX['USER']->pages = $REX['PAGES'];
-	$REX['PAGE']        = sly_Controller_Base::getPage(!empty($rex_user_login));
+	$REX['PAGE'] = sly_Controller_Base::getPage(!empty($rex_user_login));
 
 	// Login OK -> Redirect auf Startseite
 
@@ -208,15 +215,14 @@ try {
 	}
 	else {
 		$filename = '';
+		$curGroup = $navigation->getActiveGroup();
 
-		if (!empty($REX['PAGES'][$REX['PAGE']]['PATH'])) { // If page has a new/overwritten path
-			$filename = $REX['PAGES'][$REX['PAGE']]['PATH'];
+		if ($curGroup->getName() == 'addon') {
+			$curPage  = $navigation->getActivePage();
+			$filename = SLY_INCLUDE_PATH.'/addons/'.$curPage->getName().'/pages/index.inc.php';
 		}
-		elseif ($REX['PAGES'][strtolower($REX['PAGE'])][1]) { // Addon Page
-			$filename = SLY_INCLUDE_PATH.'/addons/'.$REX['PAGE'].'/pages/index.inc.php';
-		}
-		else { // Core Page
-			$filename = $REX['INCLUDE_PATH'].'/pages/'.$REX['PAGE'].'.inc.php';
+		else {
+			$filename = SLY_INCLUDE_PATH.'/pages/'.$REX['PAGE'].'.inc.php';
 		}
 
 		if (empty($filename) || !file_exists($filename)) {
