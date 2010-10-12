@@ -46,6 +46,21 @@ abstract class sly_Service_AddOn_Base {
 		}
 	}
 
+	/**
+	 * Check if a version number matches
+	 *
+	 * This will take a well-formed version number (X.Y.Z) and compare it against
+	 * the system version. You can leave out parts from the right to make it
+	 * more general (i.e. '0.2' will match any 0.2.x version).
+	 *
+	 * @param  string $version  the version number to check against
+	 * @return boolean          true for a match, else false
+	 */
+	public function checkVersion($version) {
+		$thisVersion = sly_Core::getVersion('X.Y.Z');
+		return preg_match('#^'.preg_quote($version, '#').'.*#i', $thisVersion) == 1;
+	}
+
 	public function add($addonORplugin) {
 		$this->setProperty($addonORplugin, 'install', false);
 	}

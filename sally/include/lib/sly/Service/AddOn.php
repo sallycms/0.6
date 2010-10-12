@@ -35,17 +35,37 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		$state = $this->extend('PRE', 'INSTALL', $addonName, true);
 
 		// check requirements
-		if($state) {
-			if(!$this->isInstalled($addonName))
+
+		if ($state) {
+			if (!$this->isInstalled($addonName)) {
 				$this->loadConfig($addonName);
+			}
+
 			$requires = $this->getProperty($addonName, 'requires');
-			if(!empty($requires)) {
-				if(!is_array($requires)) $requires = sly_makeArray($requires);
-				foreach($requires as $requiredAddon) {
-					if(!$this->isAvailable($requiredAddon)) {
+
+			if (!empty($requires)) {
+				$requires = sly_makeArray($requires);
+
+				foreach ($requires as $requiredAddon) {
+					if (!$this->isAvailable($requiredAddon)) {
 						//TODO I18n
-						return 'The Addon '.$requiredAddon.' is required to install this Addon';
+						return 'The addOn '.$requiredAddon.' is required to install this addOn.';
 					}
+				}
+			}
+
+			$sallyVersions = $this->getProperty($addonName, 'sally');
+
+			if (!empty($sallyVersions)) {
+				$sallyVersions = sly_makeArray($sallyVersions);
+				$versionOK     = false;
+
+				foreach ($sallyVersions as $version) {
+					$versionOK |= $this->checkVersion($version);
+				}
+
+				if (!$versionOK) {
+					return 'This addOn is not marked as compatible with your SallyCMS version ('.sly_Core::getVersion('X.Y.Z').').';
 				}
 			}
 		}

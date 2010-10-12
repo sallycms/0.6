@@ -38,6 +38,43 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 
 		$state = $this->extend('PRE', 'INSTALL', $plugin, true);
 
+		// check requirements
+
+		if ($state) {
+			if (!$this->isInstalled($plugin)) {
+				$this->loadConfig($plugin);
+			}
+
+			$requires = $this->getProperty($plugin, 'requires');
+
+			if (!empty($requires)) {
+				$requires = sly_makeArray($requires);
+				$aService = sly_Service_Factory::getAddOnService();
+
+				foreach ($requires as $requiredAddon) {
+					if (!$aService->isAvailable($requiredAddon)) {
+						//TODO I18n
+						return 'The addOn '.$requiredAddon.' is required to install this plugIn.';
+					}
+				}
+			}
+
+			$sallyVersions = $this->getProperty($plugin, 'sally');
+
+			if (!empty($sallyVersions)) {
+				$sallyVersions = sly_makeArray($sallyVersions);
+				$versionOK     = false;
+
+				foreach ($sallyVersions as $version) {
+					$versionOK |= $this->checkVersion($version);
+				}
+
+				if (!$versionOK) {
+					return 'This plugIn is not marked as compatible with your SallyCMS version ('.sly_Core::getVersion('X.Y.Z').').';
+				}
+			}
+		}
+
 		// Prüfen des Plugin-Ornders auf Schreibrechte,
 		// damit das Plugin später wieder gelöscht werden kann
 
@@ -45,10 +82,11 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 			if (is_readable($installFile)) {
 				try {
 					$this->mentalGymnasticsInclude($installFile, $plugin);
-				}catch (Exception $e) {
+				}
+				catch (Exception $e) {
 					$installError = 'Es ist eine unerwartete Ausnahme während der Installation aufgetreten: '.$e->getMessage();
 				}
-				
+
 				$hasError = !empty($installError);
 
 				if ($hasError) {
