@@ -19,14 +19,18 @@ abstract class sly_Controller_Base {
 	protected $action;
 
 	protected function __construct() {
-		$this->action = sly_request(self::ACTIONPARAM, 'string', 'index');
+		$this->action = self::getActionParam('index');
 	}
+
+	public static function getPageParam($default = '')    { return sly_request(self::PAGEPARAM, 'string', $default);    }
+	public static function getSubpageParam($default = '') { return sly_request(self::SUBPAGEPARAM, 'string', $default); }
+	public static function getActionParam($default = '')  { return sly_request(self::ACTIONPARAM, 'string', $default);  }
 
 	public static function getPage($isLogin = false) {
 		global $REX;
 
 		$config = sly_Core::config();
-		$page   = strtolower(sly_request(self::PAGEPARAM, 'string'));
+		$page   = strtolower(self::getPageParam());
 
 		// do not allow any access to setup controller when SETUP=false
 
@@ -61,8 +65,8 @@ abstract class sly_Controller_Base {
 
 	public static function factory($forcePage = null, $forceSubpage = null) {
 		$config = sly_Core::config();
-		$page    = $forcePage === null    ? sly_request(self::PAGEPARAM, 'string', $config->get('START_PAGE')) : $forcePage;
-		$subpage = $forceSubpage === null ? strtolower(sly_request(self::SUBPAGEPARAM, 'string', '')) : $forceSubpage;
+		$page    = $forcePage === null    ? self::getPageParam($config->get('START_PAGE')) : $forcePage;
+		$subpage = $forceSubpage === null ? strtolower(self::getSubpageParam()) : $forceSubpage;
 		$name    = 'sly_Controller_'.ucfirst($page);
 
 		if (!empty($subpage) && $subpage != 'index') {

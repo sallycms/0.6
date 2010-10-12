@@ -217,7 +217,7 @@ try {
 		$filename = '';
 		$curGroup = $navigation->getActiveGroup();
 
-		if ($curGroup->getName() == 'addon') {
+		if ($curGroup && $curGroup->getName() == 'addon') {
 			$curPage  = $navigation->getActivePage();
 			$filename = SLY_INCLUDE_PATH.'/addons/'.$curPage->getName().'/pages/index.inc.php';
 		}

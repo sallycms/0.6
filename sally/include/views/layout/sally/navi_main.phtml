@@ -39,6 +39,9 @@ foreach ($pages as $page) {
 foreach ($groups as $group) {
 	$topic    = $group->getName();
 	$headline = $group->getTitle();
+	$pages    = $group->getPages();
+
+	if (empty($pages)) continue;
 
 	print '<dt>'.$headline.'</dt><dd>';
 	print '<ul id="rex-navi-'.$topic.'">';
