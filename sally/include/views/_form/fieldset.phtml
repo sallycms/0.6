@@ -21,11 +21,16 @@ $id = $this->id ? ' id="'.sly_html($this->id).'"' : '';
 		$columns  = $this->columns;
 
 		foreach ($this->rows as $rowNum => $elements) {
-			if ($this->isMultilingual($elements)) {
-				include SLY_INCLUDE_PATH.'/views/_form/row_i18n.phtml';
+			if (count($elements) == 1 && reset($elements) instanceof sly_Form_Fragment) {
+				print reset($elements)->render();
 			}
 			else {
-				include SLY_INCLUDE_PATH.'/views/_form/row.phtml';
+				if ($this->isMultilingual($elements)) {
+					include SLY_INCLUDE_PATH.'/views/_form/row_i18n.phtml';
+				}
+				else {
+					include SLY_INCLUDE_PATH.'/views/_form/row.phtml';
+				}
 			}
 		}
 

@@ -48,4 +48,16 @@ abstract class sly_Form_Base {
 	public function addHiddenValue($name, $value, $id = null) {
 		$this->hiddenValues[$name] = array('value' => $value, 'id' => $id);
 	}
+
+	public function isMultilingual($row = null) {
+		$rows = $row ? array($row) : $this->rows;
+
+		foreach ($rows as $row) {
+			foreach ($row as $element) {
+				if ($element->isMultilingual()) return true;
+			}
+		}
+
+		return false;
+	}
 }

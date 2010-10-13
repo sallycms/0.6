@@ -113,4 +113,8 @@ class sly_Form extends sly_Form_Base {
 	public function setFocus($elementID) {
 		$this->focussedElement = $elementID;
 	}
+
+	public function getCurrentFieldset() {
+		return $this->currentFieldset;
+	}
 }
