@@ -426,7 +426,8 @@ echo '
 
 if ($category_id > -1)
 {
-  $templates = sly_Service_Factory::getService('Template')->getTemplates();
+  $templateService = sly_Service_Factory::getTemplateService();
+  $templates = $templateService->getTemplates();
 
   $TMPL_SEL = new rex_select;
   $TMPL_SEL->setName('template');
@@ -435,7 +436,8 @@ if ($category_id > -1)
   $TMPL_SEL->addOption($I18N->msg('option_no_template'), '');
 
   foreach ($templates as $name => $title) {
-    $TMPL_SEL->addOption(rex_translate($title, null, false), $name);
+    if($templateService->isActive($name))
+		$TMPL_SEL->addOption(rex_translate($title, null, false), $name);
   }
 
   $templates[''] = $I18N->msg('template_default_name');
