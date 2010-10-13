@@ -2,13 +2,8 @@
  * SallyCMS - JavaScript-Bibliothek
  */
 
-var redaxo = true;
-var sally  = true;
-jQuery.noConflict();
-
-(function($) {
-	pageloaded      = false;
-	imageExtensions = ['png', 'gif', 'jpg', 'jpeg', 'bmp'];
+(function($, undef) {
+	var imageExtensions = ['png', 'gif', 'jpg', 'jpeg', 'bmp'];
 
 	changeImage = function(id, img) {
 		$('#' + id).attr('src', img);
@@ -74,12 +69,12 @@ jQuery.noConflict();
 	};
 
 	openMediaDetails = function(id, file_id, file_category_id) {
-		if (typeof(id) == 'undefined') id = '';
+		if (id === undef) id = '';
 		newPoolWindow('index.php?page=mediapool&subpage=detail&opener_input_field=' + id + '&file_id=' + file_id + '&file_category_id=' + file_category_id);
 	};
 
 	openMediaPool = function(id) {
-		if (typeof(id) == 'undefined') id = '';
+		if (id === undef) id = '';
 		newPoolWindow('index.php?page=mediapool&opener_input_field=' + id);
 	};
 
@@ -87,7 +82,7 @@ jQuery.noConflict();
 		var mediaid = 'REX_MEDIA_'+id;
 		var value   = $('#' + mediaid).val();
 
-		if (typeof(param) == 'undefined') {
+		if (param === undef) {
 			param = '';
 		}
 
@@ -102,14 +97,14 @@ jQuery.noConflict();
 		$('#REX_MEDIA_' + id).val('');
 	};
 
-	addREXMedia = function(id,params) {
-		if (typeof(params) == 'undefined') params = '';
+	addREXMedia = function(id, params) {
+		if (params === undef) params = '';
 		newPoolWindow('index.php?page=mediapool&action=media_upload&subpage=add_file&opener_input_field=REX_MEDIA_'+id+params);
 	};
 
 	openLinkMap = function(id, param) {
-		if (typeof(id)    == 'undefined') id    = '';
-		if (typeof(param) == 'undefined') param = '';
+		if (id    === undef) id    = '';
+		if (param === undef) param = '';
 		newLinkMapWindow('index.php?page=linkmap&opener_input_field='+id+param);
 	};
 
@@ -133,7 +128,7 @@ jQuery.noConflict();
 		if (selected.length > 0) {
 			param = '&action=media_details&file_name=' + selected.val();
 		}
-		else if (typeof(param) == 'undefined') {
+		else if (param === undef) {
 			param = '';
 		}
 
@@ -141,7 +136,7 @@ jQuery.noConflict();
 	};
 
 	addREXMedialist = function(id, params) {
-		if (typeof(params) == 'undefined') params = '';
+		if (params === undef) params = '';
 		newPoolWindow('index.php?page=mediapool&action=media_upload&subpage=add_file&opener_input_field=REX_MEDIALIST_'+id+params);
 	};
 
@@ -158,13 +153,14 @@ jQuery.noConflict();
 	};
 
 	openREXLinklist = function(id, param) {
-		var linklist = 'REX_LINKLIST_' + id;
-		var selected = $('#REX_LINKLIST_SELECT_' + id + ' option:selected');
+		var
+			linklist = 'REX_LINKLIST_' + id,
+			selected = $('#REX_LINKLIST_SELECT_' + id + ' option:selected');
 
 		if (selected.length > 0) {
 			param = '&action=link_details&file_name=' + selected.val();
 		}
-		else if (typeof(param) == 'undefined') {
+		else if (param === undef) {
 			param = '';
 		}
 
@@ -184,14 +180,15 @@ jQuery.noConflict();
 	};
 
 	deleteREX = function(id, i_list, i_select) {
-		var $select   = $('#' + i_select + id);
-		var position = $('option:selected', $select).index();
+		var
+			$select   = $('#' + i_select + id),
+			position = $('option:selected', $select).index();
 
 		if (position == -1) return;
 		$('option:eq(' + position + ')', $select).remove();
 
 		var length = $('option', $select).length;
-		if(length < 1) return;
+		if (length < 1) return;
 
 		if (length <= position) position--;
 
@@ -201,18 +198,22 @@ jQuery.noConflict();
 	};
 
 	moveREX = function(id, i_list, i_select, direction) {
-		var $select      = $('#' + i_select + id);
-		var $selected    = $('#' + i_select + id + ' option:selected');
+		var
+			$select   = $('#' + i_select + id),
+			$selected = $('option:selected', $select);
 
-		if(!$selected.length) return;
+		if (!$selected.length) return;
 
 		if (direction == 'top') {
 			$select.prepend($selected);
-		}else if (direction == 'up') {
+		}
+		else if (direction == 'up') {
 			$($selected).prev().insertAfter($selected);
-		} else if (direction == 'down') {
+		}
+		else if (direction == 'down') {
 			$($selected).next().insertBefore($selected);
-		} else if (direction == 'bottom') {
+		}
+		else if (direction == 'bottom') {
 			$select.append($selected);
 		}
 
@@ -221,12 +222,12 @@ jQuery.noConflict();
 
 	/* übertrage Werte aus der Selectbox in einer hidden input field */
 	writeREX = function(id, input, select) {
-		var $target   = $('#' + input + id);
-		var elements = [];
+		var
+			$target  = $('#' + input + id),
+			elements = [];
 
 		$('#' + select + id + ' option').each(function(){
 			elements.push($(this).text());
-
 		});
 
 		$target.val(elements.join(','));
@@ -237,15 +238,15 @@ jQuery.noConflict();
 			return arr;
 		}
 
-		var tmp = arr[from];
+		var tmp = arr[from], index = from;
 
 		if (from > to) {
-			for (index = from; index > to; index--) {
+			for (; index > to; index--) {
 				arr[index] = arr[index-1];
 			}
 		}
 		else {
-			for (index = from; index < to; index++) {
+			for (; index < to; index++) {
 				arr[index] = arr[index+1];
 			}
 		}
@@ -339,8 +340,6 @@ jQuery.noConflict();
 })(jQuery);
 
 jQuery(function($) {
-	pageloaded = true;
-
 	// Lösch-Links in Tabellen
 
 	$('table.rex-table').delegate('a.sly-delete, input.sly-button-delete', 'click', function() {
@@ -352,6 +351,37 @@ jQuery(function($) {
 		}
 
 		return confirm(question);
+	});
+
+	// Filter-Funktionen in sly_Table
+
+	$('.sly-table-extras-filter input[class^=filter_input_]').keyup(function(event) {
+		// Klassen- und Tabellennamen ermitteln
+
+		var
+			className = $(this).attr('class'),
+			tableName = className.replace('filter_input_', ''),
+			table     = $('#' + tableName),
+			c         = event.keyCode;
+
+		// Wert auch in allen anderen Suchfeldern übernehmen
+
+		$('input.' + className).val($(this).val());
+
+		// Tabelle filtern
+
+		event.preventDefault();
+
+		if (c == 8 || c == 46 || c == 109 || c == 189 || (c >= 65 && c <= 90) || (c >= 48 && c <= 57)) {
+			var keyword = new RegExp($(this).val(), 'i');
+
+			$('tbody tr', table).each(function() {
+				var $tr = $(this);
+				$('td', $tr).filter(function() {
+					return keyword.test($(this).text());
+				}).length ? $tr.show() : $tr.hide();
+			});
+		}
 	});
 
 	// Links in neuem Fenster öffnen
