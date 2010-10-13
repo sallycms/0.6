@@ -425,3 +425,5 @@ disallowed: 'translate:disallowed' # verboten
 any: 'translate:any' # beliebig
 none: 'translate:none' # nichts
 recommended: recommended
+
+authorisation_exception_language_denied: Permission to language %s denied!

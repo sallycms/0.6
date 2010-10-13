@@ -425,3 +425,5 @@ disallowed: verboten
 any: beliebig
 none: nichts
 recommended: empfohlen
+
+authorisation_exception_language_denied: Zugriff auf Sprache %s verweigert!

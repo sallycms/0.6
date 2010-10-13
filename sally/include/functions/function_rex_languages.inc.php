@@ -65,15 +65,9 @@ if (count($REX['CLANG']) > 1) {
 </div>
 <!-- *** OUTPUT OF CLANG-TOOLBAR - END *** -->
 ';
-
 	if ($stop) {
-		/*print '
-<!-- *** OUTPUT OF CLANG-VALIDATE - START *** -->
-'.rex_warning('You have no permission to this area').'
-<!-- *** OUTPUT OF CLANG-VALIDATE - END *** -->
-';
-		return false;*/
-		throw new sly_Authorisation_Exception('You have no permission to this area');
+		$lang = sly_Service_Factory::getService('Language')->findById($stop);
+		throw new sly_Authorisation_Exception(sprintf(t('authorisation_exception_language_denied'), sly_html($lang->getName())));
 	}
 }
 else {
