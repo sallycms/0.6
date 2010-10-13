@@ -54,7 +54,7 @@ table.rex-table-mrgn, table.sly-table {
 p.sly-table-extras {
 	&-pager, &-filter, &-sorting {
 		margin-bottom: 1em;
-		font-size: 11px;
+		font-size: 13px;
 		line-height: 20px;
 	}
 
@@ -75,6 +75,6 @@ p.sly-table-extras {
 	&-filter {
 		float: right;
 
-		input { width: 150px; }
+		input { width: 150px; padding: 1px; }
 	}
 }

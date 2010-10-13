@@ -47,7 +47,7 @@ if (!self::isDragAndDropMode() && $hasSearch) {
 	$query = sly_get($key, 'string');
 
 	print '<form method="get" action="index.php">';
-	print '<p style="sly-table-extras-filter">Filter: ';
+	print '<p class="sly-table-extras-filter">Filter: ';
 
 	foreach ($_GET as $name => $value) {
 		if ($name != 'p_'.$this->id && $name != $key && is_scalar($value)) {
