@@ -21,8 +21,8 @@ $function    = rex_request('function',    'string');
 $info    = '';
 $warning = '';
 
-require $REX['INCLUDE_PATH'].'/functions/function_rex_category.inc.php';
-require $REX['INCLUDE_PATH'].'/functions/function_rex_content.inc.php';
+require SLY_INCLUDE_PATH.'/functions/function_rex_category.inc.php';
+require SLY_INCLUDE_PATH.'/functions/function_rex_content.inc.php';
 
 // Titel ausgeben
 
@@ -379,7 +379,7 @@ foreach ($categories as $cat)
         $add_td = '<td class="rex-small">'. $i_category_id .'</td>';
       }
 
-      echo '
+	  echo '
         <tr>
           '. $kat_icon_td .'
           '. $add_td .'

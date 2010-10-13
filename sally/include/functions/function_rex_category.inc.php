@@ -87,6 +87,3 @@ $KATout = '
 </ul>
 <!-- *** OUTPUT OF CATEGORY-TOOLBAR - END *** -->
 ';
-
-$KAT = null;
-unset($KAT);

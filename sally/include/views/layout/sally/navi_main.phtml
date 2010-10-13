@@ -15,10 +15,12 @@ print '<dl class="rex-navi">';
 $nav    = sly_Core::getNavigation();
 $groups = $nav->getGroups();
 
-// hide special core pages
+// try to hide special core pages
 
 foreach (array('credits', 'profile', 'content', 'linkmap') as $page) {
-	$nav->find($page)->setHidden(true);
+	$pageObj = $nav->find($page);
+	if($pageObj)
+		$pageObj->setHidden(true);
 }
 
 // integrate addon submenus that were created via the old API

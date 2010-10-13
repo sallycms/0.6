@@ -19,9 +19,8 @@
 // $REX['USER']->isValueOf("rights","csw[0]")
 
 reset($REX['CLANG']);
-$num_clang = count($REX['CLANG']);
 
-if ($num_clang > 1) {
+if (count($REX['CLANG']) > 1) {
 	print '
 <!-- *** OUTPUT OF CLANG-TOOLBAR - START *** -->
 	<div id="rex-clang" class="rex-toolbar">
@@ -68,12 +67,13 @@ if ($num_clang > 1) {
 ';
 
 	if ($stop) {
-		print '
+		/*print '
 <!-- *** OUTPUT OF CLANG-VALIDATE - START *** -->
 '.rex_warning('You have no permission to this area').'
 <!-- *** OUTPUT OF CLANG-VALIDATE - END *** -->
 ';
-		return false;
+		return false;*/
+		throw new sly_Authorisation_Exception('You have no permission to this area');
 	}
 }
 else {
