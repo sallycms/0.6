@@ -122,7 +122,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 		return intval($this->connection->getPDO()->lastInsertId());
 	}
 
-	private function affectedRows() {
+	public function affectedRows() {
 		return $this->statement ? $this->statement->rowCount() : 0;
 	}
 
