@@ -19,7 +19,7 @@ $this->consumeWidgetID();
 	<input type="hidden" name="<?= $this->attributes['id'] ?>" id="REX_MEDIALIST_<?= $id ?>" value="<?= sly_html(implode(',', (array)$this->attributes['value'])) ?>" />
 	<?
 
-	$files  = array_combine($files, $files);
+	$files  = empty($files) ? array() : array_combine($files, $files);
 	$select = new sly_Form_Select_DropDown('MEDIALIST_SELECT['.$id.']', '', null, $files, 'REX_MEDIALIST_SELECT_'.$id);
 
 	$select->setAttribute('size', 8);
