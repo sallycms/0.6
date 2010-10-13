@@ -35,22 +35,16 @@ $global_info      = '';
 
 require $REX['INCLUDE_PATH'].'/functions/function_rex_content.inc.php';
 
-$article = new rex_sql();
-$article->setQuery('SELECT startpage, name, re_id, template FROM #_article a WHERE a.id = '.$article_id.' AND clang = '.$clang, '#_');
+//$article = new rex_sql();
+//$article->setQuery('SELECT startpage, name, re_id, template FROM #_article a WHERE a.id = '.$article_id.' AND clang = '.$clang, '#_');
+$OOArt       = OOArticle::getArticleById($article_id, $clang);
 
-if ($article->getRows() == 1) {
+if (!is_null($OOArt)) {
+	
 	$templateService = sly_Service_Factory::getTemplateService();
 	$moduleService   = sly_Service_Factory::getModuleService();
-	$templateName    = $article->getValue('template');
-
-	// Slot validieren
-	$curSlots = $templateService->getSlots($templateName);
-
-	if (!$templateService->hasSlot($templateName, $slot))
-		$slot = $templateService->getFirstSlot($templateName);
 
 	// Artikel wurde gefunden - Kategorie holen
-	$OOArt       = OOArticle::getArticleById($article_id, $clang);
 	$category_id = $OOArt->getCategoryId();
 
 	// Kategoriepfad und -rechte
@@ -62,14 +56,14 @@ if ($article->getRows() == 1) {
 	if ($REX['PAGE'] == 'content' && $article_id > 0) {
 		$KATout .= '<p>';
 
-		if ($article->getValue('startpage') == 1) {
+		if ($OOArt->isStartPage()) {
 			$KATout .= $I18N->msg('start_article').' : ';
 		}
 		else {
 			$KATout .= $I18N->msg('article').' : ';
 		}
 
-		$catname = str_replace(' ', '&nbsp;', sly_html($article->getValue('name')));
+		$catname = str_replace(' ', '&nbsp;', sly_html($OOArt->getName()));
 
 		$KATout .= '<a href="index.php?page=content&amp;article_id='.$article_id.'&amp;mode=edit&amp;clang='.$clang.'">'.$catname.'</a>';
 		$KATout .= '</p>';
@@ -109,12 +103,21 @@ if ($article->getRows() == 1) {
 	));
 
 	// Rechte prüfen
+	$templateName    = $OOArt->getTemplateName();
 
-	if (!($KATPERM || $REX['USER']->hasPerm('article['.$article_id.']'))) {
+	if(empty($templateName)) {
+		print rex_warning($I18N->msg('content_select_template'));
+	}elseif (!($KATPERM || $REX['USER']->hasPerm('article['.$article_id.']'))) {
 		// keine Rechte
 		print rex_warning($I18N->msg('no_rights_to_edit'));
 	}
 	else {
+		// Slot validieren
+		if (!$templateService->hasSlot($templateName, $slot))
+			$slot = $templateService->getFirstSlot($templateName);
+
+		$curSlots = $templateService->getSlots($templateName);
+
 		// Slice add/edit/delete
 		if (rex_request('save', 'boolean') && in_array($function, array('add', 'edit', 'delete'))) {
 			// check module
