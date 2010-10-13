@@ -335,6 +335,10 @@ addon_hname: Name
 addon_hinstall: Installiert
 addon_hactive: Aktiviert
 addon_hdelete: Entfernen
+addon_hassets: Assets
+addon_reinit_assets: re-initialisieren
+addon_assets_copied: Die Assets wurden kopiert.
+plugin_assets_copied: Die Assets wurden kopiert.
 addon_reinstall: re-installieren
 addon_install: installieren
 addon_notinstalled: nicht installiert

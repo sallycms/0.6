@@ -335,6 +335,10 @@ addon_hname: name
 addon_hinstall: Installed
 addon_hactive: Activated
 addon_hdelete: Delete
+addon_hassets: Assets
+addon_reinit_assets: re-init
+addon_assets_copied: The asset files have been copied.
+plugin_assets_copied: The asset files have been copied.
 addon_reinstall: re-install
 addon_install: install
 addon_notinstalled: 'Not installed'

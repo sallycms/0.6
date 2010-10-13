@@ -94,6 +94,31 @@ abstract class sly_Service_AddOn_Base {
 		return $supportPage;
 	}
 
+	public function copyAssets($addonORplugin) {
+		$addonDir  = $this->baseFolder($addonORplugin);
+		$assetsDir = sly_Util_Directory::join($addonDir, 'assets');
+		$state     = true;
+
+		if (!is_dir($assetsDir)) return true;
+
+		if (!rex_copyDir($assetsDir, $this->publicFolder($addonORplugin), SLY_MEDIAFOLDER)) {
+			$state = t('install_cant_copy_files');
+		}
+		else {
+			$targetDir = new sly_Util_Directory($this->publicFolder($addonORplugin));
+			$files     = $targetDir->listRecursive(false, true);
+
+			foreach ($files as $filename) {
+				if (sly_Util_String::endsWith($filename, '.css')) {
+					$css = sly_Util_Scaffold::process($filename);
+					file_put_contents($filename, $css);
+				}
+			}
+		}
+
+		return $state;
+	}
+
 //	abstract public function install($addonName);         // Installieren
 //	abstract public function uninstall($addonName);       // Deinstallieren
 //	abstract public function activate($addonName);        // Aktivieren

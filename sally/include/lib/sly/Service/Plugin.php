@@ -132,9 +132,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		// Dateien kopieren
 
 		if ($state === true && is_dir($filesDir)) {
-			if (!rex_copyDir($filesDir, $this->publicFolder($plugin), $REX['MEDIAFOLDER'])) {
-				$state = $this->I18N('install_cant_copy_files');
-			}
+			$state = $this->copyAssets($plugin);
 		}
 
 		$state = $this->extend('POST', 'ASSET_COPY', $plugin, $state);

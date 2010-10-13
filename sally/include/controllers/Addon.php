@@ -117,10 +117,11 @@ class sly_Controller_Addon extends sly_Controller_Sally {
 		return $this->index();
 	}
 
-	public function install()    { return $this->call('install', 'installed');      }
-	public function uninstall()  { return $this->call('uninstall', 'uninstalled');  }
-	public function activate()   { return $this->call('activate', 'activated');     }
-	public function deactivate() { return $this->call('deactivate', 'deactivated'); }
+	public function install()    { return $this->call('install', 'installed');        }
+	public function uninstall()  { return $this->call('uninstall', 'uninstalled');    }
+	public function activate()   { return $this->call('activate', 'activated');       }
+	public function deactivate() { return $this->call('deactivate', 'deactivated');   }
+	public function assets()     { return $this->call('copyAssets', 'assets_copied'); }
 
 	public function checkPermission() {
 		global $REX;
