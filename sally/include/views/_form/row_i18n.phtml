@@ -20,8 +20,10 @@ $isEqual      = wv_post('equal__'.$origElement->getDisplayName(), 'boolean', fal
 if (method_exists($element, 'getChecks')) {
 	$values = $element->getChecks();
 }
+else {
+	$origElement->setAttribute('value', reset($values));
+}
 
-$origElement->setAttribute('value', reset($values));
 $equalValue = $origElement->getDisplayValue();
 
 foreach (array_keys($REX['CLANG']) as $clangID) {
@@ -60,7 +62,12 @@ $element = $origElement;
 // print the normal monolingual view
 
 if ($isEqual) {
-	$element->setAttribute('value', reset($values));
+	if (method_exists($element, 'getChecks')) {
+		$element->setChecked(reset($values));
+	}
+	else {
+		$element->setAttribute('value', reset($values));
+	}
 
 	// disable the automatic detection of POST values
 
@@ -71,7 +78,12 @@ if ($isEqual) {
 	$element = $origElement;
 }
 else {
-	$element->setAttribute('value', null);
+	if (method_exists($element, 'getChecks')) {
+		$element->setChecked(false);
+	}
+	else {
+		$element->setAttribute('value', null);
+	}
 }
 
 $rel   = count($REX['CLANG']) == 1 ? '' : $containerID;
