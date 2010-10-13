@@ -57,7 +57,7 @@ if (!SLY_IS_TESTING && $config->get('SETUP')) {
 
 	$I18N = rex_create_lang($REX['LANG']);
 
-	$navigation->addPage('setup', 'setup', false);
+	$navigation->addPage('system', 'setup', false);
 
 	$REX['PAGE']      = 'setup';
 	$_REQUEST['page'] = 'setup';
