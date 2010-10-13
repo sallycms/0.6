@@ -12,12 +12,15 @@
  * @ingroup form
  */
 abstract class sly_Form_Input_Base extends sly_Form_ElementBase implements sly_Form_IElement {
+	protected $annotation;
+
 	public function __construct($name, $label, $value, $id = null, $allowedAttributes = null) {
 		if ($allowedAttributes === null) {
 			$allowedAttributes = array('value', 'name', 'id', 'disabled', 'class', 'maxlength', 'readonly', 'style', 'type');
 		}
 
 		parent::__construct($name, $label, $value, $id, $allowedAttributes);
+		$this->annotation = '';
 	}
 
 	public function render() {
@@ -25,7 +28,7 @@ abstract class sly_Form_Input_Base extends sly_Form_ElementBase implements sly_F
 
 		$this->attributes['value'] = $this->getDisplayValue();
 		$attributeString = $this->getAttributeString();
-		return '<input '.$attributeString.' />';
+		return '<input '.$attributeString.' />'.($this->annotation ? ' '.$this->annotation : '');
 	}
 
 	public function getDisplayValue() {
@@ -54,5 +57,9 @@ abstract class sly_Form_Input_Base extends sly_Form_ElementBase implements sly_F
 
 	public function setSize($size) {
 		$this->setAttribute('size', abs((int) $size));
+	}
+
+	public function setAnnotation($annotation) {
+		$this->annotation = trim($annotation);
 	}
 }
