@@ -18,9 +18,10 @@
 // clang[xx], clang[0]
 // $REX['USER']->isValueOf("rights","csw[0]")
 
-reset($REX['CLANG']);
+$langService = sly_Service_Factory::getService('Language');
+$languages = $langService->find();
 
-if (count($REX['CLANG']) > 1) {
+if (count($languages) > 1) {
 	print '
 <!-- *** OUTPUT OF CLANG-TOOLBAR - START *** -->
 	<div id="rex-clang" class="rex-toolbar">
@@ -31,7 +32,8 @@ if (count($REX['CLANG']) > 1) {
 	$stop = false;
 	$i    = 1;
 
-	foreach ($REX['CLANG'] as $clangID => $clangName) {
+	foreach ($languages as $language) {
+		$clangID = $language->getId();
 		if ($i == 1) {
 			print '<li class="rex-navi-first rex-navi-clang-'.$clangID.'">';
 		}
@@ -39,7 +41,7 @@ if (count($REX['CLANG']) > 1) {
 			print '<li class="rex-navi-clang-'.$clangID.'">';
 		}
 
-		$clangName = rex_translate($clangName); // enthält htmlspecialchars()
+		$clangName = rex_translate($language->getName()); // enthält htmlspecialchars()
 
 		if (!$REX['USER']->hasPerm('admin[]') && !$REX['USER']->hasPerm('clang[all]') && !$REX['USER']->hasPerm('clang['.$clangID.']')) {
 			print '<span class="rex-strike">'.$clangName.'</span>';
@@ -66,12 +68,13 @@ if (count($REX['CLANG']) > 1) {
 <!-- *** OUTPUT OF CLANG-TOOLBAR - END *** -->
 ';
 	if ($stop) {
-		$lang = sly_Service_Factory::getService('Language')->findById($stop);
-		throw new sly_Authorisation_Exception(sprintf(t('authorisation_exception_language_denied'), sly_html($lang->getName())));
+		$lang = $langService->findById($stop);
+		throw new sly_Authorisation_Exception(sprintf(t('authorisation_exception_language_denied'), rex_translate($lang->getName())));
 	}
 }
 else {
 	$clang = 0;
 }
 
-return true;
+unset($langService);
+unset($languages);
