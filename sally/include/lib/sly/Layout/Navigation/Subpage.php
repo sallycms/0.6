@@ -17,6 +17,7 @@ class sly_Layout_Navigation_Subpage {
 	private $popup;
 	private $pageParam;
 	private $parent;
+	private $forceStatus;
 
 	public function __construct(sly_Layout_Navigation_Page $parent, $name, $title = null, $popup = false, $pageParam = null) {
 		$this->setName($name);
@@ -24,6 +25,7 @@ class sly_Layout_Navigation_Subpage {
 		$this->setPopup($popup);
 		$this->setPageParam($pageParam);
 		$this->setParentPage($parent);
+		$this->forceStatus(null);
 	}
 
 	public function getName()       { return $this->name;      }
@@ -35,6 +37,11 @@ class sly_Layout_Navigation_Subpage {
 	public function setName($name) {
 		$this->name = trim($name);
 		return $this->name;
+	}
+
+	public function forceStatus($status) {
+		$this->forceStatus = $status === null ? null : (boolean) $status;
+		return $this->forceStatus;
 	}
 
 	public function setTitle($title = null) {
@@ -57,6 +64,13 @@ class sly_Layout_Navigation_Subpage {
 	}
 
 	public function isActive() {
-		return $this->parent->isActive() && sly_request('subpage', 'string') == $this->pageParam;
+		$forced    = $this->forceStatus;
+		$isPage    = $this->parent->isActive();
+		$isSubpage = sly_request('subpage', 'string') == $this->pageParam;
+
+		if (!$isPage) return false;
+		if ($forced !== null) return $forced;
+
+		return $isSubpage;
 	}
 }

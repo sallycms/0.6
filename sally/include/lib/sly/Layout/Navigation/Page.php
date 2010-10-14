@@ -18,6 +18,7 @@ class sly_Layout_Navigation_Page {
 	private $pageParam;
 	private $hidden;
 	private $subpages;
+	private $forceStatus;
 
 	public function __construct($name, $title = null, $popup = false, $pageParam = null) {
 		$this->setName($name);
@@ -25,12 +26,17 @@ class sly_Layout_Navigation_Page {
 		$this->setPopup($popup);
 		$this->setPageParam($pageParam);
 		$this->setHidden(false);
+		$this->forceStatus(null);
 		$this->subpages = array();
 	}
 
 	public function isActive() {
 		global $REX;
-		return $REX['PAGE'] == $this->pageParam;
+
+		$forced = $this->forceStatus;
+		$isPage = $REX['PAGE'] == $this->pageParam;
+
+		return $forced !== null ? $forced : $isPage;
 	}
 
 	public function getName()      { return $this->name;      }
@@ -43,6 +49,11 @@ class sly_Layout_Navigation_Page {
 	public function setName($name) {
 		$this->name = trim($name);
 		return $this->name;
+	}
+
+	public function forceStatus($status) {
+		$this->forceStatus = $status === null ? null : (boolean) $status;
+		return $this->forceStatus;
 	}
 
 	public function setTitle($title = null) {

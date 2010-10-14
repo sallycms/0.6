@@ -63,7 +63,7 @@ class sly_Layout_Navigation_Sally {
 		return isset($this->groups[$name]) ? $this->groups[$name] : null;
 	}
 
-	private function get($name, $group) {
+	public function get($name, $group) {
 		$pages = $this->groups[$group]->getPages();
 		foreach ($pages as $p) if ($p->getName() == $name) return $p;
 		return null;
