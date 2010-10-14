@@ -58,7 +58,7 @@ define('SLY_DEVELOPFOLDER', SLY_BASE.DIRECTORY_SEPARATOR.'develop');
 // Loader initialisieren
 
 if (empty($REX['NOFUNCTIONS'])) {
-	require_once $REX['INCLUDE_PATH'].'/loader.php';
+	require_once SLY_INCLUDE_PATH.'/loader.php';
 }
 
 // Kernkonfiguration laden
@@ -66,7 +66,7 @@ if (empty($REX['NOFUNCTIONS'])) {
 $config = sly_Core::config();
 $config->loadStatic(SLY_INCLUDE_PATH.'/config/sallyStatic.yml');
 $config->loadLocalConfig();
-$config->loadLocalDefaults($REX['INCLUDE_PATH'].'/config/sallyDefaults.yml');
+$config->loadLocalDefaults(SLY_INCLUDE_PATH.'/config/sallyDefaults.yml');
 $config->loadLocalDefaults(SLY_INCLUDE_PATH.'/config/sallyDefaults.yml');
 $config->loadProjectConfig();
 

@@ -33,14 +33,14 @@ $global_warning   = '';
 $info             = '';
 $global_info      = '';
 
-require $REX['INCLUDE_PATH'].'/functions/function_rex_content.inc.php';
+require SLY_INCLUDE_PATH.'/functions/function_rex_content.inc.php';
 
 //$article = new rex_sql();
 //$article->setQuery('SELECT startpage, name, re_id, template FROM #_article a WHERE a.id = '.$article_id.' AND clang = '.$clang, '#_');
 $OOArt       = OOArticle::getArticleById($article_id, $clang);
 
 if (!is_null($OOArt)) {
-	
+
 	$templateService = sly_Service_Factory::getTemplateService();
 	$moduleService   = sly_Service_Factory::getModuleService();
 

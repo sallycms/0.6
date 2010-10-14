@@ -41,7 +41,7 @@ if (!SLY_IS_TESTING && $config->get('SETUP')) {
 	$REX['LANGUAGES'] = array();
 
 	$requestLang = sly_request('lang', 'string');
-	$langpath    = $REX['INCLUDE_PATH'].'/lang';
+	$langpath    = SLY_INCLUDE_PATH.'/lang';
 	$languages   = glob($langpath.'/*.lang');
 
 	if ($languages) {
@@ -126,7 +126,7 @@ if (!$config->get('SETUP')) {
 
 // AddOns einbinden
 
-require_once $REX['INCLUDE_PATH'].'/addons.inc.php';
+require_once SLY_INCLUDE_PATH.'/addons.inc.php';
 
 if ($REX['USER']) {
 	// Core-Seiten initialisieren
