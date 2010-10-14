@@ -1,7 +1,7 @@
 SETUP: true
 SERVER: sallycms.de
-SERVERNAME: webvariants-Projekt
-ERROR_EMAIL: webadmin@webvariants.de
+SERVERNAME: SallyCMS-Projekt
+ERROR_EMAIL: webadmin@sallycms.de
 INSTNAME: sly20100511212501
 MYSQL_VERSION: null
 START_ARTICLE_ID: 1
