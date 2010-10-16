@@ -1,4 +1,4 @@
-## Sally Database Dump Version 0
+## Sally Database Dump Version 0.3
 ## Prefix sly_
 ## Charset utf-8
 

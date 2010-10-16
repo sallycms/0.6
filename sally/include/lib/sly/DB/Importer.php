@@ -101,7 +101,7 @@ class sly_DB_Importer {
 
 	protected function checkVersion() {
 		$dumpVersion = $this->dump->getVersion();
-		$thisVersion = sly_Core::getVersion('X');
+		$thisVersion = sly_Core::getVersion('X.Y');
 
 		if ($dumpVersion === false || $dumpVersion != $thisVersion) {
 			$this->returnValues['message'] = t('importer_no_valid_import_file_version', $dumpVersion, $thisVersion);
