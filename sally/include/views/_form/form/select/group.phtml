@@ -20,7 +20,7 @@
 			'type'    => $type,
 			'value'   => $key,
 			'id'      => $id,
-			'name'    => $this->attributes['name'].'[]',
+			'name'    => $this->attributes['name'].($type == 'radio' ? '' : '[]'),
 			'checked' => $checked ? 'checked' : '',
 			'class'   => 'rex-chckbx',
 			'style'   => isset($this->attributes['style']) ? $this->attributes['style'] : ''

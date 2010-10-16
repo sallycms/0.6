@@ -20,4 +20,8 @@ class sly_Form_Select_Radio extends sly_Form_Select_Base implements sly_Form_IEl
 	public function render() {
 		return $this->renderFilename('form/select/radio.phtml');
 	}
+
+	public function getDisplayValue() {
+		return $this->getDisplayValueHelper('string', false);
+	}
 }
