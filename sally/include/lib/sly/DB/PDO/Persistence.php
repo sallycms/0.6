@@ -108,7 +108,8 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 		$tables = array();
 
 		foreach ($this as $row) {
-			$tables[] = reset(array_values($row));
+			$values = array_values($row);
+			$tables[] = reset($values);
 		}
 
 		if (is_string($find)) {
