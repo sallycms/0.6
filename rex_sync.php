@@ -137,7 +137,7 @@ class RedaxoSync
 			}
 		}
 		else {
-			self::debug($location.' is not a directory');
+			self::debug($location.' is not a directory', true);
 		}
 	}
 

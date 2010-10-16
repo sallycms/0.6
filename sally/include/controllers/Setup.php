@@ -110,7 +110,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 				$this->initdb();
 				return;
 			}
-			catch (sly_DB_PDO_Exception $e) {
+			catch (PDOException $e) {
 				$this->warning = $e->getMessage();
 			}
 		}
