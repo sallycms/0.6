@@ -11,35 +11,55 @@
 /**
  * @ingroup core
  */
-class sly_Loader
-{
-	protected static $loadPaths = array();
+class sly_Loader {
+	protected static $loadPaths       = array();
+	protected static $counter         = 0;
+	protected static $pathHash        = 0;
+	protected static $pathCache       = array();
+	protected static $enablePathCache = true;
 
-	public static function addLoadPath($path, $hiddenPrefix = '')
-	{
+	public static function enablePathCache($flag = true) {
+		self::$enablePathCache = (boolean) $flag;
+	}
+
+	public static function addLoadPath($path, $hiddenPrefix = '') {
 		$path = realpath($path);
 
 		if ($path) {
 			$path = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 			self::$loadPaths[$path] = $hiddenPrefix;
+
+			if (self::$enablePathCache) {
+				self::$pathHash = md5(json_encode(self::$loadPaths));
+
+				// import path cache
+
+				$dir      = SLY_DYNFOLDER.'/internal/sally/loader';
+				$filename = $dir.'/'.self::$pathHash.'.json';
+
+				if (!is_dir($dir)) {
+					@mkdir($dir, 0777);
+				}
+
+				if (file_exists($filename)) {
+					self::$pathCache = array_merge(self::$pathCache, json_decode(file_get_contents($filename), true));
+				}
+			}
 		}
 	}
 
-	public static function register()
-	{
+	public static function register() {
 		if (function_exists('spl_autoload_register')) {
 			spl_autoload_register(array('sly_Loader', 'loadClass'));
 		}
 		else {
-			function __autoload($className)
-			{
+			function __autoload($className) {
 				self::loadClass($className);
 			}
 		}
 	}
 
-	public static function loadClass($className)
-	{
+	public static function loadClass($className) {
 		global $REX; // für Code, der direkt beim Include ausgeführt wird.
 
 		if (class_exists($className, false)) {
@@ -49,26 +69,40 @@ class sly_Loader
 		$found = false;
 		$upper = strtoupper($className);
 
-		foreach (self::$loadPaths as $path => $prefix) {
-			// Präfix vom Klassennamen abschneiden, wenn Klasse damit beginnt.
+		if (isset(self::$pathCache[$className])) {
+			$fullPath = self::$pathCache[$className];
+			$found    = true;
+		}
+		else {
+			foreach (self::$loadPaths as $path => $prefix) {
+				// Präfix vom Klassennamen abschneiden, wenn Klasse damit beginnt.
 
-			if (!empty($prefix) && strpos($upper, strtoupper($prefix)) === 0) {
-				$shortClass = substr($className, strlen($prefix));
-			}
-			else {
-				$shortClass = $className;
-			}
+				if (!empty($prefix) && strpos($upper, strtoupper($prefix)) === 0) {
+					$shortClass = substr($className, strlen($prefix));
+				}
+				else {
+					$shortClass = $className;
+				}
 
-			$file     = str_replace('_', DIRECTORY_SEPARATOR, $shortClass).'.php';
-			$fullPath = $path.DIRECTORY_SEPARATOR.$file;
+				$file     = str_replace('_', DIRECTORY_SEPARATOR, $shortClass).'.php';
+				$fullPath = $path.DIRECTORY_SEPARATOR.$file;
 
-			// file_exists + !is_dir is faster than calling is_file and since we
-			// do not care whether the file really has a class in it, we can skip
-			// this check.
+				// file_exists + !is_dir is faster than calling is_file and since we
+				// do not care whether the file really has a class in it, we can skip
+				// this check.
 
-			if (file_exists($fullPath) && !is_dir($fullPath)) {
-				$found = true;
-				break;
+				if (file_exists($fullPath) && !is_dir($fullPath)) {
+					$found = true;
+
+					if (self::$enablePathCache) {
+						// update path cache file
+						self::$pathCache[$className] = $fullPath;
+						$filename = SLY_DYNFOLDER.'/internal/sally/loader/'.self::$pathHash.'.json';
+						file_put_contents($filename, json_encode(self::$pathCache));
+					}
+
+					break;
+				}
 			}
 		}
 
@@ -83,12 +117,22 @@ class sly_Loader
 					break;
 			}
 
+			++self::$counter;
 			return $fullPath;
 		}
 
 		$dispatcher = sly_Core::dispatcher();
 		$dispatcher->notifyUntil('__AUTOLOAD', $className);
 
-		return class_exists($className, false);
+		if (class_exists($className, false)) {
+			++self::$counter;
+			return true;
+		}
+
+		return false;
+	}
+
+	public static function getClassCount() {
+		return self::$counter;
 	}
 }

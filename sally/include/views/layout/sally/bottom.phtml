@@ -8,8 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$usage = function_exists('memory_get_peak_usage') ? memory_get_peak_usage() : memory_get_usage();
-$usage = sly_Util_String::formatFilesize($usage);
+$usage  = function_exists('memory_get_peak_usage') ? memory_get_peak_usage() : memory_get_usage();
+$usage  = sly_Util_String::formatFilesize($usage);
+$usage .= ' in '.sly_Loader::getClassCount().' Klassen';
 
 ?>
 			<!-- wegen dem bescheuerten rex_title hier ein schließendes div -->
