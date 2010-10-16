@@ -70,6 +70,10 @@ class sly_Form_Fieldset {
 		$this->elements = array();
 	}
 
+	public function getRows() {
+		return $this->rows;
+	}
+
 	public function getNum() {
 		return $this->num;
 	}
