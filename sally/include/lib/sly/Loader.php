@@ -98,7 +98,7 @@ class sly_Loader {
 
 					if (self::$enablePathCache) {
 						// update path cache file
-						self::$pathCache[$className] = $fullPath;
+						self::$pathCache[$className] = realpath($fullPath);
 						$filename = SLY_DYNFOLDER.'/internal/sally/loader/'.self::$pathHash.'.php';
 						file_put_contents($filename, '<?php $config = '.var_export(self::$pathCache, true).';');
 					}
