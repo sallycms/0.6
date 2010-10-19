@@ -16,10 +16,11 @@ class sly_Loader {
 	protected static $counter         = 0;
 	protected static $pathHash        = 0;
 	protected static $pathCache       = array();
-	protected static $enablePathCache = true;
+	protected static $enablePathCache = false;
 
 	public static function enablePathCache($flag = true) {
 		self::$enablePathCache = (boolean) $flag;
+		self::$pathHash        = $flag ? md5(json_encode(self::$loadPaths)) : 0;
 	}
 
 	public static function addLoadPath($path, $hiddenPrefix = '') {
@@ -35,14 +36,15 @@ class sly_Loader {
 				// import path cache
 
 				$dir      = SLY_DYNFOLDER.'/internal/sally/loader';
-				$filename = $dir.'/'.self::$pathHash.'.json';
+				$filename = $dir.'/'.self::$pathHash.'.php';
 
 				if (!is_dir($dir)) {
 					@mkdir($dir, 0777);
 				}
 
 				if (file_exists($filename)) {
-					self::$pathCache = array_merge(self::$pathCache, json_decode(file_get_contents($filename), true));
+					include $filename;
+					self::$pathCache = array_merge(self::$pathCache, $config);
 				}
 			}
 		}
@@ -97,8 +99,8 @@ class sly_Loader {
 					if (self::$enablePathCache) {
 						// update path cache file
 						self::$pathCache[$className] = $fullPath;
-						$filename = SLY_DYNFOLDER.'/internal/sally/loader/'.self::$pathHash.'.json';
-						file_put_contents($filename, json_encode(self::$pathCache));
+						$filename = SLY_DYNFOLDER.'/internal/sally/loader/'.self::$pathHash.'.php';
+						file_put_contents($filename, '<?php $config = '.var_export(self::$pathCache, true).';');
 					}
 
 					break;

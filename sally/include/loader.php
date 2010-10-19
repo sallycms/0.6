@@ -15,6 +15,7 @@ sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/lib/sfYaml');
 sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/controllers', 'sly_Controller_');
 sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/layout', 'sly_Layout_');
 sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/lib/rex/oo', 'OO');
+sly_Loader::enablePathCache();
 sly_Loader::register();
 
 require_once SLY_INCLUDE_PATH.'/lib/compatibility.php';
