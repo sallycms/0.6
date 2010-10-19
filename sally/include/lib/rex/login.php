@@ -12,8 +12,7 @@
  *
  * @ingroup redaxo
  */
-class rex_login
-{
+class rex_login {
 	/* Elemente sind public, da wir nicht sicher wissen, von wo auf sie zugegriffen wird. */
 
 	public $DB;
@@ -31,8 +30,7 @@ class rex_login
 
 	private $slyUser;
 
-	public function __construct()
-	{
+	public function __construct() {
 		$this->DB           = 1;
 		$this->logout       = false;
 		$this->message      = '';
@@ -47,16 +45,14 @@ class rex_login
 	 * Setzt, ob die Ergebnisse der Login-Abfrage
 	 * pro Seitenaufruf gecached werden sollen
 	 */
-	public function setCache($status = true)
-	{
+	public function setCache($status = true) {
 		$this->cache = (boolean) $status;
 	}
 
 	/**
 	 * Setzt die Id der zu verwendenden SQL Connection
 	 */
-	public function setSqlDb($DB)
-	{
+	public function setSqlDb($DB) {
 		$this->DB = (int) $DB;
 	}
 
@@ -64,37 +60,35 @@ class rex_login
 	 * Setzt eine eindeutige System Id, damit mehrere
 	 * Sessions auf der gleichen Domain unterschieden werden können
 	 */
-	public function setSysID($system_id)
-	{
+	public function setSysID($system_id) {
 		$this->system_id = $system_id;
 	}
 
 	/**
 	 * Setzt das Session Timeout
 	 */
-	public function setSessiontime($session_duration)
-	{
+	public function setSessiontime($session_duration) {
 		$this->session_duration = $session_duration;
 	}
 
 	/**
 	 * Setzt den Login
 	 */
-	public function setLogin($usr_login) { $this->usr_login = $usr_login; }
+	public function setLogin($usr_login) {
+		$this->usr_login = $usr_login;
+	}
 
 	/**
 	 * Markiert die aktuelle Session als ausgeloggt
 	 */
-	public function setLogout($logout)
-	{
+	public function setLogout($logout) {
 		$this->logout = (boolean) $logout;
 	}
 
 	/**
 	 * Prüft, ob die aktuelle Session ausgeloggt ist
 	 */
-	public function isLoggedOut()
-	{
+	public function isLoggedOut() {
 		return $this->logout;
 	}
 
@@ -104,8 +98,7 @@ class rex_login
 	 * Dieser wird benutzt, um einen bereits eingeloggten User
 	 * im Verlauf seines Aufenthaltes auf der Webseite zu verifizieren
 	 */
-	public function setUserquery($user_query)
-	{
+	public function setUserquery($user_query) {
 		$this->user_query = $user_query;
 	}
 
@@ -115,24 +108,21 @@ class rex_login
 	 * Dieser wird benutzt, um den eigentlichne Loginvorgang durchzuführen.
 	 * Hier wird das eingegebene Password und der Login eingesetzt.
 	 */
-	public function setLoginquery($login_query)
-	{
+	public function setLoginquery($login_query) {
 		$this->login_query = $login_query;
 	}
 
 	/**
 	 * Setzt den Namen der Spalte, der die User-Id enthält
 	 */
-	public function setUserID($uid)
-	{
+	public function setUserID($uid) {
 		$this->uid = $uid;
 	}
 
 	/**
 	 * Setzt einen Meldungstext
 	 */
-	public function setMessage($message)
-	{
+	public function setMessage($message) {
 		$this->message = $message;
 	}
 
@@ -142,11 +132,8 @@ class rex_login
 	 *
 	 * @return boolean  true bei Erfolg, sonst false
 	 */
-	public function checkLogin($password)
-	{
-		global $REX, $I18N;
-
-		if (!is_object($I18N)) $I18N = rex_create_lang();
+	public function checkLogin($password) {
+		global $REX;
 
 		// wenn logout dann header schreiben und auf error seite verweisen
 
@@ -169,9 +156,9 @@ class rex_login
 
 			$user    = $this->getUser();
 			$service = sly_Service_Factory::getService('User');
+			$error   = !$user;
 
-			$error = false;
-			if ($service->checkPassword($user, $password)) {
+			if (!$error && $service->checkPassword($user, $password)) {
 				$this->USER->setQuery($query);
 
 				if ($this->USER->getRows() == 1) {
@@ -183,7 +170,7 @@ class rex_login
 			}
 
 			if ($error) {
-				$this->message = $I18N->msg('login_error', '<strong>'.$REX['RELOGINDELAY'].'</strong>');
+				$this->message = t('login_error', '<strong>'.$REX['RELOGINDELAY'].'</strong>');
 				$this->setSessionVar('UID', '');
 			}
 		}
@@ -202,11 +189,11 @@ class rex_login
 					$this->setSessionVar('UID', $this->USER->getValue($this->uid));
 				}
 				else {
-					$this->message = $I18N->msg('login_session_expired');
+					$this->message = t('login_session_expired');
 				}
 			}
 			else {
-				$this->message = $I18N->msg('login_user_not_found');
+				$this->message = t('login_user_not_found');
 			}
 		}
 		else {
@@ -230,35 +217,21 @@ class rex_login
 	/**
 	 * Gibt einen Benutzer-spezifischen Wert zurück
 	 */
-	public function getValue($value, $default = NULL)
-	{
+	public function getValue($value, $default = NULL) {
 		return $this->USER ? $this->USER->getValue($value) : $default;
-	}
-
-	/**
-	 * Setzt eine Passwort-Funktion
-	 *
-	 * @deprecated  Zum Hashen von Passwörtern sollte immer
-	 *              sly_Service_User::hashPassword() verwendet werden.
-	 */
-	public function setPasswordFunction($pswfunc)
-	{
-		/* nichts tun */
 	}
 
 	/**
 	 * Setzte eine Session-Variable
 	 */
-	public function setSessionVar($varname, $value)
-	{
+	public function setSessionVar($varname, $value) {
 		$_SESSION[$this->system_id][$varname] = $value;
 	}
 
 	/**
 	 * Gibt den Wert einer Session-Variable zurück
 	 */
-	public function getSessionVar($varname, $default = '')
-	{
+	public function getSessionVar($varname, $default = '') {
 		if (SLY_IS_TESTING) {
 			if ($varname == 'UID')   return SLY_TESTING_USER_ID;
 			if ($varname == 'STAMP') return time()-10; // vor 10 Sekunden
@@ -274,8 +247,7 @@ class rex_login
 	/**
 	 * Session fixation
 	 */
-	public function sessionFixation()
-	{
+	public function sessionFixation() {
 		if (version_compare(phpversion(), '5.1.0', '>=')) {
 			session_regenerate_id(true);
 		}
@@ -288,5 +260,4 @@ class rex_login
 		if (empty($this->slyUser)) $this->slyUser = sly_Service_Factory::getService('User')->findByLogin($this->usr_login);
 		return $this->slyUser;
 	}
-
 }
