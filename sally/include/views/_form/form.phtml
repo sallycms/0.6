@@ -8,13 +8,21 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$id  = $this->id ? ' id="'.sly_html($this->id).'"' : '';
-$enc = $this->enctype ? ' enctype="'.sly_html($this->enctype).'"' : '';
+$attributes = array(
+	'class'   => implode(' ', $this->classes),
+	'method'  => strtolower($this->method),
+	'action'  => $this->action,
+	'id'      => $this->id,
+	'enctype' => $this->enctype
+);
+
 ?>
 
 <div class="rex-addon-output-v2">
 	<div class="rex-form sly-form">
-		<form method="<?= strtolower($this->method) ?>" action="<?= sly_html($this->action) ?>"<?= $id.$enc ?>>
+		<? if (!$omitFormTag): ?>
+		<form <?= sly_Util_HTML::buildAttributeString($attributes) ?>>
+		<? endif ?>
 			<? if (!empty($this->hiddenValues)): ?>
 			<div>
 				<?php
@@ -40,7 +48,9 @@ $enc = $this->enctype ? ' enctype="'.sly_html($this->enctype).'"' : '';
 				$fieldset->render();
 			}
 			?>
+		<? if (!$omitFormTag): ?>
 		</form>
+		<? endif ?>
 	</div>
 </div>
 

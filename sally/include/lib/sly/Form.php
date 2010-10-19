@@ -17,6 +17,7 @@ class sly_Form extends sly_Form_Base {
 	protected $title;
 	protected $name;
 	protected $id;
+	protected $classes;
 	protected $enctype;
 	protected $submitButton;
 	protected $resetButton;
@@ -34,6 +35,7 @@ class sly_Form extends sly_Form_Base {
 		$this->name     = $name;
 		$this->id       = $id;
 		$this->enctype  = false;
+		$this->classes  = array();
 
 		$this->submitButton    = new sly_Form_Input_Button('submit', 'submit', 'Speichern');
 		$this->resetButton     = new sly_Form_Input_Button('reset', 'reset', 'Zurücksetzen');
@@ -97,7 +99,7 @@ class sly_Form extends sly_Form_Base {
 		$this->buttonClasses[$type]   = array_unique($this->buttonClasses[$type]);
 	}
 
-	public function render($print = true) {
+	public function render($print = true, $omitFormTag = false) {
 		$viewRoot = SLY_INCLUDE_PATH.'/views/_form/';
 
 		if (!$print) ob_start();
@@ -116,5 +118,20 @@ class sly_Form extends sly_Form_Base {
 
 	public function getCurrentFieldset() {
 		return $this->currentFieldset;
+	}
+
+	public function addClass($class) {
+		$class = explode(' ', $class);
+		foreach ($class as $c) $this->classes[] = $c;
+		$this->classes = array_unique($this->classes);
+		return $this->classes;
+	}
+
+	public function clearClasses() {
+		$this->classes = array();
+	}
+
+	public function getClasses() {
+		return $this->classes;
 	}
 }
