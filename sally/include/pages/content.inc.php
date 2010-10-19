@@ -57,10 +57,10 @@ if (!is_null($OOArt)) {
 		$KATout .= '<p>';
 
 		if ($OOArt->isStartPage()) {
-			$KATout .= $I18N->msg('start_article').' : ';
+			$KATout .= t('start_article').' : ';
 		}
 		else {
-			$KATout .= $I18N->msg('article').' : ';
+			$KATout .= t('article').' : ';
 		}
 
 		$catname = str_replace(' ', '&nbsp;', sly_html($OOArt->getName()));
@@ -71,7 +71,7 @@ if (!is_null($OOArt)) {
 
 	// Titel anzeigen
 
-	rex_title($I18N->msg('content'), $KATout);
+	rex_title(t('content'), $KATout);
 
 	// Request Parameter
 
@@ -103,23 +103,30 @@ if (!is_null($OOArt)) {
 	));
 
 	// Rechte prüfen
-	$templateName    = $OOArt->getTemplateName();
+	$templateName = $OOArt->getTemplateName();
 
-	if(empty($templateName)) {
-		print rex_warning($I18N->msg('content_select_template'));
-	}elseif (!($KATPERM || $REX['USER']->hasPerm('article['.$article_id.']'))) {
+	/*if (empty($templateName)) {
+		print rex_warning(t('content_select_template'));
+	}
+	else*/if (!($KATPERM || $REX['USER']->hasPerm('article['.$article_id.']'))) {
 		// keine Rechte
-		print rex_warning($I18N->msg('no_rights_to_edit'));
+		print rex_warning(t('no_rights_to_edit'));
 	}
 	else {
-		// Slot validieren
-		if (!$templateService->hasSlot($templateName, $slot))
-			$slot = $templateService->getFirstSlot($templateName);
+		$slot        = false;
+		$hasTemplate = !empty($templateName);
 
-		$curSlots = $templateService->getSlots($templateName);
+		// validate slot
+
+		if ($hasTemplate && !$templateService->hasSlot($templateName, $slot)) {
+			$slot = $templateService->getFirstSlot($templateName);
+		}
+
+		$curSlots = $hasTemplate ? $templateService->getSlots($templateName) : false;
 
 		// Slice add/edit/delete
-		if (rex_request('save', 'boolean') && in_array($function, array('add', 'edit', 'delete'))) {
+
+		if ($hasTemplate && sly_request('save', 'boolean') && in_array($function, array('add', 'edit', 'delete'))) {
 			// check module
 
 			if ($function == 'edit' || $function == 'delete') {
@@ -130,19 +137,19 @@ if (!is_null($OOArt)) {
 			}
 
 			if (!$moduleService->exists($module)) {
-				$global_warning = $I18N->msg('module_not_found');
+				$global_warning = t('module_not_found');
 				$slice_id       = '';
 				$function       = '';
 			}
 			else {
 				// Rechte am Modul
 				if (!$templateService->hasModule($templateName, $module, $slot)) {
-					$global_warning = $I18N->msg('no_rights_to_this_function');
+					$global_warning = t('no_rights_to_this_function');
 					$slice_id       = '';
 					$function       = '';
 				}
 				elseif (!($REX['USER']->isAdmin() || $REX['USER']->hasPerm('module['.$module.']') || $REX['USER']->hasPerm('module[0]'))) {
-					$global_warning = $I18N->msg('no_rights_to_this_function');
+					$global_warning = t('no_rights_to_this_function');
 					$slice_id       = '';
 					$function       = '';
 				}
@@ -172,10 +179,10 @@ if (!is_null($OOArt)) {
 							$warning = $action_message;
 						}
 						elseif ($function == 'delete') {
-							$warning = $I18N->msg('slice_deleted_error');
+							$warning = t('slice_deleted_error');
 						}
 						else {
-							$warning = $I18N->msg('slice_saved_error');
+							$warning = t('slice_saved_error');
 						}
 					}
 					else {
@@ -215,7 +222,7 @@ if (!is_null($OOArt)) {
 								$newsql->addGlobalUpdateFields();
 
 								if ($newsql->update()) {
-									$info = $action_message.$I18N->msg('block_updated');
+									$info = $action_message.t('block_updated');
 								}
 								else {
 									$warning = $action_message.$newsql->getError();
@@ -238,7 +245,7 @@ if (!is_null($OOArt)) {
 											id != '.$last_id;
 
 									if ($newsql->setQuery($query, '#_')) {
-										$info     = $action_message.$I18N->msg('block_added');
+										$info     = $action_message.t('block_added');
 									}
 
 									$function = '';
@@ -254,10 +261,10 @@ if (!is_null($OOArt)) {
 							// make delete
 
 							if (rex_deleteSlice($slice_id)) {
-								$global_info = $I18N->msg('block_deleted');
+								$global_info = t('block_deleted');
 							}
 							else {
-								$global_warning = $I18N->msg('block_not_deleted');
+								$global_warning = t('block_not_deleted');
 							}
 						}
 						// ----- / SAVE SLICE
@@ -292,19 +299,19 @@ if (!is_null($OOArt)) {
 		}
 
 		// END: Slice add/edit/delete
-		if($mode == 'meta'){
+		if ($mode == 'meta') {
 			// START: ARTICLE2STARTARTICLE
 
-			if (rex_post('article2startpage', 'string')) {
+			if (sly_post('article2startpage', 'string')) {
 				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('article2startpage[]')) {
 					if (rex_article2startpage($article_id)) {
-						$info = $I18N->msg('content_tostartarticle_ok');
+						$info = t('content_tostartarticle_ok');
 						while (ob_get_level()) ob_end_clean();
 						header('Location: index.php?page=content&mode=meta&clang='.$clang.'&slot='.$slot.'&article_id='.$article_id.'&info='.urlencode($info));
 						exit;
 					}
 					else {
-						$warning = $I18N->msg('content_tostartarticle_failed');
+						$warning = t('content_tostartarticle_failed');
 					}
 				}
 			}
@@ -312,16 +319,16 @@ if (!is_null($OOArt)) {
 			// END: ARTICLE2STARTARTICLE
 			// START: COPY LANG CONTENT
 
-			if (rex_post('copycontent', 'string')) {
+			if (sly_post('copycontent', 'string')) {
 				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('copyContent[]')) {
-					$clang_a = rex_post('clang_a', 'rex-clang-id');
-					$clang_b = rex_post('clang_b', 'rex-clang-id');
+					$clang_a = sly_post('clang_a', 'rex-clang-id');
+					$clang_b = sly_post('clang_b', 'rex-clang-id');
 
 					if (rex_copyContent($article_id, $article_id, $clang_a, $clang_b)) {
-						$info = $I18N->msg('content_contentcopy');
+						$info = t('content_contentcopy');
 					}
 					else {
-						$warning = $I18N->msg('content_errorcopy');
+						$warning = t('content_errorcopy');
 					}
 				}
 			}
@@ -329,74 +336,74 @@ if (!is_null($OOArt)) {
 			// END: COPY LANG CONTENT
 			// START: MOVE ARTICLE
 
-			if (rex_post('movearticle', 'string') && $category_id != $article_id) {
-				$category_id_new = rex_post('category_id_new', 'rex-category-id');
+			if (sly_post('movearticle', 'string') && $category_id != $article_id) {
+				$category_id_new = sly_post('category_id_new', 'rex-category-id');
 
 				if ($REX['USER']->isAdmin() || ($REX['USER']->hasPerm('moveArticle[]') && ($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('csw['.$category_id_new.']')))) {
 					if (rex_moveArticle($article_id, $category_id, $category_id_new)) {
-						$info = $I18N->msg('content_articlemoved');
+						$info = t('content_articlemoved');
 						while (ob_get_level()) ob_end_clean();
 						header('Location: index.php?page=content&article_id='.$article_id.'&mode=meta&clang='.$clang.'&slot='.$slot.'&info='.urlencode($info));
 						exit;
 					}
 					else {
-						$warning = $I18N->msg('content_errormovearticle');
+						$warning = t('content_errormovearticle');
 					}
 				}
 				else {
-					$warning = $I18N->msg('no_rights_to_this_function');
+					$warning = t('no_rights_to_this_function');
 				}
 			}
 
 			// END: MOVE ARTICLE
 			// START: COPY ARTICLE
 
-			if (rex_post('copyarticle', 'string')) {
-				$category_copy_id_new = rex_post('category_copy_id_new', 'rex-category-id');
+			if (sly_post('copyarticle', 'string')) {
+				$category_copy_id_new = sly_post('category_copy_id_new', 'rex-category-id');
 
 				if ($REX['USER']->isAdmin() || ($REX['USER']->hasPerm('copyArticle[]') && ($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('csw['.$category_copy_id_new.']')))) {
 					if (($new_id = rex_copyArticle($article_id, $category_copy_id_new)) !== false) {
-						$info = $I18N->msg('content_articlecopied');
+						$info = t('content_articlecopied');
 						while (ob_get_level()) ob_end_clean();
 						header('Location: index.php?page=content&article_id='.$new_id.'&mode=meta&clang='.$clang.'&slot='.$slot.'&info='.urlencode($info));
 						exit;
 					}
 					else {
-						$warning = $I18N->msg('content_errorcopyarticle');
+						$warning = t('content_errorcopyarticle');
 					}
 				}
 				else {
-					$warning = $I18N->msg('no_rights_to_this_function');
+					$warning = t('no_rights_to_this_function');
 				}
 			}
 
 			// END: COPY ARTICLE
 			// START: MOVE CATEGORY
 
-			if (rex_post('movecategory', 'string')) {
-				$category_id_new = rex_post('category_id_new', 'rex-category-id');
+			if (sly_post('movecategory', 'string')) {
+				$category_id_new = sly_post('category_id_new', 'rex-category-id');
 
 				if ($REX['USER']->isAdmin() || ($REX['USER']->hasPerm('moveCategory[]') && (($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('csw['.$category_id.']')) && ($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('csw['.$category_id_new.']'))))) {
 					if ($category_id != $category_id_new && rex_moveCategory($category_id, $category_id_new)) {
-						$info = $I18N->msg('category_moved');
+						$info = t('category_moved');
 						while (ob_get_level()) ob_end_clean();
 						header('Location: index.php?page=content&article_id='.$category_id.'&mode=meta&clang='.$clang.'&slot='.$slot.'&info='.urlencode($info));
 						exit;
 					}
 					else {
-						$warning = $I18N->msg('content_error_movecategory');
+						$warning = t('content_error_movecategory');
 					}
 				}
 				else {
-					$warning = $I18N->msg('no_rights_to_this_function');
+					$warning = t('no_rights_to_this_function');
 				}
 			}
 
 			// END: MOVE CATEGORY
 			// START: SAVE METADATA
 
-			if (rex_post('savemeta', 'string')) {
-				$meta_article_name = rex_post('meta_article_name', 'string');
+			if (sly_post('savemeta', 'string')) {
+				$meta_article_name = sly_post('meta_article_name', 'string');
 
 				$meta_sql = new rex_sql();
 				$meta_sql->setTable('article', true);
@@ -405,9 +412,7 @@ if (!is_null($OOArt)) {
 				$meta_sql->addGlobalUpdateFields();
 
 				if ($meta_sql->update()) {
-					$article->setQuery('SELECT * FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE id = '.$article_id.' AND clang = '.$clang);
-
-					$info     = $I18N->msg('metadata_updated');
+					$info     = t('metadata_updated');
 					$meta_sql = null;
 
 					rex_deleteCacheArticle($article_id, $clang);
@@ -427,11 +432,11 @@ if (!is_null($OOArt)) {
 		}
 		// START: CONTENT HEAD MENUE
 
-		$numSlots = count($curSlots);
+		$numSlots = $hasTemplate ? count($curSlots) : 0;
 		$slotMenu = '';
 
 		if ($numSlots > 0) {
-			$listElements = array($I18N->msg($numSlots > 1 ? 'content_types' : 'content_type').' : ');
+			$listElements = array(t($numSlots > 1 ? 'content_types' : 'content_type').' : ');
 
 			foreach ($curSlots as $tmpSlot) {
 				$class = ($tmpSlot == $slot && $mode == 'edit') ? ' class="rex-active"' : '';
@@ -474,15 +479,15 @@ if (!is_null($OOArt)) {
 		$baseURL      = 'index.php?page=content&amp;article_id='.$article_id.'&amp;clang='.$clang.'&amp;slot='.$slot;
 
 		if ($mode == 'edit') {
-			$listElements[] = '<a href="'.$baseURL.'&amp;mode=edit" class="rex-active"'.rex_tabindex().'>'.$I18N->msg('edit_mode').'</a>';
-			$listElements[] = '<a href="'.$baseURL.'&amp;mode=meta"'.rex_tabindex().'>'.$I18N->msg('metadata').'</a>';
+			$listElements[] = '<a href="'.$baseURL.'&amp;mode=edit" class="rex-active">'.t('edit_mode').'</a>';
+			$listElements[] = '<a href="'.$baseURL.'&amp;mode=meta">'.t('metadata').'</a>';
 		}
 		else {
-			$listElements[] = '<a href="'.$baseURL.'&amp;mode=edit"'.rex_tabindex().'>'.$I18N->msg('edit_mode').'</a>';
-			$listElements[] = '<a href="'.$baseURL.'&amp;mode=meta" class="rex-active"'.rex_tabindex().'>'.$I18N->msg('metadata').'</a>';
+			$listElements[] = '<a href="'.$baseURL.'&amp;mode=edit">'.t('edit_mode').'</a>';
+			$listElements[] = '<a href="'.$baseURL.'&amp;mode=meta" class="rex-active">'.t('metadata').'</a>';
 		}
 
-		$listElements[] = '<a href="../'.$REX['FRONTEND_FILE'].'?article_id='.$article_id.'&amp;clang='.$clang.'" onclick="window.open(this.href); return false;" '.rex_tabindex().'>'.$I18N->msg('show').'</a>';
+		$listElements[] = '<a href="../'.$REX['FRONTEND_FILE'].'?article_id='.$article_id.'&amp;clang='.$clang.'" onclick="window.open(this.href); return false;" '.rex_tabindex().'>'.t('show').'</a>';
 
 		$listElements = rex_register_extension_point('PAGE_CONTENT_MENU', $listElements, array(
 			'article_id' => $article_id,
@@ -532,7 +537,7 @@ if (!is_null($OOArt)) {
 		if ($mode == 'edit') {
 			// START: Slice move up/down
 
-			if ($function == 'moveup' || $function == 'movedown') {
+			if ($hasTemplate && ($function == 'moveup' || $function == 'movedown')) {
 				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveSlice[]')) {
 					// Modul und Rechte vorhanden?
 
@@ -540,7 +545,7 @@ if (!is_null($OOArt)) {
 
 					if ($module == -1) {
 						// MODUL IST NICHT VORHANDEN
-						$warning  = $I18N->msg('module_not_found');
+						$warning  = t('module_not_found');
 						$slice_id = '';
 						$function = '';
 					}
@@ -557,7 +562,7 @@ if (!is_null($OOArt)) {
 							}
 						}
 						else {
-							$warning = $I18N->msg('no_rights_to_this_function');
+							$warning = t('no_rights_to_this_function');
 						}
 					}
 
@@ -565,43 +570,51 @@ if (!is_null($OOArt)) {
 					sly_Core::cache()->flush(OOArticleSlice::CACHE_NS);
 				}
 				else {
-					$warning = $I18N->msg('no_rights_to_this_function');
+					$warning = t('no_rights_to_this_function');
 				}
 			}
-
 			// END: Slice move up/down
 
-			// START: MODULE EDITIEREN/ADDEN ETC.
+			$params = array(
+				'article_id' => $article_id,
+				'clang'      => $clang,
+				'slot'       => $slot
+			);
 
-			print '
-		<!-- *** OUTPUT OF ARTICLE-CONTENT-EDIT-MODE - START *** -->
-		<div class="rex-content-editmode">
-			';
-			$CONT = new rex_article();
-			$CONT->getContentAsQuery();
-			$CONT->info = $info;
-			$CONT->warning = $warning;
-			$CONT->template = $templateName;
-			$CONT->setArticleId($article_id);
-			$CONT->setSliceId($slice_id);
-			$CONT->setMode($mode);
-			$CONT->setCLang($clang);
-			$CONT->setEval(true);
-			$CONT->setSliceRevision($slice_revision);
-			$CONT->setFunction($function);
-			print $CONT->getArticle($slot);
+			if (!$hasTemplate) {
+				sly_Core::dispatcher()->notify('SLY_CONTENT_SLICE_PAGE', null, $params);
+				print rex_warning(t('content_select_template'));
+			}
+			else {
+				// START: MODULE EDITIEREN/ADDEN ETC.
 
-			print '
-		</div>
-		<!-- *** OUTPUT OF ARTICLE-CONTENT-EDIT-MODE - END *** -->
-	';
-			// END: MODULE EDITIEREN/ADDEN ETC.
+				$CONT = new rex_article();
+				$CONT->getContentAsQuery();
+				$CONT->info = $info;
+				$CONT->warning = $warning;
+				$CONT->template = $templateName;
+				$CONT->setArticleId($article_id);
+				$CONT->setSliceId($slice_id);
+				$CONT->setMode($mode);
+				$CONT->setCLang($clang);
+				$CONT->setEval(true);
+				$CONT->setSliceRevision($slice_revision);
+				$CONT->setFunction($function);
+
+				sly_Core::dispatcher()->notify('SLY_CONTENT_SLICE_PAGE', $CONT, $params);
+
+				print '<div class="rex-content-editmode">';
+				print $CONT->getArticle($slot);
+				print '</div>';
+
+				// END: MODULE EDITIEREN/ADDEN ETC.
+			}
 		}
 		elseif ($mode == 'meta') {
 			// START: META VIEW
 
-			$params = array('id' => $article_id, 'clang' => $clang, 'article' => $article);
-			$form   = new sly_Form('index.php', 'POST', $I18N->msg('general'), '', 'REX_FORM');
+			$params = array('id' => $article_id, 'clang' => $clang, 'article' => $OOArt);
+			$form   = new sly_Form('index.php', 'POST', t('general'), '', 'REX_FORM');
 
 			/////////////////////////////////////////////////////////////////
 			// init form
@@ -619,7 +632,7 @@ if (!is_null($OOArt)) {
 			/////////////////////////////////////////////////////////////////
 			// article name / metadata
 
-			$name = new sly_Form_Input_Text('meta_article_name', $I18N->msg('name_description'), $article->getValue('name'), 'rex-form-meta-article-name');
+			$name = new sly_Form_Input_Text('meta_article_name', t('name_description'), $OOArt->getValue('name'), 'rex-form-meta-article-name');
 			$form->add($name);
 
 			$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM', $form, $params);
@@ -644,10 +657,10 @@ if (!is_null($OOArt)) {
 				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('article2startpage[]')) {
 					$form->beginFieldset(t('content_startarticle'));
 
-					if ($article->getValue('startpage') == 0 && $article->getValue('re_id') == 0) {
+					if ($OOArt->getValue('startpage') == 0 && $OOArt->getValue('re_id') == 0) {
 						$form->add(new sly_Form_Text('', t('content_nottostartarticle')));
 					}
-					else if ($article->getValue('startpage') == 1) {
+					else if ($OOArt->getValue('startpage') == 1) {
 						$form->add(new sly_Form_Text('', t('content_isstartarticle')));
 					}
 					else {
@@ -674,7 +687,7 @@ if (!is_null($OOArt)) {
 
 				// ARTIKEL VERSCHIEBEN
 
-				if ($article->getValue('startpage') == 0 && ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveArticle[]'))) {
+				if ($OOArt->getValue('startpage') == 0 && ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveArticle[]'))) {
 					$select = sly_Form_Helper::getCategorySelect('category_id_new', false, false, null, $REX['USER']);
 					$select->setAttribute('value', $category_id);
 					$select->setLabel(t('move_article'));
@@ -700,7 +713,7 @@ if (!is_null($OOArt)) {
 
 				// KATEGORIE/STARTARTIKEL VERSCHIEBEN
 
-				if ($article->getValue('startpage') == 1 && ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveCategory[]'))) {
+				if ($OOArt->getValue('startpage') == 1 && ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveCategory[]'))) {
 					$select = sly_Form_Helper::getCategorySelect('category_id_new', false, false, null, $REX['USER']);
 					$select->setAttribute('value', $category_id);
 					$select->setLabel(t('move_category'));
