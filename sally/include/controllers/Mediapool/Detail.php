@@ -83,7 +83,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 		$fileObj->setTitle(sly_request('ftitle', 'string'));
 		$fileObj->setCategoryId($target);
 
-		$msg = $this->t('pool_file_infos_updated');
+		$msg = $this->t('file_infos_updated');
 		$ok  = true;
 
 		if (!empty($_FILES['file_new']['name']) && $_FILES['file_new']['name'] != 'none') {
