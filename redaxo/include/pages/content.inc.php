@@ -419,12 +419,12 @@ if ($article->getRows() == 1)
 					$meta_sql = null;
 					$warning  = $meta_sql->getError();
 				}
-			}
 
-			$info = rex_register_extension_point('ART_META_UPDATED', $info, array(
-				'id'    => $article_id,
-				'clang' => $clang,
-			));
+				$info = rex_register_extension_point('ART_META_UPDATED', $info, array(
+					'id'    => $article_id,
+					'clang' => $clang,
+				));
+			}
 
 			// END: SAVE METADATA
 		}
