@@ -171,13 +171,16 @@ function t($index) {
 	$func = null;
 
 	if (sly_Core::isBackend()) {
-		global $I18N;
-		$func = array($I18N, 'msg');
+		$func = array(sly_Core::getI18N(), 'msg');
 	}
 	else {
 		// TODO: remove addon specific code
 		if (class_exists('WV9_Language')) {
 			$func = array(WV9_Language::getInstance(), 'translate');
+		}
+		else {
+			// try to find a translation via the default locale
+			$func = array(sly_Core::getI18N(), 'msg');
 		}
 	}
 
