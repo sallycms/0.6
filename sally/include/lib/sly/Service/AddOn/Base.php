@@ -105,13 +105,28 @@ abstract class sly_Service_AddOn_Base {
 			$state = t('install_cant_copy_files');
 		}
 		else {
-			$targetDir = new sly_Util_Directory($this->publicFolder($addonORplugin));
+			$folder    = $this->publicFolder($addonORplugin);
+			$targetDir = new sly_Util_Directory($folder);
 			$files     = $targetDir->listRecursive(false, true);
+			$exclude   = sly_makeArray($this->getProperty($addonORplugin, 'noscaffold', array()));
 
 			foreach ($files as $filename) {
 				if (sly_Util_String::endsWith($filename, '.css')) {
-					$css = sly_Util_Scaffold::process($filename);
-					file_put_contents($filename, $css);
+					$relName  = substr($filename, strlen($folder) + 1);
+					$relName  = str_replace('\\', '/', $relName);
+					$excluded = false;
+
+					foreach ($exclude as $pattern) {
+						if (fnmatch($pattern, $relName)) {
+							$excluded = true;
+							break;
+						}
+					}
+
+					if (!$excluded) {
+						$css = sly_Util_Scaffold::process($filename);
+						file_put_contents($filename, $css);
+					}
 				}
 			}
 		}
