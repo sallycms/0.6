@@ -13,4 +13,13 @@
  */
 abstract class sly_Controller_Ajax extends sly_Controller_Base {
 
+	protected function init() {
+		//cleanup before dispatching
+		while(ob_get_level()) ob_end_clean();
+	}
+
+	protected function teardown() {
+		//exit, our output should be clean
+		exit();
+	}
 }
