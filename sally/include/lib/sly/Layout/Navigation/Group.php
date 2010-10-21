@@ -29,4 +29,12 @@ class sly_Layout_Navigation_Group {
 	public function addPage(sly_Layout_Navigation_Page $page) {
 		$this->pages[] = $page;
 	}
+
+	public function sortPages() {
+		usort($this->pages, array(__CLASS__, 'comparePages'));
+	}
+
+	public static function comparePages(sly_Layout_Navigation_Page $pageA, sly_Layout_Navigation_Page $pageB) {
+		return strnatcasecmp($pageA->getTitle(), $pageB->getTitle());
+	}
 }

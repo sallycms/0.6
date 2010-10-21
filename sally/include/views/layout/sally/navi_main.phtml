@@ -22,8 +22,7 @@ $nav = sly_Core::dispatcher()->filter('SLY_LAYOUT_NAVI', $nav);
 
 foreach (array('credits', 'profile', 'content', 'linkmap') as $page) {
 	$pageObj = $nav->find($page);
-	if($pageObj)
-		$pageObj->setHidden(true);
+	if ($pageObj) $pageObj->setHidden(true);
 }
 
 // integrate addon submenus that were created via the old API
@@ -53,7 +52,14 @@ foreach ($groups as $group) {
 
 	$first   = true;
 	$subpage = sly_request('subpage', 'string');
-	$pages   = $group->getPages();
+
+	// Sort the addon group automatically, since we can't load the addOns in
+	// a translated sorted way.
+
+	if ($topic == 'addon') {
+		$group->sortPages();
+		$pages = $group->getPages();
+	}
 
 	foreach ($pages as $page) {
 		if ($page->isHidden()) continue;
