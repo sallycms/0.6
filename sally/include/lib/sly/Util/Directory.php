@@ -77,7 +77,7 @@ class sly_Util_Directory {
 				if ($directories) $list[] = $absolute ? $abs : $file;
 			}
 			else {
-				$list[] = $absolute ? $abs : $file;
+				if ($files) $list[] = $absolute ? $abs : $file;
 			}
 		}
 
