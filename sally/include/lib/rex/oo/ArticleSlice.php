@@ -37,7 +37,7 @@ class OOArticleSlice {
 	 * Constructor
 	 */
 	public function __construct($id, $article_id, $clang, $slot, $module, $prior,
-		$next_article_slice_id, $createdate,$updatedate,$createuser,$updateuser,$revision, $slice_id = 0) {
+		$createdate, $updatedate, $createuser, $updateuser, $revision, $slice_id = 0) {
 		$this->_id         = (int) $id;
 		$this->_article_id = (int) $article_id;
 		$this->_clang      = (int) $clang;
@@ -223,7 +223,7 @@ class OOArticleSlice {
 		foreach ($data as $row) {
 			$slices[] = new OOArticleSlice(
 				$row['id'], $row['article_id'], $row['clang'], $row['slot'], $row['module'],
-				$row['prior'], $row['next_article_slice_id'], $row['createdate'],
+				$row['prior'], $row['createdate'],
 				$row['updatedate'], $row['createuser'], $row['updateuser'], $row['revision'],
 				$row['slice_id']
 			);
