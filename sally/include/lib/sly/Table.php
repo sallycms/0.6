@@ -40,6 +40,10 @@ class sly_Table
 		$this->totalElements      = null;
 	}
 
+	public function setID($id) {
+		$this->id = trim($id);
+	}
+
 	public static function isDragAndDropMode()
 	{
 		return sly_get('tableswitch', 'string') == 'dodraganddrop';
