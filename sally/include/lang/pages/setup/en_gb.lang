@@ -69,6 +69,7 @@ setup_config_header: 'General SallyCMS Settings'
 setup_config_server: 'Server'
 setup_config_servername: 'Project Name'
 setup_config_error_email: 'Error eMail'
+setup_config_timezone: 'Timezone'
 setup_config_continue: 'Continue with step 5'
 
 setup_createuser_title: 'Setup: Step 5 of 5'

@@ -41,6 +41,7 @@ class sly_Controller_Specials extends sly_Controller_Sally {
 		$serverName      = sly_post('servername',       'string');
 		$modRewrite      = sly_post('mod_rewrite',      'string');
 		$cachingStrategy = sly_post('caching_strategy', 'string');
+		$timezone        = sly_post('timezone', 'string');
 
 		// Änderungen speichern
 
@@ -80,7 +81,10 @@ class sly_Controller_Specials extends sly_Controller_Sally {
 		$conf->setLocal('SERVERNAME', $serverName);
 		$conf->set('MOD_REWRITE', $modRewrite === 'true');
 		$conf->setLocal('CACHING_STRATEGY', $cachingStrategy);
-
+		if(class_exists('DateTimeZone'))
+		{
+			$conf->set('TIMEZONE', $timezone);
+		}
 		$this->info    = t('info_updated');
 		$this->warning = implode("<br />\n", $this->warning);
 

@@ -135,6 +135,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			$config->setLocal('INSTNAME', 'sly'.date('YmdHis'));
 			$config->setLocal('ERROR_EMAIL', sly_post('error_email', 'string'));
 
+			$config->set('TIMEZONE', sly_post('timezone', 'string', null));
 			$config->set('LANG', $this->lang);
 
 			unset($_POST['submit']);
@@ -145,7 +146,8 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		$this->render('views/setup/config.phtml', array(
 			'server'     => $config->get('SERVER'),
 			'serverName' => $config->get('SERVERNAME'),
-			'errorEMail' => $config->get('ERROR_EMAIL')
+			'errorEMail' => $config->get('ERROR_EMAIL'),
+			'timezone'   => @date_default_timezone_get()
 		));
 	}
 

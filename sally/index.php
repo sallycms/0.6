@@ -117,6 +117,11 @@ else {
 	}
 }
 
+//set timezone if available
+
+$timezone = $config->get('TIMEZONE');
+date_default_timezone_set($timezone ? $timezone : @date_default_timezone_get());
+
 // synchronize develop
 
 if (!$config->get('SETUP')) {
