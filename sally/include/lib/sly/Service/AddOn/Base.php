@@ -33,12 +33,23 @@ abstract class sly_Service_AddOn_Base {
 	}
 
 	public function loadConfig($addonORplugin) {
+		global $REX;
+
 		$config       = sly_Core::config();
 		$staticFile   = $this->baseFolder($addonORplugin).'/static.yml';
 		$defaultsFile = $this->baseFolder($addonORplugin).'/defaults.yml';
 
 		if (file_exists($staticFile)) {
 			$config->loadStatic($staticFile, $this->getConfPath($addonORplugin));
+
+			foreach (array('perm', 'extperm') as $type) {
+				$perm = sly_makeArray($this->getProperty($addonORplugin, $type, null));
+				$upper = strtoupper($type);
+
+				foreach ($perm as $p) {
+					$REX[$upper][] = $p;
+				}
+			}
 		}
 
 		if (file_exists($defaultsFile)) {
