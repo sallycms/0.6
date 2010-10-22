@@ -305,6 +305,7 @@ specials_start_article: Startpage
 specials_default_template: 'Default Template'
 specials_lang: 'Default Backend Locale'
 specials_mod_rewrite: 'use mod_rewrite'
+specials_timezone: 'Timezone'
 specials_not_found_article: 'Not-Found Article'
 
 setup: Setup
