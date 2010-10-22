@@ -16,7 +16,7 @@ input.rex-form-submit {
 	margin-left: 145px;
 } */
 
-p.rex-button a, input.rex-form-submit {
+p.rex-button a, input.rex-form-submit, a.sly-button {
 	background-image: url(../button.gif);
 	background-repeat: repeat-x;
 	padding: 1px 6px;
@@ -25,6 +25,10 @@ p.rex-button a, input.rex-form-submit {
 	border: 1px solid $lt_grey;
 	+border-radius($brd_rad);
 	margin-left: 145px;
+}
+
+a.sly-button {
+	margin-left: inherit;
 }
 
 div.rex-addon-content,
