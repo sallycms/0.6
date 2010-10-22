@@ -36,13 +36,13 @@ class sly_Registry_Persistent implements sly_Registry_Registry {
 		return $this->store->set($key, $value);
 	}
 
-	public function get($key) {
+	public function get($key, $default = null) {
 		if ($this->has($key)) {
 			return $this->store->get($key);
 			// fallthrough -> Fehlerbehandlung durch sly_Util_Array
 		}
 
-		return null;
+		return $default;
 	}
 
 	public function has($key) {
@@ -61,7 +61,15 @@ class sly_Registry_Persistent implements sly_Registry_Registry {
 
 	public function remove($key) {
 		$this->pdo->delete('registry', array('name' => $key));
-       	return $this->store->remove($key);
+		return $this->store->remove($key);
+	}
+
+	public function flush($key = '*') {
+		$pattern = str_replace(array('*', '?'), array('%', '_'), $key);
+		$table   = $this->prefix.'registry';
+
+		$this->pdo->query('DELETE FROM '.$table.' WHERE `name` LIKE ?', array($pattern));
+		$this->store = new sly_Util_Array();
 	}
 
 	protected function getValue($key) {
