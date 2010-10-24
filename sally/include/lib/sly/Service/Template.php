@@ -186,11 +186,11 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 * Gets the first slot from the template
 	 *
 	 * @param  string  $name  Unique template name
-	 * @return string         The first slot (name) or the default slot if no slot is given
+	 * @return string         The first slot (name) or null if the template has no slots
 	 */
 	public function getFirstSlot($name) {
 		$slots = $this->getSlots($name);
-		return $slots[0];
+		return empty($slots) ? null : $slots[0];
 	}
 
 	/**

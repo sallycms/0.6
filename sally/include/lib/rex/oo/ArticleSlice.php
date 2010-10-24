@@ -117,6 +117,8 @@ class OOArticleSlice {
 		if ($slot  === null) {
 			$template = self::getArticle()->getTemplateName();
 			$slot = sly_Service_Factory::getService('Template')->getFirstSlot($template);
+
+			if ($slot === null) return null;
 		}
 
 		$prefix    = sly_Core::config()->get('DATABASE/TABLE_PREFIX');

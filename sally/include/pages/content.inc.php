@@ -126,7 +126,7 @@ if (!is_null($OOArt)) {
 
 		// Slice add/edit/delete
 
-		if ($hasTemplate && sly_request('save', 'boolean') && in_array($function, array('add', 'edit', 'delete'))) {
+		if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array($function, array('add', 'edit', 'delete'))) {
 			// check module
 
 			if ($function == 'edit' || $function == 'delete') {
@@ -581,9 +581,10 @@ if (!is_null($OOArt)) {
 				'slot'       => $slot
 			);
 
-			if (!$hasTemplate) {
+			if (!$hasTemplate || $slot === null) {
 				sly_Core::dispatcher()->notify('SLY_CONTENT_SLICE_PAGE', null, $params);
-				print rex_warning(t('content_select_template'));
+				if (!$hasTemplate) print rex_warning(t('content_select_template'));
+				else print rex_info(t('content_no_slots'));
 			}
 			else {
 				// START: MODULE EDITIEREN/ADDEN ETC.

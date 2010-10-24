@@ -158,6 +158,7 @@ content_nottostartarticle: Dieser Artikel kann nicht zum Startartikel gemacht we
 content_tostartarticle_failed: Dieser Artikel konnte nicht zum Startartikel umgewandelt werden
 content_tostartarticle_ok: Dieser Artikel wurde erfolgreich zum Startartikel umgewandelt
 content_select_template: Bitte wählen sie zuerst ein Template!
+content_no_slots: In diesem Artikel können keine Inhalte eingepflegt werden.
 move_category: nach
 category_moved: Kategorie wurde verschoben
 content_types: Spalten
