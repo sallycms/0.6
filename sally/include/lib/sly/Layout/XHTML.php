@@ -66,11 +66,7 @@ class sly_Layout_XHTML extends sly_Layout
 	}
 
 	protected function printLink($attributes = array()) {
-		print "<link ";
-		foreach ($link as $name => $value) {
-			print $name."=\"$value\" ";
-		}
-		print "/>\n";
+		print "<link ".sly_Util_HTML::buildAttributeString($attributes)."/>\n";
 	}
 
 	public function printHeader() {
