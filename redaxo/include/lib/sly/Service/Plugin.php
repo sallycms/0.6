@@ -83,7 +83,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 				}
 			}
 			else {
-				$state = $this->I18N('install_not_found');
+				$state = $this->I18N('plugin_install_not_found');
 			}
 		}
 
@@ -153,7 +153,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 			}
 		}
 		else {
-			$state = $this->I18N('uninstall_not_found');
+			$state = $this->I18N('plugin_uninstall_not_found');
 		}
 
 		$state = $this->extend('POST', 'UNINSTALL', $plugin, $state);
