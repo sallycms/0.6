@@ -13,6 +13,12 @@
  */
 class sly_Layout_XHTML extends sly_Layout
 {
+	protected $isTransitional = false;
+
+	protected function setTransitional() {
+		$this->isTransitional = true;
+	}
+
 	protected function printCSSConcrete() {
 		print "<style type=\"text/css\">$this->cssCode\n</style>\n";
 	}
