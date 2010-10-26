@@ -8,9 +8,10 @@
  * @author markus[dot]staab[at]redaxo[dot]de Markus Staab
  * @author zozi@webvariants.de
  *
+ * @author memento@webvariants.de
  *
- * @package redaxo4
- * @version svn:$Id$
+ * @package sally 0.2
+ * @version 1.6.1
  */
 
 class Thumbnail
@@ -19,58 +20,67 @@ class Thumbnail
 	const QUALITY   = 85;
 	const USECACHE  = true;
 
-	private $fileName;
-	private $isExternal;
-	private $imgsrc;
-	private $imgthumb;
-	private $filters;
-	private $origWidth;
-	private	$origHeight;
-	private $width;
-	private	$height;
-	private $quality;
-	private	$thumb_width;
-	private	$thumb_height;
-	private	$thumb_width_offset;
-	private	$thumb_height_offset;
-	private	$thumb_quality;
+	private $fileName = '';
+
+	private $imgsrc   = null;
+	private $imgthumb = null;
+
+	private $filters = array();
+
+	private $origWidth    = 0;
+	private	$origHeight   = 0;
+	private $width        = 0;
+	private	$height       = 0;
+	private $widthOffset  = 0;
+	private $heightOffset = 0;
+	private $quality      = 100;
+	private $imageType    = null;
+
+	private $allowedTypes = array();
+
+	private	$thumbWidth        = 0;
+	private	$thumbHeight       = 0;
+	private	$thumbWidthOffset  = 0;
+	private	$thumbHeightOffset = 0;
+	private	$thumbQuality      = self::QUALITY;
+
 	private $upscalingAllowed = false;
 
-	public function __construct($imgfile)
-	{
+
+	public function __construct($imgfile) {
+
 		global $REX;
 
 		$this->fileName   = $imgfile;
-		$this->isExternal = strpos($imgfile, 'http') === 0;
-		$this->filters    = array();
 
-		if (!$this->isExternal) {
+		if (strpos($imgfile, 'http://') !== 0) {
 			$this->fileName = $REX['MEDIAFOLDER'].DIRECTORY_SEPARATOR.$this->fileName;
 			if(!file_exists($this->fileName)) {
-				$this->sendError();
+				throw new Exception('File '.$this->fileName.' does not exist.');
 			}
+		}
+
+		$this->allowedTypes = self::getSupportedTypes();
+		$this->imageType  = $this->getImageType();
+
+		if (!$this->imageType) {
+			throw new Exception('File is not a supported image type.');
 		}
 
 		$data = file_get_contents($this->fileName);
 		$this->imgsrc = imagecreatefromstring($data);
 
-		if (!$this->imgsrc){
-			$this->sendError();
+		if (!$this->imgsrc) {
+			throw new Exception('Can not create valid Image Source.');
 		}
 
-		$this->origWidth           = imagesx($this->imgsrc);
-		$this->origHeight          = imagesy($this->imgsrc);
-		$this->width               = $this->origWidth;
-		$this->height              = $this->origHeight;
-		$this->quality             = 100;
-		$this->width_offset        = 0;
-		$this->height_offset       = 0;
-		$this->thumb_width_offset  = 0;
-		$this->thumb_height_offset = 0;
-		$this->thumb_quality       = self::QUALITY;
+		$this->origWidth  = imagesx($this->imgsrc);
+		$this->origHeight = imagesy($this->imgsrc);
+		$this->width      = $this->origWidth;
+		$this->height     = $this->origHeight;
 
 		if (isset($REX['ADDON']['image_resize']['jpg_quality'])) {
-			$this->thumb_quality = (int) $REX['ADDON']['image_resize']['jpg_quality'];
+			$this->thumbQuality = (int) $REX['ADDON']['image_resize']['jpg_quality'];
 		}
 		if (isset($REX['ADDON']['image_resize']['upscaling_allowed'])) {
 			$this->upscalingAllowed = (bool) $REX['ADDON']['image_resize']['upscaling_allowed'];
@@ -82,27 +92,27 @@ class Thumbnail
 	 *
 	 * @return void
 	 */
-	private function resampleImage()
-	{
+	private function resampleImage() {
 		// Originalbild selbst sehr klein und wuerde via resize vergrößert
 		// => Das Originalbild ausliefern
 
-		if ($this->thumb_width > $this->width && $this->thumb_height > $this->height) {
+		if (!$this->upscalingAllowed
+			&& $this->thumbWidth >= $this->width
+			&& $this->thumbHeight >= $this->height) {
 
-			$this->thumb_width  = $this->width;
-			$this->thumb_height = $this->height;
+			$this->thumbWidth  = $this->width;
+			$this->thumbHeight = $this->height;
 		}
 
 		if (function_exists('imagecreatetruecolor')) {
-			$this->imgthumb = @imagecreatetruecolor($this->thumb_width, $this->thumb_height);
+			$this->imgthumb = @imagecreatetruecolor($this->thumbWidth, $this->thumbHeight);
 		}
 		else {
-			$this->imgthumb = @imagecreate($this->thumb_width, $this->thumb_height);
+			$this->imgthumb = @imagecreate($this->thumbWidth, $this->thumbHeight);
 		}
 
 		if (!$this->imgthumb) {
-			$this->sendError();
-			exit();
+			throw new Exception('Can not create valid Thumbnail Image');
 		}
 
 		// Transparenz erhalten
@@ -110,27 +120,15 @@ class Thumbnail
 		imagecopyresampled(
 				$this->imgthumb,
 				$this->imgsrc,
-				$this->thumb_width_offset,
-				$this->thumb_height_offset,
-				$this->width_offset,
-				$this->height_offset,
-				$this->thumb_width,
-				$this->thumb_height,
+				$this->thumbWidthOffset,
+				$this->thumbHeightOffset,
+				$this->widthOffset,
+				$this->heightOffset,
+				$this->thumbWidth,
+				$this->thumbHeight,
 				$this->width,
 				$this->height
 		);
-	}
-
-	/**
-	 * Sendet die Fehlerdatei
-	 *
-	 * @return void
-	 */
-	private function sendError()
-	{
-		$service = sly_Service_Factory::getService('AddOn');
-		$folder  = $service->publicFolder('image_resize');
-		self::sendImage($folder.'/'.self::ERRORFILE, true);
 	}
 
 	/**
@@ -188,8 +186,9 @@ class Thumbnail
 
 		// if no filter are applied, size is smaller or equal and quality is lower than desired
 		if (empty($this->filters)
-			&& $this->thumb_width >= $this->width && $this->thumb_height >= $this->height
-			&& $this->thumb_quality >= $this->quality) {
+ 			&& (!$this->upscalingAllowed
+				&& ($this->thumbWidth >= $this->width || $this->thumbHeight >= $this->height))
+			&& $this->thumbQuality >= $this->quality) {
 
 			return false;
 		}
@@ -212,18 +211,21 @@ class Thumbnail
 
 			$fileext = strtoupper($this->getFileExtension());
 
-			if ($fileext == 'JPG' || $fileext == 'JPEG') {
-				imageJPEG($this->imgthumb, $file, $this->thumb_quality);
-			}
-			elseif ($fileext == 'PNG') {
-				imagePNG($this->imgthumb, $file);
-			}
-			elseif ($fileext == 'GIF') {
-				imageGIF($this->imgthumb, $file);
-			}
-			elseif ($fileext == 'WBMP') {
-				imageWBMP($this->imgthumb, $file);
-			}
+			switch ($this->imageType) {
+				case 'JPG':
+				case 'JPEG':
+					imagejpeg($this->imgthumb, $file, $this->thumbQuality);
+					break;
+				case 'PNG':
+					imagepng($this->imgthumb, $file);
+					break;
+				case 'GIF':
+					imagegif($this->imgthumb, $file);
+					break;
+				case 'WBMP':
+					imagewbmp($this->imgthumb, $file);
+					break;
+ 			}
 		}
 		// just copy the image
 		else {
@@ -256,7 +258,7 @@ class Thumbnail
 	}
 
 	/**
-	 * Setzt Höhe und Breite des Thumbnails
+	 * set height and width of thumbnail
 	 *
 	 * @param int $width Breite des Thumbs
 	 * @param int $height Höhe des Thumbs
@@ -281,28 +283,43 @@ class Thumbnail
 				// resize height
 				$this->resizeHeight($height);
 
-
 				// crop width
 
 				// set new cropped width from original image
 		  		$this->width = (int) round($resizeRatio * $this->origHeight);
 
 				// set width to crop width
-				$this->thumb_width = (int) $width['value'];
+				$this->thumbWidth = (int) $width['value'];
+
+				// if original height is smaller than resize height
+				if ($this->origHeight < $height['value']) {
+					// and image get not upscaled in height
+					if ($this->thumbHeight < $height['value']) {
+						// and original width is larger than resize width
+						if ($this->origWidth >= $width['value']) {
+							// set crop window width to resize width
+							$this->width = $width['value'];
+						}
+						// else do not crop width
+						else {
+							$this->width = $this->origWidth;
+							$this->thumbWidth = $this->width;
+						}
+					}
+				}
 
 				// right offset
 				if (isset($width['offset']['right']) && is_numeric($width['offset']['right'])) {
-					$this->width_offset = (int) ($this->origWidth - $this->width - ($this->origHeight / $this->thumb_height * $width['offset']['right']));
+					$this->widthOffset = (int) ($this->origWidth - $this->width - ($this->origHeight / $this->thumbHeight * $width['offset']['right']));
 				}
 				// left offset
 				elseif (isset($width['offset']['left']) && is_numeric($width['offset']['left'])) {
-					$this->width_offset = (int) $width['offset']['left'];
+					$this->widthOffset = (int) $width['offset']['left'];
 				}
 				// set offset to center image
 				else {
-					$this->width_offset = (int) (floor($this->origWidth - $this->width) / 2);
+					$this->widthOffset = (int) (floor($this->origWidth - $this->width) / 2);
 				}
-
 			}
 			// else resize into bounding box
 			else {
@@ -317,28 +334,43 @@ class Thumbnail
 				// resize width
 				$this->resizeWidth($width);
 
-
 				// crop height
 
 				// set new cropped width from original image
 		  		$this->height = (int) round($this->origWidth / $resizeRatio);
 
 				// set height to crop height
-				$this->thumb_height = (int) $height['value'];
+				$this->thumbHeight = (int) $height['value'];
+
+				// if original width is smaller than resize width
+				if ($this->origWidth < $width['value']) {
+					// and image get not upscaled in width
+					if ($this->thumbWidth < $width['value']) {
+						// and original height is larger than resize height
+						if ($this->origHeight >= $height['value']) {
+							// set crop window height to resize height
+							$this->height = $height['value'];
+						}
+						// else do not crop height
+						else {
+							$this->height = $this->origHeight;
+							$this->thumbHeight = $this->height;
+						}
+					}
+				}
 
 				// bottom offset
 				if (isset($height['offset']['bottom']) && is_numeric($height['offset']['bottom'])) {
-					$this->height_offset = (int) ($this->origHeight - $this->height - ($this->origWidth / $this->thumb_width * $height['offset']['bottom']));
+					$this->heightOffset = (int) ($this->origHeight - $this->height - ($this->origWidth / $this->thumbWidth * $height['offset']['bottom']));
 				}
 				// top offset
 				elseif (isset($height['offset']['top']) && is_numeric($height['offset']['top'])) {
-					$this->height_offset = (int) $height['offset']['top'];
+					$this->heightOffset = (int) $height['offset']['top'];
 				}
 				// set offset to center image
 				else {
-					$this->height_offset = (int) (floor($this->origHeight - $this->height) / 2);
+					$this->heightOffset = (int) (floor($this->origHeight - $this->height) / 2);
 				}
-
 
 			}
 			// else resize into bounding box
@@ -362,8 +394,8 @@ class Thumbnail
 		if ($this->origHeight < $size['value'] && !$this->upscalingAllowed) {
 			$size['value'] = $this->origHeight;
 		}
-		$this->thumb_height = (int) $size['value'];
-		$this->thumb_width  = (int) round($this->origWidth / $this->origHeight * $this->thumb_height);
+		$this->thumbHeight = (int) $size['value'];
+		$this->thumbWidth  = (int) round($this->origWidth / $this->origHeight * $this->thumbHeight);
 	}
 
 	/**
@@ -380,35 +412,34 @@ class Thumbnail
 		if ($this->origWidth < $size['value'] && !$this->upscalingAllowed) {
 			$size['value'] = $this->origWidth;
 		}
-		$this->thumb_width  = (int) $size['value'];
-		$this->thumb_height = (int) ($this->origHeight / $this->origWidth * $this->thumb_width);
+		$this->thumbWidth  = (int) $size['value'];
+		$this->thumbHeight = (int) ($this->origHeight / $this->origWidth * $this->thumbWidth);
 	}
 
 	/**
-	 * Setzt die Höhe und Breite des Thumbnails
+	 * set height and width of thumbnail
 	 *
-	 * @param int $size breite/höhe in pixel je nach modus
-	 * @param string $mode resize modus
-	 * @param int $height höhe in pixel wenn $mode2 gesetzt
-	 * @param string $mode2 resize modus2
-	 * @param int $offset offset in pixel
-	 * @param string $offsetType offset von links, oder rechts, default ist mitte
+	 * @param params Width, Height, Crop and Offset parameters
 	 * @return void
 	 */
-	//public function setNewSize($size, $mode, $height, $mode2, $offset, $offsetType)
 	public function setNewSize($params) {
 
+		// resize to square
 		if (isset($params['auto'])) {
 			$this->resizeBoth($params['auto'], $params['auto']);
 		}
+		// resize width
 		elseif (isset($params['width'])) {
+			// and resize height
 			if (isset($params['height'])) {
 				$this->resizeBoth($params['width'], $params['height']);
 			}
+			// just resize width
 			else {
 				$this->resizeWidth($params['width']);
 			}
 		}
+		// resize height
 		elseif (isset($params['height'])) {
 			$this->resizeHeight($params['height']);
 		}
@@ -438,7 +469,7 @@ class Thumbnail
 			// c100w__c200h__20r__20t__filename.jpg
 
 			// separate filename and parameters
-			preg_match('@((?:c?[0-9]{1,4}[whax]__)*(?:\-?[0-9]{1,4}[orltb]?__)*)(.*)@', $rex_resize, $params);
+			preg_match('@((?:c?[0-9]{1,4}[whaxc]__)*(?:\-?[0-9]{1,4}[orltb]?__)*)(.*)@', $rex_resize, $params);
 			if (!isset($params[1]) || !isset($params[2])) return false;
 
 			// get filename
@@ -464,8 +495,8 @@ class Thumbnail
 				// get value
 				$value = substr($param, 0, strlen($param)-1);
 
-				// set parameters for resizing
-				if (in_array($suffix, array('w', 'h', 'a', 'x'))) {
+				// set parameters for resizing (x and c just for backwards compatibility)
+				if (in_array($suffix, array('w', 'h', 'a', 'x', 'c'))) {
 					switch ($suffix) {
 						case 'w':
 							$suffix = 'width';
@@ -477,6 +508,7 @@ class Thumbnail
 							$suffix = 'auto';
 							break;
 						case 'x':
+						case 'c':
 							$suffix = 'width';
 							$crop = true;
 							break;
@@ -510,15 +542,19 @@ class Thumbnail
 			if (empty($imageFile)) {
 				self::sendError();
 			}
-
-			$thumb = new self($imageFile);
-			$thumb->setNewSize($imgParams);
-			$thumb->addFilters();
-			$thumb->generateImage($cachefile);
+			try {
+				$thumb = new self($imageFile);
+				$thumb->setNewSize($imgParams);
+				$thumb->addFilters();
+				$thumb->generateImage($cachefile);
+			}catch(Exception $e) {
+				self::sendError();
+			}
 
 		}
 
-		self::sendImage($cachefile);
+		$cachetime = filectime($cachefile);
+		self::sendImage($cachefile, $cachetime);
 	}
 
 	/**
@@ -554,9 +590,50 @@ class Thumbnail
 	/**
 	 * @return int
 	 */
-	public static function mediaUpdated($params)
-	{
+	public static function mediaUpdated($params) {
 		return self::deleteCache($params['filename']);
+	}
+
+ 	/**
+	 * return the image types supported by this PHP build
+	 *
+	 * @return array     supported types as strings
+	 */
+	public static function getSupportedTypes() {
+	    $aSupportedTypes = array();
+
+	    $aPossibleImageTypeBits = array(
+	        IMG_GIF => 'GIF',
+	        IMG_JPG => 'JPEG',
+	        IMG_PNG => 'PNG',
+	        IMG_WBMP => 'WBMP'
+	    );
+
+	    foreach ($aPossibleImageTypeBits as $iImageTypeBits => $sImageTypeString) {
+	        if (imagetypes() & $iImageTypeBits) $aSupportedTypes[] = $sImageTypeString;
+	    }
+
+	    return $aSupportedTypes;
+	}
+
+	/**
+	 * @return string image type
+	 */
+	private function getImageType() {
+
+		if (empty($this->allowedTypes) || !($imgInfo = getImageSize($this->fileName))
+			|| !isset( $imgInfo['mime'] ) || !strLen( $imgInfo['mime'] )
+			|| strToLower( subStr( $imgInfo['mime'], 0, strLen( 'image/' ))) != 'image/') {
+
+			return FALSE;
+		}
+
+		$mime = strToUpper( subStr( $imgInfo['mime'], strLen( 'image/' )));
+
+		if (!in_Array( $mime, $this->allowedTypes )) return FALSE;
+
+		return $mime;
+
 	}
 
 	/**
@@ -590,6 +667,20 @@ class Thumbnail
 	}
 
 	/**
+	 * Sendet die Fehlerdatei
+	 *
+	 * @return void
+	 */
+	private static function sendError()
+	{
+		header('HTTP/1.0 404 Not Found');
+
+		$service = sly_Service_Factory::getService('AddOn');
+		$folder  = $service->publicFolder('image_resize');
+		self::sendImage($folder.'/'.self::ERRORFILE, true);
+	}
+
+	/**
 	 * Sendet ein Bild an den Browser und beendet das Script
 	 *
 	 * @param string $fileName Dateiname des Bildes
@@ -600,12 +691,9 @@ class Thumbnail
 	{
 		while (ob_get_level()) ob_end_clean();
 
-		$etag = md5($fileName.filectime($fileName));
+		if(!$error) {
+			$etag = md5($fileName.filectime($fileName));
 
-		if ($error) {
-			header('HTTP/1.0 404 Not Found');
-		}
-		else {
 			if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] == $etag) {
 				header('HTTP/1.0 304 Not Modified');
 				exit();
@@ -615,12 +703,13 @@ class Thumbnail
 				header('HTTP/1.0 404 Not Found');
 				exit();
 			}
+
+			header('ETag: '.$etag);
+			header('Cache-Control: ');
+			header('Pragma: ');
 		}
 
 		header('Content-Type: image/'.self::getFileExtensionStatic($fileName));
-		header('ETag: '.$etag);
-		header('Cache-Control: ');
-		header('Pragma: ');
 
 		readfile($fileName);
 		exit();
