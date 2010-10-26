@@ -22,6 +22,7 @@
 class sly_DB_MySQL_Connection{
 
 	private $connection;
+	private $SQLInit = false;
 
 	private static $instances = array();
 
@@ -40,18 +41,12 @@ class sly_DB_MySQL_Connection{
 
 		error_reporting($level);
 
-		if (!$config->has('REX_SQL_INIT')) {
+		if (!$this->SQLInit) {
 			// ggf. Strict Mode abschalten
 
 			mysql_query('SET SQL_MODE = ""', $this->connection);
 
-			// Verbindung auf UTF8 trimmen
-
-//			if (rex_lang_is_utf8()) {
-//				$this->setQuery('SET NAMES utf8');
-//			}
-
-			$config->set('REX_SQL_INIT', true);
+			$this->SQLInit = true;
 		}
 	}
 
