@@ -184,18 +184,18 @@ jQuery.noConflict();
 	};
 
 	deleteREX = function(id, i_list, i_select) {
-		var $select   = $('#' + i_select + id);
+		var $select  = $('#' + i_select + id);
 		var position = $('option:selected', $select).index();
 
 		if (position == -1) return;
 		$('option:eq(' + position + ')', $select).remove();
 
 		var length = $('option', $select).length;
-		if(length < 1) return;
 
-		if (length <= position) position--;
-
-		$('#' + i_select + id + ' option:eq(' + position + ')').attr('selected', 'selected');
+		if (length >= 1) {
+			if (length <= position) position--;
+			$('#' + i_select + id + ' option:eq(' + position + ')').attr('selected', 'selected');
+		}
 
 		writeREX(id, i_list, i_select);
 	};
