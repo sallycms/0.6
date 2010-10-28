@@ -11,12 +11,12 @@
  * @author memento@webvariants.de
  *
  * @package sally 0.2
- * @version 1.6.1
+ * @version 1.6.2
  */
 
 class Thumbnail
 {
-	const ERRORFILE = 'warning.jpg';
+	const ERRORFILE = 'error.png';
 	const QUALITY   = 85;
 	const USECACHE  = true;
 
@@ -35,8 +35,6 @@ class Thumbnail
 	private $heightOffset = 0;
 	private $quality      = 100;
 	private $imageType    = null;
-
-	private $allowedTypes = array();
 
 	private	$thumbWidth        = 0;
 	private	$thumbHeight       = 0;
@@ -60,8 +58,7 @@ class Thumbnail
 			}
 		}
 
-		$this->allowedTypes = self::getSupportedTypes();
-		$this->imageType  = $this->getImageType();
+		$this->imageType  = self::getImageType($this->fileName);
 
 		if (!$this->imageType) {
 			throw new Exception('File is not a supported image type.');
@@ -136,12 +133,10 @@ class Thumbnail
 	 *
 	 * @return void
 	 */
-	private function keepTransparent()
-	{
-		$ext = strtolower($this->getFileExtension());
+	private function keepTransparent() {
 
-		if ($ext == 'png' || $ext == 'gif') {
-			if ($ext == 'gif') {
+		if ($this->imageType == IMAGETYPE_PNG || $this->imageType == IMAGETYPE_GIF) {
+			if ($this->imageType == IMAGETYPE_GIF) {
 				imagepalettecopy($this->imgsrc, $this->imgthumb);
 			}
 
@@ -160,7 +155,7 @@ class Thumbnail
 				// Set the background color for new image to transparent
 				imagecolortransparent($this->imgthumb, $colorTransparent);
 			}
-			elseif ($ext == 'png') {
+			elseif ($this->imageType == IMAGETYPE_PNG) {
 				imagealphablending($this->imgthumb, false);
 
 				// Create a new transparent color for image
@@ -172,7 +167,7 @@ class Thumbnail
 				imagesavealpha($this->imgthumb, true);
 			}
 
-			if ($ext == 'gif') {
+			if ($this->imageType == IMAGETYPE_GIF) {
 				imagetruecolortopalette($this->imgthumb, true, 256);
 			}
 		}
@@ -209,20 +204,17 @@ class Thumbnail
 			$this->resampleImage();
 			$this->applyFilters();
 
-			$fileext = strtoupper($this->getFileExtension());
-
 			switch ($this->imageType) {
-				case 'JPG':
-				case 'JPEG':
+				case IMAGETYPE_JPEG:
 					imagejpeg($this->imgthumb, $file, $this->thumbQuality);
 					break;
-				case 'PNG':
+				case IMAGETYPE_PNG:
 					imagepng($this->imgthumb, $file);
 					break;
-				case 'GIF':
+				case IMAGETYPE_GIF:
 					imagegif($this->imgthumb, $file);
 					break;
-				case 'WBMP':
+				case IMAGETYPE_WBMP:
 					imagewbmp($this->imgthumb, $file);
 					break;
  			}
@@ -460,8 +452,8 @@ class Thumbnail
 	 * @param string $rex_resize
 	 * @return void
 	 */
-	public static function getResizedImage($rex_resize)
-	{
+	public static function getResizedImage($rex_resize) {
+
 		$cachefile = self::getCacheFileName($rex_resize);
 
 		if (!self::USECACHE || !file_exists($cachefile)) {
@@ -603,14 +595,16 @@ class Thumbnail
 	    $aSupportedTypes = array();
 
 	    $aPossibleImageTypeBits = array(
-	        IMG_GIF => 'GIF',
-	        IMG_JPG => 'JPEG',
-	        IMG_PNG => 'PNG',
-	        IMG_WBMP => 'WBMP'
+	        'GIF' => IMAGETYPE_GIF,
+	        'JPEG' => IMAGETYPE_JPEG,
+	        'PNG' => IMAGETYPE_PNG,
+	        'WBMP' => IMAGETYPE_WBMP
 	    );
 
-	    foreach ($aPossibleImageTypeBits as $iImageTypeBits => $sImageTypeString) {
-	        if (imagetypes() & $iImageTypeBits) $aSupportedTypes[] = $sImageTypeString;
+	    foreach ($aPossibleImageTypeBits as $sImageTypeString => $iImageTypeBits) {
+	        if (imagetypes() & $iImageTypeBits) {
+				$aSupportedTypes[$sImageTypeString] = $iImageTypeBits;
+			}
 	    }
 
 	    return $aSupportedTypes;
@@ -619,38 +613,23 @@ class Thumbnail
 	/**
 	 * @return string image type
 	 */
-	private function getImageType() {
+	private static function getImageType($fileName) {
 
-		if (empty($this->allowedTypes) || !($imgInfo = getImageSize($this->fileName))
-			|| !isset( $imgInfo['mime'] ) || !strLen( $imgInfo['mime'] )
-			|| strToLower( subStr( $imgInfo['mime'], 0, strLen( 'image/' ))) != 'image/') {
+		$allowedTypes = self::getSupportedTypes();
+
+		if (!$fileName || !is_array($allowedTypes) || empty($allowedTypes)) return false;
+
+		$imgInfo = getImageSize($fileName);
+		if (!is_array($imgInfo) || empty($imgInfo)
+			|| !array_key_exists(2, $imgInfo) || !is_int($imgInfo[2])) {
 
 			return FALSE;
 		}
 
-		$mime = strToUpper( subStr( $imgInfo['mime'], strLen( 'image/' )));
+		if (!in_array($imgInfo[2], $allowedTypes)) return FALSE;
 
-		if (!in_Array( $mime, $this->allowedTypes )) return FALSE;
+		return $imgInfo[2];
 
-		return $mime;
-
-	}
-
-	/**
-	 * @return string Die File Extension des Bildes
-	 */
-	private function getFileExtension()
-	{
-		return self::getFileExtensionStatic($this->fileName);
-	}
-
-	/**
-	 * @param string $fileName
-	 * @return string Die File Extension einer Datei
-	 */
-	private static function getFileExtensionStatic($fileName)
-	{
-		return strtoupper(substr(strrchr($fileName, '.'), 1));
 	}
 
 	/**
@@ -687,8 +666,8 @@ class Thumbnail
 	 * @param timestamp $lastModified wann wurde das Bild zuletzt modifiziert?
 	 * @return void
 	 */
-	private static function sendImage($fileName, $error = false)
-	{
+	private static function sendImage($fileName, $error = false) {
+
 		while (ob_get_level()) ob_end_clean();
 
 		if(!$error) {
@@ -709,7 +688,7 @@ class Thumbnail
 			header('Pragma: ');
 		}
 
-		header('Content-Type: image/'.self::getFileExtensionStatic($fileName));
+		header('Content-Type: '.image_type_to_mime_type(self::getImageType($fileName)));
 
 		readfile($fileName);
 		exit();
