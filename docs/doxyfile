@@ -2,7 +2,7 @@ PROJECT_NAME     = "SallyCMS"
 PROJECT_NUMBER   = "Version X"
 OUTPUT_DIRECTORY = ./doxygen/
 INPUT            = ../sally/include/lib/ ../sally/include/layout/ ../sally/include/functions/
-EXCLUDE          = ../sally/include/lib/Scaffold/
+EXCLUDE          = ../sally/include/lib/Scaffold/ ../sally/include/lib/sfYaml/
 
 # Einstellungen, die vom Standard abweichen oder wichtig sind
 
