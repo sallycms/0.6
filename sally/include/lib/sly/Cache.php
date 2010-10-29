@@ -12,11 +12,11 @@
  * @ingroup cache
  */
 abstract class sly_Cache {
-	protected $expiration = 0; // niemals ablaufen (nur, um Platz im Server zu schaffen)
+	protected $expiration = 0; ///< int  niemals ablaufen (nur, um Platz im Server zu schaffen)
 
-	private static $instances       = null;
-	private static $cachingStrategy = null;
-	private static $cacheDisabled   = false;
+	private static $instances       = null;   ///< array
+	private static $cachingStrategy = null;   ///< string
+	private static $cacheDisabled   = false;  ///< boolean
 
 	private static $cacheImpls = array(
 		'sly_Cache_APC'          => 'APC',
@@ -30,21 +30,29 @@ abstract class sly_Cache {
 		'sly_Cache_ZendServer'   => 'ZendServer'
 	);
 
+	/**
+	 * @param string $className
+	 * @param string $name
+	 */
 	public static function addCacheImpl($className, $name) {
 		self::$cacheImpls[$className] = $name;
 	}
 
+	/**
+	 * @return array  [className: title, className: title]
+	 */
 	public static function getAvailableCacheImpls() {
 		$result = array();
-		foreach(self::$cacheImpls as $cacheimpl => $name) {
+		foreach (self::$cacheImpls as $cacheimpl => $name) {
 			$available = call_user_func(array($cacheimpl, 'isAvailable'));
-			if($available) {
-				$result[$cacheimpl] = $name;
-			}
+			if ($available) $result[$cacheimpl] = $name;
 		}
 		return $result;
 	}
 
+	/**
+	 * @return boolean  always true
+	 */
 	public static function isAvailable() {
 		return true;
 	}
@@ -57,10 +65,16 @@ abstract class sly_Cache {
 		self::$cacheDisabled = false;
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function getStrategy() {
 		return sly_Core::config()->get('CACHING_STRATEGY', 'sly_Cache_Memory');
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function getFallbackStrategy() {
 		return sly_Core::config()->get('FALLBACK_CACHING_STRATEGY', 'sly_Cache_Blackhole');
 	}
@@ -153,6 +167,10 @@ abstract class sly_Cache {
 		return $cache;
 	}
 
+	/**
+	 * @throws sly_Cache_Exception
+	 * @param  string $namespace
+	 */
 	protected static function cleanupNamespace($namespace) {
 		$namespace = trim($namespace); // normale Whitespaces entfernen
 		$namespace = preg_replace('#[^a-z0-9_\.-]#i', '_', $namespace);
@@ -166,6 +184,10 @@ abstract class sly_Cache {
 		return strtolower($namespace);
 	}
 
+	/**
+	 * @throws sly_Cache_Exception
+	 * @param  string $key
+	 */
 	protected static function cleanupKey($key) {
 		$key = trim($key); // normale Whitespaces entfernen
 		$key = preg_replace('#[^a-z0-9_\.-]#i', '_', $key);
@@ -179,14 +201,24 @@ abstract class sly_Cache {
 		return strtolower($key);
 	}
 
+	/**
+	 * @param string $namespace
+	 */
 	protected static function getDirFromNamespace($namespace) {
 		return str_replace('.', DIRECTORY_SEPARATOR, $namespace);
 	}
 
+	/**
+	 * @param string $namespace
+	 * @param string $newSep
+	 */
 	protected static function replaceSeparator($namespace, $newSep) {
 		return str_replace('.', $newSep, $namespace);
 	}
 
+	/**
+	 * @param string $args  Call this method with as many arguments as you want.
+	 */
 	protected static function concatPath($args) {
 		$args = func_get_args();
 		return implode(DIRECTORY_SEPARATOR, $args);
@@ -197,25 +229,43 @@ abstract class sly_Cache {
 	 * Namespacenamen noch in Keys vorkommen darf. Damit können die
 	 * Implementierungen dieses Zeichen dann verwenden, um interne Strukturen
 	 * zu kennzeichnen.
+	 *
+	 * @return string
 	 */
 	protected static function getSafeDirChar() {
 		return '~';
 	}
 
+	/**
+	 * @param string $prefix
+	 */
 	public function setNamespacePrefix($prefix) {
 		$this->namespacePrefix = self::cleanupNamespace($prefix);
 	}
 
+	/**
+	 * @param int $expiration
+	 */
 	public function setExpiration($expiration) {
 		$this->expiration = abs((int) $expiration);
 	}
 
+	/**
+	 * @throws sly_Cache_Exception
+	 * @param  string $key
+	 * @param  int    $length
+	 */
 	protected static function checkKeyLength($key, $length) {
 		if (strlen($key) > $length) {
 			throw new sly_Cache_Exception('The given key is too long. At most '.$length.' characters are allowed.');
 		}
 	}
 
+	/**
+	 * @param  string $namespace
+	 * @param  string $key
+	 * @return string
+	 */
 	protected function getFullKeyHelper($namespace, $key) {
 		$fullKey = self::cleanupNamespace($namespace);
 
@@ -226,6 +276,12 @@ abstract class sly_Cache {
 		return $fullKey;
 	}
 
+	/**
+	 * @param  string  $path
+	 * @param  string  $keyName
+	 * @param  boolean $excludeLastVersion
+	 * @return string
+	 */
 	protected static function versionPathHelper($path, $keyName, $excludeLastVersion = false) {
 		if ($excludeLastVersion) {
 			$lastNode = array_pop($path);

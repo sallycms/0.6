@@ -12,24 +12,34 @@
  * @ingroup authorisation
  */
 class sly_Authorisation {
+	private static $provider; ///< sly_Authorisation_Provider
 
-	private static $provider;
-
-	public static function setAuthorisationProvider(sly_Authorisation_Provider $provider){
+	/**
+	 * @param sly_Authorisation_Provider $provider
+	 */
+	public static function setAuthorisationProvider(sly_Authorisation_Provider $provider) {
 		self::$provider = $provider;
 	}
 
-	public static function hasPermission($userId, $context, $permission, $objectId = null){
-		if(!self::$provider){
+	/**
+	 * @param  mixed $userId
+	 * @param  mixed $context
+	 * @param  mixed $permission
+	 * @param  mixed $objectId
+	 * @return boolean
+	 */
+	public static function hasPermission($userId, $context, $permission, $objectId = null) {
+		if (!self::$provider) {
 			return true;
-		}else {
+		}
+		else {
 			try {
 				return $provider->hasPermission($userId, $context, $permission, $objectId);
-			}catch(Exception $e){
+			}
+			catch (Exception $e) {
 				trigger_error('An error occured in authorisationprovider, for security reasons permission was denied.', E_USER_WARNING);
 				return false;
 			}
 		}
 	}
-
 }
