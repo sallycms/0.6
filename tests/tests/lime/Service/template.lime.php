@@ -46,6 +46,8 @@ unset($testfile);
 // Diese Warnings interessieren uns hier aber nicht, für uns geht's nur um unser
 // eigenes Template.
 
+$service->refresh();
+
 $lime->is_deeply(@$service->get($uniqid, 'name'), $uniqid, 'get() returns the correct name');
 $lime->is_deeply(@$service->getTitle($uniqid), 'Mein super tolles Template!!!1elf', 'getTitle() returns the correct title');
 $lime->is_deeply(@$service->get($uniqid, 'custom'), 42, 'get() returns custom value');
