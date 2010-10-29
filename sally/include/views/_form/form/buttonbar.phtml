@@ -13,15 +13,11 @@
 	<?
 	$additionalClass = '';
 
-	foreach (array('submit', 'reset', 'apply', 'delete') as $type) {
-		$button = isset($this->buttons[$type]) ? $this->buttons[$type] : null;
+	foreach ($this->buttons as $button) {
+		$button->addClass('rex-form-submit'.$additionalClass);
+		$additionalClass = ' rex-form-submit-2';
 
-		if ($button) {
-			$button->addClass('rex-form-submit'.$additionalClass);
-			$additionalClass = ' rex-form-submit-2';
-
-			print $button->render();
-		}
+		print $button->render();
 	}
 	?>
 </p>

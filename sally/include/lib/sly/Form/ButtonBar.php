@@ -17,7 +17,7 @@ class sly_Form_ButtonBar extends sly_Form_ElementBase implements sly_Form_IEleme
 	public function __construct($buttons = array(), $id = null) {
 		$id = $id === null ? 'a'.uniqid() : $id;
 		parent::__construct('', '', '', $id, array('class', 'style', 'id'));
-		$this->buttons = $buttons;
+		$this->buttons = sly_makeArray($buttons);
 	}
 
 	public function render() {
@@ -32,5 +32,17 @@ class sly_Form_ButtonBar extends sly_Form_ElementBase implements sly_Form_IEleme
 		$name = array();
 		foreach ($this->buttons as $button) $name[] = $button->getDisplayValue();
 		return $name;
+	}
+
+	public function getButtons() {
+		return $this->buttons;
+	}
+
+	public function addButton(sly_Form_Input_Button $button) {
+		$this->buttons[] = $button;
+	}
+
+	public function clearButtons() {
+		$this->buttons = array();
 	}
 }

@@ -8,16 +8,12 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$buttons         = array();
-$additionalClass = '';
+$buttons = array();
 
 foreach (array('submit', 'reset', 'apply', 'delete') as $type) {
 	$varname = $type.'Button';
 
 	if ($this->$varname) {
-		$this->$varname->addClass('rex-form-submit'.$additionalClass);
-		$additionalClass = ' rex-form-submit-2';
-
 		foreach ($this->buttonClasses[$type] as $class) {
 			$this->$varname->addClass($class);
 		}
