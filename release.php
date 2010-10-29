@@ -17,6 +17,7 @@ $variants = array(
 );
 
 $addonDir = 'Q:\\AddOns\\';
+$cocoBin  = 'Q:\\docroot\\coco\\bin\\coco.php';
 
 // Check arguments
 
@@ -82,6 +83,12 @@ foreach ($variants as $name => $settings) {
 	mkdir('data');
 	mkdir('sally/include/addons');
 	file_put_contents('data/empty', 'This directory is intentionally left blank.');
+
+	// Generate documentation
+
+	chdir('docs');
+	exec('php '.$cocoBin.' . doconly 2>&0');
+	chdir($target);
 
 	if (empty($settings['addons'])) {
 		file_put_contents('sally/include/addons/empty', 'Put all your addOns in this directory.');
