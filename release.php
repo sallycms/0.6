@@ -24,7 +24,7 @@ $cocoBin  = 'Q:\\docroot\\coco\\bin\\coco.php';
 $args = $_SERVER['argv'];
 
 if (count($args) < 2) {
-	die('Usage: php '.$args[0].' tagname');
+	die('Usage: php '.$args[0].' tagname [nofetch]');
 }
 
 $repo = dirname(__FILE__);
@@ -103,7 +103,7 @@ foreach ($variants as $name => $settings) {
 			chdir($dir);
 
 			// update the repo
-			exec('hg fetch');
+			if (!isset($args[2]) || $args[2] != 'nofetch') exec('hg fetch');
 
 			// archive the repo into our sally archive
 
@@ -128,16 +128,16 @@ foreach ($variants as $name => $settings) {
 	$suffix = $name == 'full' ? '' : '-'.$name;
 
 	print ' zip...';
-	exec('7z a "../sally-'.$tag.$suffix.'.zip" "'.$target.'"');
+	exec('7z a -mx9 "../sally-'.$tag.$suffix.'.zip" "'.$target.'"');
+
+	print ' 7z...';
+	exec('7z a -mx9 "../sally-'.$tag.$suffix.'.7z" "'.$target.'"');
 
 	print ' tar...';
 	exec('7z a "../sally-'.$tag.$suffix.'.tar" "'.$target.'"');
 
-	print ' gz...';
-	exec('7z a "../sally-'.$tag.$suffix.'.tar.gz" "../sally-'.$tag.$suffix.'.tar"');
-
 	print ' bz2...';
-	exec('7z a "../sally-'.$tag.$suffix.'.tar.bz2" "../sally-'.$tag.$suffix.'.tar"');
+	exec('7z a -mx9 "../sally-'.$tag.$suffix.'.tar.bz2" "../sally-'.$tag.$suffix.'.tar"');
 
 	// We don't need the tar file anymore.
 	unlink('../sally-'.$tag.$suffix.'.tar');
