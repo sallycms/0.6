@@ -23,9 +23,9 @@ class sly_Layout_XHTML extends sly_Layout
 	protected $links           = array();
 
 	public function __construct() {
-		
+
 	}
-	
+
 	public function setFavIcon($iconPath) {
 		$this->favIcon = $iconPath;
 	}
@@ -39,7 +39,7 @@ class sly_Layout_XHTML extends sly_Layout
 		$this->title .= $title;
 	}
 
-	public static function addFeedFile($feedFile, $type = '') {
+	public function addFeedFile($feedFile, $type = '') {
 		if (!in_array($type, array('rss', 'rss1', 'rss2', 'atom'))) {
 			$type = 'feed';
 		}
@@ -88,10 +88,10 @@ class sly_Layout_XHTML extends sly_Layout
 	public function addLink($rel, $href) {
 		$this->links[$rel] = $href;
 	}
-	
+
 	protected function printFeedFiles() {
 		foreach ($this->feedFiles as $type => $file) {
-			
+
 			$link = "<link rel=\"alternate\" type=\"application/";
 			if ($type != 'atom') $link .= "rss";
 			else $link .= $type;
@@ -106,13 +106,13 @@ class sly_Layout_XHTML extends sly_Layout
 				case 'atom':
 					$link .= "Atom-Feed";
 					break;
-					
+
 				default:
 					$link .= "RSS-Feed";
 					break;
 			}
 			$link .= "\" href=\"".$file."\" />\n";
-			
+
 			print $link;
 		}
 	}
@@ -131,7 +131,7 @@ class sly_Layout_XHTML extends sly_Layout
 
 		foreach ($this->cssFiles as $group => $medias) {
 			$isConditional = false;
-			
+
 			if (strtoupper(substr($group, 0, 3)) == 'IF ') {
 				print "<!--[if ".strtoupper(substr($group, 3))."]>\n";
 				$isConditional = true;
@@ -142,7 +142,7 @@ class sly_Layout_XHTML extends sly_Layout
 					print "<link rel=\"stylesheet\" type=\"text/css\" href=\"".$file['src']."\" media=\"".$media."\" />\n";
 				}
 			}
-			
+
 			if ($isConditional) print "<![endif]-->\n";
 		}
 	}
