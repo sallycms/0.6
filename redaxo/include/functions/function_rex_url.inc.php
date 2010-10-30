@@ -88,8 +88,10 @@ function rex_getUrl($id = 0, $clang = false, $name = 'NoName', $params = '', $di
 	// AddOns eine ganze Weile dauern. Da sich die URLs auf einer Seite
 	// wohl eher selten ändern, cachen wir sie hier zwischen.
 
+	$func = function_exists('json_encode') ? 'json_encode' : 'serialize';
+
 	static $urlCache = array();
-	$cacheKey        = substr(md5($id.'_'.$clang.'_'.json_encode($params).'_'.$divider), 0, 10); // $params kann ein Array sein.
+	$cacheKey        = substr(md5($id.'_'.$clang.'_'.$func($params).'_'.$divider), 0, 10); // $params kann ein Array sein.
 
 	if (isset($urlCache[$cacheKey])) {
 		return $urlCache[$cacheKey];
