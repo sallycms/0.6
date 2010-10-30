@@ -11,22 +11,22 @@
 
 /**
  * PDO Persintence Klasse für eine PDO  Verbindung
- * 
+ *
  * @author zozi@webvariants.de
  *
  */
 class sly_DB_PDO_Persistence extends sly_DB_Persistence{
 	const LOG_UNKNOWN = -1;
 	const LOG_ERROR   = -2;
-	
+
 	private $connection   = null;
 	private $statement    = null;
 	private $currentRow   = null;
-	
+
 	public function __construct($driver, $connString, $login, $password) {
 		$this->connection = sly_DB_PDO_Connection::getInstance($driver, $connString, $login, $password);
 	}
-	
+
 	public function query($query, $data = array()){
 
 		try{
@@ -39,35 +39,35 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
                 self::log($query, $time, self::LOG_ERROR);
                 $this->error();
 			}
-			
+
 			$time = microtime(true) - $start;
 			self::log($query, $time, $this->affectedRows());
-			
+
 		}catch(PDOException $e){
 			$time = microtime(true) - $start;
 			self::log($query, $time, self::LOG_ERROR);
             $this->error();
 		}
 		return true;
-	} 
-	
+	}
+
 	public function insert($table, $values) {
 		$sql = $this->connection->getSQLbuilder(self::getPrefix().$table);
 		$sql->insert($values);
         $this->query($sql->to_s(), $sql->bind_values());
-        
+
         return $this->affectedRows();
     }
-	
+
     public function update($table, $newValues, $where = null){
     	$sql = $this->connection->getSQLbuilder(self::getPrefix().$table);
     	$sql->update($newValues);
     	$sql->where($where);
     	$this->query($sql->to_s(), $sql->bind_values());
-    	
+
     	return $this->affectedRows();
     }
-    
+
     public function select($table, $select = '*', $where = null, $group = null, $order = null, $offset = null, $limit = null, $having = null, $joins = null) {
 		$sql = $this->connection->getSQLbuilder(self::getPrefix().$table);
 		$sql->select($select);
@@ -78,13 +78,13 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
 		if($offset) $sql->offset($offset);
 		if($limit) $sql->limit($limit);
 		if($joins) $sql->joins($joins);
-		
+
     	return $this->query($sql->to_s(), $sql->bind_values());
     }
-    
+
     /**
      * Delete Rows fron DB
-     * 
+     *
      * @param $table TableName without prefix
      * @param $where a hash (columnname => value ...)
      * @return int affected rows
@@ -93,71 +93,79 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
     	$sql = $this->connection->getSQLbuilder(self::getPrefix().$table);
     	$sql->delete($where);
     	$this->query($sql->to_s(), $sql->bind_values());
-    	
+
     	return $this->affectedRows();
     }
-    
+
 	public function listTables($find = null)
 	{
 		$sql = $this->connection->getSQLbuilder('');
 		$sql->list_tables();
 		$this->query($sql->to_s(), $sql->bind_values());
-		
+
 		$tables = array();
-		
+
 		foreach ($this as $row) {
 			$tables[] = reset(array_values($row));
 		}
-		
+
 		if (is_string($find)) {
 			return in_array($find, $tables);
 		}
-		
+
 		return $tables;
 	}
-    
+
     public function lastId() {
 		return intval($this->connection->getPDO()->lastInsertId());
     }
-    
+
     private function affectedRows() {
         return $this->statement ? $this->statement->rowCount() : 0;
     }
-    
+
  	private static function getPrefix() {
         return sly_Core::config()->get('DATABASE/TABLE_PREFIX');
     }
-	 
+
 	public function fetch($table, $select = '*', $where = null, $order = null) {
 		$this->select($table, $select, $where, null, $order, null, 1);
 		$this->next();
 		$data = $this->current();
-		
+
+		if ($this->statement) {
+			$this->statement->closeCursor();
+		}
+
 		return $data;
     }
-	 
+
 	public function magicFetch($table, $select = '*', $where = null, $order = null)
 	{
 		$this->select($table, $select, $where, null, $order, null, 1);
 		$this->next();
 		$data = $this->current();
-		
+
+		if ($this->statement) {
+			$this->statement->closeCursor();
+		}
+
 		if ($data === false) {
 			return false;
 		}
-		
+
 		if (count($data) == 1) {
 			$ret = array_values($data);
 			return $ret[0];
 		}
-		
+
 		return $data;
 	}
-    
+
     // =========================================================================
     // Locks
     // =========================================================================
-    
+
     public function writeLock($tables, $replaceRexPrefix = '') {
         $this->lock($tables, $replaceRexPrefix, 'WRITE');
     }
@@ -179,12 +187,12 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
 
         $this->query('LOCK TABLES '.implode(', ', $tables));
     }
-    
-    
+
+
     // =========================================================================
     // TRANSACTIONS
     // =========================================================================
-    
+
 	/**
      * Transaktion starten
      *
@@ -215,7 +223,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
             }
         }
     }
-    
+
 	/**
      * Transaktion beenden
      *
@@ -231,7 +239,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
 			return false;
 		}
     }
-    
+
 	/**
      * Transaktion zurücknehmen
      *
@@ -247,7 +255,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
         	return false;
 		}
     }
-    
+
 	public function cleanEndTransaction($e) {
         $this->doRollBack($useTransaction);
         $this->connection->setTransRunning(false);
@@ -264,16 +272,16 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
 
         $this->error();
     }
-    
+
     // =========================================================================
     // ERROR UND LOGGING
     // =========================================================================
-    
+
 	protected function error() {
 		$message   = 'Es trat ein Datenbank-Fehler auf: ';
 		throw new sly_DB_PDO_Exception($message.'Fehlercode: '. $this->getErrno() .' '.$this->getError());
 	}
-    
+
 	/**
      * Gibt die letzte Fehlermeldung zurück.
      *
@@ -287,7 +295,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
         $info = $this->statement->errorInfo();
         return $info[2]; // Driver-specific error message.
     }
-    
+
     /**
      * Gibt den letzten Fehlercode zurück.
      *
@@ -358,5 +366,5 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence{
             trigger_error('Über ein PDO-Resultset kann nicht mehrfach iteriert werden!', E_USER_WARNING);
         }
     }
-		
+
 }

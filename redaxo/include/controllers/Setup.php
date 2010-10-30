@@ -260,7 +260,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 				}
 
 				if (empty($error)) {
-					$userOK = $pdo->listTables($prefix.'user') && $pdo->fetch('user', 'id', array('login' => $adminUser)) > 0;
+					$userOK = $pdo->listTables($prefix.'user') && $pdo->magicFetch('user', 'id', array('login' => $adminUser)) > 0;
 
 					if ($userOK) {
 						$error = $I18N->msg('setup_042'); // Dieses Login existiert schon!
