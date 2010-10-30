@@ -147,6 +147,7 @@ function selectMedialist(filename)
 
     }
   ?>
+  self.close();
 }
 
 function insertImage(src,alt)
