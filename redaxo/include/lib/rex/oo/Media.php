@@ -319,7 +319,7 @@ class OOMedia
 			}
 			else {
 				// Bild 1:1 anzeigen
-				$path .= 'files/';
+				$path .= 'data/mediapool/';
 				$file = $this->getFileName();
 			}
 		}
