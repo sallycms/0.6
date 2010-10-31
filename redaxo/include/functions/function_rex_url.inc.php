@@ -35,10 +35,10 @@ function rex_parse_article_name($name)
 //					preg_replace('/[^a-zA-Z_\-0-9 ]/', '',
 //						// sprachspezifische Zeichen umschreiben
 //						str_replace($search, $replace, $name)
-//				)
+//					)
+				)
 			)
-		)
-	);
+		);
 }
 
 /**
