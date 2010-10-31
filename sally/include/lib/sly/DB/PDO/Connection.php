@@ -12,8 +12,8 @@
 /**
  * Stellt eine PDO Verbindung zur Datenbank her und hält sie vor.
  *
- * @author zozi@webvariants.de
- *
+ * @author  zozi@webvariants.de
+ * @ingroup database
  */
 class sly_DB_PDO_Connection {
 
@@ -23,9 +23,9 @@ class sly_DB_PDO_Connection {
 	private $pdo;
 	private $transrunning = false;
 
-	private function __construct($driver, $connString, $login, $password) {
+	private function __construct($driver, $dsn, $login, $password) {
 		$this->driver = $driver;
-		$this->pdo    = new PDO($driver.':'.$connString, $login, $password);
+		$this->pdo    = new PDO($dsn, $login, $password);
 
 		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}
@@ -34,17 +34,25 @@ class sly_DB_PDO_Connection {
 	 *
 	 * @return sly_DB_PDO_Connection instance
 	 */
-	public static function getInstance($driver, $connString, $login, $password) {
-		if (empty(self::$instances[$driver.$connString])) {
-			self::$instances[$driver.$connString] = new self($driver, $connString, $login, $password);
+	public static function getInstance($driver, $host, $login, $password, $database) {
+		if (!class_exists('sly_DB_PDO_Driver_'.strtoupper($driver))) {
+			throw new sly_DB_PDO_Exception('Unbekannter Datenbank-Treiber: '.$driver);
 		}
 
-		return self::$instances[$driver.$connString];
-	}
+		$driverClass = 'sly_DB_PDO_Driver_'.strtoupper($driver);
+		$driverObj   = new $driverClass($host, $login, $password, $database);
+		$dsn         = $driverObj->getDSN();
 
-	public function getSQLbuilder($table) {
-		$classname = 'sly_DB_PDO_SQLBuilder_'.strtoupper($this->driver);
-		return new $classname($this->pdo, $table);
+		if (empty(self::$instances[$dsn])) {
+			try {
+				self::$instances[$dsn] = new self($driver, $dsn, $login, $password);
+			}
+			catch (PDOException $e) {
+				throw new sly_DB_PDO_Exception($e->getMessage(), $e->getCode(), $e->getPrevious());
+			}
+		}
+
+		return self::$instances[$dsn];
 	}
 
 	/**
