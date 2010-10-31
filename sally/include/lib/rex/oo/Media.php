@@ -217,7 +217,7 @@ class OOMedia
 	 * If format is <code>''</code> the datestamp is formated
 	 * with the default <code>dateformat</code> (lang-files).
 	 */
-	protected static function _getDate($date, $format = null)
+	public static function _getDate($date, $format = null)
 	{
 		if ($format !== null) {
 			if ($format == '') {
@@ -238,7 +238,6 @@ class OOMedia
 	 */
 	public function getUpdateDate($format = null)
 	{
-		if ($format == null) return $this->updatedate;
 		return self::_getDate($this->updatedate, $format);
 	}
 
@@ -247,7 +246,6 @@ class OOMedia
 	 */
 	public function getCreateDate($format = null)
 	{
-		if ($format == null) return $this->createdate;
 		return self::_getDate($this->createdate, $format);
 	}
 
@@ -326,7 +324,7 @@ class OOMedia
 			}
 			else {
 				// Bild 1:1 anzeigen
-				$path .= 'files/';
+				$path .= 'data/mediapool/';
 				$file = $this->getFileName();
 			}
 		}

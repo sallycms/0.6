@@ -8,11 +8,12 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+
+
 /**
  * @ingroup layout
  */
-class sly_Layout_XHTML extends sly_Layout
-{
+class sly_Layout_XHTML extends sly_Layout {
 	protected $isTransitional = false;
 
 	protected function setTransitional() {
@@ -25,6 +26,7 @@ class sly_Layout_XHTML extends sly_Layout
 
 	protected function printCSSFilesConcrete() {
 		foreach ($this->cssFiles as $group => $medias) {
+
 			$isConditional = strtoupper(substr($group, 0, 3)) == 'IF ';
 
 			if ($isConditional) print "<!--[if ".strtoupper(substr($group, 3))."]>\n";

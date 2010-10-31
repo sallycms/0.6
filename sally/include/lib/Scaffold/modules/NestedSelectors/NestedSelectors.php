@@ -20,7 +20,7 @@ class NestedSelectors
 	(
 		'@media'
 	);
-	
+
 	/**
 	 * Stores the CSS comments so they don't break processing
 	 *
@@ -44,7 +44,7 @@ class NestedSelectors
 		{
 			$attributes = (array)$value->attributes();
 			$attributes = $attributes['@attributes'];
-	
+
 			/*
 				Comments are given the same <property> node as actual properties
 				so that they are output next to their respective property in a list
@@ -54,11 +54,11 @@ class NestedSelectors
 			if($key == 'property')
 			{
 				if($attributes['name'] == 'comment')
-				{		
+				{
 					$css .= self::parse_comment($attributes['value']);
 				}
 			}
-			
+
 			/*
 				Imports should be at the root level, so we'll assume they are.
 				If they're nested inside a rule, they'll just be ignored.
@@ -71,7 +71,7 @@ class NestedSelectors
 					'media' => $attributes['media']
 				);
 			}
-			
+
 			/*
 				Otherwise it's just a rule
 			*/
@@ -80,7 +80,7 @@ class NestedSelectors
 				$css .= self::parse_rule($value);
 			}
 		}
-		
+
 		if(isset($imports))
 		{
 			foreach(array_reverse($imports) as $import)
@@ -92,7 +92,7 @@ class NestedSelectors
 		Scaffold::$css->string = str_replace('#NEWLINE#', "\n", $css);
 		Scaffold::$css->convert_entities('decode');
 	}
-	
+
 	/**
 	 * Parses the comment nodes
 	 *
@@ -103,7 +103,7 @@ class NestedSelectors
 	{
 		return '/*'. self::$comments[$comment] .'*/';
 	}
-	
+
 	/**
 	 * Parse the css selector rule
 	 *
@@ -117,31 +117,31 @@ class NestedSelectors
 		$property_list = "";
 		$parent = trim($parent);
 		$skip = false;
-	
+
 		# Get the selector and store it away
 		foreach($rule->attributes() as $type => $value)
 		{
 			$child = (string)$value;
-			
+
 			# if its NOT a root selector and has parents
 			if($parent != "")
-			{				
+			{
 				$parent = explode(",", $parent);
 
 				foreach($parent as $parent_key => $parent_value)
 				{
 					$parent[$parent_key] = self::parse_selector(trim($parent_value), $child);
 				}
-				
+
 				$parent = implode(",", $parent);
 			}
-			
+
 			elseif( strstr($child,'@media') )
 			{
 				$skip = true;
 				$parent = $child;
 			}
-			
+
 			# Otherwise it's a root selector
 			else
 			{
@@ -151,9 +151,9 @@ class NestedSelectors
 
 		foreach($rule->property as $p)
 		{
-			$property = (array)$p->attributes(); 
+			$property = (array)$p->attributes();
 			$property = $property['@attributes'];
-			
+
 			if($property['name'] == 'comment')
 			{
 				$property_list .= self::parse_comment($property['value']);
@@ -163,7 +163,7 @@ class NestedSelectors
 				$property_list .= $property['name'].":".$property['value'].";";
 			}
 		}
-		
+
 		# Create the css string
 		if($property_list != "" && $skip !== true)
 		{
@@ -171,18 +171,18 @@ class NestedSelectors
 		}
 
 		foreach($rule->rule as $inner_rule)
-		{			
-			# If the selector is in our skip array in the 
+		{
+			# If the selector is in our skip array in the
 			# member variable, we'll leave the selector as nested.
 			foreach(self::$skip as $selector)
-			{				
+			{
 				if(strstr($parent, $selector))
 				{
 					$skip = true;
 					continue;
 				}
 			}
-			
+
 			# We don't want the selectors inside @media to have @media before them
 			if($skip)
 			{
@@ -193,7 +193,7 @@ class NestedSelectors
 				$css_string .= self::parse_rule($inner_rule, $parent);
 			}
 		}
-		
+
 		# Build our @media string full of these properties if we need to
 		if($skip)
 		{
@@ -202,7 +202,7 @@ class NestedSelectors
 
 		return $css_string;
 	}
-		
+
 	/**
 	 * Parses the parent and child to find the next parent
 	 * to pass on to the function
@@ -214,28 +214,28 @@ class NestedSelectors
 	 * @return string
 	 */
 	public static function parse_selector($parent, $child)
-	{		
+	{
 		# If there are listed parents eg. #id, #id2, #id3
 		if(strstr($child, ","))
 		{
 			$parent = self::split_children($child, $parent);
 		}
-		
+
 		# If the child references the parent selector
 		elseif (strstr($child, "#SCAFFOLD-PARENT#"))
-		{						
+		{
 			$parent = str_replace("#SCAFFOLD-PARENT#", $parent, $child);
 		}
-		
+
 		# Otherwise, do it normally
 		else
 		{
 			$parent = "$parent $child";
 		}
-		
+
 		return $parent;
 	}
-	
+
 	/**
 	 * Splits selectors with , and adds the parent to each
 	 *
@@ -247,23 +247,23 @@ class NestedSelectors
 	public static function split_children($children, $parent)
 	{
 		$children = explode(",", $children);
-												
+
 		foreach($children as $key => $child)
 		{
 			# If the child references the parent selector
 			if (strstr($child, "#SCAFFOLD-PARENT#"))
 			{
-				$children[$key] = str_replace("#SCAFFOLD-PARENT#", $parent, $child);	
+				$children[$key] = str_replace("#SCAFFOLD-PARENT#", $parent, $child);
 			}
 			else
 			{
 				$children[$key] = "$parent $child";
 			}
 		}
-		
+
 		return implode(",",$children);
 	}
-	
+
 
 	/**
 	 * Transforms CSS into XML
@@ -271,11 +271,11 @@ class NestedSelectors
 	 * @return string $css
 	 */
 	public static function to_xml($css)
-	{		
+	{
 		# Convert comments
 		self::$comments = array();
 		$xml = preg_replace_callback('/\/\*(.*?)\*\//sx', array('NestedSelectors','encode_comment') ,$css);
-		
+
 		# Convert imports
 		$xml = preg_replace(
 		    '/
@@ -303,17 +303,17 @@ class NestedSelectors
 
 		# Close rules
 		$xml = preg_replace('/\;?\s*\}/', "\n</rule>", $xml);
-		
+
 		# Indent everything one tab
 		$xml = preg_replace('/\n/', "\r\t", $xml);
-				
+
 		# Tie it up with a bow
 		$xml = '<?xml version="1.0" ?'.">\r<css>\r\t$xml\r</css>\r";
-		
+
 
 		return simplexml_load_string($xml);
 	}
-	
+
 	/**
 	 * Turns CSS comments into an xml format
 	 *
@@ -324,7 +324,7 @@ class NestedSelectors
 	{
 		// Encode new lines
 		$comment = preg_replace('/\n|\r/', '#NEWLINE#',$comment[1]);
-		
+
 		// Save it
 		self::$comments[] = $comment;
 

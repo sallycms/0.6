@@ -35,12 +35,14 @@ function rex_parse_article_name($name)
 	return
 		// ggf übrige zeichen url-codieren
 		urlencode(
-			// mehrfach hintereinander auftretende Spaces auf eines reduzieren
-			preg_replace('/ {2,}/',' ',
-				// alle sonderzeichen raus
-				preg_replace('/[^a-zA-Z_\-0-9 ]/', '',
-					// sprachspezifische Zeichen umschreiben
-					str_replace($search, $replace, $name)
+			str_replace('/', '-',
+				// mehrfach hintereinander auftretende Spaces auf eines reduzieren
+				preg_replace('/ {2,}/',' ',
+//					// alle sonderzeichen raus
+//					preg_replace('/[^a-zA-Z_\-0-9 ]/', '',
+//						// sprachspezifische Zeichen umschreiben
+//						str_replace($search, $replace, $name)
+//				)
 			)
 		)
 	);
@@ -94,6 +96,8 @@ function rex_getUrl($id = 0, $clang = false, $name = 'NoName', $params = '', $di
 	// Die Erzeugung von URLs kann in Abhängigkeit von den installierten
 	// AddOns eine ganze Weile dauern. Da sich die URLs auf einer Seite
 	// wohl eher selten ändern, cachen wir sie hier zwischen.
+
+	$func = function_exists('json_encode') ? 'json_encode' : 'serialize';
 
 	static $urlCache = array();
 

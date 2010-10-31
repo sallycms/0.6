@@ -38,6 +38,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 				$this->error();
 			}
 		}
+			
 		catch (PDOException $e) {
 			$this->error();
 		}
@@ -87,7 +88,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 
 	/**
 	 * Delete rows from DB
-	 *
+     * 
 	 * @param  string $table  table name without system prefix
 	 * @param  array  $where  a hash (column => value ...)
 	 * @return int            affected rows
@@ -358,4 +359,5 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 			trigger_error('Über ein PDO-Resultset kann nicht mehrfach iteriert werden!', E_USER_WARNING);
 		}
 	}
+		
 }

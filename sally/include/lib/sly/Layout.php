@@ -192,7 +192,7 @@ abstract class sly_Layout {
 	 * @param string $feedFile
 	 * @param string $type
 	 */
-	public static function addFeedFile($feedFile, $type = '') {
+	public function addFeedFile($feedFile, $type = '') {
 		switch ($type) {
 			case 'rss1':
 				$title .= "RSS-Feed 1.0";
