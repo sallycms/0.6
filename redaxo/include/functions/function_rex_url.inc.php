@@ -30,7 +30,7 @@ function rex_parse_article_name($name)
 		urlencode(
 			str_replace('/', '-',
 				// mehrfach hintereinander auftretende Spaces auf eines reduzieren
-				preg_replace('/ {2,}/',' ',
+				preg_replace('/ {2,}/',' ', $name
 //					// alle sonderzeichen raus
 //					preg_replace('/[^a-zA-Z_\-0-9 ]/', '',
 //						// sprachspezifische Zeichen umschreiben
