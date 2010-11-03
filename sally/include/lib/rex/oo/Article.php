@@ -152,7 +152,7 @@ class OOArticle extends OORedaxo
 
 		// prüfen, ob ID in Content Cache Dateien vorhanden
 
-		$cacheFiles = glob(SLY_DYNFOLDER.'/internal/sally/articles/'.$articleId.'.*');
+		$cacheFiles = glob(SLY_DYNFOLDER.'/internal/sally/articles/'.$articleId.'.*.content');
 
 		if (!empty($cacheFiles)) {
 			return true;
