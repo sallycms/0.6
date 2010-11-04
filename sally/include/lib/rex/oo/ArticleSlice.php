@@ -175,10 +175,9 @@ class OOArticleSlice {
 	}
 
 	/**
-	 * Gibt den Slice formatiert zurück
-	 * @since 4.1 - 29.05.2008
+	 * @return string the content of the slice
 	 */
-	public function getSlice() {
+	public function getOutput() {
 		$slice   = sly_Service_Factory::getService('Slice')->findById($this->getSliceId());
 		$content = $slice->getOutput();
 		$content = self::replaceLinks($content);
@@ -194,7 +193,7 @@ class OOArticleSlice {
 		$slice_content_file = SLY_DYNFOLDER.'/internal/sally/articles/'.$this->getSliceId().'.slice.php';
 
 		if (!file_exists($slice_content_file)) {
-			$slice_content = $this->getSlice();
+			$slice_content = $this->getOutput();
 
 			if (rex_put_file_contents($slice_content_file, $slice_content) === false) {
 				return $I18N->msg('slice_could_not_be_generated').' '.$I18N->msg('check_rights_in_directory').SLY_DYNFOLDER.'/internal/sally/articles/';
