@@ -208,6 +208,12 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 
 	public function delete($addonName)
 	{
+		$registered = $this->getRegisteredAddons();
+
+		if (!in_array($addonName, $registered)) {
+			return false;
+		}
+
 		$state = $this->extend('PRE', 'DELETE', $addonName, true);
 
 		if ($state === true) {

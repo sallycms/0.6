@@ -18,21 +18,22 @@ class sly_Controller_Addon extends sly_Controller_Sally
 	protected $plugin  = null;
 	protected $info    = '';
 	protected $warning = '';
-	
+
 	public function init()
 	{
 		rex_title(t('addon'));
 		print '<div class="sly-content">';
-		
+
 		$this->addons  = sly_Service_Factory::getService('AddOn');
 		$this->plugins = sly_Service_Factory::getService('Plugin');
-		
+
 		$addon  = sly_request('addon', 'string', '');
 		$plugin = sly_request('plugin', 'string', '');
 		$addons = $this->addons->getRegisteredAddOns();
-		
-		$this->addon = in_array($addon, $addons) ? $addon : null;
-		
+
+		$this->addon  = in_array($addon, $addons) ? $addon : null;
+		$this->plugin = null;
+
 		if ($this->addon) {
 			$plugins      = $this->plugins->getRegisteredPlugins($this->addon);
 			$this->plugin = in_array($plugin, $plugins) ? $plugin : null;
@@ -41,7 +42,7 @@ class sly_Controller_Addon extends sly_Controller_Sally
 			unset($_REQUEST['func']);
 		}
 	}
-	
+
 	public function teardown()
 	{
 		print '</div>';
@@ -50,7 +51,7 @@ class sly_Controller_Addon extends sly_Controller_Sally
 	public function index()
 	{
 		$this->checkForNewComponents();
-		
+
 		$this->render('views/addon/list.phtml', array(
 			'addons'  => $this->addons,
 			'plugins' => $this->plugins,
@@ -58,7 +59,7 @@ class sly_Controller_Addon extends sly_Controller_Sally
 			'warning' => $this->warning
 		));
 	}
-	
+
 	protected function prepareAction()
 	{
 		return array(
@@ -66,20 +67,20 @@ class sly_Controller_Addon extends sly_Controller_Sally
 			$this->plugin ? array($this->addon, $this->plugin) : $this->addon
 		);
 	}
-	
+
 	protected function checkForNewComponents()
 	{
 		$config  = sly_Core::config();
 		$addons  = rex_read_addons_folder();
 		$plugins = array();
-		
+
 		foreach ($addons as $addon) {
 			$plugins[$addon] = rex_read_plugins_folder($addon);
 		}
 
 		// Vergleiche Addons aus dem Verzeichnis addons/ mit den Einträgen in addons.yaml.
 		// Wenn ein Addon in der Datei fehlt oder nicht mehr vorhanden ist, ändere den Dateiinhalt.
-		
+
 		$knownAddons = $this->addons->getRegisteredAddOns();
 
 		foreach(array_diff($addons, $knownAddons) as $addon){
@@ -90,10 +91,10 @@ class sly_Controller_Addon extends sly_Controller_Sally
 		}
 
 		// dito für Plugins
-		
+
 		foreach ($addons as $addon) {
 			$knownPlugins = $this->plugins->getRegisteredPlugins($addon);
-			
+
 			foreach(array_diff($plugins[$addon], $knownPlugins) as $plugin){
 				$this->plugins->add(array($addon, $plugin));
 			}
@@ -102,7 +103,7 @@ class sly_Controller_Addon extends sly_Controller_Sally
 			}
 		}
 	}
-	
+
 	protected function t($key, $param = null)
 	{
 		global $I18N;
@@ -110,13 +111,13 @@ class sly_Controller_Addon extends sly_Controller_Sally
 		if ($this->plugin && is_array($param)) $param = $param[1];
 		return $I18N->msg($prefix.$key, $param);
 	}
-	
+
 	protected function call($method, $i18n)
 	{
 		list($service, $component) = $this->prepareAction();
 		$this->warning = $service->$method($component);
-		
-		if ($this->warning === true) {
+
+		if ($this->warning === true || $this->warning === 1) {
 			$this->info    = $this->t($i18n, $component);
 			$this->warning = '';
 		}
