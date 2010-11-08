@@ -492,7 +492,7 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 		$article_slice = $article_slice->getNextSlice();
 	}
 
-	rex_deleteCacheArticleContent($to_id, $to_clang);
+	rex_deleteCacheArticle($to_id, $to_clang);
 	return true;
 }
 
