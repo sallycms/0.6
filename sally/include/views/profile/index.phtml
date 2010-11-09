@@ -29,7 +29,18 @@ $localeSelect->setMultiple(false);
 $form->beginFieldset(t('profile_myprofile'), '', 2);
 $form->addRow(array($login, $password));
 $form->addRow(array($username, $userdesc));
-$form->addRow(array($localeSelect));
+$fields = array($localeSelect);
+
+if(class_exists('DateTimeZone')) {
+	$timezone = $user->getTimeZone();
+	$timezone = $timezone ? $timezone : sly_Core::config()->get('TIMEZONE');
+	$timezoneList = DateTimeZone::listIdentifiers();
+	$timezoneList = array_combine($timezoneList, $timezoneList);
+	$timezoneSelect = new sly_Form_Select_DropDown('timezone', t('specials_timezone'), $timezone, $timezoneList);
+	$fields[] = $timezoneSelect;
+}
+
+$form->addRow($fields);
 
 $form->getSubmitButton()->setAttribute('value', t('profile_save'));
 $form->setResetButton(null);

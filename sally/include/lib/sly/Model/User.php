@@ -28,6 +28,7 @@ class sly_Model_User extends sly_Model_Base {
 	protected $lasttrydate;
 	protected $session_id;
 	protected $cookiekey;
+	protected $timezone;
 	protected $revision;
 
 	protected $startpage;
@@ -38,7 +39,7 @@ class sly_Model_User extends sly_Model_Base {
 		'name' => 'string', 'description' => 'string', 'login' => 'string', 'psw' => 'string',
 		'status' => 'int', 'rights' => 'string', 'updateuser' => 'string',
 		'updatedate' => 'int', 'createuser' => 'string', 'createdate' => 'int', 'lasttrydate' => 'int',
-		'session_id' => 'string', 'cookiekey' => 'string', 'revision' => 'int'
+		'session_id' => 'string', 'cookiekey' => 'string', 'timezone' => 'string', 'revision' => 'int'
 	);
 
 	public function __construct($params = array()) {
@@ -94,6 +95,7 @@ class sly_Model_User extends sly_Model_Base {
 	public function setLastTryDate($lasttrydate) { $this->lasttrydate = $lasttrydate;  }
 	public function setSessionId($session_id)    { $this->session_id  = $session_id;   }
 	public function setCookieKey($cookiekey)     { $this->cookiekey   = $cookiekey;    }
+	public function setTimeZone($timezone)       { $this->timezone    = $timezone;     }
 	public function setRevision($revision)       { $this->revision    = $revision;     }
 
 	public function getName()        { return $this->name;        }
@@ -109,6 +111,7 @@ class sly_Model_User extends sly_Model_Base {
 	public function getLastTryDate() { return $this->lasttrydate; }
 	public function getSessionId()   { return $this->session_id;  }
 	public function getCookieKey()   { return $this->cookiekey;   }
+	public function getTimeZone()    { return $this->timezone;    }
 	public function getRevision()    { return $this->revision;    }
 
 	// Wenn Rechte gesetzt werden, müssen wir etwas mehr arbeiten.

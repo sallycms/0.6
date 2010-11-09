@@ -44,6 +44,10 @@ class sly_Controller_Profile extends sly_Controller_Sally {
 			$user->toggleRight('#be_lang['.$backendLocale.']');
 		}
 
+		// timezone
+		$timezone  = sly_post('timezone', 'string');
+		$user->setTimeZone($timezone);
+
 		// Passwort ändern?
 
 		$password = sly_post('password', 'string');

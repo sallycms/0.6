@@ -191,7 +191,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 			case 'setup': // leere Datenbank neu einrichten
 
-				$installScript = SLY_INCLUDE_PATH.'/install/sally0_3.sql';
+				$installScript = SLY_INCLUDE_PATH.'/install/sally0_4.sql';
 				$error         = $this->setupImport($installScript);
 
 				break;
