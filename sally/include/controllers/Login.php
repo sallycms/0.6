@@ -23,6 +23,7 @@ class sly_Controller_Login extends sly_Controller_Sally {
 
 	public function init() {
 		$layout = sly_Core::getLayout();
+		$layout->showNavigation(false);
 		$layout->pageHeader(t('login_title'));
 		print '<div class="sly-content">';
 	}
@@ -34,12 +35,36 @@ class sly_Controller_Login extends sly_Controller_Sally {
 	public function index() {
 		if(empty($this->message)) $this->message = t('login_welcome');
 		$this->render('views/login/index.phtml');
-		return true;
+	}
+
+	protected function login() {
+		$user_login = sly_post('rex_user_login', 'string');
+		$user_psw   = sly_post('rex_user_psw', 'string');
+		$loginCheck = sly_Service_Factory::getUserService()->login($user_login, $user_psw);
+
+		if($loginCheck !== true) {
+			$this->message = t('login_error', '<strong>'.sly_Core::config()->get('RELOGINDELAY').'</strong>');
+			$this->index();
+		} else {
+			// if relogin, forward to previous page
+			$referer = sly_post('referer', 'string', false);
+
+			if ($referer && !sly_startsWith(basename($referer), 'index.php?page=login')) {
+				$url = $referer;
+				$msg = t('redirect_previous_page', $referer);
+			}
+			else {
+				$url = 'index.php?page='.urlencode($REX['PAGE']);
+				$msg = t('redirect_startpage', $url);
+			}
+			sly_Util_HTTP::redirect($url, array(), $msg);
+		}
 	}
 
 	public function logout() {
+		sly_Service_Factory::getUserService()->logout();
+		$REX['USER'] = null;
 		$this->message = t('login_logged_out');
-		sly_Service_Factory::getService('User')->logout();
 		$this->index();
 	}
 

@@ -127,7 +127,7 @@ class sly_DB_Dump {
 		// $REX['USER'] gibts im Setup nicht.
 
 		if (isset($REX['USER'])) {
-			$query = str_replace('%USER%', $REX['USER']->getValue('login'), $query);
+			$query = str_replace('%USER%', $REX['USER']->getLogin(), $query);
 		}
 
 		if ($prefix === null) {

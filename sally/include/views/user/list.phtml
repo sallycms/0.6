@@ -25,7 +25,7 @@ $table->setIsEmpty(false);
 $table->renderHeader(count($users));
 
 $tdIcon    = '';
-$currentID = $REX['USER']->getValue('id');
+$currentID = $REX['USER']->getId();
 
 foreach ($users as $user) {
 	$id    = (int) $user->getId();

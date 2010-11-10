@@ -147,8 +147,8 @@ function rex_addCategory($parentID, $data)
 			/*  updatedate */ $createTime,
 			/*    template */ $sql->escape($template),
 			/*       clang */ (int) $clangID,
-			/*  createuser */ $sql->escape($REX['USER']->getValue('login')),
-			/*  updateuser */ $sql->escape($REX['USER']->getValue('login')),
+			/*  createuser */ $sql->escape($REX['USER']->getLogin()),
+			/*  updateuser */ $sql->escape($REX['USER']->getLogin()),
 			/*    revision */ 0
 		);
 
@@ -239,7 +239,7 @@ function rex_editCategory($categoryID, $clang, $data)
 	$sql->setQuery(
 		'UPDATE '.$REX['DATABASE']['TABLE_PREFIX'].'article '.
 		'SET catname = "'.$data['catname'].'", '. // Magic Quotes von REDAXO!
-		'updatedate = UNIX_TIMESTAMP(), updateuser = "'.$sql->escape($REX['USER']->getValue('login')).'" '.
+		'updatedate = UNIX_TIMESTAMP(), updateuser = "'.$sql->escape($REX['USER']->getLogin()).'" '.
 		'WHERE id = '.$categoryID.' AND clang = '.$clang
 	);
 
@@ -633,8 +633,8 @@ function rex_addArticle($data)
 			/*  updatedate */ $createTime,
 			/*    template */ $sql->escape($templateName),
 			/*       clang */ $clangID,
-			/*  createuser */ $sql->escape($REX['USER']->getValue('login')),
-			/*  updateuser */ $sql->escape($REX['USER']->getValue('login')),
+			/*  createuser */ $sql->escape($REX['USER']->getLogin()),
+			/*  updateuser */ $sql->escape($REX['USER']->getLogin()),
 			/*    revision */ 0
 		);
 
@@ -715,7 +715,7 @@ function rex_editArticle($articleID, $clang, $data)
 	$sql->setQuery(
 		'UPDATE '.$REX['DATABASE']['TABLE_PREFIX'].'article '.
 		'SET name = "'.$data['name'].'", template = "'.$sql->escape($data['template']).'", '. // Magic Quotes von REDAXO!
-		'updatedate = UNIX_TIMESTAMP(), updateuser = "'.$sql->escape($REX['USER']->getValue('login')).'" '.
+		'updatedate = UNIX_TIMESTAMP(), updateuser = "'.$sql->escape($REX['USER']->getLogin()).'" '.
 		'WHERE id = '.$articleID.' AND clang = '.$clang
 	);
 

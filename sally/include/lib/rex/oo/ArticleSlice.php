@@ -287,8 +287,8 @@ class OOArticleSlice {
 
 		if ($user_id === null) {
 			if (isset($REX['USER'])) {
-				$user_id    = $REX['USER']->getValue('id');
-				$user_login = $REX['USER']->getValue('login');
+				$user_id    = $REX['USER']->getId();
+				$user_login = $REX['USER']->getLogin();
 			}
 			else {
 				$user_id    = '';

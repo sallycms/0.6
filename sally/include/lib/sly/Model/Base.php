@@ -45,7 +45,7 @@ abstract class sly_Model_Base {
 		global $REX;
 
 		if (!$user) {
-			$user = $REX['USER']->getValue('login');
+			$user = $REX['USER']->getLogin();
 		}
 
 		$this->setUpdateDate(time());
@@ -56,7 +56,7 @@ abstract class sly_Model_Base {
 		global $REX;
 
 		if (!$user) {
-			$user = $REX['USER']->getValue('login');
+			$user = $REX['USER']->getLogin();
 		}
 
 		$this->setCreateDate(time());

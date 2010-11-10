@@ -11,7 +11,7 @@
 // Daten vorbereiten
 
 $label     = t($this->func == 'edit' ? 'edit_user' : 'create_user');
-$currentID = $REX['USER']->getValue('id');
+$currentID = $REX['USER']->getId();
 $PERM      = $REX['PERM'];
 $EXTPERM   = empty($REX['EXTPERM']) ? array() : $REX['EXTPERM'];
 $EXTRAPERM = empty($REX['EXTRAPERM']) ? array() : $REX['EXTRAPERM'];

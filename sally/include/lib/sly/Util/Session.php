@@ -70,6 +70,18 @@ class sly_Util_Session {
 	}
 
 	/**
+	 * Session fixation
+	 */
+	public static function regenerate_id() {
+		if (version_compare(phpversion(), '5.1.0', '>=')) {
+			session_regenerate_id(true);
+		}
+		elseif (function_exists('session_regenerate_id')) {
+			session_regenerate_id();
+		}
+	}
+
+	/**
 	 * return the unique installation id of this sally instance
 	 *
 	 * @return string

@@ -26,7 +26,6 @@ class sly_Model_User extends sly_Model_Base {
 	protected $createdate;
 	protected $updatedate;
 	protected $lasttrydate;
-	protected $session_id;
 	protected $cookiekey;
 	protected $timezone;
 	protected $revision;
@@ -39,7 +38,7 @@ class sly_Model_User extends sly_Model_Base {
 		'name' => 'string', 'description' => 'string', 'login' => 'string', 'psw' => 'string',
 		'status' => 'int', 'rights' => 'string', 'updateuser' => 'string',
 		'updatedate' => 'int', 'createuser' => 'string', 'createdate' => 'int', 'lasttrydate' => 'int',
-		'session_id' => 'string', 'cookiekey' => 'string', 'timezone' => 'string', 'revision' => 'int'
+		'cookiekey' => 'string', 'timezone' => 'string', 'revision' => 'int'
 	);
 
 	public function __construct($params = array()) {
@@ -93,7 +92,6 @@ class sly_Model_User extends sly_Model_Base {
 	public function setCreateUser($createuser)   { $this->createuser  = $createuser;   }
 	public function setUpdateUser($updateuser)   { $this->updateuser  = $updateuser;   }
 	public function setLastTryDate($lasttrydate) { $this->lasttrydate = $lasttrydate;  }
-	public function setSessionId($session_id)    { $this->session_id  = $session_id;   }
 	public function setCookieKey($cookiekey)     { $this->cookiekey   = $cookiekey;    }
 	public function setTimeZone($timezone)       { $this->timezone    = $timezone;     }
 	public function setRevision($revision)       { $this->revision    = $revision;     }
@@ -109,7 +107,6 @@ class sly_Model_User extends sly_Model_Base {
 	public function getCreateUser()  { return $this->createuser;  }
 	public function getUpdateUser()  { return $this->updateuser;  }
 	public function getLastTryDate() { return $this->lasttrydate; }
-	public function getSessionId()   { return $this->session_id;  }
 	public function getCookieKey()   { return $this->cookiekey;   }
 	public function getTimeZone()    { return $this->timezone;    }
 	public function getRevision()    { return $this->revision;    }
@@ -153,6 +150,10 @@ class sly_Model_User extends sly_Model_Base {
 
 	public function hasRight($right) {
 		return in_array($right, $this->rightsArray);
+	}
+
+	public function hasPerm($right) {
+		return $this->hasRight($right);
 	}
 
 	public function toggleRight($right, $switch = true) {

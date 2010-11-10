@@ -97,7 +97,7 @@ class sly_Controller_User extends sly_Controller_Sally {
 
 		$save    = sly_post('save', 'boolean', false);
 		$service = sly_Service_Factory::getService('User');
-		$current = $REX['USER']->getValue('id');
+		$current = $REX['USER']->getId();
 
 		if ($save) {
 			$status = sly_post('userstatus', 'boolean', false) ? 1 : 0;
@@ -239,7 +239,7 @@ class sly_Controller_User extends sly_Controller_Sally {
 		global $REX;
 
 		$permissions = array();
-		$current     = $REX['USER']->getValue('id');
+		$current     = $REX['USER']->getId();
 		$config      = sly_Core::config();
 
 		if (sly_post('is_admin', 'boolean', false) || ($user && $current == $user->getId())) {

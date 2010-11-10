@@ -181,7 +181,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 		}
 
 		$db   = sly_DB_Persistence::getInstance();
-		$what = array('category_id' => $this->category, 'updateuser' => $REX['USER']->getValue('login'), 'updatedate' => time());
+		$what = array('category_id' => $this->category, 'updateuser' => $REX['USER']->getLogin(), 'updatedate' => time());
 		$db->update('file', $what, array('id' => $files));
 
 		$this->info = $this->t('selectedmedia_moved');
