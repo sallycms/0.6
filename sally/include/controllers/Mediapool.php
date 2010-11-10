@@ -52,6 +52,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 
 		$subline = rex_register_extension_point('PAGE_MEDIAPOOL_MENU', $subline);
 		$layout  = sly_Core::getLayout();
+		$layout->showNavigation(false);
 
 		$layout->pageHeader($this->t('media'), $subline);
 	}

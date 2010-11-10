@@ -13,7 +13,7 @@
  */
 class sly_Layout_Sally extends sly_Layout_XHTML
 {
-	private $hasNavigation = false;
+	private $hasNavigation = true;
 
 	public function __construct()
 	{
@@ -58,11 +58,7 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		$active = sly_Core::getNavigation()->getActivePage();
 
 		if ($active && $active->isPopup()) {
-			$this->hasNavigation = false;
 			$this->setBodyAttr('onunload', 'closeAll()');
-		}
-		else {
-			$this->hasNavigation = true;
 		}
 	}
 
@@ -181,6 +177,15 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		}
 
 		return $subtitle_str;
+	}
+
+	/**
+	 * override default hasNavigation value
+	 *
+	 * @param boolean $active true to show navigation falso to hide
+	 */
+	public function showNavigation($active = true) {
+		$this->hasNavigation = $active;
 	}
 
 	public function hasNavigation() {

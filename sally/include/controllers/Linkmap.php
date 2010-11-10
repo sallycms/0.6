@@ -34,6 +34,7 @@ class sly_Controller_Linkmap extends sly_Controller_Sally {
 
 		$naviPath .= '</ul>';
 		$layout    = sly_Core::getLayout();
+		$layout->showNavigation(false);
 
 		$layout->pageHeader(t('linkmap'), $naviPath);
 	}
