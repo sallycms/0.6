@@ -16,7 +16,6 @@
  */
 class sly_Service_User extends sly_Service_Model_Base {
 	protected $tablename = 'user';
-	protected $currentUser = false;
 
 	protected function makeObject(array $params) {
 		return new sly_Model_User($params);
@@ -45,11 +44,8 @@ class sly_Service_User extends sly_Service_Model_Base {
 	 * @return sly_Model_User
 	 */
 	public function getCurrentUser() {
-		if($this->currentUser === false) {
-			$userID = sly_Util_Session::get('UID', 'int', -1);
-			$this->currentUser = $this->findById($userID);
-		}
-		return $this->currentUser;
+		$userID = sly_Util_Session::get('UID', 'int', -1);
+		return $this->findById($userID);
 	}
 
 	public function login($login, $password) {

@@ -67,7 +67,7 @@ if (!SLY_IS_TESTING && $config->get('SETUP')) {
 else {
 	$locale = '';
 	$timezone = '';
-	$REX['USER'] = sly_Service_Factory::getUserService()->getCurrentUser();
+	$REX['USER'] = sly_Util_User::getCurrentUser();
 
 	//get user values
 	if ($REX['USER'] instanceof sly_Model_User) {
