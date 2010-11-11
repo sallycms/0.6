@@ -72,12 +72,12 @@ if ($this->action == 'add' || $this->action == 'edit') {
 		$form->addHiddenValue('args['.$name.']', $value);
 	}
 
-	$form->beginFieldset($legend);
+	$form->beginFieldset($legend, 'sly-mediapool-structure-form');
 	ob_start();
 }
 
 ?>
-<table class="rex-table" summary="<?= sly_html(t('pool_kat_summary')) ?>">
+<table class="rex-table" id="sly-mediapool-structure" summary="<?= sly_html(t('pool_kat_summary')) ?>">
 	<caption class="rex-hide"><?= sly_html(t('pool_kat_caption')) ?></caption>
 	<colgroup>
 		<col width="40" />
