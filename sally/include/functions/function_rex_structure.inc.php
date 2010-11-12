@@ -152,6 +152,13 @@ function rex_addCategory($parentID, $data)
 			/*    revision */ 0
 		);
 
+		$sql->setQuery('SELECT id FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE re_id = "'.$parentID.'" AND clang ="'.$clangID.'" AND catprior != 0');
+		for ($i=0; $i < $sql->getRows(); $i++)
+		{
+			sly_Core::cache()->delete('sly.category', $sql->getValue('id').'_'.$clangID);
+			$sql->next();
+		}
+
 		sly_Core::cache()->delete('sly.category.list', $parentID.'_'.$clangID);
 	}
 

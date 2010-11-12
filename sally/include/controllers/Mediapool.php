@@ -11,7 +11,6 @@
 class sly_Controller_Mediapool extends sly_Controller_Sally {
 	protected $warning;
 	protected $info;
-	protected $i18n;
 	protected $category;
 	protected $selectBox;
 
@@ -21,7 +20,6 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 		// load our i18n stuff
 		sly_Core::getI18N()->appendFile(SLY_INCLUDE_PATH.'/lang/pages/mediapool/');
 
-		$this->i18n    = sly_I18N_Subset::create('pool_');
 		$this->info    = sly_request('info', 'string');
 		$this->warning = sly_request('warning', 'string');
 		$this->args    = sly_requestArray('args', 'string');
@@ -58,8 +56,9 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 	}
 
 	protected function t($args) {
-		$args = func_get_args();
-		return call_user_func_array(array($this->i18n, 'msg'), $args);
+		$args    = func_get_args();
+		$args[0] = 'pool_'.$args[0];
+		return call_user_func_array('t', $args);
 	}
 
 	protected function getArgumentString($separator = '&amp;') {

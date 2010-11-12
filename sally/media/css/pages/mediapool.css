@@ -33,6 +33,19 @@ body#rex-page-mediapool {
 			a.rex-active { color: $drk_grey; }
 		}
 	}
+
+	#sly-mediapool-structure {
+		input.rex-form-submit {
+			margin-left: 0;
+		}
+	}
+
+	#sly-mediapool-structure-form {
+		.rex-form-row {
+			padding: 0;
+			width: 690px;
+		}
+	}
 }
 
 /*	Button - Arrows */

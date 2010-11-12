@@ -44,8 +44,14 @@ foreach ($groups as $group) {
 	$topic    = $group->getName();
 	$headline = $group->getTitle();
 	$pages    = $group->getPages();
+	$count    = 0;
 
-	if (empty($pages)) continue;
+	foreach ($pages as $page) {
+		if ($page->isHidden()) continue;
+		++$count;
+	}
+
+	if ($count == 0) continue;
 
 	print '<dt>'.$headline.'</dt><dd>';
 	print '<ul id="rex-navi-'.$topic.'">';
