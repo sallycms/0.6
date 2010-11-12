@@ -323,7 +323,7 @@ addon_back: zurück
 addon_install_not_found: Installationsdatei wurde nicht gefunden (install.inc.php)!
 addon_uninstall_not_found: Deinstallationsdatei wurde nicht gefunden (uninstall.inc.php)!
 addon_config_not_found: Konfigurationsdatei wurde nicht gefunden (config.inc.php)!
-addon_no_install: "AddOn {0} konnte aus folgendem Grund <b>nicht</b> installiert werden:"
+addon_no_install: "AddOn {0} konnte aus folgendem Grund <b>nicht</b> installiert werden:<br /> {1}"
 addon_no_uninstall: "AddOn {0} konnte aus folgendem Grund <b>nicht</b> deinstalliert werden:"
 addon_no_reason: Es wurde kein Grund angegeben.
 addon_no_activation: "AddOn {0} konnte <b>nicht</b> aktiviert werden, da es noch nicht installiert wurde!"
@@ -342,6 +342,8 @@ addon_hassets: Assets
 addon_reinit_assets: re-initialisieren
 addon_assets_copied: Die Assets wurden kopiert.
 plugin_assets_copied: Die Assets wurden kopiert.
+addon_addon_required: "Das AddOn {0} wird für das Addon {1} benötigt."
+addon_sally_incompatible: "Dieses AddOn ist nicht mit ihrer Version von SallyCMS ({0}) kompatibel."
 addon_reinstall: re-installieren
 addon_install: installieren
 addon_notinstalled: nicht installiert

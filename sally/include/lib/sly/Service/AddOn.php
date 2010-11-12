@@ -48,8 +48,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 
 				foreach ($requires as $requiredAddon) {
 					if (!$this->isAvailable($requiredAddon)) {
-						//TODO I18n
-						return 'The addOn '.$requiredAddon.' is required to install this addOn.';
+						return t('addon_addon_required', $requiredAddon, $addonName);
 					}
 				}
 			}
@@ -65,7 +64,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 				}
 
 				if (!$versionOK) {
-					return 'This addOn is not marked as compatible with your SallyCMS version ('.sly_Core::getVersion('X.Y.Z').').';
+					return t('addon_sally_incompatible', sly_Core::getVersion('X.Y.Z'));
 				}
 			}
 		}
@@ -78,7 +77,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 				try {
 					$this->req($installFile);
 				}catch (Exception $e) {
-					$installError = 'Es ist eine unerwartete Ausnahme während der Installation aufgetreten: '.$e->getMessage();
+					$installError = t('addon_no_install', $addonName, $e->getMessage());
 				}
 
 				$hasError = !empty($installError);
