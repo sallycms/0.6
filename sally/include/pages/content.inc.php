@@ -113,7 +113,6 @@ if (!is_null($OOArt)) {
 		print rex_warning(t('no_rights_to_edit'));
 	}
 	else {
-		$slot        = false;
 		$hasTemplate = !empty($templateName);
 
 		// validate slot
