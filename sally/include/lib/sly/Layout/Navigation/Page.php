@@ -86,4 +86,20 @@ class sly_Layout_Navigation_Page {
 		$this->subpages[] = $subpage;
 		return $subpage;
 	}
+
+	public function addSubpages(array $list) {
+		foreach ($list as $sp) {
+			if ($sp instanceof sly_Layout_Navigation_Subpage) {
+				$this->addSubpageObj($sp);
+			}
+			else {
+				$name      = isset($sp[0]) ? $sp[0] : '';
+				$title     = isset($sp[1]) ? $sp[1] : null;
+				$popup     = isset($sp[2]) ? $sp[2] : false;
+				$pageParam = isset($sp[3]) ? $sp[3] : null;
+
+				$this->addSubpage($name, $title, $popup, $pageParam);
+			}
+		}
+	}
 }
