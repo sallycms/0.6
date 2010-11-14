@@ -200,31 +200,6 @@ function rex_setAttributes($name,$value,$content)
 	return serialize($prop);
 }
 
-/**
- * Gibt den nächsten freien Tabindex zurück.
- * Der Tabindex ist eine stetig fortlaufende Zahl,
- * welche die Priorität der Tabulatorsprünge des Browsers regelt.
- *
- * @param  bool $html  wenn true, wird HTML zurückgegeben
- * @return int         nächster freier Tabindex oder HTML-Code zum Einfügen
- */
-function rex_tabindex($html = true)
-{
-	global $REX;
-
-	if (empty($REX['TABINDEX'])) {
-		$REX['TABINDEX'] = 0;
-	}
-
-	++$REX['TABINDEX'];
-
-	if ($html === true) {
-		return ''; // ' tabindex="'.$REX['TABINDEX'].'"';
-	}
-
-	return $REX['TABINDEX'];
-}
-
 function array_insert($array, $index, $value)
 {
 	// In PHP5 akzeptiert array_merge nur Arrays. Deshalb hier $value als Array verpacken
