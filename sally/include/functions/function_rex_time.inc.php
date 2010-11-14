@@ -8,10 +8,9 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-rex_startScripttime();
+rex_startScriptTime();
 
-function rex_showScriptTime()
-{
+function rex_showScriptTime() {
 	$start    = rex_startScriptTime();
 	$end      = microtime(true);
 	$duration = round($end - $start, 3);
@@ -19,13 +18,11 @@ function rex_showScriptTime()
 	return $duration;
 }
 
-function rex_getCurrentTime()
-{
+function rex_getCurrentTime() {
 	return microtime(true);
 }
 
-function rex_startScriptTime()
-{
+function rex_startScriptTime() {
 	static $start = null;
 	if ($start === null) $start = microtime(true);
 	return $start;
