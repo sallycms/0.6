@@ -320,7 +320,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		$args    = func_get_args();
 		$args[0] = $this->i18nPrefix.$args[0];
 
-		return rex_call_func(array($I18N, 'msg'), $args, false);
+		return call_user_func(array($I18N, 'msg'), $args, false);
 	}
 
 	public function isAvailable($plugin)
