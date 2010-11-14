@@ -20,8 +20,7 @@
  * @param string $contentType  ContentType der Datei
  * @param string $environment  Die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
-function rex_send_file($file, $contentType, $environment = 'backend')
-{
+function rex_send_file($file, $contentType, $environment = 'backend') {
 	global $REX;
 
 	// Cachen für Dateien aktivieren
@@ -48,8 +47,7 @@ function rex_send_file($file, $contentType, $environment = 'backend')
  * @param string      $content      Inhalt des Artikels
  * @param string      $environment  die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
-function rex_send_article($REX_ARTICLE, $content, $environment, $sendcharset = false)
-{
+function rex_send_article($REX_ARTICLE, $content, $environment, $sendcharset = false) {
 	global $REX;
 
 	// ----- EXTENSION POINT
@@ -85,8 +83,7 @@ function rex_send_article($REX_ARTICLE, $content, $environment, $sendcharset = f
  * @param string $cacheKey      Cachekey zur identifizierung des Caches
  * @param string $environment   die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
-function rex_send_content($content, $lastModified, $etag, $environment, $sendcharset = false)
-{
+function rex_send_content($content, $lastModified, $etag, $environment, $sendcharset = false) {
 	global $REX;
 
 	// Cachen erlauben, nach revalidierung
@@ -136,8 +133,7 @@ function rex_send_content($content, $lastModified, $etag, $environment, $sendcha
  *
  * @param int $lastModified  Last-Modified Timestamp
  */
-function rex_send_last_modified($lastModified = null)
-{
+function rex_send_last_modified($lastModified = null) {
 	if (!$lastModified) {
 		$lastModified = time();
 	}
@@ -167,8 +163,7 @@ function rex_send_last_modified($lastModified = null)
  *
  * @param string $cacheKey  Cachekey zur identifizierung des Caches
  */
-function rex_send_etag($cacheKey)
-{
+function rex_send_etag($cacheKey) {
 	// Laut HTTP Spec muss der Etag in " sein
 	$cacheKey = '"'.$cacheKey.'"';
 
@@ -195,8 +190,7 @@ function rex_send_etag($cacheKey)
  *
  * @param string $content  Inhalt des Artikels
  */
-function rex_send_gzip($content)
-{
+function rex_send_gzip($content) {
 	$enc          = '';
 	$encodings    = array();
 	$supportsGzip = false;
@@ -219,22 +213,6 @@ function rex_send_gzip($content)
 }
 
 /**
- * Prüft, ob sich der Client vermutlich über eine AV-Suite mit dem Internet
- * verbindet. Diese ersetzen (oder entfernen) mögliche Accept-Header, um immer
- * unkomprimierten Inhalt zu erhalten. Das erleichtert wohl das Prüfen des
- * Inhalts irgendwie.
- *
- * @return bool  true, wenn der Client sich vermutlich hinter einer AV-Suite verbirgt
- */
-function rex_is_avsuite()
-{
-	return
-		isset($_SERVER['---------------']) ||
-		isset($_SERVER['Accept-EncodXng']) ||
-		isset($_SERVER['XXXXXXXXXXXXXXX']);
-}
-
-/**
  * Sendet eine MD5 Checksumme als HTTP Header, damit der Browser validieren
  * kann, ob Übertragungsfehler aufgetreten sind
  *
@@ -242,7 +220,6 @@ function rex_is_avsuite()
  *
  * @param string $md5  MD5-Summe des Inhalts
  */
-function rex_send_checksum($md5)
-{
+function rex_send_checksum($md5) {
 	header('Content-MD5: '.$md5);
 }
