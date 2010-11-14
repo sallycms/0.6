@@ -21,7 +21,7 @@ $function    = rex_request('function',    'string');
 $info    = '';
 $warning = '';
 
-require SLY_INCLUDE_PATH.'/functions/function_rex_category.inc.php';
+require SLY_INCLUDE_PATH.'/views/toolbars/breadcrumb.phtml';
 require SLY_INCLUDE_PATH.'/functions/function_rex_content.inc.php';
 
 // Titel ausgeben
@@ -29,7 +29,7 @@ require SLY_INCLUDE_PATH.'/functions/function_rex_content.inc.php';
 rex_title($I18N->msg('title_structure'), $KATout);
 
 $sprachen_add = '&amp;category_id='.$category_id;
-$result = require SLY_INCLUDE_PATH.'/functions/function_rex_languages.inc.php';
+$result = require SLY_INCLUDE_PATH.'/views/toolbars/languages.phtml';
 if ($result === false) return;
 
 // -------------- STATUS_TYPE Map
@@ -43,7 +43,7 @@ if (rex_post('catedit_function', 'boolean') && $edit_id != '' && $KATPERM)
   $data = array();
   $data['catprior'] = rex_post('Position_Category', 'int');
   $data['catname']  = rex_post('kat_name', 'string');
-  $data['path']     = $KATPATH; // wird in functions/function_rex_category.inc.php erzeugt.
+  $data['path']     = $KATPATH; // wird in views/category/breadcrumb.phtml erzeugt.
 
   list($success, $message) = rex_editCategory($edit_id, $clang, $data);
 

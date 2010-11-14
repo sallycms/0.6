@@ -49,7 +49,7 @@ if (!is_null($OOArt)) {
 
 	// Kategoriepfad und -rechte
 
-	require SLY_INCLUDE_PATH.'/functions/function_rex_category.inc.php';
+	require SLY_INCLUDE_PATH.'/views/toolbars/breadcrumb.phtml';
 	// $KATout kommt aus dem include
 	// $KATPERM
 
@@ -84,7 +84,7 @@ if (!is_null($OOArt)) {
 	// Sprachenblock
 
 	$sprachen_add = '&amp;mode='.$mode.'&amp;category_id='.$category_id.'&amp;article_id='.$article_id;
-	require SLY_INCLUDE_PATH.'/functions/function_rex_languages.inc.php';
+	require SLY_INCLUDE_PATH.'/views/toolbars/languages.phtml';
 
 	// EXTENSION POINT
 
