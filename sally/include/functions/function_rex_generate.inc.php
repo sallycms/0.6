@@ -74,23 +74,10 @@ function rex_deleteCacheSliceContent($slice_id)
 /**
  * Löscht einen Artikel
  *
- * @param $id ArtikelId des Artikels, der gelöscht werden soll
- *
- * @return Erfolgsmeldung bzw. Fehlermeldung bei Fehlern.
+ * @param  int $id  ArtikelId des Artikels, der gelöscht werden soll
+ * @return array    array('state' => ..., 'message' => ...)
  */
 function rex_deleteArticle($id)
-{
-	return _rex_deleteArticle($id);
-}
-
-/**
- * Löscht einen Artikel
- *
- * @param $id ArtikelId des Artikels, der gelöscht werden soll
- *
- * @return true wenn der Artikel gelöscht wurde, sonst eine Fehlermeldung
- */
-function _rex_deleteArticle($id)
 {
 	global $REX, $I18N;
 
@@ -131,7 +118,7 @@ function _rex_deleteArticle($id)
 			$children = rex_sql::getArrayEx('SELECT id FROM #_article WHERE re_id = '.$id.' AND clang = 0', '#_');
 
 			foreach ($children as $child) {
-				$retval = _rex_deleteArticle($child);;
+				$retval = rex_deleteArticle($child);;
 				$return['state'] &= $retval['state'];
 
 				if (!$retval['status']) {
@@ -154,8 +141,8 @@ function _rex_deleteArticle($id)
 			$sql->setQuery('DELETE FROM #_article_slice WHERE article_id = '.$id, '#_');
 			$sql = null;
 
-			// Listen generieren (auskommtiert, weil: werden layze erzeugt)
-			//rex_generateLists($re_id);
+			// Listen generieren (auskommtiert, weil: werden lazy erzeugt)
+			// rex_generateLists($re_id);
 		}
 
 		return $return;
@@ -401,27 +388,4 @@ function rex_addCLang($id, $name)
 	sly_Core::cache()->set('sly.language', 'all', $REX['CLANG']);
 	rex_register_extension_point('CLANG_ADDED', '', array('id' => $id, 'name' => $name));
 	return true;
-}
-
-/**
- * Escaped einen String
- *
- * @deprecated  Using this function is a good indicator that you're doing something wrong.
- * @param       $string Zu escapender String
- */
-function rex_addslashes($string, $flag = '\\\'\"')
-{
-	trigger_error('Using this function is a good indicator that you\'re doing something wrong. Also, it\'s deprecated.', E_USER_NOTICE);
-
-	if ($flag == '\\\'\"') {
-		$string = str_replace('\\', '\\\\', $string);
-		$string = str_replace('\'', '\\\'', $string);
-		$string = str_replace('"', '\"', $string);
-	}
-	elseif ($flag == '\\\'') {
-		$string = str_replace('\\', '\\\\', $string);
-		$string = str_replace('\'', '\\\'', $string);
-	}
-
-	return $string;
 }
