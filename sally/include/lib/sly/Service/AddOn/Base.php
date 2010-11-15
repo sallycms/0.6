@@ -145,6 +145,27 @@ abstract class sly_Service_AddOn_Base {
 		return $state;
 	}
 
+	public function checkUpdate($addonORplugin) {
+		$version = $this->getVersion($addonORplugin, false);
+		$key     = $this->getVersionKey($addonORplugin);
+		$known   = sly_Util_Versions::get($key, false);
+
+		if ($known !== false && $version !== false && $known !== $version) {
+			$updateFile = $this->baseFolder($addonORplugin).'update.inc.php';
+
+			if (file_exists($updateFile)) {
+				global $REX, $I18N;
+				require_once $updateFile;
+			}
+
+			sly_Util_Versions::set($key, $version);
+		}
+	}
+
+	private function getVersionKey($addonORplugin) {
+		return is_array($addonORplugin) ? 'plugins/'.implode('_', $addonORplugin) : 'addons/'.$addonORplugin;
+	}
+
 //	abstract public function install($addonName);         // Installieren
 //	abstract public function uninstall($addonName);       // Deinstallieren
 //	abstract public function activate($addonName);        // Aktivieren

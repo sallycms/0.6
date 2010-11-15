@@ -76,7 +76,8 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 			if (is_readable($installFile)) {
 				try {
 					$this->req($installFile);
-				}catch (Exception $e) {
+				}
+				catch (Exception $e) {
 					$installError = t('addon_no_install', $addonName, $e->getMessage());
 				}
 
@@ -120,7 +121,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 
 		$state = $this->extend('POST', 'INSTALL', $addonName, $state);
 
-		// Dateien kopieren
+		// copy assets to data/dyn/public
 
 		if ($state === true && is_dir($filesDir)) {
 			$state = $this->copyAssets($addonName);
@@ -130,6 +131,14 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 
 		if ($state !== true) {
 			$this->setProperty($addonName, 'install', false);
+		}
+		else {
+			// store current addOn version
+			$version = $this->getProperty($addonName, 'version', false);
+
+			if ($version !== false) {
+				sly_Util_Versions::set('addons/'.$addonName, $version);
+			}
 		}
 
 		return $state;
@@ -213,6 +222,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 			$state = $this->extend('PRE', 'ACTIVATE', $addonName, true);
 
 			if ($state === true) {
+				$this->checkUpdate($addonName);
 				$this->setProperty($addonName, 'status', true);
 			}
 		}
@@ -456,17 +466,21 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	}
 
 	public function loadAddon($addonName) {
-		if(in_array($addonName, self::$addonsLoaded)) return true;
+		if (in_array($addonName, self::$addonsLoaded)) return true;
 
 		$this->loadConfig($addonName);
 
 		$requires = $this->getProperty($addonName, 'requires');
-		if(!empty($requires)) {
-			if(!is_array($requires)) $requires = sly_makeArray($requires);
-			foreach($requires as $requiredAddon) {
+
+		if (!empty($requires)) {
+			if (!is_array($requires)) $requires = sly_makeArray($requires);
+
+			foreach ($requires as $requiredAddon) {
 				$this->loadAddon($requiredAddon);
 			}
 		}
+
+		$this->checkUpdate($addonName);
 
 		$addonConfig = $this->baseFolder($addonName).'config.inc.php';
 

@@ -81,7 +81,7 @@ class sly_Configuration {
 		if(file_exists($filename)) {
 			$config = sly_Util_YAML::load($filename);
 			$this->localConfig = new sly_Util_Array($config);
-	
+
 		}
 	}
 
@@ -142,7 +142,7 @@ class sly_Configuration {
 		return $this->staticConfig->has($key) || $this->localConfig->has($key) || $this->projectConfig->has($key);
 	}
 
-	public function remove($key){
+	public function remove($key) {
 		$this->localConfig->remove($key);
 		$this->projectConfig->remove($key);
 	}

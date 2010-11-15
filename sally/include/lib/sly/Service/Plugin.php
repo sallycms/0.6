@@ -140,6 +140,14 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		if ($state !== true) {
 			$this->setProperty($plugin, 'install', false);
 		}
+		else {
+			// store current plugin version
+			$version = $this->getProperty($plugin, 'version', false);
+
+			if ($version !== false) {
+				sly_Util_Versions::set('plugins/'.implode('_', $plugin), $version);
+			}
+		}
 
 		return $state;
 	}
@@ -223,6 +231,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 			$state = $this->extend('PRE', 'ACTIVATE', $plugin, true);
 
 			if ($state === true) {
+				$this->checkUpdate($plugin);
 				$this->setProperty($plugin, 'status', true);
 			}
 		}
@@ -470,6 +479,8 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 
 	public function loadPlugin($plugin) {
 		$this->loadConfig($plugin);
+		$this->checkUpdate($plugin);
+
 		$pluginConfig = $this->baseFolder($plugin).'config.inc.php';
 
 		if (file_exists($pluginConfig)) {
@@ -530,5 +541,4 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base
 		// Alle überbleibenden Keys die ggf. andere Addons beinflussen einfließen lassen
 		$REX['ADDON'] = array_merge_recursive($ADDONSsic, $REX['ADDON']);
 	}
-
 }
