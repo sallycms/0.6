@@ -29,7 +29,8 @@ class sly_Controller_Addon extends sly_Controller_Sally {
 		$plugin = sly_request('plugin', 'string', '');
 		$addons = $this->addons->getRegisteredAddOns();
 
-		$this->addon = in_array($addon, $addons) ? $addon : null;
+		$this->addon  = in_array($addon, $addons) ? $addon : null;
+		$this->plugin = null;
 
 		if ($this->addon) {
 			$plugins      = $this->plugins->getRegisteredPlugins($this->addon);
@@ -109,7 +110,7 @@ class sly_Controller_Addon extends sly_Controller_Sally {
 		list($service, $component) = $this->prepareAction();
 		$this->warning = $service->$method($component);
 
-		if ($this->warning === true) {
+		if ($this->warning === true || $this->warning === 1) {
 			$this->info    = $this->t($i18n, $component);
 			$this->warning = '';
 		}
