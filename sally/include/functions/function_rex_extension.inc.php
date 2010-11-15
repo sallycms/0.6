@@ -24,8 +24,7 @@
  * @param mixed  $subject         Objekt/Variable die beeinflusst werden soll
  * @param array  $params          Parameter für die Callback-Funktion
  */
-function rex_register_extension_point($extensionPoint, $subject = null, $params = array (), $read_only = false)
-{
+function rex_register_extension_point($extensionPoint, $subject = null, $params = array (), $read_only = false) {
 	$dispatcher = sly_Core::dispatcher();
 	$read_only |= $subject === null;
 
@@ -49,8 +48,7 @@ function rex_register_extension_point($extensionPoint, $subject = null, $params 
  * @param mixed  $function   Name der Callback-Funktion
  * @param array  $params     Array von zusätzlichen Parametern
  */
-function rex_register_extension($extensionPoint, $callable, $params = array())
-{
+function rex_register_extension($extensionPoint, $callable, $params = array()) {
 	$dispatcher = sly_Core::dispatcher();
 	$dispatcher->register($extensionPoint, $callable, $params);
 }
@@ -62,8 +60,7 @@ function rex_register_extension($extensionPoint, $callable, $params = array())
  *
  * @param string $extensionPoint  Name des ExtensionPoints
  */
-function rex_extension_is_registered($extensionPoint)
-{
+function rex_extension_is_registered($extensionPoint) {
 	$dispatcher = sly_Core::dispatcher();
 	return $dispatcher->hasListeners($extensionPoint);
 }
@@ -76,43 +73,7 @@ function rex_extension_is_registered($extensionPoint)
  *
  * @param string $extensionPoint  Name des ExtensionPoints
  */
-function rex_get_registered_extensions($extensionPoint)
-{
+function rex_get_registered_extensions($extensionPoint) {
 	$dispatcher = sly_Core::dispatcher();
 	return $dispatcher->getListeners($extensionPoint);
-}
-
-/**
- * Aufruf einer Funtion (Class-Member oder statische Funktion)
- *
- * @deprecated  bietet keinen wirklich Mehrwert
- *
- * @param string $function  Name der Callback-Funktion
- * @param array  $params    Parameter für die Funktion
- *
- * @example
- *   rex_call_func( 'myFunction', array( 'Param1' => 'ab', 'Param2' => 12))
- * @example
- *   rex_call_func( 'myClass::myMethod', array( 'Param1' => 'ab', 'Param2' => 12))
- * @example
- *   rex_call_func( array('myClass', 'myMethod'), array( 'Param1' => 'ab', 'Param2' => 12))
- * @example
- *   $myObject = new myObject();
- *   rex_call_func( array($myObject, 'myMethod'), array( 'Param1' => 'ab', 'Param2' => 12))
- */
-function rex_call_func($function, $params, $parseParamsAsArray = true)
-{
-	if (!is_callable($function)) {
-		trigger_error('rexCallFunc: Using of an unexpected function var "'.$function.'"!');
-	}
-
-	if ($parseParamsAsArray === true) {
-		// Alle Parameter als ein Array übergeben
-		// $function($params);
-		return call_user_func($function, $params);
-	}
-
-	// Jeder index im Array ist ein Parameter
-	// $function($params[0], $params[1], $params[2],...);
-	return call_user_func_array($function, $params);
 }

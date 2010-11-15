@@ -54,7 +54,7 @@ if (count($languages) > 1) {
 				$class = ' class="rex-active"';
 			}
 
-			print '<a'.$class.' href="index.php?page='.$REX['PAGE'].'&amp;clang='.$clangID.$sprachen_add.'&amp;slot='.$slot.'"'.rex_tabindex().'>'.$clangName.'</a>';
+			print '<a'.$class.' href="index.php?page='.$REX['PAGE'].'&amp;clang='.$clangID.$sprachen_add.'&amp;slot='.$slot.'">'.$clangName.'</a>';
 		}
 
 		print '</li>';

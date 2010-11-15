@@ -48,7 +48,7 @@ class rex_var_template extends rex_var
 
         if (isset($args['callback'])) {
         	$tpl .= "\n".'$args[\'subject\'] = file_get_contents($tplService->getContent(\'$template_id\'));';
-        	$tpl .= "\n".'eval(\'?>\'.rex_call_func(unserialize("'.serialize($args['callback']).'", $args));';
+        	$tpl .= "\n".'eval(\'?>\'.call_user_func(unserialize("'.serialize($args['callback']).'", $args));';
         }
         else {
         	$prefix = isset($args['prefix']) ? "\n".'eval("'.addslashes($args['prefix']).'")' : '';

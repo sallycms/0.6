@@ -18,6 +18,8 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 
 	const DEFAULT_TYPE = 'default';
 
+	private static $defaultSlots = array('default' => '');
+
 	protected function isFileValid($filename) {
 		return preg_match('#\.php$#i', $filename);
 	}
@@ -40,7 +42,7 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 			'title'    => isset($data['title'])  ? $data['title']  : $data['name'],
 			'class'    => isset($data['class'])  ? $data['class']  : null,
 			'active'   => isset($data['active']) ? $data['active'] : false,
-			'slots'    => sly_makeArray(isset($data['slots']) ? $data['slots'] : array(0 => 'default')),
+			'slots'    => sly_makeArray(isset($data['slots']) ? $data['slots'] : self::$defaultSlots),
 			'modules'  => isset($data['modules']) ? $data['modules'] : array(),
 			'mtime'    => $mtime
 		);
@@ -165,7 +167,7 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 * @return array          Array of slots
 	 */
 	public function getSlots($name) {
-		return array_keys($this->get($name, 'slots', array(0)));
+		return array_keys($this->get($name, 'slots', self::$defaultSlots));
 	}
 
 	/**
@@ -178,7 +180,7 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 * @return string             The slot title or an empty string
 	 */
 	public function getSlotTitle($name, $slotName) {
-		$slots = $this->get($name, 'slots', array(0 => 'default'));
+		$slots = $this->get($name, 'slots', self::$defaultSlots);
 		return empty($slots[$slotName]) ? '' : $slots[$slotName];
 	}
 
@@ -189,7 +191,7 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 * @return string         The first slot (name) or null if the template has no slots
 	 */
 	public function getFirstSlot($name) {
-		$slots = $this->getSlots($name);
+		$slots = $this->getSlots($name); // gets the keys!
 		return empty($slots) ? null : $slots[0];
 	}
 
@@ -312,5 +314,4 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 		if (!empty($params)) extract($params);
 		include $templateFile_C3476zz3g21ug327ur623;
 	}
-
 }

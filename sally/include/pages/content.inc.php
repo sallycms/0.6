@@ -49,7 +49,7 @@ if (!is_null($OOArt)) {
 
 	// Kategoriepfad und -rechte
 
-	require SLY_INCLUDE_PATH.'/functions/function_rex_category.inc.php';
+	require SLY_INCLUDE_PATH.'/views/toolbars/breadcrumb.phtml';
 	// $KATout kommt aus dem include
 	// $KATPERM
 
@@ -84,7 +84,7 @@ if (!is_null($OOArt)) {
 	// Sprachenblock
 
 	$sprachen_add = '&amp;mode='.$mode.'&amp;category_id='.$category_id.'&amp;article_id='.$article_id;
-	require SLY_INCLUDE_PATH.'/functions/function_rex_languages.inc.php';
+	require SLY_INCLUDE_PATH.'/views/toolbars/languages.phtml';
 
 	// EXTENSION POINT
 
@@ -434,13 +434,13 @@ if (!is_null($OOArt)) {
 		$numSlots = $hasTemplate ? count($curSlots) : 0;
 		$slotMenu = '';
 
-		if ($numSlots > 0) {
+		if ($numSlots > 1) {
 			$listElements = array(t($numSlots > 1 ? 'content_types' : 'content_type').' : ');
 
 			foreach ($curSlots as $tmpSlot) {
 				$class = ($tmpSlot == $slot && $mode == 'edit') ? ' class="rex-active"' : '';
 				$slotTitle = rex_translate($templateService->getSlotTitle($templateName, $tmpSlot));
-				$listElements[] = '<a href="index.php?page=content&amp;article_id='.$article_id.'&amp;clang='.$clang.'&amp;slot='.$tmpSlot.'&amp;mode=edit"'.$class.''.rex_tabindex().'>'.$slotTitle.'</a>';
+				$listElements[] = '<a href="index.php?page=content&amp;article_id='.$article_id.'&amp;clang='.$clang.'&amp;slot='.$tmpSlot.'&amp;mode=edit"'.$class.'>'.$slotTitle.'</a>';
 			}
 
 			$listElements = rex_register_extension_point('PAGE_CONTENT_CTYPE_MENU', $listElements, array(
@@ -486,7 +486,7 @@ if (!is_null($OOArt)) {
 			$listElements[] = '<a href="'.$baseURL.'&amp;mode=meta" class="rex-active">'.t('metadata').'</a>';
 		}
 
-		$listElements[] = '<a href="../'.$REX['FRONTEND_FILE'].'?article_id='.$article_id.'&amp;clang='.$clang.'" onclick="window.open(this.href); return false;" '.rex_tabindex().'>'.t('show').'</a>';
+		$listElements[] = '<a href="../'.$REX['FRONTEND_FILE'].'?article_id='.$article_id.'&amp;clang='.$clang.'" onclick="window.open(this.href); return false;">'.t('show').'</a>';
 
 		$listElements = rex_register_extension_point('PAGE_CONTENT_MENU', $listElements, array(
 			'article_id' => $article_id,
@@ -673,11 +673,9 @@ if (!is_null($OOArt)) {
 				if (($REX['USER']->isAdmin() || $REX['USER']->hasPerm('copyContent[]')) && count($REX['CLANG']) > 1) {
 					$lang_a = new sly_Form_Select_DropDown('clang_a', t('content_contentoflang'), sly_request('clang_a', 'rex-clang-id', null), $REX['CLANG'], 'clang_a');
 					$lang_a->setSize(1);
-					$lang_a->setAttribute('tabindex', rex_tabindex(false));
 
 					$lang_b = new sly_Form_Select_DropDown('clang_b', t('content_to'), sly_request('clang_b', 'rex-clang-id', null), $REX['CLANG'], 'clang_b');
 					$lang_b->setSize(1);
-					$lang_b->setAttribute('tabindex', rex_tabindex(false));
 
 					$form->beginFieldset(t('content_submitcopycontent'), null, 2);
 					$form->addRow(array($lang_a, $lang_b));
