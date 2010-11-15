@@ -434,7 +434,7 @@ if (!is_null($OOArt)) {
 		$numSlots = $hasTemplate ? count($curSlots) : 0;
 		$slotMenu = '';
 
-		if ($numSlots > 0) {
+		if ($numSlots > 1) {
 			$listElements = array(t($numSlots > 1 ? 'content_types' : 'content_type').' : ');
 
 			foreach ($curSlots as $tmpSlot) {
