@@ -15,7 +15,10 @@
 abstract class sly_Service_AddOn_Base {
 	protected $addons;
 	protected $data;
-	protected $i18nPrefix;
+
+	public function __construct() {
+		$this->data = sly_Core::config()->get('ADDON');
+	}
 
 	protected function req($filename) {
 		global $REX, $I18N; // Nötig damit im Addon verfügbar
@@ -105,6 +108,126 @@ abstract class sly_Service_AddOn_Base {
 		return $supportPage;
 	}
 
+	/**
+	 * Aktiviert ein Addon
+	 *
+	 * @param $addonName Name des Addons
+	 */
+	public function activate($addonORplugin) {
+		if ($this->isActivated($addonORplugin)) {
+			return true;
+		}
+
+		if ($this->isInstalled($addonORplugin)) {
+			$state = $this->extend('PRE', 'ACTIVATE', $addonORplugin, true);
+
+			if ($state === true) {
+				$this->checkUpdate($addonORplugin);
+				$this->setProperty($addonORplugin, 'status', true);
+			}
+		}
+		else {
+			$state = t('no_activation', $addonORplugin);
+		}
+
+		return $this->extend('POST', 'ACTIVATE', $addonORplugin, $state);
+	}
+
+	/**
+	 * Deaktiviert ein Plugin
+	 *
+	 * @param array $plugin  Plugin als array(addon, plugin)
+	 */
+	public function deactivate($addonORplugin) {
+		if (!$this->isActivated($addonORplugin)) {
+			return true;
+		}
+
+		$state = $this->extend('PRE', 'DEACTIVATE', $addonORplugin, true);
+
+		if ($state === true) {
+			$this->setProperty($addonORplugin, 'status', false);
+		}
+
+		return $this->extend('POST', 'DEACTIVATE', $addonORplugin, $state);
+	}
+
+	public function publicFolder($addonORplugin) {
+		return $this->dynFolder('public', $addonORplugin);
+	}
+
+	public function internalFolder($addonORplugin) {
+		return $this->dynFolder('internal', $addonORplugin);
+	}
+
+	public function deletePublicFiles($addonORplugin) {
+		return $this->deleteFiles('public', $addonORplugin);
+	}
+
+	public function deleteInternalFiles($addonORplugin) {
+		return $this->deleteFiles('internal', $addonORplugin);
+	}
+
+	protected function deleteFiles($type, $addonORplugin) {
+		$dir   = $this->dynFolder($type, $addonORplugin);
+		$state = $this->extend('PRE', 'DELETE_'.strtoupper($type), $addonORplugin, true);
+
+		if ($state !== true) {
+			return $state;
+		}
+
+		if (is_dir($dir) && !rex_deleteDir($dir, true)) {
+			return $this->I18N('install_cant_delete_files');
+		}
+
+		return $this->extend('POST', 'DELETE_'.strtoupper($type), $addonORplugin, true);
+	}
+
+	protected function I18N() {
+		$args    = func_get_args();
+		$args[0] = $this->getI18NPrefix().$args[0];
+
+		return call_user_func('t', $args, false);
+	}
+
+	public function isAvailable($addonORplugin) {
+		return $this->isInstalled($addonORplugin) && $this->isActivated($addonORplugin);
+	}
+
+	public function isInstalled($addonORplugin) {
+		return $this->getProperty($addonORplugin, 'install', false) == true;
+	}
+
+	public function isActivated($addonORplugin) {
+		return $this->getProperty($addonORplugin, 'status', false) == true;
+	}
+
+	public function getAuthor($addonORplugin, $default = null) {
+		return $this->getProperty($addonORplugin, 'author', $default);
+	}
+
+	public function getSupportPage($addonORplugin, $default = null) {
+		return $this->getProperty($addonORplugin, 'supportpage', $default);
+	}
+
+	public function getVersion($addonORplugin, $default = null) {
+		$version     = $this->getProperty($addonORplugin, 'version', null);
+		$versionFile = $this->baseFolder($addonORplugin).'/version';
+
+		if ($version === null && file_exists($versionFile)) {
+			$version = file_get_contents($versionFile);
+		}
+
+		return $version === null ? $default : $version;
+	}
+
+	public function getKnownVersion($addonORplugin, $default = null) {
+		$key     = $this->getVersionKey($addonORplugin);
+		$version = sly_Util_Versions::get($key);
+
+		return $version === false ? $default : $version;
+	}
+
 	public function copyAssets($addonORplugin) {
 		$addonDir  = $this->baseFolder($addonORplugin);
 		$assetsDir = sly_Util_Directory::join($addonDir, 'assets');
@@ -154,16 +277,13 @@ abstract class sly_Service_AddOn_Base {
 			$updateFile = $this->baseFolder($addonORplugin).'update.inc.php';
 
 			if (file_exists($updateFile)) {
-				global $REX, $I18N;
-				require_once $updateFile;
+				$this->req($updateFile);
 			}
+		}
 
+		if ($version !== false && $known !== $version) {
 			sly_Util_Versions::set($key, $version);
 		}
-	}
-
-	private function getVersionKey($addonORplugin) {
-		return is_array($addonORplugin) ? 'plugins/'.implode('_', $addonORplugin) : 'addons/'.$addonORplugin;
 	}
 
 //	abstract public function install($addonName);         // Installieren
