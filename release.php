@@ -11,9 +11,9 @@
 // Configuration
 
 $variants = array(
-	'full'    => array('tests' => true, 'addons' => array('image_resize', 'import_export', 'be_search')),
-	'lite'    => array('tests' => true, 'addons' => array()),
-	'minimal' => array('tests' => false, 'addons' => array())
+	'full'    => array('docs' => true, 'tests' => true, 'addons' => array('image_resize', 'import_export', 'be_search')),
+	'lite'    => array('docs' => true, 'tests' => true, 'addons' => array()),
+	'minimal' => array('docs' => false, 'tests' => false, 'addons' => array())
 );
 
 $addonDir = 'Q:\\AddOns\\';
@@ -72,6 +72,10 @@ foreach ($variants as $name => $settings) {
 		$params[] = '-X tests';
 	}
 
+	if (!$settings['docs']) {
+		$params[] = '-X docs';
+	}
+
 	$params[] = '"'.$target.'"';
 	print 'archiving...';
 	chdir($repo);
@@ -86,9 +90,12 @@ foreach ($variants as $name => $settings) {
 
 	// Generate documentation
 
-	chdir('docs');
-	exec('php '.$cocoBin.' . doconly 2>&0');
-	chdir($target);
+	if ($settings['docs']) {
+		chdir('docs');
+		print 'coco...';
+		exec('php '.$cocoBin.' . doconly 2>&0');
+		chdir($target);
+	}
 
 	if (empty($settings['addons'])) {
 		file_put_contents('sally/include/addons/empty', 'Put all your addOns in this directory.');
