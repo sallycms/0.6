@@ -43,7 +43,6 @@
 			$params['isActive']    = $addons->isActivated($addon);
 			$params['isInstalled'] = $addons->isInstalled($addon);
 			$params['version']     = $addons->getVersion($addon);
-			$params['icon']        = $addons->getIcon($addon);
 			$params['author']      = $addons->getAuthor($addon);
 			$params['supportPage'] = $addons->getSupportPageEx($addon);
 
@@ -58,7 +57,6 @@
 					$params['isActive']    = $plugins->isActivated(array($addon, $plugin));
 					$params['isInstalled'] = $plugins->isInstalled(array($addon, $plugin));
 					$params['version']     = $plugins->getVersion(array($addon, $plugin));
-					$params['icon']        = $plugins->getIcon(array($addon, $plugin));
 					$params['author']      = $plugins->getAuthor(array($addon, $plugin));
 					$params['supportPage'] = $plugins->getSupportPageEx(array($addon, $plugin));
 
