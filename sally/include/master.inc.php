@@ -99,5 +99,16 @@ if (empty($REX['SYNC']) && !$config->get('SETUP')){
 }
 
 // REDAXO compatibility
+
 if (!$config->has('TABLE_PREFIX')) $config->setLocal('TABLE_PREFIX', $config->get('DATABASE/TABLE_PREFIX'));
 $REX = array_merge($REX, $config->get(null));
+
+// Check for system updates
+
+$coreVersion  = sly_Core::getVersion('X.Y.Z');
+$knownVersion = sly_Util_Versions::get('sally');
+
+if ($knownVersion !== $coreVersion) {
+	// dummy: implement some clever update mechanism (if needed)
+	sly_Util_Versions::set('sally', $coreVersion);
+}

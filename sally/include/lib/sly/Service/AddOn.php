@@ -12,20 +12,10 @@
  * @author  christoph@webvariants.de
  * @ingroup service
  */
-class sly_Service_AddOn extends sly_Service_AddOn_Base
-{
+class sly_Service_AddOn extends sly_Service_AddOn_Base {
 	protected static $addonsLoaded = array();
 
-	public function __construct()
-	{
-		$this->data       = sly_Core::config()->get('ADDON');
-		$this->i18nPrefix = 'addon_';
-	}
-
-	public function install($addonName, $installDump = true)
-	{
-		global $REX;
-
+	public function install($addonName, $installDump = true) {
 		$addonDir    = $this->baseFolder($addonName);
 		$installFile = $addonDir.'install.inc.php';
 		$installSQL  = $addonDir.'install.sql';
@@ -76,7 +66,8 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 			if (is_readable($installFile)) {
 				try {
 					$this->req($installFile);
-				}catch (Exception $e) {
+				}
+				catch (Exception $e) {
 					$installError = t('addon_no_install', $addonName, $e->getMessage());
 				}
 
@@ -120,7 +111,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 
 		$state = $this->extend('POST', 'INSTALL', $addonName, $state);
 
-		// Dateien kopieren
+		// copy assets to data/dyn/public
 
 		if ($state === true && is_dir($filesDir)) {
 			$state = $this->copyAssets($addonName);
@@ -131,6 +122,14 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		if ($state !== true) {
 			$this->setProperty($addonName, 'install', false);
 		}
+		else {
+			// store current addOn version
+			$version = $this->getProperty($addonName, 'version', false);
+
+			if ($version !== false) {
+				sly_Util_Versions::set('addons/'.$addonName, $version);
+			}
+		}
 
 		return $state;
 	}
@@ -140,8 +139,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	 *
 	 * @param $addonName Name des Addons
 	 */
-	public function uninstall($addonName)
-	{
+	public function uninstall($addonName) {
 		$addonDir      = $this->baseFolder($addonName);
 		$uninstallFile = $addonDir.'uninstall.inc.php';
 		$uninstallSQL  = $addonDir.'uninstall.sql';
@@ -198,70 +196,13 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		return $state;
 	}
 
-	/**
-	 * Aktiviert ein Addon
-	 *
-	 * @param $addonName Name des Addons
-	 */
-	public function activate($addonName)
-	{
-		if ($this->isActivated($addonName)) {
-			return true;
-		}
-
-		if ($this->isInstalled($addonName)) {
-			$state = $this->extend('PRE', 'ACTIVATE', $addonName, true);
-
-			if ($state === true) {
-				$this->setProperty($addonName, 'status', true);
-			}
-		}
-		else {
-			$state = t('no_activation', $addonName);
-		}
-
-		return $this->extend('POST', 'ACTIVATE', $addonName, $state);
-	}
-
-	/**
-	 * Deaktiviert ein Addon
-	 *
-	 * @param $addonName Name des Addons
-	 */
-	public function deactivate($addonName)
-	{
-		if (!$this->isActivated($addonName)) {
-			return true;
-		}
-
-		$state = $this->extend('PRE', 'DEACTIVATE', $addonName, true);
-
-		if ($state === true) {
-			$this->setProperty($addonName, 'status', false);
-		}
-
-		return $this->extend('POST', 'DEACTIVATE', $addonName, $state);
-	}
-
-	public function baseFolder($addonName)
-	{
+	public function baseFolder($addonName) {
 		$dir = SLY_INCLUDE_PATH.DIRECTORY_SEPARATOR.'addons'.DIRECTORY_SEPARATOR;
 		if (!empty($addonName)) $dir .= $addonName.DIRECTORY_SEPARATOR;
 		return $dir;
 	}
 
-	public function publicFolder($addonName)
-	{
-		return $this->dynFolder('public', $addonName);
-	}
-
-	public function internalFolder($addonName)
-	{
-		return $this->dynFolder('internal', $addonName);
-	}
-
-	protected function dynFolder($type, $addonName)
-	{
+	protected function dynFolder($type, $addonName) {
 		$config = sly_Core::config();
 		$dir    = SLY_DYNFOLDER.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.$addonName;
 
@@ -269,8 +210,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		return $dir;
 	}
 
-	protected function dynPath($type, $addonName)
-	{
+	protected function dynPath($type, $addonName) {
 		$config = sly_Core::config();
 		$dir    = SLY_BASE.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.$addonName;
 
@@ -278,109 +218,8 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 		return $dir;
 	}
 
-	protected function extend($time, $type, $addonName, $state)
-	{
+	protected function extend($time, $type, $addonName, $state) {
 		return rex_register_extension_point('SLY_ADDON_'.$time.'_'.$type, $state, array('addon' => $addonName));
-	}
-
-	public function deletePublicFiles($addonName)
-	{
-		return $this->deleteFiles('public', $addonName);
-	}
-
-	public function deleteInternalFiles($addonName)
-	{
-		return $this->deleteFiles('internal', $addonName);
-	}
-
-	protected function deleteFiles($type, $addonName)
-	{
-		$dir   = $this->dynFolder($type, $addonName);
-		$state = $this->extend('PRE', 'DELETE_'.strtoupper($type), $addonName, true);
-
-		if ($state !== true) {
-			return $state;
-		}
-
-		if (is_dir($dir) && !rex_deleteDir($dir, true)) {
-			return $this->I18N('install_cant_delete_files');
-		}
-
-		return $this->extend('POST', 'DELETE_'.strtoupper($type), $addonName, true);
-	}
-
-	protected function I18N()
-	{
-		global $I18N;
-
-		$args    = func_get_args();
-		$args[0] = $this->i18nPrefix.$args[0];
-
-		return call_user_func(array($I18N, 'msg'), $args, false);
-	}
-
-	public function isAvailable($addonName)
-	{
-		return $this->isInstalled($addonName) && $this->isActivated($addonName);
-	}
-
-	public function isInstalled($addonName)
-	{
-		return $this->getProperty($addonName, 'install', false) == true;
-	}
-
-	public function isActivated($addonName)
-	{
-		return $this->getProperty($addonName, 'status', false) == true;
-	}
-
-	public function getVersion($addonName, $default = null)
-	{
-		$version     = $this->getProperty($addonName, 'version', null);
-		$versionFile = $this->baseFolder($addonName).'/version';
-
-		if ($version === null && file_exists($versionFile)) {
-			$version = file_get_contents($versionFile);
-		}
-
-		return $version === null ? $default : $version;
-	}
-
-	public function getAuthor($addonName, $default = null)
-	{
-		return $this->getProperty($addonName, 'author', $default);
-	}
-
-	public function getSupportPage($addonName, $default = null)
-	{
-		return $this->getProperty($addonName, 'supportpage', $default);
-	}
-
-	public function getIcon($addonName)
-	{
-		$directory = $this->publicFolder($addonName);
-		$base      = $this->baseFolder($addonName);
-		$icon      = $this->getProperty($addonName, 'icon', null);
-
-		if ($icon === null) {
-			if (file_exists($directory.'/images/icon.png')) {
-				$icon = 'images/'.$addonName.'/icon.png';
-			}
-			elseif (file_exists($directory.'/images/icon.gif')) {
-				$icon = 'images/'.$addonName.'/icon.gif';
-			}
-			elseif (file_exists($base.'/images/icon.png')) {
-				$icon = $base.'/images/icon.png';
-			}
-			elseif (file_exists($base.'/images/icon.gif')) {
-				$icon = $base.'/images/icon.gif';
-			}
-			else {
-				$icon = false;
-			}
-		}
-
-		return $icon;
 	}
 
 	/**
@@ -391,8 +230,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	 * @param  mixed  $property  Wert der Eigenschaft
 	 * @return mixed             der gesetzte Wert
 	 */
-	public function setProperty($addonName, $property, $value)
-	{
+	public function setProperty($addonName, $property, $value) {
 		return sly_Core::config()->set('ADDON/'.$addonName.'/'.$property, $value);
 	}
 
@@ -404,8 +242,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	 * @param  mixed  $default    Rückgabewert, falls die Eigenschaft nicht gefunden wurde
 	 * @return string             Wert der Eigenschaft des Addons
 	 */
-	public function getProperty($addonName, $property, $default = null)
-	{
+	public function getProperty($addonName, $property, $default = null) {
 		return sly_Core::config()->has('ADDON/'.$addonName.'/'.$property) ? sly_Core::config()->get('ADDON/'.$addonName.'/'.$property) : $default;
 	}
 
@@ -416,8 +253,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	 *
 	 * @return array  Array aller registrierten Addons
 	 */
-	public function getRegisteredAddons()
-	{
+	public function getRegisteredAddons() {
 		$data = sly_Core::config()->get('ADDON');
 		$data = !empty($data) ? array_keys($data) : array();
 		natsort($data);
@@ -431,8 +267,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	 *
 	 * @return array  Array der verfügbaren Addons
 	 */
-	public function getAvailableAddons()
-	{
+	public function getAvailableAddons() {
 		$avail = array();
 
 		foreach ($this->getRegisteredAddons() as $addonName) {
@@ -450,31 +285,41 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base
 	 * @param  string $addonName  Name des Addons
 	 * @return boolean            true, wenn es sich um ein System-Addon handelt, sonst false
 	 */
-	public function isSystemAddon($addonName)
-	{
+	public function isSystemAddon($addonName) {
 		return false;
 	}
 
 	public function loadAddon($addonName) {
-		if(in_array($addonName, self::$addonsLoaded)) return true;
+		if (in_array($addonName, self::$addonsLoaded)) return true;
 
 		$this->loadConfig($addonName);
 
 		$requires = $this->getProperty($addonName, 'requires');
-		if(!empty($requires)) {
-			if(!is_array($requires)) $requires = sly_makeArray($requires);
-			foreach($requires as $requiredAddon) {
+
+		if (!empty($requires)) {
+			if (!is_array($requires)) $requires = sly_makeArray($requires);
+
+			foreach ($requires as $requiredAddon) {
 				$this->loadAddon($requiredAddon);
 			}
 		}
 
+		$this->checkUpdate($addonName);
+
 		$addonConfig = $this->baseFolder($addonName).'config.inc.php';
 
 		if (file_exists($addonConfig)) {
-			global $REX, $I18N;
-			require_once $addonConfig;
+			$this->req($addonConfig);
 		}
 
 		self::$addonsLoaded[] = $addonName;
+	}
+
+	protected function getI18NPrefix() {
+		return 'addon_';
+	}
+
+	protected function getVersionKey($addon) {
+		return 'addons/'.$addon;
 	}
 }
