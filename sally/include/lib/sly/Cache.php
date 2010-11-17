@@ -139,10 +139,12 @@ abstract class sly_Cache {
 			case 'sly_Cache_XCache':
 			case 'sly_Cache_ZendServer':
 
+				$oldmaxtime = ini_get('max_execution_time');
 				set_time_limit(3);
 				$cache = new $cachingStrategy();
 				$cache->setNamespacePrefix($instname);
 				$cache->setExpiration(0);
+				set_time_limit($oldmaxtime);
 				break;
 
 			case 'sly_Cache_Memcache':
