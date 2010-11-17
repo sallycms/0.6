@@ -192,7 +192,7 @@ if (!is_null($OOArt)) {
 							$newsql->setTable('article_slice', true);
 
 							if ($function == 'edit') {
-								$ooslice = OOArticleSlice::getArticleSliceById($slice_id);
+								$ooslice   = OOArticleSlice::getArticleSliceById($slice_id);
 								$realslice = sly_Service_Factory::getSliceService()->findById($ooslice->getSliceId());
 								$realslice->flushValues();
 								unset($ooslice);
@@ -233,18 +233,13 @@ if (!is_null($OOArt)) {
 
 								if ($newsql->insert()) {
 									$last_id = $newsql->getLastId();
-
 									$query   =
-										'UPDATE #_article_slice '.
-										'SET prior = prior + 1 WHERE
-											article_id = '.$article_id.' AND
-											clang = '.$clang.' AND
-											slot = "'.$slot.'" AND
-											prior >= '.$prior.' AND
-											id != '.$last_id;
+										'UPDATE ~article_slice SET prior = prior + 1 '.
+										'WHERE article_id = '.$article_id.' AND clang = '.$clang.' AND slot = "'.$slot.'" '.
+										'AND prior >= '.$prior.' AND id <> '.$last_id;
 
 									if ($newsql->setQuery($query, '#_')) {
-										$info     = $action_message.t('block_added');
+										$info = $action_message.t('block_added');
 									}
 
 									$function = '';
@@ -257,8 +252,6 @@ if (!is_null($OOArt)) {
 							$newsql = null;
 						}
 						else {
-							// make delete
-
 							if (rex_deleteSlice($slice_id)) {
 								$global_info = t('block_deleted');
 							}
@@ -283,6 +276,11 @@ if (!is_null($OOArt)) {
 						// POST SAVE ACTION [ADD/EDIT/DELETE]
 
 						$info .= rex_execPostSaveAction($module, $function, $REX_ACTION);
+
+						sly_Core::dispatcher()->notify('SLY_CONTENT_UPDATED', array(
+							'article_id' => $article_id,
+							'clang'      => $clang
+						));
 
 						// Update Button wurde gedrückt?
 
