@@ -148,6 +148,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 	 * @param array $plugin  Plugin als array(addon, plugin)
 	 */
 	public function uninstall($plugin) {
+		global $REX;
 		list($addon, $pluginName) = $plugin;
 
 		$pluginDir      = $this->baseFolder($plugin);
