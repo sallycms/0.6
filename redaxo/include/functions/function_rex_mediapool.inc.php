@@ -169,7 +169,6 @@ function rex_mediapool_saveMedia($fileData, $rex_file_category, $fileInfos, $use
 	$return['ok']           = $success;
 	$return['filename']     = $newFilename;
 	$return['old_filename'] = $filename;
-	$return['id']           = $sql->getLastId();
 
 	if ($size) {
 		$return['width']  = $size[0];
@@ -177,6 +176,7 @@ function rex_mediapool_saveMedia($fileData, $rex_file_category, $fileInfos, $use
 	}
 
 	if ($success) {
+		$return['id'] = $sql->getLastId();
 		rex_register_extension_point('MEDIA_ADDED', '', $return);
 	}
 
