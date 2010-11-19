@@ -140,14 +140,17 @@ class Thumbnail
 				imagepalettecopy($this->imgsrc, $this->imgthumb);
 			}
 
+			// get the original image's index for its transparent color
 			$colorTransparent = imagecolortransparent($this->imgsrc);
 
-			if ($colorTransparent >= 0) {
+			// if there is an index in the color index range -> the image has transparency
+			if ($colorTransparent >= 0 && $colorTransparent < imagecolorstotal($this->imgsrc)) {
+
 				// Get the original image's transparent color's RGB values
 				$trnprt_color = imagecolorsforindex($this->imgsrc,  $colorTransparent);
 
 				// Allocate the same color in the new image resource
-				$colorTransparent = imagecolorallocate($this->imgthumb, $colorTransparent['red'], $colorTransparent['green'], $colorTransparent['blue']);
+				$colorTransparent = imagecolorallocate($this->imgthumb, $trnprt_color['red'], $trnprt_color['green'], $trnprt_color['blue']);
 
 				// Completely fill the background of the new image with allocated color.
 				imagefill($this->imgthumb, 0, 0, $colorTransparent);
