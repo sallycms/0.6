@@ -54,6 +54,7 @@ define('SLY_DYNFOLDER',    $REX['DYNFOLDER']);
 define('SLY_DATAFOLDER',   $REX['DATAFOLDER']);
 define('SLY_MEDIAFOLDER',  $REX['MEDIAFOLDER']);
 define('SLY_DEVELOPFOLDER', SLY_BASE.DIRECTORY_SEPARATOR.'develop');
+define('SLY_ADDONFOLDER',  $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'addons');
 
 // Loader initialisieren
 
