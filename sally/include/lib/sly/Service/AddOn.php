@@ -197,7 +197,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 	}
 
 	public function baseFolder($addonName) {
-		$dir = SLY_INCLUDE_PATH.DIRECTORY_SEPARATOR.'addons'.DIRECTORY_SEPARATOR;
+		$dir = SLY_ADDONFOLDER.DIRECTORY_SEPARATOR;
 		if (!empty($addonName)) $dir .= $addonName.DIRECTORY_SEPARATOR;
 		return $dir;
 	}
