@@ -46,7 +46,7 @@ class sly_Service_Module extends sly_Service_DevelopBase {
 		return $result;
 	}
 
-	protected function flush($name = null) {
+	protected function flush($name = null, $filename = null) {
 		$sql = sly_DB_Persistence::getInstance();
 		$where = $name === null ? null : array('module' => $name);
 		$sql->select('article_slice', 'slice_id', $where);

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
  *
@@ -15,7 +16,6 @@
  * @ingroup service
  */
 class sly_Service_Template extends sly_Service_DevelopBase {
-
 	const DEFAULT_TYPE = 'default';
 
 	private static $defaultSlots = array('default' => '');
@@ -39,12 +39,12 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	protected function buildData($filename, $mtime, $data) {
 		$result = array(
 			'filename' => $filename,
-			'title'    => isset($data['title'])  ? $data['title']  : $data['name'],
-			'class'    => isset($data['class'])  ? $data['class']  : null,
-			'active'   => isset($data['active']) ? $data['active'] : false,
-			'slots'    => sly_makeArray(isset($data['slots']) ? $data['slots'] : self::$defaultSlots),
-			'modules'  => isset($data['modules']) ? $data['modules'] : array(),
-			'mtime'    => $mtime
+			'title' => isset($data['title']) ? $data['title'] : $data['name'],
+			'class' => isset($data['class']) ? $data['class'] : null,
+			'active' => isset($data['active']) ? $data['active'] : false,
+			'slots' => sly_makeArray(isset($data['slots']) ? $data['slots'] : self::$defaultSlots),
+			'modules' => isset($data['modules']) ? $data['modules'] : array(),
+			'mtime' => $mtime
 		);
 		unset($data['name'], $data['title'], $data['class'], $data['active'], $data['slots'], $data['modules']);
 		$result['params'] = $data;
@@ -52,15 +52,13 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 		return $result;
 	}
 
-	protected function flush($name = null) {
-		if ($name === null) {
-			$dir   = new sly_Util_Directory($this->getCacheFolder());
+	protected function flush($name = null, $filename = null) {
+		if ($name === null && $filename === null) {
+			$dir = new sly_Util_Directory($this->getCacheFolder());
 			$files = $dir->listPlain(true, false, false, true, '');
-		}
-		elseif ($this->exists($name)) {
-			$files = array($this->getCacheFile($name));
-		}
-		else {
+		} elseif ($this->exists($name)) {
+			$files = array($this->getCacheFile($name, $filename));
+		} else {
 			return false;
 		}
 
@@ -82,7 +80,7 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 		$result = array();
 		foreach ($this->getData() as $name => $types) {
 			if (empty($class) || $this->getClass($name) == $class) {
-				$result[$name] = $types[self::DEFAULT_TYPE]['title'];
+				$result[$name] = $this->getTitle($name);
 			}
 		}
 		return $result;
@@ -95,7 +93,8 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 */
 	public function getCacheFolder() {
 		$dir = sly_Util_Directory::join(SLY_DYNFOLDER, 'internal/sally', $this->getClassIdentifier());
-		if (!is_dir($dir) && !@mkdir($dir, sly_Core::config()->get('DIRPERM'), true)) throw new sly_Exception('Konnte Cache-Verzeichnis '.$dir.' nicht erstellen.');
+		if (!is_dir($dir) && !@mkdir($dir, sly_Core::config()->get('DIRPERM'), true))
+			throw new sly_Exception('Konnte Cache-Verzeichnis ' . $dir . ' nicht erstellen.');
 		return $dir;
 	}
 
@@ -106,17 +105,24 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 * @return int            Returns the number of bytes that were written to the cache file, or false on failure.
 	 * @throws sly_Exception  When the given template does ot exist
 	 */
-	public function generate($name) {
-		if (!$this->exists($name)) throw new sly_Exception("Template '$name' does not exist.");
+	public function getGenerated($name) {
+		if (!$this->exists($name))
+			throw new sly_Exception("Template '$name' does not exist.");
 
-		$content = $this->getContent($name);
+		$tmpl = $this->filterByCondition($name, $this->getFileType());
 
-		foreach (sly_Core::getVarTypes() as $var) {
-			$content = $var->getTemplate($content);
+		$templateFile = $this->getCacheFile($name, $tmpl['filename']);
+
+		if (!file_exists($templateFile)) {
+			$content = $this->getContent($name, $tmpl['filename']);
+
+			foreach (sly_Core::getVarTypes() as $var) {
+				$content = $var->getTemplate($content);
+			}
+			if (!file_put_contents($templateFile, $content) > 0)
+				return false;
 		}
-
-		$templateFile = $this->getCacheFile($name);
-		return file_put_contents($templateFile, $content) > 0;
+		return $templateFile;
 	}
 
 	/**
@@ -125,12 +131,12 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 * @param  string  $name  Unique template name
 	 * @return boolean        true, when the cache file exists.
 	 */
-	public function isGenerated($name) {
-		return file_exists($this->getCacheFile($name));
-	}
+	/* public function isGenerated($name, $filename) {
+	  return file_exists($this->getCacheFile($name, $filename));
+	  } */
 
-	public function getCacheFile($name) {
-		return sly_Util_Directory::join($this->getCacheFolder(), $name.'.php');
+	public function getCacheFile($name, $filename) {
+		return sly_Util_Directory::join($this->getCacheFolder(), $name . '-' . md5($filename) . '.php');
 	}
 
 	/**
@@ -219,16 +225,17 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 */
 	public function getModules($name, $slot = null) {
 		$moduleService = sly_Service_Factory::getModuleService();
-		$modules       = sly_makeArray($this->get($name, 'modules'));
-		$slots         = $this->getSlots($name);
-		$result        = array();
+		$modules = sly_makeArray($this->get($name, 'modules'));
+		$slots = $this->getSlots($name);
+		$result = array();
 
 		// check if slot is valid
 		if (isset($slot) || self::hasSlot($name, $slot)) {
 			$allModules = array_keys($moduleService->getModules());
 
 			// find modules for this template
-			if (empty($modules)) $modules = $allModules;
+			if (empty($modules))
+				$modules = $allModules;
 			elseif ($this->isModulesDefComplex($modules)) {
 				$tmp = array();
 				foreach ($modules as $key => $value) {
@@ -271,7 +278,7 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 * @return boolean        true, if the template is active
 	 */
 	public function isActive($name) {
-		return (boolean)$this->get($name, 'active', false);
+		return (boolean) $this->get($name, 'active', false);
 	}
 
 	/**
@@ -293,7 +300,8 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 * @return boolean          true, when the module is allowed in the given template and slot
 	 */
 	public function hasModule($name, $module, $slot = null) {
-		if (!$this->exists($name)) return false;
+		if (!$this->exists($name))
+			return false;
 
 		$modules = $this->getModules($name, $slot);
 		return array_key_exists($module, $modules);
@@ -309,9 +317,11 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 * @param  array   $params  Array of params to be available in the template
 	 */
 	public function includeFile($name, $params = array()) {
-		if (!$this->isGenerated($name)) $this->generate($name);
-		$templateFile_C3476zz3g21ug327ur623 = $this->getCacheFile($name);
-		if (!empty($params)) extract($params);
+		//if (!$this->isGenerated($name)) $this->generate($name);
+		$templateFile_C3476zz3g21ug327ur623 = $this->getGenerated($name);
+		if (!empty($params))
+			extract($params);
 		include $templateFile_C3476zz3g21ug327ur623;
 	}
+
 }
