@@ -586,6 +586,7 @@ class Thumbnail
 	 * @return int
 	 */
 	public static function mediaUpdated($params) {
+		if (!isset($params['filename'])) return false;
 		return self::deleteCache($params['filename']);
 	}
 
