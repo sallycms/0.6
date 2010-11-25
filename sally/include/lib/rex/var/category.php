@@ -26,7 +26,7 @@ class rex_var_category extends rex_var {
 		return $this->matchCategory($content);
 	}
 
-	public function handleDefaultParam($varname, $args, $name, $value) {
+	protected function handleDefaultParam($varname, $args, $name, $value) {
 		if ($name == 'field') $args['field'] = (string) $value;
 		if ($name == 'clang') $args['clang'] = (int) $value;
 

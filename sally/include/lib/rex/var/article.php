@@ -30,7 +30,7 @@ class rex_var_article extends rex_var {
 		return $this->matchArticle($content);
 	}
 
-	public function handleDefaultParam($varname, $args, $name, $value) {
+	protected function handleDefaultParam($varname, $args, $name, $value) {
 		switch ($name) {
 			case '1':
 			case 'clang':
