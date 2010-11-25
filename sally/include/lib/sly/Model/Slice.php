@@ -45,8 +45,9 @@ class sly_Model_Slice extends sly_Model_Base {
 	}
 
 	public function getOutput() {
-		$service = sly_Service_Factory::getService('Module');
-		$output  = $service->getContent($this->getModule(), 'output');
+		$service  = sly_Service_Factory::getModuleService();
+		$filename = $service->getOutputFilename($this->getModule());
+		$output   = $service->getContent($filename);
 
 		foreach (sly_Core::getVarTypes() as $idx => $var) {
 			$output = $var->getFEOutput($this->getId(), $output);

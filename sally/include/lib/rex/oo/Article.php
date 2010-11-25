@@ -150,14 +150,6 @@ class OOArticle extends OORedaxo
 			return true;
 		}
 
-		// prüfen, ob ID in Content Cache Dateien vorhanden
-
-		$cacheFiles = glob(SLY_DYNFOLDER.'/internal/sally/articles/'.$articleId.'.*.content');
-
-		if (!empty($cacheFiles)) {
-			return true;
-		}
-
 		// prüfen, ob ID in DB vorhanden
 		return self::isValid(self::getArticleById($articleId));
 	}

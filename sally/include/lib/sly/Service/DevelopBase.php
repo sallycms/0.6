@@ -269,12 +269,13 @@ abstract class sly_Service_DevelopBase {
 	 * returns an array with all user defined parameters. User parameters may
 	 * also be fetched directly by giving the name of the parameter.
 	 *
-	 * @param  string  $name     Name of the item
-	 * @param  string  $key      Key of the desired parameter. null gets all. (default: null)
-	 * @param  string  $default  Default value, if the desired parameter is not set (default: null)
-	 * @param  string  $type     Filetype if necessary (default: null)
-	 * @return mixed             array with all user defined parameters or string with the desired parameter
-	 * @throws sly_Exception     When the resource with the given name is not available
+	 * @param  string  $name      Name of the item
+	 * @param  string  $key       Key of the desired parameter. null gets all. (default: null)
+	 * @param  string  $default   Default value, if the desired parameter is not set (default: null)
+	 * @param  string  $type      Filetype if necessary (default: null)
+	 * @param  string  $filename  A special Filename to get a parameter from
+	 * @return mixed              array with all user defined parameters or string with the desired parameter
+	 * @throws sly_Exception      When the resource with the given name is not available
 	 */
 	public function get($name, $key = null, $default = null, $type = null, $filename = null) {
 		if ($key == 'name')
@@ -309,45 +310,53 @@ abstract class sly_Service_DevelopBase {
 	}
 
 	/**
-	 * Gets the content of an item
+	 * Gets the content of a file
 	 *
-	 * @param  string  $name  Name of the item
-	 * @param  string  $type  Type if necessary (default: null)
-	 * @return string         Content of the file
-	 * @throws sly_Exception  When item/file does not exist.
+	 * @param  string  $filename  Type if necessary (default: null)
+	 * @return string             Content of the file
+	 * @throws sly_Exception      When file does not exist.
 	 */
-	public function getContent($name, $filename, $type = null) {
-		$data = $this->getData();
-		$type = $type === null ? $this->getFileType() : $type;
-		if (!isset($data[$name][$type][$filename]['filename']))
-			throw new sly_Exception("Item '$name' does not exist.");
-
+	public function getContent($filename) {
 		$filename = sly_Util_Directory::join($this->getFolder(), $filename);
 		if (!file_exists($filename))
 			throw new sly_Exception("File '$filename' does not exist.");
 		return file_get_contents($filename);
 	}
 
+	/**
+	 * Uses the registered filter functions to reduce the set of filenames
+	 * by configurable conditions.
+	 *
+	 * @param string $name
+	 * @param string $type
+	 * @return string One filename of all files for name and type
+	 */
 	protected function filterByCondition($name, $type) {
 		$data = $this->getData();
-		$data = $data[$name][$type];
+		$data = array_keys($data[$name][$type]);
+		if (count($data) > 1) {
+			foreach ($this->conditionEvaluators as $evaluator) {
+				$result = call_user_func_array($evaluator, array($name, $data));
 
-		foreach ($this->conditionEvaluators as $evaluator) {
-			$result = call_user_func_array($evaluator, array($name, $data));
+				//if the result is not false or empty or something go on with the result
+				if (!empty($result))
+					$data = $result;
 
-			//if the result is not false or empty or something go on with the result
-			if (!empty($result))
-				$data = $result;
+				//if result is definitive break to return data
+				if (count($data) == 1)
+					break;
 
-			//if result is definitive break to return data
-			if (count($data) == 1)
-				break;
-
-			//continue running the loop
+				//continue running the loop
+			}
 		}
 		return current($data);
 	}
 
+	/**
+	 * registeres a filter function for develop items
+	 *
+	 * @param callable $evaluator  A callable method to filter items
+	 */
 	public function registerConditionEvaluator($evaluator) {
 		$this->conditionEvaluators[] = $evaluator;
 	}

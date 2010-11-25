@@ -109,12 +109,11 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 		if (!$this->exists($name))
 			throw new sly_Exception("Template '$name' does not exist.");
 
-		$tmpl = $this->filterByCondition($name, $this->getFileType());
-
-		$templateFile = $this->getCacheFile($name, $tmpl['filename']);
+		$filename     = $this->filterByCondition($name, $this->getFileType());
+		$templateFile = $this->getCacheFile($name, $filename);
 
 		if (!file_exists($templateFile)) {
-			$content = $this->getContent($name, $tmpl['filename']);
+			$content = $this->getContent($filename);
 
 			foreach (sly_Core::getVarTypes() as $var) {
 				$content = $var->getTemplate($content);
@@ -124,16 +123,6 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 		}
 		return $templateFile;
 	}
-
-	/**
-	 * Checks, if a cache file is already generated
-	 *
-	 * @param  string  $name  Unique template name
-	 * @return boolean        true, when the cache file exists.
-	 */
-	/* public function isGenerated($name, $filename) {
-	  return file_exists($this->getCacheFile($name, $filename));
-	  } */
 
 	public function getCacheFile($name, $filename) {
 		return sly_Util_Directory::join($this->getCacheFolder(), $name . '-' . md5($filename) . '.php');
@@ -316,9 +305,8 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 * @param  string  $name    Unique template name
 	 * @param  array   $params  Array of params to be available in the template
 	 */
-	public function includeFile($name, $params = array()) {
-		//if (!$this->isGenerated($name)) $this->generate($name);
-		$templateFile_C3476zz3g21ug327ur623 = $this->getGenerated($name);
+	public function includeFile($name_C3476zz3g21ug327ur623, $params = array()) {
+		$templateFile_C3476zz3g21ug327ur623 = $this->getGenerated($name_C3476zz3g21ug327ur623);
 		if (!empty($params))
 			extract($params);
 		include $templateFile_C3476zz3g21ug327ur623;

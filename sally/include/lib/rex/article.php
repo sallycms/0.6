@@ -322,8 +322,8 @@ class rex_article {
 		$this->initSlices();
 
 		$slice        = $this->slices[$sliceID];
-		$service      = sly_Service_Factory::getService('Module');
-		$sliceContent = (string) $service->getContent($slice['Module'], 'output');
+		$service      = sly_Service_Factory::getModuleService();
+		$sliceContent = (string) $service->getContent($service->getOutputFilename($slice['Module']));
 
 		$sliceContent = $this->replaceObjectVars($slice['sliceId'], $sliceContent);
 		$sliceContent = $this->triggerSliceShowEP($sliceContent, $slice);
@@ -576,7 +576,7 @@ class rex_article {
   {
     global $REX,$I18N;
 
-    $moduleService = sly_Service_Factory::getService('Module');
+    $moduleService = sly_Service_Factory::getModuleService();
 
     if (!$moduleService->exists($module))
     {
@@ -611,7 +611,7 @@ class rex_article {
               <div class="rex-form-row">
                 <div class="rex-content-editmode-slice-input">
                 <div class="rex-content-editmode-slice-input-2">
-                  '.$moduleService->getContent($module, 'input').'
+                  '.$moduleService->getContent($moduleService->getInputFilename($module)).'
                 </div>
                 </div>
               </div>

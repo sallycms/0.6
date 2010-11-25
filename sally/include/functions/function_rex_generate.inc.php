@@ -66,8 +66,11 @@ function rex_deleteCacheArticle($id, $clang = null)
 
 function rex_deleteCacheSliceContent($slice_id)
 {
-	$cachePath = SLY_DYNFOLDER.'/internal/sally/articles/';
-	@unlink($cachePath.$slice_id.'.slice.php');
+	$cachedir = SLY_DYNFOLDER.'/internal/sally/article_slice/';
+	sly_Util_Directory::create($cachedir);
+	foreach (glob($cachedir.$slice_id.'-*.slice.php') as $filename) {
+	   @unlink($filename);
+	}
 }
 
 

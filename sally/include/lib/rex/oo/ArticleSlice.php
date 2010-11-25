@@ -190,7 +190,11 @@ class OOArticleSlice {
 	public function getContent() {
 		global $REX, $I18N;
 
-		$slice_content_file = SLY_DYNFOLDER.'/internal/sally/articles/'.$this->getSliceId().'.slice.php';
+		$cachedir = SLY_DYNFOLDER.'/internal/sally/article_slice/';
+		sly_Util_Directory::create($cachedir);
+		$modulefile = sly_Service_Factory::getModuleService()->getOutputFilename($this->getModuleName());
+
+		$slice_content_file = $cachedir.$this->getSliceId().'-'.md5($modulefile).'.slice.php';
 
 		if (!file_exists($slice_content_file)) {
 			$slice_content = $this->getOutput();
