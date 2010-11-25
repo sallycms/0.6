@@ -327,38 +327,64 @@ abstract class sly_Service_DevelopBase {
 	 * Uses the registered filter functions to reduce the set of filenames
 	 * by configurable conditions.
 	 *
-	 * @param string $name
-	 * @param string $type
-	 * @return string One filename of all files for name and type
+	 * @param  string        $name Name of the item
+	 * @param  string        $type realm of the item
+	 * @return string        One filename of all files for name and type
+	 * @throws sly_Exception When all files are filtered
 	 */
 	protected function filterByCondition($name, $type) {
 		$data = $this->getData();
-		$data = array_keys($data[$name][$type]);
-		if (count($data) > 1) {
-			foreach ($this->conditionEvaluators as $evaluator) {
-				$result = call_user_func_array($evaluator, array($name, $data));
+		$filenames = array_keys($data[$name][$type]);
+		//need to check the files
+		if (count($filenames) > 1) {
+			//run all evaluators
+			foreach ($this->conditionEvaluators as $param => $evaluator) {
+				//prepare data
+				$filter = array();
+				foreach ($filenames as $filename) {
+					if (isset($data[$name][$type][$filename]['params'][$param]))
+						$filter[$filename] = $data[$name][$type][$filename]['params'][$param];
+				}
 
+				$result = call_user_func_array($evaluator, array($name, $filter));
 				//if the result is not false or empty or something go on with the result
 				if (!empty($result))
-					$data = $result;
+					$filenames = array_keys($result);
+				//else remove the files from the list
+				else
+					$filenames = array_diff($filenames, array_keys($filter));
+			}
 
-				//if result is definitive break to return data
-				if (count($data) == 1)
-					break;
+			//if all files are filtered
+			if (empty($filenames))
+				throw new sly_Exception('All files for item ' . $name . ' were filtered');
 
-				//continue running the loop
+			//if there are more than one
+			if (count($filenames) > 1) {
+				//warn the user
+				trigger_error('The concrete file for Item ' . $name . ' is not clear. Taking one without conditions or first to come.', E_USER_WARNING);
+				//try to find one without without conditions)
+				foreach ($filenames as $filename) {
+					$nocondition = true;
+					foreach (array_keys($this->conditionEvaluators) as $condition) {
+						$nocondition = $nocondition || isset($data[$name][$type][$filename]['params'][$condition]);
+					}
+					if ($nocondition)
+						return $filename;
+				}
 			}
 		}
-		return current($data);
+		//return the first to find
+		return current($filenames);
 	}
 
 	/**
 	 * registeres a filter function for develop items
-	 *
+	 * @param string $param the @sly param this filter depends on
 	 * @param callable $evaluator  A callable method to filter items
 	 */
-	public function registerConditionEvaluator($evaluator) {
-		$this->conditionEvaluators[] = $evaluator;
+	public function registerConditionEvaluator($param, $evaluator) {
+		$this->conditionEvaluators[$param] = $evaluator;
 	}
 
 	/**
