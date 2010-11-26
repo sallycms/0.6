@@ -362,7 +362,7 @@ abstract class sly_Service_DevelopBase {
 			//if there are more than one
 			if (count($filenames) > 1) {
 				//warn the user
-				trigger_error('The concrete file for Item ' . $name . ' is not clear. Taking one without conditions or first to come.', E_USER_WARNING);
+				if(!sly_Core::isBackend()) trigger_error('The concrete file for Item ' . $name . ' is not clear. Taking one without conditions or first to come.', E_USER_WARNING);
 				//try to find one without without conditions)
 				foreach ($filenames as $filename) {
 					$nocondition = true;

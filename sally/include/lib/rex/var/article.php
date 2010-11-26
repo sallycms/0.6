@@ -119,7 +119,7 @@ class rex_var_article extends rex_var
 	        // aus modulen/templates überschreibt
 	        $varname = '$__rex_art';
 	        $tpl = '<?php
-	        '. $varname .' = new rex_article('.$article_id.', '.$clang.');
+	        '. $varname .' = OOArticle::getArticleById('. $article_id .', '. $clang .');
           print '. $this->handleGlobalVarParamsSerialized($var, $args, $varname .'->getArticle('.$slot.')') .';
 	        ?>';
         }

@@ -70,8 +70,7 @@ if (!is_null($OOArt)) {
 	}
 
 	// Titel anzeigen
-
-	rex_title(t('content'), $KATout);
+	sly_Core::getLayout()->pageHeader(t('content'), $KATout);
 
 	// Request Parameter
 
@@ -579,31 +578,56 @@ if (!is_null($OOArt)) {
 				'slot'       => $slot
 			);
 
+			sly_Core::dispatcher()->notify('SLY_CONTENT_SLICE_PAGE', null, $params);
+
 			if (!$hasTemplate || $slot === null) {
-				sly_Core::dispatcher()->notify('SLY_CONTENT_SLICE_PAGE', null, $params);
 				if (!$hasTemplate) print rex_warning(t('content_select_template'));
 				else print rex_info(t('content_no_slots'));
 			}
 			else {
-				// START: MODULE EDITIEREN/ADDEN ETC.
-
-				$CONT = new rex_article();
-				$CONT->getContentAsQuery();
-				$CONT->info = $info;
-				$CONT->warning = $warning;
-				$CONT->template = $templateName;
-				$CONT->setArticleId($article_id);
-				$CONT->setSliceId($slice_id);
-				$CONT->setMode($mode);
-				$CONT->setCLang($clang);
-				$CONT->setEval(true);
-				$CONT->setSliceRevision($slice_revision);
-				$CONT->setFunction($function);
-
-				sly_Core::dispatcher()->notify('SLY_CONTENT_SLICE_PAGE', $CONT, $params);
-
 				print '<div class="rex-content-editmode">';
-				print $CONT->getArticle($slot);
+				$prior = sly_request('prior', 'int', 0);
+
+				$articleSlices = OOArticleSlice::getSliceIdsForSlot($article_id, $clang, $slot);
+
+				foreach($articleSlices as $articleSlice) {
+					$ooslice = OOArticleSlice::getArticleSliceById($articleSlice);
+
+					if($function == 'add' && $prior == $ooslice->getPrior()) {
+						$module = sly_request('module', 'string');
+						sly_Helper_Content::printAddSliceForm($prior, $module, $article_id, $clang, $slot);
+					}else {
+						sly_Helper_Content::printAddModuleForm($article_id, $clang, $ooslice->getPrior(), $templateName, $slot);
+					}
+
+					if(empty($function) && $prior == $ooslice->getPrior()) {
+						if(!empty($info)) print rex_info($info);
+						if(!empty($warning)) print rex_warning ($warning);
+					}
+
+					if(($function == 'edit' || $function == 'moveup' || $function == 'movedown') && $slice_id == $ooslice->getId()) {
+						if(!empty($info)) print rex_info($info);
+						if(!empty($warning)) print rex_warning ($warning);
+					}
+
+					if($function == 'edit' && $slice_id == $ooslice->getId()) {
+						sly_Helper_Content::printSliceToolbar($ooslice);
+						sly_Helper_Content::printEditSliceForm($ooslice);
+					}else {
+						sly_Helper_Content::printSliceToolbar($ooslice);
+						sly_Helper_Content::printSliceContent($ooslice);
+					}
+				}
+
+				if($function == 'add' && $prior == count($articleSlices)) {
+					$module = sly_request('module', 'string');
+					if(!empty($info)) print rex_info($info);
+					if(!empty($warning)) print rex_warning ($warning);
+					sly_Helper_Content::printAddSliceForm($prior, $module, $article_id, $clang, $slot);
+				}else {
+					sly_Helper_Content::printAddModuleForm($article_id, $clang, count($articleSlices), $templateName, $slot);
+				}
+
 				print '</div>';
 
 				// END: MODULE EDITIEREN/ADDEN ETC.

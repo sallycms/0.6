@@ -178,7 +178,7 @@ class OOArticleSlice {
 	 * @return string the content of the slice
 	 */
 	public function getOutput() {
-		$slice   = sly_Service_Factory::getService('Slice')->findById($this->getSliceId());
+		$slice = $this->getSlice();
 		$content = $slice->getOutput();
 		$content = self::replaceLinks($content);
 		$content = $this->replaceCommonVars($content);
@@ -187,7 +187,7 @@ class OOArticleSlice {
 		return $content;
 	}
 
-	public function getContent() {
+	public function printContent() {
 		global $REX, $I18N;
 
 		$cachedir = SLY_DYNFOLDER.'/internal/sally/article_slice/';
@@ -250,6 +250,11 @@ class OOArticleSlice {
 	public function getId()         { return $this->_id;                  }
 	public function getPrior()      { return $this->_prior;               }
 	public function getSliceId()    { return $this->_slice_id;            }
+	/**
+	 *
+	 * @return Sly_Model_Slice
+	 */
+	public function getSlice()      { return sly_Service_Factory::getService('Slice')->findById($this->getSliceId()); }
 
 	public function getValue($index)     { return $this->getRexVarValue('REX_VALUE', $index);     }
 	public function getLink($index)      { return $this->getRexVarValue('REX_LINK', $index);      }
@@ -262,8 +267,7 @@ class OOArticleSlice {
 	}
 
 	public function getMediaUrl($index) {
-		global $REX;
-		return $REX['MEDIAFOLDER'].'/'.$this->getMedia($index);
+		return SLY_MEDIAFOLDER.'/'.$this->getMedia($index);
 	}
 
 	private function replaceGlobals($content) {

@@ -141,8 +141,7 @@ function rex_slice_module_exists($sliceID, $clang)
  */
 function rex_module_exists($module)
 {
-	$service = sly_Service_Factory::getService('Module');
-	return $service->exists($module);
+	return $service = sly_Service_Factory::getModuleService()->exists($module);
 }
 
 /**

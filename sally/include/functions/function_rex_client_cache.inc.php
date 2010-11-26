@@ -40,10 +40,10 @@ function rex_send_file($file, $contentType, $environment = 'backend') {
 }
 
 /**
- * Sendet einen rex_article zum Client,
+ * Sendet einen OOArticle zum Client,
  * fügt ggf. HTTP1.1 cache headers hinzu
  *
- * @param rex_article $REX_ARTICLE  der zu sendene Artikel
+ * @param OOArticle   $REX_ARTICLE  der zu sendene Artikel
  * @param string      $content      Inhalt des Artikels
  * @param string      $environment  die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
@@ -60,10 +60,10 @@ function rex_send_article($REX_ARTICLE, $content, $environment, $sendcharset = f
 	$etag = md5(preg_replace('@<!--DYN-->.*<!--/DYN-->@','', $content));
 
 	if ($REX_ARTICLE) {
-		$lastModified = $REX_ARTICLE->getValue('updatedate');
+		$lastModified = $REX_ARTICLE->getUpdateDate();
 		$etag        .= $REX_ARTICLE->getValue('pid');
 
-		if ($REX_ARTICLE->getArticleId() == $REX['NOTFOUND_ARTICLE_ID'] && $REX_ARTICLE->getArticleId() != $REX['START_ARTICLE_ID']) {
+		if ($REX_ARTICLE->getId() == $REX['NOTFOUND_ARTICLE_ID'] && $REX_ARTICLE->getId() != $REX['START_ARTICLE_ID']) {
 			header('HTTP/1.0 404 Not Found');
 		}
 	}

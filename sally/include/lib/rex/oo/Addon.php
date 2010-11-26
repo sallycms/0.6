@@ -11,6 +11,7 @@
  * Klasse zum Prüfen ob Addons installiert/aktiviert sind
  *
  * @ingroup redaxo2
+ * @deprecated
  */
 abstract class OOAddon extends rex_addon
 {

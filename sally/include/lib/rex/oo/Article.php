@@ -178,4 +178,32 @@ class OOArticle extends OORedaxo
 	{
 		return parent::hasValue($value, array_merge(array('art_'), $prefixes));
 	}
+
+	public function getArticle($slot = null) {
+		$ids = OOArticleSlice::getSliceIdsForSlot($this->getId(), $this->getClang(), $slot);
+		foreach ($ids as $id) {
+			print OOArticleSlice::getArticleSliceById($id)->printContent();
+		}
+	}
+
+	// ----- Template inklusive Artikel zurückgeben
+	public function getArticleTemplate() {
+		// global $REX hier wichtig, damit in den Artikeln die Variable vorhanden ist!
+		global $REX;
+
+		$tplserv = sly_Service_Factory::getTemplateService();
+
+		if ($this->hasTemplate() && $tplserv->exists($this->getTemplateName())) {
+			$params['article'] = $this;
+			ob_start();
+			ob_implicit_flush(0);
+			$tplserv->includeFile($this->getTemplateName(), $params);
+			$content = ob_get_clean();
+		}
+		else {
+			$content = 'No Template';
+		}
+
+		return $content;
+	}
 }

@@ -11,6 +11,7 @@
  * Klasse zum Prüfen ob Plugins installiert/aktiviert sind
  *
  * @ingroup redaxo2
+ * @deprecated
  */
 class OOPlugin extends rex_addon
 {

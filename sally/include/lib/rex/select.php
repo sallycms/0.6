@@ -11,6 +11,7 @@
  * Klasse zur Erstellung eines HTML-Pulldown-Menues (Select-Box)
  *
  * @ingroup redaxo
+ * @deprecated
  */
 class rex_select
 {
