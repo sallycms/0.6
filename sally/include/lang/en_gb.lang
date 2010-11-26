@@ -431,3 +431,7 @@ none: 'translate:none' # nichts
 recommended: recommended
 
 authorisation_exception_language_denied: Permission to language %s denied!
+
+config_server: Server
+config_servername: Project title
+config_error_email: Admin e-mail address
