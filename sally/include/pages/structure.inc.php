@@ -429,18 +429,16 @@ if ($category_id > -1)
   $templateService = sly_Service_Factory::getTemplateService();
   $templates = $templateService->getTemplates();
 
-  $TMPL_SEL = new rex_select;
-  $TMPL_SEL->setName('template');
-  $TMPL_SEL->setId('rex-form-template');
+  $TMPL_SEL = new sly_Form_Select_DropDown('template', '', '', array(), 'rex-form-template');
   $TMPL_SEL->setSize(1);
-  $TMPL_SEL->addOption($I18N->msg('option_no_template'), '');
+  $TMPL_SEL->addValue('', $I18N->msg('option_no_template'));
 
   foreach ($templates as $name => $title) {
     if($templateService->isActive($name))
-		$TMPL_SEL->addOption(rex_translate($title, null, false), $name);
+		 $TMPL_SEL->addValue($name, rex_translate($title, null, false));
   }
 
-  $templates[''] = $I18N->msg('template_default_name');
+  //$templates[''] = $I18N->msg('template_default_name');
 
   // --------------------- ARTIKEL LIST
   $art_add_link = '';
@@ -523,7 +521,7 @@ if ($category_id > -1)
 
     if(!empty($default) && isset($templates[$default]))
     {
-      $TMPL_SEL->setSelected($default);
+      $TMPL_SEL->setAttrribute('value', $default);
 
     }else
     {
@@ -531,7 +529,7 @@ if ($category_id > -1)
       $sql2 = new rex_sql;
       $sql2->setQuery('SELECT template FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE id='. $category_id .' AND clang='. $clang .' AND startpage=1');
       if ($sql2->getRows() == 1)
-        $TMPL_SEL->setSelected($sql2->getValue('template'));
+        $TMPL_SEL->setAttrribute('value', $sql2->getValue('template'));
     }
 
     $add_td = '';
@@ -543,7 +541,7 @@ if ($category_id > -1)
             '. $add_td .'
             <td><input type="text" class="rex-form-text" id="rex-form-field-name" name="article_name" /></td>
             <td><input type="text" class="rex-form-text" id="rex-form-field-prior" name="Position_New_Article" value="100" /></td>
-            <td>'. $TMPL_SEL->get() .'</td>
+            <td>'. $TMPL_SEL->render() .'</td>
             <td>'. rex_formatter :: format(time(), 'strftime', 'date') .'</td>
             <td colspan="3"><input type="submit" class="rex-form-submit" name="artadd_function" value="'.$I18N->msg('article_add') .'" /></td>
           </tr>
@@ -568,7 +566,7 @@ if ($category_id > -1)
       if ($REX['USER']->hasPerm('advancedMode[]'))
         $add_td = '<td class="rex-small">'. $sql->getValue("id") .'</td>';
 
-      $TMPL_SEL->setSelected($sql->getValue('template'));
+      $TMPL_SEL->setAttribute('value',$sql->getValue('template'));
       $url = 'index.php?page=content&article_id='.$sql->getValue('id').'&category_id='.$category_id.'&clang='.$clang;
 
       echo '<tr class="rex-table-row-activ">
@@ -576,7 +574,7 @@ if ($category_id > -1)
               '. $add_td .'
               <td><input type="text" class="rex-form-text" id="rex-form-field-name" name="article_name" value="' .htmlspecialchars($sql->getValue('name')).'" /></td>
               <td><input type="text" class="rex-form-text" id="rex-form-field-prior" name="Position_Article" value="'. htmlspecialchars($sql->getValue('prior')).'" /></td>
-              <td>'. $TMPL_SEL->get() .'</td>
+              <td>'. $TMPL_SEL->render() .'</td>
               <td>'. rex_formatter :: format($sql->getValue('createdate'), 'strftime', 'date') .'</td>
               <td colspan="3"><input type="submit" class="rex-form-submit" name="artedit_function" value="'. $I18N->msg('article_save') .'" /></td>
             </tr>
