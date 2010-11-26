@@ -42,15 +42,19 @@ abstract class sly_Service_Model_Base {
 	}
 
 	public function findById($id) {
-		$res = $this->find(array('id' => (int)$id));
+		return $this->findOne(array('id' => (int)$id));
+	}
+
+	public function findOne($where = null, $group = null, $having = null) {
+		$res = $this->find($where, $group, null, null, null, $having);
 		if (count($res) == 1) return $res[0];
 		return null;
 	}
 
-	public function find($where = null, $group = null, $order = null, $limit = null, $having = null) {
+	public function find($where = null, $group = null, $order = null, $offset = null, $limit = null, $having = null) {
 		$return      = array();
 		$persistence = sly_DB_Persistence::getInstance();
-		$persistence->select($this->getTableName(), '*', $where, $group, $order, $limit, $having);
+		$persistence->select($this->getTableName(), '*', $where, $group, $order, $offset, $limit, $having);
 
 		foreach ($persistence as $row) {
 			$return[] = $this->makeObject($row);
