@@ -17,39 +17,35 @@
  *
  * @ingroup redaxo
  */
-class rex_var_value extends rex_var
-{
+class rex_var_value extends rex_var {
 	// --------------------------------- Actions
 
-	function getACRequestValues($REX_ACTION)
-	{
+	public function getACRequestValues($REX_ACTION) {
 		$values = rex_request('VALUE', 'array');
-		foreach($values as $key => $value)
-		{
-			//TODO: wenn irgendwann rex_sql und damit der mquotes mist in rente ist das stripslashes wieder entfernen.
+
+		foreach ($values as $key => $value) {
+			// TODO: wenn irgendwann rex_sql und damit der mquotes mist in rente ist das stripslashes wieder entfernen.
 			$REX_ACTION['REX_VALUE'][$key] = stripslashes($value);
 		}
 
 		return $REX_ACTION;
 	}
 
-	function getACDatabaseValues($REX_ACTION, $slice_id)
-	{
+	public function getACDatabaseValues($REX_ACTION, $slice_id) {
 		$values = sly_Service_Factory::getService('SliceValue')->find(array('slice_id' => $slice_id, 'type' => 'REX_VALUE'));
 
-		foreach($values as $value)
-		{
+		foreach ($values as $value) {
 			$REX_ACTION['REX_VALUE'][$value->getFinder()] = $value->getValue();
 		}
 
 		return $REX_ACTION;
 	}
 
-	function setACValues($slice_id, $REX_ACTION, $escape = false, $prependTableName = true)
-	{
+	public function setACValues($slice_id, $REX_ACTION, $escape = false, $prependTableName = true) {
 		$slice = sly_Service_Factory::getService('Slice')->findById($slice_id);
-		if(isset($REX_ACTION['REX_VALUE'])){
-			foreach($REX_ACTION['REX_VALUE'] as $key => $value){
+
+		if (isset($REX_ACTION['REX_VALUE'])){
+			foreach ($REX_ACTION['REX_VALUE'] as $key => $value){
 				$slice->addValue('REX_VALUE', $key, $value);
 			}
 		}
@@ -57,26 +53,22 @@ class rex_var_value extends rex_var
 
 	// --------------------------------- Output
 
-	function getBEOutput($slice_id, $content)
-	{
+	public function getBEOutput($slice_id, $content) {
 		$content = $this->getOutput($slice_id, $content, true);
 		return $content;
 	}
 
-	function getBEInput($slice_id, $content)
-	{
+	public function getBEInput($slice_id, $content) {
 		$content = $this->getOutput($slice_id, $content);
 		return $content;
 	}
 
-	function getFEOutput($slice_id, $content)
-	{
+	public function getFEOutput($slice_id, $content) {
 		$content = $this->getOutput($slice_id, $content, true);
 		return $content;
 	}
 
-	function getOutput($slice_id, $content, $nl2br = false)
-	{
+	public function getOutput($slice_id, $content, $nl2br = false) {
 		$content = $this->matchValue($slice_id, $content, $nl2br);
 		$content = $this->matchHtmlValue($slice_id, $content);
 		$content = $this->matchIsValue($slice_id, $content);
@@ -88,71 +80,53 @@ class rex_var_value extends rex_var
 	/**
 	 * Wert für die Ausgabe
 	 */
-	private function _matchValue($slice_id, $content, $var, $escape = false, $nl2br = false, $stripPHP = false, $booleanize = false)
-	{
+	private function _matchValue($slice_id, $content, $var, $escape = false, $nl2br = false, $stripPHP = false, $booleanize = false) {
 		$matches = $this->getVarParams($content, $var);
 
-
-		foreach ($matches as $match)
-		{
+		foreach ($matches as $match) {
 			list ($param_str, $args) = $match;
 			list ($id, $args) = $this->extractArg('id', $args, 0);
 
 			$replace = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_VALUE', $id);
+			$replace = $replace ? $replace->getValue() : '';
 
-			if($replace){
-				$replace = $replace->getValue();
-			}else{
-				$replace = '';
-			}
-
-			if ($booleanize)
-			{
+			if ($booleanize) {
 				$replace = empty($replace);
 			}
-			else
-			{
-				if ($escape)
-				{
-					$replace = htmlspecialchars($replace,ENT_QUOTES);
+			else {
+				if ($escape) {
+					$replace = htmlspecialchars($replace, ENT_QUOTES, 'UTF-8');
 				}
 
-				if ($nl2br)
-				{
+				if ($nl2br) {
 					$replace = nl2br($replace);
 				}
 
-				if ($stripPHP)
-				{
+				if ($stripPHP) {
 					$replace = self::stripPHP($replace);
 				}
 
 				$replace = $this->handleGlobalVarParams($var, $args, $replace);
-				$content = str_replace($var . '[' . $param_str . ']', $replace, $content);
+				$content = str_replace($var.'['.$param_str.']', $replace, $content);
 			}
 		}
-
 
 		return $content;
 	}
 
-	function matchValue($slice_id, $content, $nl2br = false)
-	{
+	public function matchValue($slice_id, $content, $nl2br = false) {
 		return $this->_matchValue($slice_id, $content, 'REX_VALUE', true, $nl2br);
 	}
 
-	private function matchHtmlValue($slice_id, $content)
-	{
+	private function matchHtmlValue($slice_id, $content) {
 		return $this->_matchValue($slice_id, $content, 'REX_HTML_VALUE', false, false, true);
 	}
 
-	private function matchPhpValue($slice_id, $content)
-	{
+	private function matchPhpValue($slice_id, $content) {
 		return $this->_matchValue($slice_id, $content, 'REX_PHP_VALUE', false, false, false);
 	}
 
-	private function matchIsValue($slice_id, $content)
-	{
+	private function matchIsValue($slice_id, $content) {
 		return $this->_matchValue($slice_id, $content, 'REX_IS_VALUE', false, false, false, true);
 	}
 }

@@ -139,7 +139,6 @@ abstract class sly_Cache {
 			case 'sly_Cache_XCache':
 			case 'sly_Cache_ZendServer':
 
-				set_time_limit(3);
 				$cache = new $cachingStrategy();
 				$cache->setNamespacePrefix($instname);
 				$cache->setExpiration(0);
@@ -285,7 +284,8 @@ abstract class sly_Cache {
 	protected static function versionPathHelper($path, $keyName, $excludeLastVersion = false) {
 		if ($excludeLastVersion) {
 			$lastNode = array_pop($path);
-			$lastNode = reset(explode('@', $lastNode, 2));
+			$lastNode = explode('@', $lastNode, 2);
+			$lastNode = reset($lastNode);
 
 			$path[] = $lastNode;
 		}

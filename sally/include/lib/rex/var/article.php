@@ -19,116 +19,101 @@
  *
  * @ingroup redaxo
  */
-class rex_var_article extends rex_var
-{
-  // --------------------------------- Output
+class rex_var_article extends rex_var {
+	// --------------------------------- Output
 
-  function getTemplate($content)
-  {
-    return $this->matchArticle($content, true);
-  }
+	public function getTemplate($content) {
+		return $this->matchArticle($content, true);
+	}
 
-  function getBEOutput($slice_id, $content)
-  {
-    return $this->matchArticle($content);
-  }
+	public function getBEOutput($slice_id, $content) {
+		return $this->matchArticle($content);
+	}
 
-  /**
-   * @see rex_var::handleDefaultParam
-   */
-  function handleDefaultParam($varname, $args, $name, $value)
-  {
-    switch($name)
-    {
-      case '1' :
-      case 'clang' :
-        $args['clang'] = (int) $value;
-        break;
-      case '2' :
-      case 'slot' :
-      case 'ctype' :
-        $args['slot'] = $value;
-        break;
-      case 'field' :
-        $args['field'] = (string) $value;
-        break;
-    }
-    return parent::handleDefaultParam($varname, $args, $name, $value);
-  }
+	protected function handleDefaultParam($varname, $args, $name, $value) {
+		switch ($name) {
+			case '1':
+			case 'clang':
+				$args['clang'] = (int) $value;
+				break;
 
-  /**
-   * Wert für die Ausgabe
-   */
-  function matchArticle($content, $replaceInTemplate = false)
-  {
-  	global $REX;
+			case '2':
+			case 'slot':
+			case 'ctype':
+				$args['slot'] = $value;
+				break;
 
-    $var = 'REX_ARTICLE';
-    $matches = $this->getVarParams($content, $var);
+			case 'field':
+				$args['field'] = (string) $value;
+				break;
+		}
 
-    foreach ($matches as $match)
-    {
-      list ($param_str, $args)  = $match;
-      list ($article_id, $args) = $this->extractArg('id',    $args, 0);
-      list ($clang, $args)      = $this->extractArg('clang', $args, '$REX[\'CUR_CLANG\']');
-      list ($slot,  $args)      = $this->extractArg('slot',  $args, '');
-      list ($field, $args)      = $this->extractArg('field', $args, '');
+		return parent::handleDefaultParam($varname, $args, $name, $value);
+	}
 
-      $tpl = '';
-      if($article_id == 0)
-      {
-        // REX_ARTICLE[field=name] keine id -> feld von aktuellem artikel verwenden
-      	if($field)
-	      {
-	        if(OOArticle::hasValue($field))
-	        {
-	          $tpl = '<?php print sly_html('. $this->handleGlobalVarParamsSerialized($var, $args, '$this->getValue(\''. addslashes($field) .'\')') .'); ?>';
-	        }
-	      }
-	      // REX_ARTICLE[] keine id -> aktuellen artikel verwenden
-	      else
-	      {
-	      	if($replaceInTemplate)
-	      	{
-	          // aktueller Artikel darf nur in Templates, nicht in Modulen eingebunden werden
-	          // => endlossschleife
-	          $tpl = '<?php print '. $this->handleGlobalVarParamsSerialized($var, $args, '$this->getArticle('.$slot.')') .'; ?>';
-	      	}
-	      }
-      }
-      else if($article_id > 0)
-      {
-        // REX_ARTICLE[field=name id=5] feld von gegebene artikel id verwenden
-      	if($field)
-        {
-          if(OOArticle::hasValue($field))
-          {
-	        	// bezeichner wählen, der keine variablen
-	          // aus modulen/templates überschreibt
-	          $varname = '$__rex_art';
-	          $tpl = '<?php
-	          '. $varname .' = OOArticle::getArticleById('. $article_id .', '. $clang .');
-	          if('. $varname .') print sly_html('. $this->handleGlobalVarParamsSerialized($var, $args, $varname .'->getValue(\''. addslashes($field) .'\')') .');
-	          ?>';
-          }
-        }
-        // REX_ARTICLE[id=5] kompletten artikel mit gegebener artikel id einbinden
-        else
-        {
-	        // bezeichner wählen, der keine variablen
-	        // aus modulen/templates überschreibt
-	        $varname = '$__rex_art';
-	        $tpl = '<?php
-	        '. $varname .' = OOArticle::getArticleById('. $article_id .', '. $clang .');
-          print '. $this->handleGlobalVarParamsSerialized($var, $args, $varname .'->getArticle('.$slot.')') .';
-	        ?>';
-        }
-      }
+	/**
+	 * Wert für die Ausgabe
+	 */
+	public function matchArticle($content, $replaceInTemplate = false) {
+		$var     = 'REX_ARTICLE';
+		$matches = $this->getVarParams($content, $var);
 
-      if($tpl != '')
-        $content = str_replace($var . '[' . $param_str . ']', $tpl, $content);
-    }
+		foreach ($matches as $match) {
+			list ($param_str, $args)  = $match;
+			list ($article_id, $args) = $this->extractArg('id',    $args, 0);
+			list ($clang, $args)      = $this->extractArg('clang', $args, '$REX[\'CUR_CLANG\']');
+			list ($slot,  $args)      = $this->extractArg('slot',  $args, '');
+			list ($field, $args)      = $this->extractArg('field', $args, '');
 
-    return $content;
-  }
+			$tpl = '';
+
+			if ($article_id == 0) {
+				// REX_ARTICLE[field=name] keine id -> feld von aktuellem artikel verwenden
+				if ($field) {
+					if (OOArticle::hasValue($field)) {
+						$tpl = '<?php print sly_html('.$this->handleGlobalVarParamsSerialized($var, $args, '$this->getValue(\''.addslashes($field).'\')').'); ?>';
+					}
+				}
+
+				// REX_ARTICLE[] keine id -> aktuellen artikel verwenden
+				else {
+					if ($replaceInTemplate) {
+						// aktueller Artikel darf nur in Templates, nicht in Modulen eingebunden werden
+						// => endlossschleife
+						$tpl = '<?php print '.$this->handleGlobalVarParamsSerialized($var, $args, '$this->getArticle('.$slot.')').'; ?>';
+					}
+				}
+			}
+			else if ($article_id > 0) {
+				// REX_ARTICLE[field=name id=5] feld von gegebene artikel id verwenden
+				if ($field) {
+					if (OOArticle::hasValue($field)) {
+						// bezeichner wählen, der keine variablen
+						// aus modulen/templates überschreibt
+						$varname = '$__rex_art';
+						$tpl     =
+							'<?php '.
+							$varname.' = OOArticle::getArticleById('.$article_id.', '.$clang.'); '.
+							'if ('.$varname.') print sly_html('.$this->handleGlobalVarParamsSerialized($var, $args, $varname.'->getValue(\''.addslashes($field).'\')').'); ?>';
+					}
+				}
+				// REX_ARTICLE[id=5] kompletten artikel mit gegebener artikel id einbinden
+				else {
+					// bezeichner wählen, der keine variablen
+					// aus modulen/templates überschreibt
+					$varname = '$__rex_art';
+					$tpl     =
+						'<?php '.
+						$varname .' = OOArticle::getArticleById('.$article_id.', '.$clang.'); '.
+						'print '.$this->handleGlobalVarParamsSerialized($var, $args, $varname.'->getArticle('.$slot.')').'; ?>';
+				}
+			}
+
+			if ($tpl) {
+				$content = str_replace($var.'['.$param_str.']', $tpl, $content);
+			}
+		}
+
+		return $content;
+	}
 }

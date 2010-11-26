@@ -12,282 +12,242 @@
  *
  * @ingroup redaxo
  */
-abstract class rex_var
-{
-  // --------------------------------- Actions
+abstract class rex_var {
+	// --------------------------------- Actions
 
-  /**
-   * Actionmethode:
-   * Zum füllen des sql aus dem $REX_ACTION Array
-   */
-  function setACValues($sql, $REX_ACTION, $escape = false, $prependTableName = true)
-  {
-    // nichts tun
-  }
+	/**
+	 * Actionmethode:
+	 * Zum füllen des sql aus dem $REX_ACTION Array
+	 */
+	public function setACValues($sql, $REX_ACTION, $escape = false, $prependTableName = true) {
+		// nichts tun
+	}
 
-  /**
-   * Actionmethode:
-   * Zum füllen des $REX_ACTION Arrays aus den Input Formularwerten
-   * @return REX_ACTION Array
-   */
-  function getACRequestValues($REX_ACTION)
-  {
-    return $REX_ACTION;
-  }
+	/**
+	 * Actionmethode:
+	 * Zum füllen des $REX_ACTION Arrays aus den Input Formularwerten
+	 * @return REX_ACTION Array
+	 */
+	public function getACRequestValues($REX_ACTION) {
+		return $REX_ACTION;
+	}
 
-  /**
-   * Actionmethode:
-   * Zum füllen des $REX_ACTION Arrays aus der Datenbank (rex_sql)
-   * @return REX_ACTION Array
-   */
-  function getACDatabaseValues($REX_ACTION, $sql)
-  {
-    return $REX_ACTION;
-  }
+	/**
+	 * Actionmethode:
+	 * Zum Füllen des $REX_ACTION Arrays aus der Datenbank (rex_sql)
+	 * @return REX_ACTION Array
+	 */
+	public function getACDatabaseValues($REX_ACTION, $sql) {
+		return $REX_ACTION;
+	}
 
-  /**
-   * Actionmethode:
-   * Ersetzen der Werte in dem Aktionsscript
-   * @return output String
-   */
-  function getACOutput($REX_ACTION, $content)
-  {
-    $sql = new rex_sql();
-    $this->setACValues($sql, $REX_ACTION);
-    return $this->getBEOutput($sql, $content);
-  }
+	/**
+	 * Actionmethode:
+	 * Ersetzen der Werte in dem Aktionsscript
+	 * @return output String
+	 */
+	public function getACOutput($REX_ACTION, $content) {
+		$sql = new rex_sql();
+		$this->setACValues($sql, $REX_ACTION);
+		return $this->getBEOutput($sql, $content);
+	}
 
-  // --------------------------------- Ouput
+	// --------------------------------- Ouput
 
-  /**
-   * Ausgabe eines Modules fürs Frontend
-   * sql Objekt mit der passenden Slice
-   *
-   * FE = Frontend
-   */
-  function getFEOutput($sql, $content)
-  {
-    return $this->getBEOutput($sql, $content);
-  }
+	/**
+	 * Ausgabe eines Modules fürs Frontend
+	 * sql Objekt mit der passenden Slice
+	 *
+	 * FE = Frontend
+	 */
+	public function getFEOutput($sql, $content) {
+		return $this->getBEOutput($sql, $content);
+	}
 
-  /**
-   * Ausgabe eines Modules im Backend bei der Ausgabe
-   * sql Objekt mit der passenden Slice
-   *
-   * BE = Backend
-   */
-  function getBEOutput($sql, $content)
-  {
-    return $content;
-  }
+	/**
+	 * Ausgabe eines Modules im Backend bei der Ausgabe
+	 * sql Objekt mit der passenden Slice
+	 *
+	 * BE = Backend
+	 */
+	public function getBEOutput($sql, $content) {
+		return $content;
+	}
 
-  /**
-   * Ausgabe eines Modules im Backend bei der Eingabe
-   * sql Objekt mit der passenden Slice
-   *
-   * BE = Backend
-   */
-  function getBEInput($sql, $content)
-  {
-    return $this->getBEOutput($sql, $content);
-  }
+	/**
+	 * Ausgabe eines Modules im Backend bei der Eingabe
+	 * sql Objekt mit der passenden Slice
+	 *
+	 * BE = Backend
+	 */
+	public function getBEInput($sql, $content) {
+		return $this->getBEOutput($sql, $content);
+	}
 
-  /**
-   * Ausgabe eines Templates
-   */
-  function getTemplate($content)
-  {
-  	return $content;
-  }
+	/**
+	 * Ausgabe eines Templates
+	 */
+	public function getTemplate($content) {
+		return $content;
+	}
 
-  /**
-   * Wandelt PHP Code in Einfache Textausgaben um
-   */
-  protected static function stripPHP($content)
-  {
-    $content = str_replace('<?', '&lt;?', $content);
-    $content = str_replace('?>', '?&gt;', $content);
-    return $content;
-  }
+	/**
+	 * Wandelt PHP Code in einfache Textausgaben um
+	 */
+	protected static function stripPHP($content) {
+		return str_replace(array('<?', '?>'), array('&lt;?', '?&gt;'), $content);
+	}
 
-  /**
-   * GetValue Wrapper, da hier immer auf die gleiche Tabelle gearbeitet wird und
-   * mit MySQL 3.x mit Tabellenprefix angegeben werden muss, da der SQL gleichnamige
-   * Spalten unterschiedlicher Tabellen enthält.
-   */
-  function getValue($sql, $value)
-  {
-    global $REX;
-	if(!$sql instanceof rex_sql) debug_print_backtrace();
-    //return $sql->getValue($REX['DATABASE']['TABLE_PREFIX'] . 'article_slice.' . $value);
-  }
-  /**
-   * setValue Wrapper, da hier immer auf die gleiche Tabelle gearbeitet wird und
-   * mit MySQL 3.x mit Tabellenprefix angegeben werden muss, da der SQL gleichnamige
-   * Spalten unterschiedlicher Tabellen enth�lt.
-   */
-  function setValue($sql, $fieldname, $value, $escape = false, $prependTableName = true)
-  {
-    global $REX;
+	/**
+	 * GetValue Wrapper, da hier immer auf die gleiche Tabelle gearbeitet wird und
+	 * mit MySQL 3.x mit Tabellenprefix angegeben werden muss, da der SQL gleichnamige
+	 * Spalten unterschiedlicher Tabellen enthält.
+	 */
+	public function getValue($sql, $value) {
+		if (!$sql instanceof rex_sql) debug_print_backtrace();
+		//return $sql->getValue($REX['DATABASE']['TABLE_PREFIX'] . 'article_slice.' . $value);
+	}
 
-	 $table = $prependTableName ? $REX['DATABASE']['TABLE_PREFIX'].'article_slice.' : '';
+	/**
+	 * setValue Wrapper, da hier immer auf die gleiche Tabelle gearbeitet wird und
+	 * mit MySQL 3.x mit Tabellenprefix angegeben werden muss, da der SQL gleichnamige
+	 * Spalten unterschiedlicher Tabellen enthält.
+	 */
+	public function setValue(rex_sql $sql, $fieldname, $value, $escape = false, $prependTableName = true) {
+		$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+		$table  = $prependTableName ? $prefix.'article_slice.' : '';
 
-    if ($escape)
-      return $sql->setValue($table.$fieldname, addslashes($value));
+		if ($escape) {
+			$value = $sql->escape($value);
+		}
 
-    return $sql->setValue($table.$fieldname, $value);
-  }
+		return $sql->setValue($table.$fieldname, $value);
+	}
 
-  /**
-   * Callback um nicht explizit gehandelte OutputParameter zu behandeln
-   */
-  function handleDefaultParam($varname, $args, $name, $value)
-  {
-    switch($name)
-    {
-      case '0'       : $name = 'id';
-      case 'id'      :
-      case 'prefix'  :
-      case 'suffix'  :
-      case 'ifempty' :
-      case 'instead' :
-      case 'callback':
-      $args[$name] = (string) $value;
-    }
-    return $args;
-  }
+	/**
+	 * Callback um nicht explizit gehandelte OutputParameter zu behandeln
+	 */
+	protected function handleDefaultParam($varname, $args, $name, $value) {
+		if ($name == '0') $name = 'id'; // warum auch immer...
 
-  /**
-   * Parameter aus args auf die Ausgabe eines Widgets anwenden
-   */
-  function handleGlobalWidgetParams($varname, $args, $value)
-  {
-    return $value;
-  }
+		switch ($name) {
+			case 'id':
+			case 'prefix':
+			case 'suffix':
+			case 'ifempty':
+			case 'instead':
+			case 'callback':
+				$args[$name] = (string) $value;
+		}
 
-  /**
-   * Parameter aus args auf den Wert einer Variablen anwenden
-   */
-  function handleGlobalVarParams($varname, $args, $value)
-  {
-    if(isset($args['callback']))
-    {
-      $args['subject'] = $value;
-      return call_user_func($args['callback'], $args);
-    }
+		return $args;
+	}
 
-    $prefix = '';
-    if(isset($args['prefix']))
-      $prefix = $args['prefix'];
+	/**
+	 * Parameter aus args auf die Ausgabe eines Widgets anwenden
+	 */
+	protected function handleGlobalWidgetParams($varname, $args, $value) {
+		return $value;
+	}
 
-    $suffix = '';
-    if(isset($args['suffix']))
-      $suffix = $args['suffix'];
+	/**
+	 * Parameter aus args auf den Wert einer Variablen anwenden
+	 */
+	protected function handleGlobalVarParams($varname, $args, $value) {
+		if (isset($args['callback'])) {
+			$args['subject'] = $value;
+			return call_user_func($args['callback'], $args);
+		}
 
-    if(isset($args['instead']) && $value != '')
-      $value = $args['instead'];
+		$prefix = '';
+		$suffix = '';
 
-    if(isset($args['ifempty']) && $value == '')
-      $value = $args['ifempty'];
+		if (isset($args['prefix'])) $prefix = $args['prefix'];
+		if (isset($args['suffix'])) $suffix = $args['suffix'];
 
-    return $prefix . $value . $suffix;
-  }
+		if (isset($args['instead']) && $value != '') $value = $args['instead'];
+		if (isset($args['ifempty']) && $value == '') $value = $args['ifempty'];
 
-  /**
-   * Parameter aus args zur Laufzeit auf den Wert einer Variablen anwenden.
-   * Wichtig f�r Variablen, die Variable ausgaben haben.
-   */
-  function handleGlobalVarParamsSerialized($varname, $args, $value)
-  {
-    $varname = str_replace('"', '\"', $varname);
-    $args = str_replace('"', '\"', serialize($args));
-    return 'rex_var::handleGlobalVarParams("'. $varname .'", unserialize("'. $args .'"), '. $value .')';
-  }
+		return $prefix.$value.$suffix;
+	}
 
-  /**
-   * Findet die Parameter der Variable $varname innerhalb des Strings $content.
-   *
-   * @access protected
-   */
-  function getVarParams($content, $varname)
-  {
-    $result = array ();
+	/**
+	 * Parameter aus args zur Laufzeit auf den Wert einer Variablen anwenden.
+	 * Wichtig für Variablen, die Variable ausgaben haben.
+	 */
+	protected function handleGlobalVarParamsSerialized($varname, $args, $value) {
+		$varname = str_replace('"', '\"', $varname);
+		$args    = str_replace('"', '\"', serialize($args));
 
-    $match = $this->matchVar($content, $varname);
+		return 'rex_var::handleGlobalVarParams("'.$varname.'", unserialize("'.$args.'"), '.$value.')';
+	}
 
-    foreach ($match as $param_str)
-    {
-    	$args = array();
-    	$params = $this->splitString($param_str);
-    	foreach ($params as $name => $value)
-    	{
-        $args = $this->handleDefaultParam($varname, $args, $name, $value);
-    	}
+	/**
+	* Findet die Parameter der Variable $varname innerhalb des Strings $content.
+	*/
+	protected function getVarParams($content, $varname) {
+		$result = array();
+		$match  = $this->matchVar($content, $varname);
 
-      $result[] = array (
-        $param_str,
-        $args
-      );
-    }
+		foreach ($match as $param_str) {
+			$args   = array();
+			$params = $this->splitString($param_str);
 
-    return $result;
-  }
+			foreach ($params as $name => $value) {
+				$args = $this->handleDefaultParam($varname, $args, $name, $value);
+			}
 
-  /**
-   * Durchsucht den String $content nach Variablen mit dem Namen $varname.
-   * Gibt die Parameter der Treffer (Text der Variable zwischen den []) als Array zur�ck.
-   */
-  function matchVar($content, $varname)
-  {
-    $result = array ();
+			$result[] = array($param_str, $args);
+		}
 
-    if (preg_match_all('/' . preg_quote($varname, '/') . '\[([^\]]*)\]/ms', $content, $matches))
-    {
-      foreach ($matches[1] as $match)
-      {
-        $result[] = $match;
-      }
-    }
+		return $result;
+	}
 
-    return $result;
-  }
+	/**
+	 * Durchsucht den String $content nach Variablen mit dem Namen $varname.
+	 * Gibt die Parameter der Treffer (Text der Variable zwischen den []) als Array zur�ck.
+	 */
+	private function matchVar($content, $varname) {
+		if (preg_match_all('/'.preg_quote($varname, '/').'\[([^\]]*)\]/ms', $content, $matches)) {
+			return $matches[1];
+		}
 
+		return array();
+	}
 
+	/**
+	 * @return array  array(value, args)
+	 */
+	protected function extractArg($name, $args, $default = null) {
+		$val = $default;
 
-  function extractArg($name, $args, $default = null)
-  {
-  	$val = $default;
-  	if(isset($args[$name]))
-  	{
-  		$val = $args[$name];
-  		unset($args[$name]);
-  	}
-  	return array($val, $args);
-  }
+		if (isset($args[$name])) {
+			$val = $args[$name];
+			unset($args[$name]);
+		}
 
-  /**
-   * Trennt einen String an Leerzeichen auf.
-   * Abschnitte die in "" oder '' stehen, werden als ganzes behandelt und
-   * darin befindliche Leerzeichen nicht getrennt.
-   * @access protected
-   */
-  protected static function splitString($string)
-  {
-    return rex_split_string($string);
-  }
+		return array($val, $args);
+	}
 
-  public static function isAddEvent()
-  {
-    return rex_request('function', 'string') == 'add';
-  }
+	/**
+	 * Trennt einen String an Leerzeichen auf.
+	 *
+	 * Abschnitte die in "" oder '' stehen, werden als ganzes behandelt und
+	 * darin befindliche Leerzeichen nicht getrennt.
+	 */
+	protected static function splitString($string) {
+		return rex_split_string($string);
+	}
 
-  public static function isEditEvent()
-  {
-    return rex_request('function', 'string') == 'edit';
-  }
+	public static function isAddEvent() {
+		return sly_request('function', 'string') == 'add';
+	}
 
-  public static function isDeleteEvent()
-  {
-    return rex_request('function', 'string') == 'delete';
-  }
+	public static function isEditEvent() {
+		return sly_request('function', 'string') == 'edit';
+	}
+
+	public static function isDeleteEvent() {
+		return sly_request('function', 'string') == 'delete';
+	}
 }

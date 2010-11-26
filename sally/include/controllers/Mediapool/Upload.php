@@ -30,6 +30,7 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 			// close the popup, if requested
 
 			if (sly_post('saveandexit', 'boolean', false) && $file !== null) {
+				$this->render('views/mediapool/javascript.phtml');
 				$this->render('views/mediapool/upload_js.phtml', array('file' => $file));
 				exit;
 			}

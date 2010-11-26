@@ -12,71 +12,63 @@
  *
  * @ingroup redaxo
  */
-class rex_var_template extends rex_var
-{
-  // --------------------------------- Output
+class rex_var_template extends rex_var {
+	// --------------------------------- Output
 
-  function getBEOutput(& $sql, $content)
-  {
-    return $this->matchTemplate($content);
-  }
+	public function getBEOutput($sql, $content) {
+		return $this->matchTemplate($content);
+	}
 
-  function getTemplate($content)
-  {
-    return $this->matchTemplate($content);
-  }
+	public function getTemplate($content) {
+		return $this->matchTemplate($content);
+	}
 
-  /**
-   * Wert für die Ausgabe
-   */
-  function matchTemplate($content)
-  {
-    $var = 'REX_TEMPLATE';
-    $matches = $this->getVarParams($content, $var);
+	/**
+	 * Wert für die Ausgabe
+	 */
+	public function matchTemplate($content) {
+		$var        = 'REX_TEMPLATE';
+		$matches    = $this->getVarParams($content, $var);
+		$tplService = sly_Service_Factory::getTemplateService();
 
-    foreach ($matches as $match)
-    {
-      list ($param_str, $args) = $match;
-      list ($template_id, $args) = $this->extractArg('id', $args, 0);
+		foreach ($matches as $match) {
+			list ($param_str, $args)   = $match;
+			list ($template_id, $args) = $this->extractArg('id', $args, 0);
 
-	  $tplService = sly_Service_Factory::getTemplateService();
+			if (!empty($template_id) && $tplService->exists($template_id)) {
+				$varname = '$__rex_tpl'.$template_id;
+				$tpl     = "<?php\n\$tplService = sly_Service_Factory::getTemplateService();";
 
-      if(!empty($template_id) && $tplService->exists($template_id))
-      {
-        $varname = '$__rex_tpl'.$template_id;
-        $tpl     = "<?php\n\$tplService = sly_Service_Factory::getTemplateService();";
+				if (isset($args['callback'])) {
+					$tpl .= "\n".'$args[\'subject\'] = file_get_contents($tplService->getContent(\'$template_id\'));';
+					$tpl .= "\n".'eval(\'?>\'.call_user_func(unserialize("'.serialize($args['callback']).'", $args));';
+				}
+				else {
+					$prefix = isset($args['prefix']) ? "\n".'eval("'.addslashes($args['prefix']).'")' : '';
+					$suffix = isset($args['suffix']) ? "\n".'eval("'.addslashes($args['suffix']).'")' : '';
+					$exists = $tplService->exists($template_id);
 
-        if (isset($args['callback'])) {
-        	$tpl .= "\n".'$args[\'subject\'] = file_get_contents($tplService->getContent(\'$template_id\'));';
-        	$tpl .= "\n".'eval(\'?>\'.call_user_func(unserialize("'.serialize($args['callback']).'", $args));';
-        }
-        else {
-        	$prefix = isset($args['prefix']) ? "\n".'eval("'.addslashes($args['prefix']).'")' : '';
-        	$suffix = isset($args['suffix']) ? "\n".'eval("'.addslashes($args['suffix']).'")' : '';
+					$tpl .= $prefix;
 
-        	$tpl .= $prefix;
+					if (isset($args['instead']) && $exists) { // Bescheuertes Verhalten von REDAXO beibehalten.
+						$tpl .= "\n".'eval("'.addslashes($args['instead']).'");';
+					}
+					elseif (isset($args['ifempty']) && !$exists) {
+						$tpl .= "\n".'eval("'.addslashes($args['ifempty']).'");';
+					}
+					else {
+						$tpl .= "\n".'$tplService->includeFile(\''.$template_id.'\');';
+					}
 
-        	$exists   = $tplService->exists($template_id);
+					$tpl .= $suffix;
+				}
 
-        	if (isset($args['instead']) && $exists) { // Bescheuertes Verhalten von REDAXO beibehalten.
-        		$tpl .= "\n".'eval("'.addslashes($args['instead']).'");';
-        	}
-        	elseif (isset($args['ifempty']) && !$exists) {
-        		$tpl .= "\n".'eval("'.addslashes($args['ifempty']).'");';
-        	}
-        	else {
-        		$tpl .= "\n".'$tplService->includeFile(\''.$template_id.'\');';
-        	}
+				$tpl .= "\n".'?>';
 
-        	$tpl .= $suffix;
-        }
+				$content = str_replace($var.'['.$param_str.']', $tpl, $content);
+			}
+		}
 
-        $tpl .= "\n".'?>';
-
-	    $content = str_replace($var.'['.$param_str.']', $tpl, $content);
-      }
-    }
-
-    return $content;
-  }
+		return $content;
+	}
 }
