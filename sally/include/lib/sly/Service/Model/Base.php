@@ -14,14 +14,14 @@
 abstract class sly_Service_Model_Base {
 	protected $tablename;
 
-	protected abstract function makeObject(array $params);
+	protected abstract function makeInstance(array $params);
 
 	protected function getTableName() {
 		return $this->tablename;
 	}
 
 	public function create($params) {
-		$model = $this->makeObject($params);
+		$model = $this->makeInstance($params);
 		return $this->save($model);
 	}
 
@@ -57,7 +57,7 @@ abstract class sly_Service_Model_Base {
 		$persistence->select($this->getTableName(), '*', $where, $group, $order, $offset, $limit, $having);
 
 		foreach ($persistence as $row) {
-			$return[] = $this->makeObject($row);
+			$return[] = $this->makeInstance($row);
 		}
 
 		return $return;
