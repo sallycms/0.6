@@ -198,7 +198,6 @@ no_permission_to_edit: 'No permission to edit'
 option_no_template: 'No template'
 template_default_name: 'NO TEMPLATE'
 header_article_name: 'Article name'
-header_template: Template
 header_date: Created
 header_article_type: 'Article type'
 change: change
@@ -431,3 +430,4 @@ none: 'translate:none' # nichts
 recommended: recommended
 
 authorisation_exception_language_denied: Permission to language %s denied!
+exception_articletype_not_exists: The articletype %s does not exist!

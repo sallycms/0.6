@@ -79,4 +79,11 @@ abstract class sly_Service_Factory {
 	public static function getUserService() {
 		return self::getService('User');
 	}
+
+	/**
+	 * @return sly_Service_ArticleType  The user service instance
+	 */
+	public static function getArticleTypeService() {
+		return self::getService('ArticleType');
+	}
 }

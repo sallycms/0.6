@@ -198,7 +198,6 @@ no_permission_to_edit: Keine Editiererlaubnis
 option_no_template: Kein Template
 template_default_name: KEIN TEMPLATE
 header_article_name: Artikelname
-header_template: Template
 header_date: Erstellt am
 header_article_type: Artikeltyp
 change: ändern
@@ -431,3 +430,4 @@ none: nichts
 recommended: empfohlen
 
 authorisation_exception_language_denied: Zugriff auf Sprache %s verweigert!
+exception_articletype_not_exists: Der Artikeltyp %s existiert nicht!

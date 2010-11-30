@@ -193,7 +193,7 @@ class OOArticle extends OORedaxo
 
 		$tplserv = sly_Service_Factory::getTemplateService();
 
-		if ($this->hasTemplate() && $tplserv->exists($this->getTemplateName())) {
+		if ($this->hasType() && $tplserv->exists($this->getTemplateName())) {
 			$params['article'] = $this;
 			ob_start();
 			ob_implicit_flush(0);
@@ -206,4 +206,18 @@ class OOArticle extends OORedaxo
 
 		return $content;
 	}
+
+	/*
+	 * Accessor Method:
+	 * returns the template id
+	 */
+	public function getTemplateName() {
+		return sly_Service_Factory::getArticleTypeService()->getTemplate($this->_type);
+	}
+
+	/*
+	 * Accessor Method:
+	 * returns true if article has a template.
+	 */
+	public function hasType() { return !empty($this->_type); }
 }
