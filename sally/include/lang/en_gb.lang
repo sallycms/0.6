@@ -157,7 +157,8 @@ content_tostartarticle: 'Make this start-article'
 content_nottostartarticle: 'Cannot make this article start-article.'
 content_tostartarticle_failed: 'Error. Article not changed to start-article.'
 content_tostartarticle_ok: 'Article was changed to start-article.'
-content_select_template: Please select a template!
+content_select_type: Please select an articletype!
+content_configure_article_type: Configure the tempalte for this articletype!
 content_no_slots: This article cannot contain any content.
 move_category: to
 category_moved: 'Category moved'

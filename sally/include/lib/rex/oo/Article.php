@@ -217,7 +217,10 @@ class OOArticle extends OORedaxo
 
 	/*
 	 * Accessor Method:
-	 * returns true if article has a template.
+	 * returns true if article has a type.
 	 */
 	public function hasType() { return !empty($this->_type); }
+
+	
+	public function getType() { return $this->_type; }
 }

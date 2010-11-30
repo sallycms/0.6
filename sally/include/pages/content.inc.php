@@ -41,6 +41,7 @@ $OOArt       = OOArticle::getArticleById($article_id, $clang);
 
 if (!is_null($OOArt)) {
 
+	$typeService     = sly_Service_Factory::getArticleTypeService();
 	$templateService = sly_Service_Factory::getTemplateService();
 	$moduleService   = sly_Service_Factory::getModuleService();
 
@@ -101,18 +102,18 @@ if (!is_null($OOArt)) {
 		'slice_revision'   => &$slice_revision
 	));
 
-	// Rechte prüfen
-	$templateName = $OOArt->getTemplateName();
 
-	/*if (empty($templateName)) {
-		print rex_warning(t('content_select_template'));
-	}
-	else*/if (!($KATPERM || $REX['USER']->hasPerm('article['.$article_id.']'))) {
+	if (!($KATPERM || $REX['USER']->hasPerm('article['.$article_id.']'))) {
 		// keine Rechte
 		print rex_warning(t('no_rights_to_edit'));
 	}
 	else {
-		$hasTemplate = !empty($templateName);
+		$hasType     = $OOArt->hasType();
+		$hasTemplate = false;
+		if($hasType) {
+			$templateName = $typeService->getTemplate($OOArt->getType());
+			$hasTemplate = !empty($templateName) && $templateService->exists($templateName);
+		}
 
 		// validate slot
 
@@ -578,8 +579,9 @@ if (!is_null($OOArt)) {
 
 			sly_Core::dispatcher()->notify('SLY_CONTENT_SLICE_PAGE', null, $params);
 
-			if (!$hasTemplate || $slot === null) {
-				if (!$hasTemplate) print rex_warning(t('content_select_template'));
+			if (!$hasType || !$hasTemplate || $slot === null) {
+				if (!$hasType) print rex_warning(t('content_select_type'));
+				elseif (!$hasTemplate) print rex_warning(t('content_configure_article_type'));
 				else print rex_info(t('content_no_slots'));
 			}
 			else {

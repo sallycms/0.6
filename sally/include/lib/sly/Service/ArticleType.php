@@ -25,20 +25,23 @@ class sly_Service_ArticleType {
 
 	public function getArticleTypes() {
 		$types = array();
-		foreach ($this->data as $name => $data) {
-			$types[$name] = $data['title'];
+		foreach (array_keys($this->data) as $name) {
+			$types[$name] = $this->getTitle($name);
 		}
 		return $types;
 	}
 
-	public function getTitle($articleType) {
+	protected function get($articleType, $property, $default = '') {
 		$this->exists($articleType, true);
-		return $this->data[$articleType]['title'];
+		return isset($this->data[$articleType][$property]) ? $this->data[$articleType][$property] : $default;
+	}
+
+	public function getTitle($articleType) {
+		return $this->get($articleType, 'title');
 	}
 
 	public function getTemplate($articleType) {
-		$this->exists($articleType, true);
-		return $this->data[$articleType]['template'];
+		return $this->get($articleType, 'template');
 	}
 
 	public function exists($articleType, $throwException = false) {
