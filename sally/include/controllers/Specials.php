@@ -34,14 +34,14 @@ class sly_Controller_Specials extends sly_Controller_Sally {
 	public function update() {
 		$startArticle    = sly_post('start_article',    'int');
 		$notFoundArticle = sly_post('notfound_article', 'int');
-		$defaultTemplate = sly_post('default_template', 'string');
+		$defaultType     = sly_post('default_type',     'string');
 		$backendLocale   = sly_post('backend_locale',   'string');
 		$errorEMail      = sly_post('error_email',      'string');
 		$server          = sly_post('server',           'string');
 		$serverName      = sly_post('servername',       'string');
 		$modRewrite      = sly_post('mod_rewrite',      'string');
 		$cachingStrategy = sly_post('caching_strategy', 'string');
-		$timezone        = sly_post('timezone', 'string');
+		$timezone        = sly_post('timezone',         'string');
 
 		// Änderungen speichern
 
@@ -64,13 +64,12 @@ class sly_Controller_Specials extends sly_Controller_Sally {
 
 		// Standard-Artikel
 
-		$service = sly_Service_Factory::getService('Template');
-
-		if (!empty($defaultTemplate) && !$service->exists($defaultTemplate)) {
-			$this->warning[] = t('settings_invalid_default_template').'<br />';
+		$service = sly_Service_Factory::getArticleTypeService();
+		if (!empty($defaultType) && !$service->exists($defaultType)) {
+			$this->warning[] = t('settings_invalid_default_type').'<br />';
 		}
 		else {
-			$conf->set('DEFAULT_TEMPLATE', $defaultTemplate);
+			$conf->set('DEFAULT_ARTICLE_TYPE', $defaultType);
 		}
 
 		//Sonstige Einstellungen

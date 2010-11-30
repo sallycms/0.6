@@ -195,7 +195,7 @@ save_category: 'Save category'
 status_online: online
 status_offline: offline
 no_permission_to_edit: 'No permission to edit'
-option_no_template: 'No template'
+option_no_type: 'No Articletype'
 template_default_name: 'NO TEMPLATE'
 header_article_name: 'Article name'
 header_date: Created
@@ -267,7 +267,7 @@ specials_features: Features
 specials_settings: Settings
 settings_invalid_sitestart_article: 'Invalid ID for not-found article!'
 settings_invalid_notfound_article: 'Invalid ID for start article!'
-settings_invalid_default_template: 'Invalid default template!'
+settings_invalid_default_type: 'Invalid default Articletype!'
 regenerate_article: 'Regenerate articles & cache'
 regeneration_message: 'Categories, articles and templates are regenerated. Cache will be deleted. Might take longer. Don''t abort process!'
 general_info_header: 'General information:'
@@ -302,7 +302,7 @@ specials_server: 'Server'
 specials_servername: 'Project Name'
 specials_error_email: 'Error eMail'
 specials_start_article: Startpage
-specials_default_template: 'Default Template'
+specials_default_type: 'Default Articletype'
 specials_lang: 'Default Backend Locale'
 specials_mod_rewrite: 'use mod_rewrite'
 specials_timezone: 'Timezone'

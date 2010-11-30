@@ -17,13 +17,13 @@ if (!empty($this->info))    print rex_info($this->info);
 
 $locales    = array_combine($REX['LOCALES'], $REX['LOCALES']);
 $rewrites   = array('true' => t('yes'), 'false' => t('no'));
-$tplService = sly_Service_Factory::getService('Template');
-$templates  = $tplService->getTemplates();
-$templates  = array_merge(array('' => t('option_no_template')), $templates);
+$typeService = sly_Service_Factory::getArticleTypeService();
+$types  = $typeService->getArticleTypes();
+$types  = array_merge(array('' => t('option_no_type')), $types);
 
 $backendLocale   = new sly_Form_Select_DropDown('backend_locale', t('specials_lang'), $config->get('LANG'), $locales, 'rex-form-lang');
 $modRewrite      = new sly_Form_Select_DropDown('mod_rewrite', t('specials_mod_rewrite'), $config->get('MOD_REWRITE') ? 'true' : 'false', $rewrites, 'rex-form-mod-rewrite');
-$defaultTemplate = new sly_Form_Select_DropDown('default_template', t('specials_default_template'), $config->get('DEFAULT_TEMPLATE'), $templates, 'rex-form-default-template-id');
+$defaultType     = new sly_Form_Select_DropDown('default_type', t('specials_default_type'), $config->get('DEFAULT_ARTICLE_TYPE'), $types, 'rex-form-default-article-type');
 $cachingStrategy = new sly_Form_Select_DropDown('caching_strategy', t('specials_caching_strategy'), sly_Cache::getStrategy(), sly_Cache::getAvailableCacheImpls(), 'rex-form-caching-strategy');
 
 $buttonBar = new sly_Form_ButtonBar(array(
@@ -75,7 +75,7 @@ $buttonBar = new sly_Form_ButtonBar(array(
 						new sly_Form_Input_Text('error_email', t('config_error_email'), $config->get('ERROR_EMAIL')),
 						new sly_Form_Widget_LinkButton('start_article', t('specials_start_article'), $config->get('START_ARTICLE_ID')),
 						new sly_Form_Widget_LinkButton('notfound_article', t('specials_not_found_article'), $config->get('NOTFOUND_ARTICLE_ID')),
-						$defaultTemplate,
+						$defaultType,
 						$backendLocale,
 						$modRewrite,
 						$cachingStrategy,

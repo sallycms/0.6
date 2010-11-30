@@ -195,7 +195,7 @@ save_category: Kategorie speichern
 status_online: online
 status_offline: offline
 no_permission_to_edit: Keine Editiererlaubnis
-option_no_template: Kein Template
+option_no_type: Kein Artikeltyp
 template_default_name: KEIN TEMPLATE
 header_article_name: Artikelname
 header_date: Erstellt am
@@ -267,7 +267,7 @@ specials_features: Features
 specials_settings: Einstellungen
 settings_invalid_sitestart_article: Ungültige Startartikel Id!
 settings_invalid_notfound_article: Ungültige Not-Found-Artikel Id!
-settings_invalid_default_template: Ungültige Default-Template Id!
+settings_invalid_default_type: Ungültiger Default-Artikeltyp!
 regenerate_article: "Regeneriere Artikel & Cache"
 regeneration_message: "Kategorien, Artikel und Templates werden neu generiert. Der gesamte Cache wird gelöscht. Kann länger dauerrn. Bitte den Vorgang nicht abbrechen."
 general_info_header: Allgemeine Informationen:
@@ -302,7 +302,7 @@ specials_server: Server
 specials_servername: Projektname
 specials_error_email: Fehler-E-Mail
 specials_start_article: Startseite
-specials_default_template: Standardtemplate
+specials_default_type: Standard Artikeltyp
 specials_lang: Standard BE-Locale
 specials_mod_rewrite: mod_rewrite verwenden
 specials_timezone: Zeitzone

@@ -19,27 +19,35 @@ class sly_Service_ArticleType {
 
 	private $data;
 
-	public function  __construct() {
-		$this->data = sly_Util_YAML::load(SLY_BASE.DIRECTORY_SEPARATOR.'develop'.DIRECTORY_SEPARATOR.'types.yml');
+	public function __construct() {
+		$this->data = sly_Util_YAML::load(SLY_BASE . DIRECTORY_SEPARATOR . 'develop' . DIRECTORY_SEPARATOR . 'types.yml');
 	}
 
 	public function getArticleTypes() {
-		return array_keys($this->data);
+		$types = array();
+		foreach ($this->data as $name => $data) {
+			$types[$name] = $data['title'];
+		}
+		return $types;
 	}
 
 	public function getTitle($articleType) {
-		$this->exists($articleType);
+		$this->exists($articleType, true);
 		return $this->data[$articleType]['title'];
 	}
 
 	public function getTemplate($articleType) {
-		$this->exists($articleType);
+		$this->exists($articleType, true);
 		return $this->data[$articleType]['template'];
 	}
 
-	public function exists($articleType) {
-		if(!array_key_exists($articleType, $this->data)) {
-			throw new sly_Exception(sprintf(t('exception_articletype_not_exists'), $articleType));
+	public function exists($articleType, $throwException = false) {
+		if (!array_key_exists($articleType, $this->data)) {
+			if ($throwException)
+				throw new sly_Exception(sprintf(t('exception_articletype_not_exists'), $articleType));
+			return false;
 		}
+		return true;
 	}
+
 }

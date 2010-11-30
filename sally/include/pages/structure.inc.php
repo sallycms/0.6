@@ -112,7 +112,6 @@ elseif (rex_post('artadd_function', 'boolean') && $category_id !== '' && $KATPER
   $data = array();
   $data['prior']       = rex_post('Position_New_Article', 'int');
   $data['name']        = rex_post('article_name', 'string');
-  $data['template']    = sly_post('template', 'string');
   $data['category_id'] = $category_id;
   $data['path']        = $KATPATH;
 
@@ -129,7 +128,6 @@ elseif (rex_post('artedit_function', 'boolean') && $article_id != '' && $KATPERM
   $data = array();
   $data['prior']       = rex_post('Position_Article', 'int');
   $data['name']        = rex_post('article_name', 'string');
-  $data['template']    = sly_post('template', 'string');
   $data['category_id'] = $category_id;
   $data['path']        = $KATPATH;
 
