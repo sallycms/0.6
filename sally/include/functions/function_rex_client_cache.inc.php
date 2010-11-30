@@ -47,11 +47,11 @@ function rex_send_file($file, $contentType, $environment = 'backend') {
  * @param string      $content      Inhalt des Artikels
  * @param string      $environment  die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
-function rex_send_article($REX_ARTICLE, $content, $environment, $sendcharset = false) {
+function rex_send_article($REX_ARTICLE, $content, $environment) {
 	global $REX;
 
 	// ----- EXTENSION POINT
-	$content = rex_register_extension_point('OUTPUT_FILTER', $content, array('environment' => $environment, 'sendcharset' => $sendcharset));
+	$content = rex_register_extension_point('OUTPUT_FILTER', $content, array('environment' => $environment));
 
 	// ----- EXTENSION POINT - keine Manipulation der Ausgaben ab hier (read only)
 	rex_register_extension_point('OUTPUT_FILTER_CACHE', $content, '', true);
@@ -71,7 +71,7 @@ function rex_send_article($REX_ARTICLE, $content, $environment, $sendcharset = f
 		$lastModified = time();
 	}
 
-	rex_send_content(trim($content), $lastModified, $etag, $environment, $sendcharset);
+	rex_send_content(trim($content), $lastModified, $etag, $environment);
 }
 
 /**
@@ -83,7 +83,7 @@ function rex_send_article($REX_ARTICLE, $content, $environment, $sendcharset = f
  * @param string $cacheKey      Cachekey zur identifizierung des Caches
  * @param string $environment   die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
-function rex_send_content($content, $lastModified, $etag, $environment, $sendcharset = false) {
+function rex_send_content($content, $lastModified, $etag, $environment) {
 	global $REX;
 
 	// Cachen erlauben, nach revalidierung
@@ -91,12 +91,7 @@ function rex_send_content($content, $lastModified, $etag, $environment, $sendcha
 	session_cache_limiter('none');
 	header('Cache-Control: must-revalidate, proxy-revalidate, private');
 
-	if ($sendcharset) {
-		global $I18N;
-		header('Content-Type: text/html; charset="'.$I18N->msg('htmlcharset').'"');
-	}
-
-	// ----- Last-Modified
+		// ----- Last-Modified
 	if ($REX['USE_LAST_MODIFIED'] === 'true' || $REX['USE_LAST_MODIFIED'] == $environment) {
 		rex_send_last_modified($lastModified);
 	}

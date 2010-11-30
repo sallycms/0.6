@@ -16,6 +16,35 @@ abstract class sly_Controller_Base {
 	const SUBPAGEPARAM = 'subpage';
 	const ACTIONPARAM  = 'func';
 
+	protected $content_type = null;
+	protected $charset = null;
+	
+	protected function setContentType($type) {
+		$this->content_type = $type;
+	}
+	protected function getContentType() {
+		return $this->content_type;
+	}
+	protected function setCharset($charset) {
+		$this->charset = $charset;
+	}
+	protected function getCharset() {
+		return $this->charset;
+	}
+	protected function computeContentType() {
+		if (!empty ($this->content_type))
+			return $this->content_type . ($this->charset ?  ('; charset=' . $this->charset) : '');
+		return null;
+	}
+	protected function injectContentType() {
+		$content_type = $this->computeContentType();
+		if ($content_type) {
+			header('Content-Type: ' . $content_type);
+			$layout = sly_Core::getLayout('Sally');
+			$layout->addHttpMeta('Content-Type', $content_type);
+		}
+	}
+
 	protected $action;
 
 	protected function __construct() {
@@ -112,7 +141,8 @@ abstract class sly_Controller_Base {
 		extract($paramsHtuG50hNCdikAvf7CZ1F);
 
 		ob_start();
-		include SLY_INCLUDE_PATH.DIRECTORY_SEPARATOR.$filenameHtuG50hNCdikAvf7CZ1F;
+		include SLY_INCLUDE_PATH.DIRECTORY_SEPARATOR.$filenameHtuG50hNCdikAvf7CZ1F;	
+		$this->injectContentType();
 		print ob_get_clean();
 	}
 

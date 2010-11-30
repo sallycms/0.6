@@ -215,4 +215,4 @@ catch (Exception $e) {
 	$CONTENT = $layout->render();
 }
 
-rex_send_article(null, $CONTENT, 'backend', true);
+rex_send_article(null, $CONTENT, 'backend');
