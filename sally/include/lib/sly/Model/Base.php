@@ -21,7 +21,7 @@ abstract class sly_Model_Base {
 	protected $id = self::NEW_ID;
 
 	public function __construct($params = array()) {
-		if (isset($params['id'])) $this->id = $params['id'];
+		if (isset($params['id'])) $this->setId($params['id']);
 
 		foreach ($this->_attributes as $name => $type){
 			if (isset($params[$name])) $this->$name = $params[$name];
@@ -29,7 +29,7 @@ abstract class sly_Model_Base {
 	}
 
 	public function getId()    { return $this->id; }
-	public function setId($id) { $this->id = $id;  }
+	public function setId($id) { $this->id = intval($id); }
 
 	public function toHash() {
 		$return = array('id' => $this->id);

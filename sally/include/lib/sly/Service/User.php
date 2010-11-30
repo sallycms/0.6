@@ -17,12 +17,12 @@
 class sly_Service_User extends sly_Service_Model_Base {
 	protected $tablename = 'user';
 
-	protected function makeObject(array $params) {
+	protected function makeInstance(array $params) {
 		return new sly_Model_User($params);
 	}
 
 	public function create($params) {
-		$model = $this->makeObject($params);
+		$model = $this->makeInstance($params);
 		if (isset($params['psw'])) $model->setPassword($params['psw']);
 		return $this->save($model);
 	}

@@ -64,12 +64,18 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 	}
 
 	/**
-	 * Select rows
 	 *
-	 * @param  string $table  table name without system prefix
-	 * @param  string $select what to select (colA, colB, colC, ...)
-	 * @param  array  $where  a hash (column => value ...)
-	 * @return int            affected rows
+	 * @param string $table
+	 * @param unknown_type $select
+	 * @param unknown_type $where
+	 * @param unknown_type $group
+	 * @param unknown_type $order
+	 * @param unknown_type $offset
+	 * @param unknown_type $limit
+	 * @param unknown_type $having
+	 * @param unknown_type $joins
+	 *
+	 * @return boolean
 	 */
 	public function select($table, $select = '*', $where = null, $group = null, $order = null, $offset = null, $limit = null, $having = null, $joins = null) {
 		$sql = $this->getSQLbuilder(self::getPrefix().$table);

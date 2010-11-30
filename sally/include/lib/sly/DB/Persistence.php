@@ -56,6 +56,7 @@ abstract class sly_DB_Persistence implements Iterator {
 	 * @param unknown_type $where
 	 * @param unknown_type $group
 	 * @param unknown_type $order
+	 * @param unknown_type $offset
 	 * @param unknown_type $limit
 	 * @param unknown_type $having
 	 * @param unknown_type $joins

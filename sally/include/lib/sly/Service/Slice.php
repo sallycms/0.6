@@ -17,7 +17,7 @@
 class sly_Service_Slice extends sly_Service_Model_Base {
 	protected $tablename = 'slice';
 
-	protected function makeObject(array $params) {
+	protected function makeInstance(array $params) {
 		return new sly_Model_Slice($params);
 	}
 

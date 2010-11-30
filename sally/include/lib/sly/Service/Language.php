@@ -16,7 +16,7 @@ class sly_Service_Language extends sly_Service_Model_Base
 {
 	protected $tablename = 'clang';
 
-	protected function makeObject(array $params)
+	protected function makeInstance(array $params)
 	{
 		return new sly_Model_Language($params);
 	}
