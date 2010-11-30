@@ -33,37 +33,23 @@ class sly_Helper_Content {
 	}
 
 	public static function printAddModuleForm($articleId, $clangId, $prior, $template, $slot) {
-		global $I18N;
-
-		$formURL = 'index.php';
 		$moduleSelect = self::getModuleSelect($template, $slot);
-		$formID = ' id="slice' . $prior . '"';
+		$formID = 'slice' . $prior;
 
-		$moduleSelect->setAttribute('id', 'module' . $prior);
+		$form = new sly_Form('index.php', 'GET', t('add_block'), $formID , $formID);
+		$form->addClass('rex-form-content-editmode');
+		$form->addHiddenValue('article_id', $articleId);
+		$form->addHiddenValue('page', 'content');
+		$form->addHiddenValue('mode', 'edit');
+		$form->addHiddenValue('prior', $prior);
+		$form->addHiddenValue('function', 'add');
+		$form->addHiddenValue('clang', $clangId);
+		$form->addHiddenValue('slot', $slot);
 
-		$sliceContent = '
-			<div class="rex-form rex-form-content-editmode">
-				<form action="' . $formURL . '" method="get"' . $formID . '>
-					<fieldset class="rex-form-col-1">
-						<legend><span>' . $I18N->msg("add_block") . '</span></legend>
-						<input type="hidden" name="article_id" value="' . $articleId . '" />
-						<input type="hidden" name="page" value="content" />
-						<input type="hidden" name="mode" value="edit" />
-						<input type="hidden" name="prior" value="' . $prior . '" />
-						<input type="hidden" name="function" value="add" />
-						<input type="hidden" name="clang" value="' . $clangId . '" />
-						<input type="hidden" name="slot" value="' . $slot . '" />
-
-						<div class="rex-form-row">
-							<p class="rex-form-select">
-								' . $moduleSelect->render() . '
-								<noscript><input class="rex-form-submit" type="submit" name="btn_add" value="' . $I18N->msg("add_block") . '" /></noscript>
-							</p>
-						</div>
-					</fieldset>
-				</form>
-			</div>';
-		print $sliceContent;
+		$form->add($moduleSelect);
+		$form->setSubmitButton(null);
+		$form->setResetButton(null);
+		$form->render();
 	}
 
 	// ----- ADD Slice
