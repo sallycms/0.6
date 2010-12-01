@@ -573,7 +573,7 @@ function rex_copyArticle($id, $to_cat_id)
 				        're_id'  => $to_cat_id,
 				        'prior'  => 9999999,
 				        'path'   => $path,
-				        'template_id' => $from_data['template_id'],
+				        'type' => $from_data['type'],
 			      	)
     			);
     			sly_Core::cache()->delete('sly.article.list', $to_cat_id);
