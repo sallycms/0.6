@@ -123,6 +123,7 @@ abstract class sly_Controller_Base {
 		$method = $this->action;
 		$retval = $this->$method();
 
+		$this->injectContentType();
 		$this->teardown();
 	}
 
@@ -142,7 +143,6 @@ abstract class sly_Controller_Base {
 
 		ob_start();
 		include SLY_INCLUDE_PATH.DIRECTORY_SEPARATOR.$filenameHtuG50hNCdikAvf7CZ1F;	
-		$this->injectContentType();
 		print ob_get_clean();
 	}
 

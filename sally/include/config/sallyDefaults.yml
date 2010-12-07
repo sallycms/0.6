@@ -20,6 +20,6 @@ DATABASE:
   PERSISTENT: false
   TABLE_PREFIX: sly_
 PERM: ["mediapool[]"]
-EXTPERM: ["advancedMode[]", "moveSlice[]", "copyContent[]", "moveArticle[]", "copyArticle[]", "moveCategory[]", "publishArticle[]", "publishCategory[]", "article2startpage[]"]
+EXTPERM: ["advancedMode[]", "moveSlice[]", "copyContent[]", "moveArticle[]", "copyArticle[]", "moveCategory[]", "publishArticle[]", "publishCategory[]", "article2startpage[]", "changearttype[]"]
 EXTRAPERM: ["editContentOnly[]"]
 ADDON: []

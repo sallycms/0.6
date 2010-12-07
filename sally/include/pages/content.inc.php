@@ -35,9 +35,7 @@ $global_info      = '';
 
 require SLY_INCLUDE_PATH.'/functions/function_rex_content.inc.php';
 
-//$article = new rex_sql();
-//$article->setQuery('SELECT startpage, name, re_id, template FROM #_article a WHERE a.id = '.$article_id.' AND clang = '.$clang, '#_');
-$OOArt       = OOArticle::getArticleById($article_id, $clang);
+$OOArt = OOArticle::getArticleById($article_id, $clang);
 
 if (!is_null($OOArt)) {
 
@@ -108,6 +106,39 @@ if (!is_null($OOArt)) {
 		print rex_warning(t('no_rights_to_edit'));
 	}
 	else {
+		if ($mode == 'edit') {
+			// START: Slice move up/down
+
+			if (sly_post('save_article', 'string')) {
+
+				sly_Core::dispatcher()->notify('ART_META_UPDATED', $info, array(
+					'id'    => $article_id,
+					'clang' => $clang,
+				));
+
+				$article_type = sly_post('article_type', 'string');
+
+				$meta_sql = new rex_sql();
+				$meta_sql->setTable('article', true);
+				$meta_sql->setWhere('id = '.$article_id.' AND clang = '.$clang);
+				$meta_sql->setValue('type', $article_type);
+				$meta_sql->addGlobalUpdateFields();
+
+				if ($meta_sql->update()) {
+					$global_info     = t('article_updated');
+					$meta_sql = null;
+
+					sly_Core::cache()->delete('sly.article', $article_id.'_'.$clang);
+				}
+				else {
+					$meta_sql = null;
+					$global_warning  = $meta_sql->getError();
+				}
+				$OOArt = OOArticle::getArticleById($article_id, $clang);
+			}
+		}
+
+
 		$hasType     = $OOArt->hasType();
 		$hasTemplate = false;
 		if($hasType) {
@@ -396,9 +427,15 @@ if (!is_null($OOArt)) {
 			}
 
 			// END: MOVE CATEGORY
-			// START: SAVE METADATA
+			// START: SAVE METADATA META PAGE
 
 			if (sly_post('savemeta', 'string')) {
+
+				sly_Core::dispatcher()->notify('ART_META_UPDATED', $info, array(
+					'id'    => $article_id,
+					'clang' => $clang,
+				));
+
 				$meta_article_name = sly_post('meta_article_name', 'string');
 
 				$meta_sql = new rex_sql();
@@ -411,17 +448,12 @@ if (!is_null($OOArt)) {
 					$info     = t('metadata_updated');
 					$meta_sql = null;
 
-					rex_deleteCacheArticle($article_id, $clang);
+					sly_Core::cache()->delete('sly.article', $article_id.'_'.$clang);
 				}
 				else {
 					$meta_sql = null;
 					$warning  = $meta_sql->getError();
 				}
-
-				$info = rex_register_extension_point('ART_META_UPDATED', $info, array(
-					'id'    => $article_id,
-					'clang' => $clang,
-				));
 			}
 
 			// END: SAVE METADATA
@@ -571,13 +603,34 @@ if (!is_null($OOArt)) {
 			}
 			// END: Slice move up/down
 
-			$params = array(
-				'article_id' => $article_id,
-				'clang'      => $clang,
-				'slot'       => $slot
-			);
+			$params = array('id' => $article_id, 'clang' => $clang, 'article' => $OOArt);
 
-			sly_Core::dispatcher()->notify('SLY_CONTENT_SLICE_PAGE', null, $params);
+			$form   = new sly_Form('index.php', 'POST', t('general'), '', 'content_article_form');
+
+			/////////////////////////////////////////////////////////////////
+			// init form
+
+			$form->setEncType('multipart/form-data');
+			$form->addHiddenValue('page',       'content');
+			$form->addHiddenValue('article_id', $article_id);
+			$form->addHiddenValue('mode',       'edit');
+			$form->addHiddenValue('save',       1);
+			$form->addHiddenValue('clang',      $clang);
+			$form->addHiddenValue('slot',       $slot);
+
+			/////////////////////////////////////////////////////////////////
+			// articletype
+			$type = new sly_Form_Select_DropDown('article_type', t('content_arttype'), $OOArt->getType(), $typeService->getArticleTypes(), 'article_type');
+			$form->add($type);
+
+			//additional form elements
+			$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM', $form, $params);
+
+			//buttons
+			$button = new sly_Form_Input_Button('submit', 'save_article', t('article_save'));
+			$form->setSubmitButton($button );
+
+			$form->render();
 
 			if (!$hasType || !$hasTemplate || $slot === null) {
 				if (!$hasType) print rex_warning(t('content_select_type'));

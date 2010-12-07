@@ -165,6 +165,7 @@ category_moved: Kategorie wurde verschoben
 content_types: Spalten
 content_type: Spalte
 option: optional
+content_arttype: 'Artikeltyp'
 
 input: Eingabe
 output: Ausgabe

@@ -48,7 +48,7 @@ abstract class sly_Form_Helper {
 		return $select;
 	}
 
-	public function getCategorySelect($name, $hideOffline = true, $clang = false, $root = null, $user = null, $id = null) {
+	public static function getCategorySelect($name, $hideOffline = true, $clang = false, $root = null, $user = null, $id = null) {
 		$select = new sly_Form_Select_DropDown($name, '', -1, array(0 => 'Homepage'), $id);
 
 		if ($root === null) {

@@ -165,6 +165,7 @@ category_moved: 'Category moved'
 content_types: Columns
 content_type: Column
 option: optional
+content_arttype: 'Article type'
 
 input: Input
 output: Output
