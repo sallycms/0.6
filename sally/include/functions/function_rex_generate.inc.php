@@ -378,10 +378,10 @@ function rex_addCLang($id, $name)
 	$sql = new rex_sql();
 	$sql->setQuery(
 		'INSERT INTO #_article (id,re_id,name,catname,catprior,attributes,'.
-			'startpage,prior,path,status,createdate,updatedate,template_id,clang,createuser,'.
+			'startpage,prior,path,status,createdate,updatedate,type,clang,createuser,'.
 			'updateuser,revision) '.
 			'SELECT id,re_id,name,catname,catprior,attributes,startpage,prior,path,0,createdate,'.
-				'updatedate,template_id,'.$id.',createuser,updateuser,revision '.
+				'updatedate,type,'.$id.',createuser,updateuser,revision '.
 				'FROM #_article WHERE clang = 0', '#_'
 	);
 

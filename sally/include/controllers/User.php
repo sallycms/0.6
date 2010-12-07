@@ -97,12 +97,12 @@ class sly_Controller_User extends sly_Controller_Sally {
 
 		$save    = sly_post('save', 'boolean', false);
 		$service = sly_Service_Factory::getService('User');
-		$current = $REX['USER']->getId();
+		$currentUser = sly_Util_User::getCurrentUser();
 
 		if ($save) {
 			$status = sly_post('userstatus', 'boolean', false) ? 1 : 0;
 
-			if ($current == $user->getId()) {
+			if ($currentUser->getId() == $user->getId()) {
 				$status = $user->getStatus();
 			}
 
@@ -110,7 +110,7 @@ class sly_Controller_User extends sly_Controller_Sally {
 			$user->setDescription(sly_post('userdesc', 'string'));
 			$user->setStatus($status);
 			$user->setUpdateDate(time());
-			$user->setUpdateUser($REX['LOGIN']->getValue('login'));
+			$user->setUpdateUser($currentUser->getLogin());
 
 			// Passwort ändern?
 
