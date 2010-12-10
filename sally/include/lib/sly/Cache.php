@@ -357,7 +357,7 @@ abstract class sly_Cache {
 					break;
 
 				case 'array':
-					$key[] = empty($val) ? 'a[]' : 'a['.call_user_func_array(array(__CLASS__, 'generateKey'), $var).']';
+					$key[] = empty($var) ? 'a[]' : 'a['.call_user_func_array(array(__CLASS__, 'generateKey'), $var).']';
 					break;
 
 				case 'null':
