@@ -848,10 +848,11 @@ function rex_deleteArticleReorganized($articleID)
 	}
 
 	$return = rex_deleteArticle($articleID);
-	$cache  = sly_Core::cache();
-	$sql    = new rex_sql();
 
-	if($return['state'] === 'true') {
+	if ($return['state'] === true) {
+		$cache = sly_Core::cache();
+		$sql   = new rex_sql();
+
 		foreach ($data as $clang => $article) {
 			$sql->setQuery(
 				'UPDATE #_article SET prior = prior - 1 '.
