@@ -23,6 +23,10 @@ $minYear  = 1970; // Und es machte Booom im UNIX-Universum...
 $maxYear  = date('Y') + 20;
 $value    = $this->getDisplayValue();
 
+if ($value === '') {
+	$value = null;
+}
+
 if ($value === false) {
 	$value = time();
 }
