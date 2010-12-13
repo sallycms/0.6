@@ -16,7 +16,7 @@ class Core_Test extends Snap_UnitTestCase
 	public function testGetCache()
 	{
 		$cache = sly_Core::cache();
-		return $this->assertIsA($cache, 'sly_ICache');
+		return $this->assertIsA($cache, 'BabelCache_Interface');
 	}
 
 	public function testGetSingleton()

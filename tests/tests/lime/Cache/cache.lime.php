@@ -15,10 +15,10 @@ $lime->isnt(sly_Cache::generateKey('1'), sly_Cache::generateKey(1), 'generateKey
 
 // ==== sly_Cache_Blackhole ====================================================
 
-$lime->comment('Testing sly_Cache (sly_Cache_Blackhole)...');
+$lime->comment('Testing sly_Cache (BabelCache_Blackhole)...');
 
-$cache = sly_Cache::factory('sly_Cache_Blackhole');
-$lime->isa_ok($cache, 'sly_Cache_Blackhole', 'factory() uses the given cache class');
+$cache = sly_Cache::factory('BabelCache_Blackhole');
+$lime->isa_ok($cache, 'BabelCache_Blackhole', 'factory() uses the given cache class');
 $lime->ok($cache->set('foo', 'bar', 1), 'set() returns true');
 $lime->is_deeply($cache->get('foo', 'bar', 2), 2, 'get() always returns the default');
 $lime->ok(!$cache->exists('foo', 'bar'), 'exists() always returns false');
@@ -28,7 +28,7 @@ $lime->ok(!$cache->exists('foo', 'bar'), 'exists() always returns false');
 $implementations = array('Memory', 'Filesystem', 'APC', 'XCache', 'eAccelerator', 'Memcache', 'Memcached', 'ZendServer');
 
 foreach ($implementations as $system) {
-	$className = 'sly_Cache_'.$system;
+	$className = 'BabelCache_'.$system;
 
 	if (!call_user_func(array($className, 'isAvailable'))) {
 		$lime->comment('Skipping tests for '.$className.' (not available)...');
