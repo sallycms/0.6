@@ -125,6 +125,23 @@ class sly_Util_Directory {
 		return $list;
 	}
 
+	public function deleteFiles() {
+		$level     = error_reporting(0);
+
+		if ($this->exists()) {
+			$files = $this->listPlain(true, false, true, true, null);
+			if ($files) array_map('unlink', $files);
+
+			if ($this->listPlain(true, false, true, true, null)) {
+				error_reporting($level);
+				return false;
+			}
+		}
+
+		error_reporting($level);
+		return true;
+	}
+
 	public function __toString() {
 		$dir = realpath($this->directory);
 		return $dir ? $dir : $this->directory.' (not existing)';

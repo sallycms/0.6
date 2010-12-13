@@ -63,7 +63,7 @@ class OOArticleSlice {
 		$clang     = (int) $clang;
 		$id        = (int) $id;
 		$revision  = (int) $revision;
-		$key       = $id.'_'.$clang.'_'.$revision;
+		$key       = sly_Cache::generateKey('by_id', $id, $clang, $revision);
 		$obj       = sly_Core::cache()->get($namespace, $key, null);
 
 		if ($obj === null) {
@@ -76,7 +76,7 @@ class OOArticleSlice {
 
 	public static function getSliceIdsForSlot($article_id, $clang, $slot = null) {
 		$cache    = sly_Cache::factory();
-		$cachekey = "slice_ids_for_slot_$article_id.$clang.$slot";
+		$cachekey = sly_Cache::generateKey('slice_ids_for_slot', $article_id, $clang, $slot);
 		$ids      = $cache->get(self::CACHE_NS, $cachekey);
 		if(is_null($ids)) {
 			$ids = array();

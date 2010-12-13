@@ -240,20 +240,7 @@ function rex_deleteDir($file, $delete_folders = false, $isRecursion = false)
 function rex_deleteFiles($directory)
 {
 	$directory = new sly_Util_Directory($directory);
-	$level     = error_reporting(0);
-
-	if ($directory->exists()) {
-		$files = $directory->listPlain(true, false, true, true, null);
-		if ($files) array_map('unlink', $files);
-
-		if ($directory->listPlain(true, false, true, true, null)) {
-			error_reporting($level);
-			return false;
-		}
-	}
-
-	error_reporting($level);
-	return true;
+	return $directory->deleteFiles();
 }
 
 /**
