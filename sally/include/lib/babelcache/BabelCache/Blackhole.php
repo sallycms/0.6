@@ -9,16 +9,20 @@
  */
 
 /**
- * Blackhole-Caching
+ * Blackhole Caching
  *
- * Dieser Cache cached gar nicht. Er existiert nur als logisches Pendant zu den
- * anderen Implementierungen, um in nutzendem Code nicht auf null testen muss,
- * sondern einfach diese Klasse angeben kann, wenn man "deaktiviertes Caching"
- * meint.
+ * This cache does not save any data at all and exists as the logical pendant
+ * to all the other, real systems. It should be used if the caching is disabled,
+ * so that code relying on a cache can use the cache instance normally without
+ * checking for null.
  *
- * @ingroup cache
+ * @author Christoph Mewes
  */
-class sly_Cache_Blackhole extends sly_Cache implements sly_Cache_ISeekable {
+class BabelCache_Blackhole extends BabelCache implements BabelCache_Interface {
+	public static function isAvailable() {
+		return true;
+	}
+
 	public function set($namespace, $key, $value) {
 		return $value;
 	}
@@ -47,23 +51,7 @@ class sly_Cache_Blackhole extends sly_Cache implements sly_Cache_ISeekable {
 		return true;
 	}
 
-	public function find($namespace, $key = '*', $getKey = false, $recursive = false) {
-		return array();
-	}
-
-	public function getAll($namespace, $recursive = false) {
-		return array();
-	}
-
 	public function flush($namespace, $recursive = false) {
 		return true;
-	}
-
-	public function getElementCount($namespace, $recursive = false) {
-		return 0;
-	}
-
-	public function getSize($namespace, $recursive = false) {
-		return 0;
 	}
 }

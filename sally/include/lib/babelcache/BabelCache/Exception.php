@@ -9,6 +9,9 @@
  */
 
 /**
- * @ingroup cache
+ * Exception class
+ *
+ * Nothing special here, just to distinguish between BabelCache errors and
+ * other errors.
  */
-class sly_Cache_Exception extends Exception { }
+class BabelCache_Exception extends Exception { }

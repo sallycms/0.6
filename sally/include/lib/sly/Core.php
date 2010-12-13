@@ -37,7 +37,7 @@ class sly_Core {
 	/**
 	 * Gibt die angemeldete Cache-Instanz zurück.
 	 *
-	 * @return sly_Cache_IFlushable  Cache-Instanz
+	 * @return BabelCache_Interface  Cache-Instanz
 	 */
 	public static function cache() {
 		return self::getInstance()->cache;

@@ -9,9 +9,17 @@
  */
 
 /**
- * @ingroup cache
+ * XCache
+ *
+ * This class wraps the XCache extension, which provides both opcode and vardata
+ * caching.
+ *
+ * Using XCache is my personal recommendation, as it's fast and reliable.
+ *
+ * @author Christoph Mewes
+ * @see    http://xcache.lighttpd.net/
  */
-class sly_Cache_XCache extends sly_Cache_Abstract {
+class BabelCache_XCache extends BabelCache_Abstract {
 	public function getMaxKeyLength() {
 		return 200; // unbekannt -> Schätzwert
 	}
@@ -21,8 +29,8 @@ class sly_Cache_XCache extends sly_Cache_Abstract {
 	}
 
 	public static function isAvailable() {
-		// Wir müssen auch prüfen, ob Werte gespeichert werden können (oder ob nur der Opcode-Cache aktiviert ist).
-		return function_exists('xcache_set') && xcache_set('test', 1, 1);
+		// XCache will throw a warning if it is misconfigured. We don't want to see that one.
+		return function_exists('xcache_set') && @xcache_set('test', 1, 1);
 	}
 
 	protected function _getRaw($key) {
@@ -34,10 +42,6 @@ class sly_Cache_XCache extends sly_Cache_Abstract {
 	}
 
 	protected function _setRaw($key, $value, $expiration) {
-		if (is_object($value)) {
-			throw new sly_Cache_Exception('Objekte können nicht raw in XCache gespeichert werden!');
-		}
-
 		return xcache_set($key, $value, $expiration);
 	}
 

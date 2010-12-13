@@ -14,6 +14,7 @@ sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/lib');
 sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/lib/sfYaml');
 sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/controllers', 'sly_Controller_');
 sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/helpers', 'sly_Helper_');
+sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/lib/babelcache');
 sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/layout', 'sly_Layout_');
 sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/lib/rex/oo', 'OO');
 sly_Loader::enablePathCache();
