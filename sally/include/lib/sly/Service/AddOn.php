@@ -56,6 +56,8 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 				if (!$versionOK) {
 					return t('addon_sally_incompatible', sly_Core::getVersion('X.Y.Z'));
 				}
+			}else {
+				return t('addon_has_no_sally_version_info');
 			}
 		}
 

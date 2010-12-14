@@ -345,6 +345,7 @@ addon_assets_copied: Die Assets wurden kopiert.
 plugin_assets_copied: Die Assets wurden kopiert.
 addon_addon_required: "Das AddOn {0} wird für das Addon {1} benötigt."
 addon_sally_incompatible: "Dieses AddOn ist nicht mit ihrer Version von SallyCMS ({0}) kompatibel."
+addon_has_no_sally_version_info: Dieses AddOn hat keine Kompatibilitätsinformationen. Es kann nicht installiert werden.
 addon_reinstall: re-installieren
 addon_install: installieren
 addon_notinstalled: nicht installiert
