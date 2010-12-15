@@ -31,6 +31,8 @@ importer_no_valid_charset: In der Importdatei konnte keine Angabe über die Kodi
 importer_charset_mismatch: Die in der Importdatei angegebene Kodierung weicht von der dieses Projekts ab.
 importer_no_valid_import_file_version: "Die Importdatei ist ungültig: Versionsstempel von Version {0} gefunden, aber {1} erwartet."
 importer_no_valid_import_file_prefix: Die Importdatei ist ungültig: Es wurde kein Tabellenpräfix angegeben.
+importer_database_imported: Datenbankimport erfolgreich importiert
+importer_entry_count: ({0} Eintraege)
 
 homepage: Homepage
 
