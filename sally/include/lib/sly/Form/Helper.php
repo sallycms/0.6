@@ -134,11 +134,11 @@ abstract class sly_Form_Helper {
 		$monoName  = $name.$nameSuffix;
 		$monoValue = isset($_POST[$monoName]) ? $_POST[$monoName] : $default;
 
-		if (!$multilingual || count($REX['CLANG']) == 1) {
+		if (!$multilingual) {
 			return $monoValue;
 		}
 
-		$equal  = sly_post('equal__'.$name, 'boolean', false);
+		$equal  = count($REX['CLANG']) == 1 || sly_post('equal__'.$name, 'boolean', false);
 		$values = array();
 
 		foreach (array_keys($REX['CLANG']) as $clangID) {
