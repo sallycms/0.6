@@ -109,6 +109,7 @@ class sly_Layout_XHTML extends sly_Layout {
 		static $titles = array('rss' => 'RSS-Feed', 'rss1' => 'RSS-Feed 1.0', 'rss2' => 'RSS-Feed 2.0', 'atom' => 'Atom-Feed');
 
 		foreach ($this->feedFiles as $type => $file) {
+			print "\t";
 			printf('<link rel="alternate" type="application/%s+xml" title="%s" href="%s" />', $types[$type], $titles[$type], $file);
 			print "\n";
 		}
@@ -118,7 +119,7 @@ class sly_Layout_XHTML extends sly_Layout {
 		$this->cssCode = rex_register_extension_point('HEADER_CSS', $this->cssCode);
 
 		if (!empty($this->cssCode)) {
-			print "<style type=\"text/css\">\n".trim($this->cssCode)."\n</style>\n";
+			print "\t<style type=\"text/css\">\n".trim($this->cssCode)."\n</style>\n";
 		}
 	}
 
@@ -129,17 +130,17 @@ class sly_Layout_XHTML extends sly_Layout {
 			$isConditional = false;
 
 			if (strtoupper(substr($group, 0, 3)) == 'IF ') {
-				print "<!--[if ".strtoupper(substr($group, 3))."]>\n";
+				print "\t<!--[if ".strtoupper(substr($group, 3))."]>\n";
 				$isConditional = true;
 			}
 
 			foreach ($medias as $media => $files) {
 				foreach ($files as $file) {
-					print "<link rel=\"stylesheet\" type=\"text/css\" href=\"".$file['src']."\" media=\"".$media."\" />\n";
+					print "\t<link rel=\"stylesheet\" type=\"text/css\" href=\"".$file['src']."\" media=\"".$media."\" />\n";
 				}
 			}
 
-			if ($isConditional) print "<![endif]-->\n";
+			if ($isConditional) print "\t<![endif]-->\n";
 		}
 	}
 
@@ -159,7 +160,7 @@ class sly_Layout_XHTML extends sly_Layout {
 		$this->javaScriptFiles = rex_register_extension_point('HEADER_JAVASCRIPT_FILES', $this->javaScriptFiles);
 
 		foreach ($this->javaScriptFiles as $files) {
-			$this->printHeadElements('<script type="text/javascript" src="%2$s"></script>'."\n", $files);
+			$this->printHeadElements("\t".'<script type="text/javascript" src="%2$s"></script>'."\n", $files);
 		}
 	}
 
@@ -168,15 +169,15 @@ class sly_Layout_XHTML extends sly_Layout {
 	}
 
 	protected function printMetas() {
-		$this->printHeadElements('<meta name="%s" content="%s" />'."\n", $this->metas);
+		$this->printHeadElements("\t".'<meta name="%s" content="%s" />'."\n", $this->metas);
 	}
 
 	protected function printHttpMetas() {
-		$this->printHeadElements('<meta http-equiv="%s" content="%s" />'."\n", $this->httpMetas);
+		$this->printHeadElements("\t".'<meta http-equiv="%s" content="%s" />'."\n", $this->httpMetas);
 	}
 
 	protected function printLinks() {
-		$this->printHeadElements('<link rel="%s" href="%s" />'."\n", $this->links);
+		$this->printHeadElements("\t".'<link rel="%s" href="%s" />'."\n", $this->links);
 	}
 
 	public function printHeader() {
