@@ -128,20 +128,21 @@ abstract class sly_Form_Helper {
 		}
 	}
 
-	public static function parseFormValue($name, $default = null, $multilingual = false) {
+	public static function parseFormValue($name, $default = null, $multilingual = false, $nameSuffix = '') {
 		global $REX;
 
-		$monoValue = isset($_POST[$name]) ? $_POST[$name] : $default;
+		$monoName  = $name.$nameSuffix;
+		$monoValue = isset($_POST[$monoName]) ? $_POST[$monoName] : $default;
 
-		if (!$multilingual || count($REX['CLANG']) == 1) {
+		if (!$multilingual) {
 			return $monoValue;
 		}
 
-		$equal  = sly_post('equal__'.$name, 'boolean', false);
+		$equal  = count($REX['CLANG']) == 1 || sly_post('equal__'.$name, 'boolean', false);
 		$values = array();
 
 		foreach (array_keys($REX['CLANG']) as $clangID) {
-			$key              = $name.'__clang_'.$clangID;
+			$key              = $name.'__clang_'.$clangID.$nameSuffix;
 			$values[$clangID] = $equal ? $monoValue : (isset($_POST[$key]) ? $_POST[$key] : $default);
 		}
 

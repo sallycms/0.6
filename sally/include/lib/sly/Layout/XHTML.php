@@ -8,8 +8,6 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-
-
 /**
  * @ingroup layout
  */
@@ -26,14 +24,13 @@ class sly_Layout_XHTML extends sly_Layout {
 
 	protected function printCSSFilesConcrete() {
 		foreach ($this->cssFiles as $group => $medias) {
-
 			$isConditional = strtoupper(substr($group, 0, 3)) == 'IF ';
 
 			if ($isConditional) print "<!--[if ".strtoupper(substr($group, 3))."]>\n";
 
 			foreach ($medias as $media => $files) {
 				foreach ($files as $file) {
-					print "<link rel=\"stylesheet\" type=\"text/css\" href=\"".$file['src']."\" media=\"".$media."\" />\n";
+					print "<link rel=\"stylesheet\" type=\"text/css\" href=\"$file[src]\" media=\"$media\" />\n";
 				}
 			}
 
@@ -42,42 +39,38 @@ class sly_Layout_XHTML extends sly_Layout {
 	}
 
 	protected function printJavaScriptConcrete() {
-			print '<script type="text/javascript">
-				/* <![CDATA[ */'
-				.$this->javaScriptCode
-				.'/* ]]> */
-				</script>';
+		print '<script type="text/javascript">'.trim($this->javaScriptCode).'</script>';
 	}
 
 	protected function printJavaScriptFilesConcrete() {
 		foreach ($this->javaScriptFiles as $files) {
-			print "<script type=\"text/javascript\" src=\"".join("\"></script>\n<script type=\"text/javascript\" src=\"" , $files)."\"></script>\n";
+			$this->printHeadElements('<script type="text/javascript" src="%2$s"></script>'."\n", $files);
 		}
 	}
 
 	protected function printBodyAttrs() {
-		foreach($this->bodyAttrs as $name => $value) {
-			print $name.'="'.sly_html($value).'"';
-		}
+		$this->printHeadElements(' %s="%s"', $this->bodyAttrs);
 	}
 
 	protected function printMetas() {
-		foreach ($this->metas as $name => $content) {
-			print "<meta name=\"".sly_html($name)."\" content=\"".sly_html($content)."\" />\n";
-		}
+		$this->printHeadElements('<meta name="%s" content="%s" />'."\n", $this->metas);
 	}
 
-	protected function printHttpMetas(){
-		foreach($this->httpMetas as $name => $content) {
-			print "<meta http-equiv=\"".sly_html($name)."\" content=\"".sly_html($content)."\" />\n";
-		}
+	protected function printHttpMetas() {
+		$this->printHeadElements('<meta http-equiv="%s" content="%s" />'."\n", $this->httpMetas);
 	}
 
-	protected function printLink($attributes = array()) {
-		print "<link ".sly_Util_HTML::buildAttributeString($attributes)."/>\n";
+	protected function printLink($attributes) {
+		print '<link '.sly_Util_HTML::buildAttributeString($attributes)."/>\n";
 	}
 
 	public function printHeader() {
 		$this->renderView('views/layout/xhtml/head.phtml');
+	}
+
+	private function printHeadElements($format, $data) {
+		foreach ($data as $key => $value) {
+			printf($format, sly_html(trim($key)), sly_html(trim($value)));
+		}
 	}
 }

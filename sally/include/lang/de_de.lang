@@ -434,3 +434,7 @@ recommended: empfohlen
 
 authorisation_exception_language_denied: Zugriff auf Sprache %s verweigert!
 exception_articletype_not_exists: Der Artikeltyp %s existiert nicht!
+
+config_server: Server
+config_servername: Projektname
+config_error_email: E-Mail-Adresse des Admins

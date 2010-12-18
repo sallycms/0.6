@@ -27,7 +27,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 		// check requirements
 
 		if ($state) {
-			if (!$this->isInstalled($addonName)) {
+			if (!$this->isAvailable($addonName)) {
 				$this->loadConfig($addonName);
 			}
 
