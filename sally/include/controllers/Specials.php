@@ -62,17 +62,23 @@ class sly_Controller_Specials extends sly_Controller_Sally {
 			$this->warning[] = t('settings_invalid_notfound_article').'<br />';
 		}
 
-		// Standard-Artikel
+		// Standard-Artikeltyp
 
-		$service = sly_Service_Factory::getArticleTypeService();
-		if (!empty($defaultType) && !$service->exists($defaultType)) {
-			$this->warning[] = t('settings_invalid_default_type').'<br />';
+		try {
+			$service = sly_Service_Factory::getArticleTypeService();
+
+			if (!empty($defaultType) && !$service->exists($defaultType)) {
+				$this->warning[] = t('settings_invalid_default_type').'<br />';
+			}
+			else {
+				$conf->set('DEFAULT_ARTICLE_TYPE', $defaultType);
+			}
 		}
-		else {
-			$conf->set('DEFAULT_ARTICLE_TYPE', $defaultType);
+		catch (Exception $e) {
+			$conf->set('DEFAULT_ARTICLE_TYPE', '');
 		}
 
-		//Sonstige Einstellungen
+		// Sonstige Einstellungen
 
 		$conf->setLocal('ERROR_EMAIL', strtolower($errorEMail));
 		$conf->set('LANG', $backendLocale);

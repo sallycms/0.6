@@ -15,11 +15,17 @@ $config = sly_Core::config();
 if (!empty($this->warning)) print rex_warning($this->warning);
 if (!empty($this->info))    print rex_info($this->info);
 
-$locales    = array_combine($REX['LOCALES'], $REX['LOCALES']);
-$rewrites   = array('true' => t('yes'), 'false' => t('no'));
-$typeService = sly_Service_Factory::getArticleTypeService();
-$types  = $typeService->getArticleTypes();
-$types  = array_merge(array('' => t('option_no_type')), $types);
+$locales  = array_combine($REX['LOCALES'], $REX['LOCALES']);
+$rewrites = array('true' => t('yes'), 'false' => t('no'));
+$types    = array('' => t('option_no_type'));
+
+try {
+	$typeService = sly_Service_Factory::getArticleTypeService();
+	$types       = array_merge($types, $typeService->getArticleTypes());
+}
+catch (Exception $e) {
+	// pass...
+}
 
 $backendLocale   = new sly_Form_Select_DropDown('backend_locale', t('specials_lang'), $config->get('LANG'), $locales, 'rex-form-lang');
 $modRewrite      = new sly_Form_Select_DropDown('mod_rewrite', t('specials_mod_rewrite'), $config->get('MOD_REWRITE') ? 'true' : 'false', $rewrites, 'rex-form-mod-rewrite');
