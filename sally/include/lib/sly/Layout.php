@@ -12,7 +12,7 @@
  * @ingroup layout
  */
 abstract class sly_Layout {
-	protected $title = '';
+	protected $title           = '';
 	protected $cssCode         = '';
 	protected $javaScriptCode  = '';
 	protected $favIcon         = null;
@@ -23,8 +23,7 @@ abstract class sly_Layout {
 	protected $httpMetas       = array();
 	protected $metas           = array();
 	protected $links           = array();
-
-	protected $content;
+	protected $content         = '';
 
 	public function openBuffer() {
 		ob_start();
@@ -106,12 +105,22 @@ abstract class sly_Layout {
 	 * Fügt dem layout eine css datei zu. CSS Dateien werden Gruppen zugeordnet,
 	 * Funktionen der Gruppen siehe printCSSFiles().
 	 *
-	 * @param string $cssFile Pfad zur CSS Datei
-	 * @param string $media media Attribut für den CSS Link
-	 *
+	 * @param string $cssFile  Pfad zur CSS Datei
+	 * @param string $media    media Attribut für den CSS Link
 	 */
 	public function addCSSFile($cssFile, $media = 'all', $group = 'default') {
-		$this->cssFiles[trim($group)][trim($media)][] = array('src' => trim($cssFile));
+		$cssFile = trim($cssFile);
+
+		foreach ($this->cssFiles as $files) {
+			foreach ($files as $list) {
+				foreach ($list as $file) {
+					if ($file['src'] == $cssFile) return false;
+				}
+			}
+		}
+
+		$this->cssFiles[trim($group)][trim($media)][] = array('src' => $cssFile);
+		return true;
 	}
 
 	/**
@@ -127,13 +136,16 @@ abstract class sly_Layout {
 	/**
 	 * Fügt dem layout eine Javascript datei zu. Javascript Dateien werden Gruppen zugeordnet,
 	 * Funktionen der Gruppen siehe printJavaScriptFiles().
-	 *
-	 * @param string $cssFile Pfad zur CSS Datei
-	 * @param string $media media Attribut für den CSS Link
-	 *
 	 */
 	public function addJavaScriptFile($javascriptFile, $group = 'default') {
-		$this->javaScriptFiles[trim($group)][] = trim($javascriptFile);
+		$javascriptFile = trim($javascriptFile);
+
+		foreach ($this->javaScriptFiles as $files) {
+			if (in_array($javascriptFile, $files)) return false;
+		}
+
+		$this->javaScriptFiles[trim($group)][] = $javascriptFile;
+		return true;
 	}
 
 	/**
@@ -145,11 +157,13 @@ abstract class sly_Layout {
 	 * @param string $value
 	 */
 	public function setBodyAttr($name, $value) {
-		$name = trim($name);
+		$name  = trim($name);
 		$value = trim($value);
-		if(sly_startsWith($name, 'on')) {
+
+		if (sly_startsWith($name, 'on')) {
 			$this->addJavaScript('window.'.$name.' = function() { '.$value.' }');
-		}else{
+		}
+		else {
 			$this->bodyAttrs[$name] = $value;
 		}
 	}
@@ -160,7 +174,7 @@ abstract class sly_Layout {
 	 * @param string $name
 	 * @param string $content
 	 */
-	public function addMeta($name, $content)	{
+	public function addMeta($name, $content) {
 		$this->metas[trim($name)] = trim($content);
 	}
 
@@ -193,23 +207,15 @@ abstract class sly_Layout {
 	 * @param string $type
 	 */
 	public function addFeedFile($feedFile, $type = '') {
-		switch ($type) {
-			case 'rss1':
-				$title .= "RSS-Feed 1.0";
-				break;
-			case 'rss2':
-				$title .= "RSS-Feed 2.0";
-				break;
-			case 'atom':
-				$title .= "Atom-Feed";
-				break;
-			default:
-				$title .= "RSS-Feed";
-				break;
+		if (!in_array($type, array('rss', 'rss1', 'rss2', 'atom'))) {
+			$type = 'rss';
 		}
 
-		if ($type != 'atom') $type .= "rss";
-		$type = 'application/'.$type.'+xml';
+		static $types  = array('rss' => 'rss', 'rss1' => 'rss', 'rss2' => 'rss', 'atom' => 'atom');
+		static $titles = array('rss' => 'RSS-Feed', 'rss1' => 'RSS-Feed 1.0', 'rss2' => 'RSS-Feed 2.0', 'atom' => 'Atom-Feed');
+
+		$title = $titles[$type];
+		$type  = 'application/'.$types[$type].'+xml';
 
 		$this->addLink('alternate', $feedFile, $type, $title);
 	}
@@ -220,13 +226,10 @@ abstract class sly_Layout {
 	 * den CSS Code. Der vom Extension Point zurückgegebne
 	 * Wert wird in das <style> Tag geschrieben. Zum schreiben wird
 	 * die abstrakte Methode printCSSConcrete() aufgerufen.
-	 *
 	 */
 	protected function printCSS() {
-		$this->cssCode = rex_register_extension_point('HEADER_CSS', $this->cssCode);
-		if (!empty($this->cssCode)) {
-			$this->printCSSConcrete();
-		}
+		$this->cssCode = sly_Core::dispatcher()->filter('HEADER_CSS', $this->cssCode);
+		if (!empty($this->cssCode)) $this->printCSSConcrete();
 	}
 
 	/**
@@ -241,10 +244,9 @@ abstract class sly_Layout {
 	 * die zugefügten CSS Dateien. Die vom Extension Point zurückgegebenen
 	 * Dateien wird in den Header geschrieben. Zum Schreiben wird
 	 * die abstrakte Methode printCSSFilesConcrete() aufgerufen.
-	 *
 	 */
 	protected function printCSSFiles() {
-		$this->cssFiles = rex_register_extension_point('HEADER_CSS_FILES', $this->cssFiles);
+		$this->cssFiles = sly_Core::dispatcher()->filter('HEADER_CSS_FILES', $this->cssFiles);
 		$this->printCSSFilesConcrete();
 	}
 
@@ -262,10 +264,8 @@ abstract class sly_Layout {
 	 *
 	 */
 	protected function printJavaScript() {
-		$this->javaScriptCode = rex_register_extension_point('HEADER_JAVASCRIPT', $this->javaScriptCode);
-		if (!empty($this->javaScriptCode)) {
-			$this->printJavaScriptConcrete();
-		}
+		$this->javaScriptCode = sly_Core::dispatcher()->filter('HEADER_JAVASCRIPT', $this->javaScriptCode);
+		if (!empty($this->javaScriptCode)) $this->printJavaScriptConcrete();
 	}
 
 	/**
@@ -283,7 +283,7 @@ abstract class sly_Layout {
 	 *
 	 */
 	protected function printJavaScriptFiles() {
-		$this->javaScriptFiles = rex_register_extension_point('HEADER_JAVASCRIPT_FILES', $this->javaScriptFiles);
+		$this->javaScriptFiles = sly_Core::dispatcher()->filter('HEADER_JAVASCRIPT_FILES', $this->javaScriptFiles);
 		$this->printJavaScriptFilesConcrete();
 	}
 	/**
@@ -319,21 +319,21 @@ abstract class sly_Layout {
 	/**
 	 * Schreibt einen Link in den Header
 	 *
-	 * @param array $link ein Hash mit attributen ($name => $value)
+	 * @param array $link ein Hash mit Attributen ($name => $value)
 	 */
-	protected abstract function printLink($attributes = array());
+	protected abstract function printLink($attributes);
 
 	/**
 	 * Schreibt den Header
  	 */
-	public function printHeader(){
+	public function printHeader() {
 		print '<html><head><title>'.$this->title.'</title></head><body>';
 	}
 
 	/**
 	 * Schreibt den Footer
 	 */
-	public function printFooter(){
+	public function printFooter() {
 		print '</body></html>';
 	}
 }
