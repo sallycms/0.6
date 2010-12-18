@@ -42,6 +42,7 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		rex_register_extension('PAGE_CHECKED', array($this, 'pageChecked'));
 
 		$this->addHttpMeta('Content-Type', 'text/html charset='.t('htmlcharset'));
+		$this->addMeta('robots', 'noindex,nofollow');
 	}
 
 	public function pageChecked($params) {

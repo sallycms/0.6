@@ -19,32 +19,32 @@ class sly_Layout_XHTML extends sly_Layout {
 	}
 
 	protected function printCSSConcrete() {
-		print "<style type=\"text/css\">$this->cssCode\n</style>\n";
+		print "\t<style type=\"text/css\">$this->cssCode\n</style>\n";
 	}
 
 	protected function printCSSFilesConcrete() {
 		foreach ($this->cssFiles as $group => $medias) {
 			$isConditional = strtoupper(substr($group, 0, 3)) == 'IF ';
 
-			if ($isConditional) print "<!--[if ".strtoupper(substr($group, 3))."]>\n";
+			if ($isConditional) print "\t<!--[if ".strtoupper(substr($group, 3))."]>\n";
 
 			foreach ($medias as $media => $files) {
 				foreach ($files as $file) {
-					print "<link rel=\"stylesheet\" type=\"text/css\" href=\"$file[src]\" media=\"$media\" />\n";
+					print "\t<link rel=\"stylesheet\" type=\"text/css\" href=\"$file[src]\" media=\"$media\" />\n";
 				}
 			}
 
-			if ($isConditional) print "<![endif]-->\n";
+			if ($isConditional) print "\t<![endif]-->\n";
 		}
 	}
 
 	protected function printJavaScriptConcrete() {
-		print '<script type="text/javascript">'.trim($this->javaScriptCode).'</script>';
+		print "\t".'<script type="text/javascript">'.trim($this->javaScriptCode).'</script>';
 	}
 
 	protected function printJavaScriptFilesConcrete() {
 		foreach ($this->javaScriptFiles as $files) {
-			$this->printHeadElements('<script type="text/javascript" src="%2$s"></script>'."\n", $files);
+			$this->printHeadElements("\t".'<script type="text/javascript" src="%2$s"></script>'."\n", $files);
 		}
 	}
 
@@ -53,15 +53,15 @@ class sly_Layout_XHTML extends sly_Layout {
 	}
 
 	protected function printMetas() {
-		$this->printHeadElements('<meta name="%s" content="%s" />'."\n", $this->metas);
+		$this->printHeadElements("\t".'<meta name="%s" content="%s" />'."\n", $this->metas);
 	}
 
 	protected function printHttpMetas() {
-		$this->printHeadElements('<meta http-equiv="%s" content="%s" />'."\n", $this->httpMetas);
+		$this->printHeadElements("\t".'<meta http-equiv="%s" content="%s" />'."\n", $this->httpMetas);
 	}
 
 	protected function printLink($attributes) {
-		print '<link '.sly_Util_HTML::buildAttributeString($attributes)."/>\n";
+		print "\t".'<link '.sly_Util_HTML::buildAttributeString($attributes)."/>\n";
 	}
 
 	public function printHeader() {
