@@ -9,8 +9,7 @@
  * http://de.wikipedia.org/wiki/MIT-Lizenz
  */
 
-class sly_Layout_XHTML extends sly_Layout
-{
+class sly_Layout_XHTML extends sly_Layout {
 	protected $cssCode         = '';
 	protected $javaScriptCode  = '';
 	protected $favIcon         = null;
@@ -31,7 +30,7 @@ class sly_Layout_XHTML extends sly_Layout
 	}
 
 	/**
-	 * Erweitert den Inhalt den title Attibuts
+	 * Erweitert den Inhalt den title-Attributs
 	 *
 	 * @param string $title
 	 */
@@ -40,6 +39,8 @@ class sly_Layout_XHTML extends sly_Layout
 	}
 
 	public function addFeedFile($feedFile, $type = '') {
+		$type = strtolower($type);
+
 		if (!in_array($type, array('rss', 'rss1', 'rss2', 'atom'))) {
 			$type = 'feed';
 		}
@@ -48,31 +49,45 @@ class sly_Layout_XHTML extends sly_Layout
 	}
 
 	public function addCSS($css) {
-		$this->cssCode .= "\n$css";
+		$this->cssCode .= "\n".trim($css);
 	}
 
 	/**
 	 *
-	 * @param string $cssFile Pfad zur CSS Datei
-	 * @param string $media media Attribut für den CSS Link
-	 *
+	 * @param string $cssFile  Pfad zur CSS Datei
+	 * @param string $media    media Attribut für den CSS Link
 	 */
 	public function addCSSFile($cssFile, $media = 'all', $group = 'default') {
+		foreach ($this->cssFiles as $files) {
+			foreach ($files as $list) {
+				foreach ($list as $file) {
+					if ($file['src'] == $cssFile) return false;
+				}
+			}
+		}
+
 		$this->cssFiles[$group][$media][] = array('src' => $cssFile);
+		return true;
 	}
 
 	public function addJavaScript($javascript) {
-		$this->javaScriptCode .= "\n$javascript";
+		$this->javaScriptCode .= "\n".trim($javascript);
 	}
 
 	public function addJavaScriptFile($javascriptFile, $group = 'default') {
+		foreach ($this->javaScriptFiles as $files) {
+			if (in_array($javascriptFile, $files)) return false;
+		}
+
 		$this->javaScriptFiles[$group][] = $javascriptFile;
+		return true;
 	}
 
 	public function setBodyAttr($name, $value) {
-		if(sly_startsWith($name, 'on')) {
+		if (sly_startsWith($name, 'on')) {
 			$this->addJavaScript('window.'.$name.' = function() { '.$value.' }');
-		}else{
+		}
+		else {
 			$this->bodyAttrs[$name] = $value;
 		}
 	}
@@ -90,35 +105,17 @@ class sly_Layout_XHTML extends sly_Layout
 	}
 
 	protected function printFeedFiles() {
+		static $types  = array('rss' => 'rss', 'rss1' => 'rss', 'rss2' => 'rss', 'atom' => 'atom');
+		static $titles = array('rss' => 'RSS-Feed', 'rss1' => 'RSS-Feed 1.0', 'rss2' => 'RSS-Feed 2.0', 'atom' => 'Atom-Feed');
+
 		foreach ($this->feedFiles as $type => $file) {
-
-			$link = "<link rel=\"alternate\" type=\"application/";
-			if ($type != 'atom') $link .= "rss";
-			else $link .= $type;
-			$link .= "+xml\" title=\"";
-			switch ($type) {
-				case 'rss1':
-					$link .= "RSS-Feed 1.0";
-					break;
-				case 'rss2':
-					$link .= "RSS-Feed 2.0";
-					break;
-				case 'atom':
-					$link .= "Atom-Feed";
-					break;
-
-				default:
-					$link .= "RSS-Feed";
-					break;
-			}
-			$link .= "\" href=\"".$file."\" />\n";
-
-			print $link;
+			printf('<link rel="alternate" type="application/%s+xml" title="%s" href="%s" />', $types[$type], $titles[$type], $file);
+			print "\n";
 		}
 	}
 
 	protected function printCSS() {
-		$this->cssCode =  rex_register_extension_point('HEADER_CSS', $this->cssCode);
+		$this->cssCode = rex_register_extension_point('HEADER_CSS', $this->cssCode);
 
 		if (!empty($this->cssCode)) {
 			print "<style type=\"text/css\">\n".trim($this->cssCode)."\n</style>\n";
@@ -126,8 +123,7 @@ class sly_Layout_XHTML extends sly_Layout
 	}
 
 	protected function printCSSFiles() {
-
-		$this->cssFiles =  rex_register_extension_point('HEADER_CSS_FILES', $this->cssFiles);
+		$this->cssFiles = rex_register_extension_point('HEADER_CSS_FILES', $this->cssFiles);
 
 		foreach ($this->cssFiles as $group => $medias) {
 			$isConditional = false;
@@ -137,7 +133,7 @@ class sly_Layout_XHTML extends sly_Layout
 				$isConditional = true;
 			}
 
-			foreach($medias as $media => $files){
+			foreach ($medias as $media => $files) {
 				foreach ($files as $file) {
 					print "<link rel=\"stylesheet\" type=\"text/css\" href=\"".$file['src']."\" media=\"".$media."\" />\n";
 				}
@@ -148,8 +144,7 @@ class sly_Layout_XHTML extends sly_Layout
 	}
 
 	protected function printJavaScript() {
-
-		$this->javaScriptCode =  rex_register_extension_point('HEADER_JAVASCRIPT', $this->javaScriptCode);
+		$this->javaScriptCode = rex_register_extension_point('HEADER_JAVASCRIPT', $this->javaScriptCode);
 
 		if (!empty($this->javaScriptCode)) {
 			print '<script type="text/javascript">
@@ -161,41 +156,36 @@ class sly_Layout_XHTML extends sly_Layout
 	}
 
 	protected function printJavaScriptFiles() {
-
 		$this->javaScriptFiles = rex_register_extension_point('HEADER_JAVASCRIPT_FILES', $this->javaScriptFiles);
 
 		foreach ($this->javaScriptFiles as $files) {
-			foreach($files as $file){
-				print "<script type=\"text/javascript\" src=\"".sly_html(trim($file))."\"></script>\n";
-			}
+			$this->printHeadElements('<script type="text/javascript" src="%2$s"></script>'."\n", $files);
 		}
 	}
 
 	protected function printBodyAttrs() {
-		foreach($this->bodyAttrs as $name => $value) {
-			print trim($name).'="'.sly_html(trim($value)).'"';
-		}
+		$this->printHeadElements(' %s="%s"', $this->bodyAttrs);
 	}
 
 	protected function printMetas() {
-		foreach ($this->metas as $name => $content) {
-			print "<meta name=\"".sly_html(trim($name))."\" content=\"".sly_html(trim($content))."\" />\n";
-		}
+		$this->printHeadElements('<meta name="%s" content="%s" />'."\n", $this->metas);
 	}
 
-	protected function printHttpMetas(){
-		foreach($this->httpMetas as $name => $content) {
-			print "<meta http-equiv=\"".sly_html(trim($name))."\" content=\"".sly_html(trim($content))."\" />\n";
-		}
+	protected function printHttpMetas() {
+		$this->printHeadElements('<meta http-equiv="%s" content="%s" />'."\n", $this->httpMetas);
 	}
 
 	protected function printLinks() {
-		foreach ($this->links as $rel => $href) {
-			print "<link rel=\"".sly_html(trim($rel))."\" href=\"".sly_html(trim($href))."\" />\n";
-		}
+		$this->printHeadElements('<link rel="%s" href="%s" />'."\n", $this->links);
 	}
 
 	public function printHeader() {
 		$this->renderView('views/layout/xhtml/head.phtml');
+	}
+
+	private function printHeadElements($format, $data) {
+		foreach ($data as $key => $value) {
+			printf($format, sly_html(trim($key)), sly_html(trim($value)));
+		}
 	}
 }

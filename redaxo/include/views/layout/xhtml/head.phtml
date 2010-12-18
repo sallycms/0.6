@@ -3,7 +3,6 @@
 
 <head>
 	<title><?= sly_html(trim($this->title)) ?></title>
-
 	<?php
 		rex_register_extension_point('PAGE_HEADER', '');
 		if ($this->favIcon !== null) {
@@ -19,4 +18,4 @@
 		$this->printJavaScript();
 	?>
 </head>
-<body <?= $this->printBodyAttrs() ?>>
+<body<?= $this->printBodyAttrs() ?>>
