@@ -41,6 +41,7 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		}
 
 		$this->addHttpMeta('Content-Type', 'text/html charset='.t('htmlcharset'));
+		$this->addMeta('robots', 'noindex,nofollow');
 	}
 
 	public function pageChecked($params) {
