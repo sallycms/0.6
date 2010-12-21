@@ -27,6 +27,12 @@ $REX['HTDOCS_PATH'] = './';
 // Core laden
 
 require_once 'sally/include/master.inc.php';
+
+if ($config->get('FRONTEND_SYNC')) {
+	sly_Service_Factory::getService('Template')->refresh();
+	sly_Service_Factory::getService('Module')->refresh();
+}
+
 require_once 'sally/include/addons.inc.php';
 
 // Setup?

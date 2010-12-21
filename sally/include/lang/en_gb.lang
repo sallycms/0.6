@@ -301,6 +301,7 @@ version: Version
 host: Host
 database: Database
 specials_caching_strategy: 'Cache Strategy'
+specials_frontend_sync: 'Enable Frontend Sync'
 specials_server: 'Server'
 specials_servername: 'Project Name'
 specials_error_email: 'Error eMail'
