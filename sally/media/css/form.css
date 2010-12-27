@@ -475,3 +475,52 @@ div#rex-addon-editmode form div.rex-widget {
 	input { width: 15px !important; }
 	img   { vertical-align: top; cursor: pointer; }
 }
+
+/* Linklist-Button */
+
+div.rex-form div.rex-form-row .sly-linklistbutton {
+	select.sly-linklist { width: 305px; }
+
+	input.sly-link-filter {
+		width: 200px;
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+
+	.sly-icons {
+		float: left;
+    	margin-left: 5px;
+    	width: 16px;
+
+		img { padding-bottom: 2px; }
+	}
+
+	input, select { float: left; }
+
+	span.rex-form-notice {
+		clear: none;
+		float: left;
+		margin-left: 10px;
+		margin-top: 10px;
+		width: 205px;
+		line-height: 14px;
+	}
+}
+
+.sly-filter-results {
+	background: white;
+	border: 1px dotted #4D4646;
+
+	ul li {
+		list-style: none;
+		font-size: 11px;
+		color: #666;
+		padding: 3px;
+
+		&:hover {
+			background-color: #EEE;
+			color: black;
+			cursor: pointer;
+		}
+	}
+}

@@ -335,6 +335,57 @@
 			slider.slideUp('slow');
 		else
 			slider.slideDown('slow');
+	},
+
+	sly_addListOption = function(parentSpan, title, key) {
+		var list = $('select', parentSpan);
+
+		if ($('option[value='+key+']').length == 0) {
+			list.append($('<option>').val(key).text(title));
+			sly_createList(list);
+		}
+	},
+
+	sly_moveListItem = function(ev) {
+		var
+			link     = $(this),
+			span     = link.parents('span.sly-widget'),
+			list     = $('select', span),
+			func     = link.attr('rel'),
+			selected = $('option:selected', list);
+
+		if (selected) {
+			switch (func) {
+				case 'up':
+					selected.insertBefore(selected.prev());
+					break;
+				case 'down':
+					selected.insertAfter(selected.next());
+					break;
+				case 'top':
+					selected.detach();
+					list.prepend(selected);
+					break;
+				case 'bottom':
+					selected.detach();
+					list.append(selected);
+					break;
+			}
+
+			sly_createList(list);
+		}
+
+		return false;
+	},
+
+	sly_createList = function(list) {
+		var ids = [], options = $('option', list), len = options.length, i = 0;
+
+		for (; i < len; ++i) {
+			ids.push(options[i].value);
+		}
+
+		list.parents('span').find('input[type=hidden]').val(ids.join(','));
 	};
 
 })(jQuery);
@@ -502,4 +553,39 @@ jQuery(function($) {
 			}
 		});
 	}
+
+	// Linklist-Buttons
+
+	if ($.fn.autocomplete) {
+		$('.sly-link-filter').autocomplete({
+			url:            'index.php',
+			paramName:      'q',
+			extraParams:    {page: 'api', func: 'linklistbutton_search'},
+			maxCacheLength: 50,
+			matchContains:  true,
+			resultsClass:   'sly-filter-results',
+			showResult:     function(value, data) {
+				return '<span class="name"><strong>' + value + '</strong></span><br/><span class="cat">' + data[1] + '</span>';
+			},
+			onItemSelect:   function(item) {
+				var
+					input = $('input:focus'),
+					span  = input.parents('.sly-widget');
+
+				sly_addListOption(span, item.value, item.data[0]);
+				input.val('');
+			}
+		});
+	}
+
+	$('select.sly-linklist').bind('keydown', 'del', function() {
+		var sel  = $('option:selected', $(this));
+		var next = sel.next();
+
+		sel.remove();
+		next.attr('selected', 'selected');
+		sly_createList($(this));
+	});
+
+	$('body').delegate('.sly-linklistbutton .sly-icons a[rel]', 'click', sly_moveListItem);
 });
