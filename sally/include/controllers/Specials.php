@@ -35,6 +35,7 @@ class sly_Controller_Specials extends sly_Controller_Sally {
 		$startArticle    = sly_post('start_article',    'int');
 		$notFoundArticle = sly_post('notfound_article', 'int');
 		$defaultType     = sly_post('default_type',     'string');
+		$frontendSync    = sly_post('frontend_sync',    'string');
 		$backendLocale   = sly_post('backend_locale',   'string');
 		$errorEMail      = sly_post('error_email',      'string');
 		$server          = sly_post('server',           'string');
@@ -80,6 +81,7 @@ class sly_Controller_Specials extends sly_Controller_Sally {
 
 		// Sonstige Einstellungen
 
+		$conf->set('FRONTEND_SYNC', $frontendSync === 'true');
 		$conf->setLocal('ERROR_EMAIL', strtolower($errorEMail));
 		$conf->set('LANG', $backendLocale);
 		$conf->setLocal('SERVER', $server);
