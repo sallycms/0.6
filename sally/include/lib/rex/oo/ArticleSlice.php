@@ -331,7 +331,7 @@ class OOArticleSlice {
 
 		foreach ($matches as $match) {
 			if (empty($match)) continue;
-			$replace = self::getReplacementLink($match[1], $match[2], $match[3]);
+			$replace = self::getReplacementLink($match[1], $match[2]);
 			$content = str_replace($match[0], $replace, $content);
 		}
 
@@ -341,18 +341,18 @@ class OOArticleSlice {
 
 		foreach ($matches as $match) {
 			if (empty($match)) continue;
-			$replace = self::getReplacementLink($match[1], false, $match[2]);
+			$replace = self::getReplacementLink($match[1], false);
 			$content = str_replace($match[0], $replace, $content);
 		}
 
 		return $content;
 	}
 
-	private static function getReplacementLink($articleID, $clang = false, $params = '')
+	private static function getReplacementLink($articleID, $clang)
 	{
 		$art = OOArticle::getArticleById($articleID, $clang);
 		if ($art === null) return '';
-		return $art->getUrl().$params;
+		return rex_getUrl($articleID, $clang, '', '', '', true);
 	}
 
 	protected function getRexVarValue($type, $key) {

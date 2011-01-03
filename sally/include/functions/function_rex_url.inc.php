@@ -74,7 +74,7 @@ function rex_param_string($params, $divider = '&amp;')
  * @param [$_divider] Trennzeichen für Parameter
  * (z.B. &amp; für HTML, & für Javascript)
  */
-function rex_getUrl($id = 0, $clang = false, $name = 'NoName', $params = '', $divider = '&amp;')
+function rex_getUrl($id = 0, $clang = false, $name = 'NoName', $params = '', $divider = '&amp;', $disableCache = false)
 {
 	global $REX;
 
@@ -104,7 +104,7 @@ function rex_getUrl($id = 0, $clang = false, $name = 'NoName', $params = '', $di
 	$func     = function_exists('json_encode') ? 'json_encode' : 'serialize';
 	$cacheKey = substr(md5($id.'_'.$clang.'_'.$func($params).'_'.$divider), 0, 10); // $params kann ein Array sein.
 
-	if (isset($urlCache[$cacheKey])) {
+	if (!$disableCache && isset($urlCache[$cacheKey])) {
 		return $urlCache[$cacheKey];
 	}
 
