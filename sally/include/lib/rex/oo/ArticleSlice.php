@@ -327,7 +327,7 @@ class OOArticleSlice {
 		// siehe dazu: http://forum.redaxo.de/ftopic7563.html
 
 		// -- preg match redaxo://[ARTICLEID]-[CLANG] --
-		preg_match_all('@(redaxo|sally)://([0-9]*)\-([0-9]*)(.){1}/?@im', $content, $matches, PREG_SET_ORDER);
+		preg_match_all('@(?:redaxo|sally)://([0-9]*)\-([0-9]*)(.){1}/?@im', $content, $matches, PREG_SET_ORDER);
 
 		foreach ($matches as $match) {
 			if (empty($match)) continue;
@@ -337,7 +337,7 @@ class OOArticleSlice {
 
 		// -- preg match redaxo://[ARTICLEID] --
 
-		preg_match_all('@(redaxo|sally)://([0-9]*)(.){1}/?@im', $content, $matches, PREG_SET_ORDER);
+		preg_match_all('@(?:redaxo|sally)://([0-9]*)(.){1}/?@im', $content, $matches, PREG_SET_ORDER);
 
 		foreach ($matches as $match) {
 			if (empty($match)) continue;
