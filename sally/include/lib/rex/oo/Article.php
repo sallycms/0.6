@@ -179,14 +179,47 @@ class OOArticle extends OORedaxo
 		return parent::hasValue($value, array_merge(array('art_'), $prefixes));
 	}
 
-	public function getArticle($slot = null) {
+	/**
+	 * prints the articlecontent for a given slot, or if empty for all slots
+	 *
+	 * @param string $slot
+	 */
+	public function printContent($slot = null) {
 		$ids = OOArticleSlice::getSliceIdsForSlot($this->getId(), $this->getClang(), $slot);
 		foreach ($ids as $id) {
 			print OOArticleSlice::getArticleSliceById($id)->printContent();
 		}
 	}
 
-	// ----- Template inklusive Artikel zurückgeben
+	/**
+	 * returns the articlecontent for a given slot, or if empty for all slots
+	 *
+	 * @deprecated use getContent() instead
+	 * @param string $slot
+	 * @return string
+	 */
+	public function getArticle($slot = null) {
+		return $this->getContent($slot);
+	}
+
+	/**
+	 * returns the articlecontent for a given slot, or if empty for all slots
+	 *
+	 * @param <type> $slot
+	 * @return <type>
+	 */
+	public function getContent($slot = null) {
+		ob_start();
+		$this->printContent($slot);
+		return ob_get_clean();
+	}
+
+	/**
+	 * returns the rendered template with the articlecontent
+	 *
+	 * @global array $REX
+	 * @return string
+	 */
 	public function getArticleTemplate() {
 		// global $REX hier wichtig, damit in den Artikeln die Variable vorhanden ist!
 		global $REX;
@@ -207,20 +240,26 @@ class OOArticle extends OORedaxo
 		return $content;
 	}
 
-	/*
-	 * Accessor Method:
-	 * returns the template id
+	/**
+	 * returns the template name of the template associated with the articletype of this article
+	 *
+	 * @return string the template name
 	 */
 	public function getTemplateName() {
 		return sly_Service_Factory::getArticleTypeService()->getTemplate($this->_type);
 	}
 
-	/*
-	 * Accessor Method:
-	 * returns true if article has a type.
+	/**
+	 * returns true if the articletype is set
+	 *
+	 * @return boolean
 	 */
 	public function hasType() { return !empty($this->_type); }
 
-	
+	/**
+	 * returns the articletype
+	 *
+	 * @return string the articletype
+	 */
 	public function getType() { return $this->_type; }
 }
