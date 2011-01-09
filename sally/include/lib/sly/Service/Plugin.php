@@ -261,7 +261,9 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 	 * @return array  Array aller registrierten Plugins
 	 */
 	public function getRegisteredPlugins($addon) {
-		return isset($this->data[$addon]['plugins']) ? array_keys($this->data[$addon]['plugins']) : array();
+		$plugins = isset($this->data[$addon]['plugins']) ? array_keys($this->data[$addon]['plugins']) : array();
+		natsort($plugins);
+		return $plugins;
 	}
 
 	/**
@@ -280,6 +282,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 			}
 		}
 
+		natsort($avail);
 		return $avail;
 	}
 
@@ -296,6 +299,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 			if ($this->isInstalled(array($addon, $plugin))) $avail[] = $plugin;
 		}
 
+		natsort($avail);
 		return $avail;
 	}
 

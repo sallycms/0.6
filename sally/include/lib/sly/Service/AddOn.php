@@ -274,6 +274,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 			if ($this->isAvailable($addonName)) $avail[] = $addonName;
 		}
 
+		natsort($avail);
 		return $avail;
 	}
 
