@@ -334,18 +334,17 @@ addon_installed: 'AddOn {0} installed'
 addon_activated: 'AddOn {0} activated'
 addon_deactivated: 'AddOn {0} deactivated'
 addon_uninstalled: 'AddOn {0} uninstalled'
-addon_deleted: 'AddOn {0} deleted'
-addon_delete_question: 'Delete {0} AddOn?'
 addon_uninstall_question: 'Deinstall {0} AddOn?'
 addon_hname: name
 addon_hinstall: Installed
 addon_hactive: Activated
-addon_hdelete: Delete
+addon_hdelete: Uninstall
 addon_hassets: Assets
 addon_reinit_assets: re-init
 addon_assets_copied: The asset files have been copied.
 plugin_assets_copied: The asset files have been copied.
 addon_addon_required: "The addOn {0} is required to install the addOn {1}."
+addon_plugin_required: "The plugIn {0} is required to install the addOn {1}."
 addon_sally_incompatible: "This addOn is not marked as compatible with your SallyCMS version ({0})."
 addon_reinstall: re-install
 addon_install: install
@@ -369,17 +368,15 @@ plugin_uninstall_not_found: 'translate:plugin_uninstall_not_found' # Deinstallat
 plugin_config_not_found: 'translate:plugin_config_not_found' # Konfigurationsdatei wurde nicht gefunden (config.inc.php)!
 plugin_no_install: 'PlugIn has not been installed'
 plugin_no_uninstall: 'translate:plugin_no_uninstall' # PlugIn {0} konnte aus folgendem Grund <b>nicht</b> deinstalliert werden:
-plugin_no_reason: '???'
+plugin_no_reason: 'No reason was given by the plugin.'
 plugin_no_activation: 'translate:plugin_no_activation' # PlugIn {0} konnte <b>nicht</b> aktiviert werden, da es noch nicht installiert wurde!
 plugin_installed: 'PlugIn has been installed'
 plugin_activated: 'PlugIn activated'
 plugin_deactivated: 'PlugIn deactivated'
-plugin_uninstalled: 'translate:plugin_uninstalled' # PlugIn {0} wurde deinstalliert
-plugin_deleted: 'translate:plugin_deleted' # PlugIn {0} wurde gelöscht
-plugin_delete_question: 'translate:plugin_delete_question' # PlugIn {0} löschen?
-plugin_uninstall_question: 'translate:plugin_uninstall_question' # PlugIn {0} de-installieren?
-plugin_install_cant_copy_files: 'translate:plugin_install_cant_copy_files' # Fehler beim Kopieren des /files Ordners!
-plugin_install_cant_delete_files: 'translate:plugin_install_cant_delete_files' # Fehler beim Löschen des /files Ordners!
+plugin_uninstalled: 'PlugIn {0} has been uninstalled.'
+plugin_uninstall_question: 'Uninstall PlugIn?'
+plugin_install_cant_copy_files: 'Error while copying the assets directory.'
+plugin_install_cant_delete_files: 'Error while deleting the assets directory.'
 
 # sally\include\pages\credits.inc.php
 credits: credits
@@ -421,16 +418,17 @@ var_linklist_move_up: 'translate:var_linklist_move_up' # Ausgewählten Link nach
 var_linklist_move_down: 'translate:var_linklist_move_down' # Ausgewählten Link nach unten verschieben
 var_linklist_move_bottom: 'translate:var_linklist_move_bottom' # Ausgewählten Link an das Ende verschieben
 
-available: 'translate:available' # verfügbar
-unavailable: 'translate:unavailable' # nicht verfügbar
-required: 'translate:required' # benötigt
-activated: 'translate:activated' # aktiviert
-optional: 'translate:optional' # optional
-deactivated: 'translate:deactivated' # deaktiviert
-allowed: 'translate:allowed' # erlaubt
-disallowed: 'translate:disallowed' # verboten
-any: 'translate:any' # beliebig
-none: 'translate:none' # nichts
+available: 'available'
+unavailable: 'unavailable'
+required: 'required'
+is_required: 'is required by {0}'
+activated: 'activated'
+optional: 'optional'
+deactivated: 'deactivated'
+allowed: 'allowed'
+disallowed: 'disallowed'
+any: 'any'
+none: 'none'
 recommended: recommended
 
 authorisation_exception_language_denied: Permission to language %s denied!

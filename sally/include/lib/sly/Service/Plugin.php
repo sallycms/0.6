@@ -35,17 +35,13 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 				$this->loadConfig($plugin);
 			}
 
-			$requires = $this->getProperty($plugin, 'requires');
+			$requires = sly_makeArray($this->getProperty($plugin, 'requires'));
+			$aService = sly_Service_Factory::getAddOnService();
 
-			if (!empty($requires)) {
-				$requires = sly_makeArray($requires);
-				$aService = sly_Service_Factory::getAddOnService();
-
-				foreach ($requires as $requiredAddon) {
-					if (!$aService->isAvailable($requiredAddon)) {
-						//TODO I18n
-						return 'The addOn '.$requiredAddon.' is required to install this plugIn.';
-					}
+			foreach ($requires as $requiredAddon) {
+				if (!$aService->isAvailable($requiredAddon)) {
+					//TODO I18n
+					return 'The addOn '.$requiredAddon.' is required to install this plugIn.';
 				}
 			}
 
@@ -74,13 +70,10 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 					$this->mentalGymnasticsInclude($installFile, $plugin);
 				}
 				catch (Exception $e) {
-					$installError = t('plugin_no_install', $plugin, $e->getMessage());
+					$state = t('plugin_no_install', $plugin, $e->getMessage());
 				}
 
-				if (!empty($installError)) {
-					$state = t('plugin_no_install', $plugin).'<br />'.$installError;
-				}
-				else {
+				if ($state === true) {
 					if (is_readable($configFile)) {
 						if (!$this->isActivated($plugin)) {
 							$this->mentalGymnasticsInclude($configFile, $plugin);
@@ -146,6 +139,10 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 		$uninstallFile  = $pluginDir.'uninstall.inc.php';
 		$uninstallSQL   = $pluginDir.'uninstall.sql';
 
+		if (!$this->isInstalled($plugin)) {
+			return true;
+		}
+
 		$state = $this->extend('PRE', 'UNINSTALL', $plugin, true);
 
 		if (is_readable($uninstallFile)) {
@@ -153,13 +150,10 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 				$this->mentalGymnasticsInclude($uninstallFile, $plugin);
 			}
 			catch (Exception $e) {
-				$installError = t('plugin_no_uninstall', $plugin, $e->getMessage());
+				$state = t('plugin_no_uninstall', $plugin, $e->getMessage());
 			}
 
-			if (!empty($installError)) {
-				$state = t('plugin_no_uninstall', $plugin).'<br />'.$installError;
-			}
-			else {
+			if ($state === true) {
 				$state = $this->deactivate($plugin);
 
 				if ($state === true && is_readable($uninstallSQL)) {

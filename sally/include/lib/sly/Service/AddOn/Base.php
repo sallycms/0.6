@@ -109,9 +109,9 @@ abstract class sly_Service_AddOn_Base {
 	}
 
 	/**
-	 * Aktiviert ein Addon
+	 * Aktiviert ein AddOn/Plugin
 	 *
-	 * @param $addonName Name des Addons
+	 * @param $addonORplugin Name des Addons
 	 */
 	public function activate($addonORplugin) {
 		if ($this->isActivated($addonORplugin)) {
@@ -119,6 +119,25 @@ abstract class sly_Service_AddOn_Base {
 		}
 
 		if ($this->isInstalled($addonORplugin)) {
+			// We can't use the service to get the list of required addOns since the
+			// static.yml has not yet been loaded.
+
+			$this->loadConfig($addonORplugin);
+
+			$requires     = sly_makeArray($this->getProperty($addonORplugin, 'requires'));
+			$addonService = sly_Service_Factory::getAddOnService();
+
+			foreach ($requires as $requiredAddon) {
+				if (!$addonService->isAvailable($requiredAddon)) {
+					if (is_array($addonORplugin)) {
+						return t('addon_plugin_required', $requiredAddon, end($addonORplugin));
+					}
+					else {
+						return t('addon_addon_required', $requiredAddon, $addonORplugin);
+					}
+				}
+			}
+
 			$state = $this->extend('PRE', 'ACTIVATE', $addonORplugin, true);
 
 			if ($state === true) {
@@ -134,13 +153,26 @@ abstract class sly_Service_AddOn_Base {
 	}
 
 	/**
-	 * Deaktiviert ein Plugin
+	 * Deaktiviert ein AddOn/Plugin
 	 *
-	 * @param array $plugin  Plugin als array(addon, plugin)
+	 * @param array $addonORplugin  AddOn als String oder Plugin als array(addon, plugin)
 	 */
 	public function deactivate($addonORplugin) {
 		if (!$this->isActivated($addonORplugin)) {
 			return true;
+		}
+
+		// Requirement check works only for addOns since you cannot specify plugin dependencies
+		// in static.yml (yet?). BUT we have to check plugins for their dependencies.
+
+		if (!is_array($addonORplugin)) {
+			$addonService = sly_Service_Factory::getAddOnService();
+			$dependencies = $addonService->getDependencies($addonORplugin, true);
+
+			if (!empty($dependencies)) {
+				$dep = reset($dependencies);
+				return t(is_array($dep) ? 'addon_plugin_required' : 'addon_addon_required', $addonORplugin, is_array($dep) ? reset($dep).'/'.end($dep) : $dep);
+			}
 		}
 
 		$state = $this->extend('PRE', 'DEACTIVATE', $addonORplugin, true);
