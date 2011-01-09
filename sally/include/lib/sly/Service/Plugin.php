@@ -74,20 +74,11 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 					$this->mentalGymnasticsInclude($installFile, $plugin);
 				}
 				catch (Exception $e) {
-					$installError = 'Es ist eine unerwartete Ausnahme während der Installation aufgetreten: '.$e->getMessage();
+					$installError = t('plugin_no_install', $plugin, $e->getMessage());
 				}
 
-				$hasError = !empty($installError);
-
-				if ($hasError) {
-					$state = $this->I18N('no_install', $pluginName).'<br />';
-
-					if ($hasError) {
-						$state .= $state .= $installError;
-					}
-					else {
-						$state .= $this->I18N('no_reason');
-					}
+				if (!empty($installError)) {
+					$state = t('plugin_no_install', $plugin).'<br />'.$installError;
 				}
 				else {
 					if (is_readable($configFile)) {
@@ -96,7 +87,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 						}
 					}
 					else {
-						$state = $this->I18N('config_not_found');
+						$state = t('plugin_config_not_found');
 					}
 
 					if ($installDump && $state === true && is_readable($installSQL)) {
@@ -113,7 +104,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 				}
 			}
 			else {
-				$state = $this->I18N('plugin_install_not_found');
+				$state = t('plugin_install_not_found');
 			}
 		}
 
@@ -158,19 +149,15 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 		$state = $this->extend('PRE', 'UNINSTALL', $plugin, true);
 
 		if (is_readable($uninstallFile)) {
-			$this->mentalGymnasticsInclude($uninstallFile, $plugin);
+			try {
+				$this->mentalGymnasticsInclude($uninstallFile, $plugin);
+			}
+			catch (Exception $e) {
+				$installError = t('plugin_no_uninstall', $plugin, $e->getMessage());
+			}
 
-			$hasError = $REX['ADDON']['installmsg'][$pluginName];
-
-			if ($hasError) {
-				$state = $this->I18N('no_uninstall', $pluginName).'<br />';
-
-				if ($hasError) {
-					$state .= $REX['ADDON']['installmsg'][$pluginName];
-				}
-				else {
-					$state .= $this->I18N('no_reason');
-				}
+			if (!empty($installError)) {
+				$state = t('plugin_no_uninstall', $plugin).'<br />'.$installError;
 			}
 			else {
 				$state = $this->deactivate($plugin);
@@ -189,7 +176,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 			}
 		}
 		else {
-			$state = $this->I18N('plugin_uninstall_not_found');
+			$state = t('plugin_uninstall_not_found');
 		}
 
 		$state = $this->extend('POST', 'UNINSTALL', $plugin, $state);

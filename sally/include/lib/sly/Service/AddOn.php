@@ -71,17 +71,8 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 					$installError = t('addon_no_install', $addonName, $e->getMessage());
 				}
 
-				$hasError = !empty($installError);
-
-				if ($hasError) {
-					$state = t('no_install', $addonName).'<br />';
-
-					if ($hasError) {
-						$state .= $installError;
-					}
-					else {
-						$state .= $this->I18N('no_reason');
-					}
+				if (!empty($installError)) {
+					$state = t('addon_no_install', $addonName).'<br />'.$installError;
 				}
 				else {
 					if (is_readable($configFile)) {
@@ -148,19 +139,15 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 		$state = $this->extend('PRE', 'UNINSTALL', $addonName, true);
 
 		if (is_readable($uninstallFile)) {
-			$this->req($uninstallFile);
+			try {
+				$this->req($uninstallFile);
+			}
+			catch (Exception $e) {
+				$installError = t('addon_no_uninstall', $addonName, $e->getMessage());
+			}
 
-			$hasError = $config->has('ADDON/installmsg/'.$addonName);
-
-			if ($hasError) {
-				$state = $this->I18N('no_uninstall', $addonName).'<br />';
-
-				if ($hasError) {
-					$state .= $config->get('ADDON/installmsg/'.$addonName);
-				}
-				else {
-					$state .= $this->I18N('no_reason');
-				}
+			if (!empty($installError)) {
+				$state = t('addon_no_uninstall', $addonName).'<br />'.$installError;
 			}
 			else {
 				$state = $this->deactivate($addonName);
@@ -179,7 +166,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 			}
 		}
 		else {
-			$state = $this->I18N('addon_uninstall_not_found');
+			$state = t('addon_uninstall_not_found');
 		}
 
 		$state = $this->extend('POST', 'UNINSTALL', $addonName, $state);
