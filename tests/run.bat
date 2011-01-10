@@ -1,1 +1,1 @@
-phpunit --bootstrap addons/sally_bootstrap.php tests
+phpunit --bootstrap bootstrap.php tests
