@@ -10,7 +10,6 @@
 
 require 'addons/sally_bootstrap.php';
 require 'lime/lime.php';
-require 'coverage.php';
 
 $limeOptions = array('force_colors' => isset($_SERVER['REMOTE_ADDR']));
 
@@ -45,16 +44,6 @@ if (SLY_TEST_LIME_XDEBUG) {
 
 foreach ($registration->files as $filename) {
 	include $filename;
-}
-
-if (SLY_TEST_LIME_XDEBUG) {
-	$exportDir = 'coverage_reports';
-	$baseDir   = realpath(dirname(__FILE__).'/../sally/include');
-	@mkdir($exportDir, 0777, true);
-
-	$code_coverage = new code_coverage($exportDir.'/raw.php');
-	$code_coverage->saveRawData();
-	$code_coverage->createReports($exportDir, $baseDir);
 }
 
 if (SLY_TEST_LIME_IS_XML) {
