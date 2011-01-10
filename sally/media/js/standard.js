@@ -340,7 +340,7 @@
 	sly_addListOption = function(parentSpan, title, key) {
 		var list = $('select', parentSpan);
 
-		if ($('option[value='+key+']').length == 0) {
+		if (list.find('option[value='+key+']').length == 0) {
 			list.append($('<option>').val(key).text(title));
 			sly_createList(list);
 		}
