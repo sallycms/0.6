@@ -42,6 +42,8 @@ if (!empty($warning)) print rex_warning($warning);
 		$base              = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;func=';
 		$registeredPlugins = $plugins->getRegisteredPlugins($addon);
 		$availablePlugins  = $plugins->getAvailablePlugins($addon);
+		$isRequired        = $addons->isActivated($addon) ? $addons->isRequired($addon) : false;
+		$required          = $isRequired ? sly_html(t('is_required', is_array($isRequired) ? reset($isRequired).'/'.end($isRequired) : $isRequired)) : '';
 		$classes           = array('sly-addon');
 
 		if (!empty($registeredPlugins)) {
@@ -56,6 +58,9 @@ if (!empty($warning)) print rex_warning($warning);
 				$uninstall = t('plugin_plugins_installed');
 				$classes[] = 'sly-has-active-plugins';
 			}
+			elseif ($isRequired) {
+				$uninstall = '<del title="'.$required.'">'.t('addon_uninstall').'</del>';
+			}
 			else {
 				$uninstall = '<a href="'.$base.'uninstall" onclick="return confirm(\''.sly_html(t('addon_uninstall_question', $addon)).'\');">'.t('addon_uninstall').'</a>';
 			}
@@ -67,7 +72,7 @@ if (!empty($warning)) print rex_warning($warning);
 		}
 
 		if ($addons->isActivated($addon)) {
-			$status    = t('addon_yes').' - <a href="'.$base.'deactivate">'.t('addon_deactivate').'</a>';
+			$status    = t('addon_yes').($isRequired ? ' - <del title="'.$required.'">'.t('addon_deactivate').'</del>' : ' - <a href="'.$base.'deactivate">'.t('addon_deactivate').'</a>');
 			$classes[] = 'sly-activated';
 			$assets    = '<a href="'.$base.'assets">'.t('addon_reinit_assets').'</a>';
 		}

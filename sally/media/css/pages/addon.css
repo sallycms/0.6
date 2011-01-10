@@ -12,9 +12,11 @@
 		&.sly-activated td     { background: #fff; color: #4D4646; }
 	}
 
-	tr.sly-addon .is-help {
+	tr.sly-addon .is-help, del {
 		border-bottom: 1px dotted #777;
 		cursor: help;
+		color: #8D8686;
+		font-size: 0.8em;
 	}
 }
 

@@ -31,15 +31,11 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 				$this->loadConfig($addonName);
 			}
 
-			$requires = $this->getProperty($addonName, 'requires');
+			$requires = sly_makeArray($this->getProperty($addonName, 'requires'));
 
-			if (!empty($requires)) {
-				$requires = sly_makeArray($requires);
-
-				foreach ($requires as $requiredAddon) {
-					if (!$this->isAvailable($requiredAddon)) {
-						return t('addon_addon_required', $requiredAddon, $addonName);
-					}
+			foreach ($requires as $requiredAddon) {
+				if (!$this->isAvailable($requiredAddon)) {
+					return t('addon_addon_required', $requiredAddon, $addonName);
 				}
 			}
 
@@ -70,22 +66,10 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 					$this->req($installFile);
 				}
 				catch (Exception $e) {
-					$installError = t('addon_no_install', $addonName, $e->getMessage());
+					$state = t('addon_no_install', $addonName, $e->getMessage());
 				}
 
-				$hasError = !empty($installError);
-
-				if ($hasError) {
-					$state = t('no_install', $addonName).'<br />';
-
-					if ($hasError) {
-						$state .= $installError;
-					}
-					else {
-						$state .= $this->I18N('no_reason');
-					}
-				}
-				else {
+				if ($state === true) {
 					if (is_readable($configFile)) {
 						if (!$this->isActivated($addonName)) {
 							$this->req($configFile);
@@ -147,24 +131,30 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 		$uninstallSQL  = $addonDir.'uninstall.sql';
 		$config        = sly_Core::config();
 
+		if (!$this->isInstalled($addonName)) {
+			return true;
+		}
+
+		if ($this->isActivated($addonName)) {
+			$dependencies = $this->getDependencies($addonName, true);
+
+			if (!empty($dependencies)) {
+				$dep = reset($dependencies);
+				return t(is_array($dep) ? 'addon_plugin_required' : 'addon_addon_required', $addonName, is_array($dep) ? reset($dep).'/'.end($dep) : $dep);
+			}
+		}
+
 		$state = $this->extend('PRE', 'UNINSTALL', $addonName, true);
 
 		if (is_readable($uninstallFile)) {
-			$this->req($uninstallFile);
-
-			$hasError = $config->has('ADDON/installmsg/'.$addonName);
-
-			if ($hasError) {
-				$state = $this->I18N('no_uninstall', $addonName).'<br />';
-
-				if ($hasError) {
-					$state .= $config->get('ADDON/installmsg/'.$addonName);
-				}
-				else {
-					$state .= $this->I18N('no_reason');
-				}
+			try {
+				$this->req($uninstallFile);
 			}
-			else {
+			catch (Exception $e) {
+				$state = t('addon_no_uninstall', $addonName, $e->getMessage());
+			}
+
+			if ($state === true) {
 				$state = $this->deactivate($addonName);
 
 				if ($state === true && is_readable($uninstallSQL)) {
@@ -181,7 +171,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 			}
 		}
 		else {
-			$state = $this->I18N('addon_uninstall_not_found');
+			$state = t('addon_uninstall_not_found');
 		}
 
 		$state = $this->extend('POST', 'UNINSTALL', $addonName, $state);
@@ -276,6 +266,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 			if ($this->isAvailable($addonName)) $avail[] = $addonName;
 		}
 
+		natsort($avail);
 		return $avail;
 	}
 
@@ -323,5 +314,58 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 
 	protected function getVersionKey($addon) {
 		return 'addons/'.$addon;
+	}
+
+	public function getDependencies($addonName, $onlyMissing = false) {
+		return $this->dependencyHelper($addonName, $onlyMissing);
+	}
+
+	public function dependencyHelper($addonName, $onlyMissing = false, $onlyFirst = false) {
+		$addonService  = sly_Service_Factory::getAddOnService();
+		$pluginService = sly_Service_Factory::getPluginService();
+		$addons        = $addonService->getAvailableAddons();
+		$result        = array();
+
+		if (!$this->isAvailable($addonName)) {
+			$this->loadConfig($addonName);
+		}
+
+		foreach ($addons as $addon) {
+			// don't check yourself
+			if ($addonName == $addon) continue;
+
+			$requires = sly_makeArray($this->getProperty($addon, 'requires'));
+			$inArray  = in_array($addonName, $requires);
+
+			if ($inArray && $onlyFirst) {
+				return array($addon);
+			}
+
+			if (!$onlyMissing || $inArray) {
+				$result[] = $addon;
+			}
+
+			$plugins = $pluginService->getAvailablePlugins($addon);
+
+			foreach ($plugins as $plugin) {
+				$requires = sly_makeArray($pluginService->getProperty(array($addon, $plugin), 'requires'));
+				$inArray  = in_array($addonName, $requires);
+
+				if ($inArray && $onlyFirst) {
+					return array(array($addon, $plugin));
+				}
+
+				if (!$onlyMissing || $inArray) {
+					$result[] = array($addon, $plugin);
+				}
+			}
+		}
+
+		return $onlyFirst ? reset($result) : $result;
+	}
+
+	public function isRequired($addonName) {
+		$dependency = $this->dependencyHelper($addonName, true, true);
+		return empty($dependency) ? false : reset($dependency);
 	}
 }

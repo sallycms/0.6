@@ -89,37 +89,26 @@ class sly_Util_Directory {
 
 	public function listRecursive($dotFiles = false, $absolute = false) {
 		if (!is_dir($this->directory)) return false;
-
-		$iterator = new RecursiveDirectoryIterator($this->directory);
+		//use the realpath of the directory to normalize the filenames
+		$iterator = new RecursiveDirectoryIterator(realpath($this->directory));
 		$iterator = new RecursiveIteratorIterator($iterator);
 		$list     = array();
-		$base     = rtrim(realpath($this->directory), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+		$baselen  = strlen(rtrim(realpath($this->directory), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR);
 
 		foreach ($iterator as $filename => $fileInfo) {
+
+			if($iterator->isDot()) continue;
 			if ($dotFiles && $absolute) {
 				$list[] = $filename;
 				continue;
 			}
-
-			$relative = substr($filename, strlen($base));
-
-			if (!$dotFiles) {
-				$parts     = explode(DIRECTORY_SEPARATOR, $relative);
-				$isDotPath = false;
-
-				foreach ($parts as $path) {
-					if ($path[0] == '.') {
-						$isDotPath = true;
-						break;
-					}
-				}
-
-				if ($isDotPath) {
-					continue;
-				}
+			//use the fast way to find dotfiles
+			if (!$dotFiles &&
+				 substr_count($filename, DIRECTORY_SEPARATOR.'.') > 0) {
+				continue;
 			}
 
-			$list[] = $absolute ? $filename : $relative;
+			$list[] = $absolute ? $filename : substr($filename, $baselen);
 		}
 
 		return $list;

@@ -35,17 +35,13 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 				$this->loadConfig($plugin);
 			}
 
-			$requires = $this->getProperty($plugin, 'requires');
+			$requires = sly_makeArray($this->getProperty($plugin, 'requires'));
+			$aService = sly_Service_Factory::getAddOnService();
 
-			if (!empty($requires)) {
-				$requires = sly_makeArray($requires);
-				$aService = sly_Service_Factory::getAddOnService();
-
-				foreach ($requires as $requiredAddon) {
-					if (!$aService->isAvailable($requiredAddon)) {
-						//TODO I18n
-						return 'The addOn '.$requiredAddon.' is required to install this plugIn.';
-					}
+			foreach ($requires as $requiredAddon) {
+				if (!$aService->isAvailable($requiredAddon)) {
+					//TODO I18n
+					return 'The addOn '.$requiredAddon.' is required to install this plugIn.';
 				}
 			}
 
@@ -74,29 +70,17 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 					$this->mentalGymnasticsInclude($installFile, $plugin);
 				}
 				catch (Exception $e) {
-					$installError = 'Es ist eine unerwartete Ausnahme während der Installation aufgetreten: '.$e->getMessage();
+					$state = t('plugin_no_install', $plugin, $e->getMessage());
 				}
 
-				$hasError = !empty($installError);
-
-				if ($hasError) {
-					$state = $this->I18N('no_install', $pluginName).'<br />';
-
-					if ($hasError) {
-						$state .= $state .= $installError;
-					}
-					else {
-						$state .= $this->I18N('no_reason');
-					}
-				}
-				else {
+				if ($state === true) {
 					if (is_readable($configFile)) {
 						if (!$this->isActivated($plugin)) {
 							$this->mentalGymnasticsInclude($configFile, $plugin);
 						}
 					}
 					else {
-						$state = $this->I18N('config_not_found');
+						$state = t('plugin_config_not_found');
 					}
 
 					if ($installDump && $state === true && is_readable($installSQL)) {
@@ -113,7 +97,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 				}
 			}
 			else {
-				$state = $this->I18N('plugin_install_not_found');
+				$state = t('plugin_install_not_found');
 			}
 		}
 
@@ -155,24 +139,21 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 		$uninstallFile  = $pluginDir.'uninstall.inc.php';
 		$uninstallSQL   = $pluginDir.'uninstall.sql';
 
+		if (!$this->isInstalled($plugin)) {
+			return true;
+		}
+
 		$state = $this->extend('PRE', 'UNINSTALL', $plugin, true);
 
 		if (is_readable($uninstallFile)) {
-			$this->mentalGymnasticsInclude($uninstallFile, $plugin);
-
-			$hasError = $REX['ADDON']['installmsg'][$pluginName];
-
-			if ($hasError) {
-				$state = $this->I18N('no_uninstall', $pluginName).'<br />';
-
-				if ($hasError) {
-					$state .= $REX['ADDON']['installmsg'][$pluginName];
-				}
-				else {
-					$state .= $this->I18N('no_reason');
-				}
+			try {
+				$this->mentalGymnasticsInclude($uninstallFile, $plugin);
 			}
-			else {
+			catch (Exception $e) {
+				$state = t('plugin_no_uninstall', $plugin, $e->getMessage());
+			}
+
+			if ($state === true) {
 				$state = $this->deactivate($plugin);
 
 				if ($state === true && is_readable($uninstallSQL)) {
@@ -189,7 +170,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 			}
 		}
 		else {
-			$state = $this->I18N('plugin_uninstall_not_found');
+			$state = t('plugin_uninstall_not_found');
 		}
 
 		$state = $this->extend('POST', 'UNINSTALL', $plugin, $state);
@@ -261,7 +242,9 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 	 * @return array  Array aller registrierten Plugins
 	 */
 	public function getRegisteredPlugins($addon) {
-		return isset($this->data[$addon]['plugins']) ? array_keys($this->data[$addon]['plugins']) : array();
+		$plugins = isset($this->data[$addon]['plugins']) ? array_keys($this->data[$addon]['plugins']) : array();
+		natsort($plugins);
+		return $plugins;
 	}
 
 	/**
@@ -280,6 +263,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 			}
 		}
 
+		natsort($avail);
 		return $avail;
 	}
 
@@ -296,6 +280,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 			if ($this->isInstalled(array($addon, $plugin))) $avail[] = $plugin;
 		}
 
+		natsort($avail);
 		return $avail;
 	}
 

@@ -334,32 +334,32 @@ class OOArticleSlice {
 		// siehe dazu: http://forum.redaxo.de/ftopic7563.html
 
 		// -- preg match redaxo://[ARTICLEID]-[CLANG] --
-		preg_match_all('@(redaxo|sally)://([0-9]*)\-([0-9]*)(.){1}/?@im', $content, $matches, PREG_SET_ORDER);
+		preg_match_all('@(?:redaxo|sally)://([0-9]*)\-([0-9]*)(.){1}/?@im', $content, $matches, PREG_SET_ORDER);
 
 		foreach ($matches as $match) {
 			if (empty($match)) continue;
-			$replace = self::getReplacementLink($match[1], $match[2], $match[3]);
+			$replace = self::getReplacementLink($match[1], $match[2]);
 			$content = str_replace($match[0], $replace, $content);
 		}
 
 		// -- preg match redaxo://[ARTICLEID] --
 
-		preg_match_all('@(redaxo|sally)://([0-9]*)(.){1}/?@im', $content, $matches, PREG_SET_ORDER);
+		preg_match_all('@(?:redaxo|sally)://([0-9]*)(.){1}/?@im', $content, $matches, PREG_SET_ORDER);
 
 		foreach ($matches as $match) {
 			if (empty($match)) continue;
-			$replace = self::getReplacementLink($match[1], false, $match[2]);
+			$replace = self::getReplacementLink($match[1], false);
 			$content = str_replace($match[0], $replace, $content);
 		}
 
 		return $content;
 	}
 
-	private static function getReplacementLink($articleID, $clang = false, $params = '')
+	private static function getReplacementLink($articleID, $clang)
 	{
 		$art = OOArticle::getArticleById($articleID, $clang);
 		if ($art === null) return '';
-		return $art->getUrl().$params;
+		return rex_getUrl($articleID, $clang, '', '', '', true);
 	}
 
 	protected function getRexVarValue($type, $key) {

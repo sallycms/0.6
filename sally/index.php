@@ -120,7 +120,8 @@ if ($REX['USER']) {
 	}
 
 	// AddOn-Seiten initialisieren
-	$addonService = sly_Service_Factory::getService('AddOn');
+	$addonService  = sly_Service_Factory::getAddOnService();
+	$pluginService = sly_Service_Factory::getPluginService();
 
 	foreach ($addonService->getAvailableAddons() as $addon) {
 		$link = '';
@@ -132,6 +133,20 @@ if ($REX['USER']) {
 			$popup = $addonService->getProperty($addon, 'popup', false);
 
 			$navigation->addPage('addon', strtolower($addon), $name, $popup, $page);
+		}
+
+		foreach ($pluginService->getAvailablePlugins($addon) as $plugin) {
+			$pluginArray = array($addon, $plugin);
+			$link        = '';
+			$perm        = $pluginService->getProperty($pluginArray, 'perm', '');
+			$page        = $pluginService->getProperty($pluginArray, 'page', '');
+
+			if (!empty($page) && (empty($perm) || $REX['USER']->hasPerm($perm) || $REX['USER']->isAdmin())) {
+				$name  = $pluginService->getProperty($pluginArray, 'name', '');
+				$popup = $pluginService->getProperty($pluginArray, 'popup', false);
+
+				$navigation->addPage('addon', strtolower($plugin), $name, $popup, $page);
+			}
 		}
 	}
 
