@@ -11,9 +11,9 @@
 /**
  * @ingroup cache
  */
-class sly_Cache extends BabelCache_Factory{
+class sly_Cache extends BabelCache_Factory {
 	private static $cachingStrategy = null;   ///< string
-	private static $instance = null;
+	private static $instance        = null;
 
 	private static $cacheImpls = array(
 		'BabelCache_APC'          => 'APC',
@@ -66,9 +66,12 @@ class sly_Cache extends BabelCache_Factory{
 	 * @return BabelCache_Interface
 	 */
 	public static function factory($forceCache = null) {
-		if (self::$cacheDisabled && $forceCache != 'sly_Cache_Blackhole') {
 		if (self::$cachingStrategy === null) {
 			self::$cachingStrategy = self::getStrategy();
+		}
+
+		if (SLY_IS_TESTING) {
+			$forceCache = 'BabelCache_Blackhole';
 		}
 
 		if ($forceCache !== null) {
