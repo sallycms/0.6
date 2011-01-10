@@ -11,9 +11,6 @@
 define('IS_SALLY', true);
 define('IS_SALLY_BACKEND', true);
 
-ob_start();
-ob_implicit_flush(0);
-
 if (!defined('SLY_IS_TESTING')) {
 	define('SLY_IS_TESTING', false);
 }
@@ -26,6 +23,8 @@ if (SLY_IS_TESTING) {
 	global $REX;
 }
 else {
+	ob_start();
+	ob_implicit_flush(0);
 	unset($REX);
 }
 
