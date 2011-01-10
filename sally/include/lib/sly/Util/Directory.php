@@ -89,22 +89,22 @@ class sly_Util_Directory {
 
 	public function listRecursive($dotFiles = false, $absolute = false) {
 		if (!is_dir($this->directory)) return false;
-		//use the realpath of the directory to normalize the filenames
+		// use the realpath of the directory to normalize the filenames
 		$iterator = new RecursiveDirectoryIterator(realpath($this->directory));
 		$iterator = new RecursiveIteratorIterator($iterator);
 		$list     = array();
 		$baselen  = strlen(rtrim(realpath($this->directory), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR);
 
 		foreach ($iterator as $filename => $fileInfo) {
+			if ($iterator->isDot()) continue;
 
-			if($iterator->isDot()) continue;
 			if ($dotFiles && $absolute) {
 				$list[] = $filename;
 				continue;
 			}
-			//use the fast way to find dotfiles
-			if (!$dotFiles &&
-				 substr_count($filename, DIRECTORY_SEPARATOR.'.') > 0) {
+
+			// use the fast way to find dotfiles
+			if (!$dotFiles && substr_count($filename, DIRECTORY_SEPARATOR.'.') > 0) {
 				continue;
 			}
 
