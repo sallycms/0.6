@@ -18,7 +18,16 @@ if (!defined('SLY_IS_TESTING')) {
 	define('SLY_IS_TESTING', false);
 }
 
-unset($REX);
+// Only remove $REX if we're not in test mode, or else we have no global $REX
+// (this file is included in PHPUnit method context) and the system will crash
+// and burrrrn.
+
+if (SLY_IS_TESTING) {
+	global $REX;
+}
+else {
+	unset($REX);
+}
 
 $REX['REDAXO']      = true;
 $REX['SALLY']       = true;

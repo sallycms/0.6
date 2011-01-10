@@ -66,6 +66,7 @@ class sly_Cache extends BabelCache_Factory{
 	 * @return BabelCache_Interface
 	 */
 	public static function factory($forceCache = null) {
+		if (self::$cacheDisabled && $forceCache != 'sly_Cache_Blackhole') {
 		if (self::$cachingStrategy === null) {
 			self::$cachingStrategy = self::getStrategy();
 		}
