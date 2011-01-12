@@ -217,7 +217,7 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 * @param  string  $slot  Slot identifier
 	 * @return array          Array of module names
 	 */
-	public function getModules($name, $slot = null) {
+		public function getModules($name, $slot = null) {
 		$moduleService = sly_Service_Factory::getModuleService();
 		$modules       = sly_makeArray($this->get($name, 'modules'));
 		$slots         = $this->getSlots($name);
@@ -230,14 +230,18 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 			// find modules for this template
 			if (empty($modules)) $modules = $allModules;
 			elseif ($this->isModulesDefComplex($modules)) {
-				$tmp = array();
-				foreach ($modules as $key => $value) {
-					$value = sly_makeArray($value);
-					if ($slot === null || $slot === $key || ($key === '_ALL_' && !self::hasSlot($name, '_ALL_'))) {
-						$tmp = array_merge($tmp, array_values($value));
+				if(!array_key_exists($slot, $modules)) {
+					$modules = $allModules;
+				}else {
+					$tmp = array();
+					foreach ($modules as $key => $value) {
+						$value = sly_makeArray($value);
+						if ($slot === null || $slot === $key || ($key === '_ALL_' && !self::hasSlot($name, '_ALL_'))) {
+							$tmp = array_merge($tmp, array_values($value));
+						}
 					}
+					$modules = $tmp;
 				}
-				$modules = $tmp;
 			}
 
 			// filter modules by their constraints
