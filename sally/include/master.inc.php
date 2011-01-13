@@ -98,13 +98,14 @@ if (empty($REX['SYNC']) && !$config->get('SETUP')){
 	$REX['ARTICLE_ID'] = sly_Core::getCurrentArticleId();
 }
 
-// REDAXO compatibility
+// register sly_Loader for cache clearing
+sly_Core::dispatcher()->register('ALL_GENERATED', array('sly_Loader', 'clearCache'));
 
+// REDAXO compatibility
 if (!$config->has('TABLE_PREFIX')) $config->setLocal('TABLE_PREFIX', $config->get('DATABASE/TABLE_PREFIX'));
 $REX = array_merge($REX, $config->get(null));
 
 // Check for system updates
-
 $coreVersion  = sly_Core::getVersion('X.Y.Z');
 $knownVersion = sly_Util_Versions::get('sally');
 

@@ -35,16 +35,14 @@ class sly_Loader {
 
 				// import path cache
 
-				$dir      = SLY_DYNFOLDER.'/internal/sally/loader';
-				$filename = $dir.'/'.self::$pathHash.'.php';
-
-				if (!is_dir($dir)) {
-					@mkdir($dir, 0777);
-				}
+				$filename = self::getCacheFile();
 
 				if (file_exists($filename)) {
 					include $filename;
-					self::$pathCache = array_merge(self::$pathCache, $config);
+					self::$pathCache = $config;
+				}
+				else {
+					self::$pathCache = array();
 				}
 			}
 		}
@@ -100,11 +98,8 @@ class sly_Loader {
 						// update path cache file
 						self::$pathCache[$className] = realpath($fullPath);
 
-						$dir      = SLY_DYNFOLDER.'/internal/sally/loader';
-						$filename = $dir.'/'.self::$pathHash.'.php';
-
-						if (!is_dir($dir)) @mkdir($dir, 0777);
-						if (is_dir($dir)) file_put_contents($filename, '<?php $config = '.var_export(self::$pathCache, true).';');
+						$filename = self::getCacheFile();
+						file_put_contents($filename, '<?php $config = '.var_export(self::$pathCache, true).';');
 					}
 
 					break;
@@ -140,5 +135,33 @@ class sly_Loader {
 
 	public static function getClassCount() {
 		return self::$counter;
+	}
+
+	public static function getCacheFile() {
+		return self::getCacheDir().'/'.self::$pathHash.'.php';
+	}
+
+	public static function getCacheDir() {
+		static $dir = null;
+
+		if ($dir === null) {
+			$dir = SLY_DYNFOLDER.'/internal/sally/loader';
+			if (!is_dir($dir)) mkdir($dir, 0777);
+		}
+
+		return $dir;
+	}
+
+	public static function clearCache($params = array()) {
+		$dir   = new sly_Util_Directory(self::getCacheDir());
+		$files = $dir->listPlain(true, false);
+
+		foreach ($files as $file) {
+			unlink($dir.'/'.$file);
+		}
+
+		self::$pathCache = array();
+
+		return isset($params['subject']) ? $params['subject'] : true;
 	}
 }
