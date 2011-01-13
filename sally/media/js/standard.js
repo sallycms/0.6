@@ -227,7 +227,7 @@
 			elements = [];
 
 		$('#' + select + id + ' option').each(function(){
-			elements.push($(this).text());
+			elements.push($(this).val());
 		});
 
 		$target.val(elements.join(','));
