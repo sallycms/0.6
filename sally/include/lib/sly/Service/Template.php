@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
  * This file is released under the terms of the MIT license. You can find the
  * complete text in the attached LICENSE file or online at:
@@ -212,7 +212,7 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 * @param  string  $slot  Slot identifier
 	 * @return array          Array of module names
 	 */
-	public function getModules($name, $slot = null) {
+		public function getModules($name, $slot = null) {
 		$moduleService = sly_Service_Factory::getModuleService();
 		$modules = sly_makeArray($this->get($name, 'modules'));
 		$slots = $this->getSlots($name);
@@ -226,14 +226,18 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 			if (empty($modules))
 				$modules = $allModules;
 			elseif ($this->isModulesDefComplex($modules)) {
-				$tmp = array();
-				foreach ($modules as $key => $value) {
-					$value = sly_makeArray($value);
-					if ($slot === null || $slot === $key || ($key === '_ALL_' && !self::hasSlot($name, '_ALL_'))) {
-						$tmp = array_merge($tmp, array_values($value));
+				if(!array_key_exists($slot, $modules)) {
+					$modules = $allModules;
+				}else {
+					$tmp = array();
+					foreach ($modules as $key => $value) {
+						$value = sly_makeArray($value);
+						if ($slot === null || $slot === $key || ($key === '_ALL_' && !self::hasSlot($name, '_ALL_'))) {
+							$tmp = array_merge($tmp, array_values($value));
+						}
 					}
+					$modules = $tmp;
 				}
-				$modules = $tmp;
 			}
 
 			// filter modules by their constraints

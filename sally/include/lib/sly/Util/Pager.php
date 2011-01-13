@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
  * This file is released under the terms of the MIT license. You can find the
  * complete text in the attached LICENSE file or online at:
@@ -29,22 +29,23 @@ class sly_Util_Pager
 	protected $perPage;
 	protected $maxLinks;
 	protected $linksLeftRight;
+	protected $linksOnEnd;
 	private $pages;
 
-	public function __construct($currentPage, $totalElements, $perPage = 10, $maxLinks = 10, $linksLeftRight = 2)
+	public function __construct($currentPage, $totalElements, $perPage = 10, $maxLinks = 10, $linksLeftRight = 2, $linksOnEnds = 2)
 	{
 		$this->currentPage    = abs((int) $currentPage);
 		$this->totalElements  = abs((int) $totalElements);
 		$this->perPage        = abs((int) $perPage);
 		$this->maxLinks       = abs((int) $maxLinks);
 		$this->linksLeftRight = abs((int) $linksLeftRight);
+		$this->linksOnEnd     = abs((int) $linksOnEnds);
 
 		$this->pages = ceil($this->totalElements / $this->perPage);
 
 		if ($this->currentPage > $this->pages-1) $this->currentPage = $this->pages - 1;
 		if ($this->currentPage < 0) $this->currentPage = 0;
 		if ($this->maxLinks < 5) $this->maxLinks = 5;
-		if ($this->linksLeftRight < 0) $this->linksLeftRight = 2;
 	}
 
 	public function getPaginationData()
@@ -68,24 +69,24 @@ class sly_Util_Pager
 			// Links am Anfang
 
 			$result[] = 0;
-			for ($i = 0; $i < $this->linksLeftRight; ++$i) $result[] = $i+1;
+			for ($i = 0; $i < $this->linksOnEnd; ++$i) $result[] = $i+1;
 
 			// Links um die aktuelle Seite herum
 
 			$begin = $this->currentPage - $this->linksLeftRight;
 			$end   = $this->currentPage + $this->linksLeftRight;
 
-			if ($begin-1 > $this->linksLeftRight) $result[] = self::ELLIPSIS_LEFT;
+			if ($begin-1 > $this->linksOnEnd) $result[] = self::ELLIPSIS_LEFT;
 
 			for ($i = $begin; $i <= $end; ++$i) {
 				if ($i > 0 && $i < $this->pages) $result[] = $i;
 			}
 
-			if ($end < ($this->pages - $this->linksLeftRight - 2)) $result[] = self::ELLIPSIS_RIGHT;
+			if ($end < ($this->pages - $this->linksOnEnd - 2)) $result[] = self::ELLIPSIS_RIGHT;
 
 			// Links am Ende
 
-			for ($i = $this->linksLeftRight; $i > 0; --$i) $result[] = $this->pages - $i - 1;
+			for ($i = $this->linksOnEnd; $i > 0; --$i) $result[] = $this->pages - $i - 1;
 			$result[] = $this->pages - 1;
 
 			// Doppelte entfernen
