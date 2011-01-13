@@ -125,12 +125,14 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 	protected function getFiles() {
 		$cat   = $this->getCurrentCategory();
 		$where = 'f.category_id = '.$cat;
+		$where = sly_Core::dispatcher()->filter('SLY_MEDIA_LIST_QUERY', $where, array('category_id' => $cat));
+		$where = '('.$where.')';
 
 		if (isset($this->args['types'])) {
-			$types = explode(',', $this->args['types']);
+			$types = explode(',', preg_replace('#[^a-z0-9,]#i', '', $this->args['types']));
 
 			foreach ($types as $i => $type) {
-				$types[$i] = 'f.filename LIKE "%.'.preg_replace('#[^a-z0-9]#i', '', $type).'"';
+				$types[$i] = 'f.filename LIKE "%.'.$type.'"';
 			}
 
 			$where .= ' AND ('.implode(' OR ', $types).')';
@@ -138,8 +140,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 
 		$db     = sly_DB_Persistence::getInstance();
 		$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
-		$query  = 'SELECT id FROM '.$prefix.'file f WHERE '.$where.' ORDER BY f.updatedate DESC';
-		$query  = rex_register_extension_point('MEDIA_LIST_QUERY', $query, array('category_id' => $cat));
+		$query  = 'SELECT f.id FROM '.$prefix.'file f LEFT JOIN '.$prefix.'file_category c ON f.category_id = c.id WHERE '.$where.' ORDER BY f.updatedate DESC';
 		$files  = array();
 
 		$db->query($query);
