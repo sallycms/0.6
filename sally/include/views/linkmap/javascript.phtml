@@ -48,8 +48,8 @@ function insertLink(link, name) {
 	opener.writeREXLinklist('<?= $id ?>');
 <? else: ?>
 	var linkid = link.replace('sally://', '');
-	window.opener.document.getElementById('<?= $openerField ?>').value = linkid;
-	window.opener.document.getElementById('<?= $openerFieldName ?>').value = name;
+	window.opener.jQuery('#<?= $openerField ?>').val(linkid);
+	window.opener.jQuery('#<?= $openerFieldName ?>').val(name);
 	self.close();
 <? endif ?>
 }

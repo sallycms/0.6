@@ -11,7 +11,7 @@
 <script type="text/javascript">
 function selectMedia(filename) {
 	<?	if (!empty($this->opener)): ?>
-	opener.document.getElementById('<?= addslashes($this->opener) ?>').value = filename;
+	window.opener.jQuery('#<?= addslashes($this->opener) ?>').val(filename);
 	<? endif ?>
 	self.close();
 }
