@@ -238,7 +238,7 @@ if (!is_null($OOArt)) {
 										'WHERE article_id = '.$article_id.' AND clang = '.$clang.' AND slot = "'.$slot.'" '.
 										'AND prior >= '.$prior.' AND id <> '.$last_id;
 
-									if ($newsql->setQuery($query, '#_')) {
+									if ($newsql->setQuery($query, '~')) {
 										$info = $action_message.t('block_added');
 									}
 
