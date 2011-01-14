@@ -234,22 +234,13 @@ class rex_var_link extends rex_var {
 		$open_params = '&clang='.sly_Core::getCurrentClang();
 		if ($category != '') $open_params .= '&category_id='.$category;
 
-		$media = '
-	<div class="rex-widget">
-		<div class="rex-widget-link">
-			<p class="rex-widget-field">
-				<input type="hidden" name="LINK['.$id.']" id="LINK_'.$id.'" value="'.$article_id.'" />
-				<input type="text" size="30" name="LINK_NAME['.$id.']" value="'.$art_name.'" id="LINK_'.$id.'_NAME" readonly="readonly" />
-			</p>
-			<p class="rex-widget-icons">
-				<a href="#" class="rex-icon-file-open" onclick="openLinkMap(\'LINK_'.$id.'\', \''.$open_params.'\');return false;"><img src="media/file_open.gif" width="16" height="16" alt="'.t('var_link_open').'" title="'.t('var_link_open').'" /></a>
-				<a href="#" class="rex-icon-file-delete" onclick="deleteREXLink('.$id.');return false;"><img src="media/file_del.gif" width="16" height="16" title="'.t('var_link_delete').'" alt="'.t('var_link_delete').'" /></a>
-			</p>
-		</div>
-	</div>
-	<div class="rex-clearer"></div>';
+		$button = new sly_Form_Widget_LinkButton('LINK['.$id.']', null, $article_id, $id);
+		$widget = '
+		<div class="rex-widget">'
+		.$button->render().
+		'</div>';
 
-		return $media;
+		return $widget;
 	}
 
 	/**
@@ -271,7 +262,7 @@ class rex_var_link extends rex_var {
 			}
 		}
 
-		$link = '
+		$widget = '
 	<div class="rex-widget">
 		<div class="rex-widget-linklist">
 			<input type="hidden" name="LINKLIST['.$id.']" id="REX_LINKLIST_'.$id.'" value="'.$value.'" />
@@ -292,6 +283,6 @@ class rex_var_link extends rex_var {
 	</div>
 	<div class="rex-clearer"></div> ';
 
-		return $link;
+		return $widget;
 	}
 }
