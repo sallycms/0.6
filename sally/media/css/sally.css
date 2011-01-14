@@ -199,6 +199,7 @@ div.rex-widget {
 	padding: 5px;
 	border-width: 1px;
 	border-style: solid;
+	+border-radius($brd_rad);
 }
 
 /*	Breite war von "div.rex-form div.rex-form-row p" */

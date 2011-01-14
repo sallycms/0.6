@@ -131,6 +131,7 @@ input#rex-form-field-prior {
 	div.rex-form-widget select    { width: 212px; }
 
 	.sly-widget {
+		+clearfix;
 		&.sly-medialistbutton {
 			display: block;
 
@@ -153,6 +154,7 @@ input#rex-form-field-prior {
 		&.sly-mediabutton, &.sly-linkbutton {
 			input {
 				width: 393px;
+				margin: 0;
 			}
 
 			.sly-icons img {
