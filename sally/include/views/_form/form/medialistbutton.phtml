@@ -10,24 +10,20 @@
 
 $id    = $this->getWidgetID();
 $files = sly_makeArray($this->getDisplayValue());
-$files = array_filter($files);
+$files  = empty($files) ? array() : array_filter($files);
 
 $this->consumeWidgetID();
 
 ?>
 <span class="sly-widget sly-medialistbutton">
-	<input type="hidden" name="<?= $this->attributes['id'] ?>" id="REX_MEDIALIST_<?= $id ?>" value="<?= sly_html(implode(',', (array)$this->attributes['value'])) ?>" />
-	<?
-
-	$files  = empty($files) ? array() : array_combine($files, $files);
-	$select = new sly_Form_Select_DropDown('MEDIALIST_SELECT['.$id.']', '', null, $files, 'REX_MEDIALIST_SELECT_'.$id);
-
-	$select->setAttribute('size', 8);
-	$select->setAttribute('class', $this->attributes['class']);
-	print $select->render();
-
-	?>
-
+	<input type="hidden" name="<?= $this->attributes['name'] ?>" id="REX_MEDIALIST_<?= $id ?>" value="<?= sly_html(implode(',', (array)$this->attributes['value'])) ?>" />
+	<select id="REX_MEDIALIST_SELECT_<?= $id ?>" size="8" class="<?= $this->attributes['class'] ?>">
+		<?php
+			foreach($files as $file) {
+				printf('<option value="%s">%s</option>', $file, $file);
+			}
+		?>
+	</select>
 	<span class="sly-icons">
 		<a href="#" onclick="moveREXMedialist(<?= $id ?>, 'top'); return false;"><img src="media/file_top.gif" title="Ganz Hoch schieben" alt="Ganz Hoch schieben" /></a>
 		<a href="#" onclick="moveREXMedialist(<?= $id ?>, 'up'); return false;"><img src="media/file_up.gif" title="Hoch schieben" alt="Hoch schieben" /></a>
