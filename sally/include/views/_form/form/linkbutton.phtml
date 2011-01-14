@@ -28,7 +28,7 @@ $this->consumeWidgetID();
 ?>
 
 <span class="sly-widget sly-linkbutton">
-	<input type="hidden" name="<?= sly_html($this->attributes['id']) ?>" id="LINK_<?= $id ?>" value="<?= sly_html($this->attributes['value']) ?>" />
+	<input type="hidden" name="<?= sly_html($this->attributes['name']) ?>" id="LINK_<?= $id ?>" value="<?= sly_html($this->attributes['value']) ?>" />
 	<input type="text" name="LINK_NAME[<?= $id ?>]" value="<?= $artName; ?>" class="<?= sly_html($this->attributes['class']) ?>" id="LINK_<?= $id ?>_NAME" readonly="readonly" />
 
 	<span class="sly-icons">

@@ -13,7 +13,7 @@ $this->consumeWidgetID();
 ?>
 
 <span class="sly-widget sly-mediabutton">
-	<input type="text" size="30" name="<?= sly_html($this->attributes['id']) ?>" value="<?= sly_html($this->attributes['value']) ?>" class="<?= sly_html($this->attributes['class']) ?>" id="REX_MEDIA_<?= $id ?>" readonly="readonly" />
+	<input type="text" size="30" name="<?= sly_html($this->attributes['name']) ?>" value="<?= sly_html($this->attributes['value']) ?>" class="<?= sly_html($this->attributes['class']) ?>" id="REX_MEDIA_<?= $id ?>" readonly="readonly" />
 
 	<span class="sly-icons">
 		<a href="#" onclick="openREXMedia(<?= $id ?>, ''); return false;"><img src="media/file_open.gif" title="Medium auswählen" alt="Medium auswählen" /></a>
