@@ -588,4 +588,8 @@ jQuery(function($) {
 	});
 
 	$('body').delegate('.sly-linklistbutton .sly-icons a[rel]', 'click', sly_moveListItem);
+
+	$('.sly-module-select').change(function(){
+		$(this).closest('form').submit();
+	});
 });

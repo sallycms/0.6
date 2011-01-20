@@ -19,7 +19,7 @@ class sly_Helper_Content {
 
 			self::$moduleSelect = new sly_Form_Select_DropDown('module', '', '', array());
 			self::$moduleSelect->addClass('rex-form-select');
-			self::$moduleSelect->setAttribute('onchange', 'this.form.submit();');
+			self::$moduleSelect->addClass('sly-module-select');
 			self::$moduleSelect->addValue('', '----------------------------  ' . $I18N->msg('add_block'));
 
 			foreach ($modules as $module => $moduleTitle) {
