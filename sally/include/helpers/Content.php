@@ -119,7 +119,7 @@ class sly_Helper_Content {
 	}
 
 	// ----- EDIT Slice
-	public function printEditSliceForm(OOArticleSlice $articleSlice) {
+	public static function printEditSliceForm(OOArticleSlice $articleSlice) {
 		global $REX, $I18N;
 
 		$moduleService = sly_Service_Factory::getModuleService();
@@ -143,7 +143,7 @@ class sly_Helper_Content {
             <div class="rex-form-row">
               <div class="rex-content-editmode-slice-input">
               <div class="rex-content-editmode-slice-input-2">
-              ' . $moduleService->getContent($moduleService->getInputFilename($articleSlice->getModuleName())) . '
+              ' . $articleSlice->getInput() . '
               </div>
               </div>
             </div>
@@ -216,9 +216,8 @@ class sly_Helper_Content {
 
 		  // ----- / PRE VIEW ACTION
 		 */
-		$slice_content = self::replaceObjectVars($articleSlice->getSliceId(), $slice_content);
-		$slice_content = self::replaceCommonVars($slice_content, $articleSlice->getArticleId(), $articleSlice->getClang());
-		$slice_content = self::triggerSliceShowEP($slice_content, $articleSlice, 'edit');
+		$slice_content = sly_Helper_Content::replaceObjectVars($articleSlice->getSliceId(), $slice_content);
+		$slice_content = sly_Helper_Content::triggerSliceShowEP($slice_content, $articleSlice, 'edit');
 		print $slice_content;
 	}
 

@@ -187,6 +187,13 @@ class OOArticleSlice {
 		return $content;
 	}
 
+	public function getInput() {
+		$moduleService = sly_Service_Factory::getModuleService();
+		$content = $moduleService->getContent($moduleService->getInputFilename($this->getModuleName()));
+		$content = $this->replaceCommonVars($content);
+		return $content;
+	}
+
 	public function printContent() {
 		global $REX, $I18N;
 
