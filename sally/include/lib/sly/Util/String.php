@@ -190,4 +190,9 @@ class sly_Util_String
 
 		return $time;
 	}
+
+	public static function preg_startsWith($pattern, $subject){
+		preg_match($pattern, $subject, $treffer);
+		return !empty($treffer);
+	}
 }
