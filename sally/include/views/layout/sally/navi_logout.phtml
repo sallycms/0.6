@@ -11,7 +11,7 @@
 global $REX;
 
 if ($REX['USER'] && $this->hasNavigation()) {
-	$user_name = $REX['USER']->getValue('name') != '' ? $REX['USER']->getValue('name') : $REX['USER']->getValue('login');
+	$user_name = $REX['USER']->getName() != '' ? $REX['USER']->getName() : $REX['USER']->getLogin();
 	?>
 	<ul class="rex-logout">
 		<li class="rex-navi-first"><span><?= t('logged_in_as').' '.htmlspecialchars($user_name) ?></span></li>

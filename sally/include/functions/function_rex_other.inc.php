@@ -441,6 +441,10 @@ function rex_organize_priorities($tableName, $priorColumnName, $whereCondition =
 	unset($select, $update);
 }
 
+/**
+ *
+ * @deprecated its true
+ */
 function rex_lang_is_utf8()
 {
 	// In SallyCMS all backend locales are UTF-8.
@@ -458,6 +462,12 @@ function rex_is_monolingual()
 	return count($REX['CLANG']) == 1;
 }
 
+/**
+ * @deprecated use sly_Core::isBackend();
+ *
+ * @global array $REX
+ * @return boolean true if it is backend
+ */
 function rex_is_backend()
 {
 	global $REX;

@@ -41,7 +41,7 @@ class OOCategory extends OORedaxo {
 
 		$clang     = (int) $clang;
 		$namespace = 'sly.category.list';
-		$key       = $cat_parent_id.'_'.$clang;
+		$key       = sly_Cache::generateKey($cat_parent_id, $clang);
 		$clist     = sly_Core::cache()->get($namespace, $key, null);
 
 		if ($clist === null) {

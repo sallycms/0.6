@@ -32,12 +32,12 @@ function rex_addCategory($parentID, $data)
 		trigger_error('Expecting $data to be an array!', E_USER_ERROR);
 	}
 
-	$startpageTemplates = array();
+	$startpageTypes = array();
 
 	if (!empty($parentID)) {
-		// TemplateId vom Startartikel der jeweiligen Sprache vererben
-		$startpageTemplates = rex_sql::getArrayEx(
-			'SELECT clang, template FROM #_article '.
+		// Artikeltyp vom Startartikel der jeweiligen Sprache vererben
+		$startpageTypes = rex_sql::getArrayEx(
+			'SELECT clang, type FROM #_article '.
 			'WHERE id = '.$parentID.' AND startpage = 1', '#_'
 		);
 	}
@@ -126,10 +126,10 @@ function rex_addCategory($parentID, $data)
 	$createTime  = time();
 
 	foreach (array_keys($REX['CLANG']) as $clangID) {
-		$template = $REX['DEFAULT_TEMPLATE'];
+		$type = sly_Core::config()->get('DEFAULT_ARTICLE_TYPE', '');
 
-		if (!empty($startpageTemplates[$clangID])) {
-			$template = $startpageTemplates[$clangID];
+		if (!empty($startpageTypes[$clangID])) {
+			$type = $startpageTypes[$clangID];
 		}
 
 		$records[] = sprintf($sqlTemplate,
@@ -145,10 +145,10 @@ function rex_addCategory($parentID, $data)
 			/*      status */ $data['status'] ? 1 : 0,
 			/*  createdate */ $createTime,
 			/*  updatedate */ $createTime,
-			/*    template */ $sql->escape($template),
+			/*    template */ $sql->escape($type),
 			/*       clang */ (int) $clangID,
-			/*  createuser */ $sql->escape($REX['USER']->getValue('login')),
-			/*  updateuser */ $sql->escape($REX['USER']->getValue('login')),
+			/*  createuser */ $sql->escape($REX['USER']->getLogin()),
+			/*  updateuser */ $sql->escape($REX['USER']->getLogin()),
 			/*    revision */ 0
 		);
 
@@ -164,7 +164,7 @@ function rex_addCategory($parentID, $data)
 
 	$sql->setQuery('INSERT INTO '.$REX['DATABASE']['TABLE_PREFIX'].'article (id,re_id,name,'.
 		'catname,catprior,attributes,startpage,prior,path,status,createdate,'.
-		'updatedate,template,clang,createuser,updateuser,revision) VALUES '.
+		'updatedate,type,clang,createuser,updateuser,revision) VALUES '.
 		implode(',', $records)
 	);
 
@@ -246,7 +246,7 @@ function rex_editCategory($categoryID, $clang, $data)
 	$sql->setQuery(
 		'UPDATE '.$REX['DATABASE']['TABLE_PREFIX'].'article '.
 		'SET catname = "'.$data['catname'].'", '. // Magic Quotes von REDAXO!
-		'updatedate = UNIX_TIMESTAMP(), updateuser = "'.$sql->escape($REX['USER']->getValue('login')).'" '.
+		'updatedate = UNIX_TIMESTAMP(), updateuser = "'.$sql->escape($REX['USER']->getLogin()).'" '.
 		'WHERE id = '.$categoryID.' AND clang = '.$clang
 	);
 
@@ -541,19 +541,23 @@ function rex_addArticle($data)
 	$success = true;
 	$message = '';
 
-	if (!isset($data['name']) || !isset($data['category_id']) || !isset($data['prior']) || !isset($data['template'])) {
+	if (!isset($data['name']) || !isset($data['category_id']) || !isset($data['prior'])) {
 		trigger_error('Expecting $data to be an array!', E_USER_ERROR);
 	}
 
 	$articleName  = $data['name'];
 	$categoryID   = (int) $data['category_id'];
 	$prior        = (int) $data['prior'];
-	$templateName = $data['template'];
+	// apply type of parent
+	$type         = sly_DB_Persistence::getInstance()->magicFetch('article', 'type', array('id' => $categoryID, 'startpage' => 1));
+	// or apply default type
+	if(empty($type)) {
+		$type = sly_Core::config()->get('DEFAULT_ARTICLE_TYPE', '');
+	}
 
-	// Template überprüfen
-
-	$service = sly_Service_Factory::getService('Template');
-	if (!$service->exists($templateName)) $templateName = '';
+	// check Type
+	$service = sly_Service_Factory::getArticleTypeService();
+	if (!$service->exists($type)) $type = '';
 
 	if ($categoryID == 0) {
 		$categoryData = array('catname' => '', 'path' => '|');
@@ -638,10 +642,10 @@ function rex_addArticle($data)
 			/*      status */ $data['status'] ? 1 : 0,
 			/*  createdate */ $createTime,
 			/*  updatedate */ $createTime,
-			/*    template */ $sql->escape($templateName),
+			/*    template */ $sql->escape($type),
 			/*       clang */ $clangID,
-			/*  createuser */ $sql->escape($REX['USER']->getValue('login')),
-			/*  updateuser */ $sql->escape($REX['USER']->getValue('login')),
+			/*  createuser */ $sql->escape($REX['USER']->getLogin()),
+			/*  updateuser */ $sql->escape($REX['USER']->getLogin()),
 			/*    revision */ 0
 		);
 
@@ -651,7 +655,7 @@ function rex_addArticle($data)
 
 	$sql->setQuery('INSERT INTO '.$REX['DATABASE']['TABLE_PREFIX'].'article (id,re_id,name,'.
 		'catname,catprior,attributes,startpage,prior,path,status,createdate,'.
-		'updatedate,template,clang,createuser,updateuser,revision) VALUES '.
+		'updatedate,type,clang,createuser,updateuser,revision) VALUES '.
 		implode(',', $records)
 	);
 
@@ -669,7 +673,7 @@ function rex_addArticle($data)
 				'path'     => $data['path'],
 				're_id'    => (int) $data['category_id'],
 				'prior'    => (int) $data['prior'],
-				'template' => $data['template'],
+				'template' => $type,
 				'data'     => $data
 			));
 		}
@@ -722,7 +726,7 @@ function rex_editArticle($articleID, $clang, $data)
 	$sql->setQuery(
 		'UPDATE '.$REX['DATABASE']['TABLE_PREFIX'].'article '.
 		'SET name = "'.$data['name'].'", template = "'.$sql->escape($data['template']).'", '. // Magic Quotes von REDAXO!
-		'updatedate = UNIX_TIMESTAMP(), updateuser = "'.$sql->escape($REX['USER']->getValue('login')).'" '.
+		'updatedate = UNIX_TIMESTAMP(), updateuser = "'.$sql->escape($REX['USER']->getLogin()).'" '.
 		'WHERE id = '.$articleID.' AND clang = '.$clang
 	);
 

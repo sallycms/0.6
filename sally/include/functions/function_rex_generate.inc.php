@@ -66,8 +66,11 @@ function rex_deleteCacheArticle($id, $clang = null)
 
 function rex_deleteCacheSliceContent($slice_id)
 {
-	$cachePath = SLY_DYNFOLDER.'/internal/sally/articles/';
-	@unlink($cachePath.$slice_id.'.slice.php');
+	$cachedir = SLY_DYNFOLDER.'/internal/sally/article_slice/';
+	sly_Util_Directory::create($cachedir);
+	foreach (glob($cachedir.$slice_id.'-*.slice.php') as $filename) {
+	   @unlink($filename);
+	}
 }
 
 
@@ -237,20 +240,7 @@ function rex_deleteDir($file, $delete_folders = false, $isRecursion = false)
 function rex_deleteFiles($directory)
 {
 	$directory = new sly_Util_Directory($directory);
-	$level     = error_reporting(0);
-
-	if ($directory->exists()) {
-		$files = $directory->listPlain(true, false, true, true, null);
-		if ($files) array_map('unlink', $files);
-
-		if ($directory->listPlain(true, false, true, true, null)) {
-			error_reporting($level);
-			return false;
-		}
-	}
-
-	error_reporting($level);
-	return true;
+	return $directory->deleteFiles();
 }
 
 /**
@@ -375,10 +365,10 @@ function rex_addCLang($id, $name)
 	$sql = new rex_sql();
 	$sql->setQuery(
 		'INSERT INTO #_article (id,re_id,name,catname,catprior,attributes,'.
-			'startpage,prior,path,status,createdate,updatedate,template_id,clang,createuser,'.
+			'startpage,prior,path,status,createdate,updatedate,type,clang,createuser,'.
 			'updateuser,revision) '.
 			'SELECT id,re_id,name,catname,catprior,attributes,startpage,prior,path,0,createdate,'.
-				'updatedate,template_id,'.$id.',createuser,updateuser,revision '.
+				'updatedate,type,'.$id.',createuser,updateuser,revision '.
 				'FROM #_article WHERE clang = 0', '#_'
 	);
 

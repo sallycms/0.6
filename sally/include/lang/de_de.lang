@@ -159,13 +159,15 @@ content_tostartarticle: Diesen Artikel zum Startartikel umwandeln
 content_nottostartarticle: Dieser Artikel kann nicht zum Startartikel gemacht werden
 content_tostartarticle_failed: Dieser Artikel konnte nicht zum Startartikel umgewandelt werden
 content_tostartarticle_ok: Dieser Artikel wurde erfolgreich zum Startartikel umgewandelt
-content_select_template: Bitte wählen sie zuerst ein Template!
+content_select_type: Bitte wählen sie zuerst einen Artikeltypen!
+content_configure_article_type: Konfigurieren sie das Template für den Atikeltypen!
 content_no_slots: In diesem Artikel können keine Inhalte eingepflegt werden.
 move_category: nach
 category_moved: Kategorie wurde verschoben
 content_types: Spalten
 content_type: Spalte
 option: optional
+content_arttype: 'Artikeltyp'
 
 input: Eingabe
 output: Ausgabe
@@ -197,10 +199,9 @@ save_category: Kategorie speichern
 status_online: online
 status_offline: offline
 no_permission_to_edit: Keine Editiererlaubnis
-option_no_template: Kein Template
+option_no_type: Kein Artikeltyp
 template_default_name: KEIN TEMPLATE
 header_article_name: Artikelname
-header_template: Template
 header_date: Erstellt am
 header_article_type: Artikeltyp
 change: ändern
@@ -270,7 +271,7 @@ specials_features: Features
 specials_settings: Einstellungen
 settings_invalid_sitestart_article: Ungültige Startartikel Id!
 settings_invalid_notfound_article: Ungültige Not-Found-Artikel Id!
-settings_invalid_default_template: Ungültige Default-Template Id!
+settings_invalid_default_type: Ungültiger Default-Artikeltyp!
 regenerate_article: "Regeneriere Artikel & Cache"
 regeneration_message: "Kategorien, Artikel und Templates werden neu generiert. Der gesamte Cache wird gelöscht. Kann länger dauerrn. Bitte den Vorgang nicht abbrechen."
 general_info_header: Allgemeine Informationen:
@@ -306,7 +307,7 @@ specials_server: Server
 specials_servername: Projektname
 specials_error_email: Fehler-E-Mail
 specials_start_article: Startseite
-specials_default_template: Standardtemplate
+specials_default_type: Standard Artikeltyp
 specials_lang: Standard BE-Locale
 specials_mod_rewrite: mod_rewrite verwenden
 specials_timezone: Zeitzone
@@ -346,6 +347,7 @@ plugin_assets_copied: Die Assets wurden kopiert.
 addon_addon_required: "Das AddOn {0} wird für das Addon {1} benötigt."
 addon_plugin_required: "Das AddOn {0} wird für das PlugIn {1} benötigt."
 addon_sally_incompatible: "Dieses AddOn ist nicht mit ihrer Version von SallyCMS ({0}) kompatibel."
+addon_has_no_sally_version_info: Dieses AddOn hat keine Kompatibilitätsinformationen. Es kann nicht installiert werden.
 addon_reinstall: re-installieren
 addon_install: installieren
 addon_notinstalled: nicht installiert
@@ -431,6 +433,7 @@ none: nichts
 recommended: empfohlen
 
 authorisation_exception_language_denied: Zugriff auf Sprache %s verweigert!
+exception_articletype_not_exists: Der Artikeltyp %s existiert nicht!
 
 config_server: Server
 config_servername: Projektname

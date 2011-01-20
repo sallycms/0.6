@@ -32,7 +32,7 @@ class OOArticle extends OORedaxo
 
 		$clang     = (int) $clang;
 		$namespace = $OOCategory ? 'sly.category' : 'sly.article';
-		$key       = $article_id.'_'.$clang;
+		$key       = sly_Cache::generateKey($article_id, $clang);
 		$obj       = sly_Core::cache()->get($namespace, $key, null);
 
 		if ($obj === null) {
@@ -82,7 +82,7 @@ class OOArticle extends OORedaxo
 		$clang       = (int) $clang;
 
 		$namespace = 'sly.article.list';
-		$key       = $category_id.'_'.$clang.'_'.($ignore_offlines ? 1 : 0);
+		$key       = sly_Cache::generateKey($category_id, $clang, $ignore_offlines);
 		$alist     = sly_Core::cache()->get($namespace, $key, null);
 
 		if ($alist === null) {
@@ -146,15 +146,7 @@ class OOArticle extends OORedaxo
 	public static function exists($articleId)
 	{
 		
-		if (sly_Core::cache()->get('sly.article', $articleId.'_'.sly_Core::getCurrentClang(), null) !== null) {
-			return true;
-		}
-
-		// prüfen, ob ID in Content Cache Dateien vorhanden
-
-		$cacheFiles = glob(SLY_DYNFOLDER.'/internal/sally/articles/'.$articleId.'.*.content');
-
-		if (!empty($cacheFiles)) {
+		if (sly_Core::cache()->get('sly.article', sly_Cache::generateKey($articleId, sly_Core::getCurrentClang()), null) !== null) {
 			return true;
 		}
 
@@ -186,4 +178,88 @@ class OOArticle extends OORedaxo
 	{
 		return parent::hasValue($value, array_merge(array('art_'), $prefixes));
 	}
+
+	/**
+	 * prints the articlecontent for a given slot, or if empty for all slots
+	 *
+	 * @param string $slot
+	 */
+	public function printContent($slot = null) {
+		$ids = OOArticleSlice::getSliceIdsForSlot($this->getId(), $this->getClang(), $slot);
+		foreach ($ids as $id) {
+			print OOArticleSlice::getArticleSliceById($id)->printContent();
+		}
+	}
+
+	/**
+	 * returns the articlecontent for a given slot, or if empty for all slots
+	 *
+	 * @deprecated use getContent() instead
+	 * @param string $slot
+	 * @return string
+	 */
+	public function getArticle($slot = null) {
+		return $this->getContent($slot);
+	}
+
+	/**
+	 * returns the articlecontent for a given slot, or if empty for all slots
+	 *
+	 * @param <type> $slot
+	 * @return <type>
+	 */
+	public function getContent($slot = null) {
+		ob_start();
+		$this->printContent($slot);
+		return ob_get_clean();
+	}
+
+	/**
+	 * returns the rendered template with the articlecontent
+	 *
+	 * @global array $REX
+	 * @return string
+	 */
+	public function getArticleTemplate() {
+		// global $REX hier wichtig, damit in den Artikeln die Variable vorhanden ist!
+		global $REX;
+
+		$tplserv = sly_Service_Factory::getTemplateService();
+
+		if ($this->hasType() && $tplserv->exists($this->getTemplateName())) {
+			$params['article'] = $this;
+			ob_start();
+			ob_implicit_flush(0);
+			$tplserv->includeFile($this->getTemplateName(), $params);
+			$content = ob_get_clean();
+		}
+		else {
+			$content = 'No Template';
+		}
+
+		return $content;
+	}
+
+	/**
+	 * returns the template name of the template associated with the articletype of this article
+	 *
+	 * @return string the template name
+	 */
+	public function getTemplateName() {
+		return sly_Service_Factory::getArticleTypeService()->getTemplate($this->_type);
+	}
+
+	/**
+	 * returns true if the articletype is set
+	 *
+	 * @return boolean
+	 */
+	public function hasType() { return !empty($this->_type); }
+
+	/**
+	 * returns the articletype
+	 *
+	 * @return string the articletype
+	 */
+	public function getType() { return $this->_type; }
 }

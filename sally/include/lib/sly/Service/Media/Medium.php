@@ -17,7 +17,7 @@
 class sly_Service_Media_Medium extends sly_Service_Model_Base {
 	protected $tablename = 'file';
 
-	protected function makeObject(array $params) {
+	protected function makeInstance(array $params) {
 		return new sly_Model_Media_Medium($params);
 	}
 }

@@ -21,7 +21,7 @@ class OORedaxo {
 	public $_clang      = '';
 	public $_name       = '';
 	public $_catname    = '';
-	public $_template   = '';
+	public $_type       = '';
 	public $_path       = '';
 	public $_prior      = '';
 	public $_startpage  = '';
@@ -149,38 +149,6 @@ class OORedaxo {
 	*/
 	public function getName() { return $this->_name; }
 
-	/**
-	* Accessor Method:
-	* returns the name of the article
-	* @deprecated 4.0 17.09.2007
-	*/
-	public function getFile() { return $this->getValue('art_file'); }
-
-	/**
-	* Accessor Method:
-	* returns the name of the article
-	* @deprecated 4.0 17.09.2007
-	*/
-	public function getFileMedia() {
-		return OOMedia::getMediaByFileName($this->getValue('art_file'));
-	}
-
-	/**
-	* Accessor Method:
-	* returns the article description.
-	* @deprecated 4.0 17.09.2007
-	*/
-	public function getDescription() {
-		return $this->getValue('art_description');
-	}
-
-	/**
-	* Accessor Method:
-	* returns the Type ID of the article.
-	* @deprecated 4.0 17.09.2007
-	*/
-	public function getTypeId() { return $this->getValue('art_type_id'); }
-
 	/*
 	* Accessor Method:
 	* returns the article priority
@@ -220,18 +188,6 @@ class OORedaxo {
 	* returns true if article is online.
 	*/
 	public function isOnline() { return $this->_status == 1; }
-
-	/*
-	* Accessor Method:
-	* returns the template id
-	*/
-	public function getTemplateName() { return $this->_template; }
-
-	/*
-	* Accessor Method:
-	* returns true if article has a template.
-	*/
-	public function hasTemplate() { return !empty($this->_template); }
 
 	/*
 	* Accessor Method:
@@ -321,8 +277,7 @@ class OORedaxo {
 	* returns true if this Article is the Startpage for the entire site.
 	*/
 	public function isSiteStartArticle() {
-		global $REX;
-		return $this->_id == $REX['START_ARTICLE_ID'];
+		return $this->_id == sly_Core::config()->get('START_ARTICLE_ID');
 	}
 
 	/**
@@ -330,8 +285,7 @@ class OORedaxo {
 	*  returns  true if this Article is the not found article
 	*/
 	public function isNotFoundArticle() {
-		global $REX;
-		return $this->_id == $REX['NOTFOUND_ARTICLE_ID'];
+		return $this->_id == sly_Core::config()->get('NOTFOUND_ARTICLE_ID');
 	}
 
 	/*

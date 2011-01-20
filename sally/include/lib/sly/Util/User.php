@@ -10,6 +10,8 @@
 
 class sly_Util_User {
 
+	private static $currentUser = false;
+
 	/**
 	 * Generates a password hash for a given user and a given password sting.
 	 *
@@ -24,6 +26,13 @@ class sly_Util_User {
 		$createdate = $user->getCreateDate();
 		if (empty($createdate)) throw sly_Exception('Password could not be generated without a valid createdate.');
 		return sly_Util_Password::hash($password, $createdate);
+	}
+
+	public static function getCurrentUser() {
+		if(self::$currentUser === false) {
+			self::$currentUser = sly_Service_Factory::getUserService()->getCurrentUser();
+		}
+		return self::$currentUser;
 	}
 
 }

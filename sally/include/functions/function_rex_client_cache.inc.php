@@ -40,18 +40,18 @@ function rex_send_file($file, $contentType, $environment = 'backend') {
 }
 
 /**
- * Sendet einen rex_article zum Client,
+ * Sendet einen OOArticle zum Client,
  * fügt ggf. HTTP1.1 cache headers hinzu
  *
- * @param rex_article $REX_ARTICLE  der zu sendene Artikel
+ * @param OOArticle   $REX_ARTICLE  der zu sendene Artikel
  * @param string      $content      Inhalt des Artikels
  * @param string      $environment  die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
-function rex_send_article($REX_ARTICLE, $content, $environment, $sendcharset = false) {
+function rex_send_article($REX_ARTICLE, $content, $environment) {
 	global $REX;
 
 	// ----- EXTENSION POINT
-	$content = rex_register_extension_point('OUTPUT_FILTER', $content, array('environment' => $environment, 'sendcharset' => $sendcharset));
+	$content = rex_register_extension_point('OUTPUT_FILTER', $content, array('environment' => $environment));
 
 	// ----- EXTENSION POINT - keine Manipulation der Ausgaben ab hier (read only)
 	rex_register_extension_point('OUTPUT_FILTER_CACHE', $content, '', true);
@@ -60,10 +60,10 @@ function rex_send_article($REX_ARTICLE, $content, $environment, $sendcharset = f
 	$etag = md5(preg_replace('@<!--DYN-->.*<!--/DYN-->@','', $content));
 
 	if ($REX_ARTICLE) {
-		$lastModified = $REX_ARTICLE->getValue('updatedate');
+		$lastModified = $REX_ARTICLE->getUpdateDate();
 		$etag        .= $REX_ARTICLE->getValue('pid');
 
-		if ($REX_ARTICLE->getArticleId() == $REX['NOTFOUND_ARTICLE_ID'] && $REX_ARTICLE->getArticleId() != $REX['START_ARTICLE_ID']) {
+		if ($REX_ARTICLE->getId() == $REX['NOTFOUND_ARTICLE_ID'] && $REX_ARTICLE->getId() != $REX['START_ARTICLE_ID']) {
 			header('HTTP/1.0 404 Not Found');
 		}
 	}
@@ -71,7 +71,7 @@ function rex_send_article($REX_ARTICLE, $content, $environment, $sendcharset = f
 		$lastModified = time();
 	}
 
-	rex_send_content(trim($content), $lastModified, $etag, $environment, $sendcharset);
+	rex_send_content(trim($content), $lastModified, $etag, $environment);
 }
 
 /**
@@ -83,7 +83,7 @@ function rex_send_article($REX_ARTICLE, $content, $environment, $sendcharset = f
  * @param string $cacheKey      Cachekey zur identifizierung des Caches
  * @param string $environment   die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
-function rex_send_content($content, $lastModified, $etag, $environment, $sendcharset = false) {
+function rex_send_content($content, $lastModified, $etag, $environment) {
 	global $REX;
 
 	// Cachen erlauben, nach revalidierung
@@ -91,12 +91,7 @@ function rex_send_content($content, $lastModified, $etag, $environment, $sendcha
 	session_cache_limiter('none');
 	header('Cache-Control: must-revalidate, proxy-revalidate, private');
 
-	if ($sendcharset) {
-		global $I18N;
-		header('Content-Type: text/html; charset="'.$I18N->msg('htmlcharset').'"');
-	}
-
-	// ----- Last-Modified
+		// ----- Last-Modified
 	if ($REX['USE_LAST_MODIFIED'] === 'true' || $REX['USE_LAST_MODIFIED'] == $environment) {
 		rex_send_last_modified($lastModified);
 	}

@@ -11,8 +11,8 @@ CREATE TABLE `%PREFIX%user` (
 	`createdate`  int(11) NOT NULL,
 	`updatedate`  int(11) NOT NULL,
 	`lasttrydate` int(11) DEFAULT 0,
-	`session_id`  varchar(255),
 	`cookiekey`   varchar(255),
+	`timezone`    varchar(64) DEFAULT NULL,
 	`revision`    int(11) NOT NULL,
 	PRIMARY KEY(`id`),
 	UNIQUE KEY `login` (`login`)

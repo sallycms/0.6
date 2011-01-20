@@ -82,7 +82,6 @@ function rex_moveSlice($slice_id, $clang, $direction)
 			// Flush slice cache
 			sly_Core::cache()->flush(OOArticleSlice::CACHE_NS);
 
-			//rex_deleteCacheArticleContent($article_id, $clang);
 		}
 	}
 
@@ -142,8 +141,7 @@ function rex_slice_module_exists($sliceID, $clang)
  */
 function rex_module_exists($module)
 {
-	$service = sly_Service_Factory::getService('Module');
-	return $service->exists($module);
+	return $service = sly_Service_Factory::getModuleService()->exists($module);
 }
 
 /**
@@ -468,9 +466,9 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 	if ($from_id == $to_id && $from_clang == $to_clang) {
 		return false;
 	}
-
-	$article_slice = OOArticleSlice::_getSliceWhere('article_id = '.$from_id.' AND clang = '.$from_clang);
-	while($article_slice){
+	$sliceIds = OOArticleSlice::getSliceIdsForSlot($from_id, $from_clang);
+	foreach($sliceIds as $sliceId){
+		$article_slice = OOArticleSlice::getArticleSliceById($sliceId, $from_clang);
 		$sliceservice = sly_Service_Factory::getService('Slice');
 		$slice = $sliceservice->findById($article_slice->getSliceId());
 		$slice = $sliceservice->copy($slice);
@@ -486,8 +484,6 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 		$insert->setValue('revision', 0);
 		$insert->addGlobalCreateFields();
 		$insert->insert();
-
-		$article_slice = $article_slice->getNextSlice();
 	}
 
 	rex_deleteCacheArticle($to_id, $to_clang);
@@ -575,7 +571,7 @@ function rex_copyArticle($id, $to_cat_id)
 				        're_id'  => $to_cat_id,
 				        'prior'  => 9999999,
 				        'path'   => $path,
-				        'template_id' => $from_data['template_id'],
+				        'type' => $from_data['type'],
 			      	)
     			);
     			sly_Core::cache()->delete('sly.article.list', $to_cat_id);

@@ -9,6 +9,12 @@
  */
 
 abstract class sly_Controller_Sally extends sly_Controller_Base {
+	protected function __construct() {
+		parent::__construct();
+		$this->setContentType('text/html');
+		$this->setCharset(t('htmlcharset'));
+	}
+
 	public function dispatch() {
 		$layout = sly_Core::getLayout('Sally');
 

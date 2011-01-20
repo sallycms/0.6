@@ -190,8 +190,7 @@ class OOMedia
 
 	public function getPath()
 	{
-		global $REX;
-		return $REX['MEDIAFOLDER'];
+		return SLY_MEDIAFOLDER;
 	}
 
 	public function getFullPath()
@@ -251,13 +250,9 @@ class OOMedia
 
 	public function toImage($params = array())
 	{
-		global $REX;
+		$params = sly_makeArray($params);
 
-		if (!is_array($params)) {
-			$params = array();
-		}
-
-		$path = $REX['HTDOCS_PATH'];
+		$path = SLY_BASE;
 
 		if (isset($params['path'])) {
 			$path = $params['path'];
@@ -320,7 +315,7 @@ class OOMedia
 
 			// Bild resizen?
 			if ($resize) {
-				$file = $REX['FRONTEND_FILE'].'?rex_resize='.$resizeParam.$resizeMode.'__'.$this->getFileName();
+				$file = sly_Core::config()->get('FRONTEND_FILE').'?rex_resize='.$resizeParam.$resizeMode.'__'.$this->getFileName();
 			}
 			else {
 				// Bild 1:1 anzeigen

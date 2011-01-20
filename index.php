@@ -44,16 +44,14 @@ if ($config->get('SETUP')) {
 
 // Aktuellen Artikel finden und ausgeben
 
-$REX['ARTICLE'] = new rex_article();
-$REX['ARTICLE']->setCLang(sly_Core::getCurrentClang());
+$REX['ARTICLE'] = OOArticle::getArticleById(sly_Core::getCurrentArticleId(), sly_Core::getCurrentClang());
 
-if ($REX['ARTICLE']->setArticleId(sly_Core::getCurrentArticleId())) {
+if ($REX['ARTICLE']) {
 	print $REX['ARTICLE']->getArticleTemplate();
 }
 else {
 	print 'Kein Startartikel selektiert. Bitte setze ihn im <a href="sally/index.php">Backend</a>.';
 	$REX['STATS']   = 0;
-	$REX['ARTICLE'] = null;
 }
 
 $content = ob_get_clean();

@@ -63,13 +63,12 @@ class sly_Util_HTTP {
 	 *
 	 * Diese Methode ermittelt zu einem Artikel die dazugehörige ID.
 	 *
-	 * @param  mixed $article  OOArticle, rex_article oder int
+	 * @param  mixed $article  OOArticle oder int
 	 * @return int             die ID oder -1 falls keine gefunden wurde
 	 */
 	protected static function resolveArticle($article) {
 		if (WV_String::isInteger($article)) return (int) $article;
 		if ($article instanceof OOArticle) return (int) $article->getId();
-		if ($article instanceof rex_article) return (int) $article->getValue('article_id');
 
 		return -1;
 	}

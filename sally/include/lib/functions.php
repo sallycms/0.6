@@ -87,8 +87,14 @@ function sly_isEmpty($var) {
 	return empty($var);
 }
 
+/**
+ * @deprecated
+ * @param srtring $haystack
+ * @param string $needle
+ * @return boolean
+ */
 function sly_startsWith($haystack, $needle) {
-	return strlen($needle) <= strlen($haystack) && substr($haystack, 0, strlen($needle)) == $needle;
+	return sly_Util_String::startsWith($haystack, $needle);
 }
 
 function sly_html($string) {

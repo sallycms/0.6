@@ -7,9 +7,8 @@ MYSQL_VERSION: null
 START_ARTICLE_ID: 1
 NOTFOUND_ARTICLE_ID: 1
 START_CLANG_ID: 0
-DEFAULT_TEMPLATE: ""
-CACHING_STRATEGY: "sly_Cache_Blackhole"
-FRONTEND_SYNC: false
+DEFAULT_ARTICLE_TYPE: ""
+CACHING_STRATEGY: "BabelCache_Blackhole"
 LANG: de_de
 USE_MD5: never
 DATABASE:
@@ -21,6 +20,6 @@ DATABASE:
   PERSISTENT: false
   TABLE_PREFIX: sly_
 PERM: ["mediapool[]"]
-EXTPERM: ["advancedMode[]", "moveSlice[]", "copyContent[]", "moveArticle[]", "copyArticle[]", "moveCategory[]", "publishArticle[]", "publishCategory[]", "article2startpage[]"]
+EXTPERM: ["advancedMode[]", "moveSlice[]", "copyContent[]", "moveArticle[]", "copyArticle[]", "moveCategory[]", "publishArticle[]", "publishCategory[]", "article2startpage[]", "changearttype[]"]
 EXTRAPERM: ["editContentOnly[]"]
 ADDON: []

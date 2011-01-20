@@ -31,8 +31,8 @@ importer_no_valid_charset: 'translate:importer_no_valid_charset' # In der Import
 importer_charset_mismatch: 'translate:importer_charset_mismatch' # Die in der Importdatei angegebene Kodierung weicht von der dieses Projekts ab.
 importer_no_valid_import_file_version: 'translate:importer_no_valid_import_file_version' # Die Importdatei ist ungültig: Versionsstempel von Version {0} gefunden, aber {1} erwartet.
 importer_no_valid_import_file_prefix: 'translate:importer_no_valid_import_file_prefix' # Die Importdatei ist ungültig: Es wurde kein Tabellenpräfix angegeben.
-importer_database_imported: Database imported
 importer_entry_count: ({0} entries)
+importer_database_imported: Database imported
 
 homepage: 'Homepage'
 
@@ -159,13 +159,15 @@ content_tostartarticle: 'Make this start-article'
 content_nottostartarticle: 'Cannot make this article start-article.'
 content_tostartarticle_failed: 'Error. Article not changed to start-article.'
 content_tostartarticle_ok: 'Article was changed to start-article.'
-content_select_template: Please select a template!
+content_select_type: Please select an articletype!
+content_configure_article_type: Configure the tempalte for this articletype!
 content_no_slots: This article cannot contain any content.
 move_category: to
 category_moved: 'Category moved'
 content_types: Columns
 content_type: Column
 option: optional
+content_arttype: 'Article type'
 
 input: Input
 output: Output
@@ -197,10 +199,9 @@ save_category: 'Save category'
 status_online: online
 status_offline: offline
 no_permission_to_edit: 'No permission to edit'
-option_no_template: 'No template'
+option_no_type: 'No Articletype'
 template_default_name: 'NO TEMPLATE'
 header_article_name: 'Article name'
-header_template: Template
 header_date: Created
 header_article_type: 'Article type'
 change: change
@@ -270,7 +271,7 @@ specials_features: Features
 specials_settings: Settings
 settings_invalid_sitestart_article: 'Invalid ID for not-found article!'
 settings_invalid_notfound_article: 'Invalid ID for start article!'
-settings_invalid_default_template: 'Invalid default template!'
+settings_invalid_default_type: 'Invalid default Articletype!'
 regenerate_article: 'Regenerate articles & cache'
 regeneration_message: 'Categories, articles and templates are regenerated. Cache will be deleted. Might take longer. Don''t abort process!'
 general_info_header: 'General information:'
@@ -306,7 +307,7 @@ specials_server: 'Server'
 specials_servername: 'Project Name'
 specials_error_email: 'Error eMail'
 specials_start_article: Startpage
-specials_default_template: 'Default Template'
+specials_default_type: 'Default Articletype'
 specials_lang: 'Default Backend Locale'
 specials_mod_rewrite: 'use mod_rewrite'
 specials_timezone: 'Timezone'
@@ -346,6 +347,7 @@ plugin_assets_copied: The asset files have been copied.
 addon_addon_required: "The addOn {0} is required to install the addOn {1}."
 addon_plugin_required: "The plugIn {0} is required to install the addOn {1}."
 addon_sally_incompatible: "This addOn is not marked as compatible with your SallyCMS version ({0})."
+addon_has_no_sally_version_info: This addOn has no compatibility-information. It can not be installed.
 addon_reinstall: re-install
 addon_install: install
 addon_notinstalled: 'Not installed'
@@ -432,7 +434,7 @@ none: 'none'
 recommended: recommended
 
 authorisation_exception_language_denied: Permission to language %s denied!
-
+exception_articletype_not_exists: The articletype %s does not exist!
 config_server: Server
 config_servername: Project title
 config_error_email: Admin e-mail address

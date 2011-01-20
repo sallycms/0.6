@@ -973,7 +973,7 @@ class rex_sql
 		global $REX;
 
 		if (!$user) {
-			$user = $REX['USER']->getValue('login');
+			$user = $REX['USER']->getLogin();
 		}
 
 		$this->setValue('updatedate', time());
@@ -985,7 +985,7 @@ class rex_sql
 		global $REX;
 
 		if (!$user) {
-			$user = $REX['USER']->getValue('login');
+			$user = $REX['USER']->getLogin();
 		}
 
 		$this->setValue('createdate', time());

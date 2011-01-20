@@ -46,7 +46,7 @@ class sly_Service_Module extends sly_Service_DevelopBase {
 		return $result;
 	}
 
-	protected function flush($name = null) {
+	protected function flush($name = null, $filename = null) {
 		$sql = sly_DB_Persistence::getInstance();
 		$where = $name === null ? null : array('module' => $name);
 		$sql->select('article_slice', 'slice_id', $where);
@@ -65,7 +65,7 @@ class sly_Service_Module extends sly_Service_DevelopBase {
 		$result = array();
 
 		foreach ($this->getData() as $name => $params) {
-			$result[$name] = isset($params['input']) ? $params['input']['title'] : $params['output']['title'];
+			$result[$name] = isset($params['input']) ? $this->get($name, 'title', '', 'input') : $this->get($name, 'title', '', 'output');
 		}
 
 		return $result;
@@ -108,7 +108,7 @@ class sly_Service_Module extends sly_Service_DevelopBase {
 	 * @return string         The filename of the output file
 	 */
 	public function getOutputFilename($name) {
-		return $this->get($name, 'filename', null, 'output');
+		return $this->filterByCondition($name, 'output');
 	}
 
 	/**

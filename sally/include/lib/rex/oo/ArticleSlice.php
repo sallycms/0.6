@@ -63,7 +63,7 @@ class OOArticleSlice {
 		$clang     = (int) $clang;
 		$id        = (int) $id;
 		$revision  = (int) $revision;
-		$key       = $id.'_'.$clang.'_'.$revision;
+		$key       = sly_Cache::generateKey('by_id', $id, $clang, $revision);
 		$obj       = sly_Core::cache()->get($namespace, $key, null);
 
 		if ($obj === null) {
@@ -76,7 +76,7 @@ class OOArticleSlice {
 
 	public static function getSliceIdsForSlot($article_id, $clang, $slot = null) {
 		$cache    = sly_Cache::factory();
-		$cachekey = "slice_ids_for_slot_$article_id.$clang.$slot";
+		$cachekey = sly_Cache::generateKey('slice_ids_for_slot', $article_id, $clang, $slot);
 		$ids      = $cache->get(self::CACHE_NS, $cachekey);
 		if(is_null($ids)) {
 			$ids = array();
@@ -175,11 +175,10 @@ class OOArticleSlice {
 	}
 
 	/**
-	 * Gibt den Slice formatiert zurück
-	 * @since 4.1 - 29.05.2008
+	 * @return string the content of the slice
 	 */
-	public function getSlice() {
-		$slice   = sly_Service_Factory::getService('Slice')->findById($this->getSliceId());
+	public function getOutput() {
+		$slice = $this->getSlice();
 		$content = $slice->getOutput();
 		$content = self::replaceLinks($content);
 		$content = $this->replaceCommonVars($content);
@@ -188,13 +187,17 @@ class OOArticleSlice {
 		return $content;
 	}
 
-	public function getContent() {
+	public function printContent() {
 		global $REX, $I18N;
 
-		$slice_content_file = SLY_DYNFOLDER.'/internal/sally/articles/'.$this->getSliceId().'.slice.php';
+		$cachedir = SLY_DYNFOLDER.'/internal/sally/article_slice/';
+		sly_Util_Directory::create($cachedir);
+		$modulefile = sly_Service_Factory::getModuleService()->getOutputFilename($this->getModuleName());
+
+		$slice_content_file = $cachedir.$this->getSliceId().'-'.md5($modulefile).'.slice.php';
 
 		if (!file_exists($slice_content_file)) {
-			$slice_content = $this->getSlice();
+			$slice_content = $this->getOutput();
 
 			if (rex_put_file_contents($slice_content_file, $slice_content) === false) {
 				return $I18N->msg('slice_could_not_be_generated').' '.$I18N->msg('check_rights_in_directory').SLY_DYNFOLDER.'/internal/sally/articles/';
@@ -247,6 +250,11 @@ class OOArticleSlice {
 	public function getId()         { return $this->_id;                  }
 	public function getPrior()      { return $this->_prior;               }
 	public function getSliceId()    { return $this->_slice_id;            }
+	/**
+	 *
+	 * @return Sly_Model_Slice
+	 */
+	public function getSlice()      { return sly_Service_Factory::getService('Slice')->findById($this->getSliceId()); }
 
 	public function getValue($index)     { return $this->getRexVarValue('REX_VALUE', $index);     }
 	public function getLink($index)      { return $this->getRexVarValue('REX_LINK', $index);      }
@@ -259,8 +267,7 @@ class OOArticleSlice {
 	}
 
 	public function getMediaUrl($index) {
-		global $REX;
-		return $REX['MEDIAFOLDER'].'/'.$this->getMedia($index);
+		return SLY_MEDIAFOLDER.'/'.$this->getMedia($index);
 	}
 
 	private function replaceGlobals($content) {
@@ -288,8 +295,8 @@ class OOArticleSlice {
 
 		if ($user_id === null) {
 			if (isset($REX['USER'])) {
-				$user_id    = $REX['USER']->getValue('id');
-				$user_login = $REX['USER']->getValue('login');
+				$user_id    = $REX['USER']->getId();
+				$user_login = $REX['USER']->getLogin();
 			}
 			else {
 				$user_id    = '';

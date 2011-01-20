@@ -98,6 +98,10 @@ div.rex-content-body {
 
 		input.rex-form-submit {margin: 5px;}
 
+		&-wrapper {
+			margin: 0;			
+		}
+
 		&-row {
 
 			background-color: #e8e8e8;
@@ -105,9 +109,7 @@ div.rex-content-body {
 			float: left;
 			padding: 0;
 			width: 100%;
-			+border-radius(4px);
 			border: 1px solid #efefef;
-
 
 			& input, select {
 				margin: 5px;
@@ -126,9 +128,12 @@ div.rex-content-body {
 
 
 		&-content-editmode {
+			label {
+				+hardcore-hidden;
+			}
 
 			.rex-form-col-1 {
-				select {width: 99%} /* Block hinzufügen - Element*/
+				select {width: 99%} /* Block hinzuf��gen - Element*/
 			}
 
 			&, &-add-slice, &-edit-slice {
@@ -156,6 +161,7 @@ div.rex-content-body {
 		clear: both;
 		padding: 10px;
 		line-height: 1.6;
+		+border-radius(4px);
 		ol, ul { margin-left: 20px; }
 	}
 
@@ -221,7 +227,7 @@ div.rex-content-body {
 		&-col-1, &-col-2 {
 
 			.rex-form-wrapper {
-				margin-top: -17px; /* Ausgleich für Legend */
+				margin-top: -17px; /* Ausgleich f��r Legend */
 				padding: 0 10px 10px 10px;
 				line-height: 25px;
 				background-color: #fff;
@@ -249,7 +255,7 @@ div.rex-content-body {
 				color: #fff;
 				font-size: 1.1em;
 				+border-top-radius(4px);
-				width: 787px; /* Breite des Loginbereichs abzüglich des padding links*/
+				width: 787px; /* Breite des Loginbereichs abz��glich des padding links*/
 				padding: 8px 0 8px 10px;
 			}
 
@@ -313,7 +319,7 @@ div.rex-navi-slice li {
 			}
 		}
 
-		/* Löschen-Button */
+		/* L��schen-Button */
 		&.rex-tx2 {
 			background-image: url(../background_btn_dlt.png);
 			background-position: 6px 0;

@@ -11,14 +11,22 @@
 define('IS_SALLY', true);
 define('IS_SALLY_BACKEND', true);
 
-ob_start();
-ob_implicit_flush(0);
-
 if (!defined('SLY_IS_TESTING')) {
 	define('SLY_IS_TESTING', false);
 }
 
-unset($REX);
+// Only remove $REX if we're not in test mode, or else we have no global $REX
+// (this file is included in PHPUnit method context) and the system will crash
+// and burrrrn.
+
+if (SLY_IS_TESTING) {
+	global $REX;
+}
+else {
+	ob_start();
+	ob_implicit_flush(0);
+	unset($REX);
+}
 
 $REX['REDAXO']      = true;
 $REX['SALLY']       = true;
@@ -26,11 +34,12 @@ $REX['HTDOCS_PATH'] = SLY_IS_TESTING ? SLY_TESTING_ROOT : '../';
 
 require 'include/master.inc.php';
 
+if (!SLY_IS_TESTING) sly_Util_Session::start();
+
 // addon/normal page path
 $REX['PAGEPATH'] = '';
 $REX['PAGE']     = '';
 $REX['USER']     = null;
-$REX['LOGIN']    = null;
 
 $navigation = sly_Core::getNavigation();
 
@@ -61,66 +70,25 @@ if (!SLY_IS_TESTING && $config->get('SETUP')) {
 
 	$REX['PAGE']      = 'setup';
 	$_REQUEST['page'] = 'setup';
+	date_default_timezone_set(@date_default_timezone_get());
 }
 else {
+	$locale = '';
+	$timezone = '';
+	$REX['USER'] = sly_Util_User::getCurrentUser();
 
-	// Wir vermeiden es, das Locale hier schon zu setzen, da setlocale() sehr
-	// teuer ist und wir es ggf. weiter unten nochmal ändern müssten.
-
-	$I18N = rex_create_lang($REX['LANG'], '', false);
-
-	// Login vorbereiten
-
-	$REX['LOGIN']   = new rex_backend_login($config->get('DATABASE/TABLE_PREFIX').'user');
-	$rex_user_login = rex_post('rex_user_login', 'string');  // addslashes()!
-	$rex_user_psw   = rex_post('rex_user_psw', 'string');    // addslashes()!
-
-	if (sly_get('page', 'string') == 'login' && sly_get('func', 'string') == 'logout') {
-		$loginCheck = false;
+	//get user values
+	if ($REX['USER'] instanceof sly_Model_User) {
+		$locale = $REX['USER']->getBackendLocale();
+		$timezone = $REX['USER']->getTimeZone();
 	}
-	else {
-		$REX['LOGIN']->setLogin($rex_user_login);
-		$loginCheck = $REX['LOGIN']->checkLogin($rex_user_psw);
-	}
-
-	// Login OK / Session gefunden?
-
-	if ($loginCheck === true) {
-
-		// Userspezifische Sprache einstellen, falls gleicher Zeichensatz
-		$lang = $REX['LOGIN']->getLanguage();
-
-		if (t('htmlcharset') == rex_create_lang($lang, '', false)->msg('htmlcharset')) {
-			$I18N = rex_create_lang($lang);
-		}
-		else {
-			sly_set_locale($lang);
-		}
-
-		$REX['USER'] = $REX['LOGIN']->USER;
-	}
-	else {
-		$rex_user_loginmessage = $REX['LOGIN']->message;
-
-		// Fehlermeldung von der Datenbank
-
-		if (is_string($loginCheck)) {
-			$rex_user_loginmessage = $loginCheck;
-		}
-
-		$navigation->addPage('system', 'login', false);
-
-		$REX['PAGE']  = 'login';
-		$REX['USER']  = null;
-		$REX['LOGIN'] = null;
-
-	}
+	//create $I18N and set locale
+	if(empty($locale)) $locale = $config->get('LANG');
+	$I18N = rex_create_lang($locale);
+	//set timezone
+	if(empty($timezone)) $timezone = $config->get('TIMEZONE');
+	date_default_timezone_set($timezone);
 }
-
-//set timezone if available
-
-$timezone = $config->get('TIMEZONE');
-date_default_timezone_set($timezone ? $timezone : @date_default_timezone_get());
 
 // synchronize develop
 
@@ -129,7 +97,7 @@ if (!$config->get('SETUP')) {
 	sly_Service_Factory::getService('Module')->refresh();
 }
 
-// AddOns einbinden
+// include AddOns
 
 require_once SLY_INCLUDE_PATH.'/addons.inc.php';
 
@@ -270,4 +238,4 @@ catch (Exception $e) {
 	$CONTENT = $layout->render();
 }
 
-rex_send_article(null, $CONTENT, 'backend', true);
+rex_send_article(null, $CONTENT, 'backend');
