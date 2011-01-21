@@ -99,7 +99,7 @@ abstract class sly_Service_DevelopBase {
 		// Wir müssen die Daten erst aus der Konfiguration entfernen, falls sich
 		// der Datentyp geändert hat. Ansonsten wird sich sly_Configuration z. B.
 		// weigern, aus einem Skalar ein Array zu machen.
-		if ($modified) {
+		if ($modified || count($newData) != count($oldData)) {
 			sly_Core::config()->remove($this->getClassIdentifier());
 			$this->setData($newData);
 			$this->resetRefreshTime();
@@ -112,17 +112,18 @@ abstract class sly_Service_DevelopBase {
 	 * @return boolean  true, when refresh is necessary
 	 */
 	protected function needsRefresh() {
-		return true;
 		$refresh = $this->getLastRefreshTime();
 		if ($refresh == 0) return true;
 
 		$files = $this->getFiles();
 		$known = $this->getKnownFiles();
+		$bases = array_map('basename', $files);
 
 		return
-			/* files?      */ count($files) > 0 &&
-			/* new data?   */ (max(array_map('filemtime', $files)) > $refresh ||
-			/* new files?  */ count(array_diff(array_map('basename', $files), $known)) > 0);
+			/* files?         */ count($files) > 0 &&
+			/* new data?      */ (max(array_map('filemtime', $files)) > $refresh ||
+			/* new files?     */ count(array_diff($bases, $known)) > 0 ||
+			/* deleted files? */ count(array_diff($known, $bases)) > 0);
 	}
 
 	/**
