@@ -73,7 +73,7 @@ else {
 
 	$REX['LOGIN']   = new rex_backend_login($config->get('DATABASE/TABLE_PREFIX').'user');
 	$rex_user_login = rex_post('rex_user_login', 'string');  // addslashes()!
-	$rex_user_psw   = rex_post('rex_user_psw', 'string');    // addslashes()!
+	$rex_user_psw   = sly_post('rex_user_psw', 'string');    // kein addslashes()!
 
 	if (sly_get('page', 'string') == 'login' && sly_get('func', 'string') == 'logout') {
 		$loginCheck = false;
