@@ -16,4 +16,4 @@ CREATE TABLE `%PREFIX%user` (
 	`revision`    int(11) NOT NULL,
 	PRIMARY KEY(`id`),
 	UNIQUE KEY `login` (`login`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
