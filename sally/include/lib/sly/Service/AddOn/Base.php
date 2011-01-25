@@ -267,7 +267,7 @@ abstract class sly_Service_AddOn_Base {
 
 		if (!is_dir($assetsDir)) return true;
 
-		if (!rex_copyDir($assetsDir, $this->publicFolder($addonORplugin), SLY_MEDIAFOLDER)) {
+		if (!rex_copyDir($assetsDir, $this->publicFolder($addonORplugin))) {
 			$state = t('install_cant_copy_files');
 		}
 		else {
