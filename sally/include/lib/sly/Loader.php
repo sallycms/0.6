@@ -147,6 +147,7 @@ class sly_Loader {
 
 			if (is_dir(dirname($dir)) && !is_dir($dir)) {
 				mkdir($dir, 0777);
+				chmod($dir, 0777); // hoster compatibility
 			}
 		}
 
@@ -156,7 +157,10 @@ class sly_Loader {
 	private static function storePathCache() {
 		if (is_dir(self::getCacheDir())) {
 			$filename = self::getCacheFile();
+			$exists   = file_exists($filename);
+
 			file_put_contents($filename, '<?php $config = '.var_export(self::$pathCache, true).';');
+			if (!$exists) chmod($filename, 0777);
 		}
 	}
 

@@ -33,10 +33,13 @@ class sly_Util_Scaffold {
 				define('SCAFFOLD_PRODUCTION', false);
 			}
 
+			$cacheDir = SLY_DYNFOLDER.'/internal/sally/css-cache';
+			sly_Util_Directory::create($cacheDir, 0777);
+
 			$config = array(
-				'document_root'    => $_SERVER['DOCUMENT_ROOT'],
+				'document_root'    => SLY_BASE,
 				'system'           => $scaffoldBase,
-				'cache'            => false,
+				'cache'            => $cacheDir,
 				'cache_lifetime'   => false,
 				'disable_flags'    => true,
 				'enable_log'       => false,
