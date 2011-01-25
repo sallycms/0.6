@@ -708,11 +708,6 @@ function rex_editArticle($articleID, $clang, $data)
 	$hasOldExtensions = rex_extension_is_registered('ART_UPDATED');
 	$hasNewExtensions = rex_extension_is_registered('ART_UPDATED_NEW');
 
-	// Template überprüfen
-
-	$service = sly_Service_Factory::getService('Template');
-	if (!$service->exists($data['template'])) $data['template'] = '';
-
 	// Artikel mit alten Daten selektieren. Wir brauchen sie, unabhängig von
 	// ART_UPDATED. Und da wir da die gleichen Daten benötigen, nutzen wir hier
 	// gleich ein rex_sql-Objekt.
@@ -725,7 +720,7 @@ function rex_editArticle($articleID, $clang, $data)
 	$sql = new rex_sql();
 	$sql->setQuery(
 		'UPDATE '.$REX['DATABASE']['TABLE_PREFIX'].'article '.
-		'SET name = "'.$data['name'].'", template = "'.$sql->escape($data['template']).'", '. // Magic Quotes von REDAXO!
+		'SET name = "'.$data['name'].'", '. // Magic Quotes von REDAXO!
 		'updatedate = UNIX_TIMESTAMP(), updateuser = "'.$sql->escape($REX['USER']->getLogin()).'" '.
 		'WHERE id = '.$articleID.' AND clang = '.$clang
 	);
@@ -792,8 +787,7 @@ function rex_editArticle($articleID, $clang, $data)
 			'clang'       => $clang,
 			're_id'       => (int) $data['category_id'],
 			'prior'       => (int) $data['prior'],
-			'path'        => $data['path'],
-			'template'    => $data['template']
+			'path'        => $data['path']
 		));
 	}
 
@@ -806,8 +800,7 @@ function rex_editArticle($articleID, $clang, $data)
 			'clang'    => $clang,
 			're_id'    => (int) $data['category_id'],
 			'prior'    => (int) $data['prior'],
-			'path'     => $data['path'],
-			'template' => $data['template']
+			'path'     => $data['path']
 		));
 	}
 
