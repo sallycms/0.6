@@ -26,7 +26,7 @@ RewriteRule ^([0-9]*)- index.php?article_id=$1&%{QUERY_STRING}
 RewriteCond %{REQUEST_URI} (.*/)?imageresize/(.*)
 RewriteCond %{REQUEST_FILENAME}###%2 (.*/)imageresize.*###(.*)
 RewriteCond %1/data/dyn/public/image_resize/cache__%2 -f
-RewriteRule imageresize/(.*)$ data/dyn/public/image_resize/cache__$1 [L]
+RewriteRule imageresize/(.*)$ gzip.php?file=data/dyn/public/image_resize/cache__$1 [L]
 
 # Image Resize
 RewriteRule ^imageresize/(.*)$ index.php?rex_resize=$1 [L]
@@ -42,5 +42,8 @@ RewriteCond %{REQUEST_URI}       \.css$
 RewriteCond %{REQUEST_URI}       !wym_styles.css$
 RewriteRule assets/css/(.+)$     sally/scaffold.php?f=assets/css/$1&%{QUERY_STRING} [L]
 
-# Komprimierung fuer statischen Content
-RewriteRule ^(assets/.*\.(css|js))$  gzip.php?file=$1 [L]
+# Komprimierung für statischen Content
+RewriteRule ^(assets/.*\.(css|js|png|gif|jpg|jpeg))$  gzip.php?file=$1 [L]
+
+# Backend-Assets sollen auch komprimiert werden
+RewriteRule ^data/dyn/public/(.*?)/(.*?)\.(js|css|png|gif|jpg|jpeg)$ gzip.php?file=data/dyn/public/$1/$2.$3

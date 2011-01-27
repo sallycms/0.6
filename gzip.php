@@ -20,12 +20,16 @@ $file_path   = pathinfo($file, PATHINFO_DIRNAME);
 if (substr($file_path, 0, strlen($script_path)) !== $script_path) die;
 
 $mimetypes = array(
-	'.css' => 'text/css',
-	'.js'  => 'text/javascript' // application/javascript wäre richtiger, wird aber nicht überall unterstützt (http://en.wikipedia.org/wiki/Client-side_JavaScript)
+	'.css'  => 'text/css',
+	'.js'   => 'text/javascript', // application/javascript wäre richtiger, wird aber nicht überall unterstützt (http://en.wikipedia.org/wiki/Client-side_JavaScript)
+	'.png'  => 'image/png',
+	'.jpg'  => 'image/jpeg',
+	'.jpeg' => 'image/jpeg',
+	'.gif'  => 'image/gif'
 );
 
 if (!file_exists($file)) die;
-if (substr($file,-3) != '.js' && substr($file,-4) != '.css') die;
+if (!preg_match('#\.(css|js|png|jpg|jpeg|gif)$#i', $file)) die;
 
 // E-Tag-Behandlung
 
@@ -62,6 +66,7 @@ if (isset($mimetypes[$extension])) header('Content-Type: '.$mimetypes[$extension
 
 header('Last-Modified: '.date('r', $mtime));
 header('ETag: "'.$md5.'"');
+header('Cache-Control: public');
 
 if (!empty($_GET['forever'])) {
 	header('Expires: Thu, 15 Apr '.(date('Y')+2).' 20:00:00 GMT');
