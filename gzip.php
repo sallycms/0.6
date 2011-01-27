@@ -67,10 +67,7 @@ if (isset($mimetypes[$extension])) header('Content-Type: '.$mimetypes[$extension
 header('Last-Modified: '.date('r', $mtime));
 header('ETag: "'.$md5.'"');
 header('Cache-Control: public');
-
-if (!empty($_GET['forever'])) {
-	header('Expires: Thu, 15 Apr '.(date('Y')+2).' 20:00:00 GMT');
-}
+header('Expires: Thu, 15 Apr '.(date('Y')+5).' 20:00:00 GMT');
 
 // Content senden
 
