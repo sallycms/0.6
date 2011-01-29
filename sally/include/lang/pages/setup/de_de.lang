@@ -12,6 +12,7 @@ setup_fsperms_title: Setup: Schritt 1 von 5
 setup_fsperms_security_msg: Der Ordner sally/include ist unsicher. Bitte schützen Sie diesen Ordner und starten das Setup erneut!
 setup_fsperms_header: Systemvoraussetzungen
 setup_fsperms_property: Eigenschaft
+setup_fsperms_required: benötigt
 setup_fsperms_recommended: empfohlen
 setup_fsperms_status: Status
 setup_fsperms_php_version: PHP-Version
