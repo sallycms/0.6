@@ -11,7 +11,7 @@
 // Configuration
 
 $variants = array(
-	'full'    => array('docs' => true, 'tests' => true, 'addons' => array('image_resize', 'import_export', 'be_search')),
+	'full'    => array('docs' => true, 'tests' => true, 'addons' => array('image_resize', 'import_export', 'be_search', 'metainfoex')),
 	'lite'    => array('docs' => true, 'tests' => true, 'addons' => array()),
 	'minimal' => array('docs' => false, 'tests' => false, 'addons' => array())
 );
