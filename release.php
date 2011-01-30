@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2010, webvariants GbR, http://www.webvariants.de
+ * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
  * This file is released under the terms of the MIT license. You can find the
  * complete text in the attached LICENSE file or online at:
@@ -86,7 +86,7 @@ foreach ($variants as $name => $settings) {
 	chdir($target);
 	mkdir('data');
 	mkdir('sally/include/addons');
-	file_put_contents('data/empty', 'This directory is intentionally left blank.');
+	file_put_contents('data/empty', 'This directory is intentionally left blank. Please make sure it\'s chmod to 0777.');
 
 	// Generate documentation
 
@@ -98,7 +98,7 @@ foreach ($variants as $name => $settings) {
 	}
 
 	if (empty($settings['addons'])) {
-		file_put_contents('sally/include/addons/empty', 'Put all your addOns in this directory.');
+		file_put_contents('sally/include/addons/empty', 'Put all your addOns in this directory. PHP does not need writing permissions in here.');
 	}
 	else {
 		print ' addons...';
@@ -140,14 +140,14 @@ foreach ($variants as $name => $settings) {
 	print ' 7z...';
 	exec('7z a -mx9 "../sally-'.$tag.$suffix.'.7z" "'.$target.'"');
 
-	print ' tar...';
-	exec('7z a "../sally-'.$tag.$suffix.'.tar" "'.$target.'"');
+	// print ' tar...';
+	// exec('7z a "../sally-'.$tag.$suffix.'.tar" "'.$target.'"');
 
-	print ' bz2...';
-	exec('7z a -mx9 "../sally-'.$tag.$suffix.'.tar.bz2" "../sally-'.$tag.$suffix.'.tar"');
+	// print ' bz2...';
+	// exec('7z a -mx9 "../sally-'.$tag.$suffix.'.tar.bz2" "../sally-'.$tag.$suffix.'.tar"');
 
 	// We don't need the tar file anymore.
-	unlink('../sally-'.$tag.$suffix.'.tar');
+	// unlink('../sally-'.$tag.$suffix.'.tar');
 
 	print PHP_EOL;
 }
