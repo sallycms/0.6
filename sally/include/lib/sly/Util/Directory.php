@@ -37,15 +37,17 @@ class sly_Util_Directory {
 			// FIXME: do not chmod previously existing folders, concept of this
 			// function is not that good
 
-			$base = '';
-			//strip SLY_BASE from path
-			if(startsWith($path, SLY_BASE)) {
+			$base = '.';
+			$s    = DIRECTORY_SEPARATOR;
+
+			if (startsWith($path, SLY_BASE)) {
 				$base = SLY_BASE;
-				$path = substr($path, strlen(SLY_BASE));
+				$path = trim(substr($path, strlen(SLY_BASE)), $s);
 			}
-			foreach (explode(DIRECTORY_SEPARATOR, $path) as $component) {
-				chmod($base.$component, $perm);
-				$base .= $component.'/';
+
+			foreach (explode($s, $path) as $component) {
+				chmod($base.$s.$component, $perm);
+				$base .= $s.$component;
 			}
 		}
 

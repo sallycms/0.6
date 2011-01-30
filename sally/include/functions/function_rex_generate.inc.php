@@ -248,26 +248,14 @@ function rex_deleteFiles($directory)
  *
  * @param  string $srcdir    Zu kopierendes Verzeichnis
  * @param  string $dstdir    Zielpfad
- * @param  string $startdir  Pfad ab welchem erst neue Ordner generiert werden
  * @return bool              true bei Erfolg, false bei Fehler
  */
-function rex_copyDir($srcdir, $dstdir, $startdir = '')
+function rex_copyDir($srcdir, $dstdir)
 {
-	global $REX;
-
 	$state = true;
 
 	if (!is_dir($dstdir)) {
-		$dir = '';
-
-		foreach (explode(DIRECTORY_SEPARATOR, $dstdir) as $dirPart) {
-			$dir .= $dirPart.DIRECTORY_SEPARATOR;
-
-			if (strpos($startdir, $dir) !== 0 && !is_dir($dir)) {
-				mkdir($dir);
-				chmod($dir, 0777);
-			}
-		}
+		sly_Util_Directory::create($dstdir);
 	}
 
 	if ($curdir = opendir($srcdir)) {
@@ -286,7 +274,7 @@ function rex_copyDir($srcdir, $dstdir, $startdir = '')
 					if ($isNewer) {
 						if (copy($srcfile, $dstfile)) {
 							touch($dstfile, filemtime($srcfile));
-							chmod($dstfile, $REX['FILEPERM']);
+							chmod($dstfile, 0777);
 						}
 						else {
 							return false;
@@ -294,7 +282,7 @@ function rex_copyDir($srcdir, $dstdir, $startdir = '')
 					}
 				}
 				elseif (is_dir($srcfile)) {
-					$state &= rex_copyDir($srcfile, $dstfile, $startdir);
+					$state &= rex_copyDir($srcfile, $dstfile);
 				}
 			}
 		}

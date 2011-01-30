@@ -3,7 +3,7 @@
  * Scaffold_Cache
  *
  * Handles the file caching
- * 
+ *
  * @author  Anthony Short
  * @package CSScaffold
  * @license BSD License
@@ -193,6 +193,7 @@ final class Scaffold_Cache
 		}
 
 		fclose($fp);
+		chmod(self::$cacheFile, 0777);
 		return true;
 	}
 

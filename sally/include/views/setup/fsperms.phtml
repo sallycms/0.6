@@ -13,57 +13,63 @@ $this->title(t('setup_fsperms_title'));
 ?>
 
 <div class="rex-message" id="security_warning" style="display:none">
-	<p class="rex-warning"><span><?= t('setup_fsperms_security_msg') ?></span></p>
+	<p class="rex-warning"><span><?php print t('setup_fsperms_security_msg') ?></span></p>
 </div>
 
-<h2 class="rex-hl2"><?= t('setup_fsperms_header') ?></h2>
+<h2 class="rex-hl2"><?php print t('setup_fsperms_header') ?></h2>
 
 <div class="rex-area-content sly-setup-requirements">
 	<table summary="">
 		<thead><tr>
-			<th class="sly-testcase"><?= t('setup_fsperms_property') ?></th>
-			<th class="sly-recommended"><?= t('setup_fsperms_recommended') ?></th>
-			<th class="sly-status"><?= t('setup_fsperms_status') ?></th>
+			<th class="sly-testcase"><?php print t('setup_fsperms_property') ?></th>
+			<th class="sly-required"><?php print t('setup_fsperms_required') ?></th>
+			<th class="sly-recommended"><?php print t('setup_fsperms_recommended') ?></th>
+			<th class="sly-status"><?php print t('setup_fsperms_status') ?></th>
 		</tr></thead>
-		<tbody><? foreach ($results as $type => $result): ?><tr class="<?= $tester->getClassName($result[1]) ?>">
-			<td class="sly-testcase"><?= rex_translate('translate:setup_fsperms_'.$type) ?></td>
-			<td class="sly-recommended"><?= rex_translate($result[0]) ?></td>
-			<td class="sly-status"><?= sly_html($result[1]['text']) ?></td>
-		</tr><? endforeach ?></tbody>
+		<tbody><?php foreach ($results as $type => $result): ?><tr class="<?php print $tester->getClassName($result[2]) ?>">
+			<td class="sly-testcase"><?php print rex_translate('translate:setup_fsperms_'.$type) ?></td>
+			<?php if ($result[0] == $result[1]): ?>
+			<td class="sly-required center" colspan="2"><?php print rex_translate($result[0]) ?></td>
+			<?php else: ?>
+			<td class="sly-required"><?php print rex_translate($result[0]) ?></td>
+			<td class="sly-recommended"><?php print rex_translate($result[1]) ?></td>
+			<?php endif ?>
+			<td class="sly-status"><?php print sly_html($result[2]['text']) ?></td>
+		</tr><?php endforeach ?></tbody>
 	</table>
 </div>
 
-<? if ($errors): ?>
+<?php if ($errors): ?>
 <div class="rex-area-footer sly-fs-errors">
-	<p class="rex-algn-rght"><?= t('setup_fsperms_please_fix') ?></p>
+	<p class="rex-algn-rght"><?php print t('setup_fsperms_please_fix') ?></p>
 </div>
-<? endif ?>
+<?php endif ?>
 
-<? if (!empty($cantCreate) || !empty($protects)): ?>
-<h2 class="rex-hl2 sly-setup-fs-problems"><?= t('setup_fsperms_fsproblems') ?></h2>
+<?php if (!empty($cantCreate) || !empty($protects)): ?>
+<h2 class="rex-hl2 sly-setup-fs-problems"><?php print t('setup_fsperms_fsproblems') ?></h2>
 <div class="rex-area-content sly-setup-fs-problems">
-	<? if (!empty($cantCreate)): ?>
-	<p class="rex-tx1"><?= t('setup_fsperms_cant_access') ?></p>
+	<?php if (!empty($cantCreate)): ?>
+	<p class="rex-tx1"><?php print t('setup_fsperms_cant_access') ?></p>
 
 	<ul class="rex-ul1">
-		<li><?= implode('</li><li>', $cantCreate) ?></li>
+		<li><?php print implode('</li><li>', $cantCreate) ?></li>
 	</ul>
-	<? endif ?>
+	<?php endif ?>
 
-	<? if (!empty($protects)): ?>
-	<p class="rex-tx1"><?= t('setup_fsperms_cant_protect') ?></p>
+	<?php if (!empty($protects)): ?>
+	<p class="rex-tx1"><?php print t('setup_fsperms_cant_protect') ?></p>
 
 	<ul class="rex-ul1">
-		<li><?= implode('</li><li>', $protects) ?></li>
+		<li><?php print implode('</li><li>', $protects) ?></li>
 	</ul>
-	<? endif ?>
+	<?php endif ?>
 
-	<iframe src="include/views/setup/direct.phtml?lang=<?= urlencode($this->lang) ?>" style="display:none"></iframe>
+	<iframe src="include/views/setup/direct.phtml?lang=<?php print urlencode($this->lang) ?>" style="display:none"></iframe>
 </div>
-<? elseif (!$errors): ?>
+<?php elseif (!$errors): ?>
 <div class="rex-area-footer">
 	<p id="nextstep" class="rex-algn-rght">
-		<a href="index.php?page=setup&amp;func=dbconfig&amp;lang=<?= urlencode($this->lang) ?>">&raquo; <?= t('setup_fsperms_continue') ?></a>
+		<a href="index.php?page=setup&amp;func=dbconfig&amp;lang=<?php print urlencode($this->lang) ?>">&raquo; <?php print t('setup_fsperms_continue') ?></a>
 	</p>
 </div>
-<? endif ?>
+<?php endif ?>

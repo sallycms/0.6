@@ -13,7 +13,7 @@
  */
 class sly_Util_YAML {
 	protected static function getCacheDir() {
-		$dir = SLY_DYNFOLDER.DIRECTORY_SEPARATOR.'internal'.DIRECTORY_SEPARATOR.'sally'.DIRECTORY_SEPARATOR.'yaml-cache';
+		$dir = SLY_DYNFOLDER.'/internal/sally/yaml-cache';
 
 		if (!sly_Util_Directory::create($dir)) {
 			throw new sly_Exception('Cache-Verzeichnis '.$dir.' konnte nicht erzeugt werden.');
@@ -37,7 +37,7 @@ class sly_Util_YAML {
 			// Laufwerk:/.../ korrigieren
 			$filename = str_replace(':', '', $filename);
 		}
-		
+
 		return $dir.DIRECTORY_SEPARATOR.str_replace(DIRECTORY_SEPARATOR, '_', $filename).'.php';
 	}
 
@@ -58,21 +58,29 @@ class sly_Util_YAML {
 		if (!file_exists($filename)) throw new sly_Exception('Datei '.$filename.' konnte nicht gefunden werden.');
 
 		$cachefile = self::getCacheFile($filename);
-		$config = array();
+		$config    = array();
 
 		// get content from cache, when up to date
-		if (self::isCacheValid($filename, $cachefile)) include $cachefile;
+		if (self::isCacheValid($filename, $cachefile)) {
+			include $cachefile;
+		}
 		// get content from yaml file
 		else {
 			$config = sfYaml::load($filename);
-			file_put_contents($cachefile, '<?php $config = '.var_export($config, true).';');
+			$exists = file_exists($cachefile);
+
+			file_put_contents($cachefile, '<?php $config = '.var_export($config, true).';', LOCK_EX);
+			if (!$exists) chmod($cachefile, 0777);
 		}
 
 		return $config;
 	}
 
 	public static function dump($filename, $data) {
-		$data = sfYaml::dump($data, 5);
+		$data   = sfYaml::dump($data, 5);
+		$exists = file_exists($filename);
+
 		file_put_contents($filename, $data, LOCK_EX);
+		if (!$exists) chmod($filename, 0777);
 	}
 }

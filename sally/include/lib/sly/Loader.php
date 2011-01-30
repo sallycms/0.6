@@ -97,9 +97,7 @@ class sly_Loader {
 					if (self::$enablePathCache) {
 						// update path cache file
 						self::$pathCache[$className] = realpath($fullPath);
-
-						$filename = self::getCacheFile();
-						file_put_contents($filename, '<?php $config = '.var_export(self::$pathCache, true).';');
+						self::storePathCache();
 					}
 
 					break;
@@ -146,10 +144,24 @@ class sly_Loader {
 
 		if ($dir === null) {
 			$dir = SLY_DYNFOLDER.'/internal/sally/loader';
-			if (!is_dir($dir)) mkdir($dir, 0777);
+
+			if (is_dir(dirname($dir)) && !is_dir($dir)) {
+				mkdir($dir, 0777);
+				chmod($dir, 0777); // hoster compatibility
+			}
 		}
 
 		return $dir;
+	}
+
+	private static function storePathCache() {
+		if (is_dir(self::getCacheDir())) {
+			$filename = self::getCacheFile();
+			$exists   = file_exists($filename);
+
+			file_put_contents($filename, '<?php $config = '.var_export(self::$pathCache, true).';');
+			if (!$exists) chmod($filename, 0777);
+		}
 	}
 
 	public static function clearCache($params = array()) {

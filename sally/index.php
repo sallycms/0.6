@@ -79,13 +79,13 @@ else {
 
 	//get user values
 	if ($REX['USER'] instanceof sly_Model_User) {
-		$locale = $REX['USER']->getBackendLocale();
+		$locale   = $REX['USER']->getBackendLocale();
 		$timezone = $REX['USER']->getTimeZone();
 	}
-	//create $I18N and set locale
+	// create $I18N and set locale
 	if(empty($locale)) $locale = $config->get('LANG');
 	$I18N = rex_create_lang($locale);
-	//set timezone
+	// set timezone
 	if(empty($timezone)) $timezone = $config->get('TIMEZONE');
 	date_default_timezone_set($timezone);
 }

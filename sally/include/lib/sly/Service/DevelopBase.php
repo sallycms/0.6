@@ -30,13 +30,12 @@ abstract class sly_Service_DevelopBase {
 	 * @return array               Array of files
 	 */
 	public function getFiles($absolute = true) {
-		$dir = new sly_Util_Directory($this->getFolder());
-		$files = $dir->listPlain(true, false, false, $absolute);
+		$dir    = new sly_Util_Directory($this->getFolder());
+		$files  = $dir->listPlain(true, false, false, $absolute);
 		$retval = array();
 
 		foreach ($files as $filename) {
-			if ($this->isFileValid($filename))
-				$retval[] = $filename;
+			if ($this->isFileValid($filename)) $retval[] = $filename;
 		}
 
 		natsort($retval);
@@ -50,8 +49,9 @@ abstract class sly_Service_DevelopBase {
 	 */
 	public function getFolder() {
 		$dir = sly_Util_Directory::join(SLY_DEVELOPFOLDER, $this->getClassIdentifier());
-		if (!is_dir($dir) && !@mkdir($dir, sly_Core::config()->get('DIRPERM'), true))
+		if (!is_dir($dir) && !@mkdir($dir, sly_Core::config()->get('DIRPERM'), true)) {
 			throw new sly_Exception('Konnte Verzeichnis ' . $dir . ' nicht erstellen.');
+		}
 		return $dir;
 	}
 
@@ -65,8 +65,7 @@ abstract class sly_Service_DevelopBase {
 	 */
 	public function refresh($force = false) {
 		$refresh = $force || $this->needsRefresh();
-		if (!$refresh)
-			return true;
+		if (!$refresh) return true;
 
 		$files = $this->getFiles();
 		$newData = array();
@@ -90,12 +89,16 @@ abstract class sly_Service_DevelopBase {
 
 			$parser = new sly_Util_ParamParser($file);
 			$data = $parser->get();
-			if (empty($data) && $known)
+		
+			if (empty($data) && $known) {
 				$modified = true;
+			}
+			
 			$name = $parser->get('name', null);
 
-			if (!$this->areParamsValid($name, $data, $newData, $basename, $type))
+			if (!$this->areParamsValid($name, $data, $newData, $basename, $type)) {
 				continue;
+			}
 
 			$newData[$name][$type][$basename] = $this->buildData($basename, $mtime, $parser->get());
 
@@ -106,7 +109,7 @@ abstract class sly_Service_DevelopBase {
 		// Wir müssen die Daten erst aus der Konfiguration entfernen, falls sich
 		// der Datentyp geändert hat. Ansonsten wird sich sly_Configuration z. B.
 		// weigern, aus einem Skalar ein Array zu machen.
-		if ($modified) {
+		if ($modified || count($newData) != count($oldData)) {
 			sly_Core::config()->remove($this->getClassIdentifier());
 			$this->setData($newData);
 			$this->resetRefreshTime();
@@ -120,16 +123,17 @@ abstract class sly_Service_DevelopBase {
 	 */
 	protected function needsRefresh() {
 		$refresh = $this->getLastRefreshTime();
-		if ($refresh == 0)
-			return true;
+		if ($refresh == 0) return true;
 
 		$files = $this->getFiles();
 		$known = $this->getKnownFiles();
+		$bases = array_map('basename', $files);
 
 		return
-		/* files?      */ count($files) > 0 &&
-		/* new data?   */ (max(array_map('filemtime', $files)) > $refresh ||
-		/* new files?  */ count(array_diff(array_map('basename', $files), $known)) > 0);
+			/* files?         */ count($files) > 0 &&
+			/* new data?      */ (max(array_map('filemtime', $files)) > $refresh ||
+			/* new files?     */ count(array_diff($bases, $known)) > 0 ||
+			/* deleted files? */ count(array_diff($known, $bases)) > 0);
 	}
 
 	/**
@@ -173,8 +177,10 @@ abstract class sly_Service_DevelopBase {
 	 * @return array  The parameters of all items as an associative array
 	 */
 	protected function getData() {
-		if (!isset($this->data))
+		if (!isset($this->data)) {
 			$this->data = sly_Core::config()->get($this->getClassIdentifier() . '/data', array());
+		}
+		
 		return $this->data;
 	}
 
@@ -197,8 +203,7 @@ abstract class sly_Service_DevelopBase {
 
 		foreach (array_keys($data) as $name) {
 			foreach ($data[$name][$type] as $file) {
-				if (isset($file[$attribute]) && $file[$attribute] == $value)
-					return $name;
+				if (isset($file[$attribute]) && $file[$attribute] == $value) return $name;
 			}
 		}
 
@@ -223,8 +228,7 @@ abstract class sly_Service_DevelopBase {
 	 * @param int $time  The new timestamp. Leave this null for the current timestamp time();
 	 */
 	protected function resetRefreshTime($time = null) {
-		if ($time === null)
-			$time = time();
+		if ($time === null) $time = time();
 		sly_Core::config()->set($this->getClassIdentifier() . '/last_refresh', $time);
 		$this->lastRefreshTime = $time;
 	}
@@ -247,13 +251,12 @@ abstract class sly_Service_DevelopBase {
 	 */
 	public function getKnownFiles() {
 		$known = array();
-
-		$data = $this->getData();
+		$data  = $this->getData();
+		
 		foreach ($data as $types) {
 			foreach ($types as $files) {
 				foreach ($files as $file) {
-					if (!empty($file['filename']))
-						$known[] = $file['filename'];
+					if (!empty($file['filename'])) $known[] = $file['filename'];
 				}
 			}
 		}
@@ -278,14 +281,17 @@ abstract class sly_Service_DevelopBase {
 	 * @throws sly_Exception      When the resource with the given name is not available
 	 */
 	public function get($name, $key = null, $default = null, $type = null, $filename = null) {
-		if ($key == 'name')
-			return $name;
+		if ($key == 'name') return $name;
 
 		$data = $this->getData();
-		if (!isset($data[$name]))
+		
+		if (!isset($data[$name])) {
 			throw new sly_Exception('The development resource "' . $name . '" is not available.');
-		if ($type !== null && !isset($data[$name][$type]))
+		}
+		
+		if ($type !== null && !isset($data[$name][$type])) {
 			return $default;
+		}
 
 		// get default type if necessary
 		if ($type === null) {
@@ -298,12 +304,16 @@ abstract class sly_Service_DevelopBase {
 		}
 
 		// return all data?
-		if ($filename !== null && isset($data[$name][$type][$filename]))
+		if ($filename !== null && isset($data[$name][$type][$filename])) {
 			$result = $data[$name][$type][$filename];
-		else
+		}
+		else {
 			$result = current($data[$name][$type]);
-		if ($key === null)
+		}
+		
+		if ($key === null) {
 			return $result;
+		}
 
 		// check for standard params first, then for custom params.
 		return (isset($result[$key]) ? $result[$key] : (isset($result['params'][$key]) ? $result['params'][$key] : $default));
@@ -318,8 +328,7 @@ abstract class sly_Service_DevelopBase {
 	 */
 	public function getContent($filename) {
 		$filename = sly_Util_Directory::join($this->getFolder(), $filename);
-		if (!file_exists($filename))
-			throw new sly_Exception("File '$filename' does not exist.");
+		if (!file_exists($filename)) throw new sly_Exception("File '$filename' does not exist.");
 		return file_get_contents($filename);
 	}
 
@@ -333,48 +342,64 @@ abstract class sly_Service_DevelopBase {
 	 * @throws sly_Exception When all files are filtered
 	 */
 	protected function filterByCondition($name, $type) {
-		$data = $this->getData();
+		$data      = $this->getData();
 		$filenames = array_keys($data[$name][$type]);
-		//need to check the files
+		
+		// need to check the files
 		if (count($filenames) > 1) {
-			//run all evaluators
+			// run all evaluators
 			foreach ($this->conditionEvaluators as $param => $evaluator) {
-				//prepare data
+				// prepare data
 				$filter = array();
 				foreach ($filenames as $filename) {
-					if (isset($data[$name][$type][$filename]['params'][$param]))
+					if (isset($data[$name][$type][$filename]['params'][$param])) {
 						$filter[$filename] = $data[$name][$type][$filename]['params'][$param];
+					}
 				}
 
 				$result = call_user_func_array($evaluator, array($name, $filter));
-				//if the result is not false or empty or something go on with the result
-				if (!empty($result))
+				
+				// if the result is not false or empty or something go on with the result
+				if (!empty($result)) {
 					$filenames = array_keys($result);
-				//else remove the files from the list
-				else
+				}
+				/ /else remove the files from the list
+				else {
 					$filenames = array_diff($filenames, array_keys($filter));
+				}
 			}
 
-			//if all files are filtered
-			if (empty($filenames))
+			// if all files are filtered
+			
+			if (empty($filenames)) {
 				throw new sly_Exception('All files for item ' . $name . ' were filtered');
+			}
 
 			//if there are more than one
 			if (count($filenames) > 1) {
-				//warn the user
-				if(!sly_Core::isBackend()) trigger_error('The concrete file for Item ' . $name . ' is not clear. Taking one without conditions or first to come.', E_USER_WARNING);
-				//try to find one without without conditions)
+				// warn the user
+				
+				if (!sly_Core::isBackend()) {
+					trigger_error('The concrete file for Item ' . $name . ' is not clear. Taking one without conditions or first to come.', E_USER_WARNING);
+				}
+				
+				// try to find one without without conditions)
+				
 				foreach ($filenames as $filename) {
 					$nocondition = true;
+					
 					foreach (array_keys($this->conditionEvaluators) as $condition) {
 						$nocondition = $nocondition || isset($data[$name][$type][$filename]['params'][$condition]);
 					}
-					if ($nocondition)
+					
+					if ($nocondition) {
 						return $filename;
+					}
 				}
 			}
 		}
-		//return the first to find
+		
+		// return the first to find
 		return current($filenames);
 	}
 

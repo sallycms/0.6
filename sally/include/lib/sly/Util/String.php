@@ -161,6 +161,10 @@ class sly_Util_String
 
 	public static function getRandomString($maxLen = 5, $minLen = 1, $charset = null)
 	{
+		if ($minLen > $maxLen) {
+			list($minLen, $maxLen) = array($maxLen, $minLen);
+		}
+
 		$count = mt_rand($minLen, $maxLen);
 		$chars = $charset === null ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxwz0123456789' : $charset;
 		$last  = strlen($chars)-1;

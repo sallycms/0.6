@@ -12,6 +12,7 @@ setup_fsperms_title: 'Setup: Step 1 of 5'
 setup_fsperms_security_msg: 'The directory sally/include is not secured. Please secure it and restart the setup.'
 setup_fsperms_header: 'System Requirements'
 setup_fsperms_property: 'Property'
+setup_fsperms_required: Required
 setup_fsperms_recommended: 'Recommended'
 setup_fsperms_status: 'Status'
 setup_fsperms_php_version: 'PHP version'

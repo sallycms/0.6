@@ -8,6 +8,15 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+/* On pages with heavy load, piping files through this script may cause
+ * high CPU usage. To avoid the re-compression on every hit, this script can
+ * cache the gzippped files. Just switch this constant to true and make sure
+ * that this script will be able to create data/dyn/internal/gzip-cache/ to
+ * store it's files.
+ */
+
+define('CACHE_FILES', false);
+
 error_reporting(0);
 ini_set('display_errors', 'off');
 
@@ -20,12 +29,16 @@ $file_path   = pathinfo($file, PATHINFO_DIRNAME);
 if (substr($file_path, 0, strlen($script_path)) !== $script_path) die;
 
 $mimetypes = array(
-	'.css' => 'text/css',
-	'.js'  => 'text/javascript' // application/javascript wäre richtiger, wird aber nicht überall unterstützt (http://en.wikipedia.org/wiki/Client-side_JavaScript)
+	'.css'  => 'text/css',
+	'.js'   => 'text/javascript', // application/javascript wäre richtiger, wird aber nicht überall unterstützt (http://en.wikipedia.org/wiki/Client-side_JavaScript)
+	'.png'  => 'image/png',
+	'.jpg'  => 'image/jpeg',
+	'.jpeg' => 'image/jpeg',
+	'.gif'  => 'image/gif'
 );
 
 if (!file_exists($file)) die;
-if (substr($file,-3) != '.js' && substr($file,-4) != '.css') die;
+if (!preg_match('#\.(css|js|png|jpg|jpeg|gif)$#i', $file)) die;
 
 // E-Tag-Behandlung
 
@@ -47,12 +60,6 @@ if ($last > 0 && $last == $mtime) {
 	exit();
 }
 
-// gzip starten
-
-if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
-	ob_start('ob_gzhandler');
-}
-
 // Content-Type senden
 
 $extension = strtolower(substr($file, strrpos($file, '.')));
@@ -62,11 +69,46 @@ if (isset($mimetypes[$extension])) header('Content-Type: '.$mimetypes[$extension
 
 header('Last-Modified: '.date('r', $mtime));
 header('ETag: "'.$md5.'"');
+header('Cache-Control: public');
+header('Expires: Thu, 15 Apr '.(date('Y')+5).' 20:00:00 GMT');
 
-if (!empty($_GET['forever'])) {
-	header('Expires: Thu, 15 Apr '.(date('Y')+2).' 20:00:00 GMT');
+// gzip starten
+
+if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
+	if (CACHE_FILES) {
+		$dir       = 'data/dyn/internal/gzip-cache';
+		$cacheFile = $dir.'/'.md5($file).$extension.'.gz';
+
+		if (is_dir(dirname($dir)) && !is_dir($dir)) {
+			mkdir($dir, 0777);
+			clearstatcache();
+		}
+
+		if (is_dir($dir)) {
+			if (!file_exists($cacheFile)) {
+				$out = gzopen($cacheFile, 'wb');
+				$in  = fopen($file, 'rb');
+
+				while (!feof($in)) {
+					$buf = fread($in, 4096);
+					gzwrite($out, $buf);
+				}
+
+				fclose($in);
+				gzclose($out);
+			}
+
+			$file = $cacheFile;
+			header('Content-Encoding: gzip');
+			header('Content-Length: '.filesize($file));
+		}
+		else {
+			ob_start('ob_gzhandler');
+		}
+	}
+	else {
+		ob_start('ob_gzhandler');
+	}
 }
-
-// Content senden
 
 readfile($file);
