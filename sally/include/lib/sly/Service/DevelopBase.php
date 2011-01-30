@@ -363,7 +363,7 @@ abstract class sly_Service_DevelopBase {
 				if (!empty($result)) {
 					$filenames = array_keys($result);
 				}
-				/ /else remove the files from the list
+				// else remove the files from the list
 				else {
 					$filenames = array_diff($filenames, array_keys($filter));
 				}
