@@ -19,10 +19,12 @@ class sly_I18N implements sly_I18N_Base {
 	protected $text_loaded;
 
 	/**
-	 * the locale must of the common form, eg. de_de, en_us or just plain en, de.
-	 * the searchpath is where the language files are located
+	 * Constructor
+	 *
+	 * @param string $locale      locale name (like 'de_de')
+	 * @param string $searchpath  path to .lang file
 	 */
-	public function __construct($locale = 'de_de', $searchpath) {
+	public function __construct($locale, $searchpath) {
 		$this->searchpath  = $searchpath;
 		$this->texts       = array();
 		$this->locale      = $locale;
@@ -42,7 +44,8 @@ class sly_I18N implements sly_I18N_Base {
 	/**
 	 * Sucht im angegebenden Ordner nach eine Sprachdatei der aktuellen Sprache und f�gt diese dem Sprachkatalog an
 	 *
-	 * @param string $searchPath  Pfad in dem die Sprachdatei gesucht werden soll
+	 * @param  string $searchPath  Pfad in dem die Sprachdatei gesucht werden soll
+	 * @return boolean             true if the file was read, else false
 	 */
 	public function appendFile($searchPath, $prefix = '') {
 		$filename = $searchPath.'/'.$this->locale.'.lang';
@@ -63,10 +66,10 @@ class sly_I18N implements sly_I18N_Base {
 	/**
 	 * Durchsucht den Sprachkatalog nach einem Schlüssel und gibt die dazugehörige Übersetzung zurück
 	 *
-	 * @param string $key  zu suchender Schlüssel
+	 * @param  string $key  zu suchender Schlüssel
+	 * @return string
 	 */
-	public function msg($key)
-	{
+	public function msg($key) {
 		if (!$this->text_loaded) {
 			$this->loadTexts();
 		}
