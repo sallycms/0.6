@@ -12,7 +12,21 @@
  * @ingroup i18n
  */
 interface sly_I18N_Base {
+	/**
+	 * @param  string $key
+	 * @return string
+	 */
 	public function msg($key);
+
+	/**
+	 * @param string $key
+	 * @param string $msg
+	 */
 	public function addMsg($key, $msg);
+
+	/**
+	 * @param  string $key
+	 * @return boolean
+	 */
 	public function hasMsg($key);
 }

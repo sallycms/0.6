@@ -12,11 +12,19 @@
  * @ingroup i18n
  */
 class sly_I18N_Subset implements sly_I18N_Base {
-	public function __construct($i18nContainer, $prefix) {
+	/**
+	 * @param sly_I18N_Base $i18nContainer
+	 * @param string        $prefix
+	 */
+	public function __construct(sly_I18N_Base $i18nContainer, $prefix) {
 		$this->container = $i18nContainer;
 		$this->prefix    = $prefix;
 	}
 
+	/**
+	 * @param  string $prefix
+	 * @return sly_I18N_Subset
+	 */
 	public static function create($prefix) {
 		global $I18N;
 		return new self($I18N, $prefix);
