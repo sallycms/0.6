@@ -13,20 +13,17 @@
  * @package redaxo4
  */
 
-function rex_plugins_folder($addon, $plugin = null)
-{
+function rex_plugins_folder($addon, $plugin = null) {
 	$addonFolder = rex_addons_folder($addon);
 	return sly_Util_Directory::join($addonFolder, 'plugins', $plugin);
 }
 
-function rex_plugins_file()
-{
+function rex_plugins_file() {
 	trigger_error('SallyCMS does not have a specific plugins file.', E_USER_WARNING);
 	return sly_Util_Directory::join(SLY_DYNFOLDER, 'internal', 'sally', 'plugins.rexcompat.php');
 }
 
-function rex_read_plugins_folder($addon, $folder = '')
-{
+function rex_read_plugins_folder($addon, $folder = '') {
 	if (empty($folder)) {
 		$folder = rex_plugins_folder($addon);
 	}

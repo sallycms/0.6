@@ -191,7 +191,7 @@ abstract class rex_var {
 
 		foreach ($match as $param_str) {
 			$args   = array();
-			$params = $this->splitString($param_str);
+			$params = rex_split_string($param_str);
 
 			foreach ($params as $name => $value) {
 				$args = $this->handleDefaultParam($varname, $args, $name, $value);
@@ -227,16 +227,6 @@ abstract class rex_var {
 		}
 
 		return array($val, $args);
-	}
-
-	/**
-	 * Trennt einen String an Leerzeichen auf.
-	 *
-	 * Abschnitte die in "" oder '' stehen, werden als ganzes behandelt und
-	 * darin befindliche Leerzeichen nicht getrennt.
-	 */
-	protected static function splitString($string) {
-		return rex_split_string($string);
 	}
 
 	public static function isAddEvent() {

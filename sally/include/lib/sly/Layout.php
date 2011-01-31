@@ -160,7 +160,7 @@ abstract class sly_Layout {
 		$name  = trim($name);
 		$value = trim($value);
 
-		if (sly_startsWith($name, 'on')) {
+		if (sly_Util_String::startsWith($name, 'on')) {
 			$this->addJavaScript('window.'.$name.' = function() { '.$value.' }');
 		}
 		else {

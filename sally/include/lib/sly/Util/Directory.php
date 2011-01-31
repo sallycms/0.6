@@ -40,7 +40,7 @@ class sly_Util_Directory {
 			$base = '.';
 			$s    = DIRECTORY_SEPARATOR;
 
-			if (startsWith($path, SLY_BASE)) {
+			if (sly_Util_String::startsWith($path, SLY_BASE)) {
 				$base = SLY_BASE;
 				$path = trim(substr($path, strlen(SLY_BASE)), $s);
 			}

@@ -49,7 +49,7 @@ class sly_Controller_Login extends sly_Controller_Sally {
 			// if relogin, forward to previous page
 			$referer = sly_post('referer', 'string', false);
 
-			if ($referer && !sly_startsWith(basename($referer), 'index.php?page=login')) {
+			if ($referer && !sly_Util_String::startsWith(basename($referer), 'index.php?page=login')) {
 				$url = $referer;
 				$msg = t('redirect_previous_page', $referer);
 			}
