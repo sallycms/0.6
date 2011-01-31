@@ -449,6 +449,10 @@ class sly_Log {
 		}
 	}
 
+	/**
+	 * @param  string $filename
+	 * @return NULL|string
+	 */
 	private function getIteratedFilename($filename) {
 		$logfile = $this->filename;
 		$canGZip = function_exists('gzencode');
@@ -469,10 +473,17 @@ class sly_Log {
 		return sprintf($frmt, $logfile, $next);
 	}
 
+	/**
+	 * @param  string $i
+	 * @return string
+	 */
 	private function getFileNum($i) {
 		return str_pad($i, strlen($this->maxFiles), '0', STR_PAD_LEFT);
 	}
 
+	/**
+	 * @param string $filename
+	 */
 	private function compressLogfile($filename) {
 		if (!function_exists('gzencode')) return;
 

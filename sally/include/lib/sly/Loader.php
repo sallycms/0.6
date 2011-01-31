@@ -18,11 +18,18 @@ class sly_Loader {
 	protected static $pathCache       = array();
 	protected static $enablePathCache = false;
 
+	/**
+	 * @param boolean $flag
+	 */
 	public static function enablePathCache($flag = true) {
 		self::$enablePathCache = (boolean) $flag;
 		self::$pathHash        = $flag ? md5(json_encode(self::$loadPaths)) : 0;
 	}
 
+	/**
+	 * @param string $path
+	 * @param string $hiddenPrefix
+	 */
 	public static function addLoadPath($path, $hiddenPrefix = '') {
 		$path = realpath($path);
 
@@ -59,6 +66,10 @@ class sly_Loader {
 		}
 	}
 
+	/**
+	 * @param  string $className
+	 * @return boolean|string
+	 */
 	public static function loadClass($className) {
 		global $REX; // für Code, der direkt beim Include ausgeführt wird.
 
@@ -131,14 +142,23 @@ class sly_Loader {
 		return false;
 	}
 
+	/**
+	 * @return int
+	 */
 	public static function getClassCount() {
 		return self::$counter;
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function getCacheFile() {
 		return self::getCacheDir().'/'.self::$pathHash.'.php';
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function getCacheDir() {
 		static $dir = null;
 
@@ -164,6 +184,10 @@ class sly_Loader {
 		}
 	}
 
+	/**
+	 * @param  array $params
+	 * @return mixed
+	 */
 	public static function clearCache($params = array()) {
 		$dir   = new sly_Util_Directory(self::getCacheDir());
 		$files = $dir->listPlain(true, false);

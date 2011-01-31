@@ -25,6 +25,9 @@ class sly_Table
 
 	protected static $perPage = 30;
 
+	/**
+	 * @param string $id
+	 */
 	public function __construct($id = null)
 	{
 		// Das 'a'-Präfix verhindert, dass die ID mit einer Zahl beginnt, was in HTML nicht erlaubt ist.
@@ -40,15 +43,24 @@ class sly_Table
 		$this->totalElements      = null;
 	}
 
+	/**
+	 * @param string $id
+	 */
 	public function setID($id) {
 		$this->id = trim($id);
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public static function isDragAndDropMode()
 	{
 		return sly_get('tableswitch', 'string') == 'dodraganddrop';
 	}
 
+	/**
+	 * @param int $perPage
+	 */
 	public static function setElementsPerPageStatic($perPage)
 	{
 		self::$perPage = abs((int) $perPage);
@@ -58,11 +70,17 @@ class sly_Table
 		}
 	}
 
+	/**
+	 * @param int $perPage
+	 */
 	public function setElementsPerPage($perPage = 20)
 	{
 		self::setElementsPerPageStatic($perPage);
 	}
 
+	/**
+	 * @param int $totalElements  leave this to nul lto disabled the pager
+	 */
 	public function renderHeader($totalElements = null)
 	{
 		$this->totalElements = $totalElements;
@@ -74,56 +92,91 @@ class sly_Table
 		include SLY_INCLUDE_PATH.'/views/_table/table/footer.phtml';
 	}
 
+	/**
+	 * @param boolean $enable
+	 */
 	public function setIsEmpty($isEmpty)
 	{
 		$this->isEmpty = (bool) $isEmpty;
 	}
 
+	/**
+	 * @param string $notice
+	 */
 	public function setEmptyNotice($notice)
 	{
 		$this->emptyNotice = $notice;
 	}
 
+	/**
+	 * @param boolean $enable
+	 */
 	public function enableSorting($enable)
 	{
 		$this->enableSorting = (bool) $enable;
 	}
 
+	/**
+	 * @param boolean $enable
+	 */
 	public function enableDragAndDrop($enable)
 	{
 		$this->enableDragAndDrop = (bool) $enable;
 	}
 
+	/**
+	 * @param string $function  JS callable
+	 */
 	public function setDragAndDropHandler($function)
 	{
 		$this->dragAndDropHandler = $function;
 	}
 
+	/**
+	 * @param sly_Table_Column $col
+	 */
 	public function addColumn(sly_Table_Column $col)
 	{
 		$this->columns[] = $col;
 	}
 
+	/**
+	 * @param boolean $enable
+	 */
 	public function enableSearching($enable)
 	{
 		$this->enableSearching = (bool) $enable;
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public function isSorting()
 	{
 		return $this->enableSorting;
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public function isSearching()
 	{
 		return $this->enableSearching;
 	}
 
+	/**
+	 * @param  string $default
+	 * @return string
+	 */
 	public function getSortKey($default = null)
 	{
 		return sly_get('sortby', 'string', $default);
 	}
 
+	/**
+	 * @param  string $default
+	 * @return string
+	 */
 	public function getDirection($default = 'asc')
 	{
 		return sly_get('direction', 'string', $default);
@@ -131,6 +184,8 @@ class sly_Table
 
 	/**
 	 * Gibt true zurück, wenn ein Pager angezeigt werden soll.
+	 * 
+	 * @return boolean
 	 */
 	public function hasPager()
 	{
@@ -139,6 +194,8 @@ class sly_Table
 
 	/**
 	 * Gibt true zurück, wenn die Suchmaske angezeigt werden soll.
+	 * 
+	 * @return boolean
 	 */
 	public function hasSearch()
 	{
@@ -151,6 +208,8 @@ class sly_Table
 
 	/**
 	 * Gibt true zurück, ob Drag&Drop aktiviert werden soll.
+	 * 
+	 * @return boolean
 	 */
 	public function hasDragAndDrop()
 	{
@@ -163,6 +222,12 @@ class sly_Table
 		return $this->enableDragAndDrop && (self::isDragAndDropMode() || (!$this->hasPager() && !$this->enableSearching));
 	}
 
+	/**
+	 * @param  string  $tableName
+	 * @param  boolean $hasPager
+	 * @param  boolean $hasDragAndDrop
+	 * @return array
+	 */
 	public static function getPagingParameters($tableName = 'table', $hasPager = false, $hasDragAndDrop = false)
 	{
 		$perPage = self::$perPage;
@@ -180,11 +245,20 @@ class sly_Table
 		return array('page' => $page, 'start' => $start, 'end' => $end, 'elements' => $elements);
 	}
 
+	/**
+	 * @param  string $tableName
+	 * @return string
+	 */
 	public static function getSearchParameters($tableName = 'table')
 	{
 		return sly_get('q_'.$tableName, 'string');
 	}
 
+	/**
+	 * @param  string $defaultColumn
+	 * @param  array  $enabledColumns
+	 * @return array
+	 */
 	public static function getSortingParameters($defaultColumn, $enabledColumns = array())
 	{
 		$sortby    = sly_get('sortby', 'string', $defaultColumn);

@@ -9,7 +9,6 @@
  */
 
 class sly_Util {
-
 	/**
 	 * Includes a template
 	 *
@@ -25,5 +24,4 @@ class sly_Util {
 			$service->includeFile($name, $params);
 		}
 	}
-
 }

@@ -28,6 +28,13 @@ class sly_Form extends sly_Form_Base {
 	protected $focussedElement;
 	protected $buttonClasses;
 
+	/**
+	 * @param string $action
+	 * @param string $method
+	 * @param string $title
+	 * @param string $name
+	 * @param string $id
+	 */
 	public function __construct($action, $method = 'POST', $title, $name = '', $id = '') {
 		$this->action   = $action;
 		$this->method   = strtoupper($method) == 'GET' ? 'GET' : 'POST';
@@ -48,10 +55,19 @@ class sly_Form extends sly_Form_Base {
 		$this->buttonClasses   = array('submit' => array(), 'reset' => array(), 'delete' => array(), 'apply' => array());
 	}
 
+	/**
+	 * @param string $enctype
+	 */
 	public function setEncType($enctype) {
 		$this->enctype = trim($enctype);
 	}
 
+	/**
+	 * @param  string $title
+	 * @param  string $id
+	 * @param  int    $columns
+	 * @return sly_Form_Fieldset
+	 */
 	public function beginFieldset($title, $id = null, $columns = 1) {
 		$this->currentFieldset = new sly_Form_Fieldset($title, $id, $columns);
 		$this->fieldsets[]     = $this->currentFieldset;
@@ -59,6 +75,10 @@ class sly_Form extends sly_Form_Base {
 		return $this->currentFieldset;
 	}
 
+	/**
+	 * @param  array $row
+	 * @return boolean  always true
+	 */
 	public function addRow(array $row) {
 		if ($this->currentFieldset === null) {
 			$this->beginFieldset($this->title);
@@ -68,37 +88,48 @@ class sly_Form extends sly_Form_Base {
 		return true;
 	}
 
+	/**
+	 * @param sly_Form_Fieldset $fieldset
+	 */
 	public function addFieldset(sly_Form_Fieldset $fieldset) {
 		$this->fieldsets[]     = $fieldset;
 		$this->currentFieldset = null;
 	}
 
-	public function setSubmitButton($submitButton) {
-		$this->submitButton = $submitButton instanceof sly_Form_Input_Button ? $submitButton : null;
+	public function setSubmitButton(sly_Form_Input_Button $submitButton = null) {
+		$this->submitButton = $submitButton;
 	}
 
-	public function setResetButton($resetButton) {
-		$this->resetButton = $resetButton instanceof sly_Form_Input_Button ? $resetButton : null;
+	public function setResetButton(sly_Form_Input_Button $resetButton = null) {
+		$this->resetButton = $resetButton;
 	}
 
-	public function setApplyButton($applyButton) {
-		$this->applyButton = $applyButton instanceof sly_Form_Input_Button ? $applyButton : null;
+	public function setApplyButton(sly_Form_Input_Button $applyButton = null) {
+		$this->applyButton = $applyButton;
 	}
 
-	public function setDeleteButton($deleteButton) {
-		$this->deleteButton = $deleteButton instanceof sly_Form_Input_Button ? $deleteButton : null;
+	public function setDeleteButton(sly_Form_Input_Button $deleteButton = null) {
+		$this->deleteButton = $deleteButton;
 	}
 
-	public function getSubmitButton() { return $this->submitButton; }
-	public function getResetButton()  { return $this->resetButton;  }
-	public function getApplyButton()  { return $this->applyButton;  }
-	public function getDeleteButton() { return $this->deleteButton; }
+	public function getSubmitButton() { return $this->submitButton; } ///< @return sly_Form_Input_Button
+	public function getResetButton()  { return $this->resetButton;  } ///< @return sly_Form_Input_Button
+	public function getApplyButton()  { return $this->applyButton;  } ///< @return sly_Form_Input_Button
+	public function getDeleteButton() { return $this->deleteButton; } ///< @return sly_Form_Input_Button
 
+	/**
+	 * @param string $type
+	 * @param string $class
+	 */
 	public function addButtonClass($type, $class) {
 		$this->buttonClasses[$type][] = trim($class);
 		$this->buttonClasses[$type]   = array_unique($this->buttonClasses[$type]);
 	}
 
+	/**
+	 * @param boolean $print
+	 * @param boolean $omitFormTag
+	 */
 	public function render($print = true, $omitFormTag = false) {
 		$viewRoot = SLY_INCLUDE_PATH.'/views/_form/';
 
@@ -112,14 +143,24 @@ class sly_Form extends sly_Form_Base {
 		$this->currentFieldset = null;
 	}
 
+	/**
+	 * @param string $elementID
+	 */
 	public function setFocus($elementID) {
 		$this->focussedElement = $elementID;
 	}
 
+	/**
+	 * @return sly_Form_Fieldset
+	 */
 	public function getCurrentFieldset() {
 		return $this->currentFieldset;
 	}
 
+	/**
+	 * @param string $class
+	 * @return array
+	 */
 	public function addClass($class) {
 		$class = explode(' ', $class);
 		foreach ($class as $c) $this->classes[] = $c;
@@ -131,6 +172,9 @@ class sly_Form extends sly_Form_Base {
 		$this->classes = array();
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getClasses() {
 		return $this->classes;
 	}

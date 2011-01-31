@@ -37,6 +37,9 @@ abstract class sly_Layout {
 		while (ob_get_level()) ob_end_clean();
 	}
 
+	/**
+	 * @return string
+	 */
 	public function render() {
 		ob_start();
 		$this->printHeader();
@@ -45,6 +48,10 @@ abstract class sly_Layout {
 		return ob_get_clean();
 	}
 
+	/**
+	 * @param string $filename
+	 * @param array  $params
+	 */
 	protected function renderView($filename, $params = array()) {
 		global $REX, $I18N;
 
@@ -308,7 +315,6 @@ abstract class sly_Layout {
 
 	/**
 	 * Schreibt die zugefügten Links in den Header
-	 *
 	 */
 	protected function printLinks() {
 		foreach ($this->links as $link) {
@@ -319,7 +325,7 @@ abstract class sly_Layout {
 	/**
 	 * Schreibt einen Link in den Header
 	 *
-	 * @param array $link ein Hash mit Attributen ($name => $value)
+	 * @param array $attributes  ein Hash mit Attributen ($name => $value)
 	 */
 	protected abstract function printLink($attributes);
 
