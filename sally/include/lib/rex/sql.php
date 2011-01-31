@@ -303,15 +303,11 @@ class rex_sql
 						$this->rows = mysql_affected_rows($this->identifier);
 						$this->last_insert_id = mysql_insert_id($this->identifier);
 				}
-
-				if (class_exists('_WV_QueryLogger')) _WV_QueryLogger::log($qry, $duration, $this->rows);
 			}
 		}
 		else {
 			$this->error = mysql_error($this->identifier);
 			$this->errno = mysql_errno($this->identifier);
-
-			if (class_exists('_WV_QueryLogger')) _WV_QueryLogger::log($qry, $duration, _WV_QueryLogger::ERROR);
 		}
 
 		if ($this->debugsql || $this->error != '') {

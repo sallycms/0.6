@@ -33,7 +33,7 @@ class sly_Util_Requirements {
 		}
 		elseif (function_exists('mysql_get_client_info')) {
 			$version = mysql_get_client_info();
-			return $this->result($version.' (MySQL)', ersion_compare($version, '5.0', '>=') ? self::OK : self::FAILED);
+			return $this->result($version.' (MySQL)', version_compare($version, '5.0', '>=') ? self::OK : self::FAILED);
 		}
 		else {
 			return $this->failed('translate:no_mysql_mysqli');

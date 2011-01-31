@@ -53,7 +53,7 @@ class sly_DB_PDO_Expression
 	public function bind($parameter_number, $value)
 	{
 		if ($parameter_number <= 0)
-			throw new ExpressionsException("Invalid parameter index: $parameter_number");
+			throw new sly_DB_PDO_Expression_Exception("Invalid parameter index: $parameter_number");
 
 		$this->values[$parameter_number-1] = $value;
 	}
@@ -111,7 +111,7 @@ class sly_DB_PDO_Expression
 				if ($quotes % 2 == 0)
 				{
 					if ($j > $num_values-1)
-						throw new ExpressionsException("No bound parameter for index $j");
+						throw new sly_DB_PDO_Expression_Exception("No bound parameter for index $j");
 
 					$ch = $this->substitute($values,$substitute,$i,$j++);
 				}
