@@ -117,7 +117,7 @@ class sly_Util_Directory {
 	}
 
 	public function deleteFiles() {
-		$level     = error_reporting(0);
+		$level = error_reporting(0);
 
 		if ($this->exists()) {
 			$files = $this->listPlain(true, false, true, true, null);
