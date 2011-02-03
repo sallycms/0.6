@@ -20,189 +20,24 @@
  * @param  array $data     Array mit den Daten der Kategorie (muss enthalten: catname, status)
  * @return array           Ein Array welches den status sowie eine Fehlermeldung beinhaltet
  */
-function rex_addCategory($parentID, $data)
-{
-	global $REX, $I18N;
-
-	$message  = $I18N->msg('category_added_and_startarticle_created');
-	$sql      = new rex_sql();
-	$parentID = (int) $parentID;
-
-	if (!is_array($data)) {
-		trigger_error('Expecting $data to be an array!', E_USER_ERROR);
-	}
-
-	$startpageTypes = array();
-
-	if (!empty($parentID)) {
-		// Artikeltyp vom Startartikel der jeweiligen Sprache vererben
-		$startpageTypes = rex_sql::getArrayEx(
-			'SELECT clang, type FROM #_article '.
-			'WHERE id = '.$parentID.' AND startpage = 1', '#_'
-		);
-	}
+function rex_addCategory($parentID, $data) {
+	$status = isset($data['status']) ? $data['status'] : false;
+	$prior  = -1;
 
 	if (isset($data['catprior']) && $data['catprior'] <= 0) {
-		$data['catprior'] = 1;
-	}
-	else {
-		$maxPrior         = rex_sql::fetch('MAX(catprior)', 'article', 're_id = '.$parentID.' AND catprior <> 0 AND clang = 0') + 1;
-		$data['catprior'] = $data['catprior'] > $maxPrior ? $maxPrior : $data['catprior'];
+		$prior = 1;
 	}
 
-	if (!isset($data['name'])) {
-		$data['name'] = $data['catname'];
+	try {
+		$service = sly_Service_Factory::getService('Category');
+		$service->add($parentID, $data['catname'], $status, $prior);
+
+		return array(true, 'OK');
 	}
-
-	if (!isset($data['status'])) {
-		$data['status'] = false;
+	catch (Exception $e) {
+		return array(false, $e->getMessage());
 	}
-
-	if (!isset($data['path'])) {
-		if ($parentID != 0) {
-			$data['path']  = rex_sql::fetch('path', 'article', 'id = '.$parentID.' AND startpage = 1 AND clang = 0');
-			$data['path'] .= $parent.'|';
-		}
-		else {
-			$data['path'] = '|';
-		}
-	}
-
-	// Wir müssen uns die Kategoriedaten nur merken, wenn es eine Erweiterung
-	// gibt, die sie nutzen möchte.
-	// AddOns, die stattdessen CAT_ADDED_NEW verwenden, erhalten den gleichen EP,
-	// nur ohne das rex_sql-Objekt. Das spart Speicher, wenn er gar nicht
-	// benötigt wird.
-
-	$hasOldExtensions = rex_extension_is_registered('CAT_ADDED');
-	$hasNewExtensions = rex_extension_is_registered('CAT_ADDED_NEW');
-
-	// Die ID ist für alle Sprachen gleich und entspricht einfach der aktuell
-	// höchsten plus 1.
-
-	$newID = rex_sql::fetch('MAX(id)', 'article', 'clang = 0') + 1;
-
-	// Entferne alle Kategorien aus dem Cache, die nach der aktuellen kommen und
-	// daher ab Ende dieser Funktion eine neue Positionsangabe haben.
-
-	$cache = sly_Core::cache();
-
-	foreach (array_keys($REX['CLANG']) as $clangID) {
-		$cats = rex_sql::getArrayEx('SELECT id FROM #_article WHERE catprior > '.$data['catprior'].' AND clang = '.$clangID.' AND re_id = '.$parentID, '#_');
-
-		foreach ($cats as $cat) {
-			$cache->delete('sly.category', $cat.'_'.$clangID);
-		}
-	}
-
-	// Bevor wir die neuen Datensätze einfügen, machen wir in den sortierten
-	// Listen (je eine pro Sprache) Platz, indem wir alle Kategorien, deren
-	// Priorität größergleich der Priorität der neuen Kategorie ist, um eine
-	// Position nach unten schieben.
-
-	$sql->setQuery(
-		'UPDATE #_article SET catprior = catprior + 1 '.
-		'WHERE re_id = '.$parentID.' AND catprior <> 0 AND catprior >= '.$data['catprior'].' '.
-		'ORDER BY catprior ASC', '#_'
-	);
-
-	// Kategorie in allen Sprachen anlegen
-
-	$records     = array();
-	$sqlTemplate = '(%d,%d,"%s","%s",%d,"%s",%d,%d,"%s",%d,%d,%d,"%s",%d,"%s","%s",%d)';
-	$createTime  = time();
-
-	foreach (array_keys($REX['CLANG']) as $clangID) {
-		$type = sly_Core::config()->get('DEFAULT_ARTICLE_TYPE', '');
-
-		if (!empty($startpageTypes[$clangID])) {
-			$type = $startpageTypes[$clangID];
-		}
-
-		$records[] = sprintf($sqlTemplate,
-			/*          id */ (int) $newID,
-			/*       re_id */ (int) $parentID,
-			/*        name */ $data['name'], // Magic Quotes von REDAXO!
-			/*     catname */ $data['catname'], // Magic Quotes von REDAXO!
-			/*    catprior */ (int) $data['catprior'],
-			/*  attributes */ '',
-			/*   startpage */ 1,
-			/*       prior */ 1,
-			/*        path */ $data['path'], // Magic Quotes von REDAXO!
-			/*      status */ $data['status'] ? 1 : 0,
-			/*  createdate */ $createTime,
-			/*  updatedate */ $createTime,
-			/*    template */ $sql->escape($type),
-			/*       clang */ (int) $clangID,
-			/*  createuser */ $sql->escape($REX['USER']->getLogin()),
-			/*  updateuser */ $sql->escape($REX['USER']->getLogin()),
-			/*    revision */ 0
-		);
-
-		$sql->setQuery('SELECT id FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE re_id = "'.$parentID.'" AND clang ="'.$clangID.'" AND catprior != 0');
-		for ($i=0; $i < $sql->getRows(); $i++)
-		{
-			sly_Core::cache()->delete('sly.category', $sql->getValue('id').'_'.$clangID);
-			$sql->next();
-		}
-
-		sly_Core::cache()->delete('sly.category.list', $parentID.'_'.$clangID);
-	}
-
-	$sql->setQuery('INSERT INTO '.$REX['DATABASE']['TABLE_PREFIX'].'article (id,re_id,name,'.
-		'catname,catprior,attributes,startpage,prior,path,status,createdate,'.
-		'updatedate,type,clang,createuser,updateuser,revision) VALUES '.
-		implode(',', $records)
-	);
-
-	// Falls Extensions vorhanden sind, führen wir sie einmal pro Sprache aus.
-
-	if ($hasOldExtensions || $hasNewExtensions) {
-		foreach (array_keys($REX['CLANG']) as $clangID) {
-			$category = null;
-
-			// rex_sql-Objekt erzeugen, um die Kompatibilität beizubehalten.
-
-			if ($hasOldExtensions) {
-				$category = new rex_sql();
-				$category->setQuery('SELECT * FROM #_article WHERE id = '.$newID.' AND clang = '.$clangID.' AND startpage = 1', '#_');
-			}
-
-			// EP auslösen
-
-			$message = rex_register_extension_point('CAT_ADDED', $message, array(
-				'category' => clone $category,
-				'id'       => $newID,
-				're_id'    => $parentID,
-				'clang'    => $clangID,
-				'name'     => $data['catname'],
-				'prior'    => $data['catprior'],
-				'path'     => $data['path'],
-				'status'   => $data['status'],
-				'data'     => $data
-			));
-
-			$message = rex_register_extension_point('CAT_ADDED_NEW', $message, array(
-				'id'       => $newID,
-				're_id'    => $parentID,
-				'clang'    => $clangID,
-				'name'     => $data['catname'],
-				'prior'    => $data['catprior'],
-				'path'     => $data['path'],
-				'status'   => $data['status'],
-				'data'     => $data
-			));
-		}
-
-		$category = null;
-		unset($category);
-	}
-
-	return array(true, $message, $newID);
 }
-
-
-
 
 /**
  * Bearbeitet einer Kategorie
@@ -212,121 +47,17 @@ function rex_addCategory($parentID, $data)
  * @param  array $data       Array mit den Daten der Kategorie
  * @return array             ein Array welches den status sowie eine Fehlermeldung beinhaltet
  */
-function rex_editCategory($categoryID, $clang, $data)
-{
-	global $REX, $I18N;
+function rex_editCategory($categoryID, $clang, $data) {
+	try {
+		$service = sly_Service_Factory::getService('Category');
+		$service->edit($categoryID, $clang, $data['catname'], isset($data['catprior']) ? $data['catprior'] : false);
 
-	$categoryID = (int) $categoryID;
-	$clang      = (int) $clang;
-
-	if (!isset($data['catname'])) {
-		trigger_error('Expecting $data to contain the key "catname"!', E_USER_ERROR);
+		return array(true, 'OK');
 	}
-
-	// Kategorie mit alten Daten selektieren
-
-	$oldData = rex_sql::fetch('*', 'article', 'startpage = 1 and id = '.$categoryID.' and clang = '.$clang);
-
-	// Kategorie selbst updaten
-
-	$sql = new rex_sql();
-	$sql->setQuery(
-		'UPDATE '.$REX['DATABASE']['TABLE_PREFIX'].'article '.
-		'SET catname = "'.$data['catname'].'", '. // Magic Quotes von REDAXO!
-		'updatedate = UNIX_TIMESTAMP(), updateuser = "'.$sql->escape($REX['USER']->getLogin()).'" '.
-		'WHERE id = '.$categoryID.' AND clang = '.$clang
-	);
-
-	// Name der Kategorie in den Kindern ändern
-
-	$sql->setQuery(
-		'UPDATE #_article '.
-		'SET catname = "'.$data['catname'].'" '. // Magic Quotes von REDAXO!
-		'WHERE re_id = '.$categoryID.' AND startpage = 0 AND clang = '.$clang, '#_'
-	);
-
-	// Kinder abrufen, um für jedes Kind den Cache zu leeren.
-
-	$children = rex_sql::getArrayEx(
-		'SELECT id FROM #_article '.
-		'WHERE re_id = '.$categoryID.' AND startpage = 0 AND clang = '.$clang, '#_'
-	);
-
-	foreach ($children as $child) {
-		rex_deleteCacheArticle($child, $clang);
+	catch (Exception $e) {
+		return array(false, $e->getMessage());
 	}
-
-	// Priorität verarbeiten
-
-	if (isset($data['catprior'])) {
-		$parentID = $oldData['re_id'];
-		$oldPrio  = $oldData['catprior'];
-		$newPrio  = (int) $data['catprior'];
-
-		if ($newPrio <= 0) {
-			$newPrio = 1;
-		}
-		else {
-			$maxPrio = rex_sql::fetch('MAX(catprior)', 'article', 're_id = '.$parentID.' AND catprior <> 0 AND clang = 0');
-
-			if ($newPrio > $maxPrio) {
-				$newPrio = $maxPrio;
-			}
-		}
-
-		// Nur aktiv werden, wenn sich auch etwas geändert hat.
-
-		if ($newPrio != $oldPrio) {
-			$relation    = $newPrio < $oldPrio ? '+' : '-';
-			list($a, $b) = $newPrio < $oldPrio ? array($newPrio, $oldPrio) : array($oldPrio, $newPrio);
-
-			// Alle anderen entsprechend verschieben
-
-			$sql->setQuery(
-				'UPDATE '.$REX['DATABASE']['TABLE_PREFIX'].'article '.
-				'SET catprior = catprior '.$relation.' 1 '.
-				'WHERE catprior BETWEEN '.$a.' AND '.$b.' '.
-				'AND re_id = '.$parentID.' AND catprior <> 0 AND clang = '.$clang
-			);
-
-			// Eigene neue Position speichern
-
-			$sql->setQuery(
-				'UPDATE '.$REX['DATABASE']['TABLE_PREFIX'].'article '.
-				'SET catprior = '.$newPrio.' '.
-				'WHERE id = '.$categoryID.' AND clang = '.$clang
-			);
-
-			$sql->setQuery('SELECT id FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE re_id = "'.$parentID.'" AND clang ="'.$clang.'" AND catprior != 0');
-			for ($i=0; $i < $sql->getRows(); $i++)
-			{
-				sly_Core::cache()->delete('sly.category', $sql->getValue('id').'_'.$clang);
-				$sql->next();
-			}
-           	sly_Core::cache()->delete('sly.category.list', $parentID.'_'.$clang);
-		}
-	}
-
-	// Cache der Kategorie löschen
-
-	$message = $I18N->msg('category_updated');
-	$message = rex_register_extension_point('CAT_UPDATED', $message, array(
-		'id'     => $categoryID,
-		're_id'  => $oldData['re_id'],
-		'clang'  => $clang,
-		'name'   => $oldData['catname'],
-		'prior'  => $oldData['catprior'],
-		'path'   => $oldData['path'],
-		'status' => $oldData['status'],
-		'data'   => $data,
-	));
-
-	sly_Core::cache()->delete('sly.category', $categoryID.'_'.$clang);
-	return array(true, $message);
 }
-
-
-
 
 /**
  * Löscht eine Kategorie und reorganisiert die Prioritäten verbleibender
@@ -335,96 +66,16 @@ function rex_editCategory($categoryID, $clang, $data)
  * @param  int $categoryID  Id der Kategorie die gelöscht werden soll
  * @return array            ein Array welches den Status sowie eine Fehlermeldung beinhaltet
  */
-function rex_deleteCategoryReorganized($categoryID)
-{
-	global $I18N, $REX;
+function rex_deleteCategoryReorganized($categoryID) {
+	try {
+		$service = sly_Service_Factory::getService('Category');
+		$service->delete($categoryID);
 
-	$message    = '';
-	$clang      = 0;
-	$categoryID = (int) $categoryID;
-
-	// Prüfen ob die Kategorie existiert
-
-	$parentID = rex_sql::fetch('re_id', 'article', 'id = '.$categoryID.' AND clang = '. $clang);
-
-	if ($parentID === false) {
-		$message = $I18N->msg('category_could_not_be_deleted');
-		return array(false, $message);
+		return array(true, 'OK');
 	}
-
-	// Prüfen ob die Kategorie noch Unterkategorien besitzt
-
-	$numSubCats = rex_sql::fetch('COUNT(*)', 'article', 're_id = '.$categoryID.' AND clang = '.$clang.' AND startpage = 1');
-
-	if ($numSubCats > 0) {
-		$message  = $I18N->msg('category_could_not_be_deleted').' ';
-		$message .= $I18N->msg('category_still_contains_subcategories');
-		return array(false, $message);
+	catch (Exception $e) {
+		return array(false, $e->getMessage());
 	}
-
-	// Prüfen ob die Kategorie noch Artikel besitzt (ausser dem Startartikel)
-
-	$numChildren = rex_sql::fetch('COUNT(*)', 'article', 're_id = '.$categoryID.' AND clang = '.$clang.' AND startpage = 0');
-
-	if ($numChildren > 0) {
-		$message  = $I18N->msg('category_could_not_be_deleted').' ';
-		$message .= $I18N->msg('category_still_contains_articles');
-		return array(false, $message);
-	}
-
-	$sql       = new rex_sql();
-	$instances = rex_sql::getArrayEx(
-		'SELECT clang, re_id, catname, catprior, path, status '.
-		'FROM #_article WHERE id = '.$categoryID, '#_'
-	);
-
-	// Kategorie löschen
-
-	$return = rex_deleteArticle($categoryID);
-
-	if ($return['state'] != false) {
-		// Kinder neu positionieren
-
-		$cache = sly_Core::cache();
-
-		foreach ($instances as $clang => $data) {
-			$sql->setQuery(
-				'UPDATE #_article SET catprior = catprior - 1 '.
-				'WHERE re_id = '.$data['re_id'].' AND catprior > '.$data['catprior'].' '.
-				'AND catprior <> 0 AND clang = '.$clang, '#_'
-			);
-
-			$return = rex_register_extension_point('CAT_DELETED', $return, array(
-				'id'     => $categoryID,
-				'clang'  => $clang,
-				're_id'  => $data['re_id'],
-				'name'   => $data['catname'],
-				'prior'  => $data['catprior'],
-				'path'   => $data['path'],
-				'status' => $data['status']
-			));
-
-			$cache->delete('sly.category', $categoryID.'_'.$clang);
-			$cache->delete('sly.category.list', $data['re_id'].'_'.$clang);
-		}
-
-		// remove all caches
-
-		$sql->setQuery('SELECT id FROM #_article WHERE re_id = "'.$parentID.'" AND catprior >= "' .$data['catprior']. '"', '#_');
-		$clangs = array_keys($REX['CLANG']);
-
-		for ($i = 0; $i < $sql->getRows(); ++$i) {
-			$id = $sql->getValue('id');
-
-			foreach ($clangs as $clang) {
-				$cache->delete('sly.category', $id.'_'.$clang);
-			}
-
-			$sql->next();
-		}
-	}
-
-	return array($return['state'], $return['message']);
 }
 
 
