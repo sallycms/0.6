@@ -41,5 +41,9 @@ class sly_Service_CategoryTest extends PHPUnit_Framework_TestCase {
 	public function testEdit() {
 		$service = sly_Service_Factory::getService('Category');
 		$service->edit(self::$id, 0, 'Neuer Titel', -1);
+
+		$cat = $service->findById(self::$id, 0);
+		$this->assertEquals('Testkategorie', $cat->getName());
+		$this->assertEquals('Neuer Titel', $cat->getCatname());
 	}
 }
