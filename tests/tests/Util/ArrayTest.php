@@ -93,7 +93,13 @@ class sly_Util_ArrayTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testTypeSafety($value, $type) {
 		$this->obj->set('hallo', $value);
-		$this->assertType($type, $this->obj->get('hallo'));
+
+		if ($type === 'stdClass') {
+			$this->assertInstanceOf($type, $this->obj->get('hallo'));
+		}
+		else {
+			$this->assertInternalType($type, $this->obj->get('hallo'));
+		}
 	}
 
 	public function typeSafetyProvider() {
