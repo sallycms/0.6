@@ -95,19 +95,6 @@ function rex_addCategory($parentID, $data)
 		}
 	}
 
-	// Entferne alle Kategorien aus dem Cache, die nach der aktuellen kommen und
-	// daher ab Ende dieser Funktion eine neue Positionsangabe haben.
-
-	$cache = sly_Core::cache();
-
-	foreach (array_keys($REX['CLANG']) as $clangID) {
-		$cats = rex_sql::getArrayEx('SELECT id FROM #_article WHERE catprior > '.$data['catprior'].' AND clang = '.$clangID.' AND re_id = '.$parentID, '#_');
-
-		foreach ($cats as $cat) {
-			$cache->delete('category', $cat.'_'.$clangID);
-		}
-	}
-
 	// Bevor wir die neuen Datensätze einfügen, machen wir in den sortierten
 	// Listen (je eine pro Sprache) Platz, indem wir alle Kategorien, deren
 	// Priorität größergleich der Priorität der neuen Kategorie ist, um eine
