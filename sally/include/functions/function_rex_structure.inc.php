@@ -78,9 +78,6 @@ function rex_deleteCategoryReorganized($categoryID) {
 	}
 }
 
-
-
-
 /**
  * Ändert den Status der Kategorie
  *
@@ -89,58 +86,16 @@ function rex_deleteCategoryReorganized($categoryID) {
  * @param  int|null $newStatus   Status auf den die Kategorie gesetzt werden soll, oder null wenn zum nächsten Status weitergeschaltet werden soll
  * @return array                 Ein Array welches den status sowie eine Fehlermeldung beinhaltet
  */
-function rex_categoryStatus($categoryID, $clang, $newStatus = null)
-{
-	global $REX, $I18N;
+function rex_categoryStatus($categoryID, $clang, $newStatus = null) {
+	try {
+		$service = sly_Service_Factory::getService('Category');
+		$service->changeStatus($categoryID, $clang, $newStatus);
 
-	$success        = false;
-	$message        = '';
-	$catStatusTypes = rex_categoryStatusTypes();
-	$categoryID     = (int) $categoryID;
-	$clang          = (int) $clang;
-
-	$sql       = new rex_sql();
-	$oldStatus = rex_sql::fetch('status,re_id', 'article', 'id = '.$categoryID.' AND clang = '.$clang);
-
-	if ($oldStatus !== false) {
-		$re_id     = $oldStatus['re_id'];
-		$oldStatus = $oldStatus['status'];
-
-		// Status wurde nicht von außen vorgegeben,
-		// => zyklisch auf den nächsten weiterschalten
-
-		if ($newStatus === null) {
-			$newStatus = ($oldStatus + 1) % count($catStatusTypes);
-		}
-
-		$sql->setTable('article', true);
-		$sql->setWhere('id = '.$categoryID.' AND clang = '.$clang);
-		$sql->setValue('status', $newStatus);
-		$sql->addGlobalCreateFields();
-
-		if ($sql->update()) {
-			rex_deleteCacheArticle($categoryID, $clang);
-
-			$success = true;
-			$message = rex_register_extension_point('CAT_STATUS', $I18N->msg('category_status_updated'), array(
-				'id'     => $categoryID,
-				'clang'  => $clang,
-				'status' => $newStatus
-			));
-
-			$cache = sly_Core::cache();
-			$cache->delete('sly.category', $categoryID.'_'.$clang);
-			$cache->delete('sly.category.list', $re_id.'_'.$clang);
-		}
-		else {
-			$message = $sql->getError();
-		}
+		return array(true, 'OK');
 	}
-	else {
-		$message = $I18N->msg('no_such_category');
+	catch (Exception $e) {
+		return array(false, $e->getMessage());
 	}
-
-	return array($success, $message);
 }
 
 /**
@@ -148,22 +103,8 @@ function rex_categoryStatus($categoryID, $clang, $newStatus = null)
  *
  * @return array  Array von Stati (jeweils array(Titel, css-Klasse))
  */
-function rex_categoryStatusTypes()
-{
-	global $I18N;
-	static $catStatusTypes;
-
-	if (!$catStatusTypes) {
-		$catStatusTypes = array(
-			// Name, CSS-Class
-			array($I18N->msg('status_offline'), 'rex-offline'),
-			array($I18N->msg('status_online'),  'rex-online')
-		);
-
-		$catStatusTypes = rex_register_extension_point('CAT_STATUS_TYPES', $catStatusTypes);
-	}
-
-	return $catStatusTypes;
+function rex_categoryStatusTypes() {
+	return sly_Service_Factory::getService('Category')->getStati();
 }
 
 /**

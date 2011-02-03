@@ -49,7 +49,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		$db       = sly_DB_Persistence::getInstance();
 		$parentID = (int) $parentID;
 		$position = (int) $position;
-		$status   = (boolean) $status;
+		$status   = (int) $status;
 
 		// Parent validieren
 
@@ -295,5 +295,62 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		$dispatcher->notify('SLY_CAT_DELETED', $cat);
 
 		return true;
+	}
+
+	public function changeStatus($categoryID, $clangID, $newStatus = null) {
+		global $REX;
+
+		$categoryID = (int) $categoryID;
+		$clangID    = (int) $clangID;
+		$cat        = $this->findById($categoryID, 0);
+
+		// Prüfen ob die Kategorie existiert
+		if ($cat === null) {
+			throw new sly_Exception('Category not found.');
+		}
+
+		$stati     = $this->getStati();
+		$re_id     = $cat->getReId();
+		$oldStatus = $cat->getStatus();
+
+		// Status wurde nicht von außen vorgegeben,
+		// => zyklisch auf den nächsten weiterschalten
+		if ($newStatus === null) {
+			$newStatus = ($oldStatus + 1) % count($stati);
+		}
+
+		// Kategorien updaten
+		$cat->setStatus($newStatus);
+		$cat->setUpdateColumns();
+		$this->save($cat);
+
+		// Cache leeren
+		rex_deleteCacheArticle($categoryID, $clangID);
+
+		$cache = sly_Core::cache();
+		$cache->delete('sly.category', $categoryID.'_'.$clangID);
+		$cache->delete('sly.category.list', $re_id.'_'.$clangID);
+
+		// Event auslösen
+		$dispatcher = sly_Core::dispatcher();
+		$dispatcher->notify('SLY_CAT_STATUS', $cat);
+
+		return true;
+	}
+
+	public function getStati() {
+		static $stati;
+
+		if (!$stati) {
+			$stati = array(
+				// Name, CSS-Klasse
+				array(t('status_offline'), 'rex-offline'),
+				array(t('status_online'),  'rex-online')
+			);
+
+			$stati = sly_Core::dispatcher()->filter('SLY_CAT_STATUS_TYPES', $stati);
+		}
+
+		return $stati;
 	}
 }
