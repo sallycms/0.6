@@ -91,7 +91,7 @@ function rex_addCategory($parentID, $data)
 		$cats = rex_sql::getArrayEx('SELECT id FROM #_article WHERE catprior > '.$data['catprior'].' AND clang = '.$clangID.' AND re_id = '.$parentID, '#_');
 
 		foreach ($cats as $cat) {
-			$cache->delete('category', $cat.'_'.$clangID);
+			$cache->delete('sly.category', $cat.'_'.$clangID);
 		}
 	}
 
