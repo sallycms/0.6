@@ -28,7 +28,6 @@ catch (Exception $e) {
 }
 
 $backendLocale   = new sly_Form_Select_DropDown('backend_locale', t('specials_lang'), $config->get('LANG'), $locales, 'rex-form-lang');
-$modRewrite      = new sly_Form_Select_DropDown('mod_rewrite', t('specials_mod_rewrite'), $config->get('MOD_REWRITE') ? 'true' : 'false', $yesNo, 'rex-form-mod-rewrite');
 $defaultType     = new sly_Form_Select_DropDown('default_type', t('specials_default_type'), $config->get('DEFAULT_ARTICLE_TYPE'), $types, 'rex-form-default-article-type');
 $cachingStrategy = new sly_Form_Select_DropDown('caching_strategy', t('specials_caching_strategy'), sly_Cache::getStrategy(), sly_Cache::getAvailableCacheImpls(), 'rex-form-caching-strategy');
 $frontendSync    = new sly_Form_Select_DropDown('frontend_sync', t('specials_frontend_sync'), $config->get('FRONTEND_SYNC') ? 'true' : 'false', $yesNo, 'rex-form-frontend-sync');
@@ -85,7 +84,6 @@ $buttonBar = new sly_Form_ButtonBar(array(
 						$defaultType,
 						$frontendSync,
 						$backendLocale,
-						$modRewrite,
 						$cachingStrategy,
 					);
 

@@ -309,7 +309,6 @@ specials_error_email: Fehler-E-Mail
 specials_start_article: Startseite
 specials_default_type: Standard Artikeltyp
 specials_lang: Standard BE-Locale
-specials_mod_rewrite: mod_rewrite verwenden
 specials_timezone: Zeitzone
 specials_not_found_article: Artikel bei fehlender Seite
 

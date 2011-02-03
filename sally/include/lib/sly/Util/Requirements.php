@@ -128,14 +128,6 @@ class sly_Util_Requirements {
 		else return $this->failed($open_basedir ? 'translate:safemode_openbasedir' : 'safe_mode');
 	}
 
-	public function modRewrite() {
-		if (function_exists('apache_get_modules')) {
-			return in_array('mod_rewrite', apache_get_modules()) ? $this->ok('translate:activated') : $this->failed('translate:deactivated');
-		}
-
-		return $this->warning('translat:unknown');
-	}
-
 	public function shortOpenTags() {
 		return ini_get('short_open_tag') == 0 ? $this->failed('translate:deactivated') : $this->ok('translate:activated');
 	}
