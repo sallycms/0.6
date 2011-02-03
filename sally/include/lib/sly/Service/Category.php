@@ -163,10 +163,9 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		return $newID;
 	}
 
-	public function edit($categoryID, $clangID, $name, $position) {
+	public function edit($categoryID, $clangID, $name, $position = false) {
 		$categoryID = (int) $categoryID;
 		$clangID    = (int) $clangID;
-		$position   = (int) $position;
 		$db         = sly_DB_Persistence::getInstance();
 		$cache      = sly_Core::cache();
 
@@ -197,9 +196,10 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		}
 
 		// Kategorie verschieben, wenn nötig
-		if ($position != $cat->getPrior()) {
+		if ($position !== false && $position != $cat->getPrior()) {
 			$parentID = $cat->getReId();
 			$oldPrio  = $cat->getPrior();
+			$position = (int) $position;
 
 			$maxPrio = $db->magicFetch('article', 'MAX(catprior)', 're_id = '.$parentID.' AND catprior <> 0 AND clang = 0');
 			$newPrio = ($position <= 0 || $position > $maxPrio) ? $maxPrio : $position;
