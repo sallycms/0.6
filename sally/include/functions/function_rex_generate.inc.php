@@ -58,9 +58,9 @@ function rex_deleteCacheArticle($id, $clang = null)
 			continue;
 		}
 
-		$cache->delete('sly.article', $id.'_'.$clang);
-		$cache->delete('sly.article.list', $id.'_'.$clang);
-		$cache->delete('sly.category.list', $id.'_'.$clang);
+		$cache->delete('sly.article', $id.'_'.$_clang);
+		$cache->delete('sly.article.list', $id.'_'.$_clang);
+		$cache->delete('sly.category.list', $id.'_'.$_clang);
 	}
 }
 

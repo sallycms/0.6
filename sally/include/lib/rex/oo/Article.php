@@ -32,7 +32,7 @@ class OOArticle extends OORedaxo
 
 		$clang     = (int) $clang;
 		$namespace = $OOCategory ? 'sly.category' : 'sly.article';
-		$key       = sly_Cache::generateKey($article_id, $clang);
+		$key       = $article_id.'_'.$clang;
 		$obj       = sly_Core::cache()->get($namespace, $key, null);
 
 		if ($obj === null) {
@@ -42,7 +42,6 @@ class OOArticle extends OORedaxo
 				$class = $OOCategory ? 'OOCategory' : 'OOArticle';
 				$obj   = new $class($article, $clang);
 
-				
 				sly_Core::cache()->set($namespace, $key, $obj);
 			}
 		}
@@ -145,7 +144,7 @@ class OOArticle extends OORedaxo
 	 */
 	public static function exists($articleId)
 	{
-		
+
 		if (sly_Core::cache()->get('sly.article', sly_Cache::generateKey($articleId, sly_Core::getCurrentClang()), null) !== null) {
 			return true;
 		}
