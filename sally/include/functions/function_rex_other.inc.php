@@ -73,7 +73,7 @@ function sly_set_locale(sly_I18N $i18n) {
  * @return string
  */
 function truncate($string, $length = 80, $etc = '...', $breakWords = false) {
-	if ($length == 0) {
+	if ($length <= 0) {
 		return '';
 	}
 
