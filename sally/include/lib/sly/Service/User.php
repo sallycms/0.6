@@ -44,7 +44,7 @@ class sly_Service_User extends sly_Service_Model_Base {
 	 * @return sly_Model_User
 	 */
 	public function getCurrentUser() {
-		$userID = SLY_IS_TESTING ? 1 : sly_Util_Session::get('UID', 'int', -1);
+		$userID = SLY_IS_TESTING ? SLY_TESTING_USER_ID : sly_Util_Session::get('UID', 'int', -1);
 		return $this->findById($userID);
 	}
 
