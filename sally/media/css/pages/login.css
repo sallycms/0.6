@@ -1,12 +1,12 @@
 body#rex-page-login {
-	div#rex-title, div#rex-output {
+	#rex-title, .sly-content {
 		float: none;
 		width: 650px;
 		margin-right: auto;
 		margin-left: auto;
 	}
 
-	div#rex-wrapper {
+	#rex-wrapper {
 		width: 100%;
 		&2 { padding: 0 16px; }
 	}
