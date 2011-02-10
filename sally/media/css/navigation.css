@@ -145,14 +145,12 @@ div#rex-navi-main ul li a.rex-active {
 /******************************************************************************\
 * Navi Logout                                                                  *
 \******************************************************************************/
-div#rex-navi-logout {
+#sly-navi-top {
 	color: #b2b2b2;
 	width: 100%;
 	height: 75px;
 	margin-bottom: 36px;
-	background-image: url(../logo.gif);
-	background-position: 11px 0px;
-	background-repeat: no-repeat;
+	background: transparent url(../logo.gif) 11px 0px no-repeat;
 
 	p, ul {
 		padding: 59px 10px 0 0;

@@ -87,7 +87,7 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		print '<div id="rex-title"><div class="rex-title-row"><h1>'.$head.'</h1></div>'.$subtitle.'</div>';
 
 		rex_register_extension_point('PAGE_TITLE_SHOWN', $subtitle, array('page' => $REX['PAGE']));
-		print '<!-- *** OUTPUT OF CONTENT - START *** --><div id="rex-output">';
+		print '<!-- *** OUTPUT OF CONTENT - START *** -->';
 	}
 
 	/**

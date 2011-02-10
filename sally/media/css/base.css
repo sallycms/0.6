@@ -12,11 +12,6 @@
 	background-color: $background !important;
 }
 
-html>body div#rex-title {
-	height: auto;
-	min-height: 0; /*oder 61*/
-}
-
 body {
 	background-color: #f2f2f2;
 	font-family: Calibri, Verdana, Arial, sans-serif;
@@ -67,7 +62,7 @@ body {
 	}
 
 	.rex-popup {
-		div#rex-navi-logout {
+		#sly-navi-top {
 			margin-bottom: 2px;
 		}
 
@@ -124,13 +119,11 @@ img, iframe {
 }
 
 /* REX-TITLE --------------------------------------------------------------------------------------- REX-TITLE */
-div#rex-title {
+#rex-title {
 
-/* 	background-image: url(../logo.jpg);
-	background-position: 100% 50%; */
-	margin: 0px;
+	margin: 0 0 5px 0;
 	background: none;
-	height: 61px;
+	height: auto;
 
 	div.rex-title-row {
 		width: 100%;
@@ -385,7 +378,6 @@ div.rex-widget {
 	background-color: #FFF;
 }
 
-div#rex-header p.rex-header-top,
 div.rex-area,
 div.rex-content-cols,
 div.rex-widget p.rex-widget-field input,
@@ -423,22 +415,14 @@ div.rex-navi-slice ul li span {
 	+hardcore-hidden;
 }
 
-div#rex-header {
-	position: relative;
-	clear: both;
-	float: left;
-	width: 100%;
-
-	p.rex-header-top {
-		padding: 5px;
-		text-align: right;
-	}
-}
-
 p.center, td.center, th.center, div.center {
 	text-align: center;
 }
 
 .rex-me1 {
 	margin: 20px 0 20px 0;
+}
+
+#sly-footer {
+	+clearfix;
 }

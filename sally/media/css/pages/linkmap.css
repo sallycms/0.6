@@ -3,8 +3,8 @@ body#rex-page-linkmap {
 	div#rex-title div.rex-title-row { width: 100%;            }
 	div#rex-title                   { background-image: none; }
 	div#rex-redaxo-link             { display: none;          }
-	div#rex-navi-logout             { display: none;          }
-	div#rex-footer                  { display: none;          }
+	#sly-navi-top                   { display: none;          }
+	#sly-footer                     { display: none;          }
 
 	div#rex-wrapper {
 		float: none;

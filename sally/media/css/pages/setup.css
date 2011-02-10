@@ -53,7 +53,7 @@ div.rex-area-scroll {
 		&2 { padding: 0 16px; }
 	}
 
-	div#rex-footer {
+	#sly-footer {
 		width: 650px;
 		float: none;
 		margin-right: auto;

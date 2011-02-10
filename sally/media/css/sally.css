@@ -172,8 +172,8 @@ div.rex-addon {
 div.rex-area-col,
 div.rex-addon-col {
 	&-2 {
+		+clearfix;
 		position: relative;
-		float: left;
 		width: 100%;
 	}
 
@@ -250,7 +250,6 @@ div.rex-addon-footer{
 	background-color: $drk_grey;
 }
 
-div#rex-header p.rex-header-top,
 div.rex-area,
 div.rex-addon-output,
 div.rex-content-cols,

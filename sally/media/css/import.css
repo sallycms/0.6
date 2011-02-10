@@ -15,5 +15,3 @@
 @include 'pages/content.css';
 @include 'pages/addon.css';
 @include 'pages/user.css';
-
-@include 'addons/image_resize.css';
