@@ -37,7 +37,7 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		// daher in PAGE_CHECKED, um den Wert später noch einmal zu validieren.
 
 		$this->pageChecked(array('subject' => isset($REX['PAGE']) ? $REX['PAGE'] : ''));
-		rex_register_extension('PAGE_CHECKED', array($this, 'pageChecked'));
+		sly_Core::dispatcher()->register('PAGE_CHECKED', array($this, 'pageChecked'));
 
 		$this->addHttpMeta('Content-Type', 'text/html charset='.t('htmlcharset'));
 		$this->addMeta('robots', 'noindex,nofollow');

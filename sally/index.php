@@ -179,6 +179,8 @@ if ($REX['USER']) {
 
 		sly_Util_HTTP::redirect($url, array(), $msg);
 	}
+}else {
+	$REX['PAGE'] = $REX['SETUP'] ? 'setup' : 'login';
 }
 
 // Seite gefunden. AddOns benachrichtigen
