@@ -19,7 +19,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		return new sly_Model_Category($params);
 	}
 
-	public function save(sly_Model_Category $cat) {
+	public function save(sly_Model_Base $cat) {
 		$persistence = sly_DB_Persistence::getInstance();
 
 		if ($cat->getPid() == sly_Model_Base::NEW_ID) {
