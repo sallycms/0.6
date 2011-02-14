@@ -18,7 +18,7 @@ $config = sly_Core::config();
 		<?php $this->renderView('views/layout/sally/navi_logout.phtml') ?>
 	</div>
 	<?php if ($REX['USER'] && $this->hasNavigation()): ?>
-	<div id="rex-navi-main">
+	<div id="sly-navi-main">
 		<?php
 		$this->renderView('views/layout/sally/navi_main.phtml');
 		?>
@@ -26,4 +26,3 @@ $config = sly_Core::config();
 	<?php endif ?>
 
 	<div id="rex-wrapper">
-		<div id="rex-wrapper2">

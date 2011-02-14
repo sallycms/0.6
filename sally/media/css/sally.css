@@ -1,25 +1,12 @@
-#rex-website:after {
-	clear: both;
-	content: ".";
-	display: block;
-	height: 0;
-	line-height: 0;
-	visibility: hidden;
-}
-
 #rex-website {
-	display: inline-block;
+	+clearfix;
 }
 
 * html #rex-website {
 	height: 1%;
 }
 
-#rex-website {
-	display: block;
-}
-
-div.sly-content {
+.sly-content {
 	clear: left;
 	/* margin-top: 10px; */
 
@@ -79,7 +66,7 @@ div.rex-addon-output {
 
 /*	REX-MESSAGE -------------------------------------------------------------------------- REX-MESSAGE */
 
-div.rex-message {
+.rex-message {
 	clear:both;
 	font-weight:700;
 	line-height:1em;
@@ -134,7 +121,7 @@ div.rex-message {
 
 /*	real width = border + padding + width */
 
-table.rex-table, table.sly-table {
+.rex-table, .sly-table {
 	th, td {
 		&.rex-icon, &.rex-small, &.sly-icon, &.sly-small {
 			width: 29px;
@@ -153,14 +140,14 @@ table.rex-table, table.sly-table {
 
 /*	Allgemeiner Block (Addon Hilfeseiten) / Addon Seiten */
 
-div.rex-area, /* Schön, dass hier das -output fehlt... */
-div.rex-addon-output {
+.rex-area, /* Schön, dass hier das -output fehlt... */
+.rex-addon-output {
 	float: left;
 	width: 100%;
 }
 
-div.rex-area,
-div.rex-addon {
+.rex-area,
+.rex-addon {
 	&-footer {
 		padding: 7px 5px;
 		font-weight: bold;
@@ -169,8 +156,8 @@ div.rex-addon {
 
 /*	Spaltigkeit */                                                 /* *lol* :) */
 
-div.rex-area-col,
-div.rex-addon-col {
+.rex-area-col,
+.rex-addon-col {
 	&-2 {
 		+clearfix;
 		position: relative;
@@ -193,31 +180,28 @@ div.rex-addon-col {
 
 /*	Widget */
 
-div.rex-widget {
+.rex-widget {
 	float: left;
 	margin-bottom: 10px;
 	padding: 5px;
 	border-width: 1px;
 	border-style: solid;
 	+border-radius($brd_rad);
-}
 
-/*	Breite war von "div.rex-form div.rex-form-row p" */
-
-div#rex-output div.rex-widget p {
-	width: auto;
-	float: left;
-}
-
-div.rex-widget {
-
-	p.rex-widget-icons {
+	.rex-widget-icons {
 		padding: 2px 0 0 10px;
 	}
 
 	&-linklist, &-medialist {
 		p.rex-widget-icons img { margin-bottom: 2px; }
 	}
+}
+
+/*	Breite war von "div.rex-form div.rex-form-row p" */
+
+#rex-output .rex-widget p {
+	width: auto;
+	float: left;
 }
 
 /*	Icons */
@@ -232,7 +216,7 @@ div.rex-widget {
 
 /* Grau - Dunkel */
 
-div#rex-clang ul li a.rex-active {
+#rex-clang ul li a.rex-active {
 	color: $drk_grey;
 }
 
@@ -245,23 +229,23 @@ input, textarea, select {
 	font-family: Calibri, Arial, Verdana, sans-serif;
 }
 
-div.rex-area-footer,
-div.rex-addon-footer{
+.rex-area-footer,
+.rex-addon-footer{
 	background-color: $drk_grey;
 }
 
-div.rex-area,
-div.rex-addon-output,
-div.rex-content-cols,
-div.rex-widget p.rex-widget-field input,
-div.rex-widget p.rex-widget-field select {
+.rex-area,
+.rex-addon-output,
+.rex-content-cols,
+.rex-widget .rex-widget-field input,
+.rex-widget .rex-widget-field select {
 	background-color: #fff;
 	color: $drk_grey;
 }
 
 /*	Back */
 
-a.rex-back {
+.rex-back {
 	padding-left: 8px;
 	background-image: url(../back.gif);
 	background-position: 0 4px;
@@ -269,7 +253,7 @@ a.rex-back {
 
 /*	Allgemeines */
 
-div#rex-wrapper {
+#rex-wrapper {
 	clear: none;
 	float: right;
 	width: 797px;
@@ -278,13 +262,12 @@ div#rex-wrapper {
 
 /*	Sprachen, Content (Editiermodus, Metadaten, Anzeigen) */
 
-div {
-	&.rex-addon-col-a,
-	&.rex-addon-col-b {
-		float: none;
-		width: 100%;
-	}
+.rex-addon-col-a,
+.rex-addon-col-b {
+	float: none;
+	width: 100%;
 }
+
 
 /*	Icons */
 
@@ -301,7 +284,7 @@ div {
 
 /*	Extras */
 
-div#rex-redaxo-link {
+#rex-redaxo-link {
 	position: absolute;
 	left: 0;
 	top: 0px;
@@ -316,25 +299,25 @@ div#rex-redaxo-link {
 }
 
 /*	Rundungen */
-div.rex-area,
-div.rex-addon-output,
-div.rex-info-block,
-div#rex-output div.rex-toolbar {
+.rex-area,
+.rex-addon-output,
+.rex-info-block,
+#rex-output .rex-toolbar {
 	+border-radius($brd_rad);
 	/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
 }
 
-div.rex-addon-output div.rex-area {
+.rex-addon-output .rex-area {
 	+border-radius(0px);
 	border: 0;
 }
 
-div.rex-area-col-2,
-div.rex-addon-col-2 {
+.rex-area-col-2,
+.rex-addon-col-2 {
 	position: static;
 }
 
-div.rex-addon-output {
+.rex-addon-output {
 	margin-bottom: 10px;
 }
 
@@ -349,7 +332,7 @@ div.rex-addon-output {
 	+border-top-radius($brd_rad);
 }
 
-div.rex-area-col-2 .rex-hl2 {
+.rex-area-col-2 .rex-hl2 {
 	width: 94%;
 }
 
@@ -370,7 +353,7 @@ div.rex-area-col-2 .rex-hl2 {
 		margin: 0 10px 5px 10px
 	}
 
-	.rex-button {
+	.sly-button {
 		margin: 0 0 15px 5px
 	}
 }

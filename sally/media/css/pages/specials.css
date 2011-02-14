@@ -14,12 +14,13 @@
 
 /*	System: Einstellungen */
 
-div#rex-form-system-setup {
+#rex-form-system-setup {
 	fieldset { padding-bottom: 1em; }
 
 	legend {
 		padding-left: 0;
 		padding-top: 0;
+		background-color: transparent;
 	}
 
 	div.rex-form-row {
@@ -29,7 +30,7 @@ div#rex-form-system-setup {
 		label { width: 180px; }
 	}
 
-	fieldset.rex-form-col-1 div.rex-form-row {
+	fieldset.rex-form-col-1 .rex-form-row {
 		width: 371px;
 
 		p.rex-form-text input,
@@ -71,7 +72,7 @@ div#rex-form-system-setup {
 		}
 
 		th { background: $md_grey; }
-		input.rex-form-text { width: 96%; }
-		input.rex-form-submit { margin-left: 0; }
+		.rex-form-text { width: 96%; }
+		.rex-form-submit { margin-left: 0; }
 	}
 }
