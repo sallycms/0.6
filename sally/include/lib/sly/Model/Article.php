@@ -9,10 +9,10 @@
  */
 
 /**
- * Business Model Klasse für Kategorien
+ * Business Model Klasse für Artikel
  *
  * @author christoph@webvariants.de
  */
-class sly_Model_Category extends sly_Model_Article_Base {
+class sly_Model_Article extends sly_Model_Article_Base {
 	/* empty */
 }

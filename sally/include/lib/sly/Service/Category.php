@@ -36,11 +36,11 @@ class sly_Service_Category extends sly_Service_Model_Base {
 	}
 
 	public function findByPid($pid) {
-		return $this->findOne(array('pid' => (int) $pid));
+		return $this->findOne(array('pid' => (int) $pid, 'startpage' => 1));
 	}
 
 	public function findById($id, $clang) {
-		return $this->findOne(array('id' => (int) $id, 'clang' => $clang));
+		return $this->findOne(array('id' => (int) $id, 'clang' => $clang, 'startpage' => 1));
 	}
 
 	public function add($parentID, $name, $status, $position = -1) {
@@ -76,7 +76,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 
 		if ($parentID !== 0) {
 			$path  = $db->magicFetch('article', 'path', array('id' => $parentID, 'startpage' => 1, 'clang' => 0));
-			$path .= $parent.'|';
+			$path .= $parentID.'|';
 		}
 		else {
 			$path = '|';
@@ -196,12 +196,13 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		}
 
 		// Kategorie verschieben, wenn nötig
-		if ($position !== false && $position != $cat->getPrior()) {
+		if ($position !== false && $position != $cat->getCatprior()) {
 			$parentID = $cat->getReId();
-			$oldPrio  = $cat->getPrior();
+			$oldPrio  = $cat->getCatprior();
 			$position = (int) $position;
 
-			$maxPrio = $db->magicFetch('article', 'MAX(catprior)', 're_id = '.$parentID.' AND catprior <> 0 AND clang = 0');
+			$where   = 're_id = '.$parentID.' AND catprior <> 0 AND clang = 0';
+			$maxPrio = $db->magicFetch('article', 'MAX(catprior)', $where);
 			$newPrio = ($position <= 0 || $position > $maxPrio) ? $maxPrio : $position;
 
 			// Nur aktiv werden, wenn sich auch etwas geändert hat.
@@ -213,15 +214,12 @@ class sly_Service_Category extends sly_Service_Model_Base {
 				// alle anderen entsprechend verschieben
 				$db->query(
 					'UPDATE '.$prefix.'article SET catprior = catprior '.$relation.' 1 '.
-					'WHERE catprior BETWEEN '.$a.' AND '.$b.' '.
-					'AND re_id = '.$parentID.' AND catprior <> 0 AND clang = '.$clangID
+					'WHERE catprior BETWEEN '.$a.' AND '.$b.' AND '.$where
 				);
 
 				// eigene neue Position speichern
-				$db->query(
-					'UPDATE '.$prefix.'article SET catprior = '.$newPrio.' '.
-					'WHERE id = '.$categoryID.' AND clang = '.$clangID
-				);
+				$cat->setCatprior($newPrio);
+				$this->save($cat);
 
 				// alle Kategorien in dieser Ebene aus dem Cache entfernen
 				$db->select('article', 'id', 're_id = '.$parentID.' AND clang = '.$clangID.' AND catprior <> 0');
@@ -306,7 +304,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 
 		// Prüfen ob die Kategorie existiert
 		if ($cat === null) {
-			throw new sly_Exception('Category not found.');
+			throw new sly_Exception(t('no_such_category'));
 		}
 
 		$stati     = $this->getStati();
@@ -319,7 +317,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 			$newStatus = ($oldStatus + 1) % count($stati);
 		}
 
-		// Kategorien updaten
+		// Kategorie updaten
 		$cat->setStatus($newStatus);
 		$cat->setUpdateColumns();
 		$this->save($cat);
