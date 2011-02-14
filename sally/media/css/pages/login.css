@@ -1,19 +1,8 @@
-body#rex-page-login {
-	#rex-title, .sly-content {
-		float: none;
-		width: 650px;
-		margin-right: auto;
-		margin-left: auto;
-	}
-
-	#rex-wrapper {
-		width: 100%;
-		&2 { padding: 0 16px; }
-	}
-
+#rex-page-login {
+	#rex-wrapper,
 	#sly-footer {
-		width: 650px;
 		float: none;
+		width: 650px;
 		margin-right: auto;
 		margin-left: auto;
 	}

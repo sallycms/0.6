@@ -13,70 +13,62 @@
 }
 
 body {
-	background-color: #f2f2f2;
 	font-family: Calibri, Verdana, Arial, sans-serif;
-	font-size: 100.01%;
-	font-weight: normal;
-	line-height: 1;
 	position: relative;
-	text-align: left;
-	background-repeat: no-repeat;
 	margin: 0;
 	color: $drk_grey;
-	/* width: 1000px; */
-	background-image: url(../body.gif);
+	background: #f2f2f2 url(../body.gif) 0 0 repeat-x;;
+}
+
+#rex-website {
+
+	width: 1000px;
+	float: none;
+	margin: 0 auto;
+
+	font-size: 0.9em;
+	background-image: url(../website.gif);
 	background-repeat: repeat-x;
 
-
-	div#rex-website {
-
-		width: 1000px;
-		float: none;
-		margin: 0 auto;
-
-		font-size: 0.9em;
-		background-image: url(../website.gif);
-		background-repeat: repeat-x;
-
-		.rex-mab-10 { margin-bottom: 10px; }
-		.rex-pat-0  { padding-top: 0px;    }
-		.rex-par-0  { padding-right: 0px;  }
-		.rex-pab-0  { padding-bottom: 0px; }
-		.rex-pal-0  { padding-left: 0px;   }
-	}
-
-	&.rex-layout-liquid {
-		div#rex-website {
-			width: 100%;
-		}
-
-		div#rex-navi-main {
-			width: 15%;
-			margin-left: 2%;
-		}
-
-		div#rex-wrapper {
-			width: 78%;
-			margin-right: 2%;
-		}
-	}
-
-	.rex-popup {
-		#sly-navi-top {
-			margin-bottom: 2px;
-		}
-
-		div#rex-title h1 {
-			padding-bottom: 6px;
-			text-align: right;
-		}
-
-		div#rex-output {
-			margin-top: 12px;
-		}
-	}
-
+	.rex-mab-10 { margin-bottom: 10px; }
+	.rex-pat-0  { padding-top: 0px;    }
+	.rex-par-0  { padding-right: 0px;  }
+	.rex-pab-0  { padding-bottom: 0px; }
+	.rex-pal-0  { padding-left: 0px;   }
 }
+
+&.rex-layout-liquid {
+	div#rex-website {
+		width: 100%;
+	}
+
+	#sly-navi-main {
+		width: 15%;
+		margin-left: 2%;
+	}
+
+	div#rex-wrapper {
+		width: 78%;
+		margin-right: 2%;
+	}
+}
+
+.rex-popup {
+	#sly-navi-top {
+		margin-bottom: 2px;
+	}
+
+	#rex-title h1 {
+		padding-bottom: 6px;
+		text-align: right;
+	}
+
+	#rex-output {
+		margin-top: 12px;
+	}
+}
+
+
 
 h1, h2, h3, h4, h5, h6 {
 	font-weight: normal;
@@ -125,7 +117,7 @@ img, iframe {
 	background: none;
 	height: auto;
 
-	div.rex-title-row {
+	.rex-title-row {
 		width: 100%;
 
 		& h1{
@@ -157,7 +149,7 @@ img, iframe {
 		}
 
 		/* p = zweite Zeile der Pfadangabe */
-		& ul#rex-navi-path{
+		& #rex-navi-path{
 			border: 0;
 			list-style: none;
 			margin: 0;
@@ -185,7 +177,7 @@ img, iframe {
 
 /* ----------------------------------------------------------------------------------------------------------- */
 
-html>body div#rex-navi-main {
+html > body #sly-navi-main {
 	height: auto;
 	min-height: 24px;
 }
@@ -221,7 +213,7 @@ html>body div#rex-navi-main {
 	}
 }
 
-div#rex-output {
+#rex-output {
 
 	margin-top: 5px; /* Abstand zwischen letzter Trennlinie und erstem Contentelement */
 	position: relative;
@@ -229,7 +221,7 @@ div#rex-output {
 	float: left;
 	width: 100%;
 
-	& div.rex-toolbar {
+	.rex-toolbar {
 
 		background-color: #fff;
 		position: relative;
@@ -247,7 +239,7 @@ div#rex-output {
 		}
 	}
 
-	& div#rex-navi-page {
+	#rex-navi-page {
 
 		background-color: #fff;
 
@@ -278,10 +270,6 @@ div#rex-output {
 	visibility: hidden;
 }
 
-.rex-clear {
-	clear: both;
-}
-
 .rex-hidden {
 	display: inline !important;
 	position: absolute !important;
@@ -303,7 +291,6 @@ div#rex-output {
 .rex-algn-lft  { text-align: left; }
 .rex-algn-rght { text-align: right; }
 .rex-strike    { text-decoration: line-through; }
-.rex-clear     { clear: both; }
 
 .rex-display-inline,
 ol.rex-display-inline li,
@@ -340,7 +327,7 @@ ul.rex-ul1 {
 	margin-bottom: 1em;
 }
 
-div.rex-addon-content {
+.rex-addon-content {
 	h4, p, ul, ol, dl { margin-bottom: 1em; }
 	h4 { padding-top: 20px; }
 }
@@ -350,8 +337,8 @@ ul.rex-ul1 {
 	li { list-style-type: square; }
 }
 
-div.rex-addon-content,
-div.rex-area-content {
+.rex-addon-content,
+.rex-area-content {
 	line-height: 1.6;
 }
 
@@ -373,20 +360,20 @@ div.rex-area-content {
 	color: $link_color_online;
 }
 
-div.rex-area-scroll,
-div.rex-widget {
+.rex-area-scroll,
+.rex-widget {
 	background-color: #FFF;
 }
 
-div.rex-area,
-div.rex-content-cols,
-div.rex-widget p.rex-widget-field input,
-div.rex-widget p.rex-widget-field select {
+.rex-area,
+.rex-content-cols,
+.rex-widget .rex-widget-field input,
+.rex-widget .rex-widget-field select {
 	background-color: #fff;
 }
 
-div.rex-area-footer,
-div.rex-addon-footer {
+.rex-area-footer,
+.rex-addon-footer {
 	background-color: #D7D6D3;
 }
 
@@ -400,8 +387,8 @@ div.rex-addon-footer {
 	&category-add      { background-image: url(../folder_plus.png);        }
 }
 
-div.rex-area-scroll,
-div.rex-widget {
+.rex-area-scroll,
+.rex-widget {
 	border-color: #999;
 }
 
@@ -411,11 +398,11 @@ div.rex-widget {
 			da diese von anderen Layouts eventuell dargestellt werden sollen
 *******************************************************************************/
 
-div.rex-navi-slice ul li span {
+.rex-navi-slice ul li span {
 	+hardcore-hidden;
 }
 
-p.center, td.center, th.center, div.center {
+.center {
 	text-align: center;
 }
 

@@ -13,24 +13,19 @@ $usage  = sly_Util_String::formatFilesize($usage);
 $usage .= ' in '.sly_Loader::getClassCount().' Klassen';
 
 ?>
-		</div>
 	</div>
-
-
 	<div id="sly-footer">
-		<div id="rex-navi-footer">
-			<ul>
-				<li class="rex-navi-first"><a href="#sly-navi-top">&#94;</a></li>
-				<li><a href="http://www.webvariants.de/" class="sly-blank">webvariants.de</a></li>
-				<li><a href="http://www.sallycms.de/" class="sly-blank">sallycms.de</a></li>
-				<?php if ($REX['USER']): ?>
-				<li><a href="index.php?page=credits"><?= t('credits') ?></a></li>
-				<?php endif ?>
-			</ul>
-			<p id="rex-scripttime"><!--DYN-->
-			<span title="<?= sly_html($usage) ?>"><?php print rex_showScriptTime() ?> Sek</span> |
-			<?php print rex_formatter::format(time(), 'strftime', 'date') ?>
-			<!--/DYN--></p>
-		</div>
+		<ul>
+			<li class="rex-navi-first"><a href="#sly-navi-top">&#94;</a></li>
+			<li><a href="http://www.webvariants.de/" class="sly-blank">webvariants.de</a></li>
+			<li><a href="http://www.sallycms.de/" class="sly-blank">sallycms.de</a></li>
+			<?php if ($REX['USER']): ?>
+			<li><a href="index.php?page=credits"><?= t('credits') ?></a></li>
+			<?php endif ?>
+		</ul>
+		<p class="sly-scripttime">
+		<span title="<?= sly_html($usage) ?>"><?php print rex_showScriptTime() ?> Sek</span> |
+		<?php print rex_formatter::format(time(), 'strftime', 'date') ?>
+		</p>
 	</div>
 </div>

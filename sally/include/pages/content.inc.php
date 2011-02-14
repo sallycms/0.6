@@ -542,7 +542,6 @@ if (!is_null($OOArt)) {
 <div class="rex-content-header">
 	<div class="rex-content-header-2">
 		'.$menu.'
-		<div class="rex-clearer"></div>
 	</div>
 </div>
 		';

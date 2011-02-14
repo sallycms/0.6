@@ -1,4 +1,4 @@
-div.rex-form-setup-step-database div.rex-form-row {
+.rex-form-setup-step-database .rex-form-row {
 	p.rex-form-label-right label { width: 630px; }
 
 	p input.rex-form-radio,
@@ -7,7 +7,7 @@ div.rex-form-setup-step-database div.rex-form-row {
 	}
 }
 
-div.rex-form-setup-admin div.rex-form-row p.rex-form-text input {
+.rex-form-setup-admin .rex-form-row p.rex-form-text input {
 	width: 200px;
 }
 
@@ -25,7 +25,7 @@ ul.rex-setup-language {
 
 /* License */
 
-div.rex-area-scroll {
+.rex-area-scroll {
 	margin: 10px 0 10px 20px;
 	padding: 5px 0 5px 5px;
 	width: 598px;
@@ -41,21 +41,10 @@ div.rex-area-scroll {
 }
 
 #rex-page-setup {
-	div#rex-title, div#rex-output {
+
+	#rex-wrapper {
 		float: none;
 		width: 650px;
-		margin-right: auto;
-		margin-left: auto;
-	}
-
-	div#rex-wrapper {
-		width: 100%;
-		&2 { padding: 0 16px; }
-	}
-
-	#sly-footer {
-		width: 650px;
-		float: none;
 		margin-right: auto;
 		margin-left: auto;
 	}
@@ -72,33 +61,6 @@ div.rex-area-scroll {
 		color: white;
 	}
 
-	.sly-setup-requirements {
-		padding: 0;
-
-		table {
-			width: 100%;
-		}
-
-		th, td {
-			line-height: 14px;
-			padding: 6px 5px;
-		}
-
-		th { font-weight: bold; }
-		td { border-top: 1px dotted #ACA9A9; }
-
-		td.sly-status, td.sly-recommended {
-			width: 110px;
-			text-align: center;
-		}
-
-		td.sly-status { color: white; }
-
-		tr.ok      .sly-status { background-color: green;  }
-		tr.warning .sly-status { background-color: orange; }
-		tr.failed  .sly-status { background-color: red;    }
-	}
-
 	.rex-form {
 		.rex-form-text input,
 		.rex-form-password input,
@@ -110,18 +72,45 @@ div.rex-area-scroll {
 		&-wrapper { width: 650px; }
 		&-row { width: 636px; }
 	}
+}
 
-	#sly-setup-dbsetup {
-		.rex-form-wrapper {
-			margin-bottom: 0;
-		}
+.sly-setup-requirements {
+	padding: 0;
 
-		#prefix { width: 50px; }
-		#create_db { width: auto; }
+	table {
+		width: 100%;
 	}
+
+	th, td {
+		line-height: 14px;
+		padding: 6px 5px;
+	}
+
+	th { font-weight: bold; }
+	td { border-top: 1px dotted #ACA9A9; }
+
+	td.sly-status, td.sly-recommended {
+		width: 110px;
+		text-align: center;
+	}
+
+	td.sly-status { color: white; }
+
+	tr.ok      .sly-status { background-color: green;  }
+	tr.warning .sly-status { background-color: orange; }
+	tr.failed  .sly-status { background-color: red;    }
 }
 
 /*	Formulare */
+
+#sly-setup-dbsetup {
+	.rex-form-wrapper {
+		margin-bottom: 0;
+	}
+
+	#prefix { width: 50px; }
+	#create_db { width: auto; }
+}
 
 #rex-form-setup-step-2 {
 	.rex-form-checkbox {

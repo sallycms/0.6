@@ -1,4 +1,4 @@
-table.rex-table {
+.rex-table {
 	clear: both;
 	width: 100%;
 	background-color: #fff;
@@ -15,43 +15,43 @@ table.rex-table {
 		height: 5px;
 	}
 
-	tr {
-		th {
-			text-align: left;
-			color: #fff;
-			padding: 4px 0 9px 0px;
-			vertical-align: middle;
+	
+	th {
+		text-align: left;
+		color: #fff;
+		padding: 4px 0 9px 0px;
+		vertical-align: middle;
+		background-color: $drk_grey;
+	}
+
+	td {
+		height: 40px;
+		border-top: 1px dotted $md_grey;
+		*position: relative;
+
+		&.rex-colored {
 			background-color: $drk_grey;
 		}
-
-		td {
-			height: 40px;
-			border-top: 1px dotted $md_grey;
-			*position: relative;
-
-			&.rex-colored {
-				background-color: $drk_grey;
-			}
-		}
-
-		&.rex-table-row-activ td {
-			background-color: $link_color;
-			color: #fff;
-
-			input { padding: 0; border: 1px solid #fff; }
-		}
-
-		&.rex-plugin td {
-			background-color: #FAF9F5;
-		}
 	}
+
+	tr.rex-table-row-activ td {
+		background-color: $link_color;
+		color: #fff;
+
+		input { padding: 0; border: 1px solid #fff; }
+	}
+
+	tr.rex-plugin td {
+		background-color: #FAF9F5;
+	}
+
 }
 
-table.rex-table-mrgn, table.sly-table {
+.rex-table-mrgn, .sly-table {
 	margin-bottom: 10px;
 }
 
-p.sly-table-extras {
+.sly-table-extras {
 	&-pager, &-filter, &-sorting {
 		margin-bottom: 1em;
 		font-size: 13px;

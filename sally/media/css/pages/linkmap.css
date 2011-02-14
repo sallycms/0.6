@@ -1,29 +1,27 @@
-body#rex-page-linkmap {
-	div#rex-website                 { width: 100%;            }
-	div#rex-title div.rex-title-row { width: 100%;            }
-	div#rex-title                   { background-image: none; }
-	div#rex-redaxo-link             { display: none;          }
-	#sly-navi-top                   { display: none;          }
-	#sly-footer                     { display: none;          }
+#rex-page-linkmap {
+	#rex-website     { width: 100%;            }
+	#rex-redaxo-link { display: none;          }
+	#sly-navi-top    { display: none;          }
+	#sly-footer      { display: none;          }
 
-	div#rex-wrapper {
+	#rex-wrapper {
 		float: none;
 		margin: 0 auto;
 		padding-top: 20px;
 		width: 690px;
 	}
 
-	div#rex-title {
+	#rex-title {
 		background-image: none;
 		height: auto;
 
 		&-row { width: 100%; }
 		p { display: none; }
-		div.rex-area-content { line-height: 1em; }
+		.rex-area-content { line-height: 1em; }
 	}
 }
 
-div#rex-linkmap {
+#rex-linkmap {
 	background-color: #fff;
 	clear: both;
 	position: relative;
@@ -41,7 +39,7 @@ div#rex-linkmap {
 		line-height: 0.9em;
 	}
 
-	div.rex-area-col-b ul li a {
+	.rex-area-col-b ul li a {
 		background-image: url(../document.gif);
 		padding-left: 20px;
 		background-repeat: no-repeat;
@@ -53,7 +51,7 @@ div#rex-linkmap {
 		background-repeat: repeat-y;
 	}
 
-	div.rex-area-col-b ul li.rex-linkmap-startpage a {
+	.rex-area-col-b ul li.rex-linkmap-startpage a {
 		background-image: url(../liste.gif);
 	}
 

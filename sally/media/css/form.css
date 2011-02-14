@@ -31,12 +31,12 @@ a.sly-button {
 	margin-left: inherit;
 }
 
-div.rex-addon-content,
-div.rex-area-content {
+.rex-addon-content,
+.rex-area-content {
 	p.rex-form-checkbox, p.rex-form-radio { line-height: 1em; }
 }
 
-div.sly-content div.rex-form {
+.sly-content .rex-form {
 	margin-bottom: 1em;
 }
 
@@ -109,12 +109,12 @@ input#rex-form-field-prior {
 		}
 	}
 
-	div.rex-form-checkboxes-wrapper,
-	div.rex-form-radios-wrapper {
+	.rex-form-checkboxes-wrapper,
+	.rex-form-radios-wrapper {
 		float: left;
 	}
 
-	div.rex-form-widget {
+	.rex-form-widget {
 		div.rex-widget-link input  { width: 208px; }
 		div.rex-widget-media input { width: 189px; }
 	}
@@ -128,7 +128,7 @@ input#rex-form-field-prior {
 
 	p select.rex-form-select-date { width: 50px;  }
 	p select.rex-form-select-year { width: 70px;  }
-	div.rex-form-widget select    { width: 212px; }
+	.rex-form-widget select    { width: 212px; }
 
 	.sly-widget {
 		+clearfix;
@@ -191,7 +191,7 @@ p.rex-form-label-right {
 	height: 20px;
 }
 
-div.rex-form-row, div.rex-message {
+.rex-form-row, .rex-message {
 	p.rex-form-label-right {
 		input.rex-form-checkbox,
 		input.rex-form-radio {
@@ -202,16 +202,16 @@ div.rex-form-row, div.rex-message {
 	}
 }
 
-div.rex-message p.rex-form-label-right,
-div.rex-form-row div.rex-form-checkboxes-wrapper,
-div.rex-form-row div.rex-form-radios-wrapper {
+.rex-message .rex-form-label-right,
+.rex-form-row .rex-form-checkboxes-wrapper,
+.rex-form-row .rex-form-radios-wrapper {
 	input.rex-form-checkbox,
 	input.rex-form-radio {
 		margin-left: 0;
 	}
 }
 
-div.rex-form-row {
+.rex-form-row {
 	div.rex-form-checkboxes-wrapper p.rex-form-checkbox,
 	div.rex-form-radios-wrapper p.rex-form-radio {
 		padding-top: 3px;
@@ -222,7 +222,7 @@ div.rex-form-row {
 	}
 }
 
-div.rex-form {
+.rex-form {
 	div.rex-form-row {
 		div.rex-form-checkboxes-wrapper,
 		div.rex-form-radios-wrapper,
@@ -246,18 +246,18 @@ div.rex-form {
 	}
 
 	&,
-	div.rex-form-row p {
+	.rex-form-row p {
 		input.rex-form-submit-2 { margin-left: 20px; }
 	}
 
-	div.rex-form-row p,
+	.rex-form-row p,
 	fieldset.rex-form-col-2 div.rex-form-row p.rex-form-text {
 		input.rex-form-submit { width: auto; }
 	}
 
 	/*	Zweispaltig */
 
-	fieldset.rex-form-col-2 div.rex-form-row {
+	fieldset.rex-form-col-2 .rex-form-row {
 		/* p.rex-form-col-a, */
 		.rex-form-col-a, .rex-form-col-b {
 			width:49%;
@@ -265,7 +265,7 @@ div.rex-form {
 		}
 	}
 
-	div.rex-area-col-b {
+	.rex-area-col-b {
 		.rex-form-wrapper {
 			width: 100%;
 			padding: 0;
@@ -279,41 +279,14 @@ div.rex-form {
 			padding-bottom: 5px;
 		}
 	}
-
-	/*	rex-form-element-v2 : Standardwerte von label und input vertauscht */
-
-	div.rex-form-element-v2 {
-		label, p.rex-form-label {
-			width: 456px;
-		}
-
-		border: 0;
-
-		div.rex-form-checkboxes-wrapper,
-		div.rex-form-radios-wrapper,
-		p.rex-form-label-right label,
-		p.rex-form-read span,
-		p.rex-form-text input,
-		p.rex-form-password input,
-		p select,
-		p textarea {
-			width: 145px;
-		}
-
-		/*	Submit */
-
-		p input.rex-form-submit {
-			margin-left: 546px;
-		}
-	}
 }
 
 /*	Bspl.: div.rex-area-col-2 -> System : Einstellungen */
 
-div.rex-area-col-2 fieldset.rex-form-col-1, div.rex-form fieldset.rex-form-col-2 {
-	div.rex-form-row {
-		div.rex-form-checkboxes-wrapper,
-		div.rex-form-radios-wrapper,
+.rex-area-col-2 fieldset.rex-form-col-1, .rex-form fieldset.rex-form-col-2 {
+	.rex-form-row {
+		.rex-form-checkboxes-wrapper,
+		.rex-form-radios-wrapper,
 		p.rex-form-label-right label,
 		p.rex-form-read span,
 		p.rex-form-text input,
@@ -326,8 +299,8 @@ div.rex-area-col-2 fieldset.rex-form-col-1, div.rex-form fieldset.rex-form-col-2
 }
 
 /*	Rundungen */
-div.rex-addon-output-v2 div.rex-form,
-div.rex-form input.rex-form-submit {
+.rex-addon-output-v2 .rex-form,
+.rex-form input.rex-form-submit {
 	+border-radius($brd_rad);
 	/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
 }
@@ -480,7 +453,7 @@ div#rex-addon-editmode form div.rex-widget {
 
 /* Linklist-Button */
 
-div.rex-form div.rex-form-row .sly-linklistbutton {
+.rex-form .rex-form-row .sly-linklistbutton {
 	select.sly-linklist { width: 305px; }
 
 	input.sly-link-filter {

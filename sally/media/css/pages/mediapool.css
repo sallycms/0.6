@@ -1,12 +1,11 @@
-body#rex-page-mediapool {
-	div#rex-website { width: 100%; }
-	div#rex-title div.rex-title-row { width: 100%; }
-	div#rex-title { background-image: none; }
-	div#rex-redaxo-link { display: none; }
+#rex-page-mediapool {
+	#rex-website { width: 100%; }
+	#rex-title { background-image: none; }
+	#rex-redaxo-link { display: none; }
 	#sly-navi-top { display: none; }
 	#sly-footer { display:none; }
 
-	div#rex-wrapper {
+	#rex-wrapper {
 		float: none;
 		margin: 0 auto;
 		padding-top: 20px;
@@ -14,12 +13,12 @@ body#rex-page-mediapool {
 	}
 
 	/*	Rundungen */
-	div.rex-form, div#rex-mediapool-detail-wrapper {
+	.rex-form, #rex-mediapool-detail-wrapper {
 		+border-radius($brd_rad);
 	}
 
 	/* Pfadangabe im Medienpool */
-	div#rex-navi-path ul {
+	#rex-navi-path ul {
 		border: 0;
 		list-style: none;
 		margin: 0 0 10px 0;
@@ -35,7 +34,7 @@ body#rex-page-mediapool {
 	}
 
 	#sly-mediapool-structure {
-		input.rex-form-submit {
+		.rex-form-submit {
 			margin-left: 0;
 		}
 	}
@@ -58,7 +57,7 @@ body#rex-page-mediapool {
 div#rex-form-mediapool-selectcategory {
 	/*  Bspl. Searchbar */
 
-	div.rex-form-row p {
+	.rex-form-row p {
 		input.rex-form-submit { margin-left: 10px; }
 	}
 
@@ -71,16 +70,16 @@ div#rex-form-mediapool-selectcategory {
 	}
 }
 
-body#rex-page-mediapool,
-div#rex-form-mediapool-other {
-	div.rex-form-row:first-child { border-top: none; }
+#rex-page-mediapool,
+#rex-form-mediapool-other {
+	.rex-form-row:first-child { border-top: none; }
 
-	fieldset.rex-form-col-1 div.rex-form-row {
-		input#file_new .rex-form-file {
+	fieldset.rex-form-col-1 .rex-form-row {
+		#file_new .rex-form-file {
 			border: 0;
 		}
 
-		p.rex-form-label-right {
+		.rex-form-label-right {
 			input.rex-form-checkbox,
 			input.rex-form-radio {
 				margin-left: 5px;
@@ -91,25 +90,25 @@ div#rex-form-mediapool-other {
 	}
 }
 
-div#rex-form-mediapool-detail {
-	div.rex-form-row p select {
+#rex-form-mediapool-detail {
+	.rex-form-row p select {
 		&.rex-form-select-date { width: 45px; }
 		&.rex-form-select-year { width: 65px; }
 	}
 
 	fieldset.num1 {
-		div.rex-form-checkboxes-wrapper,
-		div.rex-form-radios-wrapper,
-		p.rex-form-label-right label,
-		p.rex-form-read span,
-		p.rex-form-text input,
-		p.rex-form-password input,
-		p select,
-		p textarea {
+		.rex-form-checkboxes-wrapper,
+		.rex-form-radios-wrapper,
+		.rex-form-label-right label,
+		.rex-form-read span,
+		.rex-form-text input,
+		.rex-form-password input,
+		select,
+		textarea {
 			width: 250px;
 		}
 
-		div.rex-form-row {
+		.rex-form-row {
 			line-height: 29px;
 		}
 
@@ -119,7 +118,7 @@ div#rex-form-mediapool-detail {
 	}
 }
 
-div#rex-mediapool-detail {
+#rex-mediapool-detail {
 	&-wrapper {
 		float: left;
 		width: 100%;
@@ -128,7 +127,7 @@ div#rex-mediapool-detail {
 
 	.rex-form-submit { margin-left: 75px; }
 
-	div.rex-form-row {
+	.rex-form-row {
 		div.rex-form-checkboxes-wrapper,
 		div.rex-form-radios-wrapper,
 		p.rex-form-label-right label,
