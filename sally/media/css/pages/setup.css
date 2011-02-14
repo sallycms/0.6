@@ -41,8 +41,7 @@ div.rex-area-scroll {
 }
 
 #rex-page-setup {
-	div#rex-title, div#rex-output {
-		float: none;
+	div#rex-title, div#rex-wrapper2 {
 		width: 650px;
 		margin-right: auto;
 		margin-left: auto;
@@ -50,7 +49,6 @@ div.rex-area-scroll {
 
 	div#rex-wrapper {
 		width: 100%;
-		&2 { padding: 0 16px; }
 	}
 
 	#sly-footer {
