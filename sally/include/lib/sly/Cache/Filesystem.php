@@ -172,7 +172,7 @@ class sly_Cache_Filesystem extends sly_Cache implements sly_Cache_IFlushable {
 			$dir = parent::concatPath($root, 'data'.parent::getSafeDirChar());
 
 			if (!is_dir($dir) && !@mkdir($dir, 0777, true)) {
-				throw new WV_CacheException($I18N->msg('sly_cant_create_dir', $dir));
+				throw new sly_Cache_Exception($I18N->msg('sly_cant_create_dir', $dir));
 			}
 
 			// Jetzt kommen die kleinen Verzeichnisse...
@@ -180,7 +180,7 @@ class sly_Cache_Filesystem extends sly_Cache implements sly_Cache_IFlushable {
 			$dir = parent::concatPath($dir, $hash[0].$hash[1]);
 
 			if (!is_dir($dir) && !@mkdir($dir, 0777, true)) {
-				throw new WV_CacheException($I18N->msg('sly_cant_create_dir', $dir));
+				throw new sly_Cache_Exception($I18N->msg('sly_cant_create_dir', $dir));
 			}
 
 			return true;
@@ -216,7 +216,7 @@ class sly_Cache_Filesystem extends sly_Cache implements sly_Cache_IFlushable {
 		$dir       = parent::concatPath($dir, $namespace, $dataDir, $hashPart);
 
 		if (!is_dir($dir) && !@mkdir($dir, 0777, true)) {
-			throw new WV_CacheException($I18N->msg('sly_cant_create_dir', $dir));
+			throw new sly_Cache_Exception($I18N->msg('sly_cant_create_dir', $dir));
 		}
 
 		return parent::concatPath($dir, $hash);
