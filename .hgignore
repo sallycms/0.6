@@ -1,8 +1,9 @@
-syntax:glob
-data/dyn/*
-data/config/*
-sally/include/tip
-.project
-.buildpath
-.settings/*
-docs/*
+syntax:regexp
+^data/dyn/.*
+^data/config/.*
+^sally/include/tip
+^\.project
+^\.buildpath
+^\.settings/.*
+^nbproject/.*
+^docs/.*
