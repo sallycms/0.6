@@ -56,7 +56,10 @@ class Extensions
 			/**
 			 * The name of the property that can be used in Scaffold CSS
 			 */
-			$extension_name = basename($path); // old: pathinfo() -> >= PHP 5.2.x
+
+			//this extension_name ends with '.php' -> need without it
+			//$extension_name = basename($path); //pathinfo($path, PATHINFO_FILENAME) -> >= PHP 5.2.x
+			$extension_name = substr(basename($path), 0 ,-4); //pathinfo($path, PATHINFO_FILENAME) -> >= PHP 5.2.x
 
 			/**
 			 * Include the function we'll use as a callback
