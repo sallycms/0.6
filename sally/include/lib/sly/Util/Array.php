@@ -48,15 +48,14 @@ class sly_Util_Array {
 		return $value;
 	}
 
-	public function get($key) {
+	public function get($key, $default = null) {
 		$key = trim($key, '/');
 
 		if (empty($key)) return $this->array;
 
 		if (strpos($key, '/') === false) {
 			if (!array_key_exists($key, $this->array)) {
-				trigger_error('Element '.$key.' not found!', E_USER_NOTICE);
-				return null;
+				return $default;
 			}
 
 			return $this->array[$key];
@@ -67,8 +66,7 @@ class sly_Util_Array {
 
 		foreach ($path as $step) {
 			if (!array_key_exists($step, $res)) {
-				trigger_error('Element '.$key.' not found!', E_USER_NOTICE);
-				return null;
+				return $default;
 			}
 
 			$res = $res[$step];
