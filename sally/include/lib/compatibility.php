@@ -49,3 +49,12 @@ if (!function_exists('array_replace_recursive')) {
 		return $array;
 	}
 }
+
+// Kompatibilität für Windows. fnmatch() ist erst ab PHP 5.3.0 verfügbar.
+// Quelle: http://us3.php.net/manual/en/function.fnmatch.php#71725
+
+if (!function_exists('fnmatch')) {
+	function fnmatch($pattern, $string) {
+		return preg_match("#^".strtr(preg_quote($pattern, '#'), array('\*' => '.*', '\?' => '.', '\[' => '[', '\]' => ']'))."$#i", $string) > 0;
+	}
+}
