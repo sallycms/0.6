@@ -1,9 +1,9 @@
-div#rex-output div.rex-content-header {
+.rex-content-header {
 	position: relative;
 	width: 100%;
 	margin-bottom: 10px;
 
-	& div#rex-clang {
+	& #rex-clang {
 		& ul li {
 			display: inline;
 			font-weight: normal;
@@ -20,7 +20,7 @@ div#rex-output div.rex-content-header {
 		}
 	}
 
-	&-2 ul {
+	ul {
 		padding: 5px 0; /*  Abstand oben und unten */
 
 		&#rex-navi-slots { float: left; }
@@ -60,28 +60,23 @@ div.rex-content-body {
 	width: 100%;
 }
 
-div.rex-content-header ul li a {
+.rex-content-header ul li a {
 	color: #1f9eb5;
-}
-
-div.rex-content-header ul li a.rex-active {
-	color: $drk_grey;
 }
 
 /*	Background Image */
 
-div.rex-content-header { background-image: none; }
-div.rex-content-body-2 { padding: 0; }
+.rex-content-header { background-image: none; }
+.rex-content-body-2 { padding: 0; }
 
 /*	Rundungen */
-div.rex-content-header,
-div.rex-content-body,
-div.rex-content-header-2  {
+.rex-content-header,
+.rex-content-body {
 	+clearfix;
 	+border-radius($brd_rad);
 }
 
-div.rex-content-body {
+.rex-content-body {
 	+border-radius(0px);
 	border: 0;
 }
