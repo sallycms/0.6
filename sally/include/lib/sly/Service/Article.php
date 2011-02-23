@@ -188,7 +188,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 		// Kategorie verschieben, wenn nötig
 		if ($position !== false && $position != $article->getPrior()) {
-			$parentID = $cat->getReId();
+			$parentID = $cat->getParentId();
 			$oldPrio  = $cat->getPrior();
 			$position = (int) $position;
 
@@ -248,7 +248,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		if (!$return['state']) throw new sly_Exception($return['message']);
 
 		// Nachbarartikel neu positionieren
-		$parent = $article->getReId();
+		$parent = $article->getParentId();
 		$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 
 		foreach (array_keys($REX['CLANG']) as $clangID) {
@@ -290,8 +290,8 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		}
 
 		$stati     = $this->getStati();
-		$re_id     = $cat->getReId();
-		$oldStatus = $cat->getStatus();
+		$re_id     = $article->getParentId();
+		$oldStatus = $article->getStatus();
 
 		// Status wurde nicht von außen vorgegeben,
 		// => zyklisch auf den nächsten weiterschalten
