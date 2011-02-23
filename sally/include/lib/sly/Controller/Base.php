@@ -118,13 +118,16 @@ abstract class sly_Controller_Base {
 			throw new sly_Authorisation_Exception('HTTP 403: Zugriff auf '. $this->action .' in '. get_class($this) .' nicht gestattet!');
 		}
 
-		$this->init();
-
 		$method = $this->action;
+
+		ob_start();
+		$this->init();
 		$retval = $this->$method();
+		$this->teardown();
+		$output = ob_get_clean();
 
 		$this->injectContentType();
-		$this->teardown();
+		print $output;
 	}
 
 	protected function render($filename, $params = array()) {

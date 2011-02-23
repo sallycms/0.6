@@ -28,6 +28,11 @@ class sly_Util_User {
 		return sly_Util_Password::hash($password, $createdate);
 	}
 
+	/**
+	 * return current loggedin user
+	 *
+	 * @return sly_Model_User
+	 */
 	public static function getCurrentUser() {
 		if(self::$currentUser === false) {
 			self::$currentUser = sly_Service_Factory::getUserService()->getCurrentUser();
