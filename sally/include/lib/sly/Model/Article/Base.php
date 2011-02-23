@@ -46,7 +46,7 @@ class sly_Model_Article_Base extends sly_Model_Base_Pid {
 	public function getCatprior()   { return $this->catprior;   }
 	public function getCreatedate() { return $this->createdate; }
 	public function getClang()      { return $this->clang;      }
-	public function getReId()       { return $this->re_id;      }
+	public function getParentId()   { return $this->re_id;      }
 	public function getPrior()      { return $this->prior;      }
 	public function getCatname()    { return $this->catname;    }
 	public function getStartpage()  { return $this->startpage;  }
@@ -63,7 +63,7 @@ class sly_Model_Article_Base extends sly_Model_Base_Pid {
 	public function setCatprior($catprior)     { $this->catprior   = $catprior;   }
 	public function setCreatedate($createdate) { $this->createdate = $createdate; }
 	public function setClang($clang)           { $this->clang      = $clang;      }
-	public function setReId($re_id)            { $this->re_id      = $re_id;      }
+	public function setParentId($re_id)        { $this->re_id      = $re_id;      }
 	public function setPrior($prior)           { $this->prior      = $prior;      }
 	public function setCatname($catname)       { $this->catname    = $catname;    }
 	public function setStartpage($startpage)   { $this->startpage  = $startpage;  }
