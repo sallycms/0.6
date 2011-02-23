@@ -56,6 +56,8 @@ class sly_Controller_User extends sly_Controller_Sally {
 				return true;
 			}
 
+			$currentUser = sly_Util_User::getCurrentUser();
+
 			$params = array(
 				'login'       => sly_post('userlogin', 'string'),
 				'name'        => sly_post('username', 'string'),
@@ -64,8 +66,8 @@ class sly_Controller_User extends sly_Controller_Sally {
 				'lasttrydate' => 0,
 				'createdate'  => time(),
 				'updatedate'  => time(),
-				'createuser'  => $REX['LOGIN']->getValue('login'),
-				'updateuser'  => $REX['LOGIN']->getValue('login'),
+				'createuser'  => $currentUser->getLogin(),
+				'updateuser'  => $currentUser->getLogin(),
 				'psw'         => $password,
 				'rights'      => $this->getRightsFromForm(null),
 				'revision'    => 0
