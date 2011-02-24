@@ -296,4 +296,13 @@ class OORedaxo {
 	public function toString() {
 		return $this->_id.', '.$this->_name.', '.($this->isOnline() ? 'online' : 'offline');
 	}
+
+	/**
+	 * returns the path string
+	 *
+	 * @return string
+	 */
+	public function getPath() {
+		return $this->_path;
+	}
 }
