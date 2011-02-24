@@ -112,8 +112,9 @@ abstract class sly_Layout {
 	 * Fügt dem layout eine css datei zu. CSS Dateien werden Gruppen zugeordnet,
 	 * Funktionen der Gruppen siehe printCSSFiles().
 	 *
-	 * @param string $cssFile  Pfad zur CSS Datei
+	 * @param string $cssFile  path to css file
 	 * @param string $media    media Attribut für den CSS Link
+	 * @param string $group    group css files by this param
 	 */
 	public function addCSSFile($cssFile, $media = 'all', $group = 'default') {
 		$cssFile = trim($cssFile);
@@ -143,6 +144,9 @@ abstract class sly_Layout {
 	/**
 	 * Fügt dem layout eine Javascript datei zu. Javascript Dateien werden Gruppen zugeordnet,
 	 * Funktionen der Gruppen siehe printJavaScriptFiles().
+	 *
+	 * @param string $javascriptFile path to javascript file
+	 * @param string $group group javascript files by this param
 	 */
 	public function addJavaScriptFile($javascriptFile, $group = 'default') {
 		$javascriptFile = trim($javascriptFile);
