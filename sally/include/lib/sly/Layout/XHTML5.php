@@ -13,6 +13,11 @@
  */
 class sly_Layout_XHTML5 extends sly_Layout_XHTML {
 	protected $isTransitional = false;
+	protected $manifest;
+
+	public function setManifest($manifest) {
+		$this->manifest = $manifest;
+	}
 
 	protected function setTransitional() {
 		throw new sly_Exception('Cannot set transitional on XHTML5 layout.');
