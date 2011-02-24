@@ -195,15 +195,16 @@ if (SLY_IS_TESTING) return;
 $forceLogin = !$REX['SETUP'] && !$REX['USER'];
 $controller = sly_Controller_Base::factory($forceLogin ? 'login' : null, $forceLogin ? 'index' : null);
 
-// View laden
 $layout = sly_Core::getLayout('Sally');
-$layout->openBuffer();
 
 try {
 	if ($controller !== null) {
 		$CONTENT = $controller->dispatch();
 	}
 	else {
+		// View laden
+		$layout->openBuffer();
+
 		$filename = '';
 		$curGroup = $navigation->getActiveGroup();
 
@@ -225,6 +226,8 @@ try {
 	}
 }
 catch (Exception $e) {
+	$layout->openBuffer();
+
 	if ($e instanceof sly_Authorisation_Exception) {
 		$layout->pageHeader(t('security_violation'));
 	}
