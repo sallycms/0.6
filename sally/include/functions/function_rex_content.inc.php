@@ -131,6 +131,7 @@ function rex_slice_module_exists($sliceID, $clang)
 	$sliceID = (int) $sliceID;
 	$clang   = (int) $clang;
 	$slice   = OOArticleSlice::getArticleSliceById($sliceID, $clang);
+	if(is_null($slice)) return -1;
 	$module  = $slice->getModuleName();
 	return rex_module_exists($module) ? $module : -1;
 }
@@ -469,8 +470,8 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 		return false;
 	}
 
-	$article_slice = OOArticleSlice::_getSliceWhere('article_id = '.$from_id.' AND clang = '.$from_clang);
-	while($article_slice){
+	$article_slices = OOArticleSlice::_getSliceWhere('article_id = '.$from_id.' AND clang = '.$from_clang);
+	foreach($article_slices as $article_slice){
 		$sliceservice = sly_Service_Factory::getService('Slice');
 		$slice = $sliceservice->findById($article_slice->getSliceId());
 		$slice = $sliceservice->copy($slice);
@@ -486,8 +487,6 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 		$insert->setValue('revision', 0);
 		$insert->addGlobalCreateFields();
 		$insert->insert();
-
-		$article_slice = $article_slice->getNextSlice();
 	}
 
 	rex_deleteCacheArticle($to_id, $to_clang);
