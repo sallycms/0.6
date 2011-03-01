@@ -27,14 +27,13 @@ $REX['HTDOCS_PATH'] = './';
 // Core laden
 
 require_once 'sally/include/master.inc.php';
+require_once 'sally/include/addons.inc.php';
 
 if ($config->get('FRONTEND_SYNC')) {
 	require_once 'sally/include/functions/function_rex_generate.inc.php';
 	sly_Service_Factory::getService('Template')->refresh();
 	sly_Service_Factory::getService('Module')->refresh();
 }
-
-require_once 'sally/include/addons.inc.php';
 
 // Setup?
 if ($config->get('SETUP')) {
@@ -51,7 +50,6 @@ if ($REX['ARTICLE']) {
 }
 else {
 	print 'Kein Startartikel selektiert. Bitte setze ihn im <a href="sally/index.php">Backend</a>.';
-	$REX['STATS']   = 0;
 }
 
 $content = ob_get_clean();

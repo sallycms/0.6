@@ -14,10 +14,7 @@ sly_Loader::enablePathCache();
 sly_Loader::addLoadPath(SLY_DEVELOPFOLDER.'/lib');
 sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/lib');
 sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/lib/sfYaml');
-sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/controllers', 'sly_Controller');
-sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/helpers', 'sly_Helper');
 sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/lib/babelcache');
-sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/layout', 'sly_Layout');
 sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/lib/rex/oo', 'OO');
 sly_Loader::register();
 
@@ -34,7 +31,11 @@ require_once SLY_INCLUDE_PATH.'/functions/function_rex_addons.inc.php';
 require_once SLY_INCLUDE_PATH.'/functions/function_rex_plugins.inc.php';
 require_once SLY_INCLUDE_PATH.'/functions/function_rex_other.inc.php';
 
-if ($REX['REDAXO']) {
+if (defined('IS_SALLY_BACKEND')) {
+	sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/layout', 'sly_Layout');
+	sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/controllers', 'sly_Controller');
+	sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/helpers', 'sly_Helper');
+
 	require_once SLY_INCLUDE_PATH.'/functions/function_rex_time.inc.php';
 	require_once SLY_INCLUDE_PATH.'/functions/function_rex_title.inc.php';
 	require_once SLY_INCLUDE_PATH.'/functions/function_rex_generate.inc.php';

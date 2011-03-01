@@ -58,9 +58,7 @@ define('SLY_ADDONFOLDER',  $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'addons');
 
 // Loader initialisieren
 
-if (empty($REX['NOFUNCTIONS'])) {
-	require_once SLY_INCLUDE_PATH.'/loader.php';
-}
+require_once SLY_INCLUDE_PATH.'/loader.php';
 
 // Kernkonfiguration laden
 
@@ -71,7 +69,7 @@ $config->loadLocalDefaults(SLY_INCLUDE_PATH.'/config/sallyDefaults.yml');
 $config->loadProjectConfig();
 
 // Sync?
-if (empty($REX['SYNC']) && !$config->get('SETUP')){
+if (!$config->get('SETUP')){
 	// Standard-Variablen
 	sly_Core::registerVarType('rex_var_globals');
 	sly_Core::registerVarType('rex_var_article');

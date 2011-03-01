@@ -234,6 +234,7 @@ function rex_deleteDir($file, $delete_folders = false, $isRecursion = false)
 /**
  * Lösch allen Datei in einem Ordner
  *
+ * @deprecated
  * @param  string $file  Pfad zum Ordner
  * @return bool          true bei Erfolg, sonst false
  */
