@@ -171,16 +171,7 @@ abstract class sly_Cache {
 	 * @param  string $namespace
 	 */
 	protected static function cleanupNamespace($namespace) {
-		$namespace = trim($namespace); // normale Whitespaces entfernen
-		$namespace = preg_replace('#[^a-z0-9_\.-]#i', '_', $namespace);
-		$namespace = preg_replace('#\.{2,}#', '.', $namespace);
-		$namespace = trim($namespace, '.'); // führende und abschließende Punkte entfernen
-
-		if (strlen($namespace) == 0) {
-			throw new sly_Cache_Exception('An empty namespace was given.');
-		}
-
-		return strtolower($namespace);
+		return self::cleanup($namespace, 'namespace');
 	}
 
 	/**
@@ -188,16 +179,28 @@ abstract class sly_Cache {
 	 * @param  string $key
 	 */
 	protected static function cleanupKey($key) {
-		$key = trim($key); // normale Whitespaces entfernen
-		$key = preg_replace('#[^a-z0-9_\.-]#i', '_', $key);
-		$key = preg_replace('#\.{2,}#', '.', $key);
-		$key = trim($key, '.'); // führende und abschließende Punkte entfernen
+		return self::cleanup($key, 'key');
+	}
 
-		if (strlen($key) == 0) {
-			throw new sly_Cache_Exception('An empty key was given.');
+	/**
+	 * @throws sly_Cache_Exception
+	 * @param  string $namespace
+	 */
+	private static function cleanup($str, $type) {
+		$str = trim($str); // normale Whitespaces entfernen
+
+		if (preg_match('#([^a-z0-9_\.-]|\.{2,})#i', $str)) {
+			$str = preg_replace('#[^a-z0-9_\.-]#i', '_', $str);
+			$str = preg_replace('#\.{2,}#', '.', $str);
 		}
 
-		return strtolower($key);
+		$str = trim($str, '.'); // führende und abschließende Punkte entfernen
+
+		if (strlen($str) === 0) {
+			throw new sly_Cache_Exception('An empty '.$type.' was given.');
+		}
+
+		return strtolower($str);
 	}
 
 	/**
@@ -213,26 +216,6 @@ abstract class sly_Cache {
 	 */
 	protected static function replaceSeparator($namespace, $newSep) {
 		return str_replace('.', $newSep, $namespace);
-	}
-
-	/**
-	 * @param string $args  Call this method with as many arguments as you want.
-	 */
-	protected static function concatPath($args) {
-		$args = func_get_args();
-		return implode(DIRECTORY_SEPARATOR, $args);
-	}
-
-	/**
-	 * Diese Methode sagt den einzelnen Caches, welches Zeichen weder in
-	 * Namespacenamen noch in Keys vorkommen darf. Damit können die
-	 * Implementierungen dieses Zeichen dann verwenden, um interne Strukturen
-	 * zu kennzeichnen.
-	 *
-	 * @return string
-	 */
-	protected static function getSafeDirChar() {
-		return '~';
 	}
 
 	/**
