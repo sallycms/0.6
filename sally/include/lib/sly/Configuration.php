@@ -140,7 +140,7 @@ class sly_Configuration {
 	}
 
 	public function has($key) {
-		return $this->staticConfig->has($key) || $this->localConfig->has($key) || $this->projectConfig->has($key);
+		return $this->projectConfig->has($key) || $this->localConfig->has($key) || $this->staticConfig->has($key);
 	}
 
 	public function remove($key) {
