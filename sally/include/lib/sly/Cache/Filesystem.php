@@ -149,7 +149,7 @@ class sly_Cache_Filesystem extends sly_Cache implements sly_Cache_IFlushable {
 		$nsDir     = self::getDirFromNamespace($namespace);
 
 		if (!$this->dataDirExists($nsDir)) {
-			self::createNamespaceDir(explode('.', $namespace), $dir, $hash);
+			self::createNamespaceDir(explode('.', $namespace), $this->dataDir, $hash);
 		}
 
 		// Finalen Dateipfad erstellen
