@@ -349,6 +349,12 @@ abstract class sly_Cache {
 			}
 		}
 
-		return implode('_', $key);
+		$key = implode('_', $key);
+
+		if (strlen($key) > 200) {
+			$key = md5($key);
+		}
+
+		return $key;
 	}
 }
