@@ -20,51 +20,19 @@ body {
 	background: #f2f2f2 url(../body.gif) 0 0 repeat-x;;
 }
 
-#rex-website {
+#sly-page {
 
 	width: 1000px;
-	float: none;
 	margin: 0 auto;
 
 	font-size: 0.9em;
 	background-image: url(../website.gif);
 	background-repeat: repeat-x;
-
-	.rex-mab-10 { margin-bottom: 10px; }
-	.rex-pat-0  { padding-top: 0px;    }
-	.rex-par-0  { padding-right: 0px;  }
-	.rex-pab-0  { padding-bottom: 0px; }
-	.rex-pal-0  { padding-left: 0px;   }
-}
-
-&.rex-layout-liquid {
-	div#rex-website {
-		width: 100%;
-	}
-
-	#sly-navi-main {
-		width: 15%;
-		margin-left: 2%;
-	}
-
-	div#rex-wrapper {
-		width: 78%;
-		margin-right: 2%;
-	}
 }
 
 .rex-popup {
 	#sly-navi-top {
 		margin-bottom: 2px;
-	}
-
-	#rex-title h1 {
-		padding-bottom: 6px;
-		text-align: right;
-	}
-
-	#rex-output {
-		margin-top: 12px;
 	}
 }
 
@@ -117,18 +85,18 @@ img, iframe {
 	background: none;
 	height: auto;
 
+	
+
+	h1 {
+		padding-top: 5px; /* Ausrichtung der Überschrift mit der Navi-Überschrift */
+		margin-bottom: 5px; /* Ausrichtung der Überschrift mit der Navi-Überschrift */
+		font-weight: normal;
+		font-size: 2em;
+		color: $drk_grey;
+		text-shadow: 1px 1px 0px rgba(255,255,255,.8);
+	}
 	.rex-title-row {
 		width: 100%;
-
-		& h1{
-			padding-top: 5px; /* Ausrichtung der Überschrift mit der Navi-Überschrift */
-			margin-bottom: 5px; /* Ausrichtung der Überschrift mit der Navi-Überschrift */
-			font-weight: normal;
-			font-size: 2em;
-			color: $drk_grey;
-			text-shadow: 1px 1px 0px rgba(255,255,255,.8);
-		}
-
 		/* gestrichelte Linien über und unter der Pfadangabe */
 		&-sub {
 			border-top: 1px dotted $md_grey;
@@ -213,13 +181,7 @@ html > body #sly-navi-main {
 	}
 }
 
-#rex-output {
-
-	margin-top: 5px; /* Abstand zwischen letzter Trennlinie und erstem Contentelement */
-	position: relative;
-	clear: both;
-	float: left;
-	width: 100%;
+#rex-wrapper {
 
 	.rex-toolbar {
 
@@ -239,20 +201,8 @@ html > body #sly-navi-main {
 		}
 	}
 
-	#rex-navi-page {
 
-		background-color: #fff;
-
-		& ul {
-			line-height: 2;
-			padding: 0;
-
-			& li a.rex-active {
-				color: $drk_grey;
-			}
-		}
-	}
-} /* Ende div#rex-output */
+} 
 
 /* ----------------------------------------------------------------------------------------------------------- */
 

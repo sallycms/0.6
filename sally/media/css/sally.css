@@ -1,8 +1,8 @@
-#rex-website {
+#sly-page {
 	+clearfix;
 }
 
-* html #rex-website {
+* html #sly-page {
 	height: 1%;
 }
 

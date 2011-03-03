@@ -1,4 +1,4 @@
-div#rex-form-structure-category {
+#rex-form-structure-category {
 	margin-bottom: 10px;
 
 	table.rex-table-mrgn {
@@ -6,28 +6,18 @@ div#rex-form-structure-category {
 	}
 }
 
-div#rex-form, div#sly-form {
-	&-structure-article,
-	&-structure-category {
-		table.rex-table {
-			th, td                   { vertical-align: middle; }
-			th.rex-icon, td.rex-icon { padding-bottom: 6px;    }
-			th.sly-icon, td.sly-icon { padding-bottom: 6px;    }
-		}
+#rex-page-structure {
+	.rex-form {
+		+border-radius($brd_rad);
 	}
-}
-
-body#rex-page-structure div.rex-form {
-	+border-radius($brd_rad);
-
-	table.rex-table {
+	.rex-table {
 		+border-radius(0px);
 		border: 0;
 	}
 }
 
-div#rex-form-structure-category,
-div#rex-form-structure-article {
+#rex-form-structure-category,
+#rex-form-structure-article {
 	input.rex-form-submit {
 		margin-left: 0;
 	}

@@ -23,7 +23,7 @@ $usage .= ' in '.sly_Loader::getClassCount().' Klassen';
 			<li><a href="index.php?page=credits"><?= t('credits') ?></a></li>
 			<?php endif ?>
 		</ul>
-		<p class="sly-scripttime">
+		<p>
 		<span title="<?= sly_html($usage) ?>"><?php print rex_showScriptTime() ?> Sek</span> |
 		<?php print rex_formatter::format(time(), 'strftime', 'date') ?>
 		</p>

@@ -206,7 +206,7 @@
 	line-height: 51px;
 	font-size: 0.8em;
 
-	.sly-scripttime {
+	p {
 		float: right;
 		margin: 0 5px;
 		color: $lt_grey;
