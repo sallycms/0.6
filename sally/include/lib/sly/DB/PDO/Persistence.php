@@ -38,6 +38,8 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 		}
 
 		catch (PDOException $e) {
+			sly_dump($query);
+			sly_dump($data);
 			$this->error();
 		}
 
@@ -207,17 +209,17 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 	 * $enableSwitch auf true gesetzt ist.
 	 */
 	public function startTransaction($force = false) {
-		if (!$this->connecton->isTransRunning() || $force) {
+		if (!$this->connection->isTransRunning() || $force) {
 			try {
-				$this->connection->beginTransaction();
+				$this->connection->getPDO()->beginTransaction();
 				$this->connection->setTransRunning(true);
 				return true;
 			}
 			catch (PDOException $e) {
 				try {
 					if ($force) {
-						$this->connection->commit();
-						$this->connection->beginTransaction();
+						$this->connection->getPDO()->commit();
+						$this->connection->getPDO()->beginTransaction();
 						$this->connection->setTransRunning(true);
 						return true;
 					}
@@ -239,7 +241,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 	 */
 	public function doCommit() {
 		try {
-			$this->connection->commit();
+			$this->connection->getPDO()->commit();
 			$this->connection->setTransRunning(false);
 			return true;
 		}
@@ -256,7 +258,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 	 */
 	public function doRollBack() {
 		try {
-			$this->connection->rollBack();
+			$this->connection->getPDO()->rollBack();
 			$this->connection->setTransRunning(false);
 			return true;
 		}

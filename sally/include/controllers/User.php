@@ -270,7 +270,7 @@ class sly_Controller_User extends sly_Controller_Sally {
 
 			$persistence->query(
 				'SELECT DISTINCT path FROM '.$config->get('DATABASE/TABLE_PREFIX').'article '.
-				'WHERE id IN ('.implode(',', $allowedCategories).') AND clang = 0'
+				'WHERE id IN ('.implode(',', $allowedCategories).') AND clang = 1'
 			);
 
 			$pathIDs = array();

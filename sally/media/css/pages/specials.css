@@ -70,9 +70,19 @@
 			background: $md_grey;
 			border: 1px solid $md_grey;
 		}
-
 		th { background: $md_grey; }
-		.rex-form-text { width: 96%; }
 		.rex-form-submit { margin-left: 0; }
+	}
+	.sly-col-c {
+		width: 120px;
+		input {
+			width: 100px;
+		}
+	}
+	.sly-col-b {
+		padding-right: 20px;
+		.rex-form-text {
+			width: 100%;
+		}
 	}
 }

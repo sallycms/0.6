@@ -110,7 +110,7 @@ function rex_deleteArticle($id)
 		return $return;
 	}
 
-	$articleData = rex_sql::fetch('re_id, startpage', 'article', 'id = '.$id.' AND clang = 0');
+	$articleData = rex_sql::fetch('re_id, startpage', 'article', 'id = '.$id.' AND clang = 1');
 
 	if ($articleData !== false) {
 		$re_id = (int) $articleData['re_id'];
@@ -118,7 +118,7 @@ function rex_deleteArticle($id)
 
 		if ($articleData['startpage'] == 1) {
 			$return['message'] = $I18N->msg('category_deleted');
-			$children = rex_sql::getArrayEx('SELECT id FROM #_article WHERE re_id = '.$id.' AND clang = 0', '#_');
+			$children = rex_sql::getArrayEx('SELECT id FROM #_article WHERE re_id = '.$id.' AND clang = 1', '#_');
 
 			foreach ($children as $child) {
 				$retval = rex_deleteArticle($child);;
@@ -309,11 +309,11 @@ function rex_deleteCLang($clang)
 
 	$clang = (int) $clang;
 
-	if ($clang == 0 || !isset($REX['CLANG'][$clang])) {
+	if ($clang == 1 || !isset($REX['CLANG'][$clang])) {
 		return false;
 	}
 
-	$clangName = $REX['CLANG'][$clang];
+	$clang = $REX['CLANG'][$clang];
 	unset($REX['CLANG'][$clang]);
 
 	$del = new rex_sql();
@@ -324,47 +324,10 @@ function rex_deleteCLang($clang)
 
 	rex_register_extension_point('CLANG_DELETED','', array(
 		'id'   => $clang,
-		'name' => $clangName
+		'name' => $clang->getName()
 	));
 
 	rex_generateAll();
 	sly_Core::cache()->set('sly.language', 'all', $REX['CLANG']);
-	return true;
-}
-
-/**
- * Erstellt eine Clang
- *
- * @param  int    $id    Id der Clang
- * @param  string $name  Name der Clang
- * @return bool          true bei Erfolg, sonst false
- */
-function rex_addCLang($id, $name)
-{
-	global $REX;
-
-	$id = (int) $id;
-
-	if (isset($REX['CLANG'][$id])) {
-		return false;
-	}
-
-	$REX['CLANG'][$id] = $name;
-
-	$sql = new rex_sql();
-	$sql->setQuery(
-		'INSERT INTO #_article (id,re_id,name,catname,catprior,attributes,'.
-			'startpage,prior,path,status,createdate,updatedate,type,clang,createuser,'.
-			'updateuser,revision) '.
-			'SELECT id,re_id,name,catname,catprior,attributes,startpage,prior,path,0,createdate,'.
-				'updatedate,type,'.$id.',createuser,updateuser,revision '.
-				'FROM #_article WHERE clang = 0', '#_'
-	);
-
-	$sql->setQuery('INSERT INTO '.$REX['DATABASE']['TABLE_PREFIX'].'clang (id,name,revision) VALUES ('.$id.', "'.$sql->escape($name).'", 0)');
-	unset($sql);
-
-	sly_Core::cache()->set('sly.language', 'all', $REX['CLANG']);
-	rex_register_extension_point('CLANG_ADDED', '', array('id' => $id, 'name' => $name));
 	return true;
 }

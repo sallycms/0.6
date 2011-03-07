@@ -272,7 +272,7 @@ function rex_article2startpage($neu_id)
 
 	// neuer Startartikel
 
-	$neu = rex_sql::fetch('path, re_id', 'article', 'id = '.$neu_id.' AND startpage = 0 AND clang = 0 AND re_id <> 0');
+	$neu = rex_sql::fetch('path, re_id', 'article', 'id = '.$neu_id.' AND startpage = 0 AND clang = 1 AND re_id <> 0');
 
 	if ($neu === false) {
 		return false;
@@ -291,7 +291,7 @@ function rex_article2startpage($neu_id)
 	// alter Startartikel
 
 	$alt_id = (int) $neu_cat_id;
-	$alt    = rex_sql::fetch('path', 'article', 'id = '.$alt_id.' AND startpage = 1 AND clang = 0');
+	$alt    = rex_sql::fetch('path', 'article', 'id = '.$alt_id.' AND startpage = 1 AND clang = 1');
 
 	if ($alt === false) {
 		return false;
@@ -697,8 +697,8 @@ function rex_moveCategory($from_cat, $to_cat)
 		// Kategorien vorhanden?
 		// Ist die Zielkategorie im Pfad der Quellkategorie?
 
-		$from_data = rex_sql::fetch('path, re_id', 'article', 'startpage = 1 AND id = '.$from_cat.' AND clang = 0');
-		$to_data   = $to_cat == 0 ? false : rex_sql::fetch('path, re_id', 'article', 'startpage = 1 and id = '.$to_cat.' AND clang = 0');
+		$from_data = rex_sql::fetch('path, re_id', 'article', 'startpage = 1 AND id = '.$from_cat.' AND clang = 1');
+		$to_data   = $to_cat == 0 ? false : rex_sql::fetch('path, re_id', 'article', 'startpage = 1 and id = '.$to_cat.' AND clang = 1');
 
 		if (!$from_data || (!$to_data && $to_cat != 0)) {
 			// eine der Kategorien existiert nicht
@@ -732,7 +732,7 @@ function rex_moveCategory($from_cat, $to_cat)
 			$from_path = $from_data['path'].$from_cat.'|';
 
 			$up   = new rex_sql();
-			$cats = $up->getArrayEx('SELECT id, re_id, path FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE path LIKE "'.$from_path.'%" AND clang = 0');
+			$cats = $up->getArrayEx('SELECT id, re_id, path FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE path LIKE "'.$from_path.'%" AND clang = 1');
 
 			foreach ($cats as $id => $data) {
 				// make update

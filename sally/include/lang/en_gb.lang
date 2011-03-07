@@ -284,7 +284,6 @@ delete_button: delete
 main_preferences: Settings
 languages: Languages
 types: Types
-id_exists: 'ID exists'
 enter_name: 'Enter a name'
 clang_id: Language-ID
 clang_add: 'Add language'
@@ -293,11 +292,13 @@ clang_update: 'Update language'
 clang_created: 'Language added.'
 clang_edited: 'Language updated.'
 clang_deleted: 'Language deleted.'
+clang_delete_error: 'Language could not be deleted.'
 clang_name: Description/Name
 clang_delete: 'Delete language'
 clang_caption: 'List of available languages'
 clang_summary: 'List of languages'
 clang_function: Functions
+clang_locale: Locale
 version: Version
 host: Host
 database: Database

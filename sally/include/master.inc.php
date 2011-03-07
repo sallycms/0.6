@@ -87,7 +87,7 @@ if (!$config->get('SETUP')){
 		$clangs       = sly_Service_Factory::getService('Language')->find(null, null, 'id');
 
 		foreach ($clangs as $clang) {
-			$REX['CLANG'][$clang->getId()] = $clang->getName();
+			$REX['CLANG'][$clang->getId()] = $clang;
 		}
 
 		sly_Core::cache()->set('sly.language', 'all', $REX['CLANG']);

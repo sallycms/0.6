@@ -75,7 +75,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 		// Position validieren
 
-		$where    = '((re_id = '.$parentID.' AND catprior = 0) OR (id = '.$parentID.')) AND clang = 0';
+		$where    = '((re_id = '.$parentID.' AND catprior = 0) OR (id = '.$parentID.')) AND clang = 1';
 		$maxPos   = $db->magicFetch('article', 'MAX(prior)', $where) + 1;
 		$position = ($position <= 0 || $position > $maxPos) ? $maxPos : $position;
 

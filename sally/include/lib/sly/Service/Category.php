@@ -69,7 +69,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 
 		// Position validieren
 
-		$maxPos   = $db->magicFetch('article', 'MAX(catprior)', 're_id = '.$parentID.' AND catprior <> 0 AND clang = 0') + 1;
+		$maxPos   = $db->magicFetch('article', 'MAX(catprior)', 're_id = '.$parentID.' AND catprior <> 0 AND clang = 1') + 1;
 		$position = ($position <= 0 || $position > $maxPos) ? $maxPos : $position;
 
 		// Pfad ermitteln
@@ -201,7 +201,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 			$oldPrio  = $cat->getCatprior();
 			$position = (int) $position;
 
-			$where   = 're_id = '.$parentID.' AND catprior <> 0 AND clang = 0';
+			$where   = 're_id = '.$parentID.' AND catprior <> 0 AND clang = 1';
 			$maxPrio = $db->magicFetch('article', 'MAX(catprior)', $where);
 			$newPrio = ($position <= 0 || $position > $maxPrio) ? $maxPrio : $position;
 

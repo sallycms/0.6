@@ -284,20 +284,21 @@ delete_button: löschen
 main_preferences: Einstellungen
 languages: Sprachen
 types: Typen
-id_exists: ID existiert schon.
 enter_name: Bitte einen Namen eingeben.
 clang_id: Sprach-ID
 clang_add: Sprache hinzufügen
 clang_edit: Sprache bearbeiten
 clang_update: Sprache übernehmen
 clang_created: Sprache wurde angelegt.
-clang_edited: Sprache wurde editiert
-clang_deleted: Sprache wurde gelöscht
+clang_edited: Sprache wurde editiert.
+clang_deleted: Sprache wurde gelöscht.
+clang_delete_error: 'Sprache konnte nicht gelöscht werden.'
 clang_name: Beschreibung/Name
 clang_delete: Sprache löschen
 clang_caption: Liste der verfügbaren Sprachen
 clang_summary: Auflistung aller Sprachen
 clang_function: Funktionen
+clang_locale: Locale
 version: Version
 host: Host
 database: Datenbank

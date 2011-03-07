@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
@@ -12,11 +13,42 @@
  * @author  christoph@webvariants.de
  * @ingroup model
  */
-class sly_Model_Language extends sly_Model_Base
-{
-	protected $name        = '';
-	protected $_attributes = array('name' => 'string');
+class sly_Model_Language extends sly_Model_Base {
 
-	public function getName()      { return $this->name;        }
-	public function setName($name) { $this->name = trim($name); }
+	protected $name = '';
+	protected $locale = '';
+	protected $_attributes = array('name' => 'string', 'locale' => 'string');
+
+	/**
+	 *
+	 * @return string 
+	 */
+	public function getName() {
+		return $this->name;
+	}
+
+	/**
+	 *
+	 * @return string
+	 */
+	public function getLocale() {
+		return $this->locale;
+	}
+
+	/**
+	 *
+	 * @param string $name
+	 */
+	public function setName($name) {
+		$this->name = trim($name);
+	}
+
+	/**
+	 *
+	 * @param string $locale 
+	 */
+	public function setLocale($locale) {
+		$this->locale = trim($locale);
+	}
+
 }

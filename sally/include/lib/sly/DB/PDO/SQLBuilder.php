@@ -311,7 +311,7 @@ abstract class sly_DB_PDO_SQLBuilder
 	protected function build_insert()
 	{
 		$keys = join(',',array_keys($this->data));
-		$e = new sly_DB_PDO_Expression("INSERT INTO $this->table($keys) VALUES(?)",array_values($this->data));
+		$e = new sly_DB_PDO_Expression("INSERT INTO $this->table ($keys) VALUES (?)",array_values($this->data));
 		$e->set_connection($this->connection);
 		return $e->to_s();
 	}

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
@@ -9,18 +10,19 @@
  */
 
 class sly_Controller_Specials_Languages extends sly_Controller_Sally {
+
 	// for now just copy those two fields and the init() method, until
 	// I find a nice way to generalize it into. --xrstf
 
-	protected $warning   = '';
-	protected $info      = '';
-	protected $func      = '';
-	protected $id        = '';
+	protected $warning = '';
+	protected $info = '';
+	protected $func = '';
+	protected $id = '';
 	protected $languages = array();
 
 	public function init() {
 		$subline = array(
-			array('',          t('main_preferences')),
+			array('', t('main_preferences')),
 			array('languages', t('languages'))
 		);
 
@@ -35,28 +37,24 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally {
 	}
 
 	public function add() {
-		global $REX;
-
-		if (isset($_POST['sly-submit'])) {
-			$this->id  = sly_request('clang_id', 'int', -1);
-			$clangName = sly_request('clang_name', 'string');
+		if (sly_post('sly-submit', 'boolean', false)) {
+			$this->id = sly_post('clang_id', 'int', -1);
+			$clangName = sly_post('clang_name', 'string');
+			$clangLocale = sly_post('clang_locale', 'string');
 
 			if (!empty($clangName)) {
-				if (!isset($REX['CLANG'][$this->id]) && $this->id > 0) {
-					rex_addCLang($this->id, $clangName);
+				try {
+					$languageService = sly_Service_Factory::getService('Language');
+					$languageService->add($clangName, $clangLocale);
 					$this->info = t('clang_edited');
+				} catch(Exception $e) {
+					$this->warning = $e->getMessage();
 				}
-				else {
-					$this->warning = t('id_exists');
-					$this->func    = 'add';
-				}
-			}
-			else {
+			} else {
 				$this->warning = t('enter_name');
-				$this->func    = 'add';
+				$this->func = 'add';
 			}
-		}
-		else {
+		} else {
 			$this->func = 'add';
 		}
 
@@ -66,20 +64,21 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally {
 	public function edit() {
 		$this->id = sly_request('clang_id', 'int', -1);
 
-		if (isset($_POST['sly-submit'])) {
-			$clangName       = sly_request('clang_name', 'string');
+		if (sly_post('sly-submit', 'boolean', false)) {
+			$clangName = sly_post('clang_name', 'string');
+			$clangLocale = sly_post('clang_locale', 'string');
 			$languageService = sly_Service_Factory::getService('Language');
-			$clang           = $languageService->findById($this->id);
+			$clang = $languageService->findById($this->id);
 
 			if ($clang) {
 				$clang->setName($clangName);
+				$clang->setLocale($clangLocale);
 				$languageService->save($clang);
 
 				sly_Core::cache()->delete('sly.language', 'all');
 				$this->info = t('clang_edited');
 			}
-		}
-		else {
+		} else {
 			$this->func = 'edit';
 		}
 
@@ -92,15 +91,16 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally {
 		$clangID = sly_request('clang_id', 'int', -1);
 
 		if (isset($REX['CLANG'][$clangID])) {
-			rex_deleteCLang($clangID);
-			$this->info = t('clang_deleted');
+			$ok = rex_deleteCLang($clangID);
+			if($ok) $this->info = t('clang_deleted');
+			else $this->warning = t('clang_delete_error');
 		}
 
 		$this->index();
 	}
 
 	public function checkPermission() {
-		global $REX;
-		return !empty($REX['USER']);
+		return sly_Util_User::getCurrentUser() != null;
 	}
+
 }
