@@ -14,7 +14,7 @@ $base   = 'index.php?page=user&amp;func=';
 $thIcon = '<a href="'.$base.'add"><img class="sly-icon sly-sprite sly-user-add" alt="" src="media/empty.png" title="'.t('create_user').'" /></a>';
 $table  = new sly_Table('users');
 
-$table->addColumn(new sly_Table_Column($thIcon, '', '', array('class' => 'rex-icon')));
+$table->addColumn(new sly_Table_Column($thIcon, '', '', array('class' => 'sly-icon')));
 $table->addColumn(new sly_Table_Column('ID', '25px'));
 $table->addColumn(new sly_Table_Column(t('name')));
 $table->addColumn(new sly_Table_Column(t('login')));

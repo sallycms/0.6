@@ -12,7 +12,7 @@ if (!isset($this->htmlAttributes['class'])) {
 	$this->htmlAttributes['class'] = '';
 }
 
-$isRexIcon = strpos($this->htmlAttributes['class'], 'rex-icon') !== false;
+$isRexIcon = strpos($this->htmlAttributes['class'], 'sly-icon') !== false;
 $link      = '';
 
 if (!$isRexIcon && $table->isSorting() && !$table->hasDragAndDrop() && !empty($this->sortkey)) {

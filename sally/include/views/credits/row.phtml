@@ -22,7 +22,7 @@ else $class = ' sly-not-installed';
 
 <tr class="sly-<?= $type ?> sly-<?= $type ?> <?= $class ?>">
 	<? if ($type == 'addon'): ?>
-	<td class="sly-col-a rex-icon"><?= sly_Util_HTML::getSpriteLink('', $name, 'addon') ?></td>
+	<td class="sly-col-a sly-icon"><?= sly_Util_HTML::getSpriteLink('', $name, 'addon') ?></td>
 	<? else: ?>
 	<td class="sly-col-a">&nbsp;</td>
 	<? endif ?>

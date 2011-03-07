@@ -192,8 +192,7 @@ div#rex-form-mediapool-selectcategory {
 		width: 690px;
 
 		th, td                   { vertical-align: middle; }
-		th.rex-icon, td.rex-icon { padding-bottom: 6px;    }
-		th.sly-icon, td.sly-icon { padding-bottom: 6px;    }
+		th.sly-icon { padding-bottom: 6px;    }
 
 		tr th {
 			background-color: #fff;
@@ -204,7 +203,7 @@ div#rex-form-mediapool-selectcategory {
 			padding: 6px 0;
 		}
 
-		td.rex-icon input {
+		td.sly-icon input {
 			margin: 0;
 			width: 20px;
 		}

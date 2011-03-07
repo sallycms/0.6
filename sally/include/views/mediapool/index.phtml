@@ -55,7 +55,7 @@ ob_start();
 		<col width="153" />
 	</colgroup>
 	<thead><tr>
-		<th class="rex-icon">-</th>
+		<th class="sly-icon">-</th>
 		<th><?= t('pool_file_thumbnail') ?></th>
 		<th><?= t('pool_file_info') ?> / <?= t('pool_file_description') ?></th>
 		<th><?= t('pool_file_functions') ?></th>
@@ -82,7 +82,7 @@ ob_start();
 
 		?>
 		<tfoot><tr>
-			<td class="rex-icon">
+			<td class="sly-icon">
 				<label class="rex-form-hidden-label" for="checkie"><?= t('pool_select_all') ?></label>
 				<input class="rex-form-checkbox" type="checkbox" name="checkie" id="checkie" value="0" onclick="setAllCheckBoxes('selectedmedia[]', this)" />
 			</td>
@@ -165,7 +165,7 @@ ob_start();
 		$add_td = '<td>&nbsp;</td>';
 
 		if ($isAdmin) {
-			$add_td = '<td class="rex-icon"><input class="rex-form-checkbox" type="checkbox" name="selectedmedia[]" value="'.$id.'" /></td>';
+			$add_td = '<td class="sly-icon"><input class="rex-form-checkbox" type="checkbox" name="selectedmedia[]" value="'.$id.'" /></td>';
 		}
 
 		?>

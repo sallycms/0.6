@@ -123,12 +123,12 @@ div.rex-addon-output {
 
 .rex-table, .sly-table {
 	th, td {
-		&.rex-icon, &.rex-small, &.sly-icon, &.sly-small {
+		&.rex-small, &.sly-icon, &.sly-small {
 			width: 29px;
 			text-align: center;
 		}
 
-		&.rex-icon, &.sly-icon {
+		&.sly-icon {
 			padding: 0;
 		}
 

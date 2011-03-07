@@ -223,7 +223,7 @@ echo '
         </colgroup>
         <thead>
           <tr>
-            <th class="rex-icon">'. $add_category .'</th>
+            <th class="sly-icon">'. $add_category .'</th>
             '. $add_header .'
             <th>'.$I18N->msg('header_category').'</th>
             <th>'.$I18N->msg('header_priority').'</th>
@@ -234,7 +234,7 @@ echo '
 if ($category_id != 0 && ($category = OOCategory::getCategoryById($category_id)))
 {
   echo '<tr>
-          <td class="rex-icon">&nbsp;</td>';
+          <td class="sly-icon">&nbsp;</td>';
   if ($REX['USER']->hasPerm('advancedMode[]'))
   {
     echo '<td class="rex-small">-</td>';
@@ -266,7 +266,7 @@ if ($function == 'add_cat' && $KATPERM && !$REX['USER']->hasPerm('editContentOnl
 
   echo '
         <tr class="'. $class .'">
-          <td class="rex-icon">'.sly_Util_HTML::getSpriteLink('', $I18N->msg('add_category'), 'category-add').'</td>
+          <td class="sly-icon">'.sly_Util_HTML::getSpriteLink('', $I18N->msg('add_category'), 'category-add').'</td>
           '. $add_td .'
           <td><input class="rex-form-text" type="text" id="rex-form-field-name" name="category_name" />'. $meta_buttons .'</td>
           <td><input class="rex-form-text" type="text" id="rex-form-field-prior" name="Position_New_Category" value="100" /></td>
@@ -288,7 +288,7 @@ foreach ($categories as $cat)
 {
   $i_category_id = $cat->getId();
   $kat_link    = 'index.php?page=structure&category_id='.$i_category_id.'&clang='.$clang;
-  $kat_icon_td = '<td class="rex-icon">'.sly_Util_HTML::getSpriteLink($kat_link, $cat->getName(), 'category').'</td>';
+  $kat_icon_td = '<td class="sly-icon">'.sly_Util_HTML::getSpriteLink($kat_link, $cat->getName(), 'category').'</td>';
 
   $kat_status = $catStatusTypes[$cat->getValue('status')][0];
   $status_class = $catStatusTypes[$cat->getValue('status')][1];
@@ -479,7 +479,7 @@ if ($category_id > -1)
         </colgroup>
         <thead>
           <tr>
-            <th class="rex-icon">'. $art_add_link .'</th>
+            <th class="sly-icon">'. $art_add_link .'</th>
             '. $add_head .'
             <th>'.$I18N->msg('header_article_name').'</th>
             <th>'.$I18N->msg('header_priority').'</th>
@@ -504,7 +504,7 @@ if ($category_id > -1)
       $add_td = '<td class="rex-small">-</td>';
 
     echo '<tr class="rex-table-row-activ">
-            <td class="rex-icon">'.sly_Util_HTML::getSpriteLink('', $I18N->msg('article_add'), 'article').'</td>
+            <td class="sly-icon">'.sly_Util_HTML::getSpriteLink('', $I18N->msg('article_add'), 'article').'</td>
             '. $add_td .'
             <td><input type="text" class="rex-form-text" id="rex-form-field-name" name="article_name" /></td>
             <td><input type="text" class="rex-form-text" id="rex-form-field-prior" name="Position_New_Article" value="100" /></td>
@@ -535,7 +535,7 @@ if ($category_id > -1)
       $url = 'index.php?page=content&article_id='.$sql->getValue('id').'&category_id='.$category_id.'&clang='.$clang;
 
       echo '<tr class="rex-table-row-activ">
-              <td class="rex-icon">'.sly_Util_HTML::getSpriteLink($url, $sql->getValue('name'), $class).'</td>
+              <td class="sly-icon">'.sly_Util_HTML::getSpriteLink($url, $sql->getValue('name'), $class).'</td>
               '. $add_td .'
               <td><input type="text" class="rex-form-text" id="rex-form-field-name" name="article_name" value="' .htmlspecialchars($sql->getValue('name')).'" /></td>
               <td><input type="text" class="rex-form-text" id="rex-form-field-prior" name="Position_Article" value="'. htmlspecialchars($sql->getValue('prior')).'" /></td>
@@ -578,7 +578,7 @@ if ($category_id > -1)
       $url = 'index.php?page=content&article_id='.$sql->getValue('id').'&category_id='.$category_id.'&mode=edit&clang='.$clang;
 
       echo '<tr>
-              <td class="rex-icon">'.sly_Util_HTML::getSpriteLink($url, $sql->getValue('name'), $class).'</td>
+              <td class="sly-icon">'.sly_Util_HTML::getSpriteLink($url, $sql->getValue('name'), $class).'</td>
               '. $add_td .'
               <td><a href="index.php?page=content&amp;article_id='. $sql->getValue('id') .'&amp;category_id='. $category_id .'&amp;mode=edit&amp;clang='. $clang .'">'. htmlspecialchars($sql->getValue('name')) . '</a></td>
               <td>'. htmlspecialchars($sql->getValue('prior')) .'</td>
@@ -600,7 +600,7 @@ if ($category_id > -1)
       $art_status_class = $artStatusTypes[$sql->getValue('status')][1];
 
       echo '<tr>
-              <td class="rex-icon"><span class="rex-i-element '.$class.'"><span class="rex-i-element-text">' .htmlspecialchars($sql->getValue('name')).'"</span></span></td>
+              <td class="sly-icon"><span class="rex-i-element '.$class.'"><span class="rex-i-element-text">' .htmlspecialchars($sql->getValue('name')).'"</span></span></td>
               '. $add_td .'
               <td>'. htmlspecialchars($sql->getValue('name')).'</td>
               <td>'. htmlspecialchars($sql->getValue('prior')).'</td>
