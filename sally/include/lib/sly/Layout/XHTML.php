@@ -14,8 +14,8 @@
 class sly_Layout_XHTML extends sly_Layout {
 	protected $isTransitional = false;
 
-	protected function setTransitional() {
-		$this->isTransitional = true;
+	public function setTransitional($isTransitional = true) {
+		$this->isTransitional = $isTransitional;
 	}
 
 	protected function printCSSConcrete() {
