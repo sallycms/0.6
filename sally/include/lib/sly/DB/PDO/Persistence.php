@@ -366,4 +366,5 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 		}
 	}
 
+	///@endcond
 }
