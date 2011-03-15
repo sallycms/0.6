@@ -2,7 +2,6 @@
 	#sly-page  { width: 100%; }
 	#rex-title { background-image: none; }
 	#rex-redaxo-link { display: none; }
-	#sly-navi-top { display: none; }
 	#sly-footer { display:none; }
 
 	#rex-wrapper {
@@ -25,7 +24,7 @@
 		padding: 0;
 		font-size: 1em;
 
-		& li {
+		li {
 			display: inline;
 			font-weight: normal;
 
@@ -54,7 +53,7 @@
 	&mediapool-category-add { background-position: -32px -16px; }
 }
 
-div#rex-form-mediapool-selectcategory {
+#rex-form-mediapool-selectcategory {
 	/*  Bspl. Searchbar */
 
 	.rex-form-row p {
@@ -79,14 +78,6 @@ div#rex-form-mediapool-selectcategory {
 			border: 0;
 		}
 
-		.rex-form-label-right {
-			input.rex-form-checkbox,
-			input.rex-form-radio {
-				margin-left: 5px;
-			}
-
-			label { width: 426px; }
-		}
 	}
 }
 
@@ -97,9 +88,7 @@ div#rex-form-mediapool-selectcategory {
 	}
 
 	fieldset.num1 {
-		.rex-form-checkboxes-wrapper,
-		.rex-form-radios-wrapper,
-		.rex-form-label-right label,
+		label,
 		.rex-form-read span,
 		.rex-form-text input,
 		.rex-form-password input,
@@ -128,9 +117,6 @@ div#rex-form-mediapool-selectcategory {
 	.rex-form-submit { margin-left: 75px; }
 
 	.rex-form-row {
-		div.rex-form-checkboxes-wrapper,
-		div.rex-form-radios-wrapper,
-		p.rex-form-label-right label,
 		p.rex-form-read span,
 		p.rex-form-text input,
 		p.rex-form-password input,
@@ -139,18 +125,12 @@ div#rex-form-mediapool-selectcategory {
 			width: 244px;
 		}
 
-		p select.rex-form-select-date {
+		p .rex-form-select-date {
 			width: 50px;
 		}
 
-		p select.rex-form-select-year {
+		p .rex-form-select-year {
 			width: 70px;
-		}
-
-		div.rex-form-checkboxes-wrapper p.rex-form-label-right label,
-		div.rex-form-radios-wrapper p.rex-form-label-right label,
-		div.rex-form-widget select {
-			width: 212px;
 		}
 	}
 }
@@ -213,7 +193,7 @@ div#rex-form-mediapool-selectcategory {
 		}
 	}
 
-	div.rex-form-row.sly-mediapool-detail-image {
+	.rex-form-row.sly-mediapool-detail-image {
 		position: relative;
 		height: 0;
 		border: 0 none;
@@ -232,18 +212,18 @@ div#rex-form-mediapool-selectcategory {
 		}
 	}
 
-	div.rex-form-row.sly-mediapool-detail-title {
+	.rex-form-row.sly-mediapool-detail-title {
 		border-top: 0 none;
 	}
 }
 
-form#rex-form-mediapool-media {
+#rex-form-mediapool-media {
 	.rex-form-wrapper .rex-form-row.sly-num0 {
 		padding: 0;
 	}
 }
 
-div#rex-form-mediapool-categories {
+#rex-form-mediapool-categories {
 	input.rex-form-submit {
 		margin-left: 0;
 	}

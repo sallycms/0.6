@@ -70,8 +70,10 @@ foreach ($groups as $group) {
 	foreach ($pages as $page) {
 		if ($page->isHidden()) continue;
 
+		$liclass  = $page->isActive() ? 'rex-active' : '';
+		$liclass .= $page->isPopup()  ? 'popup'      : '';
 		$li = array(
-			'class' => $page->isActive() ? 'rex-active' : '',
+			'class' => $liclass,
 			'id'    => 'rex-navi-page-'.$page->getPageParam()
 		);
 

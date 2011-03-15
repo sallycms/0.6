@@ -1,16 +1,8 @@
-#rex-form-structure-category {
-	margin-bottom: 10px;
-
-	table.rex-table-mrgn {
-		margin-bottom: 0px;
-	}
-}
-
 #rex-page-structure {
 	.rex-form {
 		+border-radius($brd_rad);
 	}
-	.rex-table {
+	.sly-table {
 		+border-radius(0px);
 		border: 0;
 	}

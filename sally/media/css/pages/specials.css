@@ -1,6 +1,6 @@
 /* Sprites */
 
-.sly-sprite.sly-sprite {
+.sly-sprite {
 	&-language     { background-position: 0 -48px; }
 	&-language-add { background-position: 0 -64px; }
 }
@@ -23,7 +23,7 @@
 		background-color: transparent;
 	}
 
-	div.rex-form-row {
+	.rex-form-row {
 		border-bottom-width: 0;
 		padding: 5px 0 0;
 

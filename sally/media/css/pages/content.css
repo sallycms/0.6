@@ -3,13 +3,13 @@
 	width: 100%;
 	margin-bottom: 10px;
 
-	& #rex-clang {
-		& ul li {
+	#rex-clang {
+		ul li {
 			display: inline;
 			font-weight: normal;
 			liste-style: none;
 
-			& a {
+			a {
 				padding: 0 5px;
 				font-weight: bold;
 			}
@@ -20,19 +20,20 @@
 		}
 	}
 
+	#rex-navi-slots { float: left; }
+
 	ul {
 		padding: 5px 0; /*  Abstand oben und unten */
-
-		&#rex-navi-slots { float: left; }
+		
 		&.rex-navi-content { float: right; }
 
-		& li {
+		li {
 			liste-style: none;
 			display: inline;
 			margin: 0 0 0 5px; /* Abstand der Listenelemente zu einander, s. Buttons Editier-Modus etc. */
 
 			/* Buttons Editier Modus, Metadaten, Anzeigen */
-			& a {
+			a {
 				text-decoration: none;
 				background-color: #fff;
 				padding: 2px 8px;
@@ -54,7 +55,7 @@
 	}
 }
 
-div.rex-content-body {
+.rex-content-body {
 	clear: both;
 	float: left;
 	width: 100%;
@@ -107,11 +108,11 @@ div.rex-content-body {
 			width: 100%;
 			border: 1px solid #efefef;
 
-			& input, select {
+			input, select {
 				margin: 5px;
 			}
 
-			& label {
+			label {
 				margin:10px 0 5px 10px;
 			}
 
@@ -134,7 +135,7 @@ div.rex-content-body {
 
 			&, &-add-slice, &-edit-slice {
 
-				legend, legend span { +hardcore-hidden; }
+				legend { +hardcore-hidden; }
 
 				.rex-form-row {
 					p input.rex-form-submit { margin-left: 10px; }
@@ -186,13 +187,10 @@ div.rex-content-body {
 
 	h3 {
 		float: left;
-
-		&.rex-hl4 {
-			vertical-align: middle;
-			color: #fff;
-			font-size: 1.1em;
-			margin: 0 0 0 10px;
-		}
+		vertical-align: middle;
+		color: #fff;
+		font-size: 1.1em;
+		margin: 0 0 0 10px;
 	}
 
 	.rex-navi-slice {
@@ -208,7 +206,7 @@ div.rex-content-body {
 	padding: 0px;
 	margin-bottom: 10px;
 
-	div.rex-widget {
+	.rex-widget {
 		margin-bottom: 0px;
 	}
 

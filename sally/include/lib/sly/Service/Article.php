@@ -141,8 +141,8 @@ class sly_Service_Article extends sly_Service_Model_Base {
 				  'revision' => 0
 			));
 
-			$cat->setUpdateColumns();
-			$cat->setCreateColumns();
+			$article->setUpdateColumns();
+			$article->setCreateColumns();
 			$this->save($article);
 
 			// online/offline Listen leeren

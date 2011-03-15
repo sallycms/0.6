@@ -13,7 +13,7 @@
 
 $category_id = rex_request('category_id', 'rex-category-id');
 $article_id  = rex_request('article_id',  'rex-article-id');
-$clang       = rex_request('clang',       'rex-clang-id', $REX['START_CLANG_ID']);
+$clang       = rex_request('clang',       'rex-clang-id', sly_Core::config()->get('START_CLANG_ID'));
 $slot        = rex_request('slot',        'rex-slot');
 $edit_id     = rex_request('edit_id',     'rex-category-id');
 $function    = rex_request('function',    'string');
@@ -26,7 +26,7 @@ require SLY_INCLUDE_PATH.'/functions/function_rex_content.inc.php';
 
 // Titel ausgeben
 
-rex_title($I18N->msg('title_structure'), $KATout);
+sly_Core::getLayout()->pageHeader($I18N->msg('title_structure'), $KATout);
 
 $sprachen_add = '&amp;category_id='.$category_id;
 $result = require SLY_INCLUDE_PATH.'/views/toolbars/languages.phtml';
@@ -210,7 +210,7 @@ if($function == 'add_cat' || $function == 'edit_cat')
 }
 
 echo '
-      <table class="rex-table rex-table-mrgn" summary="'. htmlspecialchars($I18N->msg('structure_categories_summary', $cat_name)) .'">
+      <table class="sly-table" summary="'. htmlspecialchars($I18N->msg('structure_categories_summary', $cat_name)) .'">
         <caption>'. htmlspecialchars($I18N->msg('structure_categories_caption', $cat_name)) .'</caption>
         <colgroup>
           <col width="40" />
@@ -465,7 +465,7 @@ if ($category_id > -1)
   );
 
   echo '
-      <table class="rex-table" summary="'. sly_html($I18N->msg('structure_articles_summary', $cat_name)) .'">
+      <table class="sly-table" summary="'. sly_html($I18N->msg('structure_articles_summary', $cat_name)) .'">
         <caption>'. sly_html($I18N->msg('structure_articles_caption', $cat_name)).'</caption>
         <colgroup>
           <col width="40" />

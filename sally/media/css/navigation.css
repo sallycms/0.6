@@ -5,6 +5,14 @@
 	margin-left: 16px;
 	padding: 0;
 
+	li {
+		list-style: none;
+		font-size:0.9em;
+		line-height:25px;
+		list-style:none outside none;
+		margin-bottom:1px;
+	}
+
 	/*gesamtes menü*/
 	dl {
 		width: 100%;
@@ -14,42 +22,23 @@
 
 		/* Navi-Headline */
 		dt {
-			display: block !important;
-			position: static !important;
-			width: auto !important;
-			height: auto !important;
-			background-color: transparent !important;
-			padding: 12px 10px 7px 10px !important;
-			clear: both;
 			display: block;
+			padding: 12px 10px 7px 10px;
 			font-size: 1.4em;
 			letter-spacing: -0.01em;
 			text-shadow: 1px 1px 0px rgba(255,255,255,1.0);
 			border-bottom: 1px dotted $md_grey;
 			margin-bottom: 5px; /* Abstand "Basis Naviagtion" zum ersten Menüpunkt 5px */
-
 		}
 
 		dd {
 			margin: 0 0 16px 0;
-			padding: 0;
-			clear: both;
-			color: $drk_grey;
 
 			ul li {
-
-				list-style: none;
-				float:none;
-				font-size:0.9em;
-				line-height:25px;
-				list-style:none outside none;
-				margin-bottom:1px;
-
 				a {
 					+border-radius(3px);
 					display: block;
 					padding:0 0 0 25px;
-					white-space: normal;
 					background-color: #fff;
 					color: $drk_grey;
 					background-image: url(../background_menu_arrow.sld.png);
@@ -61,7 +50,6 @@
 						color: #fff;
 						background-color: #b3b3b3;
 						text-decoration: none;
-						background-image: url(../background_menu_arrow.sld.png);
 						background-position: 10px -24px;
 						background-repeat: no-repeat;
 					}
@@ -70,19 +58,17 @@
 						background-color: $drk_grey;
 						color: #fff;
 						font-weight: bold;
-						background-image: url(../background_menu_arrow.sld.png);
 						background-position: 10px -49px;
-						background-repeat: no-repeat;
 					}
 
 					/* anderes Menü-Icon für Medienpool */
 					&.popup {
-						background-image: url(../xbackground_btn_popup.sld.png);
-						background-position: top;
+						background-image: url(../background_btn_popup.sld.png);
+						background-position: center top;
 
-						&.hover {
-							background-image: url(../xbackground_btn_popup.sld.png);
-							background-position: center;
+						&:hover {
+							background-image: url(../background_btn_popup.sld.png);
+							background-position: center center;
 						}
 					}
 
@@ -147,20 +133,17 @@
 #sly-navi-top {
 	color: #b2b2b2;
 	width: 100%;
-	height: 75px;
+	height: 88px;
 	margin-bottom: 36px;
 	background: transparent url(../logo.gif) 11px 0px no-repeat;
 
-	p, ul {
-		padding: 59px 10px 0 0;
+	ul {
+		padding: 59px 0 0 0;
 		text-align: right;
 		font-size: 0.8em;
 	}
 
-
-	p.rex-logout {
-		padding-right: 5px;
-	}
+	a, span { padding: 0 5px; }
 
 	ul li {
 		display: inline;
@@ -169,11 +152,8 @@
 		background-position: 0px 2px;
 		background-repeat: no-repeat;
 
-		a, span { padding: 0 5px; }
-
 		&.rex-navi-first {
 			background: none;
-			a, span { padding-left: 0; }
 		}
 	}
 }
@@ -186,7 +166,7 @@
 	display: inline;
 	font-weight: normal;
 
-	a { margin: 0 15px;  }
+	a { margin: 0 15px; }
 	&.rex-navi-first a { margin-left: 0; }
 }
 

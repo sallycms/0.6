@@ -78,7 +78,7 @@ class sly_Helper_Content {
             <input type="hidden" name="slot" value="' . $slot . '" />
 
             <div class="rex-content-editmode-module-name">
-              <h3 class="rex-hl4">
+              <h3>
                 ' . $I18N->msg("module") . ': <span>' . sly_html($moduleService->getTitle($module)) . '</span>
               </h3>
             </div>

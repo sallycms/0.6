@@ -8,7 +8,8 @@
 	}
 
 	.rex-form {
-		.rex-form-text input,.rex-form-password input {
+		.rex-form-text input,
+		.rex-form-password input {
 			width: 250px;
 		}
 

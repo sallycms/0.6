@@ -21,21 +21,12 @@ body {
 }
 
 #sly-page {
-
 	width: 1000px;
 	margin: 0 auto;
-
 	font-size: 0.9em;
 	background-image: url(../website.gif);
 	background-repeat: repeat-x;
 }
-
-.rex-popup {
-	#sly-navi-top {
-		margin-bottom: 2px;
-	}
-}
-
 
 
 h1, h2, h3, h4, h5, h6 {
@@ -85,13 +76,30 @@ img, iframe {
 	background: none;
 	height: auto;
 
-	
+	#rex-navi-path{
+		border: 0;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		font-size: 1em;
+
+		li {
+			display: inline;
+			font-weight: normal;
+
+			a.rex-active {
+				color: $drk_grey;
+			}
+		}
+
+	}
 
 	h1 {
 		padding-top: 5px; /* Ausrichtung der Überschrift mit der Navi-Überschrift */
-		margin-bottom: 5px; /* Ausrichtung der Überschrift mit der Navi-Überschrift */
+		margin-bottom: 4px; /* Ausrichtung der Überschrift mit der Navi-Überschrift */
 		font-weight: normal;
 		font-size: 2em;
+		height: 35px;
 		color: $drk_grey;
 		text-shadow: 1px 1px 0px rgba(255,255,255,.8);
 	}
@@ -112,31 +120,12 @@ img, iframe {
 			p { display: none; }
 		}
 
-		& ul li a.rex-active {
+		ul li a.rex-active {
 			color: $drk_grey;
 		}
 
 		/* p = zweite Zeile der Pfadangabe */
-		& #rex-navi-path{
-			border: 0;
-			list-style: none;
-			margin: 0;
-			padding: 0;
-			font-size: 1em;
-
-			& li {
-				display: inline;
-				font-weight: normal;
-
-				& a.rex-active {
-					color: $drk_grey;
-				}
-			}
-
-		}
-
-		/* p = zweite Zeile der Pfadangabe */
-		& p {
+		p {
 			margin-top: 10px;
 		}
 
@@ -193,7 +182,7 @@ html > body #sly-navi-main {
 			margin: 0;
 			padding: 10px;
 
-			& ul li {
+			ul li {
 				list-style: none;
 				display: inline;
 				margin: 0 5px 0 0; /* Abstand der Listenelemente zu einander, s. Sprachen */
@@ -241,12 +230,6 @@ html > body #sly-navi-main {
 .rex-algn-lft  { text-align: left; }
 .rex-algn-rght { text-align: right; }
 .rex-strike    { text-decoration: line-through; }
-
-.rex-display-inline,
-ol.rex-display-inline li,
-ul.rex-display-inline li {
-	display: inline;
-}
 
 .rex-code {
 	font-size: 1.2em;
@@ -328,15 +311,6 @@ ul.rex-ul1 {
 }
 
 /*	Button - Arrows */
-
-.rex-i- {
-	&article           { background-image: url(../document.png);           }
-	&article-add       { background-image: url(../document_plus.png);      }
-	&article-startpage { background-image: url(../document_startpage.png); }
-	&category          { background-image: url(../folder.png);             }
-	&category-add      { background-image: url(../folder_plus.png);        }
-}
-
 .rex-area-scroll,
 .rex-widget {
 	border-color: #999;

@@ -60,7 +60,7 @@ caption, legend {
 	&.rex-hidden { display: none; }
 }
 
-div.rex-addon-output {
+.rex-addon-output {
 	ol, ul { margin-left: 20px; }
 }
 

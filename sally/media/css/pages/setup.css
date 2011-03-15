@@ -1,6 +1,4 @@
 .rex-form-setup-step-database .rex-form-row {
-	p.rex-form-label-right label { width: 630px; }
-
 	p input.rex-form-radio,
 	p input.rex-form-submit {
 		margin-left: 5px;
@@ -97,9 +95,9 @@ ul.rex-setup-language {
 
 	td.sly-status { color: white; }
 
-	tr.ok      .sly-status { background-color: green;  }
-	tr.warning .sly-status { background-color: orange; }
-	tr.failed  .sly-status { background-color: red;    }
+	.ok      .sly-status { background-color: green;  }
+	.warning .sly-status { background-color: orange; }
+	.failed  .sly-status { background-color: red;    }
 }
 
 /*	Formulare */

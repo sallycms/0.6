@@ -1,18 +1,18 @@
 /* Sprites */
 
-.sly-sprite.sly-sprite {
+.sly-sprite {
 	&-addon  { background-position: 0 -32px;     }
 	&-plugin { background-position: -32px -32px; }
 }
 
 .sly-addonlist {
-	tr.sly-addon, tr.sly-plugin {
+	.sly-addon, .sly-plugin {
 		&.sly-not-installed td { background: #ddd; color: #8D8686; }
 		&.sly-installed td     { background: #eee; color: #6D6666; }
 		&.sly-activated td     { background: #fff; color: #4D4646; }
 	}
 
-	tr.sly-addon .is-help, del {
+	.sly-addon .is-help, del {
 		border-bottom: 1px dotted #777;
 		cursor: help;
 		color: #8D8686;

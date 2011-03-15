@@ -1,4 +1,5 @@
-.rex-table {
+.rex-table,
+.sly-table{
 	clear: both;
 	width: 100%;
 	background-color: #fff;
@@ -34,14 +35,14 @@
 		}
 	}
 
-	tr.rex-table-row-activ td {
+	.rex-table-row-activ td {
 		background-color: $link_color;
 		color: #fff;
 
 		input { padding: 0; border: 1px solid #fff; }
 	}
 
-	tr.rex-plugin td {
+	.rex-plugin td {
 		background-color: #FAF9F5;
 	}
 

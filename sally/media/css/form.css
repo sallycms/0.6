@@ -70,13 +70,6 @@ input#rex-form-field-prior {
 		}
 	}
 
-	p.rex-form-label-right label {
-		clear: none;
-		display: inline;
-		width: auto;
-		padding: 0;
-	}
-
 	p {
 		span.rex-form-read,
 		span.rex-form-notice {
@@ -109,16 +102,6 @@ input#rex-form-field-prior {
 		}
 	}
 
-	.rex-form-checkboxes-wrapper,
-	.rex-form-radios-wrapper {
-		float: left;
-	}
-
-	.rex-form-widget {
-		div.rex-widget-link input  { width: 208px; }
-		div.rex-widget-media input { width: 189px; }
-	}
-
 	/*	Select */
 
 	p select.rex-form-select:disabled {
@@ -128,40 +111,6 @@ input#rex-form-field-prior {
 
 	p select.rex-form-select-date { width: 50px;  }
 	p select.rex-form-select-year { width: 70px;  }
-	.rex-form-widget select    { width: 212px; }
-
-	.sly-widget {
-		+clearfix;
-		&.sly-medialistbutton {
-			display: block;
-
-			select {
-				float: left;
-				width: 398px;
-			}
-
-			.sly-icons {
-				float: left;
-				width: 16px;
-				margin-left: 5px;
-
-				img {
-					padding-bottom: 2px;
-				}
-			}
-		}
-
-		&.sly-mediabutton, &.sly-linkbutton {
-			input {
-				width: 393px;
-				margin: 0;
-			}
-
-			.sly-icons img {
-				padding-bottom: 2px;
-			}
-		}
-	}
 
 	label.sly-inline {
 		float: none;
@@ -185,48 +134,44 @@ input#rex-form-field-prior {
 	}
 }
 
-/*	Checkbox / Radio */
+/* sly widgets */
+.sly-widget {
+	+clearfix;
+	&.sly-medialistbutton {
+		display: block;
 
-p.rex-form-label-right {
-	height: 20px;
-}
-
-.rex-form-row, .rex-message {
-	p.rex-form-label-right {
-		input.rex-form-checkbox,
-		input.rex-form-radio {
-			clear: both;
+		select {
 			float: left;
-			margin: 5px 5px 0 145px;
+			width: 398px;
+		}
+
+		.sly-icons {
+			float: left;
+			width: 16px;
+			margin-left: 5px;
+
+			img {
+				padding-bottom: 2px;
+			}
+		}
+	}
+
+	&.sly-mediabutton, &.sly-linkbutton {
+		input {
+			width: 393px;
+			margin: 0;
+		}
+
+		.sly-icons img {
+			padding-bottom: 2px;
 		}
 	}
 }
 
-.rex-message .rex-form-label-right,
-.rex-form-row .rex-form-checkboxes-wrapper,
-.rex-form-row .rex-form-radios-wrapper {
-	input.rex-form-checkbox,
-	input.rex-form-radio {
-		margin-left: 0;
-	}
-}
 
-.rex-form-row {
-	div.rex-form-checkboxes-wrapper p.rex-form-checkbox,
-	div.rex-form-radios-wrapper p.rex-form-radio {
-		padding-top: 3px;
-	}
-
-	p input.rex-form-select-checkbox {
-		vertical-align: middle;
-	}
-}
 
 .rex-form {
-	div.rex-form-row {
-		div.rex-form-checkboxes-wrapper,
-		div.rex-form-radios-wrapper,
-		p.rex-form-label-right label,
+	.rex-form-row {
 		p.rex-form-read span,
 		p.rex-form-text input,
 		p.rex-form-password input,
@@ -251,7 +196,7 @@ p.rex-form-label-right {
 	}
 
 	.rex-form-row p,
-	fieldset.rex-form-col-2 div.rex-form-row p.rex-form-text {
+	fieldset.rex-form-col-2 .rex-form-row p.rex-form-text {
 		input.rex-form-submit { width: auto; }
 	}
 
@@ -283,11 +228,9 @@ p.rex-form-label-right {
 
 /*	Bspl.: div.rex-area-col-2 -> System : Einstellungen */
 
-.rex-area-col-2 fieldset.rex-form-col-1, .rex-form fieldset.rex-form-col-2 {
+.rex-area-col-2 fieldset.rex-form-col-1,
+.rex-form fieldset.rex-form-col-2 {
 	.rex-form-row {
-		.rex-form-checkboxes-wrapper,
-		.rex-form-radios-wrapper,
-		p.rex-form-label-right label,
 		p.rex-form-read span,
 		p.rex-form-text input,
 		p.rex-form-password input,
@@ -429,14 +372,6 @@ p.rex-form-label-right {
 	left: 10px;
 }
 
-/*	Addons */
-
-div#rex-addon-editmode form div.rex-widget {
-	margin-top: -20px;
-	margin-left: 155px;
-	margin-bottom: 0px;
-}
-
 /* Mehrsprachige Formulare */
 
 .sly-form-i18n-switch {
@@ -453,7 +388,7 @@ div#rex-addon-editmode form div.rex-widget {
 
 /* Linklist-Button */
 
-.rex-form .rex-form-row .sly-linklistbutton {
+.sly-linklistbutton {
 	select.sly-linklist { width: 305px; }
 
 	input.sly-link-filter {
