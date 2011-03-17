@@ -42,10 +42,8 @@ abstract class sly_Model_Base {
 	}
 
 	public function setUpdateColumns($user = null) {
-		global $REX;
-
 		if (!$user) {
-			$user = $REX['USER']->getLogin();
+			$user = sly_Util_User::getCurrentUser()->getLogin();
 		}
 
 		$this->setUpdateDate(time());
@@ -53,10 +51,8 @@ abstract class sly_Model_Base {
 	}
 
 	public function setCreateColumns($user = null) {
-		global $REX;
-
 		if (!$user) {
-			$user = $REX['USER']->getLogin();
+			$user = sly_Util_User::getCurrentUser()->getLogin();
 		}
 
 		$this->setCreateDate(time());

@@ -109,7 +109,7 @@ class sly_Controller_Specials extends sly_Controller_Sally {
 	}
 
 	public function checkPermission() {
-		global $REX;
-		return !empty($REX['USER']);
+		$user = sly_Util_User::getCurrentUser();
+		return !is_null($user);
 	}
 }

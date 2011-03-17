@@ -125,7 +125,7 @@ class sly_Controller_Addon extends sly_Controller_Sally {
 	public function assets()     { return $this->call('copyAssets', 'assets_copied'); }
 
 	public function checkPermission() {
-		global $REX;
-		return isset($REX['USER']) && $REX['USER']->isAdmin();
+		$user = sly_Util_User::getCurrentUser();
+		return !is_null($user) && $user->isAdmin();
 	}
 }

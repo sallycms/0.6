@@ -155,9 +155,9 @@ class sly_Controller_User extends sly_Controller_Sally {
 		}
 
 		$service = sly_Service_Factory::getService('User');
-		$current = $REX['USER'];
+		$current = sly_Util_User::getCurrentUser();
 
-		if ($current->getValue('id') == $user->getId()) {
+		if ($current->getId() == $user->getId()) {
 			print rex_warning(t('user_notdeleteself'));
 			return false;
 		}
@@ -170,8 +170,8 @@ class sly_Controller_User extends sly_Controller_Sally {
 	}
 
 	public function checkPermission() {
-		global $REX;
-		return isset($REX['USER']) && $REX['USER']->isAdmin();
+		$user = sly_Util_User::getCurrentUser();
+		return !is_null($user) && $user->isAdmin();
 	}
 
 	protected function listUsers() {
@@ -181,13 +181,9 @@ class sly_Controller_User extends sly_Controller_Sally {
 	}
 
 	protected function getUser() {
-		$userID = sly_request('id', 'int', 0);
-		$service  = sly_Service_Factory::getService('User');
-		$user   = $service->findById($userID);
-
-		if (!$userID || $user === null) {
-			return null;
-		}
+		$userID  = sly_request('id', 'int', 0);
+		$service = sly_Service_Factory::getService('User');
+		$user    = $service->findById($userID);
 
 		return $user;
 	}
@@ -241,7 +237,7 @@ class sly_Controller_User extends sly_Controller_Sally {
 		global $REX;
 
 		$permissions = array();
-		$current     = $REX['USER']->getId();
+		$current     = sly_Util_User::getCurrentUser()->getId();
 		$config      = sly_Core::config();
 
 		if (sly_post('is_admin', 'boolean', false) || ($user && $current == $user->getId())) {

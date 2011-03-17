@@ -19,20 +19,20 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		return new sly_Model_Article($params);
 	}
 
-	public function save(sly_Model_Base $cat) {
+	public function save(sly_Model_Base $article) {
 		$persistence = sly_DB_Persistence::getInstance();
 
-		if ($cat->getPid() == sly_Model_Base::NEW_ID) {
-			$data = $cat->toHash();
+		if ($article->getPid() == sly_Model_Base::NEW_ID) {
+			$data = $article->toHash();
 			unset($data['pid']);
 			$persistence->insert($this->getTableName(), $data);
-			$cat->setPid($persistence->lastId());
+			$article->setPid($persistence->lastId());
 		}
 		else {
-			$persistence->update($this->getTableName(), $cat->toHash(), array('pid' => $cat->getPid()));
+			$persistence->update($this->getTableName(), $article->toHash(), array('pid' => $article->getPid()));
 		}
 
-		return $cat;
+		return $article;
 	}
 
 	public function findByPid($pid) {
@@ -75,14 +75,14 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 		// Position validieren
 
-		$where    = '((re_id = '.$parentID.' AND catprior = 0) OR (id = '.$parentID.')) AND clang = 1';
+		$where    = '((re_id = '.$parentID.' AND catprior = 0) OR (id = '.$parentID.'))';
 		$maxPos   = $db->magicFetch('article', 'MAX(prior)', $where) + 1;
 		$position = ($position <= 0 || $position > $maxPos) ? $maxPos : $position;
 
 		// Pfad ermitteln
 
 		if ($parentID !== 0) {
-			$path = $db->magicFetch('article', 'path', array('id' => $parentID, 'startpage' => 1, 'clang' => 0));
+			$path = $db->magicFetch('article', 'path', array('id' => $parentID, 'startpage' => 1));
 			$path = $path.$parentID.'|';
 		}
 		else {
@@ -92,7 +92,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		// Die ID ist für alle Sprachen gleich und entspricht einfach der aktuell
 		// höchsten plus 1.
 
-		$newID = $db->magicFetch('article', 'MAX(id)', array('clang' => 0)) + 1;
+		$newID = $db->magicFetch('article', 'MAX(id)') + 1;
 
 		// Entferne alle Artikel aus dem Cache, die nach dem aktuellen kommen und
 		// daher ab Ende dieser Funktion eine neue Positionsangabe haben.
@@ -236,7 +236,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		$articleID = (int) $articleID;
 		$db        = sly_DB_Persistence::getInstance();
 		$cache     = sly_Core::cache();
-		$article   = $this->findById($articleID, 0);
+		$article   = $this->findById($articleID, 1);
 
 		// Prüfen ob der Artikel existiert
 		if ($article === null) {
@@ -277,18 +277,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		return true;
 	}
 
-	public function changeStatus($articleID, $clangID, $newStatus = null) {
-		global $REX;
-
-		$articleID = (int) $articleID;
-		$clangID   = (int) $clangID;
-		$article   = $this->findById($articleID, 0);
-
-		// Prüfen ob die Artikel existiert
-		if ($article === null) {
-			throw new sly_Exception(t('no_such_article'));
-		}
-
+	public function changeStatus(sly_Model_Article $article, $newStatus = null) {
 		$stati     = $this->getStati();
 		$re_id     = $article->getParentId();
 		$oldStatus = $article->getStatus();
@@ -306,9 +295,9 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 		// Cache leeren
 		$cache = sly_Core::cache();
-		$cache->delete('sly.article', $articleID.'_'.$clangID);
-		$cache->delete('sly.article.list', $re_id.'_'.$clangID.'_0');
-		$cache->delete('sly.article.list', $re_id.'_'.$clangID.'_1');
+		$cache->delete('sly.article', $article->getId().'_'.$article->getClang());
+		$cache->delete('sly.article.list', $article->getParentId().'_'.$article->getClang().'_0');
+		$cache->delete('sly.article.list', $article->getParentId().'_'.$article->getClang().'_1');
 
 		// Event auslösen
 		$dispatcher = sly_Core::dispatcher();

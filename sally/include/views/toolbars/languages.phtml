@@ -19,7 +19,9 @@
 // $REX['USER']->isValueOf("rights","csw[0]")
 
 $langService = sly_Service_Factory::getService('Language');
-$languages = $langService->find();
+$languages   = $langService->find();
+$user        = sly_Util_User::getCurrentUser();
+
 
 if (count($languages) > 1) {
 	print '
@@ -43,7 +45,7 @@ if (count($languages) > 1) {
 
 		$clangName = rex_translate($language->getName()); // enthält htmlspecialchars()
 
-		if (!$REX['USER']->hasPerm('admin[]') && !$REX['USER']->hasPerm('clang[all]') && !$REX['USER']->hasPerm('clang['.$clangID.']')) {
+		if (!$user->isAdmin() && !$user->hasPerm('clang[all]') && !$user->hasPerm('clang['.$clangID.']')) {
 			print '<span class="rex-strike">'.$clangName.'</span>';
 			$stop |= $clang == $clangID;
 		}
@@ -54,7 +56,7 @@ if (count($languages) > 1) {
 				$class = ' class="rex-active"';
 			}
 
-			print '<a'.$class.' href="index.php?page='.$REX['PAGE'].'&amp;clang='.$clangID.$sprachen_add.'&amp;slot='.$slot.'">'.$clangName.'</a>';
+			print '<a'.$class.' href="index.php?page='.$REX['PAGE'].'&amp;clang='.$clangID.$sprachen_add.(isset($slot) ? '&amp;slot='.$slot : '').'">'.$clangName.'</a>';
 		}
 
 		print '</li>';
@@ -78,3 +80,4 @@ else {
 
 unset($langService);
 unset($languages);
+unset($user);
