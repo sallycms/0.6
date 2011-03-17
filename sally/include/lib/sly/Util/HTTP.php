@@ -67,7 +67,7 @@ class sly_Util_HTTP {
 	 * @return int             die ID oder -1 falls keine gefunden wurde
 	 */
 	protected static function resolveArticle($article) {
-		if (WV_String::isInteger($article)) return (int) $article;
+		if (sly_Util_String::isInteger($article)) return (int) $article;
 		if ($article instanceof OOArticle) return (int) $article->getId();
 
 		return -1;

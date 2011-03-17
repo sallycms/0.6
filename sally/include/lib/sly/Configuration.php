@@ -127,19 +127,20 @@ class sly_Configuration {
 	public function get($key, $default = null) {
 		if (!$this->has($key)) return $default;
 
-		$s = (empty($key) || $this->staticConfig->has($key))  ? $this->staticConfig->get($key)  : array();
-		$l = (empty($key) || $this->localConfig->has($key))   ? $this->localConfig->get($key)   : array();
-		$p = (empty($key) || $this->projectConfig->has($key)) ? $this->projectConfig->get($key) : array();
-
+		$p = $this->projectConfig->get($key, array());
 		if (!is_array($p)) return $p;
+
+		$l = $this->localConfig->get($key, array());
 		if (!is_array($l)) return $l;
+
+		$s = $this->staticConfig->get($key, array());
 		if (!is_array($s)) return $s;
 
 		return array_replace_recursive($s, $l, $p);
 	}
 
 	public function has($key) {
-		return $this->staticConfig->has($key) || $this->localConfig->has($key) || $this->projectConfig->has($key);
+		return $this->projectConfig->has($key) || $this->localConfig->has($key) || $this->staticConfig->has($key);
 	}
 
 	public function remove($key) {

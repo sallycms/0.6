@@ -223,7 +223,9 @@ abstract class sly_Service_AddOn_Base {
 	}
 
 	public function isAvailable($addonORplugin) {
-		return $this->isInstalled($addonORplugin) && $this->isActivated($addonORplugin);
+		// If we execute both checks in this order, we avoid the overhead of checking
+		// the install status of a disabled addon.
+		return $this->isActivated($addonORplugin) && $this->isInstalled($addonORplugin);
 	}
 
 	public function isInstalled($addonORplugin) {

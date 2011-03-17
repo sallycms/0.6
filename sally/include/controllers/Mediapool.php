@@ -338,7 +338,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 
 	protected function createFilename($filename, $doSubindexing = true) {
 		global $REX;
-
+		$filename = $this->correctEncoding($filename);
 		$newFilename = strtolower($filename);
 		$newFilename = str_replace(array('ä','ö', 'ü', 'ß'), array('ae', 'oe', 'ue', 'ss'), $newFilename);
 		$newFilename = preg_replace('#[^a-z0-9.+-]#i', '_', $newFilename);
@@ -391,5 +391,13 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 		}
 
 		return array(ceil($width), ceil($height));
+	}
+
+	protected function correctEncoding($filename) {
+		$enc = mb_detect_encoding($filename, 'Windows-1252, ISO-8859-1, ISO_8859-2, UTF-8');
+		if($enc != 'UTF-8') {
+			$filename = iconv($enc, 'UTF-8', $filename);
+		}
+		return $filename;
 	}
 }

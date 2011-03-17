@@ -40,16 +40,6 @@ $mimetypes = array(
 if (!file_exists($file)) die;
 if (!preg_match('#\.(css|js|png|jpg|jpeg|gif)$#i', $file)) die;
 
-// E-Tag-Behandlung
-
-$etag = !empty($_SERVER['HTTP_IF_NONE_MATCH']) ? $_SERVER['HTTP_IF_NONE_MATCH'] : '';
-$md5  = substr(md5_file($file), 0, 10);
-
-if ($etag == '"'.$md5.'"') { // ETag steht in "..."
-	header('HTTP/1.1 304 Not Modified');
-	exit();
-}
-
 // Last-Modified-Since-Behandlung
 
 $last  = !empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : -1;
@@ -68,9 +58,7 @@ if (isset($mimetypes[$extension])) header('Content-Type: '.$mimetypes[$extension
 // Headers
 
 header('Last-Modified: '.date('r', $mtime));
-header('ETag: "'.$md5.'"');
-header('Cache-Control: public');
-header('Expires: Thu, 15 Apr '.(date('Y')+5).' 20:00:00 GMT');
+header('Expires: Thu, 15 Apr '.(date('Y')+1).' 20:00:00 GMT');
 
 // gzip starten
 

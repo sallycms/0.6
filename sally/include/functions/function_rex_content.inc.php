@@ -130,6 +130,7 @@ function rex_slice_module_exists($sliceID, $clang)
 	$sliceID = (int) $sliceID;
 	$clang   = (int) $clang;
 	$slice   = OOArticleSlice::getArticleSliceById($sliceID, $clang);
+	if(is_null($slice)) return -1;
 	$module  = $slice->getModuleName();
 	return rex_module_exists($module) ? $module : -1;
 }
@@ -469,23 +470,22 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 	$sliceIds = OOArticleSlice::getSliceIdsForSlot($from_id, $from_clang);
 	foreach($sliceIds as $sliceId){
 		$article_slice = OOArticleSlice::getArticleSliceById($sliceId, $from_clang);
-		$sliceservice = sly_Service_Factory::getService('Slice');
-		$slice = $sliceservice->findById($article_slice->getSliceId());
-		$slice = $sliceservice->copy($slice);
+			$sliceservice = sly_Service_Factory::getService('Slice');
+			$slice = $sliceservice->findById($article_slice->getSliceId());
+			$slice = $sliceservice->copy($slice);
 
-		$insert = new rex_sql();
-		$insert->setTable('article_slice', true);
-		$insert->setValue('clang', $insert->escape($to_clang));
-		$insert->setValue('slot', $insert->escape($article_slice->getSlot()));
-		$insert->setValue('prior', $insert->escape($article_slice->getPrior()));
-		$insert->setValue('slice_id', $insert->escape($slice->getId()));
-		$insert->setValue('article_id', $insert->escape($to_id));
-		$insert->setValue('module', $insert->escape($slice->getModule()));
-		$insert->setValue('revision', 0);
-		$insert->addGlobalCreateFields();
-		$insert->insert();
+			$insert = new rex_sql();
+			$insert->setTable('article_slice', true);
+			$insert->setValue('clang', $insert->escape($to_clang));
+			$insert->setValue('slot', $insert->escape($article_slice->getSlot()));
+			$insert->setValue('prior', $insert->escape($article_slice->getPrior()));
+			$insert->setValue('slice_id', $insert->escape($slice->getId()));
+			$insert->setValue('article_id', $insert->escape($to_id));
+			$insert->setValue('module', $insert->escape($slice->getModule()));
+			$insert->setValue('revision', 0);
+			$insert->addGlobalCreateFields();
+			$insert->insert();
 	}
-
 	rex_deleteCacheArticle($to_id, $to_clang);
 	return true;
 }
@@ -571,7 +571,7 @@ function rex_copyArticle($id, $to_cat_id)
 				        're_id'  => $to_cat_id,
 				        'prior'  => 9999999,
 				        'path'   => $path,
-				        'type' => $from_data['type'],
+				        'type' => $from_data['type']
 			      	)
     			);
     			sly_Core::cache()->delete('sly.article.list', $to_cat_id);

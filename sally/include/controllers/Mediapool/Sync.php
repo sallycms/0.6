@@ -17,7 +17,7 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 			$this->render('views/mediapool/notices.phtml');
 		}
 		else {
-			$this->render('views/mediapool/sync.phtml');
+			$this->render('views/mediapool/sync.phtml', array('diffFiles' => $diff));
 		}
 	}
 
@@ -31,7 +31,7 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 			$idx = array_search($file, $diff);
 			if ($idx === false) continue;
 
-			if ($this->syncMedium($file, $cat, $title)) {
+			if ($this->syncMedium($idx, $cat, $title)) {
 				unset($diff[$idx]);
 				$this->info = $this->t('sync_files_synced');
 			}
@@ -41,17 +41,18 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 	}
 
 	protected function syncMedium($filename, $category, $title) {
-		global $REX;
-
-		$absFile = $REX['MEDIAFOLDER'].'/'.$filename;
-
+		$absFile = SLY_MEDIAFOLDER.DIRECTORY_SEPARATOR.$filename;
 		if (!file_exists($absFile)) {
 			return false;
 		}
+		//get cleaned filename
+		$newName = SLY_MEDIAFOLDER.DIRECTORY_SEPARATOR.$this->createFilename($filename, false);
+		//move file to cleaned filename
+		rename($absFile, $newName);
 
 		// create and save the file
 
-		$file    = $this->createFileObject($absFile, null, $title, $category);
+		$file    = $this->createFileObject($newName, null, $title, $category);
 		$service = sly_Service_Factory::getService('Media_Medium');
 
 		$service->save($file);
@@ -66,14 +67,11 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 	protected function getFilesFromFilesystem() {
 		global $REX;
 
-		$dir   = new sly_Util_Directory($REX['MEDIAFOLDER']);
+		$dir   = new sly_Util_Directory(SLY_MEDIAFOLDER);
 		$files = array();
-		$temp  = $REX['TEMP_PREFIX'];
-		$tLen  = strlen($temp);
 
 		foreach ($dir->listPlain(true, false) as $file) {
-			// don't sync temporary files
-			if (strlen($file) < $tLen || substr($file, 0, $tLen) != $temp) $files[] = $file;
+			 $files[] = $file;
 		}
 
 		return $files;
@@ -90,9 +88,14 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 	}
 
 	protected function getFileDiff() {
-		$database  = $this->getFilesFromDatabase();
-		$filsystem = $this->getFilesFromFilesystem();
-
-		return array_diff($filsystem, $database);
+		$database   = $this->getFilesFromDatabase();
+		$filesystem = $this->getFilesFromFilesystem();
+		$diff = array_diff($filesystem, $database);
+		$res = array();
+		// eventually broken encoded filename + utf8 filename
+		foreach($diff as $filename) {
+			$res[$filename] = $this->correctEncoding($filename);
+		}
+		return $res;
 	}
 }

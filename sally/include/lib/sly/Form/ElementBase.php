@@ -43,7 +43,7 @@ abstract class sly_Form_ElementBase {
 	}
 
 	public function setAttribute($name, $value) {
-		if ($this->allowed === null || in_array($name, $this->allowed)) {
+		if ($this->allowed === null || strpos($name, 'data-') === 0 || in_array($name, $this->allowed)) {
 			$this->attributes[$name] = $value;
 			return true;
 		}
