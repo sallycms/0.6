@@ -171,13 +171,23 @@ function rex_deleteArticleReorganized($articleID) {
  * Ändert den Status des Artikels
  *
  * @param  int      $articleID   Id des Artikels die gelöscht werden soll
- * @param  int      $clang       Id der Sprache
+ * @param  int      $clangID     Id der Sprache
  * @param  int|null $newStatus   Status auf den der Artikel gesetzt werden soll, oder null wenn zum nächsten Status weitergeschaltet werden soll
  * @return array                 ein Array welches den Status sowie eine Fehlermeldung beinhaltet
  */
-function rex_articleStatus($articleID, $clang, $newStatus = null) {
+function rex_articleStatus($articleID, $clangID, $newStatus = null) {
 	try {
-		sly_Service_Factory::getService('Article')->changeStatus($articleID, $clang, $newStatus);
+		$service   = sly_Service_Factory::getService('Article');
+		$articleID = (int) $articleID;
+		$clangID   = (int) $clangID;
+		$article   = $service->findById($articleID, $clangID);
+
+		// Prüfen ob die Artikel existiert
+		if ($article === null) {
+			return array(false, t('no_such_article'));
+		}
+
+		$service->changeStatus($article, $newStatus);
 		return array(true, t('article_status_updated'));
 	}
 	catch (Exception $e) {

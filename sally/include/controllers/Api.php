@@ -43,7 +43,7 @@ class sly_Controller_Api extends sly_Controller_Ajax {
 	}
 
 	protected function checkPermission() {
-		global $REX;
-		return isset($REX['USER']);
+		$user = sly_Util_User::getCurrentUser();
+		return !is_null($user);
 	}
 }

@@ -294,17 +294,16 @@ class OOArticleSlice {
 	 * Artikelweite globale variablen werden ersetzt
 	 */
 	private function replaceCommonVars($content) {
-		global $REX;
-
 		static $user_id    = null;
 		static $user_login = null;
 
 		// UserId gibt's nur im Backend
 
 		if ($user_id === null) {
-			if (isset($REX['USER'])) {
-				$user_id    = $REX['USER']->getId();
-				$user_login = $REX['USER']->getLogin();
+			$user = sly_Util_User::getCurrentUser();
+			if (!is_null($user)) {
+				$user_id    = $user->getId();
+				$user_login = $user->getLogin();
 			}
 			else {
 				$user_id    = '';

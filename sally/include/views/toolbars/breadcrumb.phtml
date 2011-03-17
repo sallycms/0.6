@@ -14,8 +14,10 @@
  * @package redaxo4
  */
 
+$user = sly_Util_User::getCurrentUser();
+
 $KATPATH = '|'; // Standard für path Eintragungen in DB
-$KATPERM = $REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('admin[]');
+$KATPERM = $user->hasPerm('csw[0]') || $user->hasPerm('admin[]');
 
 if (!isset($KATout)) {
 	$KATout = ''; // Variable definiert und vorbelegt wenn nicht existent
@@ -47,12 +49,12 @@ else {
 			$catName = $pathData[$catID];
 			$catName = str_replace(' ', '&nbsp;', htmlspecialchars($catName));
 
-			if ($KATPERM || $REX['USER']->hasPerm('csw['.$catID.']') || $REX['USER']->hasPerm('csr['.$catID.']'))
+			if ($KATPERM || $user->hasPerm('csw['.$catID.']') || $user->hasPerm('csr['.$catID.']'))
 			{
 				$KATout  .= '<li> : <a href="index.php?page=structure&amp;category_id='.$catID.'&amp;clang='.$clang.'">'.$catName.'</a></li>';
 				$KATPATH .= $catID.'|';
 
-				if ($REX['USER']->hasPerm('csw['.$catID.']')) {
+				if ($user->hasPerm('csw['.$catID.']')) {
 					$KATPERM = true;
 				}
 			}
@@ -62,13 +64,13 @@ else {
 	$pathElements = null;
 	unset($pathElements);
 
-	if ($KATPERM || $REX['USER']->hasPerm('csw['.$category_id.']') || $REX['USER']->hasPerm('csr['.$category_id.']')) {
+	if ($KATPERM || $user->hasPerm('csw['.$category_id.']') || $user->hasPerm('csr['.$category_id.']')) {
 		$catName = str_replace(' ', '&nbsp;', htmlspecialchars($KAT->getValue('catname')));
 
 		$KATout  .= '<li> : <a href="index.php?page=structure&amp;category_id='.$category_id.'&amp;clang='.$clang.'">'.$catName.'</a></li>';
 		$KATPATH .= $category_id.'|';
 
-		if ($REX['USER']->hasPerm('csw['.$category_id.']')) {
+		if ($user->hasPerm('csw['.$category_id.']')) {
 			$KATPERM = true;
 		}
 	}
@@ -87,3 +89,5 @@ $KATout = '
 </ul>
 <!-- *** OUTPUT OF CATEGORY-TOOLBAR - END *** -->
 ';
+
+unset($user);
