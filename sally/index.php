@@ -97,6 +97,8 @@ if (!$config->get('SETUP')) {
 	sly_Service_Factory::getService('Module')->refresh();
 }
 
+$layout = sly_Core::getLayout('Sally');
+
 // include AddOns
 
 require_once SLY_INCLUDE_PATH.'/addons.inc.php';
@@ -194,8 +196,6 @@ if (SLY_IS_TESTING) return;
 // Gewünschte Seite einbinden
 $forceLogin = !$REX['SETUP'] && !$REX['USER'];
 $controller = sly_Controller_Base::factory($forceLogin ? 'login' : null, $forceLogin ? 'index' : null);
-
-$layout = sly_Core::getLayout('Sally');
 
 try {
 	if ($controller !== null) {
