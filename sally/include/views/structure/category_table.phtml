@@ -1,5 +1,13 @@
+<form action="index.php" method="post" id="rex-form-structure-category">
+	<fieldset>
+		<input type="hidden" name="page" value="structure" />
+		<input type="hidden" name="category_id" value="<?= $this->categoryId ?>" />
+		<input type="hidden" name="clang" value="<?= $this->clangId ?>" />
+		<input type="hidden" name="func" value="<?= $this->action ?>" />
+	</fieldset>
+
 <?php
-	$add_url = 'index.php?page=structure&category_id='.$this->categoryId.'&function=addCategory&clang='.$this->clangId;
+	$add_url = 'index.php?page=structure&category_id='.$this->categoryId.'&clang='.$this->clangId.'&func=addCategory';
 	$add_category = sly_Util_HTML::getSpriteLink($add_url, $I18N->msg('add_category'), 'category-add');
 
 	$table = new sly_Table();
@@ -26,12 +34,25 @@
 		echo '</tr>';
 	}
 
+	if($this->renderAddCategory) {
+		echo '<tr class="rex-table-row-activ">';
+		echo '<td class="sly-icon">' . sly_Util_HTML::getSpriteLink('', t('add_category'), 'category-add') . '</td>';
+        if ($advancedMode) {
+			echo '<td class="rex-small">-</td>';
+		}
+		echo '<td><input class="rex-form-text" type="text" id="rex-form-field-name" name="category_name" /></td>';
+        echo '<td><input class="rex-form-text" type="text" id="rex-form-field-prior" name="category_position" value="100" /></td>';
+		echo '<td colspan="3"><input type="submit" class="rex-form-submit" name="do_add_category" value="' . t('add_category') . '" /></td>';
+        echo '</tr>';
+	}
+
 	foreach($categories as $category) {
-		$base_url = 'index.php?page=structure&amp;category_id=' . $category->getId() . '&amp;clang=' . $this->clangId;
+		$base_url = 'index.php?page=structure&category_id=' . $category->getId() . '&clang=' . $this->clangId;
+		$edit_url = 'index.php?page=structure&amp;category_id=' . $category->getParentId() . '&amp;clang=' . $this->clangId. '&amp;edit_id='. $category->getId();
 		$status   = $statusTypes[$category->getStatus()][0];
 		$status_class = $statusTypes[$category->getStatus()][1];
-		if ($this->canPublishCategory($category)) {
-			$status = '<a href="' . $base_url . '&amp;func=editCategoryStatus" class="' . $status_class . '">' . $status . '</a>';
+		if ($this->canPublishCategory($category->getId())) {
+			$status = '<a href="' . $edit_url . '&amp;func=editStatusCategory" class="' . $status_class . '">' . $status . '</a>';
 		}
 
 		echo '<tr>';
@@ -39,12 +60,12 @@
 		if ($advancedMode) {
 			echo '<td class="rex-small">' . sly_html($category->getId()) . '</td>';
 		}
-		echo '<td><a href="' . $base_url . '">' . sly_html($category->getName()) . '</a></td>';
-        echo '<td>' . sly_html($category->getPrior()) . '</td>';
+		echo '<td><a href="' . sly_html($base_url) . '">' . sly_html($category->getName()) . '</a></td>';
+        echo '<td>' . sly_html($category->getCatPrior()) . '</td>';
 		echo '<td>';
-		echo '<a href="' . $base_url . '&amp&func=editCategory">' . t('change') . '</a>&nbsp;&nbsp;&nbsp;';
+		echo '<a href="' . $edit_url . '&amp&func=editCategory">' . t('change') . '</a>&nbsp;&nbsp;&nbsp;';
 		if (!$REX['USER']->hasPerm('editContentOnly[]')) {
-			echo '<a href="'.$base_url.'&amp;func=deleteCategory" onclick="return confirm(\'' . t('delete') . ' ?\')">' . t('delete') . '</a>';
+			echo '<a href="'.$edit_url.'&amp;func=deleteCategory" onclick="return confirm(\'' . t('delete') . ' ?\')">' . t('delete') . '</a>';
 		} else {
 			echo '<span class="rex-strike">' . t('delete') . '</span>';
 		}
@@ -54,3 +75,6 @@
 	}
 
 	$table->renderFooter();
+?>
+</form>
+

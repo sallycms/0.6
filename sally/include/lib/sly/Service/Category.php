@@ -52,7 +52,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		return parent::find($where, $group, $order, $offset, $limit, $having);
 	}
 
-	public function add($parentID, $name, $status, $position = -1) {
+	public function add($parentID, $name, $status = 0, $position = -1) {
 		global $REX;
 
 		$db       = sly_DB_Persistence::getInstance();
@@ -94,7 +94,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		// Die ID ist für alle Sprachen gleich und entspricht einfach der aktuell
 		// höchsten plus 1.
 
-		$newID = $db->magicFetch('article', 'MAX(id)', array('clang' => 0)) + 1;
+		$newID = $db->magicFetch('article', 'MAX(id)') + 1;
 
 		// Entferne alle Kategorien aus dem Cache, die nach der aktuellen kommen und
 		// daher ab Ende dieser Funktion eine neue Positionsangabe haben.
@@ -253,7 +253,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		$categoryID = (int) $categoryID;
 		$db         = sly_DB_Persistence::getInstance();
 		$cache      = sly_Core::cache();
-		$cat        = $this->findById($categoryID, 0);
+		$cat        = $this->findById($categoryID, 1);
 
 		// Prüfen ob die Kategorie existiert
 		if ($cat === null) {
@@ -309,7 +309,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 
 		$categoryID = (int) $categoryID;
 		$clangID    = (int) $clangID;
-		$cat        = $this->findById($categoryID, 0);
+		$cat        = $this->findById($categoryID, $clangID);
 
 		// Prüfen ob die Kategorie existiert
 		if ($cat === null) {
