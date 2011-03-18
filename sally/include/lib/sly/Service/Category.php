@@ -36,11 +36,20 @@ class sly_Service_Category extends sly_Service_Model_Base {
 	}
 
 	public function findByPid($pid) {
-		return $this->findOne(array('pid' => (int) $pid, 'startpage' => 1));
+		return $this->findOne(array('pid' => (int) $pid));
 	}
 
 	public function findById($id, $clang) {
-		return $this->findOne(array('id' => (int) $id, 'clang' => $clang, 'startpage' => 1));
+		return $this->findOne(array('id' => (int) $id, 'clang' => $clang));
+	}
+
+	public function find($where = null, $group = null, $order = null, $offset = null, $limit = null, $having = null) {
+		if(is_array($where)) {
+			$where['startpage'] = 1;
+		} else {
+			$where = array('startpage' => 1);
+		}
+		return parent::find($where, $group, $order, $offset, $limit, $having);
 	}
 
 	public function add($parentID, $name, $status, $position = -1) {

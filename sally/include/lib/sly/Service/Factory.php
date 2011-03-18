@@ -20,7 +20,7 @@ abstract class sly_Service_Factory {
 	 *
 	 * @param string $modelName
 	 *
-	 * @return sly_Service_Base an implementation of sly_Service_Base
+	 * @return sly_Service_Base an implementation of sly_Service_Model_Base
 	 */
 	public static function getService($modelName) {
 		if (!isset(self::$services[$modelName])){
