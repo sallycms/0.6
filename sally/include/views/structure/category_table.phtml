@@ -1,0 +1,56 @@
+<?php
+	$add_url = 'index.php?page=structure&category_id='.$this->categoryId.'&function=addCategory&clang='.$this->clangId;
+	$add_category = sly_Util_HTML::getSpriteLink($add_url, $I18N->msg('add_category'), 'category-add');
+
+	$table = new sly_Table();
+	$table->addColumn(new sly_Table_Column($add_category, '40px', '', array('class' => 'sly-icon')));
+	if ($advancedMode) {
+		$table->addColumn(new sly_Table_Column(t('header_id'), '40px'));
+	}
+	$table->addColumn(new sly_Table_Column(t('header_category')));
+	$table->addColumn(new sly_Table_Column(t('header_priority'), '40px'));
+	$table->addColumn(new sly_Table_Column(t('header_status'), '150px'));
+
+	$table->renderHeader();
+
+	if ($this->categoryId != 0 && $currentCategory) {
+		echo '<tr>';
+		echo '<td class="sly-icon">&nbsp;</td>';
+		if ($advancedMode) {
+			echo '<td class="rex-small">-</td>';
+		}
+
+		echo '<td><a href="index.php?page=structure&amp;category_id=' . $currentCategory->getParentId() . '&amp;clang=' . $this->clangId . '">..</a></td>';
+		echo '<td>&nbsp;</td>';
+		echo '<td>&nbsp;</td>';
+		echo '</tr>';
+	}
+
+	foreach($categories as $category) {
+		$base_url = 'index.php?page=structure&amp;category_id=' . $category->getId() . '&amp;clang=' . $this->clangId;
+		$status   = $statusTypes[$category->getStatus()][0];
+		$status_class = $statusTypes[$category->getStatus()][1];
+		if ($this->canPublishCategory($category)) {
+			$status = '<a href="' . $base_url . '&amp;func=editCategoryStatus" class="' . $status_class . '">' . $status . '</a>';
+		}
+
+		echo '<tr>';
+		echo '<td class="sly-icon">' . sly_Util_HTML::getSpriteLink($base_url, $category->getName(), 'category') . '</td>';
+		if ($advancedMode) {
+			echo '<td class="rex-small">' . sly_html($category->getId()) . '</td>';
+		}
+		echo '<td><a href="' . $base_url . '">' . sly_html($category->getName()) . '</a></td>';
+        echo '<td>' . sly_html($category->getPrior()) . '</td>';
+		echo '<td>';
+		echo '<a href="' . $base_url . '&amp&func=editCategory">' . t('change') . '</a>&nbsp;&nbsp;&nbsp;';
+		if (!$REX['USER']->hasPerm('editContentOnly[]')) {
+			echo '<a href="'.$base_url.'&amp;func=deleteCategory" onclick="return confirm(\'' . t('delete') . ' ?\')">' . t('delete') . '</a>';
+		} else {
+			echo '<span class="rex-strike">' . t('delete') . '</span>';
+		}
+		echo '&nbsp;&nbsp;&nbsp;' . $status;
+		echo '</td>';
+		echo '</tr>';
+	}
+
+	$table->renderFooter();

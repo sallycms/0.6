@@ -1,10 +1,5 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 class sly_Controller_Structure extends sly_Controller_Sally {
 
 	protected $categoryId;
@@ -19,15 +14,30 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 		echo sly_Core::dispatcher()->filter('PAGE_STRUCTURE_HEADER', '',
 			array(
 				'category_id' => $this->categoryId,
-				'clang' => $this->clangId
+				'clang'       => $this->clangId
 			)
 		);
 	}
 
 	protected function index() {
-		
+		$service = sly_Service_Factory::getService('Category');
+		$currentCategory = $service->findById($this->categoryId, $this->clangId);
+		$categories = $service->find(array('re_id' => $this->categoryId, 'clang' => $this->clangId), null, 'prior ASC');
+		$this->render('views'.DIRECTORY_SEPARATOR.'structure'.DIRECTORY_SEPARATOR.'category_table.phtml',
+			array(
+				'categories'      => $categories,
+				'currentCategory' => $currentCategory,
+				'advancedMode'    => sly_Util_User::getCurrentUser()->hasRight('advancedMode[]'),
+				'statusTypes'     => $service->getStati()
+			)
+		);
 	}
 
+	/**
+	 * returns the breadcrumb string
+	 *
+	 * @return string
+	 */
 	protected function getBreadcrumb() {
 		$result = '';
 		$cat = OOCategory::getCategoryById($this->categoryId);
@@ -51,6 +61,12 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 		return $result;
 	}
 
+	/**
+	 * checks if a user can edit a category
+	 *
+	 * @param int $categoryId
+	 * @return boolean
+	 */
 	protected function canEditCategory($categoryId) {
 		$user = sly_Util_User::getCurrentUser();
 		if ($user->isAdmin() || $user->hasRight('csw[0]')) return true;
@@ -64,6 +80,16 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 		return false;
 	}
 
+	protected function canPublishCategory(sly_Model_Category $category) {
+		$user = sly_Util_User::getCurrentUser();
+		return $user->isAdmin() || ($user->hasRight('publishCategory[]') && $this->canEditCategory($category->getId()));
+	}
+
+	/**
+	 * checks action permissions for the current user
+	 *
+	 * @return boolean
+	 */
 	protected function checkPermission() {
 		$user = sly_Util_User::getCurrentUser();
 		if ($this->action == 'index') {
