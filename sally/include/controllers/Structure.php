@@ -7,11 +7,15 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 	protected $info;
 	protected $warning;
 	protected $renderAddCategory = false;
+	protected $renderEditCategory = false;
+
+	protected static $viewPath;
 
 	protected function init() {
 		parent::init();
+		self::$viewPath   = 'views'.DIRECTORY_SEPARATOR.'structure'.DIRECTORY_SEPARATOR;
 		$this->categoryId = rex_request('category_id', 'rex-category-id');
-		$this->clangId = rex_request('clang', 'rex-clang-id', sly_Core::config()->get('START_CLANG_ID'));
+		$this->clangId    = rex_request('clang', 'rex-clang-id', sly_Core::config()->get('START_CLANG_ID'));
 		sly_Core::getLayout()->pageHeader(t('title_structure'), $this->getBreadcrumb());
 		$this->render('views'.DIRECTORY_SEPARATOR.'toolbars'.DIRECTORY_SEPARATOR.'languages.phtml', array('clang' => $this->clangId, 'sprachen_add' => '&amp;category_id=' . $this->categoryId));
 		echo sly_Core::dispatcher()->filter('PAGE_STRUCTURE_HEADER', '',
@@ -33,7 +37,7 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 
 		if(!empty($this->info)) print rex_info ($this->info);
 		if(!empty($this->warning)) print rex_warning ($this->warning);
-		$this->render('views'.DIRECTORY_SEPARATOR.'structure'.DIRECTORY_SEPARATOR.'category_table.phtml',
+		$this->render(self::$viewPath.'category_table.phtml',
 			array(
 				'categories'      => $categories,
 				'currentCategory' => $currentCategory,
@@ -91,6 +95,24 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 			}
 		} else {
 			$this->renderAddCategory = true;
+		}
+		$this->view();
+	}
+
+	protected function editCategory() {
+		$editId   = sly_request('edit_id', 'rex-category-id');
+		if(sly_post('do_edit_category', 'boolean')) {
+			$name     = sly_post('category_name',     'string');
+			$position = sly_post('category_position', 'integer');
+			try {
+				$service = sly_Service_Factory::getService('Category');
+				$service->edit($editId, $this->clangId, $name, $position);
+				$this->info = t('category_updated');
+			}catch(sly_Exception $e) {
+				$this->warning = $e->getMessage();
+			}
+		} else {
+			$this->renderEditCategory = $editId;
 		}
 		$this->view();
 	}
@@ -155,7 +177,7 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 		$user = sly_Util_User::getCurrentUser();
 		if ($this->action == 'index') {
 			return!is_null($user);
-		} elseif($this->action == 'editCategoryStatus') {
+		} elseif($this->action == 'editStatusCategory') {
 			return $this->canPublishCategory($categoryId);
 		} elseif (sly_Util_String::startsWith ($this->action, 'edit') || sly_Util_String::startsWith ($this->action, 'add') || sly_Util_String::startsWith ($this->action, 'delete')) {
 			return $this->canEditCategory($categoryId);
