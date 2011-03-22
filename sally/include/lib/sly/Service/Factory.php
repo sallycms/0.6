@@ -86,4 +86,19 @@ abstract class sly_Service_Factory {
 	public static function getArticleTypeService() {
 		return self::getService('ArticleType');
 	}
+
+	/**
+	 *
+	 * @return sly_Service_Category 
+	 */
+	public static function getCategoryService() {
+		return self::getService('Category');
+	}
+
+	/**
+	 * @return sly_Service_Article
+	 */
+	public static function getArticleService() {
+		return self::getService('Article');
+	}
 }
