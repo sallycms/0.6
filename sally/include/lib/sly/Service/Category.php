@@ -19,7 +19,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		return new sly_Model_Category($params);
 	}
 
-	public function  save(sly_Model_Base $model) {
+	public function save(sly_Model_Base $model) {
 		throw new Exception('This Method should never be used, use add or edit');
 	}
 
