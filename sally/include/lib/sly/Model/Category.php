@@ -14,5 +14,20 @@
  * @author christoph@webvariants.de
  */
 class sly_Model_Category extends sly_Model_Article_Base {
-	/* empty */
+
+	/**
+	 *
+	 * @return boolean
+	 */
+	public function isOnline() {
+		return $this->getStatus() == 1;
+	}
+
+	/**
+	 *
+	 * @return boolean
+	 */
+	public function isOffline() {
+		return !$this->isOnline();
+	}
 }
