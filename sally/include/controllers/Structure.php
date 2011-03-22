@@ -62,6 +62,11 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 				'canEdit'         => $this->canEditCategory($this->categoryId)
 			)
 		);
+
+		if ($this->renderAddArticle || $this->renderAddCategory || $this->renderEditArticle || $this->renderEditCategory) {
+			$javascript = 'jQuery(function($){$("#rex-form-field-name").focus();});';
+			sly_Core::getLayout()->addJavaScript($javascript);
+		}
 	}
 
 	protected function editStatusCategory() {
@@ -76,6 +81,24 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 			}
 		}else {
 			$this->warning = t('no_such_category');
+		}
+
+ 		$this->view();
+	}
+
+	protected function editStatusArticle() {
+		$editId = sly_get('edit_id', 'rex-article-id');
+		if($editId) {
+			try {
+				$service = sly_Service_Factory::getArticleService();
+				$article = $service->findById($editId, $this->clangId);
+				$service->changeStatus($article);
+				$this->info = t('article_status_updated');
+			}catch(sly_Exception $e) {
+				$this->warning = $e->getMessage();
+			}
+		}else {
+			$this->warning = t('no_such_article');
 		}
 
  		$this->view();
@@ -104,8 +127,8 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 			$position = sly_post('category_position', 'integer');
 
 			try {
-				$service = sly_Service_Factory::getService('Category');
-				$service->add($this->categoryId, $name, false, $position);
+				$service = sly_Service_Factory::getCategoryService();
+				$service->add($this->categoryId, $name, 0, $position);
 				$this->info = t('category_added_and_startarticle_created');
 			}catch(sly_Exception $e) {
 				$this->warning = $e->getMessage();
@@ -113,6 +136,25 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 			}
 		} else {
 			$this->renderAddCategory = true;
+		}
+		$this->view();
+	}
+
+	protected function addArticle() {
+		if(sly_post('do_add_article', 'boolean')) {
+			$name     = sly_post('article_name',     'string');
+			$position = sly_post('article_position', 'integer');
+
+			try {
+				$service = sly_Service_Factory::getArticleService();
+				$service->add($this->categoryId, $name, 0, $position);
+				$this->info = t('article_added');
+			}catch(sly_Exception $e) {
+				$this->warning = $e->getMessage();
+				$this->renderAddArticle = true;
+			}
+		} else {
+			$this->renderAddArticle = true;
 		}
 		$this->view();
 	}
@@ -132,6 +174,25 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 			}
 		} else {
 			$this->renderEditCategory = $editId;
+		}
+		$this->view();
+	}
+
+	protected function editArticle() {
+		$editId   = sly_request('edit_id', 'rex-article-id');
+		if(sly_post('do_edit_article', 'boolean')) {
+			$name     = sly_post('article_name',     'string');
+			$position = sly_post('article_position', 'integer');
+			try {
+				$service = sly_Service_Factory::getArticleService();
+				$service->edit($editId, $this->clangId, $name, $position);
+				$this->info = t('article_updated');
+			}catch(sly_Exception $e) {
+				$this->warning = $e->getMessage();
+				$this->renderEditArticle = $editId;
+			}
+		} else {
+			$this->renderEditArticle = $editId;
 		}
 		$this->view();
 	}
@@ -196,7 +257,7 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 		$user = sly_Util_User::getCurrentUser();
 		if ($this->action == 'index') {
 			return!is_null($user);
-		} elseif($this->action == 'editStatusCategory') {
+		} elseif(sly_Util_String::startsWith ($this->action, 'editStatus')) {
 			return $this->canPublishCategory($categoryId);
 		} elseif (sly_Util_String::startsWith ($this->action, 'edit') || sly_Util_String::startsWith ($this->action, 'add') || sly_Util_String::startsWith ($this->action, 'delete')) {
 			return $this->canEditCategory($categoryId);
