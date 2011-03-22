@@ -14,5 +14,7 @@
  * @author christoph@webvariants.de
  */
 class sly_Model_Article extends sly_Model_Article_Base {
-	/* empty */
+	public function isStartPage() {
+		return $this->getStartpage() == 1;
+	}
 }
