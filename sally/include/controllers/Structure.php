@@ -8,6 +8,8 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 	protected $warning;
 	protected $renderAddCategory = false;
 	protected $renderEditCategory = false;
+	protected $renderAddArticle = false;
+	protected $renderEditArticle = false;
 
 	protected static $viewPath;
 
@@ -31,18 +33,33 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 	}
 
 	protected function view() {
-		$service = sly_Service_Factory::getService('Category');
-		$currentCategory = $service->findById($this->categoryId, $this->clangId);
-		$categories = $service->find(array('re_id' => $this->categoryId, 'clang' => $this->clangId), null, 'catprior ASC');
+		$advancedMode = sly_Util_User::getCurrentUser()->hasRight('advancedMode[]');
+
+		$cat_service = sly_Service_Factory::getService('Category');
+		$currentCategory = $cat_service->findById($this->categoryId, $this->clangId);
+		$categories = $cat_service->find(array('re_id' => $this->categoryId, 'clang' => $this->clangId), null, 'catprior ASC');
+
+		$art_service = sly_Service_Factory::getService('Article');
+		$articles   = $art_service->findArticlesByCategory($this->categoryId, false, $this->clangId);
 
 		if(!empty($this->info)) print rex_info ($this->info);
 		if(!empty($this->warning)) print rex_warning ($this->warning);
+
 		$this->render(self::$viewPath.'category_table.phtml',
 			array(
 				'categories'      => $categories,
 				'currentCategory' => $currentCategory,
-				'advancedMode'    => sly_Util_User::getCurrentUser()->hasRight('advancedMode[]'),
-				'statusTypes'     => $service->getStati()
+				'advancedMode'    => $advancedMode,
+				'statusTypes'     => $cat_service->getStati()
+			)
+		);
+
+		$this->render(self::$viewPath.'article_table.phtml',
+			array(
+				'articles'        => $articles,
+				'advancedMode'    => $advancedMode,
+				'statusTypes'     => $art_service->getStati(),
+				'canEdit'         => $this->canEditCategory($this->categoryId)
 			)
 		);
 	}
@@ -92,6 +109,7 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 				$this->info = t('category_added_and_startarticle_created');
 			}catch(sly_Exception $e) {
 				$this->warning = $e->getMessage();
+				$this->renderAddCategory = true;
 			}
 		} else {
 			$this->renderAddCategory = true;
@@ -110,6 +128,7 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 				$this->info = t('category_updated');
 			}catch(sly_Exception $e) {
 				$this->warning = $e->getMessage();
+				$this->renderEditCategory = $editId;
 			}
 		} else {
 			$this->renderEditCategory = $editId;
