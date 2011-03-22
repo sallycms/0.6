@@ -20,8 +20,11 @@ class sly_Service_Article extends sly_Service_Model_Base {
 	}
 
 	public function save(sly_Model_Base $article) {
-		$persistence = sly_DB_Persistence::getInstance();
+		throw new Exception('This Method should never be used, use add or edit');
+	}
 
+	protected function saveArticle(sly_Model_Article $article) {
+		$persistence = sly_DB_Persistence::getInstance();
 		if ($article->getPid() == sly_Model_Base::NEW_ID) {
 			$data = $article->toHash();
 			unset($data['pid']);
@@ -36,7 +39,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 	}
 
 	public function findByPid($pid) {
-		return $this->findOne(array('pid' => (int) $pid, 'startpage' => 0));
+		return $this->findOne(array('pid' => (int) $pid));
 	}
 
 	public function findById($id, $clang) {
@@ -143,7 +146,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 			$article->setUpdateColumns();
 			$article->setCreateColumns();
-			$this->save($article);
+			$this->saveArticle($article);
 
 			// online/offline Listen leeren
 			$cache->delete('sly.article.list', $parentID.'_'.$clangID.'_0');
@@ -181,7 +184,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		// Artikel selbst updaten
 		$article->setName($name);
 		$article->setUpdateColumns();
-		$this->save($article);
+		$this->saveArticle($article);
 
 		// Cache sicherheitshalber schon einmal leeren
 		$cache->delete('sly.article', $articleID.'_'.$clangID);
@@ -210,7 +213,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 				// eigene neue Position speichern
 				$article->setPrior($newPrio);
-				$this->save($article);
+				$this->saveArticle($article);
 
 				// alle Artikel in dieser Ebene aus dem Cache entfernen
 				$db->select('article', 'id', array('re_id' => $parentID, 'clang' => $clangID, 'catprior' => 0));
@@ -291,7 +294,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		// Artikel updaten
 		$article->setStatus($newStatus);
 		$article->setUpdateColumns();
-		$this->save($article);
+		$this->saveArticle($article);
 
 		// Cache leeren
 		$cache = sly_Core::cache();
@@ -320,5 +323,46 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		}
 
 		return $stati;
+	}
+
+	public function findArticlesByCategory($categoryId, $ignore_offlines = false, $clangId = false) {
+		if ($clangId === false) {
+			$clangId = sly_Core::getCurrentClang();
+		}
+
+		$categoryId = (int) $categoryId;
+		$clangId       = (int) $clangId;
+
+		$namespace = 'sly.article.list';
+		$key       = sly_Cache::generateKey($categoryId, $clangId, $ignore_offlines);
+		$alist     = sly_Core::cache()->get($namespace, $key, null);
+
+		if ($alist === null) {
+			$alist = array();
+			$sql = sly_DB_Persistence::getInstance();
+			$where = array('re_id' => $categoryId, 'clang' => $clangId, 'startpage' => 0);
+			if($ignore_offlines) $where['status'] = 1;
+			$sql->select($this->tablename, 'pid', $where, null, 'prior,name');
+			foreach($sql as $row) {
+				$alist[] = intval($row['pid']);
+			}
+
+			if ($categoryId != 0) {
+				$category = sly_Service_Factory::getCategoryService()->findById($categoryId, $clangId);
+
+				if (!$ignore_offlines || ($ignore_offlines && $category->isOnline())) {
+					array_unshift($alist, $category->getPid());
+				}
+			}
+			sly_Core::cache()->set($namespace, $key, $alist);
+		}
+
+		$artlist = array();
+
+		foreach ($alist as $pid) {
+			$artlist[] = $this->findByPid($pid);
+		}
+
+		return $artlist;
 	}
 }

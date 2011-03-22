@@ -68,45 +68,11 @@ class OOArticle extends OORedaxo
 
 	/**
 	 * @return array
+	 * @deprecated
 	 */
-	public static function getArticlesOfCategory($category_id, $ignore_offlines = false, $clang = false)
+	public static function getArticlesOfCategory($categoryId, $ignore_offlines = false, $clangId = false)
 	{
-		global $REX;
-
-		if ($clang === false) {
-			$clang = sly_Core::getCurrentClang();
-		}
-
-		$category_id = (int) $category_id;
-		$clang       = (int) $clang;
-
-		$namespace = 'sly.article.list';
-		$key       = sly_Cache::generateKey($category_id, $clang, $ignore_offlines);
-		$alist     = sly_Core::cache()->get($namespace, $key, null);
-
-		if ($alist === null) {
-			$where = 're_id = '.$category_id.' AND clang = '.$clang.($ignore_offlines ? ' AND status = 1' : '');
-			$query = 'SELECT id FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE '.$where.' ORDER BY prior,name';
-			$alist = array_map('intval', rex_sql::getArrayEx($query));
-
-			if ($category_id != 0) {
-				$category = OOCategory::getCategoryById($category_id, $clang);
-
-				if (($ignore_offlines && $category->isOnline()) || !$ignore_offlines) {
-					array_unshift($alist, $category_id);
-				}
-			}
-
-			sly_Core::cache()->set($namespace, $key, $alist);
-		}
-
-		$artlist = array();
-
-		foreach ($alist as $articleID) {
-			$artlist[] = OOArticle::getArticleById($articleID, $clang);
-		}
-
-		return $artlist;
+		return sly_Service_Factory::getArticleService()->findArticlesByCategory($categoryId, $ignore_offlines, $clangId);
 	}
 
 	/**
