@@ -191,8 +191,8 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 		// Kategorie verschieben, wenn nötig
 		if ($position !== false && $position != $article->getPrior()) {
-			$parentID = $cat->getParentId();
-			$oldPrio  = $cat->getPrior();
+			$parentID = $article->getParentId();
+			$oldPrio  = $article->getPrior();
 			$position = (int) $position;
 
 			$where   = '((re_id = '.$parentID.' AND catprior = 0) OR id = '.$parentID.') AND clang = '.$clangID;

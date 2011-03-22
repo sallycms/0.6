@@ -1,0 +1,19 @@
+<?php
+if ($article->isStartPage())
+	$sprite = 'article-startpage';
+else
+	$sprite = 'article';
+$base_url = 'index.php?page=structure&category_id=' . $article->getId() . '&clang=' . $this->clangId;
+?>
+
+<tr class="rex-table-row-activ">
+	<td class="sly-icon">
+		<input type="hidden" name="edit_id" value="<?= $article->getId() ?>" />
+		<?= sly_Util_HTML::getSpriteLink($base_url, $article->getName(), $sprite) ?>
+	</td>
+	<?= $advancedMode ? '<td class="rex-small">' . $article->getId() . '</td>' : '' ?>
+	<td><input type="text" class="rex-form-text" id="rex-form-field-name" name="article_name" value="<?= sly_html($article->getName()) ?>" /></td>
+	<td><input type="text" class="rex-form-text" id="rex-form-field-prior" name="article_position" value="<?= sly_html($article->getPrior()) ?>" /></td>
+	<td><?= rex_formatter::format($article->getCreateDate(), 'strftime', 'date') ?></td>
+	<td><input type="submit" class="rex-form-submit" name="do_edit_article" value="<?= t('article_save') ?>" /></td>
+</tr>

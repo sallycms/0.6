@@ -25,13 +25,13 @@
 	
 
 	if ($this->renderAddArticle) {
-		$this->render(sly_Controller_Structure::$viewPath . 'category_table_row_add.phtml', array('advancedMode' => $advancedMode));
+		$this->render(sly_Controller_Structure::$viewPath . 'article_table_row_add.phtml', array('advancedMode' => $advancedMode));
 	}
 
 	foreach ($articles as $article) {
-		if($this->renderEditArticle && $this->renderEditArticle == $category->getId()) {
+		if($this->renderEditArticle && $this->renderEditArticle == $article->getId()) {
 			$this->render(
-				sly_Controller_Structure::$viewPath . 'category_table_row_edit.phtml',
+				sly_Controller_Structure::$viewPath . 'article_table_row_edit.phtml',
 				array('article' => $article, 'advancedMode' => $advancedMode)
 			);
 		}else {
