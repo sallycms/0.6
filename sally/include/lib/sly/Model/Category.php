@@ -30,4 +30,13 @@ class sly_Model_Category extends sly_Model_Article_Base {
 	public function isOffline() {
 		return !$this->isOnline();
 	}
+
+	/**
+	 * return the catname
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return $this->getCatname();
+	}
 }
