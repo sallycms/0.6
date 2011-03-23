@@ -85,7 +85,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 			$category = $service->findById($category);
 			$category = $category ? $category->getId() : 0;
 
-			rex_set_session('media[rex_file_category]', $category);
+			sly_util_Session::set('media[rex_file_category]', $category);
 			$this->category = $category;
 		}
 
@@ -94,7 +94,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 
 	protected function initOpener() {
 		$this->opener = sly_request('opener_input_field', 'string', rex_session('media[opener_input_field]', 'string'));
-		rex_set_session('media[opener_input_field]', $this->opener);
+		sly_util_Session::set('media[opener_input_field]', $this->opener);
 	}
 
 	protected function getOpenerLink(/* OOMedia | sly_Model_Media_Medium */ $file) {
