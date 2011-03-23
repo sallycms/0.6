@@ -4,7 +4,26 @@
 
 START TRANSACTION;
 
-CREATE TABLE `sly_article` ( `pid` int(11) NOT NULL  auto_increment, `id` int(11) NOT NULL  , `re_id` int(11) NOT NULL  , `name` varchar(255) NOT NULL  , `catname` varchar(255) NOT NULL  , `catprior` int(11) NOT NULL  , `attributes` text NOT NULL  , `startpage` tinyint(1) NOT NULL  , `prior` int(11) NOT NULL  , `path` varchar(255) NOT NULL  , `status` tinyint(1) NOT NULL  , `createdate` int(11) NOT NULL  , `updatedate` int(11) NOT NULL  , `type` varchar(64) NOT NULL  , `clang` int(11) NOT NULL  , `createuser` varchar(255) NOT NULL  , `updateuser` varchar(255) NOT NULL  , `revision` int(11) NOT NULL  , PRIMARY KEY (`pid`)) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `sly_article` (
+  `id` int(11) NOT NULL,
+  `re_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `catname` varchar(255) NOT NULL,
+  `catprior` int(11) NOT NULL,
+  `attributes` text NOT NULL,
+  `startpage` tinyint(1) NOT NULL,
+  `prior` int(11) NOT NULL,
+  `path` varchar(255) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `createdate` int(11) NOT NULL,
+  `updatedate` int(11) NOT NULL,
+  `type` varchar(64) NOT NULL,
+  `clang` int(11) NOT NULL,
+  `createuser` varchar(255) NOT NULL,
+  `updateuser` varchar(255) NOT NULL,
+  `revision` int(11) NOT NULL,
+  UNIQUE KEY `id` (`id`,`clang`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 CREATE TABLE `sly_article_slice` ( `id` int(11) NOT NULL  auto_increment, `clang` int(11) NOT NULL  , `slot` varchar(64) NOT NULL  , `prior` int(5) NOT NULL  ,`slice_id` bigint(20) NOT NULL DEFAULT '0',`article_id` int(11) NOT NULL  , `module` varchar(64) NOT NULL  , `createdate` int(11) NOT NULL  , `updatedate` int(11) NOT NULL  , `createuser` varchar(255) NOT NULL  , `updateuser` varchar(255) NOT NULL  , `revision` int(11) NOT NULL  , PRIMARY KEY (`id`,`article_id`,`module`)) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 CREATE TABLE `sly_clang` ( `id` int(11) NOT NULL  auto_increment, `name` varchar(255) NOT NULL , `locale` varchar(5) NOT NULL , `revision` int(11) NOT NULL  , PRIMARY KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 CREATE TABLE `sly_file` ( `id` int(11) NOT NULL  auto_increment, `re_file_id` int(11) NOT NULL  , `category_id` int(11) NOT NULL  , `attributes` text NULL  , `filetype` varchar(255) NULL  , `filename` varchar(255) NULL  , `originalname` varchar(255) NULL  , `filesize` varchar(255) NULL  , `width` int(11) NULL  , `height` int(11) NULL  , `title` varchar(255) NULL  , `createdate` int(11) NOT NULL  , `updatedate` int(11) NOT NULL  , `createuser` varchar(255) NOT NULL  , `updateuser` varchar(255) NOT NULL  , `revision` int(11) NOT NULL  , PRIMARY KEY (`id`)) ENGINE=MyISAM DEFAULT CHARSET=utf8;
