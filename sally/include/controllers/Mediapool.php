@@ -79,7 +79,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 			$service  = sly_Service_Factory::getService('Media_Category');
 
 			if ($category == -1) {
-				$category = rex_session('media[rex_file_category]', 'int');
+				$category = sly_Util_Session::get('media[rex_file_category]', 'int');
 			}
 
 			$category = $service->findById($category);

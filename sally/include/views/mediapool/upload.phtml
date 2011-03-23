@@ -59,7 +59,7 @@ $submit->setAttribute('value', t('pool_file_upload'));
 
 $form->setResetButton(null);
 
-if (rex_session('media[opener_input_field]') != '') {
+if (sly_Util_Session::get('media[opener_input_field]') != '') {
 	$apply = new sly_Form_Input_Button('submit', 'saveandexit', t('pool_file_upload_get'));
 	$form->setApplyButton($apply);
 }
