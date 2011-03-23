@@ -25,10 +25,6 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		return $article;
 	}
 
-	public function findByPid($pid) {
-		return $this->findOne(array('pid' => (int) $pid));
-	}
-
 	public function findById($id, $clang) {
 		return $this->findOne(array('id' => (int) $id, 'clang' => $clang, 'startpage' => 0));
 	}
@@ -339,7 +335,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 				$category = sly_Service_Factory::getCategoryService()->findById($categoryId, $clangId);
 
 				if (!$ignore_offlines || ($ignore_offlines && $category->isOnline())) {
-					array_unshift($alist, $category->getPid());
+					array_unshift($alist, $category->getId());
 				}
 			}
 			sly_Core::cache()->set($namespace, $key, $alist);
@@ -347,8 +343,8 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 		$artlist = array();
 
-		foreach ($alist as $pid) {
-			$artlist[] = $this->findById($pid, $clangId);
+		foreach ($alist as $id) {
+			$artlist[] = $this->findById($id, $clangId);
 		}
 
 		return $artlist;
