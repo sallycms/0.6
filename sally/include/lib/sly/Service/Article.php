@@ -150,9 +150,8 @@ class sly_Service_Article extends sly_Service_Model_Base {
 			$article->setCreateColumns();
 			$this->saveArticle($article);
 
-			// online/offline Listen leeren
 			$cache->delete('sly.article.list', $parentID.'_'.$clangID.'_0');
-			$cache->delete('sly.article.list', $parentID.'_'.$clangID.'_1');
+			$cache->delete('sly.article.list', $parentID.'_'.$clangID.'_0');
 		}
 
 		// System benachrichtigen
@@ -193,11 +192,11 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 		// Kategorie verschieben, wenn nötig
 		if ($position !== false && $position != $article->getPrior()) {
-			$parentID = $article->getParentId();
+			$parent = $article->getParentId();
 			$oldPrio  = $article->getPrior();
 			$position = (int) $position;
 
-			$where   = '((re_id = '.$parentID.' AND catprior = 0) OR id = '.$parentID.') AND clang = '.$clangID;
+			$where   = '((re_id = '.$parent.' AND catprior = 0) OR id = '.$parent.') AND clang = '.$clangID;
 			$maxPrio = $db->magicFetch('article', 'MAX(prior)', $where);
 			$newPrio = ($position <= 0 || $position > $maxPrio) ? $maxPrio : $position;
 
@@ -218,14 +217,14 @@ class sly_Service_Article extends sly_Service_Model_Base {
 				$this->saveArticle($article);
 
 				// alle Artikel in dieser Ebene aus dem Cache entfernen
-				$db->select('article', 'id', array('re_id' => $parentID, 'clang' => $clangID, 'catprior' => 0));
+				$db->select('article', 'id', array('re_id' => $parent, 'clang' => $clangID, 'catprior' => 0));
 
 				foreach ($db as $row) {
 					$cache->delete('sly.article', $row['id'].'_'.$clangID);
 				}
 
-				$cache->delete('sly.article.list', $parentID.'_'.$clangID.'_0');
-				$cache->delete('sly.article.list', $parentID.'_'.$clangID.'_1');
+				$cache->delete('sly.article.list', $parent.'_'.$clangID.'_0');
+				$cache->delete('sly.article.list', $parent.'_'.$clangID.'_1');
 			}
 		}
 
@@ -336,7 +335,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		$clangId       = (int) $clangId;
 
 		$namespace = 'sly.article.list';
-		$key       = sly_Cache::generateKey($categoryId, $clangId, $ignore_offlines);
+		$key       = $categoryId.'_'.$clangId.'_'.($ignore_offlines ? '1' : '0');
 		$alist     = sly_Core::cache()->get($namespace, $key, null);
 
 		if ($alist === null) {
