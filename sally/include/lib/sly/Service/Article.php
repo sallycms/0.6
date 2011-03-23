@@ -67,11 +67,13 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		$catnames = array();
 
 		if ($parentID !== 0) {
-			foreach ($db->select('article', 'clang, type', array('id' => $parentID, 'startpage' => 1)) as $row) {
+			$db->select('article', 'clang, type', array('id' => $parentID, 'startpage' => 1));
+			foreach ($db as $row) {
 				$types[$row['clang']] = $row['type'];
 			}
-
-			foreach ($db->select('article', 'clang, catname', 'id = '.$parentID.' AND catprior <> 0 AND startpage = 1') as $row) {
+			
+			$db->select('article', 'clang, catname', 'id = '.$parentID.' AND catprior <> 0 AND startpage = 1');
+			foreach ($db as $row) {
 				$catnames[$row['clang']] = $row['catname'];
 			}
 		}
@@ -178,7 +180,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		$article = $this->findById($articleID, $clangID);
 
 		if ($article === null) {
-			throw new sly_Exception('Article not found.');
+			throw new sly_Exception(t('no_such_article'));
 		}
 
 		// Artikel selbst updaten
@@ -243,12 +245,8 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 		// Prüfen ob der Artikel existiert
 		if ($article === null) {
-			throw new sly_Exception('Article not found.');
+			throw new sly_Exception(t('no_such_article'));
 		}
-
-		// Artikel löschen
-		$return = rex_deleteArticle($articleID);
-		if (!$return['state']) throw new sly_Exception($return['message']);
 
 		// Nachbarartikel neu positionieren
 		$parent = $article->getParentId();
@@ -256,7 +254,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 		foreach (array_keys($REX['CLANG']) as $clangID) {
 			$iArticle = $this->findById($articleID, $clangID);
-			$prior    = $cat->getPrior();
+			$prior    = $iArticle->getPrior();
 			$where    = 'prior >= '.$prior.' AND re_id = '.$parent.' AND catprior = 0 AND clang = '.$clangID;
 
 			$db->query('UPDATE '.$prefix.'article SET prior = prior - 1 WHERE '.$where);
@@ -272,6 +270,10 @@ class sly_Service_Article extends sly_Service_Model_Base {
 				$cache->delete('sly.article', $row['id'].'_'.$clangID);
 			}
 		}
+
+		// Artikel löschen
+		$return = rex_deleteArticle($articleID);
+		if (!$return['state']) throw new sly_Exception($return['message']);
 
 		// Event auslösen
 		$dispatcher = sly_Core::dispatcher();

@@ -22,15 +22,13 @@
  */
 function rex_generateAll()
 {
-	global $I18N;
-
 	rex_deleteDir(SLY_DYNFOLDER.'/internal/sally/articles', false);
 	rex_deleteDir(SLY_DYNFOLDER.'/internal/sally/templates', false);
 	rex_deleteDir(SLY_DYNFOLDER.'/internal/sally/files', false);
 
 	sly_Core::cache()->flush('sly', true);
 
-	$MSG = $I18N->msg('delete_cache_message');
+	$MSG = t('delete_cache_message');
 	$MSG = rex_register_extension_point('ALL_GENERATED', $MSG);
 
 	return $MSG;
@@ -82,7 +80,7 @@ function rex_deleteCacheSliceContent($slice_id)
  */
 function rex_deleteArticle($id)
 {
-	global $REX, $I18N;
+	global $REX;
 
 	// Artikel löschen
 	//
@@ -101,12 +99,12 @@ function rex_deleteArticle($id)
 	$return['state'] = false;
 
 	if ($id == $REX['START_ARTICLE_ID']) {
-		$return['message'] = $I18N->msg('cant_delete_sitestartarticle');
+		$return['message'] = t('cant_delete_sitestartarticle');
 		return $return;
 	}
 
 	if ($id == $REX['NOTFOUND_ARTICLE_ID']) {
-		$return['message'] = $I18N->msg('cant_delete_notfoundarticle');
+		$return['message'] = t('cant_delete_notfoundarticle');
 		return $return;
 	}
 
@@ -117,20 +115,10 @@ function rex_deleteArticle($id)
 		$return['state'] = true;
 
 		if ($articleData['startpage'] == 1) {
-			$return['message'] = $I18N->msg('category_deleted');
-			$children = rex_sql::getArrayEx('SELECT id FROM #_article WHERE re_id = '.$id.' AND clang = 1', '#_');
-
-			foreach ($children as $child) {
-				$retval = rex_deleteArticle($child);;
-				$return['state'] &= $retval['state'];
-
-				if (!$retval['status']) {
-					$return['message'] .= "<br />\n$retval[message]";
-				}
-			}
+			$return['message'] = t('category_deleted');
 		}
 		else {
-			$return['message'] = $I18N->msg('article_deleted');
+			$return['message'] = t('article_deleted');
 		}
 
 		// Rekursion über alle Kindkategorien ergab keine Fehler
@@ -139,19 +127,16 @@ function rex_deleteArticle($id)
 		if ($return['state'] === true) {
 			rex_deleteCacheArticle($id);
 
-			$sql = new rex_sql();
-			$sql->setQuery('DELETE FROM #_article WHERE id = '.$id, '#_');
-			$sql->setQuery('DELETE FROM #_article_slice WHERE article_id = '.$id, '#_');
-			$sql = null;
+			$sql = sly_DB_Persistence::getInstance();
+			$sql->delete('article', array('id' => $id));
+			$sql->delete('article_slice', array('article_id' => $id));
 
-			// Listen generieren (auskommtiert, weil: werden lazy erzeugt)
-			// rex_generateLists($re_id);
 		}
 
 		return $return;
 	}
 
-	$return['message'] = $I18N->msg('category_doesnt_exist');
+	$return['message'] = t('category_doesnt_exist');
 	return $return;
 }
 

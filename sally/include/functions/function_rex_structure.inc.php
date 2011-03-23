@@ -22,6 +22,7 @@
  * @param  int   $parentID KategorieId in der die neue Kategorie erstellt werden soll
  * @param  array $data     Array mit den Daten der Kategorie (muss enthalten: catname, status)
  * @return array           Ein Array welches den status sowie eine Fehlermeldung beinhaltet
+ * @deprecated
  */
 function rex_addCategory($parentID, $data) {
 	$status = isset($data['status']) ? $data['status'] : false;
@@ -49,6 +50,7 @@ function rex_addCategory($parentID, $data) {
  * @param  int   $clang      Id der Sprache
  * @param  array $data       Array mit den Daten der Kategorie
  * @return array             ein Array welches den status sowie eine Fehlermeldung beinhaltet
+ * @deprecated
  */
 function rex_editCategory($categoryID, $clang, $data) {
 	try {
@@ -67,6 +69,7 @@ function rex_editCategory($categoryID, $clang, $data) {
  *
  * @param  int $categoryID  Id der Kategorie die gelöscht werden soll
  * @return array            ein Array welches den Status sowie eine Fehlermeldung beinhaltet
+ * @deprecated
  */
 function rex_deleteCategoryReorganized($categoryID) {
 	try {
@@ -85,6 +88,7 @@ function rex_deleteCategoryReorganized($categoryID) {
  * @param  int      $clang       Id der Sprache
  * @param  int|null $newStatus   Status auf den die Kategorie gesetzt werden soll, oder null wenn zum nächsten Status weitergeschaltet werden soll
  * @return array                 Ein Array welches den status sowie eine Fehlermeldung beinhaltet
+ * @deprecated
  */
 function rex_categoryStatus($categoryID, $clang, $newStatus = null) {
 	try {
@@ -100,6 +104,7 @@ function rex_categoryStatus($categoryID, $clang, $newStatus = null) {
  * Gibt alle Stati zurück, die für eine Kategorie gültig sind
  *
  * @return array  Array von Stati (jeweils array(Titel, css-Klasse))
+ * @deprecated
  */
 function rex_categoryStatusTypes() {
 	return sly_Service_Factory::getService('Category')->getStati();
@@ -110,6 +115,7 @@ function rex_categoryStatusTypes() {
  *
  * @param  array $data  Array mit den Daten des Artikels
  * @return array        ein Array welches den Status sowie eine Fehlermeldung beinhaltet
+ * @deprecated
  */
 function rex_addArticle($data) {
 	$status     = isset($data['status']) ? $data['status'] : false;
@@ -138,6 +144,7 @@ function rex_addArticle($data) {
  * @param  int   $clang      Id der Sprache
  * @param  array $data       Array mit den Daten des Artikels
  * @return array             ein Array welches den Status sowie eine Fehlermeldung beinhaltet
+ * @deprecated
  */
 function rex_editArticle($articleID, $clang, $data) {
 	try {
@@ -156,6 +163,7 @@ function rex_editArticle($articleID, $clang, $data) {
  *
  * @param  int $articleID  Id des Artikels die gelöscht werden soll
  * @return array           ein Array welches den Status sowie eine Fehlermeldung beinhaltet
+ * @deprecated
  */
 function rex_deleteArticleReorganized($articleID) {
 	try {
@@ -174,6 +182,7 @@ function rex_deleteArticleReorganized($articleID) {
  * @param  int      $clangID     Id der Sprache
  * @param  int|null $newStatus   Status auf den der Artikel gesetzt werden soll, oder null wenn zum nächsten Status weitergeschaltet werden soll
  * @return array                 ein Array welches den Status sowie eine Fehlermeldung beinhaltet
+ * @deprecated
  */
 function rex_articleStatus($articleID, $clangID, $newStatus = null) {
 	try {
@@ -197,6 +206,7 @@ function rex_articleStatus($articleID, $clangID, $newStatus = null) {
 
 /**
  * Gibt alle Stati zurück, die für einen Artikel gültig sind
+ * @deprecated
  *
  * @return array  Array von Stati (jeweils array(Titel, css-Klasse))
  */

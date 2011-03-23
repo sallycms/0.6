@@ -75,7 +75,8 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		$startpageTypes = array();
 
 		if ($parentID !== 0) {
-			foreach ($db->select('article', 'clang, type', array('id' => $parentID, 'startpage' => 1)) as $row) {
+			$db->select('article', 'clang, type', array('id' => $parentID, 'startpage' => 1));
+			foreach ($db as $row) {
 				$startpageTypes[$row['clang']] = $row['type'];
 			}
 		}
@@ -186,7 +187,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		$cat = $this->findById($categoryID, $clangID);
 
 		if ($cat === null) {
-			throw new sly_Exception('Category not found.');
+			throw new sly_Exception(t('category_doesnt_exist'));
 		}
 
 		// Kategorie selbst updaten
@@ -261,7 +262,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 
 		// Prüfen ob die Kategorie existiert
 		if ($cat === null) {
-			throw new sly_Exception('Category not found.');
+			throw new sly_Exception(t('category_doesnt_exist'));
 		}
 
 		// Prüfen ob die Kategorie noch Kinder (Kategorien oder Artikel) besitzt
@@ -272,17 +273,13 @@ class sly_Service_Category extends sly_Service_Model_Base {
 			throw new sly_Exception('Category has still content and therefore cannot be deleted.');
 		}
 
-		// Kategorie löschen
-		$return = rex_deleteArticle($categoryID);
-		if (!$return['state']) throw new sly_Exception($return['message']);
-
 		// Nachbarkategorien neu positionieren
 		$parent = $cat->getParentId();
 		$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 
 		foreach (array_keys($REX['CLANG']) as $clangID) {
 			$iCat     = $this->findById($categoryID, $clangID);
-			$catprior = $cat->getCatprior();
+			$catprior = $iCat->getCatprior();
 
 			$db->query(
 				'UPDATE '.$prefix.'article SET catprior = catprior - 1 '.
@@ -301,6 +298,10 @@ class sly_Service_Category extends sly_Service_Model_Base {
 			}
 		}
 
+		// Kategorie löschen
+		$return = rex_deleteArticle($categoryID);
+		if (!$return['state']) throw new sly_Exception($return['message']);
+
 		// Event auslösen
 		$dispatcher = sly_Core::dispatcher();
 		$dispatcher->notify('SLY_CAT_DELETED', $cat);
@@ -317,7 +318,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 
 		// Prüfen ob die Kategorie existiert
 		if ($cat === null) {
-			throw new sly_Exception(t('no_such_category'));
+			throw new sly_Exception(t('category_doesnt_exist'));
 		}
 
 		$stati     = $this->getStati();

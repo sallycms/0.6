@@ -121,6 +121,23 @@ class sly_Controller_Structure extends sly_Controller_Sally {
  		$this->view();
 	}
 
+	protected function deleteArticle() {
+		$editId = sly_get('edit_id', 'rex-article-id');
+		if($editId) {
+			try {
+				$service = sly_Service_Factory::getArticleService();
+				$service->delete($editId);
+				$this->info = t('article_deleted');
+			}catch(sly_Exception $e) {
+				$this->warning = $e->getMessage();
+			}
+		}else {
+			$this->warning = t('no_such_article');
+		}
+
+ 		$this->view();
+	}
+
 	protected function addCategory() {
 		if(sly_post('do_add_category', 'boolean')) {
 			$name     = sly_post('category_name',     'string');
