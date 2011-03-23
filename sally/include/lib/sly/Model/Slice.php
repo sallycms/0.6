@@ -14,7 +14,7 @@
  * @author  zozi@webvariants.de
  * @ingroup model
  */
-class sly_Model_Slice extends sly_Model_Base {
+class sly_Model_Slice extends sly_Model_Base_Id {
 	protected $module;
 	protected $_attributes = array('module' => 'string');
 

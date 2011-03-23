@@ -14,7 +14,7 @@
  * @author  zozi@webvariants.de
  * @ingroup service
  */
-class sly_Service_SliceValue extends sly_Service_Model_Base {
+class sly_Service_SliceValue extends sly_Service_Model_Base_Id {
 	protected $tablename = 'slice_value';
 
 	protected function makeInstance(array $params) {

@@ -20,33 +20,8 @@ abstract class sly_Service_Model_Base {
 		return $this->tablename;
 	}
 
-	public function create($params) {
-		$model = $this->makeInstance($params);
-		return $this->save($model);
-	}
-
-	public function save(sly_Model_Base $model) {
-		$persistence = sly_DB_Persistence::getInstance();
-
-		if ($model->getId() == sly_Model_Base::NEW_ID) {
-			$data = $model->toHash();
-			unset($data['id']);
-			$persistence->insert($this->getTableName(), $data);
-			$model->setId($persistence->lastId());
-		}
-		else {
-			$persistence->update($this->getTableName(), $model->toHash(), array('id' => $model->getId()));
-		}
-
-		return $model;
-	}
-
-	public function findById($id) {
-		return $this->findOne(array('id' => (int)$id));
-	}
-
-	public function findOne($where = null, $group = null, $having = null) {
-		$res = $this->find($where, $group, null, null, null, $having);
+	public function findOne($where = null, $having = null) {
+		$res = $this->find($where, null, null, null, 1, $having);
 		if (count($res) == 1) return $res[0];
 		return null;
 	}

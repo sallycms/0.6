@@ -16,29 +16,30 @@
  */
 abstract class sly_Model_Base {
 
-	const NEW_ID = -1;
-
-	protected $id = self::NEW_ID;
+	protected $_pk;
+	protected $_attributes;
 
 	public function __construct($params = array()) {
-		if (isset($params['id'])) $this->setId($params['id']);
-
+		foreach ($this->_pk as $name => $type){
+			if (isset($params[$name])) {
+				$this->$name = $params[$name];
+				settype($this->$name, $type);
+			}
+		}
 		foreach ($this->_attributes as $name => $type){
-			if (isset($params[$name])) $this->$name = $params[$name];
+			if (isset($params[$name])) {
+				$this->$name = $params[$name];
+				settype($this->$name, $type);
+			}
 		}
 	}
 
-	public function getId()    { return $this->id; }
-	public function setId($id) { $this->id = intval($id); }
-
 	public function toHash() {
-		$return = array('id' => $this->id);
+		return $this->attrsToHash($this->_attributes);
+	}
 
-		foreach($this->_attributes as $name => $type) {
-			$return[$name] = $this->$name;
-		}
-
-		return $return;
+	public function getPKHash() {
+		return $this->attrsToHash($this->_pk);
 	}
 
 	public function setUpdateColumns($user = null) {
@@ -58,5 +59,13 @@ abstract class sly_Model_Base {
 		$this->setCreateDate(time());
 		$this->setCreateUser($user);
 		$this->setUpdateColumns($user);
+	}
+
+	protected function attrsToHash($attrs) {
+		$data = array();
+		foreach($attrs as $name => $type) {
+			$data[$name] = $this->$name;
+		}
+		return $data;
 	}
 }

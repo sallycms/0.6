@@ -13,7 +13,7 @@
  *
  * @author christoph@webvariants.de
  */
-class sly_Model_Category extends sly_Model_Article_Base {
+class sly_Model_Category extends sly_Model_Base_Article {
 
 	/**
 	 *

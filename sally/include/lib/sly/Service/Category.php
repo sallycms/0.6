@@ -19,23 +19,9 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		return new sly_Model_Category($params);
 	}
 
-	public function save(sly_Model_Base $model) {
-		throw new Exception('This Method should never be used, use add or edit');
-	}
-
-	protected function saveCategory(sly_Model_Category $cat) {
+	protected function update(sly_Model_Category $cat) {
 		$persistence = sly_DB_Persistence::getInstance();
-
-		if ($cat->getPid() == sly_Model_Base::NEW_ID) {
-			$data = $cat->toHash();
-			unset($data['pid']);
-			$persistence->insert($this->getTableName(), $data);
-			$cat->setPid($persistence->lastId());
-		}
-		else {
-			$persistence->update($this->getTableName(), $cat->toHash(), array('pid' => $cat->getPid()));
-		}
-
+		$persistence->update($this->getTableName(), $cat->toHash(), $cat->getPKHash());
 		return $cat;
 	}
 
@@ -157,7 +143,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 
 			$cat->setUpdateColumns();
 			$cat->setCreateColumns();
-			$this->saveCategory($cat);
+			$db->insert($this->tablename, array_merge($cat->getPKHash(), $cat->toHash()));
 
 			$cache->delete('sly.category.list', $parentID.'_'.$clangID);
 		}
@@ -193,7 +179,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		// Kategorie selbst updaten
 		$cat->setCatname($name);
 		$cat->setUpdateColumns();
-		$this->saveCategory($cat);
+		$this->update($cat);
 
 		// Cache sicherheitshalber schon einmal leeren
 		$cache->delete('sly.category', $categoryID.'_'.$clangID);
@@ -233,7 +219,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 
 				// eigene neue Position speichern
 				$cat->setCatprior($newPrio);
-				$this->saveCategory($cat);
+				$this->update($cat);
 
 				// alle Kategorien in dieser Ebene aus dem Cache entfernen
 				$db->select('article', 'id', 're_id = '.$parentID.' AND clang = '.$clangID.' AND catprior <> 0');
@@ -334,7 +320,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		// Kategorie updaten
 		$cat->setStatus($newStatus);
 		$cat->setUpdateColumns();
-		$this->saveCategory($cat);
+		$this->update($cat);
 
 		// Cache leeren
 		rex_deleteCacheArticle($categoryID, $clangID);

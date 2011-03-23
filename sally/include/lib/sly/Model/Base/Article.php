@@ -13,7 +13,8 @@
  *
  * @author christoph@webvariants.de
  */
-class sly_Model_Article_Base extends sly_Model_Base_Pid {
+class sly_Model_Base_Article extends sly_Model_Base {
+	protected $id;
 	protected $updateuser;
 	protected $status;
 	protected $name;
@@ -31,15 +32,18 @@ class sly_Model_Article_Base extends sly_Model_Base_Pid {
 	protected $type;
 	protected $revision;
 
+	protected $_pk = array('id' => 'int', 'clang' => 'int');
 	protected $_attributes = array(
 		'updateuser' => 'string', 'status' => 'int', 'name' => 'string',
 		'catprior' => 'int', 'createdate' => 'int',
-		'clang' => 'int', 're_id' => 'int', 'prior' => 'int',
+		're_id' => 'int', 'prior' => 'int',
 		'catname' => 'string', 'startpage' => 'int', 'updatedate' => 'int',
 		'createuser' => 'string', 'attributes' => 'string', 'path' => 'string',
 		'type' => 'string', 'revision' => 'int'
 	);
 
+
+	public function getId()         { return $this->id; }
 	public function getUpdateuser() { return $this->updateuser; }
 	public function getStatus()     { return $this->status;     }
 	public function getName()       { return $this->name;       }
@@ -57,6 +61,7 @@ class sly_Model_Article_Base extends sly_Model_Base_Pid {
 	public function getType()       { return $this->type;       }
 	public function getRevision()   { return $this->revision;   }
 
+	public function setId($id)                 { $this->id         = intval($id); }
 	public function setUpdateuser($updateuser) { $this->updateuser = $updateuser; }
 	public function setStatus($status)         { $this->status     = $status;     }
 	public function setName($name)             { $this->name       = $name;       }

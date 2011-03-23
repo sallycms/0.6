@@ -14,7 +14,7 @@
  * @author  christoph@webvariants.de
  * @ingroup service
  */
-class sly_Service_User extends sly_Service_Model_Base {
+class sly_Service_User extends sly_Service_Model_Base_Id {
 	protected $tablename = 'user';
 
 	protected function makeInstance(array $params) {

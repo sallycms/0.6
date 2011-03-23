@@ -19,22 +19,9 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		return new sly_Model_Article($params);
 	}
 
-	public function save(sly_Model_Base $article) {
-		throw new Exception('This Method should never be used, use add or edit');
-	}
-
-	protected function saveArticle(sly_Model_Article $article) {
+	protected function update(sly_Model_Article $article) {
 		$persistence = sly_DB_Persistence::getInstance();
-		if ($article->getPid() == sly_Model_Base::NEW_ID) {
-			$data = $article->toHash();
-			unset($data['pid']);
-			$persistence->insert($this->getTableName(), $data);
-			$article->setPid($persistence->lastId());
-		}
-		else {
-			$persistence->update($this->getTableName(), $article->toHash(), array('pid' => $article->getPid()));
-		}
-
+		$persistence->update($this->getTableName(), $article->toHash(), $article->getPKHash());
 		return $article;
 	}
 
@@ -148,10 +135,10 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 			$article->setUpdateColumns();
 			$article->setCreateColumns();
-			$this->saveArticle($article);
+			$db->insert($this->tablename, array_merge($article->getPKHash(), $article->toHash()));
 
 			$cache->delete('sly.article.list', $parentID.'_'.$clangID.'_0');
-			$cache->delete('sly.article.list', $parentID.'_'.$clangID.'_0');
+			$cache->delete('sly.article.list', $parentID.'_'.$clangID.'_1');
 		}
 
 		// System benachrichtigen
@@ -185,7 +172,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		// Artikel selbst updaten
 		$article->setName($name);
 		$article->setUpdateColumns();
-		$this->saveArticle($article);
+		$this->update($article);
 
 		// Cache sicherheitshalber schon einmal leeren
 		$cache->delete('sly.article', $articleID.'_'.$clangID);
@@ -214,7 +201,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 				// eigene neue Position speichern
 				$article->setPrior($newPrio);
-				$this->saveArticle($article);
+				$this->update($article);
 
 				// alle Artikel in dieser Ebene aus dem Cache entfernen
 				$db->select('article', 'id', array('re_id' => $parent, 'clang' => $clangID, 'catprior' => 0));
@@ -295,7 +282,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		// Artikel updaten
 		$article->setStatus($newStatus);
 		$article->setUpdateColumns();
-		$this->saveArticle($article);
+		$this->update($article);
 
 		// Cache leeren
 		$cache = sly_Core::cache();
@@ -343,9 +330,9 @@ class sly_Service_Article extends sly_Service_Model_Base {
 			$sql = sly_DB_Persistence::getInstance();
 			$where = array('re_id' => $categoryId, 'clang' => $clangId, 'startpage' => 0);
 			if($ignore_offlines) $where['status'] = 1;
-			$sql->select($this->tablename, 'pid', $where, null, 'prior,name');
+			$sql->select($this->tablename, 'id', $where, null, 'prior,name');
 			foreach($sql as $row) {
-				$alist[] = intval($row['pid']);
+				$alist[] = intval($row['id']);
 			}
 
 			if ($categoryId != 0) {
@@ -361,7 +348,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		$artlist = array();
 
 		foreach ($alist as $pid) {
-			$artlist[] = $this->findByPid($pid);
+			$artlist[] = $this->findById($pid, $clangId);
 		}
 
 		return $artlist;

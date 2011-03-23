@@ -45,7 +45,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally {
 			if (!empty($clangName)) {
 				try {
 					$languageService = sly_Service_Factory::getService('Language');
-					$languageService->add($clangName, $clangLocale);
+					$languageService->create(array('name' => $clangName, 'locale' => $clangLocale));
 					$this->info = t('clang_edited');
 				} catch(Exception $e) {
 					$this->warning = $e->getMessage();
@@ -75,7 +75,6 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally {
 				$clang->setLocale($clangLocale);
 				$languageService->save($clang);
 
-				sly_Core::cache()->delete('sly.language', 'all');
 				$this->info = t('clang_edited');
 			}
 		} else {
@@ -91,8 +90,8 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally {
 		$clangID = sly_request('clang_id', 'int', -1);
 
 		if (isset($REX['CLANG'][$clangID])) {
-			$ok = rex_deleteCLang($clangID);
-			if($ok) $this->info = t('clang_deleted');
+			$ok = sly_Service_Factory::getService('Language')->delete(array('id' =>$clangID));
+			if($ok > 0) $this->info = t('clang_deleted');
 			else $this->warning = t('clang_delete_error');
 		}
 

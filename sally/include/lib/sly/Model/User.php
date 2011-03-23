@@ -14,7 +14,7 @@
  * @author  christoph@webvariants.de
  * @ingroup model
  */
-class sly_Model_User extends sly_Model_Base {
+class sly_Model_User extends sly_Model_Base_Id {
 	protected $name;
 	protected $description;
 	protected $login;

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
@@ -13,8 +14,19 @@
  *
  * @author christoph@webvariants.de
  */
-class sly_Model_Article extends sly_Model_Article_Base {
+class sly_Model_Article extends sly_Model_Base_Article {
+
 	public function isStartPage() {
 		return $this->getStartpage() == 1;
 	}
+
+	/**
+	 * returns true if the articletype is set
+	 *
+	 * @return boolean
+	 */
+	public function hasType() {
+		return !empty($this->type);
+	}
+
 }

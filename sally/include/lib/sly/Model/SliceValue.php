@@ -14,7 +14,7 @@
  * @author  zozi@webvariants.de
  * @ingroup model
  */
-class sly_Model_SliceValue extends sly_Model_Base {
+class sly_Model_SliceValue extends sly_Model_Base_Id {
 	protected $slice_id;
 	protected $type;
 	protected $finder;

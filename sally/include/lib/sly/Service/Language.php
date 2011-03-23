@@ -13,7 +13,7 @@
  * @author  christoph@webvariants.de
  * @ingroup service
  */
-class sly_Service_Language extends sly_Service_Model_Base {
+class sly_Service_Language extends sly_Service_Model_Base_Id {
 
 	protected $tablename = 'clang';
 
@@ -21,12 +21,17 @@ class sly_Service_Language extends sly_Service_Model_Base {
 		return new sly_Model_Language($params);
 	}
 
-	public function add($name, $locale) {
+	public function save(sly_Model_Base $model) {
+		sly_Core::cache()->delete('sly.language', 'all');
+		return parent::save($model);
+	}
+
+	public function create($params) {
 		global $REX;
 		$sql = sly_DB_Persistence::getInstance();
 		$sql->startTransaction();
 		try {
-			$newLanguage = $this->create(array('name' => $name, 'locale' => $locale));
+			$newLanguage = parent::create($params);
 			$sql->query(str_replace('#_', sly_Core::config()->get('DATABASE/TABLE_PREFIX'),
 							'INSERT INTO #_article (id,re_id,name,catname,catprior,attributes,' .
 							'startpage,prior,path,status,createdate,updatedate,type,clang,createuser,' .
@@ -44,8 +49,37 @@ class sly_Service_Language extends sly_Service_Model_Base {
 		
 		sly_Core::dispatcher()->notify('CLANG_ADDED', '', array('id' => $newLanguage->getId(), 'language' => $newLanguage));
 		$REX['CLANG'][$newLanguage->getId()] = $newLanguage;
-		sly_Core::cache()->set('sly.language', 'all', $REX['CLANG']);
+
 		return $newLanguage;
+	}
+
+	public function delete($where) {
+		global $REX;
+
+		$db = sly_DB_Persistence::getInstance();
+		
+		//get languages first
+		$languages = $this->find($where);
+
+		//delete
+		$res = parent::delete($where);
+
+		//remove
+		foreach($languages as $language) {
+			unset($REX['CLANG'][$language->getId()]);
+			$params = array('clang' => $language->getId());
+			$db->delete('article', $params);
+			$db->delete('article_slice', $params);
+
+			sly_Core::dispatcher()->notify('CLANG_DELETED','', array(
+				'id'   => $language->getId(),
+				'name' => $language->getName()
+			));
+		}
+		rex_generateAll();
+		sly_Core::cache()->set('sly.language', 'all', $REX['CLANG']);
+
+		return $res;
 	}
 
 }
