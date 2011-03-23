@@ -546,7 +546,7 @@ function rex_copyArticle($id, $to_cat_id)
 				$art_sql->addGlobalCreateFields();
 
 				// schon gesetzte Felder nicht wieder überschreiben
-				$dont_copy = array('id', 'pid', 're_id', 'catname', 'catprior', 'path', 'prior', 'status', 'createdate', 'createuser', 'startpage');
+				$dont_copy = array('id', 're_id', 'catname', 'catprior', 'path', 'prior', 'status', 'createdate', 'createuser', 'startpage');
 
 				foreach (array_diff(array_keys($from_data), $dont_copy) as $fld_name) {
 					$art_sql->setValue($fld_name, $from_data[$fld_name]);
@@ -780,78 +780,4 @@ function rex_moveCategory($from_cat, $to_cat)
 	}
 
 	return true;
-}
-
-/**
- * Berechnet die Prios der Kategorien in einer Kategorie neu
- *
- * @param $re_id    KategorieId der Kategorie, die erneuert werden soll
- * @param $clang    Sprach-ID der Kategorie, die erneuert werden soll
- * @param $new_prio Neue PrioNr der Kategorie
- * @param $old_prio Alte PrioNr der Kategorie
- *
- * @deprecated 4.1 - 26.03.2008
- * Besser die rex_organize_priorities() Funktion verwenden!
- *
- * @return void
- */
-function rex_newCatPrio($re_id, $clang, $new_prio, $old_prio)
-{
-	global $REX;
-
-	$re_id    = (int) $re_id;
-	$clang    = (int) $clang;
-	$new_prio = (int) $new_prio;
-	$old_prio = (int) $old_prio;
-
-	if ($new_prio != $old_prio) {
-		$addsql = $new_prio < $old_prio ? 'desc' : 'asc';
-
-		rex_organize_priorities(
-			$REX['DATABASE']['TABLE_PREFIX'].'article',
-			'catprior',
-			'clang = '.$clang.' AND re_id = '.$re_id.' AND startpage = 1',
-			'catprior, updatedate '.$addsql,
-			'pid'
-		);
-
-		sly_Core::getInstance()->cache()->delete('sly.category.list', $re_id.'_'.$clang);
-	}
-}
-
-/**
- * Berechnet die Prios der Artikel in einer Kategorie neu
- *
- * @param $re_id    KategorieId der Kategorie, die erneuert werden soll
- * @param $clang    Sprach-ID der Kategorie, die erneuert werden soll
- * @param $new_prio Neue PrioNr der Kategorie
- * @param $old_prio Alte PrioNr der Kategorie
- *
- * @deprecated 4.1 - 26.03.2008
- * Besser die rex_organize_priorities() Funktion verwenden!
- *
- * @return void
- */
-function rex_newArtPrio($re_id, $clang, $new_prio, $old_prio)
-{
-	global $REX;
-
-	$re_id    = (int) $re_id;
-	$clang    = (int) $clang;
-	$new_prio = (int) $new_prio;
-	$old_prio = (int) $old_prio;
-
-	if ($new_prio != $old_prio) {
-		$addsql = $new_prio < $old_prio ? 'desc' : 'asc';
-
-		rex_organize_priorities(
-			$REX['DATABASE']['TABLE_PREFIX'].'article',
-			'prior',
-			'clang = '.$clang.' AND ((startpage <> 1 AND re_id = '.$re_id.') OR (startpage = 1 AND id = '.$re_id.'))',
-			'prior, updatedate '. $addsql,
-			'pid'
-		);
-
-		sly_Core::getInstance()->cache()->delete('sly.article.list', $re_id.'_'.$clang);
-	}
 }

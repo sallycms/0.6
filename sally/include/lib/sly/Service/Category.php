@@ -25,10 +25,6 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		return $cat;
 	}
 
-	public function findByPid($pid) {
-		return $this->findOne(array('pid' => (int) $pid));
-	}
-
 	public function findById($id, $clang) {
 		return $this->findOne(array('id' => (int) $id, 'clang' => $clang));
 	}

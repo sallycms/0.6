@@ -43,11 +43,11 @@ function rex_send_file($file, $contentType, $environment = 'backend') {
  * Sendet einen OOArticle zum Client,
  * fügt ggf. HTTP1.1 cache headers hinzu
  *
- * @param OOArticle   $REX_ARTICLE  der zu sendene Artikel
+ * @param OOArticle   $article  der zu sendene Artikel
  * @param string      $content      Inhalt des Artikels
  * @param string      $environment  die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
-function rex_send_article($REX_ARTICLE, $content, $environment) {
+function rex_send_article($article, $content, $environment) {
 	global $REX;
 
 	// ----- EXTENSION POINT
@@ -56,19 +56,17 @@ function rex_send_article($REX_ARTICLE, $content, $environment) {
 	// ----- EXTENSION POINT - keine Manipulation der Ausgaben ab hier (read only)
 	rex_register_extension_point('OUTPUT_FILTER_CACHE', $content, '', true);
 
-	// Dynamische Teile sollen die MD5-Summe nicht beeinflussen.
-	$etag = md5(preg_replace('@<!--DYN-->.*<!--/DYN-->@','', $content));
+	if ($article) {
+		$lastModified = $article->getUpdateDate();
+		$etag .= $article->getId() . '_' . $article->getClang();
 
-	if ($REX_ARTICLE) {
-		$lastModified = $REX_ARTICLE->getUpdateDate();
-		$etag        .= $REX_ARTICLE->getValue('pid');
-
-		if ($REX_ARTICLE->getId() == $REX['NOTFOUND_ARTICLE_ID'] && $REX_ARTICLE->getId() != $REX['START_ARTICLE_ID']) {
+		if ($article->getId() == $config->get('NOTFOUND_ARTICLE_ID') && $article->getId() != $config->get('START_ARTICLE_ID')) {
 			header('HTTP/1.0 404 Not Found');
 		}
-	}
-	else {
+	} else {
 		$lastModified = time();
+		// Dynamische Teile sollen die MD5-Summe nicht beeinflussen.
+		$etag = md5(preg_replace('@<!--DYN-->.*<!--/DYN-->@', '', $content));
 	}
 
 	rex_send_content(trim($content), $lastModified, $etag, $environment);
@@ -91,7 +89,7 @@ function rex_send_content($content, $lastModified, $etag, $environment) {
 	session_cache_limiter('none');
 	header('Cache-Control: must-revalidate, proxy-revalidate, private');
 
-		// ----- Last-Modified
+	// ----- Last-Modified
 	if ($REX['USE_LAST_MODIFIED'] === 'true' || $REX['USE_LAST_MODIFIED'] == $environment) {
 		rex_send_last_modified($lastModified);
 	}
