@@ -26,7 +26,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 	}
 
 	public function findById($id, $clang) {
-		return $this->findOne(array('id' => (int) $id, 'clang' => $clang, 'startpage' => 0));
+		return $this->findOne(array('id' => (int) $id, 'clang' => $clang));
 	}
 
 	public function add($categoryID, $name, $status, $position = -1) {
