@@ -241,12 +241,7 @@ abstract class sly_Service_AddOn_Base {
 		$version = $this->getProperty($component, 'version', false);
 
 		if ($version !== false) {
-			if (is_array($component)) {
-				sly_Util_Versions::set('plugins/'.implode('_', $component), $version);
-			}
-			else {
-				sly_Util_Versions::set('addons/'.$component, $version);
-			}
+			sly_Util_Versions::set($this->getVersionKey($component), $version);
 		}
 
 		// notify listeners
