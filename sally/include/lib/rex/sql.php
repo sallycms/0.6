@@ -12,8 +12,7 @@
  *
  * @ingroup redaxo
  */
-class rex_sql
-{
+class rex_sql {
 	/*
 	 * Da leider massenhaft Code von REDAXO direkt auf die Eigenschaften
 	 * zugreift, können wir sie nicht protected setzen. REDAXO können wir noch
@@ -22,7 +21,6 @@ class rex_sql
 
 	public $values; // Werte von setValue
 	public $fieldnames; // Spalten im ResultSet
-
 	public $table; // Tabelle setzen
 	public $wherevar; // WHERE Bediengung
 	public $query; // letzter Query String
@@ -30,71 +28,17 @@ class rex_sql
 	public $rows; // anzahl der treffer
 	public $result; // ResultSet
 	public $last_insert_id; // zuletzt angelegte auto_increment nummer
-	public $debugsql; // debug schalter
 	public $identifier; // Datenbankverbindung
-	public $DBID; // ID der Verbindung
-
 	public $error; // Fehlertext
 	public $errno; // Fehlernummer
 
-	private static $ident = null;
-
-	public function __construct()
-	{
-		global $REX;
-
-		$this->debug      = false;
-		$this->identifier = null;
-		$this->selectDB(1);
+	public function __construct() {
+		$this->identifier = sly_DB_MySQL_Connection::factory()->getConnection();
 		$this->flush();
 	}
 
 	/**
-	 * Stellt die Verbindung zur Datenbank her
-	 */
-	public function selectDB($DBID, $forceReconnect = false)
-	{
-		$this->identifier = sly_DB_MySQL_Connection::factory()->getConnection();
-		$this->DBID       = 1;
-	}
-
-	/**
-	 * Gibt die DatenbankId der Abfrage (SQL) zurück,
-	 * oder false wenn die Abfrage keine DBID enthält
-	 *
-	 * @param $qry Abfrage
-	 */
-	public static function getQueryDBID($qry)
-	{
-		$qry = trim($qry);
-
-		if (preg_match('/\(DB([1-9])\)/i', $qry, $matches)) {
-			return $matches[1];
-		}
-
-		return false;
-	}
-
-	/**
-	* Entfernt die DBID aus einer Abfrage (SQL) und gibt die DBID zurück falls
-	* vorhanden, sonst false
-	*
-	* @param $query Abfrage
-	*/
-	public static function stripQueryDBID(&$qry)
-	{
-		$qry = trim($qry);
-
-		if (($qryDBID = self::getQueryDBID($qry)) !== false) {
-			$qry = substr($qry, 6);
-		}
-
-		return $qryDBID;
-	}
-
-	/**
-	 * Gibt den Typ der Abfrage (SQL) zurück,
-	 * oder false wenn die Abfrage keinen Typ enthält
+	 * Gibt den Typ der Abfrage (SQL) zurück
 	 *
 	 * Mögliche Typen:
 	 * - SELECT
@@ -104,20 +48,14 @@ class rex_sql
 	 * - DELETE
 	 * - REPLACE
 	 *
-	 * @param $query Abfrage
+	 * @param string $qry  Abfrage
 	 */
-	public function getQueryType($qry = null)
-	{
-		if (!$qry) {
-			if (!isset($this)) { // Nur bei angelegtem Object
-				return null;
-			}
-
+	public function getQueryType($qry = null) {
+		if ($qry === null) {
 			$qry = $this->query;
 		}
 
 		$qry = trim($qry);
-		self::stripQueryDBID($qry); // DBID aus dem Query herausschneiden, falls vorhanden
 
 		if (preg_match('/^(SELECT|SHOW|UPDATE|INSERT|DELETE|REPLACE)/i', $qry, $matches)) {
 			return strtoupper($matches[1]);
@@ -141,19 +79,13 @@ class rex_sql
 	 * @param  int    $mode   der Modus, in dem die Zeilen dann zurückgegeben werden sollen
 	 * @return mixed          false im Falle eines Fehlers, sonst mixed oder ein Array (je nach Spaltenanzahl)
 	 */
-	public static function fetch($what, $from, $where = '1', $mode = MYSQL_ASSOC)
-	{
-		$config = sly_Core::config();
-
+	public static function fetch($what, $from, $where = '1', $mode = MYSQL_ASSOC) {
 		// Verbindung herstellen
-		self::getInstance(1);
+		self::getInstance();
 
 		$query = sprintf(
 			'SELECT %s FROM %s%s WHERE %s LIMIT 1',
-			$what,
-			$config->get('DATABASE/TABLE_PREFIX'),
-			$from,
-			$where
+			$what, self::getPrefix(), $from, $where
 		);
 
 		$result = mysql_query($query);
@@ -177,9 +109,8 @@ class rex_sql
 			$ret = array_values($row);
 			return $ret[0];
 		}
-		else {
-			return $row;
-		}
+
+		return $row;
 	}
 
 	/**
@@ -194,14 +125,12 @@ class rex_sql
 	 * @param  string $query  die auszuführende Abfrage
 	 * @return array          ein Array mit den Werten
 	 */
-	public static function getArrayEx($query, $tablePrefix = '')
-	{
+	public static function getArrayEx($query, $tablePrefix = '') {
 		// Verbindung herstellen
-		self::getInstance(1);
+		self::getInstance();
 
 		if (!empty($tablePrefix)) {
-			$config = sly_Core::config();
-			$query  = str_replace($tablePrefix, $config->get('DATABASE/TABLE_PREFIX'), $query);
+			$query = str_replace($tablePrefix, self::getPrefix(), $query);
 		}
 
 		$result = mysql_query($query);
@@ -237,42 +166,18 @@ class rex_sql
 	}
 
 	/**
-	 * Setzt eine Abfrage (SQL) ab, wechselt die DBID falls vorhanden
-	 *
-	 * @param $query Abfrage
-	 * @return boolean True wenn die Abfrage erfolgreich war (keine DB-Errors
-	 * auftreten), sonst false
-	 */
-	public function setDBQuery($qry)
-	{
-		// Verbindung herstellen
-		$this->selectDB($this->DBID);
-
-		if (($qryDBID = self::stripQueryDBID($qry)) !== false) {
-			$this->selectDB($qryDBID);
-		}
-
-		return $this->setQuery($qry);
-	}
-
-	/**
 	 * Setzt eine Abfrage (SQL) ab
 	 *
 	 * @param $query Abfrage
 	 * @return boolean True wenn die Abfrage erfolgreich war (keine DB-Errors
 	 * auftreten), sonst false
 	 */
-	public function setQuery($qry, $tablePrefix = '')
-	{
+	public function setQuery($qry, $tablePrefix = '') {
 		// Alle Werte zurücksetzen
 		$this->flush();
 
-		// Verbindung herstellen
-		//$this->selectDB($this->DBID);
-
 		if (!empty($tablePrefix)) {
-			global $REX;
-			$qry = str_replace($tablePrefix, $REX['DATABASE']['TABLE_PREFIX'], $qry);
+			$qry = str_replace($tablePrefix, self::getPrefix(), $qry);
 		}
 
 		$qry = trim($qry);
@@ -310,23 +215,17 @@ class rex_sql
 			$this->errno = mysql_errno($this->identifier);
 		}
 
-		if ($this->debugsql || $this->error != '') {
-			$this->printError($qry);
-		}
-
 		return $this->getError() === '';
 	}
 
 	/**
 	 * Setzt den Tabellennamen
 	 *
-	 * @param $table Tabellenname
+	 * @param string $table Tabellenname
 	 */
-	public function setTable($table, $prependWithPrefix = false)
-	{
+	public function setTable($table, $prependWithPrefix = false) {
 		if ($prependWithPrefix) {
-			global $REX;
-			$table = $REX['DATABASE']['TABLE_PREFIX'].$table;
+			$table = self::getPrefix().$table;
 		}
 
 		$this->table = $table;
@@ -335,22 +234,20 @@ class rex_sql
 	/**
 	 * Setzt den Wert eine Spalte
 	 *
-	 * @param $feldname Spaltenname
-	 * @param $wert Wert
+	 * @param string $feldname  Spaltenname
+	 * @param string $wert      Wert
 	 */
-	public function setValue($feldname, $wert)
-	{
+	public function setValue($feldname, $wert) {
 		$this->values[$feldname] = $wert;
 	}
 
 	/**
 	 * Setzt ein Array von Werten zugleich
 	 *
-	 * @param $valueArray Ein Array von Werten
-	 * @param $wert Wert
+	 * @param array  $valueArray Ein Array von Werten
+	 * @param string $wert       Wert
 	 */
-	public function setValues($valueArray)
-	{
+	public function setValues($valueArray) {
 		if (is_array($valueArray)) {
 			foreach ($valueArray as $name => $value) {
 				$this->setValue($name, $value);
@@ -364,11 +261,11 @@ class rex_sql
 
 	/**
 	 * Prüft den Wert einer Spalte der aktuellen Zeile ob ein Wert enthalten ist
-	 * @param $feld Spaltenname des zu prüfenden Feldes
-	 * @param $prop Wert, der enthalten sein soll
+	 *
+	 * @param string $feld  Spaltenname des zu prüfenden Feldes
+	 * @param string $prop  Wert, der enthalten sein soll
 	 */
-	public function isValueOf($feld, $prop)
-	{
+	public function isValueOf($feld, $prop) {
 		if (empty($prop)) {
 			return true;
 		}
@@ -379,8 +276,7 @@ class rex_sql
 	/**
 	 * Setzt die WHERE Bedienung der Abfrage
 	 */
-	public function setWhere($where)
-	{
+	public function setWhere($where) {
 		$this->wherevar = 'WHERE '.$where;
 	}
 
@@ -389,8 +285,7 @@ class rex_sql
 	 * @param $value Name der Spalte
 	 * @param [$rowNumber] Zeile aus dem ResultSet
 	 */
-	public function getValue($feldname, $rowNumber = null)
-	{
+	public function getValue($feldname, $rowNumber = null) {
 		if (isset($this->values[$feldname])) {
 			return $this->values[$feldname];
 		}
@@ -408,8 +303,7 @@ class rex_sql
 	 * Prüft, ob eine Spalte im Resultset vorhanden ist
 	 * @param $value Name der Spalte
 	 */
-	public function hasValue($feldname)
-	{
+	public function hasValue($feldname) {
 		return in_array($feldname, $this->getFieldnames());
 	}
 
@@ -419,8 +313,7 @@ class rex_sql
 	 * Falls das Feld nicht vorhanden ist,
 	 * wird Null zurückgegeben, sonst True/False
 	 */
-	public function isNull($feldname)
-	{
+	public function isNull($feldname) {
 		if ($this->hasValue($feldname)) {
 			return $this->getValue($feldname) === null;
 		}
@@ -431,8 +324,7 @@ class rex_sql
 	/**
 	 * Gibt die Anzahl der Zeilen zurück
 	 */
-	public function getRows()
-	{
+	public function getRows() {
 		return $this->rows;
 	}
 
@@ -440,16 +332,14 @@ class rex_sql
 	 * Gibt die Zeilennummer zurück, auf der sich gerade der
 	 * interne Zähler befindet
 	 */
-	public function getCounter()
-	{
+	public function getCounter() {
 		return $this->counter;
 	}
 
 	/**
 	 * Gibt die Anzahl der Felder/Spalten zurück
 	 */
-	public function getFields()
-	{
+	public function getFields() {
 		return mysql_num_fields($this->result);
 	}
 
@@ -459,8 +349,7 @@ class rex_sql
 	 *
 	 * @see setValue
 	 */
-	public function buildSetQuery()
-	{
+	public function buildSetQuery() {
 		$sets = array();
 
 		if (is_array($this->values)) {
@@ -495,8 +384,7 @@ class rex_sql
 	 * @see #setTable()
 	 * @see #setWhere()
 	 */
-	public function select($fields)
-	{
+	public function select($fields) {
 		return $this->setQuery('SELECT '.$fields.' FROM `'.$this->table.'` '.$this->wherevar);
 	}
 
@@ -508,8 +396,7 @@ class rex_sql
 	 * @see #setValue()
 	 * @see #setWhere()
 	 */
-	public function update($successMessage = null)
-	{
+	public function update($successMessage = null) {
 		return $this->statusQuery('UPDATE `'.$this->table.'` SET '.$this->buildSetQuery().' '.$this->wherevar, $successMessage);
 	}
 
@@ -520,8 +407,7 @@ class rex_sql
 	 * @see #setTable()
 	 * @see #setValue()
 	 */
-	public function insert($successMessage = null)
-	{
+	public function insert($successMessage = null) {
 		return $this->statusQuery('INSERT INTO `'.$this->table.'` SET '.$this->buildSetQuery(), $successMessage);
 	}
 
@@ -533,8 +419,7 @@ class rex_sql
 	 * @see #setValue()
 	 * @see #setWhere()
 	 */
-	public function replace($successMessage = null)
-	{
+	public function replace($successMessage = null) {
 		return $this->statusQuery('REPLACE INTO `'.$this->table.'` SET '.$this->buildSetQuery().' '.$this->wherevar, $successMessage);
 	}
 
@@ -545,8 +430,7 @@ class rex_sql
 	 * @see #setTable()
 	 * @see #setWhere()
 	 */
-	public function delete($successMessage = null)
-	{
+	public function delete($successMessage = null) {
 		return $this->statusQuery('DELETE FROM `'.$this->table.'` '.$this->wherevar, $successMessage);
 	}
 
@@ -579,8 +463,7 @@ class rex_sql
 	 *   $message  = $sql- >getError();
 	 * </code>
 	 */
-	public function statusQuery($query, $successMessage = null)
-	{
+	public function statusQuery($query, $successMessage = null) {
 		$res = $this->setQuery($query);
 
 		if ($successMessage) {
@@ -593,10 +476,9 @@ class rex_sql
 	/**
 	 * Stellt alle Werte auf den Ursprungszustand zurück
 	 */
-	public function flush()
-	{
+	public function flush() {
 		$this->flushValues();
-		$this->fieldnames = array ();
+		$this->fieldnames = array();
 
 		$this->table          = '';
 		$this->wherevar       = '';
@@ -614,8 +496,7 @@ class rex_sql
 	 *
 	 * @see #setValue(), #getValue()
 	 */
-	function flushValues()
-	{
+	function flushValues() {
 		$this->values = array();
 	}
 
@@ -623,99 +504,56 @@ class rex_sql
 	/**
 	 * Setzt den Cursor des Resultsets auf die nächst niedrigere Stelle
 	 */
-	function previous()
-	{
+	function previous() {
 		return --$this->counter;
 	}
 
 	/**
 	 * Setzt den Cursor des Resultsets auf die nächst höhere Stelle
 	 */
-	function next()
-	{
+	function next() {
 		return ++$this->counter;
 	}
 
 	/*
 	 * Prüft ob das Resultset weitere Datensätze enthält
 	 */
-	function hasNext()
-	{
+	function hasNext() {
 		return $this->counter != $this->rows;
 	}
 
 	/**
 	 * Setzt den Cursor des Resultsets zurück zum Anfang
 	 */
-	function reset()
-	{
+	function reset() {
 		$this->counter = 0;
 	}
 
 	/**
 	 * Setzt den Cursor des Resultsets aufs Ende
 	 */
-	function last()
-	{
-		$this->counter = ($this->rows - 1);
+	function last() {
+		$this->counter = $this->rows - 1;
 	}
 
 	/**
 	 * Gibt die letzte InsertId zurück
 	 */
-	public function getLastId()
-	{
+	public function getLastId() {
 		return $this->last_insert_id;
-	}
-
-	/**
-	 * Lädt das komplette Resultset in ein Array und gibt dieses zurück und
-	 * wechselt die DBID falls vorhanden
-	 *
-	 * @access public
-	 * @param string $sql Abfrage
-	 * @param string $fetch_type Default: MYSQL_ASSOC; weitere: MYSQL_NUM, MYSQL_BOTH
-	 * @return array
-	 */
-	public function getDBArray($sql = '', $fetch_type = MYSQL_ASSOC)
-	{
-		return $this->_getArray($sql, $fetch_type, 'DBQuery');
 	}
 
 	/**
 	 * Lädt das komplette Resultset in ein Array und gibt dieses zurück
 	 *
-	 * @access public
-	 * @param string $sql Abfrage
-	 * @param string $fetch_type Default: MYSQL_ASSOC; weitere: MYSQL_NUM, MYSQL_BOTH
+	 * @param  string $sql         Abfrage
+	 * @param  string $fetch_type  Default: MYSQL_ASSOC; weitere: MYSQL_NUM, MYSQL_BOTH
 	 * @return array
 	 */
-	public function getArray($sql = '', $fetch_type = MYSQL_ASSOC)
-	{
-		return $this->_getArray($sql, $fetch_type);
-	}
-
-	/**
-	 * Hilfsfunktion
-	 *
-	 * @access private
-	 * @see getArray()
-	 * @see getDBArray()
-	 * @param string $sql Abfrage
-	 * @param string $fetch_type Default: MYSQL_ASSOC, MYSQL_NUM, MYSQL_BOTH
-	 * @param string $qryType void oder DBQuery
-	 * @return array
-	 */
-	public function _getArray($sql, $fetch_type, $qryType = 'default')
-	{
+	public function getArray($sql = '', $fetch_type = MYSQL_ASSOC) {
 		if ($sql != '') {
-			switch ($qryType)
-			{
-				case 'DBQuery': $this->setDBQuery($sql); break;
-				default       : $this->setQuery($sql);
-			}
+			$this->setQuery($sql);
 		}
-
 
 		$data  = array();
 		$level = error_reporting(0);
@@ -731,56 +569,29 @@ class rex_sql
 	/**
 	 * Gibt die zuletzt aufgetretene Fehlernummer zurück
 	 */
-	function getErrno()
-	{
+	function getErrno() {
 		return $this->errno;
 	}
 
 	/**
 	 * Gibt den zuletzt aufgetretene Fehlernummer zurück
 	 */
-	function getError()
-	{
+	function getError() {
 		return $this->error;
 	}
 
 	/**
 	 * Prüft, ob ein Fehler aufgetreten ist
 	 */
-	public function hasError()
-	{
+	public function hasError() {
 		return !empty($this->error);
-	}
-
-	/**
-	 * Gibt die letzte Fehlermeldung aus
-	 */
-	public function printError($query)
-	{
-		if ($this->debugsql) {
-			$newline = "<br />\n";
-			$error   = $this->getError();
-
-			print '<hr />'."\n";
-			print 'Query: '.nl2br(htmlspecialchars($query)).$newline;
-
-			if ($this->getRows() > 0) {
-				print 'Affected Rows: '.$this->getRows().$newline;
-			}
-
-			if (!empty($error)) {
-				print 'Error Message: '.htmlspecialchars($error).$newline;
-				print 'Error Code: '.$this->getErrno().$newline;
-			}
-		}
 	}
 
 	/**
 	 * Setzt eine Spalte auf den nächst möglich auto_increment Wert
 	 * @param $field Name der Spalte
 	 */
-	public function setNewId($field)
-	{
+	public function setNewId($field) {
 		$sql = new self();
 		$id  = false;
 
@@ -802,8 +613,7 @@ class rex_sql
 	/**
 	 * Gibt die Spaltennamen des ResultSets zurück
 	 */
-	public function getFieldnames()
-	{
+	public function getFieldnames() {
 		if (empty($this->fieldnames)) {
 			for ($i = 0; $i < $this->getFields(); $i++) {
 				$this->fieldnames[] = mysql_field_name($this->result, $i);
@@ -820,8 +630,7 @@ class rex_sql
 	 * @param [$delimiter] Delimiter der verwendet wird, wenn es sich bei $value
 	 * um einen String handelt
 	 */
-	public function escape($value, $delimiter = '')
-	{
+	public function escape($value, $delimiter = '') {
 		if (!is_numeric($value) && $this->identifier) {
 			$value = $delimiter.mysql_real_escape_string($value, $this->identifier).$delimiter;
 		}
@@ -829,8 +638,7 @@ class rex_sql
 		return $value;
 	}
 
-	public static function showTables($dbID = 1)
-	{
+	public static function showTables($dbID = 1) {
 		$sql = new self(1);
 		$sql->setQuery('SHOW TABLES');
 
@@ -847,43 +655,17 @@ class rex_sql
 		return $tables;
 	}
 
-	public static function showColumns($table, $dbID = 1)
-	{
-		$sql = new self(1);
-		$sql->setQuery('SHOW COLUMNS FROM `'.$table.'`');
-
-		$columns = array();
-
-		while ($sql->hasNext()) {
-			$columns[] = array(
-				'name'    => $sql->getValue('Field'),
-				'type'    => $sql->getValue('Type'),
-				'null'    => $sql->getValue('Null'),
-				'key'     => $sql->getValue('Key'),
-				'default' => $sql->getValue('Default'),
-				'extra'   => $sql->getValue('Extra')
-			);
-
-			$sql->next();
-		}
-
-		$sql = null;
-		return $columns;
-	}
-
 	/**
 	 * Gibt die Serverversion zurück
 	 */
-	public static function getServerVersion()
-	{
+	public static function getServerVersion() {
 		return $this->getArray('SELECT VERSION() AS v');
 	}
 
 	/**
 	 * Gibt ein SQL Singelton Objekt zurück
 	 */
-	public static function getInstance($dbID = 1, $createInstance = true)
-	{
+	public static function getInstance($dbID = 1, $createInstance = true) {
 		static $instances = array();
 
 		$dbID = 1;
@@ -901,8 +683,7 @@ class rex_sql
 	/**
 	 * Gibt den Speicher wieder frei
 	 */
-	public function freeResult()
-	{
+	public function freeResult() {
 		if (is_resource($this->result)) {
 			mysql_free_result($this->result);
 			return true;
@@ -915,8 +696,7 @@ class rex_sql
 	 * Prueft die uebergebenen Zugangsdaten auf gueltigkeit und legt ggf. die
 	 * Datenbank an
 	 */
-	public static function checkDbConnection($host, $login, $pw, $dbname, $createDb = false)
-	{
+	public static function checkDbConnection($host, $login, $pw, $dbname, $createDb = false) {
 		global $I18N;
 
 		$err_msg = true;
@@ -947,25 +727,7 @@ class rex_sql
 		return $err_msg;
 	}
 
-	/**
-	 * Schließt die Verbindung zum DB Server
-	 */
-	public static function disconnect($dbID = 1)
-	{
-		$db = sly_Core::config()->get('DATABASE');
-
-		if (!$db['PERSISTENT']) {
-			$db = self::getInstance(1, false);
-
-			if (self::isValid($db) && is_resource($db->identifier)) {
-				mysql_close($db->identifier);
-				self::$ident = null;
-			}
-		}
-	}
-
-	public function addGlobalUpdateFields($user = null)
-	{
+	public function addGlobalUpdateFields($user = null) {
 		global $REX;
 
 		if (!$user) {
@@ -976,8 +738,7 @@ class rex_sql
 		$this->setValue('updateuser', $user);
 	}
 
-	public function addGlobalCreateFields($user = null)
-	{
+	public function addGlobalCreateFields($user = null) {
 		global $REX;
 
 		if (!$user) {
@@ -988,8 +749,17 @@ class rex_sql
 		$this->setValue('createuser', $user);
 	}
 
-	public static function isValid($object)
-	{
+	public static function isValid($object) {
 		return is_object($object) && $object instanceof self;
+	}
+
+	public static function getPrefix() {
+		static $prefix = null;
+
+		if ($prefix === null) {
+			$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+		}
+
+		return $prefix;
 	}
 }

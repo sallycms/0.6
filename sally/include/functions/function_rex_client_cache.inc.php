@@ -110,9 +110,6 @@ function rex_send_content($content, $lastModified, $etag, $environment) {
 		rex_send_checksum(md5(preg_replace('@<!--DYN-->.*<!--/DYN-->@','', $content)));
 	}
 
-	// evtl. offene DB-Verbindungen schließen
-	rex_sql::disconnect(null);
-
 	// content length schicken, damit der Browser einen Ladebalken anzeigen kann
 	header('Content-Length: '.strlen($content));
 
