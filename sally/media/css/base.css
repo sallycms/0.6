@@ -76,16 +76,9 @@ img, iframe {
 	background: none;
 	height: auto;
 
-	#rex-navi-path{
-		border: 0;
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		font-size: 1em;
-
+	.sly-navi-path{
 		li {
 			display: inline;
-			font-weight: normal;
 
 			a.rex-active {
 				color: $drk_grey;
@@ -137,37 +130,6 @@ img, iframe {
 html > body #sly-navi-main {
 	height: auto;
 	min-height: 24px;
-}
-
-/* REX-OUTPUT -------------------------------------------------------------------------------------- REX-OUTPUT*/
-
-.rex-addon-output {
-
-	padding: 15px;
-
-	h2 {
-		color: $drk_grey;
-		background: none;
-		padding: 0;
-		font-size: 1.6em;
-		margin: 15px 0 2px 0;
-		display: block;
-		padding-bottom: 5px;
-		border-bottom: 1px dotted $md_grey;
-		width: 100%;
-
-	}
-
-	h3 {
-		background: none;
-		padding: 0;
-		font-size: 1.2em;
-		margin: 30px 0 0 0;
-		display: block;
-		padding-bottom: 0;
-		border-bottom: 1px dotted $md_grey;
-		width: 100%;
-	}
 }
 
 #rex-wrapper {

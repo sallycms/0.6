@@ -242,7 +242,7 @@ input#rex-form-field-prior {
 }
 
 /*	Rundungen */
-.rex-addon-output-v2 .rex-form,
+.rex-form,
 .rex-form input.rex-form-submit {
 	+border-radius($brd_rad);
 	/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */

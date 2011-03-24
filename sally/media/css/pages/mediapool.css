@@ -18,7 +18,7 @@
 	}
 
 	/* Pfadangabe im Medienpool */
-	#rex-navi-path ul {
+	.sly-navi-path ul {
 		border: 0;
 		list-style: none;
 		margin: 0 0 10px 0;
@@ -32,18 +32,18 @@
 			a.rex-active { color: $drk_grey; }
 		}
 	}
+}
 
-	#sly-mediapool-structure {
-		.rex-form-submit {
-			margin-left: 0;
-		}
+#sly-mediapool-structure {
+	.rex-form-submit {
+		margin-left: 0;
 	}
+}
 
-	#sly-mediapool-structure-form {
-		.rex-form-row {
-			padding: 0;
-			width: 690px;
-		}
+#sly-mediapool-structure-form {
+	.rex-form-row {
+		padding: 0;
+		width: 690px;
 	}
 }
 

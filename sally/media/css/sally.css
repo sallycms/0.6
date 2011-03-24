@@ -60,10 +60,6 @@ caption, legend {
 	&.rex-hidden { display: none; }
 }
 
-.rex-addon-output {
-	ol, ul { margin-left: 20px; }
-}
-
 /*	REX-MESSAGE -------------------------------------------------------------------------- REX-MESSAGE */
 
 .rex-message {
@@ -140,8 +136,7 @@ caption, legend {
 
 /*	Allgemeiner Block (Addon Hilfeseiten) / Addon Seiten */
 
-.rex-area, /* Schön, dass hier das -output fehlt... */
-.rex-addon-output {
+.rex-area {
 	float: left;
 	width: 100%;
 }
@@ -235,7 +230,6 @@ input, textarea, select {
 }
 
 .rex-area,
-.rex-addon-output,
 .rex-content-cols,
 .rex-widget .rex-widget-field input,
 .rex-widget .rex-widget-field select {
@@ -300,25 +294,15 @@ input, textarea, select {
 
 /*	Rundungen */
 .rex-area,
-.rex-addon-output,
 .rex-info-block,
 #rex-output .rex-toolbar {
 	+border-radius($brd_rad);
 	/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
 }
 
-.rex-addon-output .rex-area {
-	+border-radius(0px);
-	border: 0;
-}
-
 .rex-area-col-2,
 .rex-addon-col-2 {
 	position: static;
-}
-
-.rex-addon-output {
-	margin-bottom: 10px;
 }
 
 /* ----------------------------------------------------------------------------------------------------- */

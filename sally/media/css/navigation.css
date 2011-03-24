@@ -64,7 +64,7 @@
 					/* anderes Menü-Icon für Medienpool */
 					&.popup {
 						background-image: url(../background_btn_popup.sld.png);
-						background-position: center top;
+						background-position: center 1px;
 
 						&:hover {
 							background-image: url(../background_btn_popup.sld.png);

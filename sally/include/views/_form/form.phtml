@@ -18,41 +18,40 @@ $attributes = array(
 
 ?>
 
-<div class="rex-addon-output-v2">
-	<div class="rex-form sly-form">
-		<? if (!$omitFormTag): ?>
-		<form <?= sly_Util_HTML::buildAttributeString($attributes) ?>>
-		<? endif ?>
-			<? if (!empty($this->hiddenValues)): ?>
-			<div>
-				<?php
-				foreach ($this->hiddenValues as $name => $value) {
-					$value['type'] = 'hidden';
-					$value['name'] = $name;
-					print '<input '.sly_Util_HTML::buildAttributeString($value).' />';
-				}
-				?>
-			</div>
-			<? endif ?>
-
+<div class="rex-form sly-form">
+	<? if (!$omitFormTag): ?>
+	<form <?= sly_Util_HTML::buildAttributeString($attributes) ?>>
+	<? endif ?>
+		<? if (!empty($this->hiddenValues)): ?>
+		<div>
 			<?php
-			$hasButtonBar = $this->submitButton || $this->resetButton || $this->applyButton || $this->deleteButton;
-
-			if ($hasButtonBar) {
-				$fieldset = end($this->fieldsets);
-				if (!$fieldset) $fieldset = $this->beginFieldset($this->title);
-				include $viewRoot.'buttons.phtml';
-			}
-
-			foreach ($this->fieldsets as $i => $fieldset) {
-				$fieldset->render();
+			foreach ($this->hiddenValues as $name => $value) {
+				$value['type'] = 'hidden';
+				$value['name'] = $name;
+				print '<input '.sly_Util_HTML::buildAttributeString($value).' />';
 			}
 			?>
-		<? if (!$omitFormTag): ?>
-		</form>
+		</div>
 		<? endif ?>
-	</div>
+
+		<?php
+		$hasButtonBar = $this->submitButton || $this->resetButton || $this->applyButton || $this->deleteButton;
+
+		if ($hasButtonBar) {
+			$fieldset = end($this->fieldsets);
+			if (!$fieldset) $fieldset = $this->beginFieldset($this->title);
+			include $viewRoot.'buttons.phtml';
+		}
+
+		foreach ($this->fieldsets as $i => $fieldset) {
+			$fieldset->render();
+		}
+		?>
+	<? if (!$omitFormTag): ?>
+	</form>
+	<? endif ?>
 </div>
+
 
 <? if (!empty($this->focussedElement)): ?>
 <script type="text/javascript">
