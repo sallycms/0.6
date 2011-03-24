@@ -30,7 +30,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 
 	protected function extend($time, $type, $plugin, $state) {
 		list($addon, $pluginName) = $plugin;
-		return rex_register_extension_point('SLY_PLUGIN_'.$time.'_'.$type, $state, array('addon' => $addon, 'plugin' => $pluginName));
+		return sly_Core::dispatcher()->filter('SLY_PLUGIN_'.$time.'_'.$type, $state, array('addon' => $addon, 'plugin' => $pluginName));
 	}
 
 	/**
@@ -123,5 +123,16 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 
 	protected function getVersionKey($plugin) {
 		return 'plugins/'.implode('_', $plugin);
+	}
+
+	/**
+	 * Returns the path in config object
+	 *
+	 * @param  array $plugin  the plugin
+	 * @return string         a path like "ADDON/x/plugins/y"
+	 */
+	protected function getConfPath($plugin) {
+		list($addon, $plugin) = $plugin;
+		return 'ADDON/'.$addon.'/plugins/'.$plugin;
 	}
 }

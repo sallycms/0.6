@@ -13,12 +13,15 @@
  * @ingroup service
  */
 abstract class sly_Service_AddOn_Base {
-	protected $addons;
-	protected $data;
+	abstract public function baseFolder($component);
+	abstract public function setProperty($component, $property, $value);
+	abstract public function getProperty($component, $property, $default = null);
 
-	public function __construct() {
-		$this->data = sly_Core::config()->get('ADDON');
-	}
+	abstract protected function dynFolder($type, $component);
+	abstract protected function extend($time, $type, $component, $state);
+	abstract protected function getI18NPrefix();
+	abstract protected function getVersionKey($component);
+	abstract protected function getConfPath($component);
 
 	/**
 	 * Include file with $REX and $I18N available
@@ -31,22 +34,6 @@ abstract class sly_Service_AddOn_Base {
 	protected function req($filename) {
 		global $REX, $I18N; // Nötig damit im Addon verfügbar
 		require $filename;
-	}
-
-	/**
-	 * Returns the path in config object
-	 *
-	 * @param  mixed $component  addOn as string, plugin as array
-	 * @return string            a path like "ADDON/x"
-	 */
-	private function getConfPath($component) {
-		if (is_array($component)) {
-			list($addon, $plugin) = $component;
-			return 'ADDON/'.$addon.'/plugins/'.$plugin;
-		}
-		else {
-			return 'ADDON/'.$component;
-		}
 	}
 
 	/**
@@ -557,7 +544,14 @@ abstract class sly_Service_AddOn_Base {
 	 */
 	public function getVersion($component, $default = null) {
 		$version     = $this->getProperty($component, 'version', null);
-		$versionFile = $this->baseFolder($component).'/version';
+		$baseFolder  = $this->baseFolder($component);
+		$versionFile = $baseFolder.'/version';
+
+		if ($version === null && file_exists($versionFile)) {
+			$version = trim(file_get_contents($versionFile));
+		}
+
+		$versionFile = $baseFolder.'/VERSION';
 
 		if ($version === null && file_exists($versionFile)) {
 			$version = trim(file_get_contents($versionFile));
@@ -593,9 +587,8 @@ abstract class sly_Service_AddOn_Base {
 	 * @return mixed             true if successful, else an error message as a string
 	 */
 	public function copyAssets($component) {
-		$addonDir  = $this->baseFolder($component);
-		$assetsDir = sly_Util_Directory::join($addonDir, 'assets');
-		$state     = true;
+		$baseDir   = $this->baseFolder($component);
+		$assetsDir = sly_Util_Directory::join($baseDir, 'assets');
 		$target    = $this->publicFolder($component);
 
 		if (!is_dir($assetsDir)) return true;
@@ -656,15 +649,4 @@ abstract class sly_Service_AddOn_Base {
 			sly_Util_Versions::set($key, $version);
 		}
 	}
-
-//	abstract public function install($addonName);         // Installieren
-//	abstract public function uninstall($addonName);       // Deinstallieren
-//	abstract public function activate($addonName);        // Aktivieren
-//	abstract public function deactivate($addonName);      // Deaktivieren
-//	abstract public function delete($addonName);          // Löschen
-//	abstract public function generateConfig();            // Config-Datei neu generieren (z. B. addons.inc.php)
-//	abstract public function publicFolder($addonName);    // data/dyn/public/foo
-//	abstract public function internalFolder($addonName);  // data/dyn/internal/foo
-
-//	abstract protected function baseFolder($addonName);   // sally/include/addons/foo
 }

@@ -9,11 +9,15 @@
  */
 
 /**
+ * AddOn service
+ *
+ * This class implements the base service for addOns.
+ *
  * @author  christoph@webvariants.de
  * @ingroup service
  */
 class sly_Service_AddOn extends sly_Service_AddOn_Base {
-	protected static $addonsLoaded = array();
+	protected static $addonsLoaded = array(); ///< array  list of loaded addOns for depedency aware loading
 
 	public function baseFolder($addonName) {
 		$dir = SLY_ADDONFOLDER.DIRECTORY_SEPARATOR;
@@ -29,16 +33,8 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 		return $dir;
 	}
 
-	protected function dynPath($type, $addonName) {
-		$config = sly_Core::config();
-		$dir    = SLY_BASE.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.$addonName;
-
-		sly_Util_Directory::create($dir);
-		return $dir;
-	}
-
 	protected function extend($time, $type, $addonName, $state) {
-		return rex_register_extension_point('SLY_ADDON_'.$time.'_'.$type, $state, array('addon' => $addonName));
+		return sly_Core::dispatcher()->filter('SLY_ADDON_'.$time.'_'.$type, $state, array('addon' => $addonName));
 	}
 
 	/**
@@ -95,18 +91,6 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 
 		natsort($avail);
 		return $avail;
-	}
-
-	/**
-	 * Prüft, ob ein System-Addon vorliegt
-	 *
-	 * @deprecated  Since v0.3 there are no system addOns anymore.
-	 *
-	 * @param  string $addonName  Name des Addons
-	 * @return boolean            true, wenn es sich um ein System-Addon handelt, sonst false
-	 */
-	public function isSystemAddon($addonName) {
-		return false;
 	}
 
 	public function loadAddon($addonName) {
@@ -191,5 +175,15 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 	public function isRequired($addonName) {
 		$dependency = $this->dependencyHelper($addonName, true, true);
 		return empty($dependency) ? false : reset($dependency);
+	}
+
+	/**
+	 * Returns the path in config object
+	 *
+	 * @param  mixed $component  addOn as string, plugin as array
+	 * @return string            a path like "ADDON/x"
+	 */
+	protected function getConfPath($addonName) {
+		return 'ADDON/'.$addonName;
 	}
 }
