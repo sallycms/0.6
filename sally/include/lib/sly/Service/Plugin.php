@@ -42,7 +42,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 
 		// check requirements
 
-		if (!$this->isInstalled($plugin)) {
+		if (!$this->isAvailable($plugin)) {
 			$this->loadConfig($plugin); // static.yml, defaults.yml
 		}
 
@@ -113,6 +113,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 			sly_Util_Versions::set('plugins/'.implode('_', $plugin), $version);
 		}
 
+		// notify listeners
 		return $this->extend('POST', 'INSTALL', $plugin, true);
 	}
 
