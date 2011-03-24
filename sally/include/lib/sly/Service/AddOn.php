@@ -304,10 +304,7 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 		$this->checkUpdate($addonName);
 
 		$addonConfig = $this->baseFolder($addonName).'config.inc.php';
-
-		if (file_exists($addonConfig)) {
-			$this->req($addonConfig);
-		}
+		$this->req($addonConfig);
 
 		self::$addonsLoaded[] = $addonName;
 	}

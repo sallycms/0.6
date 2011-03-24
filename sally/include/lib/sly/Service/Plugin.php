@@ -80,7 +80,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 
 		if (is_readable($installFile)) {
 			try {
-				$this->mentalGymnasticsInclude($installFile, $plugin);
+				$this->req($installFile);
 			}
 			catch (Exception $e) {
 				return t('plugin_no_install', $plugin, $e->getMessage());
@@ -155,7 +155,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 
 		if (is_readable($uninstallFile)) {
 			try {
-				$this->mentalGymnasticsInclude($uninstallFile, $plugin);
+				$this->req($uninstallFile);
 			}
 			catch (Exception $e) {
 				return t('plugin_no_uninstall', $plugin, $e->getMessage());
@@ -290,63 +290,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 		$this->checkUpdate($plugin);
 
 		$pluginConfig = $this->baseFolder($plugin).'config.inc.php';
-
-		if (file_exists($pluginConfig)) {
-			$this->mentalGymnasticsInclude($pluginConfig, $plugin);
-		}
-	}
-
-	/**
-	 * So sieht eine Methode aus, die sich auf ihr Refactoring freut.
-	 *
-	 * Gott sei Dank sind in Sally die AddOn-Daten im Service gekapselt, sodass
-	 * die alten Install/Uninstall-Scripte problemlos nach $REX['ADDON']
-	 * schreiben können.
-	 */
-	public function mentalGymnasticsInclude($filename, $plugin) {
-		global $REX, $I18N; // Nötig damit im Plugin verfügbar
-
-		// Sicherstellen, dass aktuelle Änderungen von Plugins/AddOns auch in
-		// ADDONsic landen, da zwischenzeitlich keine Synchronisierung zwischen
-		// $REX und sly_Configuration stattfindet.
-
-		$ADDONSsic    = array_merge_recursive(sly_Core::config()->get('ADDON'), $REX['ADDON']);
-		$REX['ADDON'] = array();
-		$__TMP        = array('filename' => $filename, 'plugin' => $plugin);
-
-		require $filename;
-
-		$plugin       = $__TMP['plugin'];
-		$pluginConfig = array();
-
-		list($addonName, $pluginName) = $plugin;
-
-		if (isset($ADDONSsic['plugins'][$addonName])) {
-			$pluginConfig = $ADDONSsic['plugins'][$addonName];
-		}
-
-		if (isset($REX['ADDON']) && is_array($REX['ADDON'])) {
-			foreach (array_keys($REX['ADDON']) as $key) {
-				// alle Eigenschaften, die das Plugin betreffen, verschieben
-
-				if (isset($REX['ADDON'][$key][$pluginName])) {
-					$pluginConfig[$key][$pluginName] = $REX['ADDON'][$key][$pluginName];
-					unset($REX['ADDON'][$key][$pluginName]);
-
-					// ggf leeres Array löschen,
-					// damit es beim Merge später nicht ein Vorhandenes überschreibt
-
-					if (empty($REX['ADDON'][$key])) {
-						unset($REX['ADDON'][$key]);
-					}
-				}
-			}
-		}
-
-		// Addoneinstellungen als Plugindaten speichern
-		$ADDONSsic['plugins'][$addonName] = $pluginConfig;
-		// Alle überbleibenden Keys die ggf. andere Addons beinflussen einfließen lassen
-		$REX['ADDON'] = array_merge_recursive($ADDONSsic, $REX['ADDON']);
+		$this->req($pluginConfig);
 	}
 
 	protected function getI18NPrefix() {
