@@ -147,6 +147,197 @@ abstract class sly_Service_AddOn_Base {
 	}
 
 	/**
+	 * Install a component
+	 *
+	 * @param $component  addOn as string, plugin as array
+	 */
+	public function install($component, $installDump = true) {
+		$baseDir       = $this->baseFolder($component);
+		$installFile   = $baseDir.'install.inc.php';
+		$installSQL    = $baseDir.'install.sql';
+		$configFile    = $baseDir.'config.inc.php';
+		$componentName = is_array($component) ? $component[1] : $component;
+
+		// return error message if an addOn wants to stop the install process
+
+		$state = $this->extend('PRE', 'INSTALL', $component, true);
+
+		if ($state !== true) {
+			return $state;
+		}
+
+		// check for config.inc.php before we do anything
+
+		if (!is_readable($configFile)) {
+			return t('config_not_found');
+		}
+
+		// check requirements
+
+		if (!$this->isAvailable($component)) {
+			$this->loadConfig($component); // static.yml, defaults.yml
+		}
+
+		$requires = sly_makeArray($this->getProperty($component, 'requires'));
+		$aService = sly_Service_Factory::getAddOnService();
+
+		foreach ($requires as $requiredAddon) {
+			if (!$this->isAvailable($requiredAddon)) {
+				return $this->I18N('addon_required', $requiredAddon, $componentName);
+			}
+		}
+
+		// check Sally version
+
+		$sallyVersions = $this->getProperty($component, 'sally');
+
+		if (!empty($sallyVersions)) {
+			$sallyVersions = sly_makeArray($sallyVersions);
+			$versionOK     = false;
+
+			foreach ($sallyVersions as $version) {
+				$versionOK |= $this->checkVersion($version);
+			}
+
+			if (!$versionOK) {
+				return $this->I18N('sally_incompatible', sly_Core::getVersion('X.Y.Z'));
+			}
+		}
+		else {
+			return $this->I18N('addon_has_no_sally_version_info');
+		}
+
+		// include install.inc.php if available
+
+		if (is_readable($installFile)) {
+			try {
+				$this->req($installFile);
+			}
+			catch (Exception $e) {
+				return $this->I18N('no_install', $componentName, $e->getMessage());
+			}
+		}
+
+		// read install.sql and install DB
+
+		if ($installDump && is_readable($installSQL)) {
+			$state = rex_install_dump($installSQL);
+
+			if ($state !== true) {
+				return 'Error found in install.sql:<br />'.$state;
+			}
+		}
+
+		// copy assets to data/dyn/public
+
+		if (is_dir($baseDir.'assets')) {
+			$this->copyAssets($component);
+		}
+
+		// mark component as installed
+		$this->setProperty($component, 'install', true);
+
+		// store current component version
+		$version = $this->getProperty($component, 'version', false);
+
+		if ($version !== false) {
+			if (is_array($component)) {
+				sly_Util_Versions::set('plugins/'.implode('_', $component), $version);
+			}
+			else {
+				sly_Util_Versions::set('addons/'.$component, $version);
+			}
+		}
+
+		// notify listeners
+		return $this->extend('POST', 'INSTALL', $component, true);
+	}
+
+	/**
+	 * Uninstall a component
+	 *
+	 * @param $component  addOn as string, plugin as array
+	 */
+	public function uninstall($component) {
+		$baseDir       = $this->baseFolder($component);
+		$uninstallFile = $baseDir.'uninstall.inc.php';
+		$uninstallSQL  = $baseDir.'uninstall.sql';
+		$componentName = is_array($component) ? $component[1] : $component;
+
+		// if not installed, try to disable if needed
+
+		if (!$this->isInstalled($component)) {
+			return $this->deactivate($component);
+		}
+
+		// check for dependencies (only for addOns)
+
+		if (is_string($component)) {
+			if ($this->isActivated($component)) {
+				$dependencies = $this->getDependencies($component, true);
+
+				if (!empty($dependencies)) {
+					$dep = reset($dependencies);
+					$msg = is_array($dep) ? 'addon_plugin_required' : 'addon_addon_required';
+					return t($msg, $addonName, is_array($dep) ? reset($dep).'/'.end($dep) : $dep);
+				}
+			}
+		}
+
+		// stop if addOn forbids uninstall
+
+		$state = $this->extend('PRE', 'UNINSTALL', $component, true);
+
+		if ($state !== true) {
+			return $state;
+		}
+
+		// deactivate addOn first
+
+		$state = $this->deactivate($component);
+
+		if ($state !== true) {
+			return $state;
+		}
+
+		// include uninstall.inc.php if available
+
+		if (is_readable($uninstallFile)) {
+			try {
+				$this->req($uninstallFile);
+			}
+			catch (Exception $e) {
+				return $this->I18N('no_uninstall', $componentName, $e->getMessage());
+			}
+		}
+
+		// read uninstall.sql
+
+		if (is_readable($uninstallSQL)) {
+			$state = rex_install_dump($uninstallSQL);
+
+			if ($state !== true) {
+				return 'Error found in uninstall.sql:<br />'.$state;
+			}
+		}
+
+		// mark component as not installed
+		$this->setProperty($component, 'install', false);
+
+		// delete files
+		$state  = $this->deletePublicFiles($component);
+		$stateB = $this->deleteInternalFiles($component);
+
+		if ($stateB !== true) {
+			// overwrite or concat stati
+			$state = $state === true ? $stateB : $stateA.'<br />'.$stateB;
+		}
+
+		// notify listeners
+		return $this->extend('POST', 'UNINSTALL', $component, $state);
+	}
+
+	/**
 	 * Activate a component
 	 *
 	 * @param  mixed $component  addOn as string, plugin as array
