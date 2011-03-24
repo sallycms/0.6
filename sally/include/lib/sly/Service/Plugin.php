@@ -20,110 +20,100 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 	 */
 	public function install($plugin, $installDump = true) {
 		list ($addon, $pluginName) = $plugin;
+
 		$pluginDir   = $this->baseFolder($plugin);
 		$installFile = $pluginDir.'install.inc.php';
 		$installSQL  = $pluginDir.'install.sql';
 		$configFile  = $pluginDir.'config.inc.php';
-		$filesDir    = $pluginDir.'files';
+
+		// return error message if an addOn wants to stop the install process
 
 		$state = $this->extend('PRE', 'INSTALL', $plugin, true);
 
+		if ($state !== true) {
+			return $state;
+		}
+
+		// check for config.inc.php before we do anything
+
+		if (!is_readable($configFile)) {
+			return t('config_not_found');
+		}
+
 		// check requirements
 
-		if ($state) {
-			if (!$this->isInstalled($plugin)) {
-				$this->loadConfig($plugin);
-			}
+		if (!$this->isInstalled($plugin)) {
+			$this->loadConfig($plugin); // static.yml, defaults.yml
+		}
 
-			$requires = sly_makeArray($this->getProperty($plugin, 'requires'));
-			$aService = sly_Service_Factory::getAddOnService();
+		$requires = sly_makeArray($this->getProperty($plugin, 'requires'));
+		$aService = sly_Service_Factory::getAddOnService();
 
-			foreach ($requires as $requiredAddon) {
-				if (!$aService->isAvailable($requiredAddon)) {
-					//TODO I18n
-					return 'The addOn '.$requiredAddon.' is required to install this plugIn.';
-				}
-			}
-
-			$sallyVersions = $this->getProperty($plugin, 'sally');
-
-			if (!empty($sallyVersions)) {
-				$sallyVersions = sly_makeArray($sallyVersions);
-				$versionOK     = false;
-
-				foreach ($sallyVersions as $version) {
-					$versionOK |= $this->checkVersion($version);
-				}
-
-				if (!$versionOK) {
-					return 'This plugIn is not marked as compatible with your SallyCMS version ('.sly_Core::getVersion('X.Y.Z').').';
-				}
+		foreach ($requires as $requiredAddon) {
+			if (!$aService->isAvailable($requiredAddon)) {
+				// TODO I18n
+				return 'The addOn '.$requiredAddon.' is required to install this plugIn.';
 			}
 		}
 
-		// Prüfen des Plugin-Ornders auf Schreibrechte,
-		// damit das Plugin später wieder gelöscht werden kann
+		// check Sally version
 
-		if ($state) {
-			if (is_readable($installFile)) {
-				try {
-					$this->mentalGymnasticsInclude($installFile, $plugin);
-				}
-				catch (Exception $e) {
-					$state = t('plugin_no_install', $plugin, $e->getMessage());
-				}
+		$sallyVersions = $this->getProperty($plugin, 'sally');
 
-				if ($state === true) {
-					if (is_readable($configFile)) {
-						if (!$this->isActivated($plugin)) {
-							$this->mentalGymnasticsInclude($configFile, $plugin);
-						}
-					}
-					else {
-						$state = t('plugin_config_not_found');
-					}
+		if (!empty($sallyVersions)) {
+			$sallyVersions = sly_makeArray($sallyVersions);
+			$versionOK     = false;
 
-					if ($installDump && $state === true && is_readable($installSQL)) {
-						$state = rex_install_dump($installSQL);
-
-						if ($state !== true) {
-							$state = 'Error found in install.sql:<br />'.$state;
-						}
-					}
-
-					if ($state === true) {
-						$this->setProperty($plugin, 'install', true);
-					}
-				}
+			foreach ($sallyVersions as $version) {
+				$versionOK |= $this->checkVersion($version);
 			}
-			else {
-				$state = t('plugin_install_not_found');
+
+			if (!$versionOK) {
+				return 'This plugIn is not marked as compatible with your SallyCMS version ('.sly_Core::getVersion('X.Y.Z').').';
 			}
-		}
-
-		$state = $this->extend('POST', 'INSTALL', $plugin, $state);
-
-		// Dateien kopieren
-
-		if ($state === true && is_dir($filesDir)) {
-			$state = $this->copyAssets($plugin);
-		}
-
-		$state = $this->extend('POST', 'ASSET_COPY', $plugin, $state);
-
-		if ($state !== true) {
-			$this->setProperty($plugin, 'install', false);
 		}
 		else {
-			// store current plugin version
-			$version = $this->getProperty($plugin, 'version', false);
+			return t('plugin_has_no_sally_version_info');
+		}
 
-			if ($version !== false) {
-				sly_Util_Versions::set('plugins/'.implode('_', $plugin), $version);
+		// include install.inc.php if available
+
+		if (is_readable($installFile)) {
+			try {
+				$this->mentalGymnasticsInclude($installFile, $plugin);
+			}
+			catch (Exception $e) {
+				return t('plugin_no_install', $plugin, $e->getMessage());
 			}
 		}
 
-		return $state;
+		// read install.sql and install DB
+
+		if ($installDump && is_readable($installSQL)) {
+			$state = rex_install_dump($installSQL);
+
+			if ($state !== true) {
+				return 'Error found in install.sql:<br />'.$state;
+			}
+		}
+
+		// copy assets to data/dyn/public
+
+		if (is_dir($pluginDir.'assets')) {
+			$this->copyAssets($plugin);
+		}
+
+		// mark plugIn as installed
+		$this->setProperty($plugin, 'install', true);
+
+		// store current plugin version
+		$version = $this->getProperty($plugin, 'version', false);
+
+		if ($version !== false) {
+			sly_Util_Versions::set('plugins/'.implode('_', $plugin), $version);
+		}
+
+		return $this->extend('POST', 'INSTALL', $plugin, true);
 	}
 
 	/**
@@ -132,59 +122,69 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 	 * @param array $plugin  Plugin als array(addon, plugin)
 	 */
 	public function uninstall($plugin) {
-		global $REX;
 		list($addon, $pluginName) = $plugin;
 
 		$pluginDir      = $this->baseFolder($plugin);
 		$uninstallFile  = $pluginDir.'uninstall.inc.php';
 		$uninstallSQL   = $pluginDir.'uninstall.sql';
 
+		// if not installed, try to disable if needed
+
 		if (!$this->isInstalled($plugin)) {
-			return true;
+			return $this->deactivate($plugin);
 		}
 
+		// stop if addOn forbids uninstall
+
 		$state = $this->extend('PRE', 'UNINSTALL', $plugin, true);
+
+		if ($state !== true) {
+			return $state;
+		}
+
+		// deactivate addOn first
+
+		$state = $this->deactivate($plugin);
+
+		if ($state !== true) {
+			return $state;
+		}
+
+		// include uninstall.inc.php if available
 
 		if (is_readable($uninstallFile)) {
 			try {
 				$this->mentalGymnasticsInclude($uninstallFile, $plugin);
 			}
 			catch (Exception $e) {
-				$state = t('plugin_no_uninstall', $plugin, $e->getMessage());
-			}
-
-			if ($state === true) {
-				$state = $this->deactivate($plugin);
-
-				if ($state === true && is_readable($uninstallSQL)) {
-					$state = rex_install_dump($uninstallSQL);
-
-					if ($state !== true) {
-						$state = 'Error found in uninstall.sql:<br />'.$state;
-					}
-				}
-
-				if ($state === true) {
-					$this->setProperty($plugin, 'install', false);
-				}
+				return t('plugin_no_uninstall', $plugin, $e->getMessage());
 			}
 		}
-		else {
-			$state = t('plugin_uninstall_not_found');
+
+		// read uninstall.sql
+
+		if (is_readable($uninstallSQL)) {
+			$state = rex_install_dump($uninstallSQL);
+
+			if ($state !== true) {
+				return 'Error found in uninstall.sql:<br />'.$state;
+			}
 		}
 
-		$state = $this->extend('POST', 'UNINSTALL', $plugin, $state);
+		// mark plugIn as not installed
+		$this->setProperty($plugin, 'install', false);
 
-		if ($state === true) $state = $this->deletePublicFiles($plugin);
-		if ($state === true) $state = $this->deleteInternalFiles($plugin);
+		// delete files
+		$state  = $this->deletePublicFiles($plugin);
+		$stateB = $this->deleteInternalFiles($plugin);
 
-		$state = $this->extend('POST', 'ASSET_DELETE', $plugin, $state);
-
-		if ($state !== true) {
-			$this->setProperty($plugin, 'install', true);
+		if ($stateB !== true) {
+			// overwrite or concat stati
+			$state = $state === true ? $stateB : $stateA.'<br />'.$stateB;
 		}
 
-		return $state;
+		// notify listeners
+		return $this->extend('POST', 'UNINSTALL', $plugin, $state);
 	}
 
 	public function baseFolder($plugin) {

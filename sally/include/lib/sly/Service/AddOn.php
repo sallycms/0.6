@@ -20,104 +20,94 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 		$installFile = $addonDir.'install.inc.php';
 		$installSQL  = $addonDir.'install.sql';
 		$configFile  = $addonDir.'config.inc.php';
-		$filesDir    = $addonDir.'assets';
+
+		// return error message if an addOn wants to stop the install process
 
 		$state = $this->extend('PRE', 'INSTALL', $addonName, true);
 
+		if ($state !== true) {
+			return $state;
+		}
+
+		// check for config.inc.php before we do anything
+
+		if (!is_readable($configFile)) {
+			return t('config_not_found');
+		}
+
 		// check requirements
 
-		if ($state) {
-			if (!$this->isAvailable($addonName)) {
-				$this->loadConfig($addonName);
-			}
+		if (!$this->isAvailable($addonName)) {
+			$this->loadConfig($addonName); // static.yml, defaults.yml
+		}
 
-			$requires = sly_makeArray($this->getProperty($addonName, 'requires'));
+		$requires = sly_makeArray($this->getProperty($addonName, 'requires'));
 
-			foreach ($requires as $requiredAddon) {
-				if (!$this->isAvailable($requiredAddon)) {
-					return t('addon_addon_required', $requiredAddon, $addonName);
-				}
-			}
-
-			$sallyVersions = $this->getProperty($addonName, 'sally');
-
-			if (!empty($sallyVersions)) {
-				$sallyVersions = sly_makeArray($sallyVersions);
-				$versionOK     = false;
-
-				foreach ($sallyVersions as $version) {
-					$versionOK |= $this->checkVersion($version);
-				}
-
-				if (!$versionOK) {
-					return t('addon_sally_incompatible', sly_Core::getVersion('X.Y.Z'));
-				}
-			}else {
-				return t('addon_has_no_sally_version_info');
+		foreach ($requires as $requiredAddon) {
+			if (!$this->isAvailable($requiredAddon)) {
+				return t('addon_addon_required', $requiredAddon, $addonName);
 			}
 		}
 
-		// Prüfen des Addon Ornders auf Schreibrechte,
-		// damit das Addon später wieder gelöscht werden kann
+		// check Sally version
 
-		if ($state) {
-			if (is_readable($installFile)) {
-				try {
-					$this->req($installFile);
-				}
-				catch (Exception $e) {
-					$state = t('addon_no_install', $addonName, $e->getMessage());
-				}
+		$sallyVersions = $this->getProperty($addonName, 'sally');
 
-				if ($state === true) {
-					if (is_readable($configFile)) {
-						if (!$this->isActivated($addonName)) {
-							$this->req($configFile);
-						}
-					}
-					else {
-						$state = t('config_not_found');
-					}
+		if (!empty($sallyVersions)) {
+			$sallyVersions = sly_makeArray($sallyVersions);
+			$versionOK     = false;
 
-					if ($installDump && $state === true && is_readable($installSQL)) {
-						$state = rex_install_dump($installSQL);
-
-						if ($state !== true) {
-							$state = 'Error found in install.sql:<br />'.$state;
-						}
-					}
-
-					$this->setProperty($addonName, 'install', true);
-				}
+			foreach ($sallyVersions as $version) {
+				$versionOK |= $this->checkVersion($version);
 			}
-			else {
-				$state = t('addon_install_not_found');
+
+			if (!$versionOK) {
+				return t('addon_sally_incompatible', sly_Core::getVersion('X.Y.Z'));
+			}
+		}
+		else {
+			return t('addon_has_no_sally_version_info');
+		}
+
+		// include install.inc.php if available
+
+		if (is_readable($installFile)) {
+			try {
+				$this->req($installFile);
+			}
+			catch (Exception $e) {
+				return t('addon_no_install', $addonName, $e->getMessage());
 			}
 		}
 
-		$state = $this->extend('POST', 'INSTALL', $addonName, $state);
+		// read install.sql and install DB
+
+		if ($installDump && is_readable($installSQL)) {
+			$state = rex_install_dump($installSQL);
+
+			if ($state !== true) {
+				return 'Error found in install.sql:<br />'.$state;
+			}
+		}
 
 		// copy assets to data/dyn/public
 
-		if ($state === true && is_dir($filesDir)) {
-			$state = $this->copyAssets($addonName);
+		if (is_dir($addonDir.'assets')) {
+			$this->copyAssets($addonName);
 		}
 
-		$state = $this->extend('POST', 'ASSET_COPY', $addonName, $state);
+		// mark addOn as installed
+		$this->setProperty($addonName, 'install', true);
 
-		if ($state !== true) {
-			$this->setProperty($addonName, 'install', false);
-		}
-		else {
-			// store current addOn version
-			$version = $this->getProperty($addonName, 'version', false);
+		// store current addOn version
+		$version = $this->getProperty($addonName, 'version', false);
 
-			if ($version !== false) {
-				sly_Util_Versions::set('addons/'.$addonName, $version);
-			}
+		if ($version !== false) {
+			sly_Util_Versions::set('addons/'.$addonName, $version);
 		}
 
-		return $state;
+		// notify listeners
+		return $this->extend('POST', 'INSTALL', $addonName, true);
 	}
 
 	/**
@@ -131,61 +121,75 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 		$uninstallSQL  = $addonDir.'uninstall.sql';
 		$config        = sly_Core::config();
 
+		// if not installed, try to disable if needed
+
 		if (!$this->isInstalled($addonName)) {
-			return true;
+			return $this->deactivate($addonName);
 		}
+
+		// check for dependencies
 
 		if ($this->isActivated($addonName)) {
 			$dependencies = $this->getDependencies($addonName, true);
 
 			if (!empty($dependencies)) {
 				$dep = reset($dependencies);
-				return t(is_array($dep) ? 'addon_plugin_required' : 'addon_addon_required', $addonName, is_array($dep) ? reset($dep).'/'.end($dep) : $dep);
+				$msg = is_array($dep) ? 'addon_plugin_required' : 'addon_addon_required';
+				return t($msg, $addonName, is_array($dep) ? reset($dep).'/'.end($dep) : $dep);
 			}
 		}
 
+		// stop if addOn forbids uninstall
+
 		$state = $this->extend('PRE', 'UNINSTALL', $addonName, true);
+
+		if ($state !== true) {
+			return $state;
+		}
+
+		// deactivate addOn first
+
+		$state = $this->deactivate($addonName);
+
+		if ($state !== true) {
+			return $state;
+		}
+
+		// include uninstall.inc.php if available
 
 		if (is_readable($uninstallFile)) {
 			try {
 				$this->req($uninstallFile);
 			}
 			catch (Exception $e) {
-				$state = t('addon_no_uninstall', $addonName, $e->getMessage());
-			}
-
-			if ($state === true) {
-				$state = $this->deactivate($addonName);
-
-				if ($state === true && is_readable($uninstallSQL)) {
-					$state = rex_install_dump($uninstallSQL);
-
-					if ($state !== true) {
-						$state = 'Error found in uninstall.sql:<br />'.$state;
-					}
-				}
-
-				if ($state === true) {
-					$this->setProperty($addonName, 'install', false);
-				}
+				return t('addon_no_uninstall', $addonName, $e->getMessage());
 			}
 		}
-		else {
-			$state = t('addon_uninstall_not_found');
+
+		// read uninstall.sql
+
+		if (is_readable($uninstallSQL)) {
+			$state = rex_install_dump($uninstallSQL);
+
+			if ($state !== true) {
+				return 'Error found in uninstall.sql:<br />'.$state;
+			}
 		}
 
-		$state = $this->extend('POST', 'UNINSTALL', $addonName, $state);
+		// mark addOn as not installed
+		$this->setProperty($addonName, 'install', false);
 
-		if ($state === true) $state = $this->deletePublicFiles($addonName);
-		if ($state === true) $state = $this->deleteInternalFiles($addonName);
+		// delete files
+		$state  = $this->deletePublicFiles($addonName);
+		$stateB = $this->deleteInternalFiles($addonName);
 
-		$state = $this->extend('POST', 'ASSET_DELETE', $addonName, $state);
-
-		if ($state !== true) {
-			$this->setProperty($addonName, 'install', true);
+		if ($stateB !== true) {
+			// overwrite or concat stati
+			$state = $state === true ? $stateB : $stateA.'<br />'.$stateB;
 		}
 
-		return $state;
+		// notify listeners
+		return $this->extend('POST', 'UNINSTALL', $addonName, $state);
 	}
 
 	public function baseFolder($addonName) {

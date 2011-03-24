@@ -118,38 +118,39 @@ abstract class sly_Service_AddOn_Base {
 			return true;
 		}
 
-		if ($this->isInstalled($addonORplugin)) {
-			// We can't use the service to get the list of required addOns since the
-			// static.yml has not yet been loaded.
+		if (!$this->isInstalled($addonORplugin)) {
+			return t('no_activation', $addonORplugin);
+		}
 
-			$this->loadConfig($addonORplugin);
+		// We can't use the service to get the list of required addOns since the
+		// static.yml has not yet been loaded.
 
-			$requires     = sly_makeArray($this->getProperty($addonORplugin, 'requires'));
-			$addonService = sly_Service_Factory::getAddOnService();
+		$this->loadConfig($addonORplugin);
 
-			foreach ($requires as $requiredAddon) {
-				if (!$addonService->isAvailable($requiredAddon)) {
-					if (is_array($addonORplugin)) {
-						return t('addon_plugin_required', $requiredAddon, end($addonORplugin));
-					}
-					else {
-						return t('addon_addon_required', $requiredAddon, $addonORplugin);
-					}
+		$requires     = sly_makeArray($this->getProperty($addonORplugin, 'requires'));
+		$addonService = sly_Service_Factory::getAddOnService();
+
+		foreach ($requires as $requiredAddon) {
+			if (!$addonService->isAvailable($requiredAddon)) {
+				if (is_array($addonORplugin)) {
+					return t('addon_plugin_required', $requiredAddon, end($addonORplugin));
+				}
+				else {
+					return t('addon_addon_required', $requiredAddon, $addonORplugin);
 				}
 			}
-
-			$state = $this->extend('PRE', 'ACTIVATE', $addonORplugin, true);
-
-			if ($state === true) {
-				$this->checkUpdate($addonORplugin);
-				$this->setProperty($addonORplugin, 'status', true);
-			}
-		}
-		else {
-			$state = t('no_activation', $addonORplugin);
 		}
 
-		return $this->extend('POST', 'ACTIVATE', $addonORplugin, $state);
+		$state = $this->extend('PRE', 'ACTIVATE', $addonORplugin, true);
+
+		if ($state !== true) {
+			return $state;
+		}
+
+		$this->checkUpdate($addonORplugin);
+		$this->setProperty($addonORplugin, 'status', true);
+
+		return $this->extend('POST', 'ACTIVATE', $addonORplugin, true);
 	}
 
 	/**
@@ -171,17 +172,19 @@ abstract class sly_Service_AddOn_Base {
 
 			if (!empty($dependencies)) {
 				$dep = reset($dependencies);
-				return t(is_array($dep) ? 'addon_plugin_required' : 'addon_addon_required', $addonORplugin, is_array($dep) ? reset($dep).'/'.end($dep) : $dep);
+				$msg = is_array($dep) ? 'addon_plugin_required' : 'addon_addon_required';
+				return t($msg, $addonORplugin, is_array($dep) ? reset($dep).'/'.end($dep) : $dep);
 			}
 		}
 
 		$state = $this->extend('PRE', 'DEACTIVATE', $addonORplugin, true);
 
-		if ($state === true) {
-			$this->setProperty($addonORplugin, 'status', false);
+		if ($state !== true) {
+			return $state;
 		}
 
-		return $this->extend('POST', 'DEACTIVATE', $addonORplugin, $state);
+		$this->setProperty($addonORplugin, 'status', false);
+		return $this->extend('POST', 'DEACTIVATE', $addonORplugin, true);
 	}
 
 	public function publicFolder($addonORplugin) {
