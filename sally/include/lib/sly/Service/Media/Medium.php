@@ -14,7 +14,7 @@
  * @author  christoph@webvariants.de
  * @ingroup service
  */
-class sly_Service_Media_Medium extends sly_Service_Model_Base {
+class sly_Service_Media_Medium extends sly_Service_Model_Base_Id {
 	protected $tablename = 'file';
 
 	protected function makeInstance(array $params) {
