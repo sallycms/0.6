@@ -20,33 +20,55 @@ abstract class sly_Service_AddOn_Base {
 		$this->data = sly_Core::config()->get('ADDON');
 	}
 
+	/**
+	 * Include file with $REX and $I18N available
+	 *
+	 * This prevents the included file from messing with the variables of the
+	 * surrounding code.
+	 *
+	 * @param string $filename
+	 */
 	protected function req($filename) {
 		global $REX, $I18N; // Nötig damit im Addon verfügbar
 		require $filename;
 	}
 
-	private function getConfPath($addonORplugin) {
-		if (is_array($addonORplugin)) {
-			list($addon, $plugin) = $addonORplugin;
+	/**
+	 * Returns the path in config object
+	 *
+	 * @param  mixed $component  addOn as string, plugin as array
+	 * @return string            a path like "ADDON/x"
+	 */
+	private function getConfPath($component) {
+		if (is_array($component)) {
+			list($addon, $plugin) = $component;
 			return 'ADDON/'.$addon.'/plugins/'.$plugin;
 		}
 		else {
-			return 'ADDON/'.$addonORplugin;
+			return 'ADDON/'.$component;
 		}
 	}
 
-	public function loadConfig($addonORplugin) {
+	/**
+	 * Loads the YAML config file
+	 *
+	 * Loads static.yml and defaults.yml and populates some data (like
+	 * permissions) in $REX.
+	 *
+	 * @param mixed $component  addOn as string, plugin as array
+	 */
+	public function loadConfig($component) {
 		global $REX;
 
 		$config       = sly_Core::config();
-		$staticFile   = $this->baseFolder($addonORplugin).'/static.yml';
-		$defaultsFile = $this->baseFolder($addonORplugin).'/defaults.yml';
+		$staticFile   = $this->baseFolder($component).'/static.yml';
+		$defaultsFile = $this->baseFolder($component).'/defaults.yml';
 
 		if (file_exists($staticFile)) {
-			$config->loadStatic($staticFile, $this->getConfPath($addonORplugin));
+			$config->loadStatic($staticFile, $this->getConfPath($component));
 
 			foreach (array('perm', 'extperm') as $type) {
-				$perm = sly_makeArray($this->getProperty($addonORplugin, $type, null));
+				$perm = sly_makeArray($this->getProperty($component, $type, null));
 				$upper = strtoupper($type);
 
 				foreach ($perm as $p) {
@@ -56,7 +78,7 @@ abstract class sly_Service_AddOn_Base {
 		}
 
 		if (file_exists($defaultsFile)) {
-			$config->loadProjectDefaults($defaultsFile, false, $this->getConfPath($addonORplugin));
+			$config->loadProjectDefaults($defaultsFile, false, $this->getConfPath($component));
 		}
 	}
 
@@ -75,17 +97,33 @@ abstract class sly_Service_AddOn_Base {
 		return preg_match('#^'.preg_quote($version, '#').'.*#i', $thisVersion) == 1;
 	}
 
-	public function add($addonORplugin) {
-		$this->setProperty($addonORplugin, 'install', false);
+	/**
+	 * Adds a new component to the global config
+	 *
+	 * @param mixed $component  addOn as string, plugin as array
+	 */
+	public function add($component) {
+		$this->setProperty($component, 'install', false);
 	}
 
-	public function removeConfig($addonORplugin) {
+	/**
+	 * Removes a component from the global config
+	 *
+	 * @param mixed $component  addOn as string, plugin as array
+	 */
+	public function removeConfig($component) {
 		$config = sly_Core::config();
-		$config->remove($this->getConfPath($addonORplugin));
+		$config->remove($this->getConfPath($component));
 	}
 
-	public function getSupportPageEx($addonORplugin) {
-		$supportPage = $this->getSupportPage($addonORplugin, '');
+	/**
+	 * Get string with links to support pages
+	 *
+	 * @param  mixed $component  addOn as string, plugin as array
+	 * @return string            a comma separated list of URLs
+	 */
+	public function getSupportPageEx($component) {
+		$supportPage = $this->getSupportPage($component, '');
 
 		if ($supportPage) {
 			$supportPages = sly_makeArray($supportPage);
@@ -109,103 +147,136 @@ abstract class sly_Service_AddOn_Base {
 	}
 
 	/**
-	 * Aktiviert ein AddOn/Plugin
+	 * Activate a component
 	 *
-	 * @param $addonORplugin Name des Addons
+	 * @param  mixed $component  addOn as string, plugin as array
+	 * @return mixed             true if successful, else an error message as a string
 	 */
-	public function activate($addonORplugin) {
-		if ($this->isActivated($addonORplugin)) {
+	public function activate($component) {
+		if ($this->isActivated($component)) {
 			return true;
 		}
 
-		if (!$this->isInstalled($addonORplugin)) {
-			return t('no_activation', $addonORplugin);
+		if (!$this->isInstalled($component)) {
+			return t('no_activation', $component);
 		}
 
 		// We can't use the service to get the list of required addOns since the
 		// static.yml has not yet been loaded.
 
-		$this->loadConfig($addonORplugin);
+		$this->loadConfig($component);
 
-		$requires     = sly_makeArray($this->getProperty($addonORplugin, 'requires'));
+		$requires     = sly_makeArray($this->getProperty($component, 'requires'));
 		$addonService = sly_Service_Factory::getAddOnService();
 
 		foreach ($requires as $requiredAddon) {
 			if (!$addonService->isAvailable($requiredAddon)) {
-				if (is_array($addonORplugin)) {
-					return t('addon_plugin_required', $requiredAddon, end($addonORplugin));
+				if (is_array($component)) {
+					return t('addon_plugin_required', $requiredAddon, end($component));
 				}
 				else {
-					return t('addon_addon_required', $requiredAddon, $addonORplugin);
+					return t('addon_addon_required', $requiredAddon, $component);
 				}
 			}
 		}
 
-		$state = $this->extend('PRE', 'ACTIVATE', $addonORplugin, true);
+		$state = $this->extend('PRE', 'ACTIVATE', $component, true);
 
 		if ($state !== true) {
 			return $state;
 		}
 
-		$this->checkUpdate($addonORplugin);
-		$this->setProperty($addonORplugin, 'status', true);
+		$this->checkUpdate($component);
+		$this->setProperty($component, 'status', true);
 
-		return $this->extend('POST', 'ACTIVATE', $addonORplugin, true);
+		return $this->extend('POST', 'ACTIVATE', $component, true);
 	}
 
 	/**
-	 * Deaktiviert ein AddOn/Plugin
+	 * Deactivate a component
 	 *
-	 * @param array $addonORplugin  AddOn als String oder Plugin als array(addon, plugin)
+	 * @param  mixed $component  addOn as string, plugin as array
+	 * @return mixed             true if successful, else an error message as a string
 	 */
-	public function deactivate($addonORplugin) {
-		if (!$this->isActivated($addonORplugin)) {
+	public function deactivate($component) {
+		if (!$this->isActivated($component)) {
 			return true;
 		}
 
 		// Requirement check works only for addOns since you cannot specify plugin dependencies
 		// in static.yml (yet?). BUT we have to check plugins for their dependencies.
 
-		if (!is_array($addonORplugin)) {
+		if (!is_array($component)) {
 			$addonService = sly_Service_Factory::getAddOnService();
-			$dependencies = $addonService->getDependencies($addonORplugin, true);
+			$dependencies = $addonService->getDependencies($component, true);
 
 			if (!empty($dependencies)) {
 				$dep = reset($dependencies);
 				$msg = is_array($dep) ? 'addon_plugin_required' : 'addon_addon_required';
-				return t($msg, $addonORplugin, is_array($dep) ? reset($dep).'/'.end($dep) : $dep);
+				return t($msg, $component, is_array($dep) ? reset($dep).'/'.end($dep) : $dep);
 			}
 		}
 
-		$state = $this->extend('PRE', 'DEACTIVATE', $addonORplugin, true);
+		$state = $this->extend('PRE', 'DEACTIVATE', $component, true);
 
 		if ($state !== true) {
 			return $state;
 		}
 
-		$this->setProperty($addonORplugin, 'status', false);
-		return $this->extend('POST', 'DEACTIVATE', $addonORplugin, true);
+		$this->setProperty($component, 'status', false);
+		return $this->extend('POST', 'DEACTIVATE', $component, true);
 	}
 
-	public function publicFolder($addonORplugin) {
-		return $this->dynFolder('public', $addonORplugin);
+	/**
+	 * Get the full path to the public folder
+	 *
+	 * @param  mixed $component  addOn as string, plugin as array
+	 * @return string            full path
+	 */
+	public function publicFolder($component) {
+		return $this->dynFolder('public', $component);
 	}
 
-	public function internalFolder($addonORplugin) {
-		return $this->dynFolder('internal', $addonORplugin);
+	/**
+	 * Get the full path to the internal folder
+	 *
+	 * @param  mixed $component  addOn as string, plugin as array
+	 * @return string            full path
+	 */
+	public function internalFolder($component) {
+		return $this->dynFolder('internal', $component);
 	}
 
-	public function deletePublicFiles($addonORplugin) {
-		return $this->deleteFiles('public', $addonORplugin);
+	/**
+	 * Removes all public files
+	 *
+	 * @param  mixed $component  addOn as string, plugin as array
+	 * @return mixed             true if successful, else an error message as a string
+	 */
+	public function deletePublicFiles($component) {
+		return $this->deleteFiles('public', $component);
 	}
 
-	public function deleteInternalFiles($addonORplugin) {
-		return $this->deleteFiles('internal', $addonORplugin);
+	/**
+	 * Removes all internal files
+	 *
+	 * @param  mixed $component  addOn as string, plugin as array
+	 * @return mixed             true if successful, else an error message as a string
+	 */
+	public function deleteInternalFiles($component) {
+		return $this->deleteFiles('internal', $component);
 	}
 
-	protected function deleteFiles($type, $addonORplugin) {
-		$dir   = $this->dynFolder($type, $addonORplugin);
-		$state = $this->extend('PRE', 'DELETE_'.strtoupper($type), $addonORplugin, true);
+	/**
+	 * Removes all files in a directory
+	 *
+	 * @param  string $type       'public' or 'internal'
+	 * @param  mixed  $component  addOn as string, plugin as array
+	 * @return mixed              true if successful, else an error message as a string
+	 */
+	protected function deleteFiles($type, $component) {
+		$dir   = $this->dynFolder($type, $component);
+		$state = $this->extend('PRE', 'DELETE_'.strtoupper($type), $component, true);
 
 		if ($state !== true) {
 			return $state;
@@ -215,9 +286,17 @@ abstract class sly_Service_AddOn_Base {
 			return $this->I18N('install_cant_delete_files');
 		}
 
-		return $this->extend('POST', 'DELETE_'.strtoupper($type), $addonORplugin, true);
+		return $this->extend('POST', 'DELETE_'.strtoupper($type), $component, true);
 	}
 
+	/**
+	 * Translation helper
+	 *
+	 * All this method does is append 'addon_' or 'plugin_' to an i18n key. Call
+	 * it like t() with as many arguments as needed.
+	 *
+	 * @return string  the translated message
+	 */
 	protected function I18N() {
 		$args    = func_get_args();
 		$args[0] = $this->getI18NPrefix().$args[0];
@@ -225,93 +304,162 @@ abstract class sly_Service_AddOn_Base {
 		return call_user_func('t', $args, false);
 	}
 
-	public function isAvailable($addonORplugin) {
+	/**
+	 * Check if a component is installed and activated
+	 *
+	 * @param  mixed $component  addOn as string, plugin as array
+	 * @return boolean           true if available, else false
+	 */
+	public function isAvailable($component) {
 		// If we execute both checks in this order, we avoid the overhead of checking
 		// the install status of a disabled addon.
-		return $this->isActivated($addonORplugin) && $this->isInstalled($addonORplugin);
+		return $this->isActivated($component) && $this->isInstalled($component);
 	}
 
-	public function isInstalled($addonORplugin) {
-		return $this->getProperty($addonORplugin, 'install', false) == true;
+	/**
+	 * Check if a component is installed
+	 *
+	 * @param  mixed $component  addOn as string, plugin as array
+	 * @return boolean           true if installed, else false
+	 */
+	public function isInstalled($component) {
+		return $this->getProperty($component, 'install', false) == true;
 	}
 
-	public function isActivated($addonORplugin) {
-		return $this->getProperty($addonORplugin, 'status', false) == true;
+	/**
+	 * Check if a component is activated
+	 *
+	 * @param  mixed $component  addOn as string, plugin as array
+	 * @return boolean           true if activated, else false
+	 */
+	public function isActivated($component) {
+		return $this->getProperty($component, 'status', false) == true;
 	}
 
-	public function getAuthor($addonORplugin, $default = null) {
-		return $this->getProperty($addonORplugin, 'author', $default);
+	/**
+	 * Get component author
+	 *
+	 * @param  mixed $component  addOn as string, plugin as array
+	 * @param  mixed $default    default value if no author was specified in static.yml
+	 * @return mixed             the author as given in static.yml
+	 */
+	public function getAuthor($component, $default = null) {
+		return $this->getProperty($component, 'author', $default);
 	}
 
-	public function getSupportPage($addonORplugin, $default = null) {
-		return $this->getProperty($addonORplugin, 'supportpage', $default);
+	/**
+	 * Get support page
+	 *
+	 * @param  mixed $component  addOn as string, plugin as array
+	 * @param  mixed $default    default value if no page was specified in static.yml
+	 * @return mixed             the support page as given in static.yml
+	 */
+	public function getSupportPage($component, $default = null) {
+		return $this->getProperty($component, 'supportpage', $default);
 	}
 
-	public function getVersion($addonORplugin, $default = null) {
-		$version     = $this->getProperty($addonORplugin, 'version', null);
-		$versionFile = $this->baseFolder($addonORplugin).'/version';
+	/**
+	 * Get version
+	 *
+	 * This method tries to get the version from the static.yml. If no version is
+	 * found, it tries to read the contents of a version file in the component's
+	 * directory.
+	 *
+	 * @param  mixed $component  addOn as string, plugin as array
+	 * @param  mixed $default    default value if no version was specified
+	 * @return string            the version
+	 */
+	public function getVersion($component, $default = null) {
+		$version     = $this->getProperty($component, 'version', null);
+		$versionFile = $this->baseFolder($component).'/version';
 
 		if ($version === null && file_exists($versionFile)) {
-			$version = file_get_contents($versionFile);
+			$version = trim(file_get_contents($versionFile));
 		}
 
 		return $version === null ? $default : $version;
 	}
 
-	public function getKnownVersion($addonORplugin, $default = null) {
-		$key     = $this->getVersionKey($addonORplugin);
+	/**
+	 * Get last known version
+	 *
+	 * This method reads the last known version from the local config. This can
+	 * be used to determine whether a component has been updated.
+	 *
+	 * @param  mixed $component  addOn as string, plugin as array
+	 * @param  mixed $default    default value if no version was specified
+	 * @return string            the version
+	 */
+	public function getKnownVersion($component, $default = null) {
+		$key     = $this->getVersionKey($component);
 		$version = sly_Util_Versions::get($key);
 
 		return $version === false ? $default : $version;
 	}
 
-	public function copyAssets($addonORplugin) {
-		$addonDir  = $this->baseFolder($addonORplugin);
+	/**
+	 * Copy assets from component to it's public folder
+	 *
+	 * This method copies all files in 'assets' and pipis CSS files through
+	 * Scaffold.
+	 *
+	 * @param  mixed $component  addOn as string, plugin as array
+	 * @return mixed             true if successful, else an error message as a string
+	 */
+	public function copyAssets($component) {
+		$addonDir  = $this->baseFolder($component);
 		$assetsDir = sly_Util_Directory::join($addonDir, 'assets');
 		$state     = true;
+		$target    = $this->publicFolder($component);
 
 		if (!is_dir($assetsDir)) return true;
 
-		if (!rex_copyDir($assetsDir, $this->publicFolder($addonORplugin))) {
-			$state = t('install_cant_copy_files');
+		if (!rex_copyDir($assetsDir, $target)) {
+			return t('install_cant_copy_files');
 		}
-		else {
-			$folder    = $this->publicFolder($addonORplugin);
-			$targetDir = new sly_Util_Directory($folder);
-			$files     = $targetDir->listRecursive(false, true);
-			$exclude   = sly_makeArray($this->getProperty($addonORplugin, 'noscaffold', array()));
 
-			foreach ($files as $filename) {
-				if (sly_Util_String::endsWith($filename, '.css')) {
-					$relName  = substr($filename, strlen($folder) + 1);
-					$relName  = str_replace('\\', '/', $relName);
-					$excluded = false;
+		$targetDir = new sly_Util_Directory($target);
+		$files     = $targetDir->listRecursive(false, true);
+		$exclude   = sly_makeArray($this->getProperty($component, 'noscaffold', array()));
 
-					foreach ($exclude as $pattern) {
-						if (fnmatch($pattern, $relName)) {
-							$excluded = true;
-							break;
-						}
+		foreach ($files as $filename) {
+			if (sly_Util_String::endsWith($filename, '.css')) {
+				$relName  = substr($filename, strlen($target) + 1);
+				$relName  = str_replace('\\', '/', $relName);
+				$excluded = false;
+
+				foreach ($exclude as $pattern) {
+					if (fnmatch($pattern, $relName)) {
+						$excluded = true;
+						break;
 					}
+				}
 
-					if (!$excluded) {
-						$css = sly_Util_Scaffold::process($filename);
-						file_put_contents($filename, $css);
-					}
+				if (!$excluded) {
+					$css = sly_Util_Scaffold::process($filename);
+					file_put_contents($filename, $css);
 				}
 			}
 		}
 
-		return $state;
+		return true;
 	}
 
-	public function checkUpdate($addonORplugin) {
-		$version = $this->getVersion($addonORplugin, false);
-		$key     = $this->getVersionKey($addonORplugin);
+	/**
+	 * Check if a component version has changed
+	 *
+	 * This method detects changing versions and tries to include the
+	 * update.inc.php if available.
+	 *
+	 * @param mixed $component  addOn as string, plugin as array
+	 */
+	public function checkUpdate($component) {
+		$version = $this->getVersion($component, false);
+		$key     = $this->getVersionKey($component);
 		$known   = sly_Util_Versions::get($key, false);
 
 		if ($known !== false && $version !== false && $known !== $version) {
-			$updateFile = $this->baseFolder($addonORplugin).'update.inc.php';
+			$updateFile = $this->baseFolder($component).'update.inc.php';
 
 			if (file_exists($updateFile)) {
 				$this->req($updateFile);
@@ -331,6 +479,6 @@ abstract class sly_Service_AddOn_Base {
 //	abstract public function generateConfig();            // Config-Datei neu generieren (z. B. addons.inc.php)
 //	abstract public function publicFolder($addonName);    // data/dyn/public/foo
 //	abstract public function internalFolder($addonName);  // data/dyn/internal/foo
-//
+
 //	abstract protected function baseFolder($addonName);   // sally/include/addons/foo
 }
