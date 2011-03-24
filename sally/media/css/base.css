@@ -90,10 +90,8 @@ img, iframe {
 	h1 {
 		padding-top: 5px; /* Ausrichtung der Überschrift mit der Navi-Überschrift */
 		margin-bottom: 4px; /* Ausrichtung der Überschrift mit der Navi-Überschrift */
-		font-weight: normal;
 		font-size: 2em;
 		height: 35px;
-		color: $drk_grey;
 		text-shadow: 1px 1px 0px rgba(255,255,255,.8);
 	}
 	.rex-title-row {
@@ -294,8 +292,4 @@ ul.rex-ul1 {
 
 .rex-me1 {
 	margin: 20px 0 20px 0;
-}
-
-#sly-footer {
-	+clearfix;
 }
