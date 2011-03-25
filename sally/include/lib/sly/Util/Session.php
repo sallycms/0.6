@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
@@ -13,16 +12,13 @@
  * @ingroup util
  */
 class sly_Util_Session {
-
 	private static $uniqueInstallationId;
 
 	/**
 	 * Start a session if it is not already started
-	 *
 	 */
 	public static function start() {
-		if (!session_id())
-			session_start();
+		if (!session_id()) session_start();
 	}
 
 	/**
@@ -92,7 +88,4 @@ class sly_Util_Session {
 
 		return self::$uniqueInstallationId;
 	}
-
 }
-
-?>
