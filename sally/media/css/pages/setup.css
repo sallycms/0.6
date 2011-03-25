@@ -40,7 +40,7 @@ ul.rex-setup-language {
 
 #rex-page-setup {
 
-	#rex-wrapper,
+	#sly-wrapper,
 	#sly-footer{
 		float: none;
 		width: 650px;
