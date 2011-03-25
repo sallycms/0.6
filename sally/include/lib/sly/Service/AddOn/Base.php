@@ -474,7 +474,7 @@ abstract class sly_Service_AddOn_Base {
 		$args    = func_get_args();
 		$args[0] = $this->getI18NPrefix().$args[0];
 
-		return call_user_func('t', $args, false);
+		return call_user_func_array('t', $args);
 	}
 
 	/**
