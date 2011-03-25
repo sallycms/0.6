@@ -80,19 +80,7 @@ if (!$config->get('SETUP')){
 	sly_Core::registerVarType('rex_var_media');
 
 	// Sprachen laden
-	$REX['CLANG'] = sly_Core::cache()->get('sly.language', 'all', null);
-
-	if (!is_array($REX['CLANG'])) {
-		$REX['CLANG'] = array();
-		$clangs       = sly_Service_Factory::getService('Language')->find(null, null, 'id');
-
-		foreach ($clangs as $clang) {
-			$REX['CLANG'][$clang->getId()] = $clang;
-		}
-
-		sly_Core::cache()->set('sly.language', 'all', $REX['CLANG']);
-	}
-
+	$REX['CLANG']      = sly_Util_Language::findAll();
 	$REX['CUR_CLANG']  = sly_Core::getCurrentClang();
 	$REX['ARTICLE_ID'] = sly_Core::getCurrentArticleId();
 }

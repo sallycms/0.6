@@ -13,15 +13,18 @@
  */
 class sly_Util_Language {
 	public static function findAll() {
-		static $languages = null;
+		$cache     = sly_Core::cache();
+		$languages = $cache->get('sly.language', 'all', null);
 
 		if ($languages === null) {
-			$list      = sly_Service_Factory::getService('Language')->find();
+			$list      = sly_Service_Factory::getService('Language')->find(null, null, 'id');
 			$languages = array();
 
 			foreach ($list as $language) {
 				$languages[$language->getId()] = $language;
 			}
+
+			$cache->set('sly.language', 'all', $languages);
 		}
 
 		return $languages;
