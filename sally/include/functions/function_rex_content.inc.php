@@ -498,13 +498,13 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
  *
  * @return boolean false bei Fehler, sonst die Artikel Id des neue kopierten Artikels
  */
-function rex_copyArticle($id, $to_cat_id)
-{
+function rex_copyArticle($id, $to_cat_id) {
 	global $REX;
 
 	$id        = (int) $id;
 	$to_cat_id = (int) $to_cat_id;
 	$new_id    = '';
+	$prefix    = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 
 	foreach (array_keys($REX['CLANG']) as $clang) {
 		// Validierung der id & from_cat_id
@@ -528,12 +528,11 @@ function rex_copyArticle($id, $to_cat_id)
 				}
 
 				$art_sql = new rex_sql();
-				$art_sql->setTable($REX['DATABASE']['TABLE_PREFIX'].'article');
+				$art_sql->setTable($prefix.'article');
 
 				if (empty($new_id)) {
 					$new_id = $art_sql->setNewId('id');
 				}
-
 
 				$art_sql->setValue('id',        $new_id); // neuen auto_incrment erzwingen
 				$art_sql->setValue('re_id',     $to_cat_id);
@@ -562,21 +561,19 @@ function rex_copyArticle($id, $to_cat_id)
 				rex_newArtPrio($to_cat_id, $clang, 1, 0);
 
 				// ----- EXTENSION POINT
-    			rex_register_extension_point('ART_ADDED', '',
-			      	array (
-				        'id' => $new_id,
-				        'clang'  => $clang,
-				        'status' => 0,
-				        'name'   => $from_data['name'],
-				        're_id'  => $to_cat_id,
-				        'prior'  => 9999999,
-				        'path'   => $path,
-				        'type' => $from_data['type']
-			      	)
-    			);
-    			sly_Core::cache()->delete('sly.article.list', $to_cat_id);
+				rex_register_extension_point('SLY_ART_COPIED', $id, array(
+					'id'     => $new_id,
+					'clang'  => $clang,
+					'status' => 0,
+					'name'   => $from_data['name'],
+					're_id'  => $to_cat_id,
+					'prior'  => 9999999,
+					'path'   => $path,
+					'type'   => $from_data['type']
+				));
 
-
+				sly_Core::cache()->delete('sly.article.list', $to_cat_id.'_'.$clang.'_0');
+				sly_Core::cache()->delete('sly.article.list', $to_cat_id.'_'.$clang.'_1');
 				$art_sql->flush();
 			}
 			else {
