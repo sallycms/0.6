@@ -19,11 +19,11 @@
 // $REX['USER']->isValueOf("rights","csw[0]")
 
 $langService = sly_Service_Factory::getService('Language');
-$languages   = $langService->find();
+$_languages   = $langService->find();
 $user        = sly_Util_User::getCurrentUser();
 
 
-if (count($languages) > 1) {
+if (count($_languages) > 1) {
 	print '
 <!-- *** OUTPUT OF CLANG-TOOLBAR - START *** -->
 	<div id="rex-clang" class="rex-toolbar">
@@ -34,7 +34,7 @@ if (count($languages) > 1) {
 	$stop = false;
 	$i    = 1;
 
-	foreach ($languages as $language) {
+	foreach ($_languages as $language) {
 		$clangID = $language->getId();
 		if ($i == 1) {
 			print '<li class="rex-navi-first rex-navi-clang-'.$clangID.'">';
@@ -79,5 +79,5 @@ else {
 }
 
 unset($langService);
-unset($languages);
+unset($_languages);
 unset($user);

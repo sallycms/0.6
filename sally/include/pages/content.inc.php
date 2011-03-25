@@ -25,6 +25,11 @@ $clang       = sly_request('clang',       'rex-clang-id', $REX['START_CLANG_ID']
 $slice_id    = sly_request('slice_id',    'rex-slice-id', '');
 $function    = sly_request('function',    'string');
 $slot        = sly_request('slot',        'string');
+$languages   = sly_Util_Language::findAll();
+
+foreach ($languages as $id => $lang) {
+	$languages[$id] = $lang->getName();
+}
 
 $article_revision = 0;
 $slice_revision   = 0;
@@ -78,7 +83,6 @@ if (!is_null($OOArt)) {
 	$warning  = sly_request('warning', 'string');
 	$info     = sly_request('info', 'string');
 
-
 	// Sprachenblock
 
 	$sprachen_add = '&amp;mode='.$mode.'&amp;category_id='.$category_id.'&amp;article_id='.$article_id;
@@ -99,7 +103,6 @@ if (!is_null($OOArt)) {
 		'article_revision' => &$article_revision,
 		'slice_revision'   => &$slice_revision
 	));
-
 
 	if (!($KATPERM || $REX['USER']->hasPerm('article['.$article_id.']'))) {
 		// keine Rechte
@@ -726,7 +729,7 @@ if (!is_null($OOArt)) {
 				$form->add(new sly_Form_ButtonBar(array('submit' => $button)));
 			}
 
-			if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('article2startpage[]') || $REX['USER']->hasPerm('moveArticle[]') || $REX['USER']->hasPerm('copyArticle[]') || ($REX['USER']->hasPerm('copyContent[]') && count($REX['CLANG']) > 1)) {
+			if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('article2startpage[]') || $REX['USER']->hasPerm('moveArticle[]') || $REX['USER']->hasPerm('copyArticle[]') || ($REX['USER']->hasPerm('copyContent[]') && count($languages) > 1)) {
 				// ZUM STARTARTIKEL MACHEN
 
 				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('article2startpage[]')) {
@@ -745,11 +748,11 @@ if (!is_null($OOArt)) {
 
 				// INHALTE KOPIEREN
 
-				if (($REX['USER']->isAdmin() || $REX['USER']->hasPerm('copyContent[]')) && count($REX['CLANG']) > 1) {
-					$lang_a = new sly_Form_Select_DropDown('clang_a', t('content_contentoflang'), sly_request('clang_a', 'rex-clang-id', null), $REX['CLANG'], 'clang_a');
+				if (($REX['USER']->isAdmin() || $REX['USER']->hasPerm('copyContent[]')) && count($languages) > 1) {
+					$lang_a = new sly_Form_Select_DropDown('clang_a', t('content_contentoflang'), sly_request('clang_a', 'rex-clang-id', null), $languages, 'clang_a');
 					$lang_a->setSize(1);
 
-					$lang_b = new sly_Form_Select_DropDown('clang_b', t('content_to'), sly_request('clang_b', 'rex-clang-id', null), $REX['CLANG'], 'clang_b');
+					$lang_b = new sly_Form_Select_DropDown('clang_b', t('content_to'), sly_request('clang_b', 'rex-clang-id', null), $languages, 'clang_b');
 					$lang_b->setSize(1);
 
 					$form->beginFieldset(t('content_submitcopycontent'), null, 2);
