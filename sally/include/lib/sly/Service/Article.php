@@ -54,7 +54,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 			foreach ($db as $row) {
 				$types[$row['clang']] = $row['type'];
 			}
-			
+
 			$db->select('article', 'clang, catname', 'id = '.$parentID.' AND catprior <> 0 AND startpage = 1');
 			foreach ($db as $row) {
 				$catnames[$row['clang']] = $row['catname'];
@@ -108,11 +108,13 @@ class sly_Service_Article extends sly_Service_Model_Base {
 			'ORDER BY prior ASC'
 		);
 
-		// Kategorie in allen Sprachen anlegen
+		// Artikel in allen Sprachen anlegen
 
 		$defaultType = sly_Core::config()->get('DEFAULT_ARTICLE_TYPE', '');
+		$dispatcher  = sly_Core::dispatcher();
 
 		foreach (array_keys($REX['CLANG']) as $clangID) {
+			$type    = !empty($types[$clangID]) ? $types[$clangID] : $defaultType;
 			$article = new sly_Model_Article(array(
 				        'id' => $newID,
 				     're_id' => $parentID,
@@ -124,7 +126,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 				     'prior' => $position,
 				      'path' => $path,
 				    'status' => $status ? 1 : 0,
-				      'type' => !empty($types[$clangID]) ? $types[$clangID] : $defaultType,
+				      'type' => $article,
 				     'clang' => $clangID,
 				  'revision' => 0
 			));
@@ -135,19 +137,19 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 			$cache->delete('sly.article.list', $parentID.'_'.$clangID.'_0');
 			$cache->delete('sly.article.list', $parentID.'_'.$clangID.'_1');
+
+			// System benachrichtigen
+
+			$dispatcher->notify('SLY_ART_ADDED', $newID, array(
+				're_id'    => $parentID,
+				'clang'    => $clangID,
+				'name'     => $name,
+				'position' => $position,
+				'path'     => $path,
+				'status'   => $status,
+				'type'     => $type
+			));
 		}
-
-		// System benachrichtigen
-
-		$dispatcher = sly_Core::dispatcher();
-		$dispatcher->notify('SLY_ART_ADDED', $newID, array(
-			're_id'    => $parentID,
-			'clang'    => $clangID,
-			'name'     => $name,
-			'position' => $position,
-			'path'     => $path,
-			'status'   => $status
-		));
 
 		return $newID;
 	}

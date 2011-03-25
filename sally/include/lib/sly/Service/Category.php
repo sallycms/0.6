@@ -112,6 +112,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		// Kategorie in allen Sprachen anlegen
 
 		$defaultType = sly_Core::config()->get('DEFAULT_ARTICLE_TYPE', '');
+		$dispatcher  = sly_Core::dispatcher();
 
 		foreach (array_keys($REX['CLANG']) as $clangID) {
 			if (!empty($startpageTypes[$clangID])) {
@@ -142,19 +143,19 @@ class sly_Service_Category extends sly_Service_Model_Base {
 			$db->insert($this->tablename, array_merge($cat->getPKHash(), $cat->toHash()));
 
 			$cache->delete('sly.category.list', $parentID.'_'.$clangID);
+
+			// System benachrichtigen
+
+			$dispatcher->notify('SLY_CAT_ADDED', $newID, array(
+				're_id'    => $parentID,
+				'clang'    => $clangID,
+				'name'     => $name,
+				'position' => $position,
+				'path'     => $path,
+				'status'   => $status,
+				'type'     => $type
+			));
 		}
-
-		// System benachrichtigen
-
-		$dispatcher = sly_Core::dispatcher();
-		$dispatcher->notify('SLY_CAT_ADDED', $newID, array(
-			're_id'    => $parentID,
-			'clang'    => $clangID,
-			'name'     => $name,
-			'position' => $position,
-			'path'     => $path,
-			'status'   => $status
-		));
 
 		return $newID;
 	}
