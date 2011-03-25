@@ -1,5 +1,5 @@
 .rex-table,
-.sly-table{
+.sly-table {
 	clear: both;
 	width: 100%;
 	background-color: #fff;
@@ -16,7 +16,7 @@
 		height: 5px;
 	}
 
-	
+
 	th {
 		text-align: left;
 		color: #fff;
@@ -46,10 +46,6 @@
 		background-color: #FAF9F5;
 	}
 
-}
-
-.rex-table-mrgn, .sly-table {
-	margin-bottom: 10px;
 }
 
 .sly-table-extras {

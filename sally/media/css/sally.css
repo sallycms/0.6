@@ -252,6 +252,10 @@ input, textarea, select {
 	float: right;
 	width: 797px;
 	padding-bottom: 36px;
+
+	> p, table.sly-table {
+		margin: 10px 0;
+	}
 }
 
 /*	Sprachen, Content (Editiermodus, Metadaten, Anzeigen) */
