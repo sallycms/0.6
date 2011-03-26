@@ -28,19 +28,19 @@
  */
 
 function sly_get($name, $type, $default = '') {
-	$value = rex_get($name, $type, $default, false);
+	$value = _rex_array_key_cast($_GET, $name, $type, $default, false);
 	$value = strtolower($type) == 'string' ? trim($value) : $value;
 	return $value;
 }
 
 function sly_post($name, $type, $default = '') {
-	$value = rex_post($name, $type, $default, false);
+	$value = _rex_array_key_cast($_POST, $name, $type, $default, false);
 	$value = strtolower($type) == 'string' ? trim($value) : $value;
 	return $value;
 }
 
 function sly_request($name, $type, $default = '') {
-	$value = rex_request($name, $type, $default, false);
+	$value = _rex_array_key_cast($_REQUEST, $name, $type, $default, false);
 	$value = strtolower($type) == 'string' ? trim($value) : $value;
 	return $value;
 }
