@@ -93,7 +93,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 	}
 
 	protected function initOpener() {
-		$this->opener = sly_request('opener_input_field', 'string', rex_session('media[opener_input_field]', 'string'));
+		$this->opener = sly_request('opener_input_field', 'string', sly_Util_Session::get('media[opener_input_field]', 'string'));
 		sly_util_Session::set('media[opener_input_field]', $this->opener);
 	}
 
