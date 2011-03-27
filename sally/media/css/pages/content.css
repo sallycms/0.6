@@ -1,24 +1,15 @@
+#rex-clang {
+	a.rex-active {
+		color: $drk_grey;	
+	}
+}
+
+
 .rex-content-header {
-	position: relative;
 	width: 100%;
 	margin-bottom: 10px;
-
-	#rex-clang {
-		ul li {
-			display: inline;
-			font-weight: normal;
-			liste-style: none;
-
-			a {
-				padding: 0 5px;
-				font-weight: bold;
-			}
-
-			&.rex-navi-first a {
-				padding-left: 0;
-			}
-		}
-	}
+	+border-radius($brd_rad);
+	+clearfix;
 
 	#rex-navi-slots { float: left; }
 
@@ -28,7 +19,7 @@
 		&.rex-navi-content { float: right; }
 
 		li {
-			liste-style: none;
+			list-style: none;
 			display: inline;
 			margin: 0 0 0 5px; /* Abstand der Listenelemente zu einander, s. Buttons Editier-Modus etc. */
 
@@ -55,31 +46,8 @@
 	}
 }
 
-.rex-content-body {
-	clear: both;
-	float: left;
-	width: 100%;
-}
-
 .rex-content-header ul li a {
 	color: #1f9eb5;
-}
-
-/*	Background Image */
-
-.rex-content-header { background-image: none; }
-.rex-content-body-2 { padding: 0; }
-
-/*	Rundungen */
-.rex-content-header,
-.rex-content-body {
-	+clearfix;
-	+border-radius($brd_rad);
-}
-
-.rex-content-body {
-	+border-radius(0px);
-	border: 0;
 }
 
 /*	Editmode */

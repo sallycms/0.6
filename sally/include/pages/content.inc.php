@@ -559,10 +559,7 @@ if (!is_null($OOArt)) {
 			if (!empty($info))    print rex_info($info);
 		}
 
-		print '
-<div class="rex-content-body">
-	<div class="rex-content-body-2">
-	';
+		print '<div class="rex-content-body">';
 
 		if ($mode == 'edit') {
 			// START: Slice move up/down
@@ -808,7 +805,6 @@ if (!is_null($OOArt)) {
 		}
 
 		print '
-	</div>
 </div>
 <!-- *** OUTPUT OF ARTICLE-CONTENT - END *** -->
 ';

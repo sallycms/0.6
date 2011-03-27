@@ -14,7 +14,7 @@
 
 /*	System: Einstellungen */
 
-#rex-form-system-setup {
+#sly-form-system-setup {
 	fieldset { padding-bottom: 1em; }
 
 	legend {
@@ -63,7 +63,7 @@
 
 /*	System: Sprachen */
 
-#rex-form-specials-languages {
+#sly-form-specials-languages {
 	fieldset table {
 		caption {
 			+border-radius(0);

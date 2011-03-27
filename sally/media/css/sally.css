@@ -27,7 +27,7 @@ img.sly-sprite, a.sly-sprite, span.sly-sprite {
 	height: 16px;
 	width: 16px;
 
-	span { display: none; }
+	span { +hide; }
 }
 
 a.sly-sprite, span.sly-sprite {
@@ -209,12 +209,6 @@ caption, legend {
 	text-indent: -1000em;
 }
 
-/* Grau - Dunkel */
-
-#rex-clang ul li a.rex-active {
-	color: $drk_grey;
-}
-
 .rex-tx3 { color: #188D12; } /* Grün */
 .rex-tx2 { color: #AF112F; } /* Rot */
 
@@ -253,7 +247,7 @@ input, textarea, select {
 	width: 797px;
 	padding-bottom: 36px;
 
-	> p, table.sly-table {
+	> p, .sly-table {
 		margin: 10px 0;
 	}
 }
@@ -270,44 +264,15 @@ input, textarea, select {
 /*	Icons */
 
 .rex-i-element-text {
-	display: inline !important;
-	position: absolute !important;
-	left: -1000px !important;
-	top: -1000px !important;
-	width: 0px !important;
-	height: 0px !important;
-	overflow: hidden !important;
-	background-color: #FFF !important;
-}
-
-/*	Extras */
-
-#rex-redaxo-link {
-	position: absolute;
-	left: 0;
-	top: 0px;
-	width: 200px;
-
-	a {
-		display: block;
-		width: 200px;
-		height: 75px;
-		text-indent: -1000em;
-	}
+	+hide;
 }
 
 /*	Rundungen */
 .rex-area,
-.rex-info-block,
-#rex-output .rex-toolbar {
+.rex-info-block {
 	+border-radius($brd_rad);
-	/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
 }
 
-.rex-area-col-2,
-.rex-addon-col-2 {
-	position: static;
-}
 
 /* ----------------------------------------------------------------------------------------------------- */
 

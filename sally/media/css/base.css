@@ -73,8 +73,6 @@ img, iframe {
 #rex-title {
 
 	margin: 0 0 5px 0;
-	background: none;
-	height: auto;
 
 	.sly-navi-path{
 		li {
@@ -95,7 +93,6 @@ img, iframe {
 		text-shadow: 1px 1px 0px rgba(255,255,255,.8);
 	}
 	.rex-title-row {
-		width: 100%;
 		/* gestrichelte Linien über und unter der Pfadangabe */
 		&-sub {
 			border-top: 1px dotted $md_grey;
@@ -125,33 +122,23 @@ img, iframe {
 
 /* ----------------------------------------------------------------------------------------------------------- */
 
-html > body #sly-navi-main {
-	height: auto;
-	min-height: 24px;
-}
 
-#sly-wrapper {
 
-	.rex-toolbar {
+.rex-toolbar {
+	background-color: #fff;
+	position: relative;
+	margin-bottom: 10px;
+	+border-radius($brd_rad);
 
-		background-color: #fff;
-		position: relative;
-		margin-bottom: 10px;
-
-		&-content {
-			margin: 0;
-			padding: 10px;
-
-			ul li {
-				list-style: none;
-				display: inline;
-				margin: 0 5px 0 0; /* Abstand der Listenelemente zu einander, s. Sprachen */
-			}
-		}
+	&-content {
+		padding: 10px;
 	}
-
-
-} 
+	ul li {
+		list-style: none;
+		display: inline;
+		margin: 0 5px 0 0; /* Abstand der Listenelemente zu einander, s. Sprachen */
+	}
+}
 
 /* ----------------------------------------------------------------------------------------------------------- */
 

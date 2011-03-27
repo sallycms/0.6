@@ -3,19 +3,6 @@ input.rex-form-text {
 	border: 1px solid $lt_grey;
 }
 
-/*
-input.rex-form-submit {
-	background-image: url(../button.gif);
-	background-repeat: repeat-x;
-	padding: 1px 6px;
-	color: $drk_grey;
-	text-decoration: none;
-	border: 1px solid $lt_grey;
-	+border-radius($brd_rad);
-	cursor: pointer;
-	margin-left: 145px;
-} */
-
 p.rex-button a, input.rex-form-submit, a.sly-button {
 	background-image: url(../button.gif);
 	background-repeat: repeat-x;
@@ -41,11 +28,11 @@ a.sly-button {
 }
 
 
-input#rex-form-field-name {
+#sly-form-field-name {
 	width: 97%;
 }
 
-input#rex-form-field-prior {
+#sly-form-field-prior {
 	width: 87%;
 }
 
@@ -98,7 +85,6 @@ input#rex-form-field-prior {
 
 		textarea {
 			padding: 2px;
-			&.rex-form-textarea-v2 { width: 94%; }
 		}
 	}
 
