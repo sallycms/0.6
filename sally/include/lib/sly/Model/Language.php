@@ -21,7 +21,7 @@ class sly_Model_Language extends sly_Model_Base_Id {
 
 	/**
 	 *
-	 * @return string 
+	 * @return string
 	 */
 	public function getName() {
 		return $this->name;
@@ -45,10 +45,9 @@ class sly_Model_Language extends sly_Model_Base_Id {
 
 	/**
 	 *
-	 * @param string $locale 
+	 * @param string $locale
 	 */
 	public function setLocale($locale) {
 		$this->locale = trim($locale);
 	}
-
 }

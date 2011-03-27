@@ -47,7 +47,7 @@ class sly_Authorisation {
 		$rights = sly_Core::config()->get('PERM');
 		$addonService = sly_Service_Factory::getAddOnService();
 		$pluginService = sly_Service_Factory::getPluginService();
-		
+
 		$addons = $addonService->getAvailableAddons();
 		foreach ($addons as $addon) {
 			$plugins = $pluginService->getAvailablePlugins($addon);
@@ -67,5 +67,4 @@ class sly_Authorisation {
 
 		return $rights;
 	}
-
 }

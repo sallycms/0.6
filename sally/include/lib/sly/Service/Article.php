@@ -126,7 +126,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 				     'prior' => $position,
 				      'path' => $path,
 				    'status' => $status ? 1 : 0,
-				      'type' => $article,
+				      'type' => $type,
 				     'clang' => $clangID,
 				  'revision' => 0
 			));

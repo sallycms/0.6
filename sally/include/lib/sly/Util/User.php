@@ -34,10 +34,9 @@ class sly_Util_User {
 	 * @return sly_Model_User
 	 */
 	public static function getCurrentUser() {
-		if(self::$currentUser === false) {
+		if (self::$currentUser === false) {
 			self::$currentUser = sly_Service_Factory::getUserService()->getCurrentUser();
 		}
 		return self::$currentUser;
 	}
-
 }

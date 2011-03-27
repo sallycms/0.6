@@ -49,23 +49,25 @@ class sly_Service_User extends sly_Service_Model_Base_Id {
 	}
 
 	public function login($login, $password) {
-		$user = $this->findByLogin($login);
+		$user    = $this->findByLogin($login);
 		$loginOK = false;
-		if($user) {
+
+		if ($user) {
 			$loginOK = $user->getLastTryDate() < time()-sly_Core::config()->get('RELOGINDELAY')
 					&& $user->getStatus() == 1
 					&& $this->checkPassword($user, $password);
 
-			if($loginOK) {
+			if ($loginOK) {
 				sly_Util_Session::set('UID', $user->getId());
 				sly_Util_Session::regenerate_id();
 			}
+
 			$user->setLastTryDate(time());
 			$this->save($user);
 		}
+
 		return $loginOK;
 	}
-
 
 	public function logout() {
 		sly_Util_Session::set('UID', '');
@@ -81,5 +83,4 @@ class sly_Service_User extends sly_Service_Model_Base_Id {
 	public function checkPassword(sly_Model_User $user, $password) {
 		return sly_Util_User::getPasswordHash($user, $password) == $user->getPassword();
 	}
-
 }

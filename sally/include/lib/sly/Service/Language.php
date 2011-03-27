@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
@@ -46,7 +45,7 @@ class sly_Service_Language extends sly_Service_Model_Base_Id {
 			$sql->cleanEndTransaction($e);
 			throw $e;
 		}
-		
+
 		sly_Core::dispatcher()->notify('CLANG_ADDED', '', array('id' => $newLanguage->getId(), 'language' => $newLanguage));
 		$REX['CLANG'][$newLanguage->getId()] = $newLanguage;
 
@@ -57,7 +56,7 @@ class sly_Service_Language extends sly_Service_Model_Base_Id {
 		global $REX;
 
 		$db = sly_DB_Persistence::getInstance();
-		
+
 		//get languages first
 		$languages = $this->find($where);
 

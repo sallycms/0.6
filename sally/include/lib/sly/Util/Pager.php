@@ -11,8 +11,7 @@
 /**
  * @ingroup util
  */
-class sly_Util_Pager
-{
+class sly_Util_Pager {
 	const FIRST_ACTIVE   = -1;
 	const FIRST_INACTIVE = -2;
 	const PREV_ACTIVE    = -3;
@@ -32,8 +31,7 @@ class sly_Util_Pager
 	protected $linksOnEnd;
 	private $pages;
 
-	public function __construct($currentPage, $totalElements, $perPage = 10, $maxLinks = 10, $linksLeftRight = 2, $linksOnEnds = 2)
-	{
+	public function __construct($currentPage, $totalElements, $perPage = 10, $maxLinks = 10, $linksLeftRight = 2, $linksOnEnds = 2) {
 		$this->currentPage    = abs((int) $currentPage);
 		$this->totalElements  = abs((int) $totalElements);
 		$this->perPage        = abs((int) $perPage);
@@ -48,8 +46,7 @@ class sly_Util_Pager
 		if ($this->maxLinks < 5) $this->maxLinks = 5;
 	}
 
-	public function getPaginationData()
-	{
+	public function getPaginationData() {
 		$result = array();
 
 		if ($this->currentPage > 0) {
@@ -106,8 +103,7 @@ class sly_Util_Pager
 		return $result;
 	}
 
-	public function getRawLinks($getParams, $pageParamName = 'p', $filename = 'index.php', $specialSymbols = array())
-	{
+	public function getRawLinks($getParams, $pageParamName = 'p', $filename = 'index.php', $specialSymbols = array()) {
 		// Standardwerte für die Spezialsymbole
 
 		if (!isset($specialSymbols['first_active']))   $specialSymbols['first_active']   = '|&laquo;';
@@ -211,8 +207,7 @@ class sly_Util_Pager
 		return $links;
 	}
 
-	public function getHTMLString($getParams, $pageParamName = 'p', $filename = 'index.php', $specialSymbols = array())
-	{
+	public function getHTMLString($getParams, $pageParamName = 'p', $filename = 'index.php', $specialSymbols = array()) {
 		$links = $this->getRawLinks($getParams, $pageParamName, $filename, $specialSymbols);
 
 		foreach ($links as $idx => $data) {
@@ -233,8 +228,7 @@ class sly_Util_Pager
 		return "\n".implode("\n", $links)."\n";
 	}
 
-	public function getHTMLList($tag = 'ul', $getParams, $pageParamName = 'p', $filename = 'index.php', $specialSymbols = array())
-	{
+	public function getHTMLList($tag = 'ul', $getParams, $pageParamName = 'p', $filename = 'index.php', $specialSymbols = array()) {
 		$links  = $this->getRawLinks($getParams, $pageParamName, $filename, $specialSymbols);
 		$result = "\n<$tag class=\"pager\">";
 
@@ -253,8 +247,7 @@ class sly_Util_Pager
 		return $result;
 	}
 
-	public function getCurrentElements()
-	{
+	public function getCurrentElements() {
 		$elements = array();
 		$base     = $this->currentPage * $this->perPage;
 		for ($i = 0; $i < $this->perPage; ++$i) {
@@ -263,8 +256,7 @@ class sly_Util_Pager
 		return $elements;
 	}
 
-	protected function getURL($filename, $getParams, $pageParamName = 'p', $page = 0)
-	{
+	protected function getURL($filename, $getParams, $pageParamName = 'p', $page = 0) {
 		$link = $filename;
 		if ($page > 0) $getParams[$pageParamName] = $page;
 		$getString = http_build_query($getParams, '', '&amp;');
@@ -272,8 +264,7 @@ class sly_Util_Pager
 		return $link;
 	}
 
-	public static function isEllipsis($code)
-	{
+	public static function isEllipsis($code) {
 		return $code == self::ELLIPSIS_LEFT || $code == self::ELLIPSIS_RIGHT;
 	}
 }

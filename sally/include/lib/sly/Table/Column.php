@@ -11,16 +11,14 @@
 /**
  * @ingroup table
  */
-class sly_Table_Column
-{
+class sly_Table_Column {
 	protected $width;
 	protected $sortkey;
 	protected $direction;
 	protected $htmlAttributes;
 	protected $content;
 
-	public function __construct($content, $width = '', $sortkey = '', $htmlAttributes = array())
-	{
+	public function __construct($content, $width = '', $sortkey = '', $htmlAttributes = array()) {
 		$this->content        = $content;
 		$this->width          = $width;
 		$this->sortkey        = $sortkey;
@@ -34,13 +32,11 @@ class sly_Table_Column
 		}
 	}
 
-	public function setContent($content)
-	{
+	public function setContent($content) {
 		$this->content = $content;
 	}
 
-	public function render(sly_Table $table, $index)
-	{
+	public function render(sly_Table $table, $index) {
 		if (!empty($this->width)) {
 			$this->htmlAttributes['style'] = 'width:'.$this->width;
 		}

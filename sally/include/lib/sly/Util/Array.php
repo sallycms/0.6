@@ -202,5 +202,4 @@ class sly_Util_Array {
 	public static function isMultiDim($array) {
 		return self::any('is_array', $array);
 	}
-
 }

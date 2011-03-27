@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
@@ -15,15 +14,12 @@
  * @author zozi@webvariants.de
  * @ingroup model
  */
-abstract class sly_Model_Base_Id extends sly_Model_Base{
-
+abstract class sly_Model_Base_Id extends sly_Model_Base {
 	const NEW_ID = -1;
 
 	protected $_pk = array('id' => 'int');
 	protected $id  = self::NEW_ID;
 
-	public function getId()    { return $this->id; }
-	public function setId($id) { $this->id = intval($id); }
+	public function getId()    { return $this->id;      }
+	public function setId($id) { $this->id = (int) $id; }
 }
-
-?>

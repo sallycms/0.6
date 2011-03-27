@@ -36,7 +36,6 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 				$this->error();
 			}
 		}
-
 		catch (PDOException $e) {
 			sly_dump($query);
 			sly_dump($data);
@@ -94,7 +93,7 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 
 	/**
 	 * Delete rows from DB
-    *
+	 *
 	 * @param  string $table  table name without system prefix
 	 * @param  array  $where  a hash (column => value ...)
 	 * @return int            affected rows

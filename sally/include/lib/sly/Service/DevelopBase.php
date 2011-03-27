@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
@@ -89,11 +88,11 @@ abstract class sly_Service_DevelopBase {
 
 			$parser = new sly_Util_ParamParser($file);
 			$data = $parser->get();
-		
+
 			if (empty($data) && $known) {
 				$modified = true;
 			}
-			
+
 			$name = $parser->get('name', null);
 
 			if (!$this->areParamsValid($name, $data, $newData, $basename, $type)) {
@@ -180,7 +179,7 @@ abstract class sly_Service_DevelopBase {
 		if (!isset($this->data)) {
 			$this->data = sly_Core::config()->get($this->getClassIdentifier() . '/data', array());
 		}
-		
+
 		return $this->data;
 	}
 
@@ -252,7 +251,7 @@ abstract class sly_Service_DevelopBase {
 	public function getKnownFiles() {
 		$known = array();
 		$data  = $this->getData();
-		
+
 		foreach ($data as $types) {
 			foreach ($types as $files) {
 				foreach ($files as $file) {
@@ -284,11 +283,11 @@ abstract class sly_Service_DevelopBase {
 		if ($key == 'name') return $name;
 
 		$data = $this->getData();
-		
+
 		if (!isset($data[$name])) {
 			throw new sly_Exception('The development resource "' . $name . '" is not available.');
 		}
-		
+
 		if ($type !== null && !isset($data[$name][$type])) {
 			return $default;
 		}
@@ -310,7 +309,7 @@ abstract class sly_Service_DevelopBase {
 		else {
 			$result = current($data[$name][$type]);
 		}
-		
+
 		if ($key === null) {
 			return $result;
 		}
@@ -344,7 +343,7 @@ abstract class sly_Service_DevelopBase {
 	protected function filterByCondition($name, $type) {
 		$data      = $this->getData();
 		$filenames = array_keys($data[$name][$type]);
-		
+
 		// need to check the files
 		if (count($filenames) > 1) {
 			// run all evaluators
@@ -358,7 +357,7 @@ abstract class sly_Service_DevelopBase {
 				}
 
 				$result = call_user_func_array($evaluator, array($name, $filter));
-				
+
 				// if the result is not false or empty or something go on with the result
 				if (!empty($result)) {
 					$filenames = array_keys($result);
@@ -370,7 +369,7 @@ abstract class sly_Service_DevelopBase {
 			}
 
 			// if all files are filtered
-			
+
 			if (empty($filenames)) {
 				throw new sly_Exception('All files for item ' . $name . ' were filtered');
 			}
@@ -378,27 +377,27 @@ abstract class sly_Service_DevelopBase {
 			//if there are more than one
 			if (count($filenames) > 1) {
 				// warn the user
-				
+
 				if (!sly_Core::isBackend()) {
 					trigger_error('The concrete file for Item ' . $name . ' is not clear. Taking one without conditions or first to come.', E_USER_WARNING);
 				}
-				
+
 				// try to find one without without conditions)
-				
+
 				foreach ($filenames as $filename) {
 					$nocondition = true;
-					
+
 					foreach (array_keys($this->conditionEvaluators) as $condition) {
 						$nocondition = $nocondition || isset($data[$name][$type][$filename]['params'][$condition]);
 					}
-					
+
 					if ($nocondition) {
 						return $filename;
 					}
 				}
 			}
 		}
-		
+
 		// return the first to find
 		return current($filenames);
 	}

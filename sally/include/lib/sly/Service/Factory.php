@@ -89,7 +89,7 @@ abstract class sly_Service_Factory {
 
 	/**
 	 *
-	 * @return sly_Service_Category 
+	 * @return sly_Service_Category
 	 */
 	public static function getCategoryService() {
 		return self::getService('Category');
@@ -100,5 +100,12 @@ abstract class sly_Service_Factory {
 	 */
 	public static function getArticleService() {
 		return self::getService('Article');
+	}
+
+	/**
+	 * @return sly_Service_Language
+	 */
+	public static function getLanguageService() {
+		return self::getService('Language');
 	}
 }

@@ -41,5 +41,4 @@ class sly_Registry_Temp implements sly_Registry_Registry {
 	public function remove($key) {
 		return $this->store->remove($key);
 	}
-
 }

@@ -38,15 +38,13 @@ class sly_Util_Navigation {
 	protected $activeArticleId;
 	protected $startArticleId;
 	protected $isStartClang;
-	
 
 	/**
-	 *
-	 * @param int $depth
-	 * @param oolean $fullNavigation
+	 * @param int     $depth
+	 * @param boolean $fullNavigation
 	 * @param boolean $useHTMLSpecialchars
-	 * @param array $baseCategories
-	 * @param int $activeArticleId
+	 * @param array   $baseCategories
+	 * @param int     $activeArticleId
 	 */
 	public function __construct($depth = 1, $fullNavigation = false, $useHTMLSpecialchars = true, $baseCategories = null, $activeArticleId = null) {
 		$this->maxDepth            = $depth;
@@ -226,10 +224,10 @@ class sly_Util_Navigation {
 	}
 
 	/**
-	 * return the name of the active category in the given level 
-	 * 
+	 * return the name of the active category in the given level
+	 *
 	 * @param int $level
-	 * @return string 
+	 * @return string
 	 */
 	protected function getActiveCategoryForLevel($level) {
 		return isset($this->activePathCategories[$level]) ? $this->activePathCategories[$level] : null;
@@ -260,7 +258,7 @@ class sly_Util_Navigation {
 		for ($i = 1 + $offset; $i <= $this->maxDepth; $i++) {
 			$levelObject = $this->getActiveCategoryForLevel($i);
 			if(is_null($levelObject)) break;
-			
+
 			$levelName = $this->getCategoryText($levelObject);
 			if ($clickable) {
 				$levelName = '<a href="'.$this->getCategoryUrl($levelObject).'">'.$levelName.'</a>';
