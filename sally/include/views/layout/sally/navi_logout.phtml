@@ -13,7 +13,7 @@ global $REX;
 if ($REX['USER'] && $this->hasNavigation()) {
 	$user_name = $REX['USER']->getName() != '' ? $REX['USER']->getName() : $REX['USER']->getLogin();
 	?>
-	<ul class="rex-logout">
+	<ul class="sly-meta">
 		<li class="rex-navi-first"><span><?= t('logged_in_as').' '.htmlspecialchars($user_name) ?></span></li>
 		<li><a href="index.php?page=profile"><?= t('profile_title') ?></a></li>
 		<li><a href="index.php?page=login&amp;func=logout"><?= t('logout') ?></a></li>
@@ -22,8 +22,8 @@ if ($REX['USER'] && $this->hasNavigation()) {
 	<?php
 }
 elseif ($this->hasNavigation()) {
-	echo '<p class="rex-logout">'.t('logged_out').'</p>';
+	echo '<p class="sly-meta">'.t('logged_out').'</p>';
 }
 else {
-	echo '<p class="rex-logout">&nbsp;</p>';
+	echo '<p class="sly-meta">&nbsp;</p>';
 }
