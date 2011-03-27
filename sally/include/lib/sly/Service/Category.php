@@ -142,7 +142,8 @@ class sly_Service_Category extends sly_Service_Model_Base {
 			$cat->setCreateColumns();
 			$db->insert($this->tablename, array_merge($cat->getPKHash(), $cat->toHash()));
 
-			$cache->delete('sly.category.list', $parentID.'_'.$clangID);
+			$cache->delete('sly.category.list', $parentID.'_'.$clangID.'_0');
+			$cache->delete('sly.category.list', $parentID.'_'.$clangID.'_1');
 
 			// System benachrichtigen
 
@@ -225,7 +226,8 @@ class sly_Service_Category extends sly_Service_Model_Base {
 					$cache->delete('sly.category', $row['id'].'_'.$clangID);
 				}
 
-				$cache->delete('sly.category.list', $parentID.'_'.$clangID);
+				$cache->delete('sly.category.list', $parentID.'_'.$clangID.'_0');
+				$cache->delete('sly.category.list', $parentID.'_'.$clangID.'_1');
 			}
 		}
 
@@ -269,7 +271,8 @@ class sly_Service_Category extends sly_Service_Model_Base {
 			);
 
 			$cache->delete('sly.category', $categoryID.'_'.$clangID);
-			$cache->delete('sly.category.list', $parent.'_'.$clangID);
+			$cache->delete('sly.category.list', $parent.'_'.$clangID.'_0');
+			$cache->delete('sly.category.list', $parent.'_'.$clangID.'_1');
 
 			// Cache leeren
 			$db->select('article', 'id', 're_id = '.$parent.' AND catprior >= '.$catprior.' AND clang = '.$clangID);
@@ -320,7 +323,8 @@ class sly_Service_Category extends sly_Service_Model_Base {
 
 		$cache = sly_Core::cache();
 		$cache->delete('sly.category', $categoryID.'_'.$clangID);
-		$cache->delete('sly.category.list', $re_id.'_'.$clangID);
+		$cache->delete('sly.category.list', $re_id.'_'.$clangID.'_0');
+		$cache->delete('sly.category.list', $re_id.'_'.$clangID.'_1');
 
 		// Event auslösen
 		$dispatcher = sly_Core::dispatcher();

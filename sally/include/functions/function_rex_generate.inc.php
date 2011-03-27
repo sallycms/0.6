@@ -55,8 +55,10 @@ function rex_deleteCacheArticle($id, $clang = null) {
 		}
 
 		$cache->delete('sly.article', $id.'_'.$_clang);
-		$cache->delete('sly.article.list', $id.'_'.$_clang);
-		$cache->delete('sly.category.list', $id.'_'.$_clang);
+		$cache->delete('sly.article.list', $id.'_'.$_clang.'_0');
+		$cache->delete('sly.article.list', $id.'_'.$_clang.'_1');
+		$cache->delete('sly.category.list', $id.'_'.$_clang.'_0');
+		$cache->delete('sly.category.list', $id.'_'.$_clang.'_1');
 	}
 }
 

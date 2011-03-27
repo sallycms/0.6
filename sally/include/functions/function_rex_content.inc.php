@@ -359,8 +359,10 @@ function rex_article2startpage($neu_id)
 		$cache = sly_Core::cache();
 		$cache->delete('sly.article', $neu_id.'_'.$clang);
 		$cache->delete('sly.category', $alt_id.'_'.$clang);
-		$cache->delete('sly.article.list', $alt_id.'_'.$clang);
-		$cache->delete('sly.category.list', $data[$neu_cat_id]['re_id'].'_'.$clang);
+		$cache->delete('sly.article.list', $alt_id.'_'.$clang.'_0');
+		$cache->delete('sly.article.list', $alt_id.'_'.$clang.'_1');
+		$cache->delete('sly.category.list', $data[$neu_cat_id]['re_id'].'_'.$clang.'_0');
+		$cache->delete('sly.category.list', $data[$neu_cat_id]['re_id'].'_'.$clang.'_1');
 	}
 
 	$alt = null;
@@ -654,8 +656,10 @@ function rex_moveArticle($id, $from_cat_id, $to_cat_id)
 				$cache = sly_Core::getInstance()->cache();
 
 				$cache->delete('sly.article', $id.'_'.$clang);
-				$cache->delete('sly.article.list', $from_cat_id.'_'.$clang);
-				$cache->delete('sly.article.list', $to_cat_id.'_'.$clang);
+				$cache->delete('sly.article.list', $from_cat_id.'_'.$clang.'_0');
+				$cache->delete('sly.article.list', $from_cat_id.'_'.$clang.'_1');
+				$cache->delete('sly.article.list', $to_cat_id.'_'.$clang.'_0');
+				$cache->delete('sly.article.list', $to_cat_id.'_'.$clang.'_1');
 			}
 			else {
 				return false;
@@ -760,7 +764,8 @@ function rex_moveCategory($from_cat, $to_cat)
 				// Cache aufräumen
 				$cache = sly_Core::cache();
 				$cache->delete('sly.category', $from_cat.'_'.$clang);
-				$cache->delete('sly.category.list', $to_cat.'_'.$clang);
+				$cache->delete('sly.category.list', $to_cat.'_'.$clang.'_0');
+				$cache->delete('sly.category.list', $to_cat.'_'.$clang.'_1');
 			}
 
 			// generiere Artikel neu - ohne neue Inhaltsgenerierung
