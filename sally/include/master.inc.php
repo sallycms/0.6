@@ -89,7 +89,6 @@ if (!$config->get('SETUP')){
 sly_Core::dispatcher()->register('ALL_GENERATED', array('sly_Loader', 'clearCache'));
 
 // REDAXO compatibility
-if (!$config->has('TABLE_PREFIX')) $config->setLocal('TABLE_PREFIX', $config->get('DATABASE/TABLE_PREFIX'));
 $REX = array_merge($REX, $config->get(null));
 
 // Check for system updates
