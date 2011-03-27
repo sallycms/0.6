@@ -22,11 +22,11 @@ class sly_Util_YAML {
 		return $dir;
 	}
 
-	protected static function getCacheFile($filename) {
+	public static function getCacheFile($filename) {
 		$dir      = self::getCacheDir();
 		$filename = realpath($filename);
 
-		//Es kann sein, dass Dateien über Symlinks eingebunden werden. In diesem
+		// Es kann sein, dass Dateien über Symlinks eingebunden werden. In diesem
 		// Fall liegt das Verzeichnis ggf. ausßerhalb von SLY_BASE und kann dann
 		// nicht so behandelt werden wie ein "lokales" AddOn.
 
@@ -41,19 +41,20 @@ class sly_Util_YAML {
 		return $dir.DIRECTORY_SEPARATOR.str_replace(DIRECTORY_SEPARATOR, '_', $filename).'.php';
 	}
 
-	protected static function isCacheValid($origfile, $cachefile) {
+	public static function isCacheValid($origfile, $cachefile) {
 		return file_exists($cachefile) && filemtime($origfile) < filemtime($cachefile);
 	}
 
 	/**
 	 * Cached loading of a YAML file
 	 *
-	 * @param string  $filename  Path to YAML file
-	 * @return mixed  parsed content
+	 * @param  string $filename      Path to YAML file
+	 * @param  boolean $forceCached  always return cached version (if it exists)
+	 * @return mixed                 parsed content
 	 * @throws sly_Exception
 	 * @throws InvalidArgumentException
 	 */
-	public static function load($filename) {
+	public static function load($filename, $forceCached = false) {
 		if (empty($filename) || !is_string($filename)) throw new sly_Exception('Keine Datei angegeben.');
 		if (!file_exists($filename)) throw new sly_Exception('Datei '.$filename.' konnte nicht gefunden werden.');
 
@@ -61,7 +62,7 @@ class sly_Util_YAML {
 		$config    = array();
 
 		// get content from cache, when up to date
-		if (self::isCacheValid($filename, $cachefile)) {
+		if (self::isCacheValid($filename, $cachefile) || (file_exists($cachefile) && $forceCached)) {
 			include $cachefile;
 		}
 		// get content from yaml file
