@@ -726,7 +726,7 @@ if (!is_null($OOArt)) {
 				$form->add(new sly_Form_ButtonBar(array('submit' => $button)));
 			}
 
-			if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('article2startpage[]') || $REX['USER']->hasPerm('moveArticle[]') || $REX['USER']->hasPerm('copyArticle[]') || ($REX['USER']->hasPerm('copyContent[]') && count($languages) > 1)) {
+			if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('article2startpage[]') || $REX['USER']->hasPerm('moveArticle[]') || $REX['USER']->hasPerm('copyArticle[]') || ($REX['USER']->hasPerm('copyContent[]') && sly_Util_Language::isMultilingual())) {
 				// ZUM STARTARTIKEL MACHEN
 
 				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('article2startpage[]')) {
@@ -745,7 +745,7 @@ if (!is_null($OOArt)) {
 
 				// INHALTE KOPIEREN
 
-				if (($REX['USER']->isAdmin() || $REX['USER']->hasPerm('copyContent[]')) && count($languages) > 1) {
+				if (($REX['USER']->isAdmin() || $REX['USER']->hasPerm('copyContent[]')) && sly_Util_Language::isMultilingual()) {
 					$lang_a = new sly_Form_Select_DropDown('clang_a', t('content_contentoflang'), sly_request('clang_a', 'rex-clang-id', null), $languages, 'clang_a');
 					$lang_a->setSize(1);
 

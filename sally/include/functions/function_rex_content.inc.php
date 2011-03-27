@@ -316,12 +316,11 @@ function rex_article2startpage($neu_id)
 	}
 
 	$paramsToSelect = implode(',', $params);
-	$languages      = sly_Util_Language::findAll();
 
 	$alt = new rex_sql();
 	$neu = new rex_sql();
 
-	foreach (array_keys($languages) as $clang) {
+	foreach (sly_Util_Language::findAll(true) as $clang) {
 		$data = rex_sql::getArrayEx(
 			'SELECT '.$paramsToSelect.' FROM #_article '.
 			'WHERE id IN ('.$neu_cat_id.','.$neu_id.') AND clang = '.$clang,
@@ -504,9 +503,8 @@ function rex_copyArticle($id, $to_cat_id) {
 	$to_cat_id = (int) $to_cat_id;
 	$new_id    = '';
 	$prefix    = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
-	$languages = sly_Util_Language::findAll();
 
-	foreach (array_keys($languages) as $clang) {
+	foreach (sly_Util_Language::findAll(true) as $clang) {
 		// Validierung der id & from_cat_id
 		$from_data = rex_sql::fetch('*', 'article', 'clang = '.$clang.' AND id = '.$id);
 
@@ -608,14 +606,13 @@ function rex_moveArticle($id, $from_cat_id, $to_cat_id)
 	$id          = (int) $id;
 	$to_cat_id   = (int) $to_cat_id;
 	$from_cat_id = (int) $from_cat_id;
-	$languages   = sly_Util_Language::findAll();
 	$prefix      = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 
 	if ($from_cat_id == $to_cat_id) {
 		return false;
 	}
 
-	foreach (array_keys($languages) as $clang) {
+	foreach (sly_Util_Language::findAll(true) as $clang) {
 		// Validierung der id & from_cat_id
 		$from_name = rex_sql::fetch('name', 'article', 'clang = '.$clang.' AND startpage <> 1 AND id = '.$id.' AND re_id = '.$from_cat_id);
 
@@ -685,7 +682,6 @@ function rex_moveCategory($from_cat, $to_cat)
 {
 	$from_cat  = (int) $from_cat;
 	$to_cat    = (int) $to_cat;
-	$languages = sly_Util_Language::findAll();
 	$prefix    = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 
 	if ($from_cat == $to_cat) {
@@ -750,7 +746,7 @@ function rex_moveCategory($from_cat, $to_cat)
 
 			// clang holen, max catprio holen und entsprechend updaten
 
-			foreach (array_keys($languages) as $clang) {
+			foreach (sly_Util_Language::findAll(true) as $clang) {
 				$catprior = (int) rex_sql::fetch('MAX(catprior)', 'article', 're_id = '.$to_cat.' AND clang = '.$clang);
 
 				$up->setTable($prefix.'article');
@@ -773,7 +769,7 @@ function rex_moveCategory($from_cat, $to_cat)
 				rex_deleteCacheArticle($id);
 			}
 
-			foreach (array_keys($languages) as $clang) {
+			foreach (sly_Util_Language::findAll(true) as $clang) {
 				rex_newCatPrio($from_data['re_id'], $clang, 0, 1);
 			}
 		}

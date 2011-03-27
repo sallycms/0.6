@@ -46,10 +46,9 @@ function rex_generateAll()
  * @return void
  */
 function rex_deleteCacheArticle($id, $clang = null) {
-	$cache     = sly_Core::cache();
-	$languages = sly_Util_Language::findAll();
+	$cache = sly_Core::cache();
 
-	foreach (array_keys($languages) as $_clang) {
+	foreach (sly_Util_Language::findAll(true) as $_clang) {
 		if ($clang !== null && $clang != $_clang) {
 			continue;
 		}
