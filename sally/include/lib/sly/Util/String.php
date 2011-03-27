@@ -11,23 +11,20 @@
 /**
  * @ingroup util
  */
-class sly_Util_String
-{
+class sly_Util_String {
 	/**
 	 * Prüfen, ob Wert numerisch ist
 	 *
 	 * @param  mixed $value  der zu prüfende Wert
 	 * @return bool          true, wenn der Wert verlustfrei in Zahl umgeformt werden kann, sonst false
 	 */
-	public static function isInteger($value)
-	{
+	public static function isInteger($value) {
 		if (is_int($value)) return true;
 		if (is_string($value) && strval(intval($value)) === $value) return true;
 		return false;
 	}
 
-	public static function startsWith($haystack, $needle)
-	{
+	public static function startsWith($haystack, $needle) {
 		$haystack = (string) $haystack;
 		$needle   = (string) $needle;
 
@@ -36,8 +33,7 @@ class sly_Util_String
 		return strstr($haystack, $needle) == $haystack;
 	}
 
-	public static function endsWith($haystack, $needle)
-	{
+	public static function endsWith($haystack, $needle) {
 		$haystack = (string) $haystack;
 		$needle   = (string) $needle;
 
@@ -46,8 +42,7 @@ class sly_Util_String
 		return substr($haystack, -strlen($needle)) == $needle;
 	}
 
-	public static function strToUpper($string)
-	{
+	public static function strToUpper($string) {
 		if (is_string($string)) {
 			$string = str_replace('ß', 'ss', $string);
 			$string = mb_strtoupper($string, 'UTF-8');
@@ -56,21 +51,36 @@ class sly_Util_String
 		return $string;
 	}
 
-	public static function replaceUmlauts($text)
-	{
+	public static function replaceUmlauts($text) {
 		static $specials = array(
 			array('Ä', 'ä',  'á', 'à', 'é', 'è', 'Ö',  'ö',  'Ü' , 'ü' , 'ß', '&', 'ç'),
 			array('Ae','ae', 'a', 'a', 'e', 'e', 'Oe', 'oe', 'Ue', 'ue', 'ss', '', 'c')
 		);
 
-      	return str_replace($specials[0], $specials[1], $text);
+		return str_replace($specials[0], $specials[1], $text);
 	}
 
-	public static function formatNumber($number, $decimals = -1)
-	{
+	public static function formatNumber($number, $decimals = -1) {
 		$locale   = localeconv();
 		$decimals = $decimals < 0 ? $locale['frac_digits'] : $decimals;
 		return number_format($number, $decimals, $locale['decimal_point'], $locale['thousands_sep']);
+	}
+
+	public static function formatStrftime($format, $timestamp = null) {
+		if ($timestamp === null) $timestamp = time();
+		elseif (!self::isInteger($timestamp)) $timestamp = strtotime($timestamp);
+
+		$str = strftime($format, $timestamp);
+
+		// Windows systems do not support UTF-8 locales, so we try to fix this
+		// by manually converting the string. THis should only happen on dev
+		// machines, so don't worry about performance.
+
+		if (PHP_OS === 'WINNT' && function_exists('iconv')) {
+			$str = iconv('ISO-8859-1', 'UTF-8', $str);
+		}
+
+		return $str;
 	}
 
 	/**
@@ -81,8 +91,7 @@ class sly_Util_String
 	 * @param  $maxLength
 	 * @return string
 	 */
-	public static function cutText($text, $maxLength, $suffix = '...')
-	{
+	public static function cutText($text, $maxLength, $suffix = '...') {
 		$text = preg_replace('/<br\s*\/>/', '##BR##', $text);
 		$text = preg_replace('/<\/h[1-6]>/', '##BR####BR##', $text);
 		$text = str_replace('</p>', '##BR####BR##', $text);
@@ -111,13 +120,10 @@ class sly_Util_String
 	 *
 	 * Die letzte Einheit ist ein Yottabyte.
 	 *
-	 * @todo Formatierung der Kommazahl gemäß aktuellem Locale
-	 *
 	 * @param  int $size  die Dateigröße in Byte
 	 * @return string     die Dateigröße im Format "X.YY _B" oder "< 1 KB"
 	 */
-	public static function formatFilesize($size)
-	{
+	public static function formatFilesize($size) {
 		// Wir teilen in die Funktion immer durch 999 anstatt durch 1024, damit
 		// als Größenangaben nicht "1023 KB", sondern "0,99 MB" errechnet werden.
 		// Das ist benutzerfreundlicher.
@@ -149,8 +155,7 @@ class sly_Util_String
 	 * @param  string $last  das Wort, das zwischen die letzten beiden Elemente gesetzt werden soll
 	 * @return string        die Liste als String (zum Beispiel "a, b, c und d")
 	 */
-	public static function humanImplode($list, $last = ' und ')
-	{
+	public static function humanImplode($list, $last = ' und ') {
 		switch (count($list)) {
 			case 0: return '';
 			case 1: return $list[0];
@@ -159,8 +164,7 @@ class sly_Util_String
 		}
 	}
 
-	public static function getRandomString($maxLen = 5, $minLen = 1, $charset = null)
-	{
+	public static function getRandomString($maxLen = 5, $minLen = 1, $charset = null) {
 		if ($minLen > $maxLen) {
 			list($minLen, $maxLen) = array($maxLen, $minLen);
 		}
@@ -177,8 +181,7 @@ class sly_Util_String
 		return str_shuffle($s);
 	}
 
-	public static function secondsToAbsTime($seconds)
-	{
+	public static function secondsToAbsTime($seconds) {
 		$time    = '';
 		$days    = 0;
 		$hours   = 0;
@@ -195,7 +198,7 @@ class sly_Util_String
 		return $time;
 	}
 
-	public static function preg_startsWith($pattern, $subject){
+	public static function preg_startsWith($pattern, $subject) {
 		preg_match($pattern, $subject, $treffer);
 		return !empty($treffer);
 	}

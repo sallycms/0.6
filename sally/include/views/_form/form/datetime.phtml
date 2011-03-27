@@ -49,7 +49,7 @@ $attrs['type']  = 'text';
 $attrs['name']  = $name;
 $attrs['id']    = $attrs['name'];
 $attrs['style'] = 'width:150px';
-$attrs['value'] = $value === null ? '' : strftime($dateformat.($this->withTime() ? ' %H:%M' : ''), $value);
+$attrs['value'] = $value === null ? '' : sly_Util_String::formatStrftime($dateformat.($this->withTime() ? ' %H:%M' : ''), $value);
 
 print '<input '.sly_Util_HTML::buildAttributeString($attrs).' />';
 

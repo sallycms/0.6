@@ -226,7 +226,7 @@ class OOMedia
 				$format = '%a %d. %B %Y';
 			}
 
-			return strftime($format, $date);
+			return sly_Util_String::formatStrftime($format, $date);
 		}
 
 		return $date;

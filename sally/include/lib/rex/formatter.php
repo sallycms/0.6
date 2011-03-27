@@ -128,7 +128,7 @@ abstract class rex_formatter
 			$format = $I18N->msg('datetimeformat');
 		}
 
-		return strftime($format, $value);
+		return sly_Util_String::formatStrftime($format, $value);
 	}
 
 	private static function _formatNumber($value, $format)
