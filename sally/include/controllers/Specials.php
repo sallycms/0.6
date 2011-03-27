@@ -86,10 +86,11 @@ class sly_Controller_Specials extends sly_Controller_Sally {
 		$conf->setLocal('SERVER', $server);
 		$conf->setLocal('SERVERNAME', $serverName);
 		$conf->setLocal('CACHING_STRATEGY', $cachingStrategy);
-		if(class_exists('DateTimeZone'))
-		{
+
+		if (class_exists('DateTimeZone')) {
 			$conf->set('TIMEZONE', $timezone);
 		}
+
 		$this->info    = t('info_updated');
 		$this->warning = implode("<br />\n", $this->warning);
 
