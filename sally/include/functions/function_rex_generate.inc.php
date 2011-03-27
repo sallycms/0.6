@@ -45,13 +45,11 @@ function rex_generateAll()
  *
  * @return void
  */
-function rex_deleteCacheArticle($id, $clang = null)
-{
-	global $REX;
+function rex_deleteCacheArticle($id, $clang = null) {
+	$cache     = sly_Core::cache();
+	$languages = sly_Util_Language::findAll();
 
-	$cache = sly_Core::cache();
-
-	foreach (array_keys($REX['CLANG']) as $_clang) {
+	foreach (array_keys($languages) as $_clang) {
 		if ($clang !== null && $clang != $_clang) {
 			continue;
 		}
@@ -62,8 +60,7 @@ function rex_deleteCacheArticle($id, $clang = null)
 	}
 }
 
-function rex_deleteCacheSliceContent($slice_id)
-{
+function rex_deleteCacheSliceContent($slice_id) {
 	$cachedir = SLY_DYNFOLDER.'/internal/sally/article_slice/';
 	sly_Util_Directory::create($cachedir);
 	foreach (glob($cachedir.$slice_id.'-*.slice.php') as $filename) {

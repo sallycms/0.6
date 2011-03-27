@@ -12,7 +12,7 @@
  * @ingroup util
  */
 class sly_Util_Language {
-	public static function findAll() {
+	public static function findAll($keysOnly = false) {
 		$cache     = sly_Core::cache();
 		$languages = $cache->get('sly.language', 'all', null);
 
@@ -27,6 +27,17 @@ class sly_Util_Language {
 			$cache->set('sly.language', 'all', $languages);
 		}
 
-		return $languages;
+		return $keysOnly ? array_keys($languages) : $languages;
+	}
+
+	public static function exists($languageID) {
+		$languages  = self::findAll();
+		$languageID = (int) $languageID;
+
+		return isset($languages[$languageID]);
+	}
+
+	public static function isMultilingual() {
+		return count(self::findAll()) > 1;
 	}
 }

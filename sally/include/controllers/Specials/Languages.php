@@ -47,14 +47,17 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally {
 					$languageService = sly_Service_Factory::getService('Language');
 					$languageService->create(array('name' => $clangName, 'locale' => $clangLocale));
 					$this->info = t('clang_edited');
-				} catch(Exception $e) {
+				}
+				catch (Exception $e) {
 					$this->warning = $e->getMessage();
 				}
-			} else {
+			}
+			else {
 				$this->warning = t('enter_name');
 				$this->func = 'add';
 			}
-		} else {
+		}
+		else {
 			$this->func = 'add';
 		}
 
@@ -77,7 +80,8 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally {
 
 				$this->info = t('clang_edited');
 			}
-		} else {
+		}
+		else {
 			$this->func = 'edit';
 		}
 
@@ -85,13 +89,12 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally {
 	}
 
 	public function delete() {
-		global $REX;
+		$clangID   = sly_request('clang_id', 'int', -1);
+		$languages = sly_Util_Language::findAll();
 
-		$clangID = sly_request('clang_id', 'int', -1);
-
-		if (isset($REX['CLANG'][$clangID])) {
+		if (isset($languages[$clangID])) {
 			$ok = sly_Service_Factory::getService('Language')->delete(array('id' =>$clangID));
-			if($ok > 0) $this->info = t('clang_deleted');
+			if ($ok > 0) $this->info = t('clang_deleted');
 			else $this->warning = t('clang_delete_error');
 		}
 
@@ -101,5 +104,4 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally {
 	public function checkPermission() {
 		return sly_Util_User::getCurrentUser() != null;
 	}
-
 }

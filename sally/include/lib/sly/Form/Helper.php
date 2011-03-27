@@ -74,17 +74,16 @@ abstract class sly_Form_Helper {
 		return $select;
 	}
 
-	private static function walkTree($category, $depth)
-	{
-		global $REX;
+	private static function walkTree($category, $depth) {
 		if (empty($category)) return;
 
 		if (self::canSeeCategory($category)) {
 			$name = $category->getName();
+			$user = sly_Util_User::getCurrentUser();
 
 			// Die Anzeige hängt immer vom aktuellen Benutzer ab.
 
-			if ($REX['USER']->hasPerm('advancedMode[]')) {
+			if ($user->hasPerm('advancedMode[]')) {
 				$name .= ' ['.$category->getId().']';
 			}
 
@@ -129,8 +128,6 @@ abstract class sly_Form_Helper {
 	}
 
 	public static function parseFormValue($name, $default = null, $multilingual = false, $nameSuffix = '') {
-		global $REX;
-
 		$monoName  = $name.$nameSuffix;
 		$monoValue = isset($_POST[$monoName]) ? $_POST[$monoName] : $default;
 
@@ -138,10 +135,10 @@ abstract class sly_Form_Helper {
 			return $monoValue;
 		}
 
-		$equal  = count($REX['CLANG']) == 1 || sly_post('equal__'.$name, 'boolean', false);
+		$equal  = !sly_Util_Language::isMultilingual() || sly_post('equal__'.$name, 'boolean', false);
 		$values = array();
 
-		foreach (array_keys($REX['CLANG']) as $clangID) {
+		foreach (sly_Util_Language::findAll(true) as $clangID) {
 			$key              = $name.'__clang_'.$clangID.$nameSuffix;
 			$values[$clangID] = $equal ? $monoValue : (isset($_POST[$key]) ? $_POST[$key] : $default);
 		}

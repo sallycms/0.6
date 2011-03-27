@@ -308,12 +308,11 @@ function rex_organize_priorities($tableName, $priorColumnName, $whereCondition =
 }
 
 function rex_is_multilingual() {
-	return !rex_is_monolingual();
+	return sly_Util_Language::isMultilingual();
 }
 
 function rex_is_monolingual() {
-	global $REX;
-	return count($REX['CLANG']) == 1;
+	return !rex_is_multilingual();
 }
 
 /**
@@ -325,13 +324,11 @@ function rex_cur_clang() {
 }
 
 function rex_get_clang($clang = false, $default = -1) {
-	global $REX;
-
 	if ($clang === false) {
 		$clang = $default;
 	}
 
-	if (!isset($REX['CLANG'][$clang])) {
+	if (!sly_Util_Language::exists($clang)) {
 		$clang = sly_Core::getCurrentClang();
 	}
 

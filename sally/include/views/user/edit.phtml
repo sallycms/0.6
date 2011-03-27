@@ -71,9 +71,12 @@ $form->addRow(array($userAdmin, $userStatus));
 //////////////////////////////////////////////////////////////////
 // fourth row: language access and backend locale
 
+$languages = sly_Util_Language::findAll();
+foreach ($languages as $id => $obj) $languages[$id] = $obj->getName();
+
 $allowedCLangs = $user ? $user->getAllowedCLangs() : array();
 $backendLocale = $user ? $user->getBackendLocale() : array();
-$clangSelect   = new sly_Form_Select_DropDown('userperm_sprachen', t('user_lang_xs'), $allowedCLangs, $REX['CLANG']);
+$clangSelect   = new sly_Form_Select_DropDown('userperm_sprachen', t('user_lang_xs'), $allowedCLangs, $languages);
 $localeSelect  = new sly_Form_Select_DropDown('userperm_mylang', t('backend_language'), $backendLocale, $this->getBackendLocales());
 
 $localeSelect->setMultiple(false);

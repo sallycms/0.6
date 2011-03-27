@@ -27,21 +27,26 @@ class sly_Service_Language extends sly_Service_Model_Base_Id {
 
 	public function create($params) {
 		global $REX;
+
 		$sql = sly_DB_Persistence::getInstance();
 		$sql->startTransaction();
+
 		try {
 			$newLanguage = parent::create($params);
-			$sql->query(str_replace('#_', sly_Core::config()->get('DATABASE/TABLE_PREFIX'),
-							'INSERT INTO #_article (id,re_id,name,catname,catprior,attributes,' .
-							'startpage,prior,path,status,createdate,updatedate,type,clang,createuser,' .
-							'updateuser,revision) ' .
-							'SELECT id,re_id,name,catname,catprior,attributes,startpage,prior,path,0,createdate,' .
-							'updatedate,type,?,createuser,updateuser,revision ' .
-							'FROM #_article WHERE clang = 1'),
-					array($newLanguage->getId())
+
+			$sql->query(str_replace('~', sly_Core::config()->get('DATABASE/TABLE_PREFIX'),
+				'INSERT INTO ~article (id,re_id,name,catname,catprior,attributes,'.
+				'startpage,prior,path,status,createdate,updatedate,type,clang,createuser,'.
+				'updateuser,revision) '.
+				'SELECT id,re_id,name,catname,catprior,attributes,startpage,prior,path,0,createdate,'.
+				'updatedate,type,?,createuser,updateuser,revision '.
+				'FROM ~article WHERE clang = 1'),
+				array($newLanguage->getId())
 			);
+
 			$sql->doCommit();
-		} catch (Exception $e) {
+		}
+		catch (Exception $e) {
 			$sql->cleanEndTransaction($e);
 			throw $e;
 		}
@@ -64,8 +69,9 @@ class sly_Service_Language extends sly_Service_Model_Base_Id {
 		$res = parent::delete($where);
 
 		//remove
-		foreach($languages as $language) {
+		foreach ($languages as $language) {
 			unset($REX['CLANG'][$language->getId()]);
+
 			$params = array('clang' => $language->getId());
 			$db->delete('article', $params);
 			$db->delete('article_slice', $params);
@@ -75,10 +81,10 @@ class sly_Service_Language extends sly_Service_Model_Base_Id {
 				'name' => $language->getName()
 			));
 		}
+
 		rex_generateAll();
 		sly_Core::cache()->set('sly.language', 'all', $REX['CLANG']);
 
 		return $res;
 	}
-
 }

@@ -207,11 +207,8 @@ function _rex_cast_var($var, $vartype, $default, $mode, $addslashes = true)
 
 		case 'rex-clang-id':
 			$var = (int) $var;
-			if ($mode == 'found') {
-				global $REX;
-				if (empty($REX['CLANG'][$var])) {
-					$var = (int) $default;
-				}
+			if ($mode == 'found' && !sly_Util_Language::exists($var)) {
+				$var = (int) $default;
 			}
 			break;
 

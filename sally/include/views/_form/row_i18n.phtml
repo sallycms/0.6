@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$type         = count($REX['CLANG']) == 1 ? 'monolingual' : 'multilingual';
+$type         = sly_Util_Language::isMultilingual() ? 'multilingual' : 'monolingual';
 $formRowClass = array('rex-form-row', 'sly-num'.$rowNum, 'sly-form-'.$type);
 $element      = reset($elements); // in multilingual rows, there can only be one...
 $containerID  = $element->getDisplayName();
@@ -26,7 +26,7 @@ else {
 
 $equalValue = $origElement->getDisplayValue();
 
-foreach (array_keys($REX['CLANG']) as $clangID) {
+foreach (sly_Util_Language::findAll(true) as $clangID) {
 	if (!isset($values[$clangID])) {
 		$values[$clangID] = $equalValue;
 	}
@@ -86,13 +86,14 @@ else {
 	}
 }
 
-$rel   = count($REX['CLANG']) == 1 ? '' : $containerID;
+$rel   = sly_Util_Language::isMultilingual() ? $containerID : '';
 $style = $rel && !$isEqual ? 'display:none' : '';
+$langs = sly_Util_Language::findAll();
 include SLY_INCLUDE_PATH.'/views/_form/row_i18n_helper.phtml';
 
 // print the extended multilingual view
 
-if (count($REX['CLANG']) > 1) {
+if (sly_Util_Language::isMultilingual()) {
 	$style = $isEqual ? ' style="display:none"' : '';
 	print '<div class="sly-form-i18n-container c-'.$containerID.'"'.$style.'>';
 
@@ -105,7 +106,7 @@ if (count($REX['CLANG']) > 1) {
 	foreach ($elements as $clangID => $element) {
 		$formRowClass = array('rex-form-row', 'sly-num'.$rowNum, 'clang-'.$clangID);
 
-		$element->setLabel('      '.$REX['CLANG'][$clangID]);
+		$element->setLabel('      '.$langs[$clangID]->getName());
 		$element->setHelpText(''); // is displayed in the filler row we created above
 
 		include SLY_INCLUDE_PATH.'/views/_form/row_i18n_helper.phtml';

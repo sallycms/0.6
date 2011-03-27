@@ -30,8 +30,6 @@ class sly_Service_Article extends sly_Service_Model_Base {
 	}
 
 	public function add($categoryID, $name, $status, $position = -1) {
-		global $REX;
-
 		$db       = sly_DB_Persistence::getInstance();
 		$parentID = (int) $categoryID;
 		$position = (int) $position;
@@ -87,7 +85,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 		$cache = sly_Core::cache();
 
-		foreach (array_keys($REX['CLANG']) as $clangID) {
+		foreach (sly_Util_Language::findAll(true) as $clangID) {
 			$db->select('article', 'id', 'prior > '.$position.' AND startpage = 0 AND clang = '.$clangID.' AND re_id = '.$parentID);
 
 			foreach ($db as $row) {
@@ -113,7 +111,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		$defaultType = sly_Core::config()->get('DEFAULT_ARTICLE_TYPE', '');
 		$dispatcher  = sly_Core::dispatcher();
 
-		foreach (array_keys($REX['CLANG']) as $clangID) {
+		foreach (sly_Util_Language::findAll(true) as $clangID) {
 			$type    = !empty($types[$clangID]) ? $types[$clangID] : $defaultType;
 			$article = new sly_Model_Article(array(
 				        'id' => $newID,
@@ -220,8 +218,6 @@ class sly_Service_Article extends sly_Service_Model_Base {
 	}
 
 	public function delete($articleID) {
-		global $REX;
-
 		$articleID = (int) $articleID;
 		$db        = sly_DB_Persistence::getInstance();
 		$cache     = sly_Core::cache();
@@ -236,7 +232,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		$parent = $article->getParentId();
 		$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 
-		foreach (array_keys($REX['CLANG']) as $clangID) {
+		foreach (sly_Util_Language::findAll(true) as $clangID) {
 			$iArticle = $this->findById($articleID, $clangID);
 			$prior    = $iArticle->getPrior();
 			$where    = 'prior >= '.$prior.' AND re_id = '.$parent.' AND catprior = 0 AND clang = '.$clangID;

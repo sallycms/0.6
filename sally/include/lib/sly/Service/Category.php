@@ -30,17 +30,17 @@ class sly_Service_Category extends sly_Service_Model_Base {
 	}
 
 	public function find($where = null, $group = null, $order = null, $offset = null, $limit = null, $having = null) {
-		if(is_array($where)) {
+		if (is_array($where)) {
 			$where['startpage'] = 1;
-		} else {
+		}
+		else {
 			$where = array('startpage' => 1);
 		}
+
 		return parent::find($where, $group, $order, $offset, $limit, $having);
 	}
 
 	public function add($parentID, $name, $status = 0, $position = -1) {
-		global $REX;
-
 		$db       = sly_DB_Persistence::getInstance();
 		$parentID = (int) $parentID;
 		$position = (int) $position;
@@ -88,7 +88,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 
 		$cache = sly_Core::cache();
 
-		foreach (array_keys($REX['CLANG']) as $clangID) {
+		foreach (sly_Util_Language::findAll(true) as $clangID) {
 			$db->select('article', 'id', 'catprior > '.$position.' AND startpage = 1 AND clang = '.$clangID.' AND re_id = '.$parentID);
 
 			foreach ($db as $row) {
@@ -114,7 +114,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		$defaultType = sly_Core::config()->get('DEFAULT_ARTICLE_TYPE', '');
 		$dispatcher  = sly_Core::dispatcher();
 
-		foreach (array_keys($REX['CLANG']) as $clangID) {
+		foreach (sly_Util_Language::findAll(true) as $clangID) {
 			if (!empty($startpageTypes[$clangID])) {
 				$type = $startpageTypes[$clangID];
 			}
@@ -236,8 +236,6 @@ class sly_Service_Category extends sly_Service_Model_Base {
 	}
 
 	public function delete($categoryID) {
-		global $REX;
-
 		$categoryID = (int) $categoryID;
 		$db         = sly_DB_Persistence::getInstance();
 		$cache      = sly_Core::cache();
@@ -260,7 +258,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		$parent = $cat->getParentId();
 		$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 
-		foreach (array_keys($REX['CLANG']) as $clangID) {
+		foreach (sly_Util_Language::findAll(true) as $clangID) {
 			$iCat     = $this->findById($categoryID, $clangID);
 			$catprior = $iCat->getCatprior();
 
@@ -293,8 +291,6 @@ class sly_Service_Category extends sly_Service_Model_Base {
 	}
 
 	public function changeStatus($categoryID, $clangID, $newStatus = null) {
-		global $REX;
-
 		$categoryID = (int) $categoryID;
 		$clangID    = (int) $clangID;
 		$cat        = $this->findById($categoryID, $clangID);

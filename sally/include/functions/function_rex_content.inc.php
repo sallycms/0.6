@@ -266,8 +266,6 @@ function rex_getActionModeBit($function)
  */
 function rex_article2startpage($neu_id)
 {
-	global $REX;
-
 	$neu_id = (int) $neu_id;
 	$GAID   = array();
 
@@ -318,11 +316,12 @@ function rex_article2startpage($neu_id)
 	}
 
 	$paramsToSelect = implode(',', $params);
+	$languages      = sly_Util_Language::findAll();
 
 	$alt = new rex_sql();
 	$neu = new rex_sql();
 
-	foreach (array_keys($REX['CLANG']) as $clang) {
+	foreach (array_keys($languages) as $clang) {
 		$data = rex_sql::getArrayEx(
 			'SELECT '.$paramsToSelect.' FROM #_article '.
 			'WHERE id IN ('.$neu_cat_id.','.$neu_id.') AND clang = '.$clang,
@@ -499,14 +498,13 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
  * @return boolean false bei Fehler, sonst die Artikel Id des neue kopierten Artikels
  */
 function rex_copyArticle($id, $to_cat_id) {
-	global $REX;
-
 	$id        = (int) $id;
 	$to_cat_id = (int) $to_cat_id;
 	$new_id    = '';
 	$prefix    = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+	$languages = sly_Util_Language::findAll();
 
-	foreach (array_keys($REX['CLANG']) as $clang) {
+	foreach (array_keys($languages) as $clang) {
 		// Validierung der id & from_cat_id
 		$from_data = rex_sql::fetch('*', 'article', 'clang = '.$clang.' AND id = '.$id);
 
@@ -605,17 +603,17 @@ function rex_copyArticle($id, $to_cat_id) {
  */
 function rex_moveArticle($id, $from_cat_id, $to_cat_id)
 {
-	global $REX;
-
 	$id          = (int) $id;
 	$to_cat_id   = (int) $to_cat_id;
 	$from_cat_id = (int) $from_cat_id;
+	$languages   = sly_Util_Language::findAll();
+	$prefix      = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 
 	if ($from_cat_id == $to_cat_id) {
 		return false;
 	}
 
-	foreach (array_keys($REX['CLANG']) as $clang) {
+	foreach (array_keys($languages) as $clang) {
 		// Validierung der id & from_cat_id
 		$from_name = rex_sql::fetch('name', 'article', 'clang = '.$clang.' AND startpage <> 1 AND id = '.$id.' AND re_id = '.$from_cat_id);
 
@@ -638,7 +636,7 @@ function rex_moveArticle($id, $from_cat_id, $to_cat_id)
 
 				$art_sql = new rex_sql();
 
-				$art_sql->setTable($REX['DATABASE']['TABLE_PREFIX'].'article');
+				$art_sql->setTable($prefix.'article');
 				$art_sql->setValue('re_id',   $re_id);
 				$art_sql->setValue('path',    $path);
 				$art_sql->setValue('catname', $catname);
@@ -681,10 +679,10 @@ function rex_moveArticle($id, $from_cat_id, $to_cat_id)
  */
 function rex_moveCategory($from_cat, $to_cat)
 {
-	global $REX;
-
-	$from_cat = (int) $from_cat;
-	$to_cat   = (int) $to_cat;
+	$from_cat  = (int) $from_cat;
+	$to_cat    = (int) $to_cat;
+	$languages = sly_Util_Language::findAll();
+	$prefix    = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 
 	if ($from_cat == $to_cat) {
 		// kann nicht in gleiche Kategroie kopiert werden
@@ -729,14 +727,14 @@ function rex_moveCategory($from_cat, $to_cat)
 			$from_path = $from_data['path'].$from_cat.'|';
 
 			$up   = new rex_sql();
-			$cats = $up->getArrayEx('SELECT id, re_id, path FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE path LIKE "'.$from_path.'%" AND clang = 1');
+			$cats = $up->getArrayEx('SELECT id, re_id, path FROM '.$prefix.'article WHERE path LIKE "'.$from_path.'%" AND clang = 1');
 
 			foreach ($cats as $id => $data) {
 				// make update
 				$new_path = $to_path.$from_cat.'|'.str_replace($from_path, '', $data['path']);
 
 				// path Ã¤ndern und speichern
-				$up->setTable($REX['DATABASE']['TABLE_PREFIX'].'article');
+				$up->setTable($prefix.'article');
 				$up->setWhere('id = '.$id);
 				$up->setValue('path', $new_path);
 				$up->update();
@@ -748,10 +746,10 @@ function rex_moveCategory($from_cat, $to_cat)
 
 			// clang holen, max catprio holen und entsprechend updaten
 
-			foreach (array_keys($REX['CLANG']) as $clang) {
+			foreach (array_keys($languages) as $clang) {
 				$catprior = (int) rex_sql::fetch('MAX(catprior)', 'article', 're_id = '.$to_cat.' AND clang = '.$clang);
 
-				$up->setTable($REX['DATABASE']['TABLE_PREFIX'].'article');
+				$up->setTable($prefix.'article');
 				$up->setWhere('id = '.$from_cat.' AND clang = '.$clang);
 				$up->setValue('path', $to_path);
 				$up->setValue('re_id', $to_cat);
@@ -770,7 +768,7 @@ function rex_moveCategory($from_cat, $to_cat)
 				rex_deleteCacheArticle($id);
 			}
 
-			foreach (array_keys($REX['CLANG']) as $clang) {
+			foreach (array_keys($languages) as $clang) {
 				rex_newCatPrio($from_data['re_id'], $clang, 0, 1);
 			}
 		}

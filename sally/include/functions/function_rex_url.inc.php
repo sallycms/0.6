@@ -52,7 +52,7 @@ function rex_getUrl($id = 0, $clang = false, $name = 'NoName', $params = '', $di
 	$clangOrig    = $clang;
 	$id           = (int) $id;
 	$clang        = (int) $clang;
-	$multilingual = count($REX['CLANG']) > 1;
+	$multilingual = sly_Util_Language::isMultilingual();
 
 	if ($id <= 0) {
 		$id = sly_Core::getCurrentArticleId();
