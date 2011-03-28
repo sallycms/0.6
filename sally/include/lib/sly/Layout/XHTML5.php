@@ -12,7 +12,6 @@
  * @ingroup layout
  */
 class sly_Layout_XHTML5 extends sly_Layout_XHTML {
-	protected $isTransitional = false;
 	protected $manifest;
 
 	public function setManifest($manifest) {
