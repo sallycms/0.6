@@ -48,7 +48,7 @@ function rex_send_file($file, $contentType, $environment = 'backend') {
  * @param string      $environment  die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
 function rex_send_article($article, $content, $environment) {
-	global $REX;
+	$config = sly_Core::config();
 
 	// ----- EXTENSION POINT
 	$content = rex_register_extension_point('OUTPUT_FILTER', $content, array('environment' => $environment));
@@ -58,7 +58,7 @@ function rex_send_article($article, $content, $environment) {
 
 	if ($article) {
 		$lastModified = $article->getUpdateDate();
-		$etag .= $article->getId() . '_' . $article->getClang();
+		$etag = $article->getId() . '_' . $article->getClang();
 
 		if ($article->getId() == $config->get('NOTFOUND_ARTICLE_ID') && $article->getId() != $config->get('START_ARTICLE_ID')) {
 			header('HTTP/1.0 404 Not Found');
