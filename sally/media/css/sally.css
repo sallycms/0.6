@@ -1,14 +1,9 @@
-#sly-page {
-	+clearfix;
-}
-
-* html #sly-page {
-	height: 1%;
+h1, h2, h3, h4, h5, h6 {
+	font-weight: normal;
 }
 
 .sly-content {
 	clear: left;
-	/* margin-top: 10px; */
 
 	> p {
 		margin-bottom: 1em;
@@ -33,14 +28,6 @@ img.sly-sprite, a.sly-sprite, span.sly-sprite {
 a.sly-sprite, span.sly-sprite {
 	display: block;
 	margin: 0 auto;
-}
-
-.sly-sprite {
-	&-article           { background-position: -16px 0;     }
-	&-article-add       { background-position: -16px -16px; }
-	&-article-startpage { background-position: -16px -32px; }
-	&-category          { background-position: -32px 0;     }
-	&-category-add      { background-position: -32px -16px; }
 }
 
 /**********************************************************************/
@@ -127,8 +114,6 @@ caption, legend {
 		&.sly-icon {
 			padding: 0;
 		}
-
-		&.rex-colz { width: 153px; }
 	}
 
 	tr:first-child td { border-top: none; }
@@ -151,8 +136,7 @@ caption, legend {
 
 /*	Spaltigkeit */                                                 /* *lol* :) */
 
-.rex-area-col,
-.rex-addon-col {
+.rex-area-col {
 	&-2 {
 		+clearfix;
 		position: relative;
@@ -183,7 +167,7 @@ caption, legend {
 	border-style: solid;
 	+border-radius($brd_rad);
 
-	.rex-widget-icons {
+	&-icons {
 		padding: 2px 0 0 10px;
 	}
 
@@ -242,22 +226,14 @@ input, textarea, select {
 /*	Allgemeines */
 
 #sly-wrapper {
-	clear: none;
 	float: right;
 	width: 797px;
 	padding-bottom: 36px;
+	+clearfix;
 
 	> p, .sly-table {
-		margin: 10px 0;
+		margin: 0 0 10px 0;
 	}
-}
-
-/*	Sprachen, Content (Editiermodus, Metadaten, Anzeigen) */
-
-.rex-addon-col-a,
-.rex-addon-col-b {
-	float: none;
-	width: 100%;
 }
 
 

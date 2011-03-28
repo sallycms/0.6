@@ -94,7 +94,7 @@
 
 		&-content-editmode {
 			label {
-				+hardcore-hidden;
+				+hide;
 			}
 
 			.rex-form-col-1 {
@@ -103,7 +103,7 @@
 
 			&, &-add-slice, &-edit-slice {
 
-				legend { +hardcore-hidden; }
+				legend { +hide; }
 
 				.rex-form-row {
 					p input.rex-form-submit { margin-left: 10px; }

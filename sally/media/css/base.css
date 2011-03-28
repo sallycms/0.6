@@ -1,7 +1,7 @@
 +global-reset;
 +html5-reset;
 
-=hardcore-hidden {
+/*=hardcore-hidden {
 	display: inline !important;
 	position: absolute !important;
 	left: -1000px !important;
@@ -10,12 +10,11 @@
 	height: 0px !important;
 	overflow: hidden !important;
 	background-color: $background !important;
-}
+}*/
 
 body {
 	font-family: Calibri, Verdana, Arial, sans-serif;
 	position: relative;
-	margin: 0;
 	color: $drk_grey;
 	background: #f2f2f2 url(../body.gif) 0 0 repeat-x;;
 }
@@ -26,12 +25,9 @@ body {
 	font-size: 0.9em;
 	background-image: url(../website.gif);
 	background-repeat: repeat-x;
+	+clearfix;
 }
 
-
-h1, h2, h3, h4, h5, h6 {
-	font-weight: normal;
-}
 
 input, textarea, select {
 	font-size: 100%;
@@ -270,7 +266,7 @@ ul.rex-ul1 {
 *******************************************************************************/
 
 .rex-navi-slice ul li span {
-	+hardcore-hidden;
+	+hide;
 }
 
 .center {

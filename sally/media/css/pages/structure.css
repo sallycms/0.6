@@ -1,7 +1,12 @@
+.sly-sprite {
+	&-article           { background-position: -16px 0;     }
+	&-article-add       { background-position: -16px -16px; }
+	&-article-startpage { background-position: -16px -32px; }
+	&-category          { background-position: -32px 0;     }
+	&-category-add      { background-position: -32px -16px; }
+}
+
 #rex-page-structure {
-	.rex-form {
-		+border-radius($brd_rad);
-	}
 	.sly-table {
 		+border-radius(0px);
 		border: 0;
@@ -10,7 +15,7 @@
 
 #rex-form-structure-category,
 #rex-form-structure-article {
-	input.rex-form-submit {
+	.rex-form-submit {
 		margin-left: 0;
 	}
 }
