@@ -28,7 +28,6 @@ else {
 	unset($REX);
 }
 
-$REX['REDAXO']      = true;
 $REX['SALLY']       = true;
 $REX['HTDOCS_PATH'] = SLY_IS_TESTING ? SLY_TESTING_ROOT : '../';
 
