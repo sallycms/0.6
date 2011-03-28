@@ -38,11 +38,11 @@ a.sly-button {
 
 .rex-form-hidden-legend span,
 .rex-form-hidden-label {
-	+hardcore-hidden;
+	+hide;
 }
 
 /* REX-FORM -------------------------------------------------------------------------------------- REX-FORM */
-
+.sly-form .rex-form-row,
 .rex-form .rex-form-row {
 	label, p.rex-form-label {
 		clear: both;
