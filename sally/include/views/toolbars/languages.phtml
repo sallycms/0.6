@@ -74,9 +74,6 @@ if (count($_languages) > 1) {
 		throw new sly_Authorisation_Exception(sprintf(t('authorisation_exception_language_denied'), rex_translate($lang->getName())));
 	}
 }
-else {
-	$clang = 0;
-}
 
 unset($langService);
 unset($_languages);
