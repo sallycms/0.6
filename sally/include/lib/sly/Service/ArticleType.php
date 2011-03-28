@@ -19,7 +19,7 @@ class sly_Service_ArticleType {
 	private $data;
 
 	public function __construct() {
-		$this->data = sly_Util_YAML::load(SLY_BASE . DIRECTORY_SEPARATOR . 'develop' . DIRECTORY_SEPARATOR . 'types.yml');
+		$this->data = sly_Core::config()->get('ARTICLE_TYPES');
 	}
 
 	public function getArticleTypes() {
@@ -36,7 +36,8 @@ class sly_Service_ArticleType {
 	}
 
 	public function getTitle($articleType) {
-		return $this->get($articleType, 'title');
+		$title = $this->get($articleType, 'title');
+		return empty($title) ? $articleType : $title;
 	}
 
 	public function getTemplate($articleType) {

@@ -36,7 +36,7 @@ class sly_Helper_Content {
 		$moduleSelect = self::getModuleSelect($template, $slot);
 		$formID = 'slice' . $prior;
 
-		$form = new sly_Form('index.php', 'GET', t('add_block'), $formID , $formID);
+		$form = new sly_Form('index.php', 'GET', t('add_block'), $formID, $formID);
 		$form->addClass('rex-form-content-editmode');
 		$form->addHiddenValue('article_id', $articleId);
 		$form->addHiddenValue('page', 'content');
@@ -85,10 +85,13 @@ class sly_Helper_Content {
 
               <div class="rex-form-row">
                 <div class="rex-content-editmode-slice-input">
-                <div class="rex-content-editmode-slice-input-2">
-                  ' . $moduleService->getContent($moduleService->getInputFilename($module)) . '
-                </div>
-                </div>
+                <div class="rex-content-editmode-slice-input-2">';
+
+				ob_start();
+					eval('?>' . self::replaceObjectVars(-1, $moduleService->getContent($moduleService->getInputFilename($module))));
+				$slice_content .= ob_get_clean();
+
+               $slice_content .= ' </div>
               </div>
           </fieldset>
 
@@ -111,7 +114,6 @@ class sly_Helper_Content {
            //-->
         </script>';
 
-			$slice_content = self::replaceObjectVars(0, $slice_content);
 			$slice_content = self::replaceCommonVars($slice_content, $articleId, $clang);
 		}
 
@@ -142,9 +144,13 @@ class sly_Helper_Content {
 
             <div class="rex-form-row">
               <div class="rex-content-editmode-slice-input">
-              <div class="rex-content-editmode-slice-input-2">
-              ' . $articleSlice->getInput() . '
-              </div>
+              <div class="rex-content-editmode-slice-input-2">';
+
+		ob_start();
+		eval('?>'.$articleSlice->getInput());
+		$slice_content .= ob_get_clean();
+
+		$slice_content .= '</div>
               </div>
             </div>
         </fieldset>
@@ -216,7 +222,6 @@ class sly_Helper_Content {
 
 		  // ----- / PRE VIEW ACTION
 		 */
-		$slice_content = sly_Helper_Content::replaceObjectVars($articleSlice->getSliceId(), $slice_content);
 		$slice_content = sly_Helper_Content::triggerSliceShowEP($slice_content, $articleSlice, 'edit');
 		print $slice_content;
 	}

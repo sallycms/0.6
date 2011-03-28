@@ -55,4 +55,16 @@ class sly_Model_Slice extends sly_Model_Base_Id {
 
 		return $output;
 	}
+
+	public function getInput() {
+		$service  = sly_Service_Factory::getModuleService();
+		$filename = $service->getInputFilename($this->getModule());
+		$output   = $service->getContent($filename);
+
+		foreach (sly_Core::getVarTypes() as $idx => $var) {
+			$output = $var->getBEInput($this->getId(), $output);
+		}
+
+		return $output;
+	}
 }

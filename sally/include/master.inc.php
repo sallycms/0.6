@@ -67,6 +67,7 @@ $config->loadStatic(SLY_INCLUDE_PATH.'/config/sallyStatic.yml');
 $config->loadLocalConfig();
 $config->loadLocalDefaults(SLY_INCLUDE_PATH.'/config/sallyDefaults.yml');
 $config->loadProjectConfig();
+$config->loadDevelop();
 
 // Sync?
 if (!$config->get('SETUP')){
