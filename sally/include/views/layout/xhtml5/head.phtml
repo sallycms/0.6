@@ -9,7 +9,10 @@
  */
 ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"<?= !empty($this->manifest) ? ' manifest="'.$this->manifest.'"' : '' ?>>
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xml:lang="<?= I18NUtils::getLocale('shortLocale') ?>"
+  lang="<?= I18NUtils::getLocale('shortLocale') ?>"
+  <?= !empty($this->manifest) ? ' manifest="'.$this->manifest.'"' : '' ?>>
 <head>
 	<title><?= sly_html(trim($this->title)) ?></title>
 	<?php
