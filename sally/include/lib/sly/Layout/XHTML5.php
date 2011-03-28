@@ -18,7 +18,7 @@ class sly_Layout_XHTML5 extends sly_Layout_XHTML {
 		$this->manifest = $manifest;
 	}
 
-	protected function setTransitional() {
+	public function setTransitional($isTransitional = true) {
 		user_error('Cannot set transitional on XHTML5 layout.', E_NOTICE);
 	}
 
