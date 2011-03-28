@@ -189,9 +189,10 @@ class OOArticleSlice {
 	}
 
 	public function getInput() {
-		$moduleService = sly_Service_Factory::getModuleService();
-		$content = $moduleService->getContent($moduleService->getInputFilename($this->getModuleName()));
+		$slice = $this->getSlice();
+		$content = $slice->getInput();
 		$content = $this->replaceCommonVars($content);
+		$content = $this->replaceGlobals($content);
 		return $content;
 	}
 

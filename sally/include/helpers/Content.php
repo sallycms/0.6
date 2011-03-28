@@ -86,8 +86,7 @@ class sly_Helper_Content {
               <div class="rex-form-row">
                 <div class="rex-content-editmode-slice-input">
                 <div class="rex-content-editmode-slice-input-2">
-                  ' . $moduleService->getContent($moduleService->getInputFilename($module)) . '
-                </div>
+                  ' . eval('?>'.self::replaceObjectVars(-1, $moduleService->getContent($moduleService->getInputFilename($module)))) . '
                 </div>
               </div>
           </fieldset>
@@ -143,7 +142,7 @@ class sly_Helper_Content {
             <div class="rex-form-row">
               <div class="rex-content-editmode-slice-input">
               <div class="rex-content-editmode-slice-input-2">
-              ' . $articleSlice->getInput() . '
+              ' . eval('?>'.$articleSlice->getInput()) . '
               </div>
               </div>
             </div>
