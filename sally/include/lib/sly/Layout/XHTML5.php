@@ -20,7 +20,7 @@ class sly_Layout_XHTML5 extends sly_Layout_XHTML {
 	}
 
 	protected function setTransitional() {
-		throw new sly_Exception('Cannot set transitional on XHTML5 layout.');
+		user_error('Cannot set transitional on XHTML5 layout.', E_NOTICE);
 	}
 
 	public function printHeader() {
