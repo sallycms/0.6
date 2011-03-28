@@ -64,6 +64,17 @@ class sly_Configuration {
 		return $this->getConfigDir().DIRECTORY_SEPARATOR.'sly_project.yml';
 	}
 
+	public function loadDevelop() {
+		$dir = new sly_Util_Directory(SLY_BASE.DIRECTORY_SEPARATOR.'develop'.DIRECTORY_SEPARATOR.'config', true);
+		foreach($dir->listPlain() as $file) {
+			$this->loadProject($dir.DIRECTORY_SEPARATOR.$file, true);
+		}
+	}
+
+	public function loadProject($filename, $force = false, $key = '/') {
+		return $this->loadInternal($filename, self::STORE_PROJECT_DEFAULT, $force, $key);
+	}
+
 	public function loadStatic($filename, $key = '/') {
 		return $this->loadInternal($filename, self::STORE_STATIC, false, $key);
 	}
