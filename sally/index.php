@@ -100,7 +100,7 @@ $layout = sly_Core::getLayout('Sally');
 
 // include AddOns
 
-require_once SLY_INCLUDE_PATH.'/addons.inc.php';
+sly_Core::loadAddons();
 
 if ($REX['USER']) {
 	// Core-Seiten initialisieren

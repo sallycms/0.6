@@ -27,7 +27,8 @@ $REX['HTDOCS_PATH'] = './';
 // Core laden
 
 require_once 'sally/include/master.inc.php';
-require_once 'sally/include/addons.inc.php';
+
+sly_Core::loadAddons();
 
 if ($config->get('FRONTEND_SYNC')) {
 	require_once 'sally/include/functions/function_rex_generate.inc.php';
