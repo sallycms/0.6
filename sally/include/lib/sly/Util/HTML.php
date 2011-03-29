@@ -11,11 +11,24 @@
 /**
  * @ingroup util
  */
-class sly_Util_HTML
-{
-	public static function buildAttributeString($attributes)
-	{
+class sly_Util_HTML {
+
+	/**
+	 * Builds an attribute part for a tag and returns it as a string.
+	 *
+	 *
+	 * @param  array  $attributes  Associative array of attribute values, where key is the attribute name and value is the attribute value.
+	 *                             e.g. array('src' => 'picture.png', alt='my picture')
+	 * @param  array  $force       Array of attributes that should be added, even if they are empty.
+	 *                             e.g. array('alt')
+	 * @return string              String with the attributes and their values
+	 */
+	public static function buildAttributeString($attributes, $force = array()) {
 		$attributes = array_filter($attributes, array(__CLASS__, 'isAttribute'));
+
+		foreach ($force as $attribute) {
+			if (empty($attributes[$attribute])) $attributes[$attribute] = '';
+		}
 
 		foreach ($attributes as $key => &$value) {
 			$value = strtolower(trim($key)).'="'.sly_html(trim($value)).'"';
@@ -82,4 +95,5 @@ class sly_Util_HTML
 	{
 		$value = strtolower(trim($key)).'="'.sly_html(trim($value)).'"';
 	}
+
 }

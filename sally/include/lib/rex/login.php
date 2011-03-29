@@ -132,7 +132,7 @@ class rex_login {
 	 *
 	 * @return boolean  true bei Erfolg, sonst false
 	 */
-	public function checkLogin($password) {
+	public function checkLogin($password = '') {
 		global $REX;
 
 		// wenn logout dann header schreiben und auf error seite verweisen

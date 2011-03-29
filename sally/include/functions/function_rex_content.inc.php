@@ -471,24 +471,25 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 	}
 
 	$article_slices = OOArticleSlice::_getSliceWhere('article_id = '.$from_id.' AND clang = '.$from_clang);
-	foreach($article_slices as $article_slice){
-		$sliceservice = sly_Service_Factory::getService('Slice');
-		$slice = $sliceservice->findById($article_slice->getSliceId());
-		$slice = $sliceservice->copy($slice);
+	if(!empty($article_slices)) {
+		foreach($article_slices as $article_slice){
+			$sliceservice = sly_Service_Factory::getService('Slice');
+			$slice = $sliceservice->findById($article_slice->getSliceId());
+			$slice = $sliceservice->copy($slice);
 
-		$insert = new rex_sql();
-		$insert->setTable('article_slice', true);
-		$insert->setValue('clang', $insert->escape($to_clang));
-		$insert->setValue('slot', $insert->escape($article_slice->getSlot()));
-		$insert->setValue('prior', $insert->escape($article_slice->getPrior()));
-		$insert->setValue('slice_id', $insert->escape($slice->getId()));
-		$insert->setValue('article_id', $insert->escape($to_id));
-		$insert->setValue('module', $insert->escape($slice->getModule()));
-		$insert->setValue('revision', 0);
-		$insert->addGlobalCreateFields();
-		$insert->insert();
+			$insert = new rex_sql();
+			$insert->setTable('article_slice', true);
+			$insert->setValue('clang', $insert->escape($to_clang));
+			$insert->setValue('slot', $insert->escape($article_slice->getSlot()));
+			$insert->setValue('prior', $insert->escape($article_slice->getPrior()));
+			$insert->setValue('slice_id', $insert->escape($slice->getId()));
+			$insert->setValue('article_id', $insert->escape($to_id));
+			$insert->setValue('module', $insert->escape($slice->getModule()));
+			$insert->setValue('revision', 0);
+			$insert->addGlobalCreateFields();
+			$insert->insert();
+		}
 	}
-
 	rex_deleteCacheArticle($to_id, $to_clang);
 	return true;
 }

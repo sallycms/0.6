@@ -114,6 +114,7 @@ class OOArticleSlice {
 	 */
 	public static function getFirstSliceForArticle($articleID, $slot = null, $clang = null, $revision = 0) {
 		if ($clang === null) $clang = sly_Core::getCurrentClang();
+
 		if ($slot  === null) {
 			$template = self::getArticle()->getTemplateName();
 			$slot = sly_Service_Factory::getService('Template')->getFirstSlot($template);
@@ -127,7 +128,7 @@ class OOArticleSlice {
 		$revision  = (int) $revision;
 
 		return self::_getSliceWhere(
-			'a.article_id = '.$articleID.' AND a.clang = "'.$clang.'" AND a.slot = "'.mysql_real_escape_string($slot).'" AND '.
+			'a.article_id = '.$articleID.' AND a.clang = '.$clang.' AND a.slot = "'.mysql_real_escape_string($slot).'" AND '.
 			'((a.prior = 0  AND a.id = b.id) '.
 			'OR (b.slot != a.slot AND b.id = a.prior)) '.
 			'AND a.revision = '.$revision.' AND b.revision = '.$revision,
