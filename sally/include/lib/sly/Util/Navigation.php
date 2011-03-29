@@ -115,6 +115,8 @@ class sly_Util_Navigation {
 			if (($isActive || $all) && $currentLevel +1 >= $maxDepth) {
 				$children = $category->getChildren(true);
 				$childrenHTMLString = $this->walkCategories($children, $all, $maxDepth, $currentLevel+1);
+			}else {
+				$childrenHTMLString = '';
 			}
 
 			$isLast = $num == $lastnum;
