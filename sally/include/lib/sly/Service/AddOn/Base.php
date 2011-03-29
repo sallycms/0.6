@@ -48,8 +48,10 @@ abstract class sly_Service_AddOn_Base {
 		global $REX;
 
 		$config       = sly_Core::config();
-		$staticFile   = $this->baseFolder($component).'/static.yml';
-		$defaultsFile = $this->baseFolder($component).'/defaults.yml';
+		$staticFile   = $this->baseFolder($component).'static.yml';
+		$defaultsFile = $this->baseFolder($component).'defaults.yml';
+		$globalsFile  = $this->baseFolder($component).'globals.yml';
+
 
 		if (file_exists($staticFile)) {
 			$config->loadStatic($staticFile, $this->getConfPath($component));
@@ -64,7 +66,11 @@ abstract class sly_Service_AddOn_Base {
 			}
 		}
 
-		if (file_exists($defaultsFile)) {
+		if (file_exists($globalsFile) && $this->isInstalled($component)) {
+			$config->loadStatic($globalsFile);
+		}
+
+		if (file_exists($defaultsFile) && $this->isActivated($component)) {
 			$config->loadProjectDefaults($defaultsFile, false, $this->getConfPath($component));
 		}
 	}
