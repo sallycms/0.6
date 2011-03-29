@@ -26,7 +26,10 @@ if ($file === false) die;
 // Prüfen, ob der Request in ein erlaubtes Verzeichnis unterhalb dieser Datei abzielt.
 $script_path = pathinfo(realpath(__FILE__), PATHINFO_DIRNAME);
 $file_path   = pathinfo($file, PATHINFO_DIRNAME);
-if (substr($file_path, 0, strlen($script_path)) !== $script_path) die;
+if (substr($file_path, 0, strlen($script_path)) !== $script_path) {
+	header('HTTP/1.0 403 Permission Denied');
+	die;
+}
 
 $mimetypes = array(
 	'.css'  => 'text/css',
@@ -37,7 +40,11 @@ $mimetypes = array(
 	'.gif'  => 'image/gif'
 );
 
-if (!file_exists($file)) die;
+
+if (!file_exists($file)){
+	header('HTTP/1.0 404 Not Found');
+	die;
+}
 if (!preg_match('#\.(css|js|png|jpg|jpeg|gif)$#i', $file)) die;
 
 // Last-Modified-Since-Behandlung
