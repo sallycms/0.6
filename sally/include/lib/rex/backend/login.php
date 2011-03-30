@@ -28,7 +28,7 @@ class rex_backend_login extends rex_login
 		$this->tableName = $tableName;
 	}
 
-	public function checkLogin($password)
+	public function checkLogin($password = '')
 	{
 		global $REX;
 
