@@ -172,13 +172,11 @@ class sly_Configuration {
 		if (is_null($key) || strlen($key) === 0) {
 			throw new sly_Exception('Key '.$key.' ist nicht erlaubt!');
 		}
-		if (is_array($value) && !empty($value)) {
+		if (is_array($value) && !empty($value) && sly_Util_Array::isAssoc($value)) {
 			foreach ($value as $ikey => $val) {
 				$currentPath = trim($key.'/'.$ikey, '/');
-				if (is_array($val) && !empty($val)) $this->setInternal($currentPath, $val, $mode, $force);
-				else $this->setInternal($currentPath, $val, $mode, $force);
+				$this->setInternal($currentPath, $val, $mode, $force);
 			}
-
 			return $value;
 		}
 
