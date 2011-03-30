@@ -26,7 +26,6 @@ class sly_Model_User extends sly_Model_Base_Id {
 	protected $createdate;
 	protected $updatedate;
 	protected $lasttrydate;
-	protected $cookiekey;
 	protected $timezone;
 	protected $revision;
 
@@ -38,7 +37,7 @@ class sly_Model_User extends sly_Model_Base_Id {
 		'name' => 'string', 'description' => 'string', 'login' => 'string', 'psw' => 'string',
 		'status' => 'int', 'rights' => 'string', 'updateuser' => 'string',
 		'updatedate' => 'int', 'createuser' => 'string', 'createdate' => 'int', 'lasttrydate' => 'int',
-		'cookiekey' => 'string', 'timezone' => 'string', 'revision' => 'int'
+		'timezone' => 'string', 'revision' => 'int'
 	);
 
 	public function __construct($params = array()) {
@@ -70,29 +69,33 @@ class sly_Model_User extends sly_Model_Base_Id {
 	public function setName($name)               { $this->name        = $name;         }
 	public function setDescription($description) { $this->description = $description;  }
 	public function setLogin($login)             { $this->login       = $login;        }
+
 	/**
 	 * Sets a password into the user model.
 	 *
-	 * This method is doing the hashing. Mage sure, the createdate is set before.
+	 * This method is doing the hashing. Mage sure the createdate is set before.
 	 *
 	 * @param string $password  The password (plain)
 	 */
 	public function setPassword($password) {
 		$this->setHashedPassword(sly_Util_User::getPasswordHash($this, $password));
 	}
+
 	/**
 	 * Sets a password into the user model, where hashing is already done
 	 *
 	 * @param string $psw  The hashed password
 	 */
-	public function setHashedPassword($psw)      { $this->psw         = $psw;          }
+	public function setHashedPassword($psw) {
+		$this->psw = $psw;
+	}
+
 	public function setStatus($status)           { $this->status      = (int) $status; }
 	public function setCreateDate($createdate)   { $this->createdate  = $createdate;   }
 	public function setUpdateDate($updatedate)   { $this->updatedate  = $updatedate;   }
 	public function setCreateUser($createuser)   { $this->createuser  = $createuser;   }
 	public function setUpdateUser($updateuser)   { $this->updateuser  = $updateuser;   }
 	public function setLastTryDate($lasttrydate) { $this->lasttrydate = $lasttrydate;  }
-	public function setCookieKey($cookiekey)     { $this->cookiekey   = $cookiekey;    }
 	public function setTimeZone($timezone)       { $this->timezone    = $timezone;     }
 	public function setRevision($revision)       { $this->revision    = $revision;     }
 
@@ -107,7 +110,6 @@ class sly_Model_User extends sly_Model_Base_Id {
 	public function getCreateUser()  { return $this->createuser;  }
 	public function getUpdateUser()  { return $this->updateuser;  }
 	public function getLastTryDate() { return $this->lasttrydate; }
-	public function getCookieKey()   { return $this->cookiekey;   }
 	public function getTimeZone()    { return $this->timezone;    }
 	public function getRevision()    { return $this->revision;    }
 
