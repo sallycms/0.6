@@ -86,10 +86,10 @@ CREATE TABLE `sly_file_category` (
 CREATE TABLE `sly_user` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255),
-  `description` TEXT,
+  `description` VARCHAR(255),
   `login` VARCHAR(50) NOT NULL,
-  `psw` VARCHAR(50) NOT NULL,
-  `status` VARCHAR(5) NOT NULL,
+  `psw` CHAR(40) NOT NULL,
+  `status` TINYINT(1) NOT NULL,
   `rights` TEXT NOT NULL,
   `createuser` VARCHAR(255) NOT NULL,
   `updateuser` VARCHAR(255) NOT NULL,
