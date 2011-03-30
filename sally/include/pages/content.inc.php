@@ -310,7 +310,7 @@ if (!is_null($OOArt)) {
 
 						$info .= rex_execPostSaveAction($module, $function, $REX_ACTION);
 
-						sly_Core::dispatcher()->notify('SLY_CONTENT_UPDATED', array(
+						sly_Core::dispatcher()->notify('SLY_CONTENT_UPDATED', '', array(
 							'article_id' => $article_id,
 							'clang'      => $clang
 						));
