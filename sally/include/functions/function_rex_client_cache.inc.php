@@ -62,8 +62,9 @@ function rex_send_article($REX_ARTICLE, $content, $environment, $sendcharset = f
 	if ($REX_ARTICLE) {
 		$lastModified = $REX_ARTICLE->getValue('updatedate');
 		$etag        .= $REX_ARTICLE->getValue('pid');
+		$requestedID  = sly_request('article_id', 'int');
 
-		if ($REX_ARTICLE->getArticleId() == $REX['NOTFOUND_ARTICLE_ID'] && $REX_ARTICLE->getArticleId() != $REX['START_ARTICLE_ID']) {
+		if ($requestedID != $REX['NOTFOUND_ARTICLE_ID'] && $REX_ARTICLE->getArticleId() == $REX['NOTFOUND_ARTICLE_ID'] && $REX_ARTICLE->getArticleId() != $REX['START_ARTICLE_ID']) {
 			header('HTTP/1.0 404 Not Found');
 		}
 	}
