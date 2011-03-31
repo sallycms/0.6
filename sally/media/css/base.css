@@ -65,10 +65,10 @@ img, iframe {
 	vertical-align:bottom;
 }
 
-/* REX-TITLE --------------------------------------------------------------------------------------- REX-TITLE */
-#rex-title {
+/* PAGEHEAD -------------------------------------------------------- PAGEHEAD */
+#sly-pagehead {
 
-	margin: 0 0 5px 0;
+	margin: 0 0 10px 0;
 
 	.sly-navi-path{
 		li {
@@ -82,29 +82,15 @@ img, iframe {
 	}
 
 	h1 {
-		padding-top: 5px; /* Ausrichtung der Überschrift mit der Navi-Überschrift */
-		margin-bottom: 4px; /* Ausrichtung der Überschrift mit der Navi-Überschrift */
 		font-size: 2em;
-		height: 35px;
 		text-shadow: 1px 1px 0px rgba(255,255,255,.8);
 	}
-	.rex-title-row {
-		/* gestrichelte Linien über und unter der Pfadangabe */
-		&-sub {
-			border-top: 1px dotted $md_grey;
-			border-bottom: 1px dotted $md_grey;
-			padding: 15px 0;
-			margin-bottom: 5px;
-		}
+	.pagehead-row {
+		height: 40px;
+		line-height: 40px;
+		border-bottom: 1px dotted $md_grey;
 
-		&-empty {
-			border-bottom: 0;
-			padding: 0;
-			margin: 0;
-			p { display: none; }
-		}
-
-		ul li a.rex-active {
+		a.rex-active {
 			color: $drk_grey;
 		}
 

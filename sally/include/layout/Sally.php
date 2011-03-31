@@ -71,20 +71,17 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		parent::printFooter();
 	}
 
-	public function pageHeader($head, $subtitle = null) {
+	public function pageHeader($head, $subtitle = '') {
 		global $REX;
 
-		if (empty($subtitle)) {
-			$subtitle = '<div class="rex-title-row rex-title-row-sub rex-title-row-empty"><p>&nbsp;</p></div>';
-		}
-		else {
-			$subtitle = '<div class="rex-title-row rex-title-row-sub">'.$this->getSubtitle($subtitle).'</div>';
+		if (!empty($subtitle)) {
+			$subtitle = '<div class="pagehead-row">'.$this->getSubtitle($subtitle).'</div>';
 		}
 
 		$this->appendToTitle($head);
 
 		$head = rex_register_extension_point('PAGE_TITLE', $head, array('page' => $REX['PAGE']));
-		print '<div id="rex-title"><div class="rex-title-row"><h1>'.$head.'</h1></div>'.$subtitle.'</div>';
+		print '<div id="sly-pagehead"><div class="pagehead-row"><h1>'.$head.'</h1></div>'.$subtitle.'</div>';
 
 		rex_register_extension_point('PAGE_TITLE_SHOWN', $subtitle, array('page' => $REX['PAGE']));
 		print '<!-- *** OUTPUT OF CONTENT - START *** -->';
