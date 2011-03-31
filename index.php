@@ -20,9 +20,7 @@ ob_implicit_flush(0);
 
 unset($REX);
 
-$REX['REDAXO']      = false; // Backend = true, Frontend = false
-$REX['SALLY']       = false; // Backend = true, Frontend = false
-$REX['HTDOCS_PATH'] = './';
+define(SLY_HTDOCS_PATH, './');
 
 // Core laden
 

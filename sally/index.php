@@ -28,8 +28,7 @@ else {
 	unset($REX);
 }
 
-$REX['SALLY']       = true;
-$REX['HTDOCS_PATH'] = SLY_IS_TESTING ? SLY_TESTING_ROOT : '../';
+define(SLY_HTDOCS_PATH, SLY_IS_TESTING ? SLY_TESTING_ROOT : '../');
 
 require 'include/master.inc.php';
 

@@ -368,8 +368,8 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 		if ($doSubindexing) {
 			// increment filename suffix until an unique one was found
 
-			if (file_exists($REX['MEDIAFOLDER'].'/'.$newFilename)) {
-				for ($cnt = 1; file_exists($REX['MEDIAFOLDER'].'/'.$newName.'_'.$cnt.$newExt); ++$cnt);
+			if (file_exists(SLY_MEDIAFOLDER.'/'.$newFilename)) {
+				for ($cnt = 1; file_exists(SLY_MEDIAFOLDER.'/'.$newName.'_'.$cnt.$newExt); ++$cnt);
 				$newFilename = $newName.'_'.$cnt.$newExt;
 			}
 		}

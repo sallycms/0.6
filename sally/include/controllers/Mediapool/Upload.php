@@ -63,7 +63,7 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 
 		// create filenames
 
-		$dstFile = $REX['MEDIAFOLDER'].'/'.$newFilename;
+		$dstFile = SLY_MEDIAFOLDER.'/'.$newFilename;
 		$file    = null;
 
 		// move uploaded file

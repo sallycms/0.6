@@ -39,3 +39,6 @@ if (defined('IS_SALLY_BACKEND')) {
 	require_once SLY_INCLUDE_PATH.'/functions/function_rex_time.inc.php';
 	require_once SLY_INCLUDE_PATH.'/functions/function_rex_generate.inc.php';
 }
+
+// register sly_Loader for cache clearing
+sly_Core::dispatcher()->register('ALL_GENERATED', array('sly_Loader', 'clearCache'));

@@ -512,7 +512,7 @@ class OOMedia
 			$sql->setQuery($qry);
 
 			if (self::fileExists($this->getFileName())) {
-				unlink($REX['MEDIAFOLDER'].DIRECTORY_SEPARATOR.$this->getFileName());
+				unlink(SLY_MEDIAFOLDER.DIRECTORY_SEPARATOR.$this->getFileName());
 			}
 
 			return $sql->getError();
@@ -524,7 +524,7 @@ class OOMedia
 	public static function fileExists($filename)
 	{
 		global $REX;
-		return strlen($filename) > 0 && file_exists(sly_Util_Directory::join($REX['MEDIAFOLDER'], $filename));
+		return strlen($filename) > 0 && file_exists(sly_Util_Directory::join(SLY_MEDIAFOLDER, $filename));
 	}
 
 	// allowed filetypes

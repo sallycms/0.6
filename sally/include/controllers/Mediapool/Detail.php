@@ -93,7 +93,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 			$oldType  = $fileObj->getFiletype();
 
 			if ($filetype == $oldType || OOMedia::compareImageTypes($filetype, $oldType)) {
-				$targetFile = $REX['MEDIAFOLDER'].'/'.$fileObj->getFilename();
+				$targetFile = SLY_MEDIAFOLDER.'/'.$fileObj->getFilename();
 
 				if (@move_uploaded_file($filename, $targetFile)) {
 					$msg = $this->t('file_changed');

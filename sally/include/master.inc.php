@@ -38,23 +38,17 @@ if (ini_get('register_globals')) {
 
 // So, jetzt haben wir eine saubere Grundlage für unsere Aufgaben.
 
-// Wir gehen davon aus, dass $REX['HTDOCS_PATH'] existiert. Das ist
+// Wir gehen davon aus, dass SLY_HTDOCS_PATH existiert. Das ist
 // eine Annahme die den Code hier schneller macht und vertretbar ist.
 // Wer das falsch setzt, hat es verdient, dass das Script nicht läuft.
 
-$REX['FRONTEND_PATH'] = realpath($REX['HTDOCS_PATH']);
-$REX['INCLUDE_PATH']  = $REX['FRONTEND_PATH'].DIRECTORY_SEPARATOR.'sally'.DIRECTORY_SEPARATOR.'include';
-$REX['DATAFOLDER']    = $REX['FRONTEND_PATH'].DIRECTORY_SEPARATOR.'data';
-$REX['MEDIAFOLDER']   = $REX['DATAFOLDER'].DIRECTORY_SEPARATOR.'mediapool';
-$REX['DYNFOLDER']     = $REX['DATAFOLDER'].DIRECTORY_SEPARATOR.'dyn';
-
-define('SLY_BASE',         $REX['FRONTEND_PATH']);
-define('SLY_INCLUDE_PATH', $REX['INCLUDE_PATH']);
-define('SLY_DYNFOLDER',    $REX['DYNFOLDER']);
-define('SLY_DATAFOLDER',   $REX['DATAFOLDER']);
-define('SLY_MEDIAFOLDER',  $REX['MEDIAFOLDER']);
+define('SLY_BASE',          realpath(SLY_HTDOCS_PATH));
+define('SLY_INCLUDE_PATH',  SLY_BASE.DIRECTORY_SEPARATOR.'sally'.DIRECTORY_SEPARATOR.'include');
+define('SLY_DATAFOLDER',    SLY_BASE.DIRECTORY_SEPARATOR.'data');
+define('SLY_DYNFOLDER',     SLY_DATAFOLDER.DIRECTORY_SEPARATOR.'dyn');
+define('SLY_MEDIAFOLDER',   SLY_DATAFOLDER.DIRECTORY_SEPARATOR.'mediapool');
 define('SLY_DEVELOPFOLDER', SLY_BASE.DIRECTORY_SEPARATOR.'develop');
-define('SLY_ADDONFOLDER',  $REX['INCLUDE_PATH'].DIRECTORY_SEPARATOR.'addons');
+define('SLY_ADDONFOLDER',   SLY_INCLUDE_PATH.DIRECTORY_SEPARATOR.'addons');
 
 // Loader initialisieren
 
@@ -72,22 +66,13 @@ $config->loadDevelop();
 // Sync?
 if (!$config->get('SETUP')){
 	// Standard-Variablen
-	sly_Core::registerVarType('rex_var_globals');
-	sly_Core::registerVarType('rex_var_article');
-	sly_Core::registerVarType('rex_var_category');
-	sly_Core::registerVarType('rex_var_template');
-	sly_Core::registerVarType('rex_var_value');
-	sly_Core::registerVarType('rex_var_link');
-	sly_Core::registerVarType('rex_var_media');
+	sly_Core::registerCoreVarTypes();
 
 	// Sprachen laden
 	$REX['CLANG']      = sly_Util_Language::findAll();
 	$REX['CUR_CLANG']  = sly_Core::getCurrentClang();
 	$REX['ARTICLE_ID'] = sly_Core::getCurrentArticleId();
 }
-
-// register sly_Loader for cache clearing
-sly_Core::dispatcher()->register('ALL_GENERATED', array('sly_Loader', 'clearCache'));
 
 // REDAXO compatibility
 $REX = array_merge($REX, $config->get(null));

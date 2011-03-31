@@ -219,4 +219,14 @@ class sly_Core {
 
 		self::dispatcher()->notify('ADDONS_INCLUDED');
 	}
+	
+	public static function registerCoreVarTypes() {
+		self::registerVarType('rex_var_globals');
+		self::registerVarType('rex_var_article');
+		self::registerVarType('rex_var_category');
+		self::registerVarType('rex_var_template');
+		self::registerVarType('rex_var_value');
+		self::registerVarType('rex_var_link');
+		self::registerVarType('rex_var_media');
+	}
 }

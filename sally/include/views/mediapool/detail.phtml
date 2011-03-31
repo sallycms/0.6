@@ -33,7 +33,7 @@ if ($isImage) {
 	$fwidth  = $media->getWidth();
 	$fheight = $media->getHeight();
 
-	if ($size = @getimagesize($REX['MEDIAFOLDER'].'/'.$fname)) {
+	if ($size = @getimagesize(SLY_MEDIAFOLDER.'/'.$fname)) {
 		$fwidth  = $size[0];
 		$fheight = $size[1];
 	}
@@ -87,7 +87,7 @@ else {
 if ($isImage) {
 	$imgn = '../data/mediapool/'.$encoded_fname.'?t='.$ffile_update;
 
-	if (!file_exists($REX['MEDIAFOLDER'].'/'.$fname)) {
+	if (!file_exists(SLY_MEDIAFOLDER.'/'.$fname)) {
 		$imgn = 'media/mime-error.gif';
 	}
 	else if ($thumbs && $thumbsresize && ($fwidth > 200 || $fheight > 70)) {

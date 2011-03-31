@@ -129,7 +129,7 @@ ob_start();
 				$width  = false;
 				$height = false;
 
-				if ($size = @getimagesize($REX['MEDIAFOLDER'].'/'.$file_name)) {
+				if ($size = @getimagesize(SLY_MEDIAFOLDER.'/'.$file_name)) {
 					$width  = $size[0];
 					$height = $size[1];
 					list($width, $height) = $this->getDimensions($width, $height, 80, 70);
