@@ -97,23 +97,25 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 		if (in_array($addonName, self::$addonsLoaded)) return true;
 
 		$this->loadConfig($addonName);
+		
+		if($this->isAvailable($addonName)) {
+			$requires = $this->getProperty($addonName, 'requires');
 
-		$requires = $this->getProperty($addonName, 'requires');
+			if (!empty($requires)) {
+				if (!is_array($requires)) $requires = sly_makeArray($requires);
 
-		if (!empty($requires)) {
-			if (!is_array($requires)) $requires = sly_makeArray($requires);
-
-			foreach ($requires as $requiredAddon) {
-				$this->loadAddon($requiredAddon);
+				foreach ($requires as $requiredAddon) {
+					$this->loadAddon($requiredAddon);
+				}
 			}
+
+			$this->checkUpdate($addonName);
+
+			$addonConfig = $this->baseFolder($addonName).'config.inc.php';
+			$this->req($addonConfig);
+
+			self::$addonsLoaded[] = $addonName;
 		}
-
-		$this->checkUpdate($addonName);
-
-		$addonConfig = $this->baseFolder($addonName).'config.inc.php';
-		$this->req($addonConfig);
-
-		self::$addonsLoaded[] = $addonName;
 	}
 
 	protected function getI18NPrefix() {

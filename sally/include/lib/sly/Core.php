@@ -202,14 +202,17 @@ class sly_Core {
 		return $instance->navigation;
 	}
 
+	/**
+	 * loads all known addons into Sally
+	 */
 	public static function loadAddons() {
 		$addonService  = sly_Service_Factory::getAddOnService();
 		$pluginService = sly_Service_Factory::getPluginService();
 
-		foreach ($addonService->getAvailableAddons() as $addonName) {
+		foreach ($addonService->getRegisteredAddons() as $addonName) {
 			$addonService->loadAddon($addonName);
 
-			foreach ($pluginService->getAvailablePlugins($addonName) as $pluginName) {
+			foreach ($pluginService->getRegisteredPlugins($addonName) as $pluginName) {
 				$pluginService->loadPlugin(array($addonName, $pluginName));
 			}
 		}

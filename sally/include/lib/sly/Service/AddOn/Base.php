@@ -168,7 +168,7 @@ abstract class sly_Service_AddOn_Base {
 		// check requirements
 
 		if (!$this->isAvailable($component)) {
-			$this->loadConfig($component); // static.yml, defaults.yml
+			$this->loadConfig($component); // static.yml, gloabals.yml defaults.yml
 		}
 
 		$requires = sly_makeArray($this->getProperty($component, 'requires'));
