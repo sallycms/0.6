@@ -27,8 +27,6 @@ class sly_Controller_User extends sly_Controller_Sally {
 	}
 
 	public function add() {
-		global $REX;
-
 		if (sly_post('save', 'boolean', false)) {
 			$password = sly_post('userpsw', 'string');
 			$login    = sly_post('userlogin', 'string');
@@ -88,8 +86,6 @@ class sly_Controller_User extends sly_Controller_Sally {
 	}
 
 	public function edit() {
-		global $REX;
-
 		$user = $this->getUser();
 
 		if ($user === null) {
@@ -145,8 +141,6 @@ class sly_Controller_User extends sly_Controller_Sally {
 	}
 
 	public function delete() {
-		global $REX;
-
 		$user = $this->getUser();
 
 		if ($user === null) {
@@ -234,8 +228,6 @@ class sly_Controller_User extends sly_Controller_Sally {
 	}
 
 	protected function getRightsFromForm($user) {
-		global $REX;
-
 		$permissions = array();
 		$current     = sly_Util_User::getCurrentUser()->getId();
 		$config      = sly_Core::config();

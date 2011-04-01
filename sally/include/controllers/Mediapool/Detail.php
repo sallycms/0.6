@@ -106,7 +106,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 						$fileObj->setHeight($size[1]);
 					}
 
-					@chmod($targetFile, $REX['FILEPERM']);
+					@chmod($targetFile, sly_Core::config()->get('FILEPERM'));
 				}
 				else {
 					$msg = $this->t('file_upload_error');

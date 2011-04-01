@@ -14,8 +14,6 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 	}
 
 	public function upload() {
-		global $REX;
-
 		if (!empty($_FILES['file_new']['name']) && $_FILES['file_new']['name'] != 'none') {
 			$title = sly_request('ftitle', 'string');
 			$cat   = $this->getCurrentCategory();
@@ -47,8 +45,6 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 	}
 
 	protected function saveMedium($fileData, $category, $title) {
-		global $REX;
-
 		// check category
 
 		$category = (int) $category;
@@ -72,7 +68,7 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 			$this->warning = $this->t('file_movefailed');
 		}
 		else {
-			@chmod($dstFile, $REX['FILEPERM']);
+			@chmod($dstFile, sly_Core::config()->get('FILEPERM'));
 
 			// create and save our file
 
