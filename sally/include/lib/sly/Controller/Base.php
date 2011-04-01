@@ -55,8 +55,7 @@ abstract class sly_Controller_Base {
 	public static function getSubpageParam($default = '') { return sly_request(self::SUBPAGEPARAM, 'string', $default); }
 	public static function getActionParam($default = '')  { return sly_request(self::ACTIONPARAM, 'string', $default);  }
 
-	public static function getPage($isLogin = false) {
-		global $REX;
+	public static function getPage() {
 
 		$config = sly_Core::config();
 		$page   = strtolower(self::getPageParam());
@@ -65,10 +64,6 @@ abstract class sly_Controller_Base {
 
 		if ($config->get('SETUP') !== true && $page == 'setup') {
 			$page = 'profile';
-		}
-
-		if ($isLogin) {
-			$page = strtolower($REX['LOGIN']->getStartpage());
 		}
 
 		// Erst normale Startseite, dann User-Startseite, dann System-Startseite und

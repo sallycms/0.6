@@ -160,25 +160,7 @@ if ($REX['USER']) {
 
 	// Startseite ermitteln
 
-	$REX['PAGE'] = sly_Controller_Base::getPage(!empty($rex_user_login));
-
-	// Login OK -> Redirect auf Startseite
-
-	if (!empty($rex_user_login)) {
-		// if relogin, forward to previous page
-		$referer = sly_post('referer', 'string', false);
-
-		if ($referer && !sly_Util_String::startsWith(basename($referer), 'index.php?page=login')) {
-			$url = $referer;
-			$msg = t('redirect_previous_page', $referer);
-		}
-		else {
-			$url = 'index.php?page='.urlencode($REX['PAGE']);
-			$msg = t('redirect_startpage', $url);
-		}
-
-		sly_Util_HTTP::redirect($url, array(), $msg);
-	}
+	$REX['PAGE'] = sly_Controller_Base::getPage();
 }else {
 	$REX['PAGE'] = $REX['SETUP'] ? 'setup' : 'login';
 }
