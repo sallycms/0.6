@@ -20,7 +20,7 @@ ob_implicit_flush(0);
 
 unset($REX);
 
-define(SLY_HTDOCS_PATH, './');
+define('SLY_HTDOCS_PATH', './');
 
 // Core laden
 
