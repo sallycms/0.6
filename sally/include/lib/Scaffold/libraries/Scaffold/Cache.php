@@ -181,7 +181,7 @@ final class Scaffold_Cache
 
 		$lines = file_exists(self::$cacheFile) ? array_map('trim', file(self::$cacheFile)) : array();
 		$lines = array_filter($lines);
-		$fp    = fopen(self::$cacheFile, 'w');
+		$fp    = fopen(self::$cacheFile, 'wb');
 		$file  = $_GET['wv_f']; // der einzige Wert, der bereits in der cache.php bekannt ist
 
 		fwrite($fp, $file.':'.time()."\n");
@@ -189,7 +189,7 @@ final class Scaffold_Cache
 		foreach ($lines as $line) {
 			list($f, $mtime) = explode(':', $line);
 			if ($f == $file) continue;
-			fwrite($fp, $line);
+			fwrite($fp, $line."\n");
 		}
 
 		fclose($fp);
