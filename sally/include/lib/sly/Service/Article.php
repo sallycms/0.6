@@ -347,4 +347,21 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 		return $artlist;
 	}
+
+	public function setType(sly_Model_Article $article, $type) {
+		// Artikel updaten
+		$article->setType($type);
+		$article->setUpdateColumns();
+		$this->update($article);
+
+		// Cache leeren
+		$cache = sly_Core::cache();
+		$cache->delete('sly.article', $article->getId().'_'.$article->getClang());
+
+		// Event auslösen
+		$dispatcher = sly_Core::dispatcher();
+		$dispatcher->notify('SLY_ART_TYPE', $article);
+
+		return true;
+	}
 }

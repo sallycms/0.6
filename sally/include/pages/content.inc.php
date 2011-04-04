@@ -98,7 +98,6 @@ if (!is_null($OOArt)) {
 		'slice_id'         => $slice_id,
 		'page'             => 'content',
 		'slot'             => $slot,
-		'ctype'            => $slot, // REDAXO-Kompatibilität
 		'category_id'      => $category_id,
 		'article_revision' => &$article_revision,
 		'slice_revision'   => &$slice_revision
@@ -109,42 +108,22 @@ if (!is_null($OOArt)) {
 		print rex_warning(t('no_rights_to_edit'));
 	}
 	else {
-		if ($mode == 'edit') {
-			// START: Slice move up/down
+		if ($mode == 'edit' && sly_post('save_article', 'string')) {
+			$type    = sly_post('article_type', 'string');
+			$service = sly_Service_Factory::getArticleService();
+			$article = $service->findById($article_id, $clang);
 
-			if (sly_post('save_article', 'string')) {
+			// change type and update database
+			$service->setType($article, $type);
 
-				sly_Core::dispatcher()->notify('ART_META_UPDATED', $info, array(
-					'id'    => $article_id,
-					'clang' => $clang,
-				));
-
-				$article_type = sly_post('article_type', 'string');
-
-				$meta_sql = new rex_sql();
-				$meta_sql->setTable('article', true);
-				$meta_sql->setWhere('id = '.$article_id.' AND clang = '.$clang);
-				$meta_sql->setValue('type', $article_type);
-				$meta_sql->addGlobalUpdateFields();
-
-				if ($meta_sql->update()) {
-					$global_info     = t('article_updated');
-					$meta_sql = null;
-
-					sly_Core::cache()->delete('sly.article', $article_id.'_'.$clang);
-				}
-				else {
-					$meta_sql = null;
-					$global_warning  = $meta_sql->getError();
-				}
-				$OOArt = OOArticle::getArticleById($article_id, $clang);
-			}
+			$global_info = t('article_updated');
+			$OOArt       = OOArticle::getArticleById($article_id, $clang);
 		}
-
 
 		$hasType     = $OOArt->hasType();
 		$hasTemplate = false;
-		if($hasType) {
+
+		if ($hasType) {
 			$templateName = $typeService->getTemplate($OOArt->getType());
 			$hasTemplate = !empty($templateName) && $templateService->exists($templateName);
 		}
