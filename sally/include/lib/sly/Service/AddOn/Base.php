@@ -42,9 +42,10 @@ abstract class sly_Service_AddOn_Base {
 	 * Loads static.yml and defaults.yml and populates some data (like
 	 * permissions) in $REX.
 	 *
-	 * @param mixed $component  addOn as string, plugin as array
+	 * @param mixed   $component    addOn as string, plugin as array
+	 * @param boolean $forceStatic  set to true to force loading of static.yml even if addon is not installed
 	 */
-	public function loadConfig($component) {
+	public function loadConfig($component, $forceStatic = false) {
 		global $REX;
 
 		$config       = sly_Core::config();
@@ -52,8 +53,7 @@ abstract class sly_Service_AddOn_Base {
 		$defaultsFile = $this->baseFolder($component).'defaults.yml';
 		$globalsFile  = $this->baseFolder($component).'globals.yml';
 
-
-		if (file_exists($staticFile)) {
+		if (file_exists($staticFile) && ($forceStatic || $this->isActivated($component))) {
 			$config->loadStatic($staticFile, $this->getConfPath($component));
 
 			foreach (array('perm', 'extperm') as $type) {
@@ -168,7 +168,7 @@ abstract class sly_Service_AddOn_Base {
 		// check requirements
 
 		if (!$this->isAvailable($component)) {
-			$this->loadConfig($component); // static.yml, gloabals.yml defaults.yml
+			$this->loadConfig($component, true); // static.yml, gloabals.yml, defaults.yml
 		}
 
 		$requires = sly_makeArray($this->getProperty($component, 'requires'));
@@ -343,7 +343,7 @@ abstract class sly_Service_AddOn_Base {
 		// We can't use the service to get the list of required addOns since the
 		// static.yml has not yet been loaded.
 
-		$this->loadConfig($component);
+		$this->loadConfig($component, true);
 
 		$requires     = sly_makeArray($this->getProperty($component, 'requires'));
 		$addonService = sly_Service_Factory::getAddOnService();

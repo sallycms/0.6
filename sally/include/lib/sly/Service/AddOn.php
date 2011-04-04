@@ -97,8 +97,8 @@ class sly_Service_AddOn extends sly_Service_AddOn_Base {
 		if (in_array($addonName, self::$addonsLoaded)) return true;
 
 		$this->loadConfig($addonName);
-		
-		if($this->isAvailable($addonName)) {
+
+		if ($this->isAvailable($addonName)) {
 			$requires = $this->getProperty($addonName, 'requires');
 
 			if (!empty($requires)) {
