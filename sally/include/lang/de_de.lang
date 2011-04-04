@@ -36,17 +36,13 @@ importer_entry_count: ({0} Eintraege)
 
 homepage: Homepage
 
-# sally/sindex.php
+# sally/index.php
 specials: System
-module: Module
-template: Templates
 user: Benutzer
 mediapool: Medienpool
-community: Community
 import: Im-/Export
 content: Artikel
 structure: Struktur
-statistics: Statistiken
 profile: Mein Profil
 logout: abmelden
 navigation_basis: Basis Navigation

@@ -36,20 +36,16 @@ importer_database_imported: Database imported
 
 homepage: 'Homepage'
 
-# sally/sindex.php
+# sally/index.php
 specials: System
-module: Modules
-template: Templates
 user: Users
 mediapool: Mediapool
-community: Community
 import: Im-/export
 content: Article
 structure: Structure
-statistics: Statistics
 profile: Profile
 logout: Logout
-navigation_basis: 'Basis Navigation'
+navigation_basis: 'Basic Navigation'
 navigation_addons: AddOns
 
 # sally/include/classes/class.login.inc.php
