@@ -349,6 +349,8 @@ class sly_Service_Article extends sly_Service_Model_Base {
 	}
 
 	public function setType(sly_Model_Article $article, $type) {
+		$oldType = $article->getType();
+
 		// Artikel updaten
 		$article->setType($type);
 		$article->setUpdateColumns();
@@ -360,7 +362,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 		// Event auslösen
 		$dispatcher = sly_Core::dispatcher();
-		$dispatcher->notify('SLY_ART_TYPE', $article);
+		$dispatcher->notify('SLY_ART_TYPE', $article, array('old_type' => $oldType));
 
 		return true;
 	}
