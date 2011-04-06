@@ -533,6 +533,10 @@ if (!is_null($OOArt)) {
 		if (!empty($global_warning)) print rex_warning($global_warning);
 		if (!empty($global_info))    print rex_info($global_info);
 
+		$service = sly_Service_Factory::getArticleService();
+		$article = $service->findById($article_id, $clang);
+		sly_Core::dispatcher()->notify('SLY_ART_MESSAGES', $article);
+
 		if ($mode != 'edit') {
 			if (!empty($warning)) print rex_warning($warning);
 			if (!empty($info))    print rex_info($info);
