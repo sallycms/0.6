@@ -106,7 +106,8 @@ function rex_deleteArticle($id)
 		return $return;
 	}
 
-	$articleData = rex_sql::fetch('re_id, startpage', 'article', 'id = '.$id.' AND clang = 1');
+	$clang       = sly_Core::getCurrentClang();
+	$articleData = rex_sql::fetch('re_id, startpage', 'article', 'id = '.$id.' AND clang = '.$clang);
 
 	if ($articleData !== false) {
 		$re_id = (int) $articleData['re_id'];

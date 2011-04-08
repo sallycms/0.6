@@ -25,7 +25,8 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		return $cat;
 	}
 
-	public function findById($id, $clang) {
+	public function findById($id, $clang = null) {
+		if ($clang === null || $clang === false) $clang = sly_Core::getCurrentClang();
 		return $this->findOne(array('id' => (int) $id, 'clang' => $clang));
 	}
 
@@ -241,7 +242,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		$categoryID = (int) $categoryID;
 		$db         = sly_DB_Persistence::getInstance();
 		$cache      = sly_Core::cache();
-		$cat        = $this->findById($categoryID, 1);
+		$cat        = $this->findById($categoryID);
 
 		// Prüfen ob die Kategorie existiert
 		if ($cat === null) {
@@ -285,6 +286,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		// Kategorie löschen
 		$return = rex_deleteArticle($categoryID);
 		if (!$return['state']) throw new sly_Exception($return['message']);
+
 
 		// Event auslösen
 		$dispatcher = sly_Core::dispatcher();

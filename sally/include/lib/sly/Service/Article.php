@@ -25,7 +25,8 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		return $article;
 	}
 
-	public function findById($id, $clang) {
+	public function findById($id, $clang = null) {
+		if ($clang === null || $clang === false) $clang = sly_Core::getCurrentClang();
 		return $this->findOne(array('id' => (int) $id, 'clang' => $clang));
 	}
 
@@ -221,7 +222,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		$articleID = (int) $articleID;
 		$db        = sly_DB_Persistence::getInstance();
 		$cache     = sly_Core::cache();
-		$article   = $this->findById($articleID, 1);
+		$article   = $this->findById($articleID);
 
 		// Prüfen ob der Artikel existiert
 		if ($article === null) {
@@ -313,7 +314,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		}
 
 		$categoryId = (int) $categoryId;
-		$clangId       = (int) $clangId;
+		$clangId    = (int) $clangId;
 
 		$namespace = 'sly.article.list';
 		$key       = $categoryId.'_'.$clangId.'_'.($ignore_offlines ? '1' : '0');
