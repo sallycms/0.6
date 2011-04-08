@@ -37,8 +37,6 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 			}
 		}
 		catch (PDOException $e) {
-			sly_dump($query);
-			sly_dump($data);
 			$this->error();
 		}
 
