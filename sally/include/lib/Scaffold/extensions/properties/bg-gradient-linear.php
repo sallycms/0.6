@@ -8,7 +8,7 @@
  * Creates a gradient with CSS3.
  *
  * usage:
- *   bg-gradient-linear: $startPos, $endPos, $color1 $startPos1, $color2 $startPos2[, $color3 $startPos3[, ...]]
+ *   bg-gradient-linear: $startPos, $endPos, $colour1 $startPos1, $colour2 $startPos2[, $colour3 $startPos3[, ...]]
  *
  * examples:
  *   bg-gradient-linear: 50% 0%, 50% 100%, #802647 0, #000 0.5, #802647 1;
@@ -19,10 +19,10 @@
  *
  *
  * @author robert.koppsieker@webvariants.de
- * @param  string $start   Start position of gradient
- * @param  string $end     End position of gradient
- * @param  string $colors  Array with colors and positions
- * @return string          The properties
+ * @param  string $start    Start position of gradient
+ * @param  string $end      End position of gradient
+ * @param  string $colours  Array with colours and positions
+ * @return string           The properties
  */
 function Scaffold_bg_gradient_linear($params) {
 
@@ -52,22 +52,22 @@ function Scaffold_bg_gradient_linear($params) {
 
 	$startPos = trim(array_shift($params));
 	$endPos   = trim(array_shift($params));
-	$colors   = $params;
+	$colours   = $params;
 
-	for ($i = 0; $i < count($colors); $i++) {
-		$color = trim($colors[$i]);
-		$colors[$i] = array();
-		$pos = strpos($color, ' ');
+	for ($i = 0; $i < count($colours); $i++) {
+		$colour = trim($colours[$i]);
+		$colours[$i] = array();
+		$pos = strpos($colour, ' ');
 		if ($pos !== false) {
-			$colors[$i]['color'] = substr($color, 0, $pos);
-			$colors[$i]['offset'] = substr($color, $pos);
+			$colours[$i]['colour'] = substr($colour, 0, $pos);
+			$colours[$i]['offset'] = substr($colour, $pos);
 		}
 		else {
-			$colors[$i]['color'] = $color;
+			$colours[$i]['colour'] = $colour;
 		}
 	}
 
-	$css = Gradient::getLinear($startPos, $endPos, $colors);
+	$css = Gradient::getLinear($startPos, $endPos, $colours);
 
 	return $css;
 }

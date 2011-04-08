@@ -66,93 +66,161 @@ class Gradient
 
 	}
 	
-	private static function getWebkitLinear($startPos, $endPos, $colors) {
+	/**
+	 * get css property for Webkit browser (Safari < 5, Chrome < 10)
+	 *
+	 * @param string $startPos
+	 * @param string $endPos
+	 * @param array $coloursArray
+	 * @return string css code
+	 */
+	private static function getWebkitLinear($startPos, $endPos, $coloursArray) {
 		
 		$css = null;
 
 		/* webkit */
-		$wkColors = array();
-		foreach ($colors as $idx => $color) {
-			if (isset($color['color'])) {
+		$colours = array();
+		foreach ($coloursArray as $idx => $colour) {
+			if (isset($colour['colour'])) {
 				if ($idx === 0) {
-					$wkColors[] = 'from('.$color['color'].')';
+					$colours[] = 'from('.$colour['colour'].')';
 				}
-				elseif ($idx === count($colors)-1) {
-					$wkColors[] = 'to('.$color['color'].')';
+				elseif ($idx === count($colours)-1) {
+					$colours[] = 'to('.$colour['colour'].')';
 				}
 				else {
 					$offset = null;
-					if (isset($color['offset'])) {
-						$offset = $color['offset'];
+					if (isset($colour['offset'])) {
+						$offset = $colour['offset'];
 					}
 					else {
-						$offset = round($idx/(count($colors)-1), 1);
+						$offset = round($idx/(count($coloursArray)-1), 1);
 						$offset = number_format($offset, 1, '.', '');
 					}
-					$wkColors[] = 'color-stop('.$offset.','.$color['color'].')';
+					$colours[] = 'colour-stop('.$offset.','.$colour['colour'].')';
 				}
 			}
 		}
-		$wkColors = implode(', ', $wkColors);
+		$colours = implode(', ', $colours);
 
-		$css .= 'background-image: -webkit-gradient(linear, '.$startPos.', '.$endPos.', '.$wkColors.');';
+		$css .= 'background-image: -webkit-gradient(linear, '.$startPos.', '.$endPos.', '.$colours.');';
 		
 		return $css;
 	}
 	
-	private static function getWkMozLinear($startPos, $endPos, $colors) {
+	/**
+	 * get css property for Opera
+	 *
+	 * @param string $startPos
+	 * @param string $endPos
+	 * @param array $coloursArray
+	 * @return string css code
+	 */
+	private static function getOperaLinear($startPos, $endPos, $coloursArray) {
 		
 		$css = null;
 
-		/* firefox */
-		$ffAngle = null;
+		$angle = null;
 		/*
-		 * TODO: calculate angle for firefox
+		 * TODO: calculate angle
 		 */
-		$ffColors = array();
-		foreach ($colors as $color) {
-			if (isset($color['color']) && isset($color['offset'])) {
-				$ffColors[] = $color['color'].' '.round($color['offset']*100).'%';
-			}
-			elseif (isset($color['color'])) {
-				$ffColors[] = $color['color'];
+		if ($angle) $startPos = null;
+
+		$colours = array();
+		foreach ($coloursArray as $colour) {
+			if (isset($colour['colour'])) {
+				if (isset($colour['offset'])) {
+					$colours[] = $colour['colour'].' '.round($colour['offset']*100).'%';
+				}
+				else {
+					$colours[] = $colour['colour'];
+				}
 			}
 		}
-		$ffColors = implode(', ', $ffColors);
+		$colours = implode(', ', $colours);
 
-		$css .= 'background-image: -webkit-linear-gradient('.$startPos.$ffAngle.', '.$ffColors.');';
-		$css .= 'background-image: -moz-linear-gradient('.$startPos.$ffAngle.', '.$ffColors.');';
+		$css .= 'background-image: -o-linear-gradient('.$startPos.$angle.', '.$colours.');';
 		
 		return $css;
 	}
 
-	/* For Internet Explorer > 8 */
-	private static function getIELinear($colors) {
-
-		if (!is_array($colors) || empty($colors)) return false;
+	/**
+	 * get css property for Safari >= 5, Chrome >= 10 and Firefox
+	 *
+	 * @param string $startPos
+	 * @param string $endPos
+	 * @param array $coloursArray
+	 * @return string css code
+	 */
+	private static function getWkMozLinear($startPos, $endPos, $coloursArray) {
 
 		$css = null;
 
-		$startColor = null;
-		$sC = array_shift($colors);
-		if (isset($sC['color'])) $startColor = $sC['color'];
+		$angle = null;
+		/*
+		 * TODO: calculate angle
+		 */
+		$colours = array();
+		foreach ($coloursArray as $colour) {
+			if (isset($colour['colour'])) {
+				if (isset($colour['offset'])) {
+					$colours[] = $colour['colour'].' '.round($colour['offset']*100).'%';
+				}
+				elseif (isset($colour['colour'])) {
+					$colours[] = $colour['colour'];
+				}
+			}
+		}
+		$colours = implode(', ', $colours);
 
-		$endColor = null;
-		$eC = array_shift($colors);
-		if (isset($eC['color'])) $endColor = $eC['color'];
-
-		$css .= '-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='.$startColor.', endColorstr='.$endColor.')";';
+		$css .= 'background-image: -webkit-linear-gradient('.$startPos.$angle.', '.$colours.');';
+		$css .= 'background-image: -moz-linear-gradient('.$startPos.$angle.', '.$colours.');';
 
 		return $css;
 	}
 
-	public static function getLinear($startPos, $endPos, $colors) {
+	/**
+	 * get css property for Internet Explorer > 8, which only can display an
+	 * even gradient between two colours
+	 *
+	 * @param array $coloursArray
+	 * @return string css code
+	 */
+	private static function getIELinear($coloursArray) {
+
+		if (!is_array($coloursArray) || empty($coloursArray)) return false;
+
+		$css = null;
+
+		$startColour = null;
+		$sC = array_shift($coloursArray);
+		if (isset($sC['colour'])) $startColour = $sC['colour'];
+
+		$endColour = null;
+		$eC = array_shift($coloursArray);
+		if (isset($eC['colour'])) $endColour = $eC['colour'];
+
+		$css .= '-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColourstr='.$startColour.', endColourstr='.$endColour.')";';
+
+		return $css;
+	}
+
+	/**
+	 * get css linear-gradient properties for all common browsers
+	 *
+	 * @param string $startPos
+	 * @param string $endPos
+	 * @param array $coloursArray
+	 * @return string css code
+	 */
+	public static function getLinear($startPos, $endPos, $coloursArray) {
 
 		$css = null;
 		
-		$css .= self::getIELinear($colors);
-		$css .= self::getWebkitLinear($startPos, $endPos, $colors);
-		$css .= self::getWkMozLinear($startPos, $endPos, $colors);
+		$css .= self::getIELinear($coloursArray);
+		$css .= self::getOperaLinear($startPos, $endPos, $coloursArray);
+		$css .= self::getWebkitLinear($startPos, $endPos, $coloursArray);
+		$css .= self::getWkMozLinear($startPos, $endPos, $coloursArray);
 
 		return $css;
 	}
