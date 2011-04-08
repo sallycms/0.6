@@ -64,7 +64,7 @@ $config->loadProjectConfig();
 $config->loadDevelop();
 
 // Sync?
-if (!$config->get('SETUP')){
+if (!$config->get('SETUP')) {
 	// Standard-Variablen
 	sly_Core::registerCoreVarTypes();
 
@@ -72,6 +72,9 @@ if (!$config->get('SETUP')){
 	$REX['CLANG']      = sly_Util_Language::findAll();
 	$REX['CUR_CLANG']  = sly_Core::getCurrentClang();
 	$REX['ARTICLE_ID'] = sly_Core::getCurrentArticleId();
+}
+else {
+	$REX = array();
 }
 
 // REDAXO compatibility
