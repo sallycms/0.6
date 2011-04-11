@@ -78,4 +78,8 @@ class sly_Model_Base_Article extends sly_Model_Base {
 	public function setPath($path)             { $this->path       = $path;       }
 	public function setType($type)             { $this->type       = $type;       }
 	public function setRevision($revision)     { $this->revision   = $revision;   }
+	
+	public function isOnline() {
+		return $this->getStatus() == 1;
+	}
 }
