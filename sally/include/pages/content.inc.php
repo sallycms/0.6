@@ -553,7 +553,7 @@ if (!is_null($OOArt)) {
 
 					$module = rex_slice_module_exists($slice_id, $clang);
 
-					if ($module == -1) {
+					if (!$module) {
 						// MODUL IST NICHT VORHANDEN
 						$warning  = t('module_not_found');
 						$slice_id = '';

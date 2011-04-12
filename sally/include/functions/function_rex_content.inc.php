@@ -107,10 +107,9 @@ function rex_deleteSlice($slice_id)
 				AND slot = "'.$article_slice->getSlot().'"
 				AND prior > '.$article_slice->getPrior(), '#_');
 
-		sly_Service_Factory::getService('SliceValue')->delete(array('slice_id' => $article_slice->getSliceId()));
-		sly_Service_Factory::getService('Slice')->delete(array('id' => $article_slice->getSliceId()));
-
 		$sql->setQuery('DELETE FROM #_article_slice WHERE id = '.$slice_id, '#_');
+		
+		sly_Service_Factory::getService('Slice')->delete(array('id' => $article_slice->getSliceId()));
 
 		// TODO delete less entries in cache
 		sly_Core::cache()->flush(OOArticleSlice::CACHE_NS);
@@ -123,16 +122,16 @@ function rex_deleteSlice($slice_id)
 /**
  * Prüft, ob ein Modul für ein bestimmtes Slice im System bekannt ist.
  *
- * @return int  -1, falls kein Modul gefunden wurde, sonst die ID des Moduls
+ * @return boolean  true oder ... false
  */
 function rex_slice_module_exists($sliceID, $clang)
 {
 	$sliceID = (int) $sliceID;
 	$clang   = (int) $clang;
 	$slice   = OOArticleSlice::getArticleSliceById($sliceID, $clang);
-	if(is_null($slice)) return -1;
+	if(is_null($slice)) return false;
 	$module  = $slice->getModuleName();
-	return rex_module_exists($module) ? $module : -1;
+	return rex_module_exists($module) ? $module : false;
 }
 
 /**
@@ -392,56 +391,6 @@ function rex_article2startpage($neu_id)
 function rex_copyCategory($from_cat, $to_cat)
 {
 	// TODO: rex_copyCategory implementieren
-}
-
-/**
- * Kopiert die Metadaten eines Artikels in einen anderen Artikel
- *
- * @param  int   $from_id     Artikel-ID des Artikels, aus dem kopiert werden (Quell Artikel-ID)
- * @param  int   $to_id       Artikel-ID des Artikel, in den kopiert werden sollen (Ziel Artikel-ID)
- * @param  int   $from_clang  Sprach-ID des Artikels, aus dem kopiert werden soll (Quell Sprach-ID)
- * @param  int   $to_clang    Sprach-ID des Artikels, in den kopiert werden soll (Ziel Sprach-ID)
- * @param  array $params      Array von Spaltennamen, welche kopiert werden sollen
- * @return boolean            true bei Erfolg, sonst false
- */
-function rex_copyMeta($from_id, $to_id, $from_clang = 0, $to_clang = 0, $params = array())
-{
-	global $REX;
-
-	$from_clang = (int) $from_clang;
-	$to_clang   = (int) $to_clang;
-	$from_id    = (int) $from_id;
-	$to_id      = (int) $to_id;
-
-	if (!is_array($params)) {
-		$params = array();
-	}
-
-	if ($from_id == $to_id && $from_clang == $to_clang) {
-		return false;
-	}
-
-	$paramsToSelect = array_merge($params, array('clang', 'id'));
-	$paramsToSelect = implode(',', $paramsToSelect);
-	$articleData    = rex_sql::fetch($paramsToSelect, 'article', 'clang = '.$from_clang.' AND id = '.$from_id);
-
-	if ($articleData !== false) {
-		$update = new rex_sql();
-		$update->setTable('article', true);
-		$update->setWhere('clang = '.$to_clang.' AND id = '.$to_id);
-		$update->addGlobalUpdateFields();
-
-		foreach ($params as $param) {
-			$update->setValue($value, $gc->escape($articleData[$param]));
-		}
-
-		$update->update();
-
-		sly_Core::cache()->delete('sly.article', $to_id.'_'.$to_clang);
-		return true;
-	}
-
-	return false;
 }
 
 /**

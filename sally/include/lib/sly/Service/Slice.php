@@ -32,7 +32,7 @@ class sly_Service_Slice extends sly_Service_Model_Base_Id {
 		$clone        = $this->create(array('module' => $slice->getModule()));
 
 		foreach ($valueservice->find(array('slice_id' => $slice->getId())) as $sliceValue) {
-			$sliceValue->setId(sly_Model_Base::NEW_ID);
+			$sliceValue->setId(sly_Model_Base_Id::NEW_ID);
 			$sliceValue->setSliceId($clone->getId());
 			$valueservice->save($sliceValue);
 		}

@@ -79,8 +79,7 @@ function sly_postArray($name, $types, $default = array()) {
 
 function sly_requestArray($name, $types, $default = array()) {
 	return isset($_POST[$name]) ?
-		sly_postArray($name, $types, $default) :
-		isset($_GET[$name]) ? sly_getArray($name, $types, $default) : $default;
+		sly_postArray($name, $types, $default) : sly_getArray($name, $types, $default);
 }
 
 function sly_isEmpty($var) {
