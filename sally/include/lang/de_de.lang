@@ -299,7 +299,7 @@ version: Version
 host: Host
 database: Datenbank
 specials_caching_strategy: Cache-Strategie
-specials_frontend_sync: Frontend-Sync. aktivieren
+specials_developer_mode: Entwicklermodus aktivieren
 specials_server: Server
 specials_servername: Projektname
 specials_error_email: Fehler-E-Mail

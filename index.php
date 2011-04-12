@@ -28,7 +28,7 @@ require_once 'sally/include/master.inc.php';
 
 sly_Core::loadAddons();
 
-if ($config->get('FRONTEND_SYNC')) {
+if ($config->get('DEVELOPER_MODE')) {
 	require_once 'sally/include/functions/function_rex_generate.inc.php';
 	sly_Service_Factory::getService('Template')->refresh();
 	sly_Service_Factory::getService('Module')->refresh();

@@ -30,7 +30,7 @@ catch (Exception $e) {
 $backendLocale   = new sly_Form_Select_DropDown('backend_locale', t('specials_lang'), $config->get('LANG'), $locales, 'rex-form-lang');
 $defaultType     = new sly_Form_Select_DropDown('default_type', t('specials_default_type'), $config->get('DEFAULT_ARTICLE_TYPE'), $types, 'rex-form-default-article-type');
 $cachingStrategy = new sly_Form_Select_DropDown('caching_strategy', t('specials_caching_strategy'), sly_Cache::getStrategy(), sly_Cache::getAvailableCacheImpls(), 'rex-form-caching-strategy');
-$frontendSync    = new sly_Form_Select_DropDown('frontend_sync', t('specials_frontend_sync'), $config->get('FRONTEND_SYNC') ? 'true' : 'false', $yesNo, 'rex-form-frontend-sync');
+$frontendSync    = new sly_Form_Select_DropDown('developer_mode', t('specials_developer_mode'), $config->get('DEVELOPER_MODE') ? 'true' : 'false', $yesNo, 'rex-form-developer-mode');
 
 $buttonBar = new sly_Form_ButtonBar(array(
 	'submit' => new sly_Form_Input_Button('submit', 'sendit', t('specials_update'))
