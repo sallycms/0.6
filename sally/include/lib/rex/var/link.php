@@ -272,12 +272,12 @@ class rex_var_link extends rex_var {
 				</select>
 			</p>
 			<p class="rex-widget-icons">
-				<a href="#" class="rex-icon-file-top" onclick="moveREXLinklist('.$id.',\'top\');return false;"><img src="media/file_top.gif" width="16" height="16" title="'.t('var_linklist_move_top').'" alt="'.t('var_linklist_move_top').'" /></a>
-				<a href="#" class="rex-icon-file-open" onclick="openREXLinklist('.$id.', \''.$open_params.'\');return false;"><img src="media/file_open.gif" width="16" height="16" title="'.t('var_link_open').'" alt="'.t('var_link_open').'" /></a><br />
-				<a href="#" class="rex-icon-file-up" onclick="moveREXLinklist('.$id.',\'up\');return false;"><img src="media/file_up.gif" width="16" height="16" title="'.t('var_linklist_move_up').'" alt="'.t('var_linklist_move_up').'" /></a>
-				<a href="#" class="rex-icon-file-delete" onclick="deleteREXLinklist('.$id.');return false;"><img src="media/file_del.gif" width="16" height="16" title="'.t('var_link_delete').'" alt="'.t('var_link_delete').'" /></a><br />
-				<a href="#" class="rex-icon-file-down" onclick="moveREXLinklist('.$id.',\'down\');return false;"><img src="media/file_down.gif" width="16" height="16" title="'.t('var_linklist_move_down').'" alt="'.t('var_linklist_move_down').'" /></a><br />
-				<a href="#" class="rex-icon-file-bottom" onclick="moveREXLinklist('.$id.',\'bottom\');return false;"><img src="media/file_bottom.gif" width="16" height="16" title="'.t('var_linklist_move_bottom').'" alt="'.t('var_linklist_move_bottom').'" /></a>
+				<a href="#" class="rex-icon-file-top" onclick="moveREXLinklist(\''.$id.'\',\'top\');return false;"><img src="media/file_top.gif" width="16" height="16" title="'.t('var_linklist_move_top').'" alt="'.t('var_linklist_move_top').'" /></a>
+				<a href="#" class="rex-icon-file-open" onclick="openREXLinklist(\''.$id.'\', \''.$open_params.'\');return false;"><img src="media/file_open.gif" width="16" height="16" title="'.t('var_link_open').'" alt="'.t('var_link_open').'" /></a><br />
+				<a href="#" class="rex-icon-file-up" onclick="moveREXLinklist(\''.$id.'\',\'up\');return false;"><img src="media/file_up.gif" width="16" height="16" title="'.t('var_linklist_move_up').'" alt="'.t('var_linklist_move_up').'" /></a>
+				<a href="#" class="rex-icon-file-delete" onclick="deleteREXLinklist(\''.$id.'\');return false;"><img src="media/file_del.gif" width="16" height="16" title="'.t('var_link_delete').'" alt="'.t('var_link_delete').'" /></a><br />
+				<a href="#" class="rex-icon-file-down" onclick="moveREXLinklist(\''.$id.'\',\'down\');return false;"><img src="media/file_down.gif" width="16" height="16" title="'.t('var_linklist_move_down').'" alt="'.t('var_linklist_move_down').'" /></a><br />
+				<a href="#" class="rex-icon-file-bottom" onclick="moveREXLinklist(\''.$id.'\',\'bottom\');return false;"><img src="media/file_bottom.gif" width="16" height="16" title="'.t('var_linklist_move_bottom').'" alt="'.t('var_linklist_move_bottom').'" /></a>
 			</p>
 		</div>
 	</div>
