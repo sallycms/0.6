@@ -13,6 +13,7 @@
  */
 abstract class sly_Service_Model_Base {
 	protected $tablename;
+	protected $hasCascade = false;
 
 	protected abstract function makeInstance(array $params);
 
@@ -39,6 +40,14 @@ abstract class sly_Service_Model_Base {
 	}
 
 	public function delete($where) {
+		if($this->hasCascade) {
+			$models = $this->find($where);
+			foreach($models as $model) {
+				foreach($model->getDeleteCascades() as $cascadeModel => $foreign_key) {
+					sly_Service_Factory::getService($cascadeModel)->delete($foreign_key);
+				}
+			}
+		}
 		$persistence = sly_DB_Persistence::getInstance();
 		return $persistence->delete($this->getTableName(), $where);
 	}

@@ -17,6 +17,7 @@
 class sly_Model_Slice extends sly_Model_Base_Id {
 	protected $module;
 	protected $_attributes = array('module' => 'string');
+	protected $_hasMany    = array('SliceValue' => array('delete_cascade' => true, 'foreign_key' => array('slice_id' => 'id')));
 
 	public function getModule()        { return $this->module; }
 	public function setModule($module) { $this->module = $module; }

@@ -68,4 +68,20 @@ abstract class sly_Model_Base {
 		}
 		return $data;
 	}
+	
+	public function getDeleteCascades() {
+		$cascade = array();
+		if(!isset($this->_hasMany)) return $cascade;
+		
+		foreach($this->_hasMany as $model => $config) {
+			if (isset($config['delete_cascade']) && $config['delete_cascade'] === true) {
+				$fk = $config['foreign_key'];
+				foreach($fk as $column => $value) {
+					$fk[$column] = $this->$value;
+				}
+				$cascade[$model] = $fk;
+			}
+		}
+		return $cascade;
+	}
 }

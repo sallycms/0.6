@@ -15,7 +15,8 @@
  * @ingroup service
  */
 class sly_Service_Slice extends sly_Service_Model_Base_Id {
-	protected $tablename = 'slice';
+	protected $tablename  = 'slice';
+	protected $hasCascade = true;
 
 	protected function makeInstance(array $params) {
 		return new sly_Model_Slice($params);
