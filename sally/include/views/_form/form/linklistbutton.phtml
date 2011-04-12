@@ -24,7 +24,7 @@ foreach ($value as $idx => $id) {
 	if ($article) $values[$id] = $article->getName();
 }
 
-$select = new sly_Form_Select_DropDown($name.'_list', '', null, $values);
+$select = new sly_Form_Select_DropDown('list_'.$name, '', null, $values);
 $select->setAttribute('class', 'sly-linklist');
 $select->setAttribute('readonly', 'readonly');
 $select->setMultiple(false);
@@ -52,7 +52,7 @@ print ' ';
 
 // Filter-Eingabefeld
 
-$filter = new sly_Form_Input_Text($name.'_filter', '', '');
+$filter = new sly_Form_Input_Text('filter_'.$name, '', '');
 $filter->setAttribute('class', 'sly-link-filter');
 
 print $filter->render();
