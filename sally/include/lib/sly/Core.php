@@ -153,6 +153,12 @@ class sly_Core {
 		return defined('IS_SALLY_BACKEND') && IS_SALLY_BACKEND == true;
 	}
 
+	public static function isDeveloperMode() {
+		static $var = null;
+		if ($var === null) $var = (boolean) sly_Core::config()->get('DEVELOPER_MODE');
+		return $var;
+	}
+
 	public static function getI18N() {
 		global $I18N;
 		if (!isset($I18N)) $I18N = rex_create_lang();
@@ -219,7 +225,7 @@ class sly_Core {
 
 		self::dispatcher()->notify('ADDONS_INCLUDED');
 	}
-	
+
 	public static function registerCoreVarTypes() {
 		self::registerVarType('rex_var_globals');
 		self::registerVarType('rex_var_article');
