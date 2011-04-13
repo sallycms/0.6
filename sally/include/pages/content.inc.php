@@ -40,16 +40,16 @@ $global_info      = '';
 
 require SLY_INCLUDE_PATH.'/functions/function_rex_content.inc.php';
 
-$OOArt = OOArticle::getArticleById($article_id, $clang);
+$article = sly_Service_Factory::getArticleService()->findById($article_id, $clang);
 
-if (!is_null($OOArt)) {
+if (!is_null($article)) {
 
 	$typeService     = sly_Service_Factory::getArticleTypeService();
 	$templateService = sly_Service_Factory::getTemplateService();
 	$moduleService   = sly_Service_Factory::getModuleService();
 
 	// Artikel wurde gefunden - Kategorie holen
-	$category_id = $OOArt->getCategoryId();
+	$category_id = $article->getCategoryId();
 
 	// Kategoriepfad und -rechte
 
@@ -60,14 +60,14 @@ if (!is_null($OOArt)) {
 	if ($REX['PAGE'] == 'content' && $article_id > 0) {
 		$KATout .= '<p>';
 
-		if ($OOArt->isStartPage()) {
+		if ($article->isStartPage()) {
 			$KATout .= t('start_article').' : ';
 		}
 		else {
 			$KATout .= t('article').' : ';
 		}
 
-		$catname = str_replace(' ', '&nbsp;', sly_html($OOArt->getName()));
+		$catname = str_replace(' ', '&nbsp;', sly_html($article->getName()));
 
 		$KATout .= '<a href="index.php?page=content&amp;article_id='.$article_id.'&amp;mode=edit&amp;clang='.$clang.'">'.$catname.'</a>';
 		$KATout .= '</p>';
@@ -117,14 +117,14 @@ if (!is_null($OOArt)) {
 			$service->setType($article, $type);
 
 			$global_info = t('article_updated');
-			$OOArt       = OOArticle::getArticleById($article_id, $clang);
+			$article       = sly_Service_Factory::getArticleService()->findById($article_id, $clang);
 		}
 
-		$hasType     = $OOArt->hasType();
+		$hasType     = $article->hasType();
 		$hasTemplate = false;
 
 		if ($hasType) {
-			$templateName = $typeService->getTemplate($OOArt->getType());
+			$templateName = $typeService->getTemplate($article->getType());
 			$hasTemplate = !empty($templateName) && $templateService->exists($templateName);
 		}
 
@@ -585,7 +585,7 @@ if (!is_null($OOArt)) {
 			}
 			// END: Slice move up/down
 
-			$params = array('id' => $article_id, 'clang' => $clang, 'article' => $OOArt);
+			$params = array('id' => $article_id, 'clang' => $clang, 'article' => $article);
 
 			$form   = new sly_Form('index.php', 'POST', t('general'), '', 'content_article_form');
 
@@ -602,7 +602,7 @@ if (!is_null($OOArt)) {
 
 			/////////////////////////////////////////////////////////////////
 			// articletype
-			$type = new sly_Form_Select_DropDown('article_type', t('content_arttype'), $OOArt->getType(), $typeService->getArticleTypes(), 'article_type');
+			$type = new sly_Form_Select_DropDown('article_type', t('content_arttype'), $article->getType(), $typeService->getArticleTypes(), 'article_type');
 			$form->add($type);
 
 			//additional form elements
@@ -671,7 +671,7 @@ if (!is_null($OOArt)) {
 		elseif ($mode == 'meta') {
 			// START: META VIEW
 
-			$params = array('id' => $article_id, 'clang' => $clang, 'article' => $OOArt);
+			$params = array('id' => $article_id, 'clang' => $clang, 'article' => $article);
 			$form   = new sly_Form('index.php', 'POST', t('general'), '', 'REX_FORM');
 
 			/////////////////////////////////////////////////////////////////
@@ -690,7 +690,7 @@ if (!is_null($OOArt)) {
 			/////////////////////////////////////////////////////////////////
 			// article name / metadata
 
-			$name = new sly_Form_Input_Text('meta_article_name', t('name_description'), $OOArt->getValue('name'), 'rex-form-meta-article-name');
+			$name = new sly_Form_Input_Text('meta_article_name', t('name_description'), $article->getValue('name'), 'rex-form-meta-article-name');
 			$form->add($name);
 
 			$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM', $form, $params);
@@ -715,10 +715,10 @@ if (!is_null($OOArt)) {
 				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('article2startpage[]')) {
 					$form->beginFieldset(t('content_startarticle'));
 
-					if ($OOArt->getValue('startpage') == 0 && $OOArt->getValue('re_id') == 0) {
+					if ($article->getValue('startpage') == 0 && $article->getValue('re_id') == 0) {
 						$form->add(new sly_Form_Text('', t('content_nottostartarticle')));
 					}
-					else if ($OOArt->getValue('startpage') == 1) {
+					else if ($article->getValue('startpage') == 1) {
 						$form->add(new sly_Form_Text('', t('content_isstartarticle')));
 					}
 					else {
@@ -743,7 +743,7 @@ if (!is_null($OOArt)) {
 
 				// ARTIKEL VERSCHIEBEN
 
-				if ($OOArt->getValue('startpage') == 0 && ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveArticle[]'))) {
+				if ($article->getValue('startpage') == 0 && ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveArticle[]'))) {
 					$select = sly_Form_Helper::getCategorySelect('category_id_new', false, false, null, $REX['USER']);
 					$select->setAttribute('value', $category_id);
 					$select->setLabel(t('move_article'));
@@ -769,7 +769,7 @@ if (!is_null($OOArt)) {
 
 				// KATEGORIE/STARTARTIKEL VERSCHIEBEN
 
-				if ($OOArt->getValue('startpage') == 1 && ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveCategory[]'))) {
+				if ($article->getValue('startpage') == 1 && ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveCategory[]'))) {
 					$select = sly_Form_Helper::getCategorySelect('category_id_new', false, false, null, $REX['USER']);
 					$select->setAttribute('value', $category_id);
 					$select->setLabel(t('move_category'));

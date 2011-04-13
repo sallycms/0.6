@@ -20,11 +20,29 @@ class sly_Model_Article extends sly_Model_Base_Article {
 	}
 
 	/**
+	 * returns the category id
+	 * @return int
+	 */
+	public function getCategoryId()
+	{
+		return $this->isStartPage() ? $this->getId() : $this->getParentId();
+	}
+	
+	/**
 	 * returns true if the articletype is set
 	 *
 	 * @return boolean
 	 */
 	public function hasType() {
 		return !empty($this->type);
+	}
+	
+	/**
+	 * returns the template name of the template associated with the articletype of this article
+	 *
+	 * @return string the template name
+	 */
+	public function getTemplateName() {
+		return sly_Service_Factory::getArticleTypeService()->getTemplate($this->_type);
 	}
 }

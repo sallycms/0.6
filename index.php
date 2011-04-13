@@ -26,18 +26,18 @@ define('SLY_HTDOCS_PATH', './');
 
 require_once 'sally/include/master.inc.php';
 
+// Setup?
+if ($config->get('SETUP')) {
+	header('Location: sally/index.php');
+	exit('Bitte führe das <a href="sally/index.php">Setup</a> aus, um SallyCMS zu nutzen.');
+}
+
 sly_Core::loadAddons();
 
 if ($config->get('DEVELOPER_MODE')) {
 	require_once 'sally/include/functions/function_rex_generate.inc.php';
 	sly_Service_Factory::getService('Template')->refresh();
 	sly_Service_Factory::getService('Module')->refresh();
-}
-
-// Setup?
-if ($config->get('SETUP')) {
-	header('Location: sally/index.php');
-	exit('Bitte führe das <a href="sally/index.php">Setup</a> aus, um SallyCMS zu nutzen.');
 }
 
 // Aktuellen Artikel finden und ausgeben
