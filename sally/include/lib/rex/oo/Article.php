@@ -110,12 +110,6 @@ class OOArticle extends OORedaxo
 	 */
 	public static function exists($articleId)
 	{
-
-		if (sly_Core::cache()->get('sly.article', sly_Cache::generateKey($articleId, sly_Core::getCurrentClang()), null) !== null) {
-			return true;
-		}
-
-		// prüfen, ob ID in DB vorhanden
 		return self::isValid(self::getArticleById($articleId));
 	}
 
