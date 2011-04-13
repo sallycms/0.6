@@ -42,7 +42,7 @@ if (!preg_match('#\.(css|js|png|jpg|jpeg|gif)$#i', $file)) die;
 
 // Last-Modified-Since-Behandlung
 
-$last  = !empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : -1;
+$last  = !empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) : -1;
 $mtime = filemtime($file);
 
 if ($last > 0 && $last == $mtime) {
