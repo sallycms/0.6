@@ -15,11 +15,10 @@
  * @ingroup service
  */
 class sly_Service_ArticleType {
-
 	private $data;
 
 	public function __construct() {
-		$this->data = sly_Core::config()->get('ARTICLE_TYPES');
+		$this->data = (array) sly_Core::config()->get('ARTICLE_TYPES');
 	}
 
 	public function getArticleTypes() {
@@ -46,11 +45,13 @@ class sly_Service_ArticleType {
 
 	public function exists($articleType, $throwException = false) {
 		if (!array_key_exists($articleType, $this->data)) {
-			if ($throwException)
+			if ($throwException) {
 				throw new sly_Exception(sprintf(t('exception_articletype_not_exists'), $articleType));
+			}
+
 			return false;
 		}
+
 		return true;
 	}
-
 }
