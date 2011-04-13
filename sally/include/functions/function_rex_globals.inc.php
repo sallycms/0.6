@@ -190,7 +190,7 @@ function _rex_cast_var($var, $vartype, $default, $mode, $addslashes = true)
 		case 'rex-article-id':
 			$var = (int) $var;
 			if ($mode == 'found') {
-				if (!OOArticle::exists($var)) {
+				if (!sly_Util_Article::exists($var)) {
 					$var = (int) $default;
 				}
 			}

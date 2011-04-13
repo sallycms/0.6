@@ -86,7 +86,7 @@ class sly_Controller_Linkmap extends sly_Controller_Sally {
 			$label .= ' ['.$object->getId().']';
 		}
 
-		if (OOArticle::isValid($object) && !$object->hasType()) {
+		if (sly_Util_Article::isValid($object) && !$object->hasType()) {
 			$label .= ' ['.t('lmap_has_no_template').']';
 		}
 

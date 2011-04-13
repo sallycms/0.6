@@ -48,14 +48,14 @@ class sly_Controller_Specials extends sly_Controller_Sally {
 		$conf = sly_Core::config();
 		$this->warning = array();
 
-		if (OOArticle::exists($startArticle)) {
+		if (sly_Util_Article::exists($startArticle)) {
 			$conf->set('START_ARTICLE_ID', $startArticle);
 		}
 		else {
 			$this->warning[] = t('settings_invalid_sitestart_article');
 		}
 
-		if (OOArticle::exists($notFoundArticle)) {
+		if (sly_Util_Article::exists($notFoundArticle)) {
 			$conf->set('NOTFOUND_ARTICLE_ID', $notFoundArticle);
 		}
 		else {

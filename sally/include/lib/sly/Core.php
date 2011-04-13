@@ -68,11 +68,11 @@ class sly_Core {
 		if (!isset($instance->curArticleId)) {
 			$instance->curArticleId = rex_request('article_id', 'int', $conf->get('START_ARTICLE_ID'));
 
-			if (!OOArticle::exists($instance->curArticleId)) {
+			if (!sly_Util_Article::exists($instance->curArticleId)) {
 				$instance->curArticleId = $conf->get('NOTFOUND_ARTICLE_ID');
 			}
 
-			if (!OOArticle::exists($instance->curArticleId)) {
+			if (!sly_Util_Article::exists($instance->curArticleId)) {
 				$instance->curArticleId = -1;
 			}
 		}
