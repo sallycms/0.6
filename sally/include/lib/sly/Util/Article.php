@@ -24,7 +24,7 @@ class sly_Util_Article {
 	 */
 	public static function exists($articleId)
 	{
-		return self::isValid(sly_Service_Factory::getArticleService()->findById($articleId));
+		return self::isValid(self::findById($articleId));
 	}
 
 	/**
@@ -33,6 +33,10 @@ class sly_Util_Article {
 	public static function isValid($article)
 	{
 		return is_object($article) && ($article instanceof sly_Model_Article);
+	}
+	
+	public static function findById($articleId, $clang = null) {
+		return sly_Service_Factory::getArticleService()->findById($articleId, $clang);
 	}
 }
 
