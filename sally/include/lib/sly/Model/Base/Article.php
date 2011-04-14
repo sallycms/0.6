@@ -79,7 +79,19 @@ class sly_Model_Base_Article extends sly_Model_Base {
 	public function setType($type)             { $this->type       = $type;       }
 	public function setRevision($revision)     { $this->revision   = $revision;   }
 	
+	/**
+	 *
+	 * @return boolean
+	 */
 	public function isOnline() {
 		return $this->getStatus() == 1;
+	}
+
+	/**
+	 *
+	 * @return boolean
+	 */
+	public function isOffline() {
+		return!$this->isOnline();
 	}
 }
