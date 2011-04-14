@@ -8,36 +8,34 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-
 /**
  * @ingroup util
- * 
+ *
  * @author zozi@webvariants.de
  */
 class sly_Util_Article {
 
 	/**
 	 * checks wheter a article exists or not
-	 *  
-	 * @param int $articleId
-	 * @return boolean 
+	 *
+	 * @param  int $articleId
+	 * @return boolean
 	 */
-	public static function exists($articleId)
-	{
+	public static function exists($articleId) {
 		return self::isValid(self::findById($articleId));
 	}
 
 	/**
-	 * Static Method: Returns boolean if is article
+	 * @return boolean
 	 */
-	public static function isValid($article)
-	{
+	public static function isValid($article) {
 		return is_object($article) && ($article instanceof sly_Model_Article);
 	}
-	
+
+	/**
+	 * @return sly_Model_Article
+	 */
 	public static function findById($articleId, $clang = null) {
 		return sly_Service_Factory::getArticleService()->findById($articleId, $clang);
 	}
 }
-
-?>
