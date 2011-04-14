@@ -27,7 +27,17 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 	public function findById($id, $clang = null) {
 		if ($clang === null || $clang === false) $clang = sly_Core::getCurrentClang();
-		return $this->findOne(array('id' => (int) $id, 'clang' => $clang));
+		
+		$key     = $article_id.'_'.$clang;
+		$article = sly_Core::cache()->get('sly.article', $key, null);
+		if ($article === null) {
+			$article = $this->findOne(array('id' => (int) $id, 'clang' => $clang));
+			
+			if ($article !== null) {
+				sly_Core::cache()->set('sly.article', $key, $article);
+			}
+		}
+		return $article;
 	}
 
 	public function add($categoryID, $name, $status, $position = -1) {
