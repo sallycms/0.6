@@ -35,7 +35,7 @@ if ($KAT->getRows() != 1) {
 	}
 }
 else {
-	$pathElements = trim($KAT->getValue('path'), '|');
+	$pathElements = trim($KAT->getPath(), '|');
 	$pathElements = empty($pathElements) ? array(): explode('|', $pathElements);
 
 	// Informationen über den Pfad sammeln
@@ -65,7 +65,7 @@ else {
 	unset($pathElements);
 
 	if ($KATPERM || $user->hasPerm('csw['.$category_id.']') || $user->hasPerm('csr['.$category_id.']')) {
-		$catName = str_replace(' ', '&nbsp;', htmlspecialchars($KAT->getValue('catname')));
+		$catName = str_replace(' ', '&nbsp;', sly_html($KAT->getCatname()));
 
 		$KATout  .= '<li> : <a href="index.php?page=structure&amp;category_id='.$category_id.'&amp;clang='.$clang.'">'.$catName.'</a></li>';
 		$KATPATH .= $category_id.'|';

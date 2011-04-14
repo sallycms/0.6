@@ -689,7 +689,7 @@ if (!is_null($article)) {
 			/////////////////////////////////////////////////////////////////
 			// article name / metadata
 
-			$name = new sly_Form_Input_Text('meta_article_name', t('name_description'), $article->getValue('name'), 'rex-form-meta-article-name');
+			$name = new sly_Form_Input_Text('meta_article_name', t('name_description'), $article->getName(), 'rex-form-meta-article-name');
 			$form->add($name);
 
 			$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM', $form, $params);
@@ -714,10 +714,10 @@ if (!is_null($article)) {
 				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('article2startpage[]')) {
 					$form->beginFieldset(t('content_startarticle'));
 
-					if ($article->getValue('startpage') == 0 && $article->getValue('re_id') == 0) {
+					if ($article->getStartpage() == 0 && $article->getParentId() == 0) {
 						$form->add(new sly_Form_Text('', t('content_nottostartarticle')));
 					}
-					else if ($article->getValue('startpage') == 1) {
+					else if ($article->getStartpage() == 1) {
 						$form->add(new sly_Form_Text('', t('content_isstartarticle')));
 					}
 					else {
@@ -742,7 +742,7 @@ if (!is_null($article)) {
 
 				// ARTIKEL VERSCHIEBEN
 
-				if ($article->getValue('startpage') == 0 && ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveArticle[]'))) {
+				if ($article->getStartpage() == 0 && ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveArticle[]'))) {
 					$select = sly_Form_Helper::getCategorySelect('category_id_new', false, false, null, $REX['USER']);
 					$select->setAttribute('value', $category_id);
 					$select->setLabel(t('move_article'));
@@ -768,7 +768,7 @@ if (!is_null($article)) {
 
 				// KATEGORIE/STARTARTIKEL VERSCHIEBEN
 
-				if ($article->getValue('startpage') == 1 && ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveCategory[]'))) {
+				if ($article->getStartpage() == 1 && ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveCategory[]'))) {
 					$select = sly_Form_Helper::getCategorySelect('category_id_new', false, false, null, $REX['USER']);
 					$select->setAttribute('value', $category_id);
 					$select->setLabel(t('move_category'));
