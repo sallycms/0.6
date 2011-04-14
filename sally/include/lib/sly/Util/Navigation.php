@@ -53,7 +53,7 @@ class sly_Util_Navigation {
 		$this->startArticleId      = sly_Core::config()->get('START_ARTICLE_ID');
 		$this->isStartClang        = sly_Core::config()->get('START_CLANG_ID') == sly_Core::getCurrentClang();
 
-		$baseCategories            = (is_null($baseCategories)) ? OOCategory::getRootCategories(true) : $baseCategories;
+		$baseCategories            = (is_null($baseCategories)) ? sly_Util_Category::getRootCategories(true) : $baseCategories;
 		$this->generateNavigation($baseCategories, $fullNavigation);
 	}
 
@@ -132,7 +132,7 @@ class sly_Util_Navigation {
 	/**
 	 * Return the list item html for one category
 	 *
-	 * @param OOCategory $category
+	 * @param sly_Model_Category $category
 	 * @param string     $childrenHTMLString
 	 * @param int        $currentLevel
 	 * @param boolean    $isActive
@@ -140,7 +140,7 @@ class sly_Util_Navigation {
 	 * @param int        $position
 	 * @return string
 	 */
-	protected function getHTMLForCategory(OOCategory $category, $childrenHTMLString, $currentLevel, $isActive, $isLast, $position) {
+	protected function getHTMLForCategory(sly_Model_Category $category, $childrenHTMLString, $currentLevel, $isActive, $isLast, $position) {
 		$text         = $this->getCategoryText($category);
 		$url          = $this->getCategoryUrl($category);
 		$isActiveLeaf = $isActive && $this->isActiveLeaf($category);
@@ -172,20 +172,20 @@ class sly_Util_Navigation {
 	 * return true if the category is the current category,
 	 * of if it is parent of the current.
 	 *
-	 * @param OOCategory $category
+	 * @param sly_Model_Category $category
 	 * @return boolean
 	 */
-	protected function isLevelActive(OOCategory $category) {
+	protected function isLevelActive(sly_Model_Category $category) {
 		return in_array($category->getId(), $this->getActivePathArray());
 	}
 
 	/**
 	 * return true when the category is the active article
 	 *
-	 * @param OOCategory $category
+	 * @param sly_Model_Category $category
 	 * @return boolean
 	 */
-	protected function isActiveLeaf(OOCategory $category) {
+	protected function isActiveLeaf(sly_Model_Category $category) {
 		return $this->activeArticleId == $category->getId();
 	}
 
@@ -202,10 +202,10 @@ class sly_Util_Navigation {
 	/**
 	 * returns the url for a category
 	 *
-	 * @param OOCategory $category
+	 * @param sly_Model_Category $category
 	 * @return string
 	 */
-	protected function getCategoryUrl(OOCategory $category) {
+	protected function getCategoryUrl(sly_Model_Category $category) {
 		if ($this->isStartClang && $this->startArticleId == $category->getId()) {
 			return './';
 		}else {
@@ -216,10 +216,10 @@ class sly_Util_Navigation {
 	/**
 	 * returns the link text for a category
 	 *
-	 * @param OOCategory $category
+	 * @param sly_Model_Category $category
 	 * @return string
 	 */
-	protected function getCategoryText(OOCategory $category) {
+	protected function getCategoryText(sly_Model_Category $category) {
 		$text = $category->getName();
 		if ($this->useHTMLSpecialchars) $text = sly_html($text);
 		return $text;
