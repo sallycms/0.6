@@ -81,11 +81,12 @@ function rex_getUrl($id = 0, $clang = false, $name = 'NoName', $params = '', $di
 	$paramString = rex_param_string($params, $divider);
 	$dispatcher  = sly_Core::dispatcher();
 	$url         = $dispatcher->filter('URL_REWRITE', '', array(
-		'id'      => $id,
-		'name'    => $name,
-		'clang'   => $clang,
-		'params'  => $paramString,
-		'divider' => $divider
+		'id'            => $id,
+		'name'          => $name,
+		'clang'         => $clang,
+		'params'        => $paramString,
+		'divider'       => $divider,
+		'disable_cache' => $disableCache
 	));
 
 	// Wenn kein Listener eine URL erzeugt hat, erzeugen wir eine primitive
