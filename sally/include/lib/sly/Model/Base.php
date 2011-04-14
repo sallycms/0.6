@@ -18,19 +18,29 @@ abstract class sly_Model_Base {
 
 	protected $_pk;
 	protected $_attributes;
+	protected $_values;
 
 	public function __construct($params = array()) {
-		foreach ($this->_pk as $name => $type){
+		foreach ($this->_pk as $name => $type) {
 			if (isset($params[$name])) {
 				$this->$name = $params[$name];
 				settype($this->$name, $type);
 			}
 		}
-		foreach ($this->_attributes as $name => $type){
+
+		foreach ($this->_attributes as $name => $type) {
 			if (isset($params[$name])) {
 				$this->$name = $params[$name];
 				settype($this->$name, $type);
 			}
+		}
+
+		// put left over values in $_values to allow access from __call
+
+		$hangover = array_diff(array_keys($params), array_keys($this->_pk), array_keys($this->_attributes));
+
+		foreach ($hangover as $key) {
+			$this->_values[$key] = $params[$key];
 		}
 	}
 
@@ -68,20 +78,35 @@ abstract class sly_Model_Base {
 		}
 		return $data;
 	}
-	
+
 	public function getDeleteCascades() {
+		if (!isset($this->_hasMany)) return $cascade;
+
 		$cascade = array();
-		if(!isset($this->_hasMany)) return $cascade;
-		
-		foreach($this->_hasMany as $model => $config) {
+
+		foreach ($this->_hasMany as $model => $config) {
 			if (isset($config['delete_cascade']) && $config['delete_cascade'] === true) {
 				$fk = $config['foreign_key'];
-				foreach($fk as $column => $value) {
+
+				foreach ($fk as $column => $value) {
 					$fk[$column] = $this->$value;
 				}
+
 				$cascade[$model] = $fk;
 			}
 		}
+
 		return $cascade;
+	}
+
+	public function __call($method, $arguments) {
+		$event      = strtoupper(get_class($this).'_'.$method);
+		$dispatcher = sly_Core::dispatcher();
+
+		if (!$dispatcher->hasListeners($event)) {
+			throw new sly_Exception('Call to undefined function '.$method.'()');
+		}
+
+		return $dispatcher->filter($event, null, array('method' => $method, 'arguments' => $arguments, 'object' => $this));
 	}
 }
