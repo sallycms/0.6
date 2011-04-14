@@ -50,7 +50,7 @@ class sly_Model_Article extends sly_Model_Base_Article {
 	 * @return string the template name
 	 */
 	public function getTemplateName() {
-		return sly_Service_Factory::getArticleTypeService()->getTemplate($this->_type);
+		return sly_Service_Factory::getArticleTypeService()->getTemplate($this->type);
 	}
 
 	/**
