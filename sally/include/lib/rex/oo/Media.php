@@ -172,22 +172,6 @@ class OOMedia
 		return $this->getParentId() != 0;
 	}
 
-	/**
-	 * @deprecated 12.10.2007
-	 */
-	public function getDescription()
-	{
-		return $this->getValue('med_description');
-	}
-
-	/**
-	 * @deprecated 12.10.2007
-	 */
-	public function getCopyright()
-	{
-		return $this->getValue('med_copyright');
-	}
-
 	public function getPath()
 	{
 		return SLY_MEDIAFOLDER;
@@ -593,9 +577,6 @@ class OOMedia
 
 		if ($this->hasValue($value)) {
 			return $this->$value;
-		}
-		elseif ($this->hasValue('med_'.$value)) {
-			return $this->getValue('med_'.$value);
 		}
 
 		return null;
