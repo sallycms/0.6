@@ -412,12 +412,6 @@ if (!is_null($article)) {
 			// START: SAVE METADATA META PAGE
 
 			if (sly_post('savemeta', 'string')) {
-
-				sly_Core::dispatcher()->notify('ART_META_UPDATED', $info, array(
-					'id'    => $article_id,
-					'clang' => $clang,
-				));
-
 				$meta_article_name = sly_post('meta_article_name', 'string');
 
 				$meta_sql = new rex_sql();
@@ -431,6 +425,11 @@ if (!is_null($article)) {
 					$meta_sql = null;
 
 					sly_Core::cache()->delete('sly.article', $article_id.'_'.$clang);
+
+					sly_Core::dispatcher()->notify('ART_META_UPDATED', $info, array(
+						'id'    => $article_id,
+						'clang' => $clang
+					));
 				}
 				else {
 					$meta_sql = null;
