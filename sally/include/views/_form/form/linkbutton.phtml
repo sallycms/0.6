@@ -9,12 +9,12 @@
  */
 
 $id       = $this->getWidgetID();
-$art      = OOArticle::getArticleById($this->getDisplayValue());
+$art      = sly_Util_Article::findById($this->getDisplayValue());
 $artName  = '';
 $category = '';
 $params   = '';
 
-if (OOArticle::isValid($art)) {
+if (sly_Util_Article::isValid($art)) {
 	$artName  = sly_html($art->getName());
 	$category = $art->getCategoryId();
 
