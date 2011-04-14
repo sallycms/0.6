@@ -16,7 +16,7 @@
 class sly_Util_Article {
 
 	/**
-	 * checks wheter a article exists or not
+	 * checks wheter an article exists or not
 	 *
 	 * @param  int $articleId
 	 * @return boolean
