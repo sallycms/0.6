@@ -99,6 +99,10 @@ abstract class sly_Model_Base {
 		return $cascade;
 	}
 
+	public function getValue($key, $default = null) {
+		return isset($this->_values[$key]) ? $this->_values[$key] : $default;
+	}
+
 	public function __call($method, $arguments) {
 		$event      = strtoupper(get_class($this).'_'.$method);
 		$dispatcher = sly_Core::dispatcher();
