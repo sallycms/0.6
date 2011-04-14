@@ -80,9 +80,8 @@ abstract class sly_Model_Base {
 	}
 
 	public function getDeleteCascades() {
-		if (!isset($this->_hasMany)) return $cascade;
-
 		$cascade = array();
+		if (!isset($this->_hasMany)) return $cascade;
 
 		foreach ($this->_hasMany as $model => $config) {
 			if (isset($config['delete_cascade']) && $config['delete_cascade'] === true) {
