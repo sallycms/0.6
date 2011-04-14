@@ -28,7 +28,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 	public function findById($id, $clang = null) {
 		if ($clang === null || $clang === false) $clang = sly_Core::getCurrentClang();
 		
-		$key     = $article_id.'_'.$clang;
+		$key     = $id.'_'.$clang;
 		$article = sly_Core::cache()->get('sly.article', $key, null);
 		if ($article === null) {
 			$article = $this->findOne(array('id' => (int) $id, 'clang' => $clang));
