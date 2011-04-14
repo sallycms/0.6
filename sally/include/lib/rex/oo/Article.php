@@ -10,60 +10,27 @@
 /**
  * Object Oriented Framework: Bildet einen Artikel der Struktur ab
  *
+ * @deprecated
  * @ingroup redaxo2
  */
-class OOArticle extends OORedaxo
+abstract class OOArticle
 {
-	public function __construct($params = false, $clang = false)
-	{
-		parent::__construct($params, $clang);
-	}
-
 	/**
-	 * @return OOArticle
+	 * @return sly_Model_Article
+	 * @deprecated
 	 */
 	public static function getArticleById($article_id, $clang = false, $OOCategory = false)
 	{
-		$article_id = (int) $article_id;
-
-		if ($clang === false) {
-			$clang = sly_Core::getCurrentClang();
-		}
-
-		$clang     = (int) $clang;
-		$namespace = $OOCategory ? 'sly.category' : 'sly.article';
-		$key       = $article_id.'_'.$clang;
-		$obj       = sly_Core::cache()->get($namespace, $key, null);
-
-		if ($obj === null) {
-			$article = rex_sql::fetch('*', 'article', 'id = '.$article_id.' AND clang = '.$clang);
-
-			if ($article) {
-				$class = $OOCategory ? 'OOCategory' : 'OOArticle';
-				$obj   = new $class($article, $clang);
-
-				sly_Core::cache()->set($namespace, $key, $obj);
-			}
-		}
-
-		return $obj;
+		return sly_Util_Article::findById($articleId, $clang);
 	}
 
 	/**
-	 * @return OOArticle
+	 * @return sly_Model_Article
+	 * @deprecated
 	 */
-	public static function getSiteStartArticle($clang = false)
+	public static function getSiteStartArticle($clang = null)
 	{
-		global $REX;
-		return self::getArticleById($REX['START_ARTICLE_ID'], $clang);
-	}
-
-	/**
-	 * @return OOArticle
-	 */
-	public static function getCategoryStartArticle($a_category_id, $clang = false)
-	{
-		return self::getArticleById($a_category_id, $clang);
+		return sly_Util_Article::findSiteStartArticle($clang);
 	}
 
 	/**
@@ -72,153 +39,17 @@ class OOArticle extends OORedaxo
 	 */
 	public static function getArticlesOfCategory($categoryId, $ignore_offlines = false, $clangId = false)
 	{
-		return sly_Service_Factory::getArticleService()->findArticlesByCategory($categoryId, $ignore_offlines, $clangId);
+		return sly_Util_Article::findByCategory($categoryId, $ignore_offlines, $clangId);
 	}
 
 	/**
-	 * CLASS Function:
 	 * Return a list of top-level articles
 	 * @return array
+	 * @deprecated
 	 */
 	public static function getRootArticles($ignore_offlines = false, $clang = false)
 	{
-		return self::getArticlesOfCategory(0, $ignore_offlines, $clang);
-
+		return sly_Util_Article::getRootArticles($ignore_offlines, $clang);
 	}
 
-	/**
-	 * Accessor Method:
-	 * returns the category id
-	 * @return int
-	 */
-	public function getCategoryId()
-	{
-		return $this->isStartPage() ? $this->getId() : $this->getParentId();
-	}
-
-	/**
-	 * @return OOCategory
-	 */
-	public function getCategory()
-	{
-		return OOCategory::getCategoryById($this->getCategoryId(), $this->getClang());
-	}
-
-	/**
-	 * Static Method: Returns boolean if article exists with requested id
-	 * @return boolean
-	 */
-	public static function exists($articleId)
-	{
-		return self::isValid(self::getArticleById($articleId));
-	}
-
-	/**
-	 * Static Method: Returns boolean if is article
-	 */
-	public static function isValid($article)
-	{
-		return is_object($article) && ($article instanceof OOArticle);
-	}
-
-	public function getValue($value)
-	{
-		// alias für re_id -> category_id
-		if (in_array($value, array('_re_id', 'category_id', '_category_id'))) {
-			// für die CatId hier den Getter verwenden,
-			// da dort je nach ArtikelTyp Unterscheidungen getroffen werden müssen
-			return $this->getCategoryId();
-		}
-
-		return parent::getValue($value);
-	}
-
-	public function hasValue($value, $prefixes = array())
-	{
-		return parent::hasValue($value, array_merge(array('art_'), $prefixes));
-	}
-
-	/**
-	 * prints the articlecontent for a given slot, or if empty for all slots
-	 *
-	 * @param string $slot
-	 */
-	public function printContent($slot = null) {
-		$ids = OOArticleSlice::getSliceIdsForSlot($this->getId(), $this->getClang(), $slot);
-		foreach ($ids as $id) {
-			print OOArticleSlice::getArticleSliceById($id)->printContent();
-		}
-	}
-
-	/**
-	 * returns the articlecontent for a given slot, or if empty for all slots
-	 *
-	 * @deprecated use getContent() instead
-	 * @param string $slot
-	 * @return string
-	 */
-	public function getArticle($slot = null) {
-		return $this->getContent($slot);
-	}
-
-	/**
-	 * returns the articlecontent for a given slot, or if empty for all slots
-	 *
-	 * @param <type> $slot
-	 * @return <type>
-	 */
-	public function getContent($slot = null) {
-		ob_start();
-		$this->printContent($slot);
-		return ob_get_clean();
-	}
-
-	/**
-	 * returns the rendered template with the articlecontent
-	 *
-	 * @global array $REX
-	 * @return string
-	 */
-	public function getArticleTemplate() {
-		// global $REX hier wichtig, damit in den Artikeln die Variable vorhanden ist!
-		global $REX;
-
-		$tplserv = sly_Service_Factory::getTemplateService();
-
-		if ($this->hasType() && $tplserv->exists($this->getTemplateName())) {
-			$params['article'] = $this;
-			ob_start();
-			ob_implicit_flush(0);
-			$tplserv->includeFile($this->getTemplateName(), $params);
-			$content = ob_get_clean();
-		}
-		else {
-			$content = 'No Template';
-		}
-
-		return $content;
-	}
-
-	/**
-	 * returns the template name of the template associated with the articletype of this article
-	 *
-	 * @return string the template name
-	 */
-	public function getTemplateName() {
-		return sly_Service_Factory::getArticleTypeService()->getTemplate($this->_type);
-	}
-
-	/**
-	 * returns true if the articletype is set
-	 *
-	 * @return boolean
-	 */
-	public function hasType() { return !empty($this->_type); }
-
-	/**
-	 * returns the articletype
-	 *
-	 * @return string the articletype
-	 */
-	public function getType() { return $this->_type; }
 }
