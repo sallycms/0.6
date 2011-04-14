@@ -98,7 +98,7 @@ abstract class sly_Model_Base {
 		return $cascade;
 	}
 
-	public function getValue($key, $default = null) {
+	public function getExtendedValue($key, $default = null) {
 		return isset($this->_values[$key]) ? $this->_values[$key] : $default;
 	}
 
