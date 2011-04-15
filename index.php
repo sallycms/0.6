@@ -42,7 +42,7 @@ if ($config->get('DEVELOPER_MODE')) {
 
 // Aktuellen Artikel finden und ausgeben
 
-$article = OOArticle::getArticleById(sly_Core::getCurrentArticleId(), sly_Core::getCurrentClang());
+$article = sly_Util_Article::findById(sly_Core::getCurrentArticleId(), sly_Core::getCurrentClang());
 
 if ($article) {
 	print $article->getArticleTemplate();

@@ -296,7 +296,7 @@ class sly_Controller_User extends sly_Controller_Sally {
 	}
 
 	protected function getStructure() {
-		$rootCats        = OOCategory::getRootCategories();
+		$rootCats        = sly_Util_Category::getRootCategories();
 		$this->structure = array();
 
 		if ($rootCats) {

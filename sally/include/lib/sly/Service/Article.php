@@ -48,7 +48,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 		// Parent validieren
 
-		if ($parentID !== 0 && OOCategory::getCategoryById($parentID) === null) {
+		if ($parentID !== 0 && !sly_Util_Category::exists($parentID)) {
 			throw new sly_Exception('Parent category does not exist.');
 		}
 

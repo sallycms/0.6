@@ -253,7 +253,7 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 	 */
 	protected function getBreadcrumb() {
 		$result = '';
-		$cat    = OOCategory::getCategoryById($this->categoryId);
+		$cat    = sly_Util_Category::findById($this->categoryId);
 
 		if ($cat) {
 			foreach ($cat->getParentTree() as $parent) {
@@ -286,7 +286,7 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 		if ($user->isAdmin() || $user->hasRight('csw[0]')) return true;
 		if ($user->hasRight('editContentOnly[]')) return false;
 
-		$cat = OOCategory::getCategoryById($categoryId);
+		$cat = sly_Util_Category::findById($categoryId);
 
 		while ($cat) {
 			if ($user->hasRight('csw['.$categoryId.']')) return true;
