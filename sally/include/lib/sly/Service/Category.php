@@ -27,7 +27,17 @@ class sly_Service_Category extends sly_Service_Model_Base {
 
 	public function findById($id, $clang = null) {
 		if ($clang === null || $clang === false) $clang = sly_Core::getCurrentClang();
-		return $this->findOne(array('id' => (int) $id, 'clang' => $clang));
+		
+		$key     = $id.'_'.$clang;
+		$category = sly_Core::cache()->get('sly.category', $key, null);
+		if ($category === null) {
+			$category = $this->findOne(array('id' => (int) $id, 'clang' => $clang));
+			
+			if ($category !== null) {
+				sly_Core::cache()->set('sly.category', $key, $category);
+			}
+		}
+		return $category;
 	}
 
 	public function find($where = null, $group = null, $order = null, $offset = null, $limit = null, $having = null) {
