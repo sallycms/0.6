@@ -49,7 +49,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 
 		// Parent validieren
 
-		if ($parentID !== 0 && OOCategory::getCategoryById($parentID) === null) {
+		if ($parentID !== 0 && !sly_Util_Category::exists($parentID)) {
 			throw new sly_Exception('Parent category does not exist.');
 		}
 
@@ -349,5 +349,48 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		}
 
 		return $stati;
+	}
+
+	/**
+	 * return all categories of a parent
+	 * 
+	 * @param  int     $parentId
+	 * @param  boolean $ignore_offlines
+	 * @param  int     $clang
+	 * @return array 
+	 */
+	public function findByParentId($parentId, $ignore_offlines = false, $clang = null) {
+		$parentId = (int) $parentId;
+
+		if ($clang === null) {
+			$clang = sly_Core::getCurrentClang();
+		}
+
+		$clang     = (int) $clang;
+		$namespace = 'sly.category.list';
+		$key       = $parentId.'_'.$clang.'_'.($ignore_offlines ? '1' : '0');
+		$clist     = sly_Core::cache()->get($namespace, $key, null);
+
+		if ($clist === null) {
+			$sql = sly_DB_Persistence::getInstance();
+			$sql->select($this->getTableName(), 'id', array('startpage' => 1, 're_id' => $parentId, 'clang' => $clang), null, 'catprior, name ASC');
+			$clist = array();
+			foreach($sql as $row) {
+				$clist[] = $row['id'];
+			}
+			sly_Core::cache()->set($namespace, $key, $clist);
+		}
+
+		$catlist = array();
+
+		foreach ($clist as $var) {
+			$category = $this->findById($var, $clang);
+
+			if ($category && (!$ignore_offlines || ($ignore_offlines && $category->isOnline()))) {
+				$catlist[] = $category;
+			}
+		}
+
+		return $catlist;
 	}
 }
