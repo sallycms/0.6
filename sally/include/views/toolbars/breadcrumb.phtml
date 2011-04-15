@@ -23,10 +23,8 @@ if (!isset($KATout)) {
 	$KATout = ''; // Variable definiert und vorbelegt wenn nicht existent
 }
 
-$KAT = new rex_sql();
-$KAT->setQuery('SELECT catname, path FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE id = '.$category_id.' AND startpage = 1 AND clang = '.$clang);
 
-if ($KAT->getRows() != 1) {
+if (!sly_Util_Category::exists($category_id)) {
 	// Kategorie existiert nicht
 
 	if ($category_id != 0) {
@@ -35,6 +33,7 @@ if ($KAT->getRows() != 1) {
 	}
 }
 else {
+	$KAT = sly_Util_Category::findById($category_id);
 	$pathElements = trim($KAT->getPath(), '|');
 	$pathElements = empty($pathElements) ? array(): explode('|', $pathElements);
 
