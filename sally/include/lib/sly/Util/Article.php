@@ -74,4 +74,21 @@ class sly_Util_Article {
 		return self::findByCategory(0, $ignore_offlines, $clang);
 	}
 
+	/**
+	 *
+	 * @param  sly_Model_Article $article
+	 * @return boolean
+	 */
+	public function isSiteStartArticle(sly_Model_Article $article) {
+		return $article->getId() == sly_Core::config()->get('START_ARTICLE_ID');
+	}
+
+	/**
+	 *
+	 * @param  sly_Model_Article $article
+	 * @return boolean 
+	 */
+	public function isNotFoundArticle(sly_Model_Article $article) {
+		return $article->getId() == sly_Core::config()->get('NOTFOUND_ARTICLE_ID');
+	}
 }
