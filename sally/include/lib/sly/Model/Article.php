@@ -16,7 +16,7 @@
  */
 class sly_Model_Article extends sly_Model_Base_Article {
 
-	public function isStartPage() {
+	public function isStartArticle() {
 		return $this->getStartpage() == 1;
 	}
 
@@ -25,7 +25,7 @@ class sly_Model_Article extends sly_Model_Base_Article {
 	 * @return int
 	 */
 	public function getCategoryId() {
-		return $this->isStartPage() ? $this->getId() : $this->getParentId();
+		return $this->isStartArticle() ? $this->getId() : $this->getParentId();
 	}
 
 	/**
