@@ -21,7 +21,7 @@ abstract class OOArticle
 	 */
 	public static function getArticleById($article_id, $clang = false, $OOCategory = false)
 	{
-		return sly_Util_Article::findById($articleId, $clang);
+		return sly_Util_Article::findById($article_id, $clang);
 	}
 
 	/**
@@ -50,6 +50,24 @@ abstract class OOArticle
 	public static function getRootArticles($ignore_offlines = false, $clang = false)
 	{
 		return sly_Util_Article::getRootArticles($ignore_offlines, $clang);
+	}
+	
+	/**
+	 *
+	 * @param sly_Model_Article $article 
+	 * @deprecated
+	 */
+	public static function isValid($article) {
+		return sly_Util_Article::isValid($article);
+	}
+	
+	/**
+	 *
+	 * @param int $article_id
+	 * @deprecated
+	 */
+	public static function exists($article_id) {
+		return sly_Util_Article::exists($article_id);
 	}
 
 }
