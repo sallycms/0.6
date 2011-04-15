@@ -14,7 +14,7 @@
 			<h3 class="rex-hl2"><?= t('lmap_categories') ?></h3>
 			<div class="rex-area-content">
 			<?php
-			$roots = OOCategory::getRootCategories();
+			$roots = sly_Util_Category::getRootCategories();
 			print $this->tree($roots);
 			?>
 			</div>
@@ -28,14 +28,14 @@
 
 				$category_id = $this->getGlobals('category_id', 0);
 				$isRoot      = $category_id == 0;
-				$category    = OOCategory::getCategoryById($category_id);
+				$category    = sly_Util_Category::findById($category_id);
 
-				if ($isRoot) $articles = OOArticle::getRootArticles();
+				if ($isRoot) $articles = sly_Util_Article::getRootArticles();
 				elseif ($category) $articles = $category->getArticles();
 				else $articles = array();
 
 				foreach ($articles as $article) {
-					if ($article->isStartpage() && $article->getId() != $category_id) {
+					if ($article->isStartArticle() && $article->getId() != $category_id) {
 						continue;
 					}
 

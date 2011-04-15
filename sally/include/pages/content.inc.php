@@ -60,7 +60,7 @@ if (!is_null($article)) {
 	if ($REX['PAGE'] == 'content' && $article_id > 0) {
 		$KATout .= '<p>';
 
-		if ($article->isStartPage()) {
+		if ($article->isStartArticle()) {
 			$KATout .= t('start_article').' : ';
 		}
 		else {

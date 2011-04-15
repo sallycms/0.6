@@ -52,10 +52,10 @@ abstract class sly_Form_Helper {
 		$select = new sly_Form_Select_DropDown($name, '', -1, array(0 => 'Homepage'), $id);
 
 		if ($root === null) {
-			$rootCats = OOCategory::getRootCategories($hideOffline, $clang);
+			$rootCats = sly_Util_Category::getRootCategories($hideOffline, $clang);
 		}
 		else {
-			$rootCat  = OOCategory::getCategoryById((int) $root, $clang);
+			$rootCat  = sly_Util_Category::findById((int) $root, $clang);
 			$rootCats = $rootCat ? array($rootCat) : null;
 		}
 

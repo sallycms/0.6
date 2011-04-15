@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
@@ -26,16 +27,43 @@ class sly_Util_Category {
 	}
 
 	/**
-	 * @return boolean
+	 *
+	 * @param sly_Model_Category $category
+	 * @return boolean 
 	 */
 	public static function isValid($category) {
 		return is_object($category) && ($category instanceof sly_Model_Category);
 	}
 
 	/**
-	 * @return sly_Model_Category
+	 *
+	 * @param  int $categoryId
+	 * @param  int $clang
+	 * @return sly_Model_Article 
 	 */
 	public static function findById($categoryId, $clang = null) {
 		return sly_Service_Factory::getCategoryService()->findById($categoryId, $clang);
 	}
+	
+	/**
+	 *
+	 * @param  int     $parentId
+	 * @param  boolean $ignore_offlines
+	 * @param  int     $clang
+	 * @return array 
+	 */
+	public static function findByParentId($parentId, $ignore_offlines = false, $clang = null) {
+		return sly_Service_Factory::getCategoryService()->findByParentId($parentId, $ignore_offlines, $clang);
+	}
+
+	/**
+	 *
+	 * @param  boolean $ignore_offlines
+	 * @param  int $clang
+	 * @return array 
+	 */
+	public static function getRootCategories($ignore_offlines = false, $clang = null) {
+		return self::findByParentId(0, $ignore_offlines, $clang);
+	}
+
 }

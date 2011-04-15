@@ -26,16 +26,69 @@ class sly_Util_Article {
 	}
 
 	/**
-	 * @return boolean
+	 *
+	 * @param  sly_Model_Article $article
+	 * @return boolean 
 	 */
 	public static function isValid($article) {
 		return is_object($article) && ($article instanceof sly_Model_Article);
 	}
 
 	/**
-	 * @return sly_Model_Article
+	 *
+	 * @param  int $articleId
+	 * @param  int $clang
+	 * @return sly_Model_Article 
 	 */
 	public static function findById($articleId, $clang = null) {
 		return sly_Service_Factory::getArticleService()->findById($articleId, $clang);
+	}
+
+	/**
+	 *
+	 * @param  int $clang
+	 * @return sly_Model_Article  
+	 */
+	public static function findSiteStartArticle($clang = null) {
+		return self::findById(sly_core::config()->get('START_ARTICLE_ID'), $clang);
+	}
+
+	/**
+	 *
+	 * @param  int     $categoryId
+	 * @param  boolean $ignore_offlines
+	 * @param  int     $clangId
+	 * @return array 
+	 */
+	public static function findByCategory($categoryId, $ignore_offlines = false, $clangId = false) {
+		return sly_Service_Factory::getArticleService()->findArticlesByCategory($categoryId, $ignore_offlines, $clangId);
+	}
+
+	/**
+	 *
+	 * @param  boolean $ignore_offlines
+	 * @param  int     $clang
+	 * @return array 
+	 */
+	public static function getRootArticles($ignore_offlines = false, $clang = false) {
+		return self::findByCategory(0, $ignore_offlines, $clang);
+	}
+
+	/**
+	 *
+	 * @param  sly_Model_Article $article
+	 * @return boolean
+	 */
+	public function isSiteStartArticle(sly_Model_Article $article) {
+		return $article->getId() == sly_Core::config()->get('START_ARTICLE_ID');
+	}
+
+	/**
+	 *
+	 * @param  sly_Model_Article $article
+	 * @return boolean 
+	 */
+	public function isNotFoundArticle(sly_Model_Article $article) {
+		return $article->getId() == sly_Core::config()->get('NOTFOUND_ARTICLE_ID');
 	}
 }

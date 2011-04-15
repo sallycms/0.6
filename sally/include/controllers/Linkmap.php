@@ -16,7 +16,7 @@ class sly_Controller_Linkmap extends sly_Controller_Sally {
 		$catID     = $this->getGlobals('category_id', 0);
 		$naviPath = '<ul class="sly-navi-path">';
 		$isRoot    = $catID === 0;
-		$category  = OOCategory::getCategoryById($catID);
+		$category  = sly_Util_Category::findById($catID);
 		$link      = $this->url(array('category_id' => 0));
 
 		$naviPath .= '<li>'.t('path').' </li>';
