@@ -67,7 +67,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 	 * @return array  Array aller registrierten Plugins
 	 */
 	public function getRegisteredPlugins($addon) {
-		$plugins = isset($this->data[$addon]['plugins']) ? array_keys($this->data[$addon]['plugins']) : array();
+		$plugins = array_keys(sly_Core::config()->get('ADDON/'.$addon.'/plugins', array()));
 		natsort($plugins);
 		return $plugins;
 	}
