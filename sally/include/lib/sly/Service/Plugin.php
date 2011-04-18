@@ -134,7 +134,7 @@ class sly_Service_Plugin extends sly_Service_AddOn_Base {
 	 * @return string         a path like "ADDON/x/plugins/y"
 	 */
 	protected function getConfPath($plugin) {
-		list($addon, $plugin) = $plugin;
-		return 'ADDON/'.$addon.'/plugins/'.$plugin;
+		list($addon, $name) = $plugin;
+		return 'ADDON/'.$addon.'/plugins/'.$name;
 	}
 }
