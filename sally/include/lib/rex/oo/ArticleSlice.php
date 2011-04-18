@@ -251,14 +251,19 @@ class OOArticleSlice {
 		return OOArticle::getArticleById($this->getArticleId());
 	}
 
-	public function getArticleId()  { return $this->_article_id;          }
-	public function getClang()      { return $this->_clang;               }
-	public function getSlot()       { return $this->_slot;                }
-	public function getRevision()   { return $this->_revision;            }
-	public function getModuleName() { return $this->_module;              }
-	public function getId()         { return $this->_id;                  }
-	public function getPrior()      { return $this->_prior;               }
-	public function getSliceId()    { return $this->_slice_id;            }
+	public function getArticleId()  { return $this->_article_id; }
+	public function getClang()      { return $this->_clang;      }
+	public function getSlot()       { return $this->_slot;       }
+	public function getRevision()   { return $this->_revision;   }
+	public function getModuleName() { return $this->_module;     }
+	public function getId()         { return $this->_id;         }
+	public function getPrior()      { return $this->_prior;      }
+	public function getSliceId()    { return $this->_slice_id;   }
+	public function getCreatedate() { return $this->_createdate; }
+	public function getUpdatedate() { return $this->_updatedate; }
+	public function getCreateuser() { return $this->_createuser; }
+	public function getUpdateuser() { return $this->_updateuser; }
+
 	/**
 	 *
 	 * @return Sly_Model_Slice
