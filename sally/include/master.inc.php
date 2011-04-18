@@ -72,6 +72,9 @@ if (!$config->get('SETUP')) {
 	$REX['CLANG']      = sly_Util_Language::findAll();
 	$REX['CUR_CLANG']  = sly_Core::getCurrentClang();
 	$REX['ARTICLE_ID'] = sly_Core::getCurrentArticleId();
+
+	// Cache-Util initialisieren
+	sly_Util_Cache::registerListener();
 }
 else {
 	$REX = array();
