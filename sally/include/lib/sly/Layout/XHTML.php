@@ -39,7 +39,7 @@ class sly_Layout_XHTML extends sly_Layout {
 	}
 
 	protected function printJavaScriptConcrete() {
-		print "\t".'<script type="text/javascript">'.trim($this->javaScriptCode).'</script>';
+		print "\t".'<script type="text/javascript">/*<![CDATA[*/'.trim($this->javaScriptCode).'/*]]>*/</script>';
 	}
 
 	protected function printJavaScriptFilesConcrete() {
