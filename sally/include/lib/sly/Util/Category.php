@@ -39,7 +39,7 @@ class sly_Util_Category {
 	 *
 	 * @param  int $categoryId
 	 * @param  int $clang
-	 * @return sly_Model_Article 
+	 * @return sly_Model_Category 
 	 */
 	public static function findById($categoryId, $clang = null) {
 		return sly_Service_Factory::getCategoryService()->findById($categoryId, $clang);

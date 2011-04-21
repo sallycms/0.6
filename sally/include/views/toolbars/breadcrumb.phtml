@@ -34,34 +34,22 @@ if (!sly_Util_Category::exists($category_id)) {
 }
 else {
 	$KAT = sly_Util_Category::findById($category_id);
-	$pathElements = trim($KAT->getPath(), '|');
-	$pathElements = empty($pathElements) ? array(): explode('|', $pathElements);
 
-	// Informationen über den Pfad sammeln
+	foreach ($KAT->getParentTree() as $parent) {
+		if($parent->getId() == $category_id) continue;
+		$catName = $parent->getName();
+		$catName = str_replace(' ', '&nbsp;', htmlspecialchars($catName));
 
-	if (!empty($pathElements)) {
-		$path     = implode(',', $pathElements);
-		$query    = 'SELECT id, catname FROM '.$REX['DATABASE']['TABLE_PREFIX'].'article WHERE id IN ('.$path.') AND startpage = 1 AND clang = '.$clang;
-		$pathData = rex_sql::getArrayEx($query);
+		if ($KATPERM || $user->hasPerm('csw['.$parent->getId().']') || $user->hasPerm('csr['.$parent->getId().']'))
+		{
+			$KATout  .= '<li> : <a href="index.php?page=structure&amp;category_id='.$parent->getId().'&amp;clang='.$clang.'">'.$catName.'</a></li>';
+			$KATPATH .= $parent->getId().'|';
 
-		foreach ($pathElements as $catID) {
-			$catName = $pathData[$catID];
-			$catName = str_replace(' ', '&nbsp;', htmlspecialchars($catName));
-
-			if ($KATPERM || $user->hasPerm('csw['.$catID.']') || $user->hasPerm('csr['.$catID.']'))
-			{
-				$KATout  .= '<li> : <a href="index.php?page=structure&amp;category_id='.$catID.'&amp;clang='.$clang.'">'.$catName.'</a></li>';
-				$KATPATH .= $catID.'|';
-
-				if ($user->hasPerm('csw['.$catID.']')) {
-					$KATPERM = true;
-				}
+			if ($user->hasPerm('csw['.$parent->getId().']')) {
+				$KATPERM = true;
 			}
 		}
 	}
-
-	$pathElements = null;
-	unset($pathElements);
 
 	if ($KATPERM || $user->hasPerm('csw['.$category_id.']') || $user->hasPerm('csr['.$category_id.']')) {
 		$catName = str_replace(' ', '&nbsp;', sly_html($KAT->getCatname()));
