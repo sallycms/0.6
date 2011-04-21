@@ -151,83 +151,84 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 	}
 
 	protected function initdb() {
-		global $REX;
-
-		$config         = sly_Core::config();
-		$prefix         = $config->get('DATABASE/TABLE_PREFIX');
-		$error          = '';
 		$dbInitFunction = sly_post('db_init_function', 'string', '');
+		
+		if (isset($_POST['submit'])) {
+			$config         = sly_Core::config();
+			$prefix         = $config->get('DATABASE/TABLE_PREFIX');
+			$error          = '';
 
-		// nenötigte Tabellen prüfen
+			// benötigte Tabellen prüfen
 
-		$requiredTables = array (
-			$prefix.'article',
-			$prefix.'article_slice',
-			$prefix.'clang',
-			$prefix.'file',
-			$prefix.'file_category',
-			$prefix.'user',
-			$prefix.'slice',
-			$prefix.'slice_value',
-			$prefix.'registry'
-		);
+			$requiredTables = array (
+				$prefix.'article',
+				$prefix.'article_slice',
+				$prefix.'clang',
+				$prefix.'file',
+				$prefix.'file_category',
+				$prefix.'user',
+				$prefix.'slice',
+				$prefix.'slice_value',
+				$prefix.'registry'
+			);
 
-		switch ($dbInitFunction) {
-			case 'nop': // Datenbank schon vorhanden, nichts tun
+			switch ($dbInitFunction) {
+				case 'nop': // Datenbank schon vorhanden, nichts tun
 
-				$error = false;
-				break;
+					break;
 
-			case 'drop': // alte DB löschen
+				case 'drop': // alte DB löschen
 
-				$db = sly_DB_Persistence::getInstance();
+					$db = sly_DB_Persistence::getInstance();
 
-				foreach ($requiredTables as $table) {
-					$db->query('DROP TABLE IF EXISTS ?', array($table));
+					foreach ($requiredTables as $table) {
+						$db->query('DROP TABLE IF EXISTS '.$table);
+					}
+					// kein break;
+
+				case 'setup': // leere Datenbank neu einrichten
+
+					$installScript = SLY_INCLUDE_PATH.'/install/sally0_3.sql';
+					$error         = $this->setupImport($installScript);
+
+					break;
+
+				default: // Extensions eine Chance geben
+
+					rex_register_extension_point('SLY_SETUP_INIT_DATABASE', $dbInitFunction);
+			}
+
+			// Wenn kein Fehler aufgetreten ist, aber auch etwas geändert wurde, prüfen
+			// wir, ob dadurch alle benötigten Tabellen erzeugt wurden.
+
+			if (empty($error)) {
+				$existingTables = array();
+
+				foreach (rex_sql::showTables() as $tblname) {
+					if (substr($tblname, 0, strlen($prefix)) == $prefix) {
+						$existingTables[] = $tblname;
+					}
 				}
 
-				// kein break;
-
-			case 'setup': // leere Datenbank neu einrichten
-
-				$installScript = SLY_INCLUDE_PATH.'/install/sally0_4.sql';
-				$error         = $this->setupImport($installScript);
-
-				break;
-
-			default: // Extensions eine Chance geben
-
-				rex_register_extension_point('SLY_SETUP_INIT_DATABASE', $dbInitFunction);
-		}
-
-		// Wenn kein Fehler aufgetreten ist, aber auch etwas geändert wurde, prüfen
-		// wir, ob dadurch alle benötigten Tabellen erzeugt wurden.
-
-		if (empty($error)) {
-			$existingTables = array();
-
-			foreach (rex_sql::showTables() as $tblname) {
-				if (substr($tblname, 0, strlen($prefix)) == $prefix) {
-					$existingTables[] = $tblname;
+				foreach (array_diff($requiredTables, $existingTables) as $missingTable) {
+					$error .= t('setup_initdb_table_not_found', $missingTable).'<br />';
 				}
 			}
 
-			foreach (array_diff($requiredTables, $existingTables) as $missingTable) {
-				$error .= t('setup_initdb_table_not_found', $missingTable).'<br />';
+			if (empty($error)) {
+				unset($_POST['submit']);
+				$this->config();
+				return;
+			}
+			else {
+				$this->warning = $error;
 			}
 		}
 
-		if (empty($error)) {
-			unset($_POST['submit']);
-			$this->config();
-		}
-		else {
-			$this->warning = empty($dbInitFunction) ? '' : $error;
-			$this->render('views/setup/initdb.phtml', array(
-				'dbInitFunction'  => $dbInitFunction,
-				'dbInitFunctions' => array('setup', 'nop', 'drop')
-			));
-		}
+		$this->render('views/setup/initdb.phtml', array(
+			'dbInitFunction'  => $dbInitFunction,
+			'dbInitFunctions' => array('setup', 'nop', 'drop')
+		));
 	}
 
 	protected function createuser() {
