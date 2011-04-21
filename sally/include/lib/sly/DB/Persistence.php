@@ -84,4 +84,6 @@ abstract class sly_DB_Persistence implements Iterator {
 	 * @return array row
 	 */
 	abstract public function fetch($table, $select = '*', $where = null, $order = null);
+	
+	abstract public function listTables($find = null);
 }

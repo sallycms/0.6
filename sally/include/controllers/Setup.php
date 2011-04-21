@@ -109,7 +109,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 				$this->initdb();
 				return;
 			}
-			catch (PDOException $e) {
+			catch (sly_DB_PDO_Exception $e) {
 				$this->warning = $e->getMessage();
 			}
 		}
@@ -188,7 +188,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 				case 'setup': // leere Datenbank neu einrichten
 
-					$installScript = SLY_INCLUDE_PATH.'/install/sally0_3.sql';
+					$installScript = SLY_INCLUDE_PATH.'/install/sally0_4.sql';
 					$error         = $this->setupImport($installScript);
 
 					break;
@@ -203,8 +203,9 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 			if (empty($error)) {
 				$existingTables = array();
-
-				foreach (rex_sql::showTables() as $tblname) {
+				$db = sly_DB_Persistence::getInstance();
+				
+				foreach ($db->listTables() as $tblname) {
 					if (substr($tblname, 0, strlen($prefix)) == $prefix) {
 						$existingTables[] = $tblname;
 					}

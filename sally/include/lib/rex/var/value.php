@@ -21,11 +21,10 @@ class rex_var_value extends rex_var {
 	// --------------------------------- Actions
 
 	public function getACRequestValues($REX_ACTION) {
-		$values = rex_request('VALUE', 'array');
+		$values = sly_requestArray('VALUE', 'string');
 
 		foreach ($values as $key => $value) {
-			// TODO: wenn irgendwann rex_sql und damit der mquotes mist in rente ist das stripslashes wieder entfernen.
-			$REX_ACTION['REX_VALUE'][$key] = stripslashes($value);
+			$REX_ACTION['REX_VALUE'][$key] = $value;
 		}
 
 		return $REX_ACTION;
