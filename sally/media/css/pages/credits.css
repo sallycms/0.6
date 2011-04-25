@@ -3,4 +3,8 @@
 		.sly-col-b { white-space: pre; padding-right: 5px; }
 		.sly-col-c { padding-right: 5px; }
 	}
+
+	.sly-credits {
+		margin-bottom: 10px;
+	}
 }
