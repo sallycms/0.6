@@ -11,9 +11,9 @@
 // Configuration
 
 $variants = array(
-	'full'    => array('docs' => true, 'tests' => true, 'addons' => array('image_resize', 'import_export', 'be_search', 'metainfoex')),
-	'lite'    => array('docs' => true, 'tests' => true, 'addons' => array()),
-	'minimal' => array('docs' => false, 'tests' => false, 'addons' => array())
+	'starterkit' => array('docs' => true, 'tests' => true, 'addons' => array('image_resize', 'import_export', 'be_search', 'metainfo', 'developer_utils', 'global_settings', 'error_handler', 'deployer', 'realurl2', 'wymeditor')),
+	'lite'       => array('docs' => true, 'tests' => true, 'addons' => array()),
+	'minimal'    => array('docs' => false, 'tests' => false, 'addons' => array())
 );
 
 $addonDir = 'Q:\\AddOns\\';
@@ -52,7 +52,7 @@ $releases = realpath('../releases');
 foreach ($variants as $name => $settings) {
 	printf('[%-7s] ', $name); // 7 = strlen('minimal')
 
-	$target = sprintf('%s/sally-%s%s/sally', $releases, $tag, $name == 'full' ? '' : '-'.$name);
+	$target = sprintf('%s/sally-%s%s/sally', $releases, $tag, '-'.$name);
 
 	// Create repository archive
 
@@ -97,6 +97,8 @@ foreach ($variants as $name => $settings) {
 		chdir($target);
 	}
 
+	// Put addOns in the archive
+
 	if (empty($settings['addons'])) {
 		file_put_contents('sally/include/addons/empty', 'Put all your addOns in this directory. PHP does not need writing permissions in here.');
 	}
@@ -126,28 +128,28 @@ foreach ($variants as $name => $settings) {
 		}
 	}
 
+	// Add starterkit contents (templates, modules, assets, ...)
+
+	if ($name === 'starterkit') {
+		chdir($target);
+		chdir('../demo');
+		exec('hg fetch');
+		exec('hg archive "'.$target.'"');
+	}
+
 	// Create archives
 
 	chdir($target);
 	print ' compressing...';
 
 	chdir('..');
-	$suffix = $name == 'full' ? '' : '-'.$name;
+	$suffix = '-'.$name;
 
 	print ' zip...';
 	exec('7z a -mx9 "../sally-'.$tag.$suffix.'.zip" "'.$target.'"');
 
 	print ' 7z...';
 	exec('7z a -mx9 "../sally-'.$tag.$suffix.'.7z" "'.$target.'"');
-
-	// print ' tar...';
-	// exec('7z a "../sally-'.$tag.$suffix.'.tar" "'.$target.'"');
-
-	// print ' bz2...';
-	// exec('7z a -mx9 "../sally-'.$tag.$suffix.'.tar.bz2" "../sally-'.$tag.$suffix.'.tar"');
-
-	// We don't need the tar file anymore.
-	// unlink('../sally-'.$tag.$suffix.'.tar');
 
 	print PHP_EOL;
 }
