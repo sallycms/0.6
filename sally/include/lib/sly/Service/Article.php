@@ -27,16 +27,24 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 	public function findById($id, $clang = null) {
 		if ($clang === null || $clang === false) $clang = sly_Core::getCurrentClang();
-		
+
+		$id = (int) $id;
+
+		if ($id === 0) {
+			return null;
+		}
+
 		$key     = $id.'_'.$clang;
 		$article = sly_Core::cache()->get('sly.article', $key, null);
+
 		if ($article === null) {
-			$article = $this->findOne(array('id' => (int) $id, 'clang' => $clang));
-			
+			$article = $this->findOne(array('id' => $id, 'clang' => $clang));
+
 			if ($article !== null) {
 				sly_Core::cache()->set('sly.article', $key, $article);
 			}
 		}
+
 		return $article;
 	}
 
@@ -318,8 +326,8 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		return $stati;
 	}
 
-	public function findArticlesByCategory($categoryId, $ignore_offlines = false, $clangId = false) {
-		if ($clangId === false) {
+	public function findArticlesByCategory($categoryId, $ignore_offlines = false, $clangId = null) {
+		if ($clangId === false || $clangId === null) {
 			$clangId = sly_Core::getCurrentClang();
 		}
 
@@ -332,21 +340,22 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 		if ($alist === null) {
 			$alist = array();
-			$sql = sly_DB_Persistence::getInstance();
+			$sql   = sly_DB_Persistence::getInstance();
 			$where = array('re_id' => $categoryId, 'clang' => $clangId, 'startpage' => 0);
-			if($ignore_offlines) $where['status'] = 1;
-			$sql->select($this->tablename, 'id', $where, null, 'prior,name');
-			foreach($sql as $row) {
-				$alist[] = intval($row['id']);
-			}
 
-			if ($categoryId != 0) {
+			if ($ignore_offlines) $where['status'] = 1;
+
+			$sql->select($this->tablename, 'id', $where, null, 'prior,name');
+			foreach ($sql as $row) $alist[] = (int) $row['id'];
+
+			if ($categoryId !== 0) {
 				$category = sly_Service_Factory::getCategoryService()->findById($categoryId, $clangId);
 
 				if (!$ignore_offlines || ($ignore_offlines && $category->isOnline())) {
 					array_unshift($alist, $category->getId());
 				}
 			}
+
 			sly_Core::cache()->set($namespace, $key, $alist);
 		}
 
