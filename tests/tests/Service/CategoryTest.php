@@ -12,38 +12,38 @@ class sly_Service_CategoryTest extends PHPUnit_Framework_TestCase {
 	private static $id;
 
 	public static function setUpBeforeClass() {
-		$service = sly_Service_Factory::getService('Category');
+		$service = sly_Service_Factory::getCategoryService();
 		self::$id = $service->add(0, 'Testkategorie', true, -1);
 	}
 
 	public static function tearDownAfterClass() {
-		$service = sly_Service_Factory::getService('Category');
+		$service = sly_Service_Factory::getCategoryService();
 		$service->delete(self::$id);
 	}
 
 	public function testAdd() {
-		$service = sly_Service_Factory::getService('Category');
+		$service = sly_Service_Factory::getCategoryService();
 		$newID   = $service->add(0, 'Meine "Kategorie"', true, -1);
 
 		$this->assertInternalType('int', $newID);
 
-		$cat = $service->findById($newID, 0);
+		$cat = $service->findById($newID);
 		$this->assertEquals('Meine "Kategorie"', $cat->getName());
 		$this->assertEquals('Meine "Kategorie"', $cat->getCatname());
 		$this->assertEquals(1, $cat->getPrior());
 		$this->assertEquals('|', $cat->getPath());
-		$this->assertEquals(0, $cat->getReId());
+		$this->assertEquals(0, $cat->getParentId());
 
 		$service->delete($newID);
 		$this->assertNull($service->findById($newID, 0));
 	}
 
 	public function testEdit() {
-		$service = sly_Service_Factory::getService('Category');
-		$service->edit(self::$id, 0, 'Neuer Titel', -1);
+		$service = sly_Service_Factory::getCategoryService();
+		$service->edit(self::$id, 1, 'Neuer Titel', false);
 
-		$cat = $service->findById(self::$id, 0);
-		$this->assertEquals('Testkategorie', $cat->getName());
+		$cat = $service->findById(self::$id);
+		$this->assertEquals('Neuer Titel', $cat->getName());
 		$this->assertEquals('Neuer Titel', $cat->getCatname());
 	}
 }

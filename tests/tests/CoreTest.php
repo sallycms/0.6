@@ -21,8 +21,8 @@ class sly_CoreTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetClang() {
-		$_REQUEST['clang'] = 0; // clang 0 always exists
-		return $this->assertEquals(0, sly_Core::getCurrentClang());
+		$_REQUEST['clang'] = 1; // clang 1 always exists
+		return $this->assertEquals(1, sly_Core::getCurrentClang());
 	}
 
 	public function testGetNotExistingClang() {
