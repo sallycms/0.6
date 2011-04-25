@@ -16,6 +16,7 @@ sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/lib');
 sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/lib/sfYaml');
 sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/lib/babelcache');
 sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/lib/rex/oo', 'OO');
+sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/lib/PEAR');
 sly_Loader::register();
 
 require_once SLY_INCLUDE_PATH.'/lib/compatibility.php';
