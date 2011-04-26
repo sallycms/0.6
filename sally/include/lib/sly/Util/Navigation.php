@@ -64,7 +64,7 @@ class sly_Util_Navigation {
 	 */
 	protected function getActivePathArray() {
 		if (!isset($this->activePathIds)) {
-			$parts = explode('|', OOArticle::getArticleById($this->activeArticleId)->getPath().$this->activeArticleId);
+			$parts = explode('|', sly_Util_Article::findById($this->activeArticleId)->getPath().$this->activeArticleId);
 			$this->activePathIds = array_filter($parts);
 		}
 		return $this->activePathIds;

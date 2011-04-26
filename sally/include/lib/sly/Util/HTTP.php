@@ -63,7 +63,7 @@ class sly_Util_HTTP {
 	 *
 	 * Diese Methode ermittelt zu einem Artikel die dazugehörige ID.
 	 *
-	 * @param  mixed $article  OOArticle oder int
+	 * @param  mixed $article  sly_Model_Article oder int
 	 * @return int             die ID oder -1 falls keine gefunden wurde
 	 */
 	protected static function resolveArticle($article) {
