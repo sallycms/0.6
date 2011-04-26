@@ -21,7 +21,7 @@ class sly_Controller_Api extends sly_Controller_Ajax {
 		$sql->query('SELECT id,clang FROM '.$prefix.'article WHERE name LIKE ? GROUP BY id', array("%$query%"));
 
 		foreach ($sql as $row) {
-			$article = OOArticle::getArticleById($row['id'], $row['clang']);
+			$article = sly_Util_Article::findById($row['id'], $row['clang']);
 
 			if ($article) {
 				$name = str_replace('|', '/', sly_html($article->getName()));
@@ -37,7 +37,7 @@ class sly_Controller_Api extends sly_Controller_Ajax {
 				}
 
 				array_unshift($path, '(Homepage)');
-				printf("%s|%d|%s\n", $name, $row['id'], implode(' &gt; ', $path));
+				printf("%s|%d|%s|%d\n", $name, $row['id'], implode(' &gt; ', $path), $row['clang']);
 			}
 		}
 	}
