@@ -17,13 +17,14 @@ class sly_Controller_Api extends sly_Controller_Ajax {
 		$query  = sly_get('q', 'string');
 		$sql    = sly_DB_Persistence::getInstance();
 		$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+		$user = sly_Util_User::getCurrentUser();
 
 		$sql->query('SELECT id,clang FROM '.$prefix.'article WHERE name LIKE ? GROUP BY id', array("%$query%"));
 
 		foreach ($sql as $row) {
 			$article = sly_Util_Article::findById($row['id'], $row['clang']);
 
-			if ($article) {
+			if ($article && sly_Util_Category::hasPermissionOnCategory($user, $row['id'])) {
 				$name = str_replace('|', '/', sly_html($article->getName()));
 				$path = $article->getParentTree();
 

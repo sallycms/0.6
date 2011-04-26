@@ -65,5 +65,19 @@ class sly_Util_Category {
 	public static function getRootCategories($ignore_offlines = false, $clang = null) {
 		return self::findByParentId(0, $ignore_offlines, $clang);
 	}
+	
+	public static function hasPermissionOnCategory(sly_Model_User $user, $categoryId) {
+		if ($user->isAdmin() || $user->hasRight('csw[0]')) return true;
+		if ($user->hasRight('editContentOnly[]')) return false;
+
+		$cat = sly_Util_Category::findById($categoryId);
+
+		while ($cat) {
+			if ($user->hasRight('csw['.$categoryId.']')) return true;
+			$cat = $cat->getParent();
+		}
+
+		return false;
+	}
 
 }

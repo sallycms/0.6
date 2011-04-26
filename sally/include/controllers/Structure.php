@@ -282,18 +282,7 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 	 */
 	protected function canEditCategory($categoryId) {
 		$user = sly_Util_User::getCurrentUser();
-
-		if ($user->isAdmin() || $user->hasRight('csw[0]')) return true;
-		if ($user->hasRight('editContentOnly[]')) return false;
-
-		$cat = sly_Util_Category::findById($categoryId);
-
-		while ($cat) {
-			if ($user->hasRight('csw['.$categoryId.']')) return true;
-			$cat = $cat->getParent();
-		}
-
-		return false;
+		return sly_Util_Category::hasPermissionOnCategory($user, $categoryId);
 	}
 
 	protected function canPublishCategory($categoryId) {
