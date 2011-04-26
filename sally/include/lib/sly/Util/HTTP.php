@@ -15,8 +15,8 @@ class sly_Util_HTTP {
 	public static function redirect($target, $parameters = array(), $noticeText = '', $status = 301) {
 		$targetUrl = '';
 
-		if ($target instanceof OOArticle || sly_Util_String::isInteger($target)) {
-			$clang     = $target instanceof OOArticle ? $target->getCLang() : sly_Core::getCurrentClang();
+		if ($target instanceof sly_Model_Article || sly_Util_String::isInteger($target)) {
+			$clang     = $target instanceof sly_Model_Article ? $target->getCLang() : sly_Core::getCurrentClang();
 			$targetUrl = self::getAbsoluteUrl($target, $clang, $parameters, '&');
 		}
 		else {
@@ -68,7 +68,7 @@ class sly_Util_HTTP {
 	 */
 	protected static function resolveArticle($article) {
 		if (sly_Util_String::isInteger($article)) return (int) $article;
-		if ($article instanceof OOArticle) return (int) $article->getId();
+		if ($article instanceof sly_Model_Article) return (int) $article->getId();
 
 		return -1;
 	}
