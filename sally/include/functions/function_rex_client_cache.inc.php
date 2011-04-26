@@ -62,7 +62,7 @@ function rex_send_article($article, $content, $environment) {
 		$requestedID  = sly_request('article_id', 'int');
 		$notFoundID   = $config->get('NOTFOUND_ARTICLE_ID');
 
-		if ($requestedID != $notFoundID && $article->getArticleId() == $notFoundID && $article->getId() != $config->get('START_ARTICLE_ID')) {
+		if ($requestedID != $notFoundID && $article->getId() == $notFoundID && $article->getId() != $config->get('START_ARTICLE_ID')) {
 			header('HTTP/1.0 404 Not Found');
 		}
 	} else {
