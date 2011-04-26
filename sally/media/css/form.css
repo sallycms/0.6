@@ -157,6 +157,8 @@ a.sly-button {
 
 
 .rex-form {
+	+border-radius($brd_rad);
+	
 	.rex-form-row {
 		p.rex-form-read span,
 		p.rex-form-text input,
@@ -225,13 +227,6 @@ a.sly-button {
 			width: 200px;
 		}
 	}
-}
-
-/*	Rundungen */
-.rex-form,
-.rex-form input.rex-form-submit {
-	+border-radius($brd_rad);
-	/* border: 1px solid #efefef; */ /* kaum sichtbar, erzeugt aber abgerundete Ecken */
 }
 
 .rex-form {
