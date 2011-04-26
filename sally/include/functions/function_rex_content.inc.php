@@ -94,7 +94,7 @@ function rex_moveSlice($slice_id, $clang, $direction)
  * @param  int $slice_id  ID des Slices
  * @return boolean        true bei Erfolg, sonst false
  */
-function rex_deleteSlice($slice_id)
+function rex_deleteArticleSlice($slice_id)
 {
 	$article_slice = OOArticleSlice::getArticleSliceById($slice_id);
 
@@ -110,6 +110,7 @@ function rex_deleteSlice($slice_id)
 		$sql->setQuery('DELETE FROM #_article_slice WHERE id = '.$slice_id, '#_');
 		
 		sly_Service_Factory::getService('Slice')->delete(array('id' => $article_slice->getSliceId()));
+		rex_deleteCacheSliceContent($article_slice->getSliceId());
 
 		// TODO delete less entries in cache
 		sly_Core::cache()->flush(OOArticleSlice::CACHE_NS);

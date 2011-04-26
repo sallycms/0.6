@@ -11,12 +11,6 @@
  * @package redaxo4
  */
 
-/*
-// TODOS:
-// - alles vereinfachen
-// - <? ?> $ Problematik bei REX_ACTION
-*/
-
 unset ($REX_ACTION);
 
 $category_id = sly_request('category_id', 'rex-category-id');
@@ -234,6 +228,7 @@ if (!is_null($article)) {
 								$newsql->addGlobalUpdateFields();
 
 								if ($newsql->update()) {
+									rex_deleteCacheSliceContent($realslice->getId());
 									$info = $action_message.t('block_updated');
 								}
 								else {
@@ -265,7 +260,7 @@ if (!is_null($article)) {
 							$newsql = null;
 						}
 						else {
-							if (rex_deleteSlice($slice_id)) {
+							if (rex_deleteArticleSlice($slice_id)) {
 								$global_info = t('block_deleted');
 							}
 							else {
@@ -282,8 +277,6 @@ if (!is_null($article)) {
 						$update->addGlobalUpdateFields();
 						$update->update();
 						$update = null;
-
-						rex_deleteCacheSliceContent($slice_id);
 
 						// POST SAVE ACTION [ADD/EDIT/DELETE]
 
