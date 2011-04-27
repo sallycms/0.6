@@ -63,14 +63,14 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 	/**
 	 *
 	 * @param string $table
-	 * @param unknown_type $select
-	 * @param unknown_type $where
-	 * @param unknown_type $group
-	 * @param unknown_type $order
-	 * @param unknown_type $offset
-	 * @param unknown_type $limit
-	 * @param unknown_type $having
-	 * @param unknown_type $joins
+	 * @param string $select
+	 * @param mixed  $where
+	 * @param mixed  $group
+	 * @param mixed  $order
+	 * @param mixed  $offset
+	 * @param mixed  $limit
+	 * @param mixed  $having
+	 * @param mixed  $joins
 	 *
 	 * @return boolean
 	 */
@@ -175,115 +175,31 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 	}
 
 	// =========================================================================
-	// Locks
-	// =========================================================================
-
-	public function writeLock($tables, $replaceRexPrefix = '') {
-		$this->lock($tables, $replaceRexPrefix, 'WRITE');
-	}
-
-	public function readLock($tables, $replaceRexPrefix = '') {
-		$this->lock($tables, $replaceRexPrefix, 'READ');
-	}
-
-	public function unlock() {
-		$this->query('UNLOCK TABLES');
-	}
-
-	protected function lock($tables, $replaceRexPrefix, $type) {
-		if (!is_array($tables)) $tables = array($tables);
-
-		foreach ($tables as &$table) {
-			$table = str_replace($replaceRexPrefix, self::getPrefix(), $table).' '.$type;
-		}
-
-		$this->query('LOCK TABLES '.implode(', ', $tables));
-	}
-
-
-	// =========================================================================
 	// TRANSACTIONS
 	// =========================================================================
 
 	/**
 	 * Transaktion starten
-	 *
-	 * Diese Methode startet eine neue Transaktion. Allerdings nur, wenn
-	 * $enableSwitch auf true gesetzt ist.
 	 */
-	public function startTransaction($force = false) {
-		if (!$this->connection->isTransRunning() || $force) {
-			try {
-				$this->connection->getPDO()->beginTransaction();
-				$this->connection->setTransRunning(true);
-				return true;
-			}
-			catch (PDOException $e) {
-				try {
-					if ($force) {
-						$this->connection->getPDO()->commit();
-						$this->connection->getPDO()->beginTransaction();
-						$this->connection->setTransRunning(true);
-						return true;
-					}
-
-					return false;
-				}
-				catch (PDOException $e) {
-					return false;
-				}
-			}
-		}
+	public function beginTransaction() {
+		$this->connection->getPDO()->beginTransaction();
+		$this->connection->setTransRunning(true);
 	}
 
 	/**
 	 * Transaktion beenden
-	 *
-	 * Diese Methode beendet eine laufende Transaktion. Allerdings nur, wenn
-	 * $enableSwitch auf true gesetzt ist.
 	 */
-	public function doCommit() {
-		try {
-			$this->connection->getPDO()->commit();
-			$this->connection->setTransRunning(false);
-			return true;
-		}
-		catch (PDOException $e) {
-			return false;
-		}
+	public function commit() {
+		$this->connection->getPDO()->commit();
+		$this->connection->setTransRunning(false);
 	}
 
 	/**
 	 * Transaktion zurücknehmen
-	 *
-	 * Diese Methode beendet eine laufende Transaktion. Allerdings nur, wenn
-	 * $enableSwitch auf true gesetzt ist.
 	 */
-	public function doRollBack() {
-		try {
-			$this->connection->getPDO()->rollBack();
-			$this->connection->setTransRunning(false);
-			return true;
-		}
-		catch (PDOException $e) {
-			return false;
-		}
-	}
-
-	public function cleanEndTransaction($e) {
-		$this->doRollBack();
-
-		// Exceptions, die nicht von SQL-Problemen herrühren (z.B. InputExceptions),
-		// leiten wir weiter nach außen.
-
-		if ($e instanceof Exception && !($e instanceof sly_DB_PDO_Exception)) {
-			throw $e;
-		}
-
-		// Exceptions, die von SQL-Problemen herrühren, verpacken wir als
-		// neue Exception im entsprechenden Applikationskontext.
-
-		$this->error();
+	public function rollBack() {
+		$this->connection->getPDO()->rollBack();
+		$this->connection->setTransRunning(false);
 	}
 
 	// =========================================================================

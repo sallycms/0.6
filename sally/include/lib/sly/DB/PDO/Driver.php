@@ -26,4 +26,3 @@ abstract class sly_DB_PDO_Driver{
 
 	abstract public function getDSN();
 }
-
