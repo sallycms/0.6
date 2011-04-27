@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
@@ -73,7 +74,7 @@ abstract class sly_Model_Base {
 
 	protected function attrsToHash($attrs) {
 		$data = array();
-		foreach($attrs as $name => $type) {
+		foreach ($attrs as $name => $type) {
 			$data[$name] = $this->$name;
 		}
 		return $data;
@@ -81,21 +82,25 @@ abstract class sly_Model_Base {
 
 	public function getDeleteCascades() {
 		$cascade = array();
-		if (!isset($this->_hasMany)) return $cascade;
+		if (!isset($this->_hasMany))
+			return $cascade;
 
 		foreach ($this->_hasMany as $model => $config) {
 			if (isset($config['delete_cascade']) && $config['delete_cascade'] === true) {
-				$fk = $config['foreign_key'];
-
-				foreach ($fk as $column => $value) {
-					$fk[$column] = $this->$value;
-				}
-
-				$cascade[$model] = $fk;
+				$cascade[$model] = $this->getForeignKeyForHasMany($model);
 			}
 		}
 
 		return $cascade;
+	}
+
+	private function getForeignKeyForHasMany($model) {
+		$fk = $this->_hasMany[$model]['foreign_key'];
+
+		foreach ($fk as $column => $value) {
+			$fk[$column] = $this->$value;
+		}
+		return $fk;
 	}
 
 	public function getExtendedValue($key, $default = null) {
@@ -103,13 +108,23 @@ abstract class sly_Model_Base {
 	}
 
 	public function __call($method, $arguments) {
-		$event      = strtoupper(get_class($this).'_'.$method);
+
+		if (isset($this->_hasMany) && is_array($this->_hasMany)) {
+			foreach ($this->_hasMany as $model => $config) {
+				if ($method == 'get' . $model . 's') {
+					return sly_Service_Factory::getService($model)->find($this->getForeignKeyForHasMany($model));
+				}
+			}
+		}
+
+		$event = strtoupper(get_class($this) . '_' . $method);
 		$dispatcher = sly_Core::dispatcher();
 
 		if (!$dispatcher->hasListeners($event)) {
-			throw new sly_Exception('Call to undefined function '.$method.'()');
+			throw new sly_Exception('Call to undefined function ' . $method . '()');
 		}
 
 		return $dispatcher->filter($event, null, array('method' => $method, 'arguments' => $arguments, 'object' => $this));
 	}
+
 }

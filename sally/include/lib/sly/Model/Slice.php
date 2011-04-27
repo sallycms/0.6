@@ -12,6 +12,9 @@
  * Business Model Klasse für Slices
  *
  * @author  zozi@webvariants.de
+ * 
+ * @method getSliceValues()
+ * 
  * @ingroup model
  */
 class sly_Model_Slice extends sly_Model_Base_Id {
