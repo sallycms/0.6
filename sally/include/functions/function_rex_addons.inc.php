@@ -37,22 +37,14 @@ function rex_read_addons_folder($folder = null) {
 function rex_install_dump($file) {
 	try {
 		$dump = new sly_DB_Dump($file);
-	}
-	catch (sly_Exception $e) {
+		$sql   = sly_DB_Persistence::getInstance();
+	
+		foreach ($dump->getQueries(true) as $query) {
+			$sql->query($query);
+		}
+	}catch(sly_Exception $e) {
 		return $e->getMessage();
 	}
 
-	$error = '';
-	$sql   = rex_sql::getInstance();
-
-	foreach ($dump->getQueries(true) as $query) {
-		$sql->setQuery($query);
-		$sqlerr = $sql->getError();
-
-		if (!empty($sqlerr)) {
-			$error .= $sqlerr."<br />\n";
-		}
-	}
-
-	return $error == '' ? true : $error;
+	return true;
 }

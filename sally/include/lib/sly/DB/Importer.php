@@ -67,11 +67,10 @@ class sly_DB_Importer {
 
 		// User-Tabelle ggf. anlegen, falls nicht vorhanden
 
-		$dbObject = $this->checkForUserTable();
-
-		if ($dbObject instanceof rex_sql && $dbObject->hasError()) {
-			$msg   = '';
-			$error = $dbObject->getError();
+		try {
+			$this->checkForUserTable();
+		} catch(sly_DB_PDO_Exception $e) {
+			$error = $e->getMessage();
 		}
 
 		// Cache erneuern, wenn alles OK lief
@@ -137,14 +136,14 @@ class sly_DB_Importer {
 	protected function executeQueries() {
 		$queries = $this->dump->getQueries();
 
-		$sql   = new rex_sql();
+		$sql   = sly_DB_Persistence::getInstance();
 		$error = array();
 
 		foreach ($queries as $qry) {
-			$sql->setQuery($qry);
-
-			if ($sql->hasError()) {
-				$error[] = $sql->getError();
+			try {
+				$sql->query($qry);
+			} catch (sly_DB_PDO_Exception $e) {
+				$error[] = $e->getMessage();
 			}
 		}
 
@@ -159,8 +158,8 @@ class sly_DB_Importer {
 			$createStmt = file_get_contents(SLY_INCLUDE_PATH.'/install/user.sql');
 			$createStmt = str_replace('%PREFIX%', $prefix, $createStmt);
 
-			$db = new rex_sql();
-			$db->setQuery($createStmt);
+			$db = sly_DB_Persistence::getInstance();
+			$db->query($createStmt);
 			return $db;
 		}
 
