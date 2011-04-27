@@ -29,7 +29,7 @@ class sly_Service_Language extends sly_Service_Model_Base_Id {
 		global $REX;
 
 		$sql = sly_DB_Persistence::getInstance();
-		$sql->startTransaction();
+		$sql->beginTransaction();
 
 		try {
 			$newLanguage = parent::create($params);
@@ -44,10 +44,10 @@ class sly_Service_Language extends sly_Service_Model_Base_Id {
 				array($newLanguage->getId())
 			);
 
-			$sql->doCommit();
+			$sql->commit();
 		}
 		catch (Exception $e) {
-			$sql->cleanEndTransaction($e);
+			$sql->rollBack();
 			throw $e;
 		}
 
