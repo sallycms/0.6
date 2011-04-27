@@ -221,7 +221,7 @@ abstract class sly_Service_AddOn_Base {
 		// read install.sql and install DB
 
 		if ($installDump && is_readable($installSQL)) {
-			$state = rex_install_dump($installSQL);
+			$state = $this->installDump($installSQL);
 
 			if ($state !== true) {
 				return 'Error found in install.sql:<br />'.$state;
@@ -309,7 +309,7 @@ abstract class sly_Service_AddOn_Base {
 		// read uninstall.sql
 
 		if (is_readable($uninstallSQL)) {
-			$state = rex_install_dump($uninstallSQL);
+			$state = $this->installDump($uninstallSQL);
 
 			if ($state !== true) {
 				return 'Error found in uninstall.sql:<br />'.$state;
@@ -661,5 +661,21 @@ abstract class sly_Service_AddOn_Base {
 		if ($version !== false && $known !== $version) {
 			sly_Util_Versions::set($key, $version);
 		}
+	}
+
+	private function installDump($file) {
+		try {
+			$dump = new sly_DB_Dump($file);
+			$sql  = sly_DB_Persistence::getInstance();
+
+			foreach ($dump->getQueries(true) as $query) {
+				$sql->query($query);
+			}
+		}
+		catch (sly_Exception $e) {
+			return $e->getMessage();
+		}
+
+		return true;
 	}
 }
