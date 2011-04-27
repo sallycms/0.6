@@ -45,17 +45,16 @@ $navigation = sly_Core::getNavigation();
 // Setup vorbereiten
 
 if (!SLY_IS_TESTING && $config->get('SETUP')) {
-	$REX['LANG']      = 'de_de';
-	$REX['LANGUAGES'] = array();
-
+	$REX['LANG'] = 'de_de';
 	$requestLang = sly_request('lang', 'string');
 	$langpath    = SLY_INCLUDE_PATH.'/lang';
 	$languages   = glob($langpath.'/*.lang');
+	$list        = array();
 
 	if ($languages) {
 		foreach ($languages as $language) {
 			$locale = substr(basename($language), 0, -5);
-			$REX['LANGUAGES'][] = $locale;
+			$list[] = $locale;
 
 			if ($requestLang == $locale) {
 				$REX['LANG'] = $locale;
@@ -63,12 +62,17 @@ if (!SLY_IS_TESTING && $config->get('SETUP')) {
 		}
 	}
 
+	// store languages
+	sly_Controller_Setup::setLanguages($list);
+
+	// create our global i18n object
 	$I18N = rex_create_lang($REX['LANG']);
 
 	$navigation->addPage('system', 'setup', false);
 
 	$REX['PAGE']      = 'setup';
 	$_REQUEST['page'] = 'setup';
+
 	date_default_timezone_set(@date_default_timezone_get());
 }
 else {

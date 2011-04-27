@@ -8,8 +8,6 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-global $REX;
-
 $this->title('Setup: Sprachauswahl');
 
 ?>
@@ -20,7 +18,7 @@ $this->title('Setup: Sprachauswahl');
 
 	$langpath = SLY_INCLUDE_PATH.'/lang';
 
-	foreach ($REX['LANGUAGES'] as $l) {
+	foreach (sly_Controller_Setup::getLanguages() as $l) {
 		$i18n  = rex_create_lang($l, $langpath, false);
 		$label = $i18n->msg('lang');
 

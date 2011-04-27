@@ -13,15 +13,15 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 	protected $info;
 	protected $lang;
 
+	private static $languages;
+
 	protected function init() {
 		$this->lang = sly_request('lang', 'string');
 		sly_Core::getI18N()->appendFile(SLY_INCLUDE_PATH.'/lang/pages/setup/');
 	}
 
 	public function index()	{
-		global $REX;
-
-		$languages = $REX['LANGUAGES'];
+		$languages = self::$languages;
 
 		// wenn nur eine Sprache -> direkte Weiterleitung
 
@@ -152,7 +152,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 	protected function initdb() {
 		$dbInitFunction = sly_post('db_init_function', 'string', '');
-		
+
 		if (isset($_POST['submit'])) {
 			$config         = sly_Core::config();
 			$prefix         = $config->get('DATABASE/TABLE_PREFIX');
@@ -204,7 +204,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			if (empty($error)) {
 				$existingTables = array();
 				$db = sly_DB_Persistence::getInstance();
-				
+
 				foreach ($db->listTables() as $tblname) {
 					if (substr($tblname, 0, strlen($prefix)) == $prefix) {
 						$existingTables[] = $tblname;
@@ -375,5 +375,13 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 	protected function checkPermission() {
 		return sly_Core::config()->get('SETUP') === true;
+	}
+
+	public static function setLanguages(array $languages) {
+		self::$languages = $languages;
+	}
+
+	public static function getLanguages() {
+		return self::$languages;
 	}
 }
