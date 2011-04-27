@@ -84,32 +84,32 @@ function rex_send_article($article, $content, $environment) {
  * @param string $environment   die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
 function rex_send_content($content, $lastModified, $etag, $environment) {
-	global $REX;
-
 	// Cachen erlauben, nach revalidierung
 	// see http://xhtmlforum.de/35221-php-session-etag-header.html#post257967
 	session_cache_limiter('none');
 	header('Cache-Control: must-revalidate, proxy-revalidate, private');
 
-	// ----- Last-Modified
-	if ($REX['USE_LAST_MODIFIED'] === 'true' || $REX['USE_LAST_MODIFIED'] == $environment) {
+	$config  = sly_Core::config();
+	$lastMod = $config->get('USE_LAST_MODIFIED');
+	$useEtag = $config->get('USE_ETAG');
+	$gzip    = $config->get('USE_GZIP');
+	$md5     = $config->get('USE_MD5');
+
+	if ($lastMod === true || $lastMod == $environment) {
 		rex_send_last_modified($lastModified);
 	}
 
-	// ----- ETAG
-	if ($REX['USE_ETAG'] === 'true' || $REX['USE_ETAG'] == $environment) {
+	if ($useEtag === true || $useEtag == $environment) {
 		rex_send_etag($etag);
 	}
 
-	// ----- GZIP
-	if ($REX['USE_GZIP'] === 'true' || $REX['USE_GZIP'] == $environment) {
+	if ($gzip === true || $gzip == $environment) {
 		$content = rex_send_gzip($content);
 	}
 
-	// ----- MD5 Checksum
 	// Dynamische Teile sollen die MD5-Summe nicht beeinflussen.
-	if ($REX['USE_MD5'] === 'true' || $REX['USE_MD5'] == $environment) {
-		rex_send_checksum(md5(preg_replace('@<!--DYN-->.*<!--/DYN-->@','', $content)));
+	if ($md5 === true || $md5 == $environment) {
+		header('Content-MD5: '.md5(preg_replace('@<!--DYN-->.*<!--/DYN-->@', '', $content)));
 	}
 
 	// content length schicken, damit der Browser einen Ladebalken anzeigen kann
@@ -138,10 +138,7 @@ function rex_send_last_modified($lastModified = null) {
 	// Last-Modified Timestamp gefunden
 	// => den Browser anweisen, den Cache zu verwenden
 	if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $lastModified) {
-		while (ob_get_level()) {
-			ob_end_clean();
-		}
-
+		while (ob_get_level()) ob_end_clean();
 		header('HTTP/1.1 304 Not Modified');
 		exit();
 	}
@@ -165,10 +162,7 @@ function rex_send_etag($cacheKey) {
 	// CacheKey gefunden
 	// => den Browser anweisen, den Cache zu verwenden
 	if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] == $cacheKey) {
-		while (ob_get_level()) {
-			ob_end_clean();
-		}
-
+		while (ob_get_level()) ob_end_clean();
 		header('HTTP/1.1 304 Not Modified');
 		exit();
 	}
@@ -202,16 +196,4 @@ function rex_send_gzip($content) {
 	}
 
 	return $content;
-}
-
-/**
- * Sendet eine MD5 Checksumme als HTTP Header, damit der Browser validieren
- * kann, ob Übertragungsfehler aufgetreten sind
- *
- * XHTML 1.1: HTTP_CONTENT_MD5 feature
- *
- * @param string $md5  MD5-Summe des Inhalts
- */
-function rex_send_checksum($md5) {
-	header('Content-MD5: '.$md5);
 }

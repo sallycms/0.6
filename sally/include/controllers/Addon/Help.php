@@ -16,7 +16,7 @@ class sly_Controller_Addon_Help extends sly_Controller_Sally {
 		$addon  = sly_request('addon', 'string', '');
 		$plugin = sly_request('plugin', 'string', '');
 
-		$addons      = sly_Service_Factory::getService('AddOn')->getRegisteredAddOns();
+		$addons      = sly_Service_Factory::getAddOnService()->getRegisteredAddOns();
 		$this->addon = in_array($addon, $addons) ? $addon : null;
 
 		if ($this->addon) {
@@ -24,7 +24,7 @@ class sly_Controller_Addon_Help extends sly_Controller_Sally {
 			$layout->pageHeader(t('addon'));
 			print '<div class="sly-content">';
 
-			$plugins      = sly_Service_Factory::getService('Plugin')->getRegisteredPlugins($this->addon);
+			$plugins      = sly_Service_Factory::getPluginService()->getRegisteredPlugins($this->addon);
 			$this->plugin = in_array($plugin, $plugins) ? $plugin : null;
 		}
 		else {
@@ -48,7 +48,7 @@ class sly_Controller_Addon_Help extends sly_Controller_Sally {
 	}
 
 	public function checkPermission() {
-		global $REX;
-		return isset($REX['USER']) && $REX['USER']->isAdmin();
+		$user = sly_Util_User::getCurrentUser();
+		return isset($user) && $user->isAdmin();
 	}
 }

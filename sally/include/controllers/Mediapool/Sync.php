@@ -65,16 +65,8 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 	}
 
 	protected function getFilesFromFilesystem() {
-		global $REX;
-
-		$dir   = new sly_Util_Directory(SLY_MEDIAFOLDER);
-		$files = array();
-
-		foreach ($dir->listPlain(true, false) as $file) {
-			 $files[] = $file;
-		}
-
-		return $files;
+		$dir = new sly_Util_Directory(SLY_MEDIAFOLDER);
+		return $dir->listPlain(true, false);
 	}
 
 	protected function getFilesFromDatabase() {
@@ -90,12 +82,14 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 	protected function getFileDiff() {
 		$database   = $this->getFilesFromDatabase();
 		$filesystem = $this->getFilesFromFilesystem();
-		$diff = array_diff($filesystem, $database);
-		$res = array();
-		// eventually broken encoded filename + utf8 filename
-		foreach($diff as $filename) {
+		$diff       = array_diff($filesystem, $database);
+		$res        = array();
+
+		// possibly broken encoded filename + utf8 filename
+		foreach ($diff as $filename) {
 			$res[$filename] = $this->correctEncoding($filename);
 		}
+
 		return $res;
 	}
 }

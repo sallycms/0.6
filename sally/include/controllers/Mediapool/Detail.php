@@ -61,8 +61,6 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 	}
 
 	public function update() {
-		global $REX;
-
 		$fileID = $this->getCurrentFile();
 		$media  = OOMedia::getMediaById($fileID);
 		$target = $this->getCurrentCategory();

@@ -342,7 +342,7 @@ if (!is_null($article)) {
 				$category_id_new = sly_post('category_id_new', 'rex-category-id');
 
 				if ($REX['USER']->isAdmin() || ($REX['USER']->hasPerm('moveArticle[]') && ($REX['USER']->hasPerm('csw[0]') || $REX['USER']->hasPerm('csw['.$category_id_new.']')))) {
-					if (rex_moveArticle($article_id, $category_id, $category_id_new)) {
+					if (rex_moveArticle($article_id, $category_id_new)) {
 						$info = t('content_articlemoved');
 						while (ob_get_level()) ob_end_clean();
 						header('Location: index.php?page=content&article_id='.$article_id.'&mode=meta&clang='.$clang.'&slot='.$slot.'&info='.urlencode($info));

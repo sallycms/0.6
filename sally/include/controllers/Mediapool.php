@@ -15,8 +15,6 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 	protected $selectBox;
 
 	public function init() {
-		global $REX;
-
 		// load our i18n stuff
 		sly_Core::getI18N()->appendFile(SLY_INCLUDE_PATH.'/lang/pages/mediapool/');
 
@@ -27,7 +25,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 		$this->getCurrentCategory();
 		$this->initOpener();
 
-		// -------------- Header
+		// Header
 
 		$subline = array(
 			array('',       $this->t('file_list')),
@@ -48,10 +46,10 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 			$item[3] = $args;
 		}
 
-		$subline = rex_register_extension_point('PAGE_MEDIAPOOL_MENU', $subline);
+		$subline = sly_Core::dispatcher()->filter('PAGE_MEDIAPOOL_MENU', $subline);
 		$layout  = sly_Core::getLayout();
-		$layout->showNavigation(false);
 
+		$layout->showNavigation(false);
 		$layout->pageHeader($this->t('media'), $subline);
 	}
 
@@ -72,8 +70,6 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 	}
 
 	protected function getCurrentCategory() {
-		global $REX;
-
 		if ($this->category === null) {
 			$category = sly_request('rex_file_category', 'int', -1);
 			$service  = sly_Service_Factory::getService('Media_Category');
@@ -167,8 +163,6 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 	}
 
 	public function move() {
-		global $REX;
-
 		if (!$this->isMediaAdmin()) {
 			return $this->index();
 		}
@@ -180,8 +174,9 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 			return $this->index();
 		}
 
+		$user = sly_Util_User::getCurrentUser();
 		$db   = sly_DB_Persistence::getInstance();
-		$what = array('category_id' => $this->category, 'updateuser' => $REX['USER']->getLogin(), 'updatedate' => time());
+		$what = array('category_id' => $this->category, 'updateuser' => $user->getLogin(), 'updatedate' => time());
 		$db->update('file', $what, array('id' => $files));
 
 		$this->info = $this->t('selectedmedia_moved');
@@ -215,13 +210,12 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 	}
 
 	protected function deleteMedia(OOMedia $media) {
-		global $REX;
-
 		$filename = $media->getFileName();
+		$user     = sly_Util_User::getCurrentUser();
 
 		// TODO: Is $this->isMediaAdmin() redundant? The user rights are already checked in delete()...
 
-		if ($this->isMediaAdmin() || $REX['USER']->hasPerm('media['.$media->getCategoryId().']')) {
+		if ($this->isMediaAdmin() || $user->hasPerm('media['.$media->getCategoryId().']')) {
 			$usages = $media->isInUse();
 
 			if ($usages === false) {
@@ -257,13 +251,13 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 	}
 
 	public function checkPermission() {
-		global $REX;
-		return !empty($REX['USER']);
+		$user = sly_Util_User::getCurrentUser();
+		return !empty($user);
 	}
 
 	protected function isMediaAdmin() {
-		global $REX;
-		return $REX['USER']->hasPerm('admin[]') || $REX['USER']->hasPerm('media[0]');
+		$user = sly_Util_User::getCurrentUser();
+		return $user->hasPerm('admin[]') || $user->hasPerm('media[0]');
 	}
 
 	protected function canAccessFile(OOMedia $file) {
@@ -271,15 +265,15 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 	}
 
 	protected function canAccessCategory($cat) {
-		global $REX;
-		return $this->isMediaAdmin() || $REX['USER']->hasPerm('media['.intval($cat).']');
+		$user = sly_Util_User::getCurrentUser();
+		return $this->isMediaAdmin() || $user->hasPerm('media['.intval($cat).']');
 	}
 
 	protected function getCategorySelect() {
-		global $REX;
+		$user = sly_Util_User::getCurrentUser();
 
 		if ($this->selectBox === null) {
-			$this->selectBox = sly_Form_Helper::getMediaCategorySelect('rex_file_category', null, $REX['USER']);
+			$this->selectBox = sly_Form_Helper::getMediaCategorySelect('rex_file_category', null, $user);
 			$this->selectBox->setLabel($this->t('kats'));
 			$this->selectBox->setMultiple(false);
 			$this->selectBox->setAttribute('value', $this->getCurrentCategory());
@@ -337,8 +331,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 	}
 
 	protected function createFilename($filename, $doSubindexing = true) {
-		global $REX;
-		$filename = $this->correctEncoding($filename);
+		$filename    = $this->correctEncoding($filename);
 		$newFilename = strtolower($filename);
 		$newFilename = str_replace(array('ä','ö', 'ü', 'ß'), array('ae', 'oe', 'ue', 'ss'), $newFilename);
 		$newFilename = preg_replace('#[^a-z0-9.+-]#i', '_', $newFilename);
@@ -358,7 +351,9 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 
 		// check for disallowed extensions (broken by design...)
 
-		if (in_array($newExt, $REX['MEDIAPOOL']['BLOCKED_EXTENSIONS'])) {
+		$blocked = sly_Core::config()->get('MEDIAPOOL/BLOCKED_EXTENSIONS');
+
+		if (in_array($newExt, $blocked)) {
 			$newName .= $newExt;
 			$newExt   = '.txt';
 		}
@@ -395,9 +390,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 
 	protected function correctEncoding($filename) {
 		$enc = mb_detect_encoding($filename, 'Windows-1252, ISO-8859-1, ISO_8859-2, UTF-8');
-		if($enc != 'UTF-8') {
-			$filename = iconv($enc, 'UTF-8', $filename);
-		}
+		if ($enc != 'UTF-8') $filename = iconv($enc, 'UTF-8', $filename);
 		return $filename;
 	}
 }

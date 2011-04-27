@@ -64,8 +64,8 @@ class sly_Controller_Linkmap extends sly_Controller_Sally {
 	}
 
 	public function checkPermission() {
-		global $REX;
-		return !empty($REX['USER']);
+		$user = sly_Core::getCurrentUser();
+		return !empty($user);
 	}
 
 	protected function url($local = array()) {
@@ -77,12 +77,12 @@ class sly_Controller_Linkmap extends sly_Controller_Sally {
 	}
 
 	protected function formatLabel($object) {
-		global $REX;
-
+		$user  = sly_Core::getCurrentUser();
 		$label = trim($object->getName());
+
 		if (empty($label)) $label = '&nbsp;';
 
-		if ($REX['USER']->hasPerm('advancedMode[]')) {
+		if ($user->hasPerm('advancedMode[]')) {
 			$label .= ' ['.$object->getId().']';
 		}
 

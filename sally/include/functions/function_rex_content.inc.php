@@ -18,8 +18,7 @@
  * @param  int $clang     ID der Sprache
  * @return array          ein Array welches den Status sowie eine Fehlermeldung beinhaltet
  */
-function rex_moveSliceUp($slice_id, $clang)
-{
+function rex_moveSliceUp($slice_id, $clang) {
 	return rex_moveSlice($slice_id, $clang, 'moveup');
 }
 
@@ -30,8 +29,7 @@ function rex_moveSliceUp($slice_id, $clang)
  * @param  int $clang     ID der Sprache
  * @return array          ein Array welches den Status sowie eine Fehlermeldung beinhaltet
  */
-function rex_moveSliceDown($slice_id, $clang)
-{
+function rex_moveSliceDown($slice_id, $clang) {
 	return rex_moveSlice($slice_id, $clang, 'movedown');
 }
 
@@ -43,10 +41,7 @@ function rex_moveSliceDown($slice_id, $clang)
  * @param  string $direction  Richtung in die verschoben werden soll
  * @return array              ein Array welches den Status sowie eine Fehlermeldung beinhaltet
  */
-function rex_moveSlice($slice_id, $clang, $direction)
-{
-	global $REX, $I18N;
-
+function rex_moveSlice($slice_id, $clang, $direction) {
 	$slice_id = (int) $slice_id;
 	$clang    = (int) $clang;
 
@@ -59,7 +54,7 @@ function rex_moveSlice($slice_id, $clang, $direction)
 	// article regenerieren.
 
 	$success = false;
-	$message = $I18N->msg('slice_moved_error');
+	$message = t('slice_moved_error');
 
 	// Slice finden
 
@@ -72,16 +67,16 @@ function rex_moveSlice($slice_id, $clang, $direction)
 		$slot       = $articleSlice->getSlot();
 		$newprior   = $direction == 'moveup' ? $prior - 1 : $prior + 1;
 		$sliceCount = $sql->magicFetch('article_slice', 'COUNT(*)', array('article_id' => $article_id, 'clang' => $clang, 'slot' => $slot));
-		if($newprior > -1 && $newprior < $sliceCount) {
-			$update  = new rex_sql();
-			$update->setQuery('UPDATE #_article_slice SET prior = '.$prior.' WHERE article_id = '.$article_id.' AND clang = '.$clang.' AND slot = "'.$slot.'" AND prior = '.$newprior, '#_');
-			$update->setQuery('UPDATE #_article_slice SET prior = '.$newprior.' WHERE id = '.$slice_id, '#_');
-			$message = $I18N->msg('slice_moved');
+
+		if ($newprior > -1 && $newprior < $sliceCount) {
+			$sql->update('article_slice', array('prior' => $prior), array('article_id' => $article_id, 'clang' => $clang, 'slot' => $slot, 'prior' => $newprior));
+			$sql->update('article_slice', array('prior' => $newprior), array('id' => $slice_id));
+
+			$message = t('slice_moved');
 			$success = true;
 
 			// Flush slice cache
 			sly_Core::cache()->flush(OOArticleSlice::CACHE_NS);
-
 		}
 	}
 
@@ -94,22 +89,21 @@ function rex_moveSlice($slice_id, $clang, $direction)
  * @param  int $slice_id  ID des Slices
  * @return boolean        true bei Erfolg, sonst false
  */
-function rex_deleteArticleSlice($slice_id)
-{
+function rex_deleteArticleSlice($slice_id) {
 	$article_slice = OOArticleSlice::getArticleSliceById($slice_id);
 
 	if ($article_slice !== null) {
-		$sql       = new rex_sql();
+		$sql = sly_DB_Persistence::getInstance();
+		$pre = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 
-		$sql->setQuery('UPDATE #_article_slice SET prior = prior - 1
-			WHERE article_id = '.$article_slice->getArticleId().'
-				AND clang = '.$article_slice->getClang().'
-				AND slot = "'.$article_slice->getSlot().'"
-				AND prior > '.$article_slice->getPrior(), '#_');
+		$sql->query('UPDATE '.$pre.'article_slice SET prior = prior -1 WHERE '.
+			sprintf('article_id = %d AND clang = %d AND slot = "%s" AND prior > %d',
+			$article_slice->getArticleId(), $article_slice->getClang(), $article_slice->getSlot(), $article_slice->getPrior()
+		));
 
-		$sql->setQuery('DELETE FROM #_article_slice WHERE id = '.$slice_id, '#_');
-		
-		sly_Service_Factory::getService('Slice')->delete(array('id' => $article_slice->getSliceId()));
+		$sql->delete('article_slice', array('id' => $slice_id));
+
+		sly_Service_Factory::getSliceService()->delete(array('id' => $article_slice->getSliceId()));
 		rex_deleteCacheSliceContent($article_slice->getSliceId());
 
 		// TODO delete less entries in cache
@@ -125,102 +119,79 @@ function rex_deleteArticleSlice($slice_id)
  *
  * @return boolean  true oder ... false
  */
-function rex_slice_module_exists($sliceID, $clang)
-{
+function rex_slice_module_exists($sliceID, $clang) {
 	$sliceID = (int) $sliceID;
 	$clang   = (int) $clang;
 	$slice   = OOArticleSlice::getArticleSliceById($sliceID, $clang);
-	if(is_null($slice)) return false;
+	if (is_null($slice)) return false;
 	$module  = $slice->getModuleName();
 	return rex_module_exists($module) ? $module : false;
 }
 
 /**
- * PrÃ¼ft, ob ein Modul im System bekannt ist.
+ * Prüft, ob ein Modul im System bekannt ist.
  *
  * @return boolean  true oder ... false
  */
-function rex_module_exists($module)
-{
-	return $service = sly_Service_Factory::getModuleService()->exists($module);
+function rex_module_exists($module) {
+	return sly_Service_Factory::getModuleService()->exists($module);
 }
 
 /**
- * FÃ¼hrt alle pre-save Aktionen eines Moduls aus
+ * Führt alle pre-save Aktionen eines Moduls aus
  *
  * @param  int    $module_id   ID des Moduls
  * @param  string $function    Funktion/Modus der Aktion
  * @param  array  $REX_ACTION  Array zum Speichern des Status'
  * @return array               ein Array welches den Status sowie eine Fehlermeldung beinhaltet
  */
-function rex_execPreSaveAction($module_id, $function, $REX_ACTION)
-{
-	global $REX;
-
-	$module_id = (int) $module_id;
-	$modebit   = rex_getActionModeBit($function);
-	$message   = '';
-
-	$ga = new rex_sql();
-	$ga->setQuery(
-		'SELECT presave '.
-		'FROM #_module_action ma, #_action a '.
-		'WHERE presave != "" AND ma.action_id = a.id AND module_id = '.$module_id.' AND '.
-		'((a.presavemode & '.$modebit.') = '.$modebit.')',
-		'#_'
-	);
-
-	for ($i = 0; $i < $ga->getRows(); ++$i) {
-		$REX_ACTION['MSG'] = '';
-		$iaction = $ga->getValue('presave');
-
-		// *********************** WERTE ERSETZEN
-		foreach (sly_Core::getVarTypes() as $obj) {
-			$iaction = $obj->getACOutput($REX_ACTION, $iaction);
-		}
-
-		eval('?>'.$iaction);
-
-		if ($REX_ACTION['MSG'] != '') {
-			$message .= $REX_ACTION['MSG'].' | ';
-		}
-
-		$ga->next();
-	}
-
-	return array($message, $REX_ACTION);
+function rex_execPreSaveAction($module_id, $function, $REX_ACTION) {
+	return _rex_execSaveAction('pre', $module_id, $function, $REX_ACTION);
 }
 
 /**
- * FÃ¼hrt alle post-save Aktionen eines Moduls aus
+ * Führt alle post-save Aktionen eines Moduls aus
  *
  * @param  int    $module_id   ID des Moduls
  * @param  string $function    Funktion/Modus der Aktion
  * @param  array  $REX_ACTION  Array zum Speichern des Status'
  * @return string              eine Meldung
  */
-function rex_execPostSaveAction($module_id, $function, $REX_ACTION)
-{
+function rex_execPostSaveAction($module_id, $function, $REX_ACTION) {
+	return _rex_execSaveAction('post', $module_id, $function, $REX_ACTION);
+}
+
+/**
+ * Führt alle X-save Aktionen eines Moduls aus
+ *
+ * @param  string $type        'pre' oder 'post'
+ * @param  int    $module_id   ID des Moduls
+ * @param  string $function    Funktion/Modus der Aktion
+ * @param  array  $REX_ACTION  Array zum Speichern des Status'
+ * @return string              eine Meldung
+ */
+function _rex_execSaveAction($type, $module_id, $function, $REX_ACTION) {
 	global $REX;
 
+	$type      = $type === 'pre' ? 'pre' : 'post';
 	$module_id = (int) $module_id;
 	$modebit   = rex_getActionModeBit($function);
 	$message   = '';
 
-	$ga = new rex_sql();
-	$ga->setQuery(
-		'SELECT postsave '.
-		'FROM #_module_action ma, #_action a '.
-		'WHERE postsave != "" AND ma.action_id = a.id AND module_id = '.$module_id.' AND '.
-		'((a.postsavemode & '.$modebit.') = '.$modebit.')',
-		'#_'
+	$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+	$sql    = sly_DB_Persistence::getInstance();
+
+	$sql->query(
+		'SELECT postsave FROM '.$prefix.'module_action ma, '.$prefix.'action a '.
+		'WHERE '.$type.'save <> "" AND ma.action_id = a.id AND module_id = '.$module_id.' AND '.
+		'((a.'.$type.'savemode & '.$modebit.') = '.$modebit.')'
 	);
 
-	for ($i = 0; $i < $ga->getRows(); ++$i) {
+	foreach ($sql as $row) {
 		$REX_ACTION['MSG'] = '';
-		$iaction = $ga->getValue('postsave');
+		$iaction = reset($row);
 
-		// ***************** WERTE ERSETZEN UND POSTACTION AUSFÃœHREN
+		// replace values
 		foreach (sly_Core::getVarTypes() as $obj) {
 			$iaction = $obj->getACOutput($REX_ACTION, $iaction);
 		}
@@ -230,21 +201,18 @@ function rex_execPostSaveAction($module_id, $function, $REX_ACTION)
 		if ($REX_ACTION['MSG'] != '') {
 			$message .= ' | '.$REX_ACTION['MSG'];
 		}
-
-		$ga->next();
 	}
 
 	return $message;
 }
 
 /**
- * Ã¼bersetzt den Modus in das dazugehÃ¶rige Bitwort
+ * Übersetzt den Modus in das dazugehörige Bitwort
  *
  * @param  string $function  Funktion/Modus der Aktion
  * @return int               ein Bitwort
  */
-function rex_getActionModeBit($function)
-{
+function rex_getActionModeBit($function) {
 	if ($function == 'edit') {
 		$modebit = '2'; // pre-action and edit
 	}
@@ -264,14 +232,13 @@ function rex_getActionModeBit($function)
  * @param  int $neu_id  Artikel ID des Artikels, der Startartikel werden soll
  * @return boolean      true bei Erfolg, sonst false
  */
-function rex_article2startpage($neu_id)
-{
+function rex_article2startpage($neu_id) {
 	$neu_id = (int) $neu_id;
-	$GAID   = array();
+	$sql    = sly_DB_Persistence::getInstance();
 
 	// neuer Startartikel
 
-	$neu = rex_sql::fetch('path, re_id', 'article', 'id = '.$neu_id.' AND startpage = 0 AND clang = 1 AND re_id <> 0');
+	$neu = $sql->magicFetch('article', 'path, re_id', 'id = '.$neu_id.' AND startpage = 0 AND clang = 1 AND re_id <> 0');
 
 	if ($neu === false) {
 		return false;
@@ -280,17 +247,10 @@ function rex_article2startpage($neu_id)
 	$neu_path   = $neu['path'];
 	$neu_cat_id = (int) $neu['re_id'];
 
-	// in oberster Kategorie? -> return
-	// (Ist bereits oben im SQL-Query mit dem "re_id <> 0" enthalten.)
-
-//	if ($neu_cat_id == 0) {
-//		return false;
-//	}
-
 	// alter Startartikel
 
-	$alt_id = (int) $neu_cat_id;
-	$alt    = rex_sql::fetch('path', 'article', 'id = '.$alt_id.' AND startpage = 1 AND clang = 1');
+	$alt_id = $neu_cat_id;
+	$alt    = $sql->magicFetch('article', 'path', array('id' => $alt_id, 'startpage' => 1, 'clang' => 1));
 
 	if ($alt === false) {
 		return false;
@@ -299,63 +259,28 @@ function rex_article2startpage($neu_id)
 	// Diese Felder werden von den beiden Artikeln ausgetauscht.
 
 	$params = array('id', 'path', 'catname', 'startpage', 'catprior', 'status', 're_id');
-
-	// cat felder sammeln.
-	// Ist speziell für das Metainfo-AddOn enthalten, um dessen Daten gleich mit zu kopieren.
-
-	$service = sly_Service_Factory::getService('AddOn');
-
-	if ($service->isAvailable('metainfo')) {
-		$db_fields = OORedaxo::getClassVars();
-
-		foreach ($db_fields as $field) {
-			if (substr($field, 0, 4) == 'cat_') {
-				$params[] = $field;
-			}
-		}
-	}
-
-	$paramsToSelect = implode(',', $params);
-
-	$alt = new rex_sql();
-	$neu = new rex_sql();
+	$select = implode(',', $params);
+	$cache  = sly_Core::cache();
 
 	foreach (sly_Util_Language::findAll(true) as $clang) {
-		$data = rex_sql::getArrayEx(
-			'SELECT '.$paramsToSelect.' FROM #_article '.
-			'WHERE id IN ('.$neu_cat_id.','.$neu_id.') AND clang = '.$clang,
-			'#_'
-		);
-		// alten Startartikel updaten
+		$sql->select('article', $select, array('clang' => $clang, 'id' => array($neu_cat_id, $neu_id)));
 
-		$alt->setTable('article', true);
-		$alt->setWhere('id = '.$alt_id.' AND clang = '.$clang);
-		$alt->setValue('re_id', $neu_id);
-
-		// neuen Startartikel updaten
-
-		$neu->setTable('article', true);
-		$neu->setWhere('id = '.$neu_id.' AND clang = '.$clang);
-		$neu->setValue('re_id', $data[$neu_cat_id]['re_id']);
-
-		// Austauschen der definierten Paramater
-
-		foreach ($params as $param) {
-			if ($param == 'id' || $param == 're_id') {
-				continue;
-			}
-
-			$alt->setValue($param, $alt->escape($data[$neu_id][$param]));
-			$neu->setValue($param, $neu->escape($data[$neu_cat_id][$param]));
+		foreach ($sql as $row) {
+			$id = $row['id'];
+			unset($row['id']);
+			$data[$id] = $row['id'];
 		}
 
-		$alt->update();
-		$neu->update();
+		// overwrite re_id of new start article
+		$data[$neu_id]['re_id'] = $neu_id;
 
-		$alt->flush();
-		$neu->flush();
+		// update old start article
+		$sql->update('article', $data[$neu_id], array('id' => $alt_id, 'clang' => $clang));
 
-		$cache = sly_Core::cache();
+		// update new start article
+		$sql->update('article', $data[$neu_cat_id], array('id' => $neu_id, 'clang' => $clang));
+
+		// update cache
 		$cache->delete('sly.article', $neu_id.'_'.$clang);
 		$cache->delete('sly.category', $alt_id.'_'.$clang);
 		$cache->delete('sly.article.list', $alt_id.'_'.$clang.'_0');
@@ -364,34 +289,13 @@ function rex_article2startpage($neu_id)
 		$cache->delete('sly.category.list', $data[$neu_cat_id]['re_id'].'_'.$clang.'_1');
 	}
 
-	$alt = null;
-	$neu = null;
-	unset($alt, $neu);
+	// switch parent id and adjust paths
+	$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 
-	// alle Artikel suchen nach |art_id| und Pfade ersetzen
-	// alle Artikel mit re_id alt_id suchen und ersetzen
-
-	$update   = new rex_sql();
-	$articles = rex_sql::getArrayEx('SELECT id FROM #_article WHERE path LIKE "%|'.$alt_id.'|%"', '#_');
-
-	$update->setQuery('UPDATE #_article SET re_id = '.$neu_id.' WHERE re_id = '.$alt_id, '#_'); // re_id = X enthält path LIKE "%|X|%".
-	$update->setQuery('UPDATE #_article SET path = REPLACE(path, "|'.$alt_id.'|", "|'.$neu_id.'|") WHERE path LIKE "%|'.$alt_id.'|%"', '#_');
-
-	$update = null;
-	unset($update);
+	$sql->update('article', array('re_id' => $neu_id), array('re_id' => $alt_id));
+	$sql->query('UPDATE '.$prefix.'article SET path = REPLACE(path, "|'.$alt_id.'|", "|'.$neu_id.'|") WHERE path LIKE "%|'.$alt_id.'|%"');
 
   	return true;
-}
-
-/**
- * Kopiert eine Kategorie in eine andere
- *
- * @param int $from_cat_id  ID der Kategorie, die kopiert werden soll (Quelle)
- * @param int $to_cat_id    ID der Kategorie, IN die kopiert werden soll (Ziel)
- */
-function rex_copyCategory($from_cat, $to_cat)
-{
-	// TODO: rex_copyCategory implementieren
 }
 
 /**
@@ -404,9 +308,7 @@ function rex_copyCategory($from_cat, $to_cat)
  * @param  int $from_re_sliceid  ID des Slices, bei dem begonnen werden soll
  * @return boolean               true bei Erfolg, sonst false
  */
-function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from_re_sliceid = 0, $revision = 0)
-{
-	global $REX;
+function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from_re_sliceid = 0, $revision = 0) {
 	$from_clang      = (int) $from_clang;
 	$to_clang        = (int) $to_clang;
 	$from_id         = (int) $from_id;
@@ -417,25 +319,31 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 	if ($from_id == $to_id && $from_clang == $to_clang) {
 		return false;
 	}
-	$sliceIds = OOArticleSlice::getSliceIdsForSlot($from_id, $from_clang);
-	foreach($sliceIds as $sliceId){
-		$article_slice = OOArticleSlice::getArticleSliceById($sliceId, $from_clang);
-			$sliceservice = sly_Service_Factory::getService('Slice');
-			$slice = $sliceservice->findById($article_slice->getSliceId());
-			$slice = $sliceservice->copy($slice);
 
-			$insert = new rex_sql();
-			$insert->setTable('article_slice', true);
-			$insert->setValue('clang', $insert->escape($to_clang));
-			$insert->setValue('slot', $insert->escape($article_slice->getSlot()));
-			$insert->setValue('prior', $insert->escape($article_slice->getPrior()));
-			$insert->setValue('slice_id', $insert->escape($slice->getId()));
-			$insert->setValue('article_id', $insert->escape($to_id));
-			$insert->setValue('module', $insert->escape($slice->getModule()));
-			$insert->setValue('revision', 0);
-			$insert->addGlobalCreateFields();
-			$insert->insert();
+	$sliceIds = OOArticleSlice::getSliceIdsForSlot($from_id, $from_clang);
+	$service  = sly_Service_Factory::getSliceService();
+	$sql      = sly_DB_Persistence::getInstance();
+	$login    = sly_Util_User::getCurrentUser()->getLogin();
+
+	foreach ($sliceIds as $sliceId) {
+		$article_slice = OOArticleSlice::getArticleSliceById($sliceId, $from_clang);
+
+		$slice = $service->findById($article_slice->getSliceId());
+		$slice = $service->copy($slice);
+
+		$sql->insert('article_slice', array(
+			'clang'      => $to_clang,
+			'slot'       => $article_slice->getSlot(),
+			'prior'      => $article_slice->getPrior(),
+			'slice_id'   => $slice->getId(),
+			'article_id' => $to_id,
+			'module'     => $slice->getModule(),
+			'revision'   => 0,
+			'createdate' => time(),
+			'createuser' => $login
+		));
 	}
+
 	rex_deleteCacheArticle($to_id, $to_clang);
 	return true;
 }
@@ -443,101 +351,91 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 /**
  * Kopieren eines Artikels von einer Kategorie in eine andere
  *
- * @param int $id          Artikel-ID des zu kopierenden Artikels
- * @param int $to_cat_id   KategorieId in die der Artikel kopiert werden soll
- *
- * @return boolean false bei Fehler, sonst die Artikel Id des neue kopierten Artikels
+ * @param  int $id         Artikel-ID des zu kopierenden Artikels
+ * @param  int $to_cat_id  KategorieId in die der Artikel kopiert werden soll
+ * @return boolean         false bei Fehler, sonst die Artikel Id des neue kopierten Artikels
  */
-function rex_copyArticle($id, $to_cat_id) {
-	$id        = (int) $id;
-	$to_cat_id = (int) $to_cat_id;
-	$new_id    = '';
-	$prefix    = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+function rex_copyArticle($id, $target) {
+	$id     = (int) $id;
+	$target = (int) $target;
+	$new_id = -1;
+	$pos    = -1;
+	$sql    = sly_DB_Persistence::getInstance();
+	$cache  = sly_Core::cache();
+	$login  = sly_Util_User::getCurrentUser()->getLogin();
 
 	foreach (sly_Util_Language::findAll(true) as $clang) {
-		// Validierung der id & from_cat_id
-		$from_data = rex_sql::fetch('*', 'article', 'clang = '.$clang.' AND id = '.$id);
+		// validate article
+		$from_data = $sql->magicFetch('article', '*', array('clang' => $clang, 'id' => $id));
+		if ($from_data === false) return false;
 
-		if ($from_data) {
-			// Validierung der to_cat_id
-			// Query kann eingespart werden, wenn in die Root-Kategorie kopiert
-			// werden soll.
-			$to_data = $to_cat_id == 0 ? false : rex_sql::fetch('path, id, name', 'article', 'clang = '.$clang.' AND startpage = 1 AND id = '.$to_cat_id);
-
-			if ($to_data || $to_cat_id == 0) {
-				if ($to_data) {
-					$path    = $to_data['path'].$to_data['id'].'|';
-					$catname = $to_data['name'];
-				}
-				else {
-					// In RootEbene
-					$path    = '|';
-					$catname = $from_data['name'];
-				}
-
-				$art_sql = new rex_sql();
-				$art_sql->setTable($prefix.'article');
-
-				if (empty($new_id)) {
-					$new_id = $art_sql->setNewId('id');
-				}
-
-				$art_sql->setValue('id',        $new_id); // neuen auto_incrment erzwingen
-				$art_sql->setValue('re_id',     $to_cat_id);
-				$art_sql->setValue('path',      $path);
-				$art_sql->setValue('catname',   $catname);
-				$art_sql->setValue('catprior',  0);
-				$art_sql->setValue('prior',     9999999); // Artikel als letzten Artikel in die neue Kat einfügen
-				$art_sql->setValue('status',    0);       // kopierten Artikel offline setzen
-				$art_sql->setValue('startpage', 0);
-				$art_sql->addGlobalCreateFields();
-
-				// schon gesetzte Felder nicht wieder überschreiben
-				$dont_copy = array('id', 're_id', 'catname', 'catprior', 'path', 'prior', 'status', 'createdate', 'createuser', 'startpage');
-
-				foreach (array_diff(array_keys($from_data), $dont_copy) as $fld_name) {
-					$art_sql->setValue($fld_name, $from_data[$fld_name]);
-				}
-
-				$art_sql->setValue('clang', $clang);
-				$art_sql->insert();
-
-				// ArticleSlices kopieren
-				rex_copyContent($id, $new_id, $clang, $clang);
-
-				// Prios neu berechnen
-				rex_newArtPrio($to_cat_id, $clang, 1, 0);
-
-				// ----- EXTENSION POINT
-				rex_register_extension_point('SLY_ART_COPIED', $id, array(
-					'id'     => $new_id,
-					'clang'  => $clang,
-					'status' => 0,
-					'name'   => $from_data['name'],
-					're_id'  => $to_cat_id,
-					'prior'  => 9999999,
-					'path'   => $path,
-					'type'   => $from_data['type']
-				));
-
-				sly_Core::cache()->delete('sly.article.list', $to_cat_id.'_'.$clang.'_0');
-				sly_Core::cache()->delete('sly.article.list', $to_cat_id.'_'.$clang.'_1');
-				$art_sql->flush();
-			}
-			else {
-				return false;
-			}
+		// validate target
+		if ($target === 0) {
+			$to_data = array('id' => '', 'path' => '', 'name' => $from_data['name']);
 		}
 		else {
-			return false;
+			$to_data = $sql->magicFetch('article', 'path, id, name', array('clang' => $clang, 'startpage' => 1, 'id' => $target));
+			if ($to_data === false) return false;
 		}
+
+		// get new prior (same for all languages)
+		if ($pos === -1) {
+			$where = 'id = '.$target.' OR (re_id = '.$target.' AND startpage = 0)';
+			$pos   = $sql->magicFetch('article', 'MAX(prior)', $where) + 1;
+		}
+
+		// get new ID (same for all languages)
+		if ($new_id === -1) {
+			$new_id = $sql->magicFetch('article', 'MAX(id)') + 1;
+		}
+
+		// prepare data
+		$path = $to_data['path'].$to_data['id'].'|';
+		$data = array(
+			'id'         => $new_id,
+			'clang'      => $clang,
+			're_id'      => $target,
+			'path'       => $path,
+			'catname'    => $to_data['name'],
+			'catprior'   => 0,
+			'prior'      => $pos,
+			'status'     => 0,
+			'startpage'  => 0,
+			'createdate' => time(),
+			'createuser' => $login
+		);
+
+		// set all remaining fields
+		$remaining = array_diff(array_keys($from_data), array_keys($data));
+		foreach ($remaining as $col) $data[$col] = $from_data[$col];
+
+		// and pump it into the database
+		$sql->insert('article', $data);
+
+		// copy slices
+		rex_copyContent($id, $new_id, $clang, $clang);
+
+		// notify system
+		sly_Core::dispatcher()->notify('SLY_ART_COPIED', $id, array(
+			'id'     => $new_id,
+			'clang'  => $clang,
+			'status' => 0,
+			'name'   => $from_data['name'],
+			're_id'  => $target,
+			'prior'  => $pos,
+			'path'   => $path,
+			'type'   => $from_data['type']
+		));
+
+		$cache->delete('sly.article.list', $target.'_'.$clang.'_0');
+		$cache->delete('sly.article.list', $target.'_'.$clang.'_1');
 	}
 
 	// Caches des Artikels löschen, in allen Sprachen
-	//rex_deleteCacheArticle($id);
+	// rex_deleteCacheArticle($id);
 
 	// Caches der Kategorien löschen, da sich darin befindliche Artikel geändert haben
-	rex_deleteCacheArticle($to_cat_id);
+	rex_deleteCacheArticle($target);
 
 	return $new_id;
 }
@@ -545,76 +443,75 @@ function rex_copyArticle($id, $to_cat_id) {
 /**
  * Verschieben eines Artikels von einer Kategorie in eine Andere
  *
- * @param int $id          Artikel-ID des zu verschiebenden Artikels
- * @param int $from_cat_id KategorieId des Artikels, der Verschoben wird
- * @param int $to_cat_id   KategorieId in die der Artikel verschoben werden soll
- *
- * @return boolean true bei Erfolg, sonst false
+ * @param  int $id      Artikel-ID des zu verschiebenden Artikels
+ * @param  int $target  Kategorie-ID in die der Artikel verschoben werden soll
+ * @return boolean      true bei Erfolg, sonst false
  */
-function rex_moveArticle($id, $from_cat_id, $to_cat_id)
-{
-	$id          = (int) $id;
-	$to_cat_id   = (int) $to_cat_id;
-	$from_cat_id = (int) $from_cat_id;
-	$prefix      = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+function rex_moveArticle($id, $target) {
+	$id      = (int) $id;
+	$article = sly_Util_Article::findById($id);
 
-	if ($from_cat_id == $to_cat_id) {
+	if ($article === null || $article->isStartArticle()) {
 		return false;
 	}
 
+	$target = (int) $target;
+	$source = (int) $article->getCategoryId();
+
+	if ($source === $target) {
+		return false;
+	}
+
+	$sql   = sly_DB_Persistence::getInstance();
+	$cache = sly_Core::cache();
+	$login = sly_Util_User::getCurrentUser()->getLogin();
+	$pre   = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+	$pos   = -1;
+
 	foreach (sly_Util_Language::findAll(true) as $clang) {
-		// Validierung der id & from_cat_id
-		$from_name = rex_sql::fetch('name', 'article', 'clang = '.$clang.' AND startpage <> 1 AND id = '.$id.' AND re_id = '.$from_cat_id);
+		$from = $sql->magicFetch('article', 'name, prior', array('clang' => $clang, 'id' => $id));
 
-		if ($from_name !== false) {
-			// validierung der to_cat_id
-			$to_data = $to_cat_id == 0 ? false : rex_sql::fetch('id, path, name', 'article', 'clang = '.$clang.' AND startpage = 1 AND id = '.$to_cat_id);
-
-			if ($to_data || $to_cat_id == 0) {
-				if ($to_data) {
-					$re_id   = $to_data['id'];
-					$path    = $to_data['path'].$to_data['id'].'|';
-					$catname = $to_data['name'];
-				}
-				else {
-					// In RootEbene
-					$re_id   = 0;
-					$path    = '|';
-					$catname = $from_name;
-				}
-
-				$art_sql = new rex_sql();
-
-				$art_sql->setTable($prefix.'article');
-				$art_sql->setValue('re_id',   $re_id);
-				$art_sql->setValue('path',    $path);
-				$art_sql->setValue('catname', $catname);
-				$art_sql->setValue('prior',   9999999);   // Artikel als letzten Artikel in die neue Kat einfÃ¼gen
-				$art_sql->setValue('status',  0);         // kopierten Artikel offline setzen
-				$art_sql->addGlobalUpdateFields();
-				$art_sql->setWhere('clang = '.$clang.' AND startpage <> 1 AND id = '.$id.' AND re_id = '.$from_cat_id);
-				$art_sql->update();
-
-				// Prios neu berechnen
-				rex_newArtPrio($to_cat_id, $clang, 1, 0);
-				rex_newArtPrio($from_cat_id, $clang, 1, 0);
-
-				// Cache aufrÃ¤umen
-				$cache = sly_Core::getInstance()->cache();
-
-				$cache->delete('sly.article', $id.'_'.$clang);
-				$cache->delete('sly.article.list', $from_cat_id.'_'.$clang.'_0');
-				$cache->delete('sly.article.list', $from_cat_id.'_'.$clang.'_1');
-				$cache->delete('sly.article.list', $to_cat_id.'_'.$clang.'_0');
-				$cache->delete('sly.article.list', $to_cat_id.'_'.$clang.'_1');
-			}
-			else {
-				return false;
-			}
+		// validate target
+		if ($target === 0) {
+			$re_id   = 0;
+			$path    = '|';
+			$catname = $from['name'];
 		}
 		else {
-			return false;
+			$to_data = $sql->magicFetch('article', 'path, id, name', array('clang' => $clang, 'startpage' => 1, 'id' => $target));
+			if ($to_data === false) return false;
+
+			$re_id   = $to_data['id'];
+			$path    = $to_data['path'].$to_data['id'].'|';
+			$catname = $to_data['name'];
 		}
+
+		// get new prior (same for all languages)
+		if ($pos === -1) {
+			$where = 'id = '.$target.' OR (re_id = '.$target.' AND startpage = 0)';
+			$pos   = $sql->magicFetch('article', 'MAX(prior)', $where) + 1;
+		}
+
+		// move article at the end of new category
+		$sql->update('article', array(
+			're_id'      => $re_id,
+			'path'       => $path,
+			'catname'    => $catname,
+			'prior'      => $pos,
+			'status'     => 0,
+			'updatedate' => time(),
+			'updateuser' => $login
+		), array('id' => $id, 'clang' => $clang));
+
+		// re-number old category
+		$sql->query('UPDATE '.$pre.'article SET prior = prior - 1 WHERE re_id = '.$source.' AND startpage = 0 AND clang = '.$clang.' AND prior > '.$from['prior']);
+
+		// update cache
+		$cache->delete('sly.article', $id.'_'.$clang);
+		$cache->delete('sly.article.list', $source.'_'.$clang.'_0');
+		$cache->delete('sly.article.list', $source.'_'.$clang.'_1');
+		$cache->delete('sly.article.list', $target.'_'.$clang.'_0');
+		$cache->delete('sly.article.list', $target.'_'.$clang.'_1');
 	}
 
 	return true;
@@ -623,13 +520,11 @@ function rex_moveArticle($id, $from_cat_id, $to_cat_id)
 /**
  * Verschieben einer Kategorie in eine andere
  *
- * @param int $from_cat_id KategorieId der Kategorie, die verschoben werden soll (Quelle)
- * @param int $to_cat_id   KategorieId der Kategorie, IN die verschoben werden soll (Ziel)
- *
- * @return boolean true bei Erfolg, sonst false
+ * @param  int $from_cat  Kategorie-ID der Kategorie, die verschoben werden soll (Quelle)
+ * @param  int $to_cat    Kategorie-ID der Kategorie, in die verschoben werden soll (Ziel)
+ * @return boolean        true bei Erfolg, sonst false
  */
-function rex_moveCategory($from_cat, $to_cat)
-{
+function rex_moveCategory($from_cat, $to_cat) {
 	$from_cat  = (int) $from_cat;
 	$to_cat    = (int) $to_cat;
 	$prefix    = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
