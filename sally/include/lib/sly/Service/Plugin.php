@@ -14,8 +14,21 @@
  */
 class sly_Service_Plugin extends sly_Service_AddOn_Base {
 	public function baseFolder($plugin) {
-		list($addon, $pluginName) = $plugin;
-		return rex_plugins_folder($addon, $pluginName).DIRECTORY_SEPARATOR;
+		if (!is_array($plugin)) {
+			list($addon, $pluginName) = array($plugin, '');
+		}
+		else {
+			list($addon, $pluginName) = $plugin;
+		}
+
+		$dir  = sly_Service_Factory::getAddOnService()->baseFolder($addon);
+		$dir .= 'plugins'.DIRECTORY_SEPARATOR;
+
+		if (!empty($pluginName)) {
+			$dir .= $pluginName.DIRECTORY_SEPARATOR;
+		}
+
+		return $dir;
 	}
 
 	protected function dynFolder($type, $plugin) {

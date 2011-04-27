@@ -65,11 +65,11 @@ class sly_Controller_Addon extends sly_Controller_Sally {
 
 	protected function checkForNewComponents() {
 		$config  = sly_Core::config();
-		$addons  = rex_read_addons_folder();
+		$addons  = $this->readAddOns();
 		$plugins = array();
 
 		foreach ($addons as $addon) {
-			$plugins[$addon] = rex_read_plugins_folder($addon);
+			$plugins[$addon] = $this->readPlugins($addon);
 		}
 
 		// Vergleiche Addons aus dem Verzeichnis addons/ mit den Einträgen in addons.yaml.
@@ -127,5 +127,20 @@ class sly_Controller_Addon extends sly_Controller_Sally {
 	public function checkPermission() {
 		$user = sly_Util_User::getCurrentUser();
 		return !is_null($user) && $user->isAdmin();
+	}
+
+	private function readAddOns() {
+		$dir = sly_Service_Factory::getAddOnService()->baseFolder(null);
+		return $this->readDir($dir);
+	}
+
+	private function readPlugins($addon) {
+		$dir = sly_Service_Factory::getPluginService()->baseFolder($addon);
+		return $this->readDir($dir);
+	}
+
+	private function readDir($dir) {
+		$dir = new sly_Util_Directory($dir);
+		return $dir->exists() ? $dir->listPlain(false, true) : array();
 	}
 }
