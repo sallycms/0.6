@@ -35,7 +35,6 @@ if (defined('IS_SALLY_BACKEND')) {
 	sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/controllers', 'sly_Controller');
 	sly_Loader::addLoadPath(SLY_INCLUDE_PATH.'/helpers', 'sly_Helper');
 
-	require_once SLY_INCLUDE_PATH.'/functions/function_rex_time.inc.php';
 	require_once SLY_INCLUDE_PATH.'/functions/function_rex_generate.inc.php';
 }
 

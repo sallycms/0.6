@@ -10,6 +10,7 @@
 
 define('IS_SALLY', true);
 define('IS_SALLY_BACKEND', true);
+define('SLY_START_TIME', microtime(true));
 
 if (!defined('SLY_IS_TESTING')) {
 	define('SLY_IS_TESTING', false);
