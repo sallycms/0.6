@@ -697,29 +697,27 @@ class rex_sql {
 	 * Datenbank an
 	 */
 	public static function checkDbConnection($host, $login, $pw, $dbname, $createDb = false) {
-		global $I18N;
-
 		$err_msg = true;
 		$level   = error_reporting(0);
 		$link    = mysql_connect($host, $login, $pw);
 
 		if (!$link) {
-			$err_msg = $I18N->msg('setup_021');
+			$err_msg = t('setup_021');
 		}
 		elseif (!mysql_select_db($dbname, $link)) {
 			if ($createDb) {
 				mysql_query('CREATE DATABASE `'.$dbname.'`', $link);
 
 				if (mysql_error($link) != '') {
-					$err_msg = $I18N->msg('setup_022');
+					$err_msg = t('setup_022');
 				}
 			}
 			else {
-				$err_msg = $I18N->msg('setup_022');
+				$err_msg = t('setup_022');
 			}
 		}
 
-		if($link) {
+		if ($link) {
 			mysql_close($link);
 		}
 

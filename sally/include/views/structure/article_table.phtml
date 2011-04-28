@@ -8,7 +8,7 @@
 
 	<?php
 	$add_url = 'index.php?page=structure&category_id=' . $this->categoryId . '&clang=' . $this->clangId . '&func=addArticle';
-	$add_article = sly_Util_HTML::getSpriteLink($add_url, $I18N->msg('add_article'), 'article-add');
+	$add_article = sly_Util_HTML::getSpriteLink($add_url, t('add_article'), 'article-add');
 
 	$table = new sly_Table();
 	$table->addColumn(new sly_Table_Column($add_article, '40px', '', array('class' => 'sly-icon')));
@@ -22,7 +22,7 @@
 
 	$table->renderHeader();
 
-	
+
 
 	if ($this->renderAddArticle) {
 		$this->render(sly_Controller_Structure::$viewPath . 'article_table_row_add.phtml', array('advancedMode' => $advancedMode));

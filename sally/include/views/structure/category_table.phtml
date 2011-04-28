@@ -8,7 +8,7 @@
 
 	<?php
 	$add_url = 'index.php?page=structure&category_id=' . $this->categoryId . '&clang=' . $this->clangId . '&func=addCategory';
-	$add_category = sly_Util_HTML::getSpriteLink($add_url, $I18N->msg('add_category'), 'category-add');
+	$add_category = sly_Util_HTML::getSpriteLink($add_url, t('add_category'), 'category-add');
 
 	$table = new sly_Table();
 	$table->addColumn(new sly_Table_Column($add_category, '40px', '', array('class' => 'sly-icon')));

@@ -90,8 +90,6 @@ class sly_Util_Requirements {
 	}
 
 	public function execTime() {
-		global $I18N;
-
 		$maxTime = ini_get('max_execution_time');
 
 		if ($maxTime >= 20) {
@@ -102,18 +100,16 @@ class sly_Util_Requirements {
 				return $this->failed($maxTime.'s');
 			}
 			else {
-				return $this->warning($I18N->msg('exec_time', $maxTime));
+				return $this->warning(t('exec_time', $maxTime));
 			}
 		}
 	}
 
 	public function memoryLimit() {
-		global $I18N;
-
 		$mem = ini_get('memory_limit');
 
 		if ($mem >= 64) return $this->ok($mem.'B');
-		else if (ini_set('memory_limit', '64M') !== false) return $this->warning($I18N->msg('phpcheck_memory', $mem));
+		else if (ini_set('memory_limit', '64M') !== false) return $this->warning(t('phpcheck_memory', $mem));
 		else if ($mem >= 16) return $this->ok($mem.'B');
 		else if (empty($mem)) return $this->warning('translate:unknown');
 		else return $this->failed($mem.'B');
