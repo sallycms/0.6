@@ -20,8 +20,7 @@
 /**
  * Löscht den vollständigen Artikel-Cache.
  */
-function rex_generateAll()
-{
+function rex_generateAll() {
 	rex_deleteDir(SLY_DYNFOLDER.'/internal/sally/articles', false);
 	rex_deleteDir(SLY_DYNFOLDER.'/internal/sally/templates', false);
 	rex_deleteDir(SLY_DYNFOLDER.'/internal/sally/files', false);
@@ -29,7 +28,7 @@ function rex_generateAll()
 	sly_Core::cache()->flush('sly', true);
 
 	$MSG = t('delete_cache_message');
-	$MSG = rex_register_extension_point('ALL_GENERATED', $MSG);
+	$MSG = sly_Core::dispatcher()->filter('ALL_GENERATED', $MSG);
 
 	return $MSG;
 }

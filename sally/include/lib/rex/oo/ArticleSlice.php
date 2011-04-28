@@ -91,7 +91,7 @@ class OOArticleSlice {
 			}
 			$cache->set(self::CACHE_NS, $cachekey, $ids);
 
-			rex_register_extension_point('CLANG_ARTICLE_GENERATED', '', array(
+			sly_Core::dispatcher()->notify('CLANG_ARTICLE_GENERATED', '', array(
 				'id'      => $article_id,
 				'clang'   => $clang
 			));

@@ -324,7 +324,7 @@ class OOMedia {
 			);
 		}
 
-		$usages = rex_register_extension_point('SLY_OOMEDIA_IS_IN_USE', $usages, array(
+		$usages = sly_Core::dispatcher()->filter('SLY_OOMEDIA_IS_IN_USE', $usages, array(
 			'filename' => $this->getFileName(),
 			'media'    => $this
 		));

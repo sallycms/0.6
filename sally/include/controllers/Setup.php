@@ -195,7 +195,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 				default: // Extensions eine Chance geben
 
-					rex_register_extension_point('SLY_SETUP_INIT_DATABASE', $dbInitFunction);
+					sly_Core::dispatcher()->notify('SLY_SETUP_INIT_DATABASE', $dbInitFunction);
 			}
 
 			// Wenn kein Fehler aufgetreten ist, aber auch etwas geändert wurde, prüfen

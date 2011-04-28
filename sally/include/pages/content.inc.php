@@ -84,7 +84,7 @@ if (!is_null($article)) {
 
 	// EXTENSION POINT
 
-	print rex_register_extension_point('PAGE_CONTENT_HEADER', '', array(
+	print sly_Core::dispatcher()->filter('PAGE_CONTENT_HEADER', '', array(
 		'article_id'       => $article_id,
 		'clang'            => $clang,
 		'function'         => $function,
@@ -446,14 +446,14 @@ if (!is_null($article)) {
 				$listElements[] = '<a href="index.php?page=content&amp;article_id='.$article_id.'&amp;clang='.$clang.'&amp;slot='.$tmpSlot.'&amp;mode=edit"'.$class.'>'.$slotTitle.'</a>';
 			}
 
-			$listElements = rex_register_extension_point('PAGE_CONTENT_CTYPE_MENU', $listElements, array(
+			$listElements = sly_Core::dispatcher()->filter('PAGE_CONTENT_CTYPE_MENU', $listElements, array(
 				'article_id' => $article_id,
 				'clang'      => $clang,
 				'function'   => $function,
 				'mode'       => $mode,
 				'slice_id'   => $slice_id
 			));
-			$listElements = rex_register_extension_point('PAGE_CONTENT_SLOT_MENU', $listElements, array(
+			$listElements = sly_Core::dispatcher()->filter('PAGE_CONTENT_SLOT_MENU', $listElements, array(
 				'article_id' => $article_id,
 				'clang'      => $clang,
 				'function'   => $function,
@@ -491,7 +491,7 @@ if (!is_null($article)) {
 
 		$listElements[] = '<a href="../'.$REX['FRONTEND_FILE'].'?article_id='.$article_id.'&amp;clang='.$clang.'" onclick="window.open(this.href); return false;">'.t('show').'</a>';
 
-		$listElements = rex_register_extension_point('PAGE_CONTENT_MENU', $listElements, array(
+		$listElements = sly_Core::dispatcher()->filter('PAGE_CONTENT_MENU', $listElements, array(
 			'article_id' => $article_id,
 			'clang'      => $clang,
 			'function'   => $function,

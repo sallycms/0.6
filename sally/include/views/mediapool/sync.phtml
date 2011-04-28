@@ -77,7 +77,7 @@ else {
 ////////////////////////////////////////////////////////
 // and here we go!
 
-$form = rex_register_extension_point('SLY_MEDIA_FORM_SYNC', $form);
+$form = sly_Core::dispatcher()->filter('SLY_MEDIA_FORM_SYNC', $form);
 
 if ($form instanceof sly_Form) {
 	$form->render();

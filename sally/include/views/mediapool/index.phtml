@@ -181,7 +181,7 @@ ob_start();
 			<td><?
 
 			$opener_link = $this->getOpenerLink($file);
-			print rex_register_extension_point('MEDIA_LIST_FUNCTIONS', $opener_link, array(
+			print sly_Core::dispatcher()->filter('MEDIA_LIST_FUNCTIONS', $opener_link, array(
 				'id'              => $id,
 				'file_name'       => $file_name,
 				'file_oname'      => $file_oname,

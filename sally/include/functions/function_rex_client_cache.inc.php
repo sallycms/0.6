@@ -48,13 +48,11 @@ function rex_send_file($file, $contentType, $environment = 'backend') {
  * @param string            $environment  die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
 function rex_send_article($article, $content, $environment) {
-	$config = sly_Core::config();
+	$config  = sly_Core::config();
+	$content = sly_Core::dispatcher()->filter('OUTPUT_FILTER', $content, array('environment' => $environment));
 
-	// ----- EXTENSION POINT
-	$content = rex_register_extension_point('OUTPUT_FILTER', $content, array('environment' => $environment));
-
-	// ----- EXTENSION POINT - keine Manipulation der Ausgaben ab hier (read only)
-	rex_register_extension_point('OUTPUT_FILTER_CACHE', $content, '', true);
+	// keine Manipulation der Ausgaben ab hier
+	sly_Core::dispatcher()->notify('OUTPUT_FILTER_CACHE', $content, '', true);
 
 	if ($article) {
 		$lastModified = $article->getUpdateDate();

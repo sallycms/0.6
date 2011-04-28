@@ -67,7 +67,7 @@ if (sly_Util_Session::get('media[opener_input_field]') != '') {
 ////////////////////////////////////////////////////////
 // and here we go!
 
-$form = rex_register_extension_point('SLY_MEDIA_FORM_ADD', $form);
+$form = sly_Core::dispatcher()->filter('SLY_MEDIA_FORM_ADD', $form);
 
 if ($form instanceof sly_Form) {
 	$form->render();

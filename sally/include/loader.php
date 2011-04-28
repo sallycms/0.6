@@ -27,7 +27,6 @@ require_once SLY_INCLUDE_PATH.'/lib/functions.php';
 require_once SLY_INCLUDE_PATH.'/functions/function_rex_globals.inc.php';
 require_once SLY_INCLUDE_PATH.'/functions/function_rex_client_cache.inc.php';
 require_once SLY_INCLUDE_PATH.'/functions/function_rex_url.inc.php';
-require_once SLY_INCLUDE_PATH.'/functions/function_rex_extension.inc.php';
 require_once SLY_INCLUDE_PATH.'/functions/function_rex_other.inc.php';
 
 if (defined('IS_SALLY_BACKEND')) {

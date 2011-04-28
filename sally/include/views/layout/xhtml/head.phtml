@@ -18,7 +18,7 @@ if ($this->isTransitional):
 <head>
 	<title><?php print sly_html(trim($this->title)) ?></title>
 	<?php
-		rex_register_extension_point('PAGE_HEADER', '');
+		sly_Core::dispatcher()->notify('PAGE_HEADER', '');
 		if ($this->favIcon !== null) {
 			print '<link href="'.$this->favIcon.'" rel="shortcut icon" type="image/x-icon" />';
 		}
