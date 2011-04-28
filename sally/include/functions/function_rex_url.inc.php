@@ -45,14 +45,14 @@ function rex_param_string($params, $divider = '&amp;') {
  * @return string
  */
 function rex_getUrl($id = 0, $clang = false, $name = 'NoName', $params = '', $divider = '&amp;', $disableCache = false) {
-	global $REX;
-
 	static $urlCache = array();
 
 	$clangOrig    = $clang;
 	$id           = (int) $id;
 	$clang        = (int) $clang;
 	$multilingual = sly_Util_Language::isMultilingual();
+	$dispatcher   = sly_Core::dispatcher();
+	$config       = sly_Core::config();
 
 	if ($id <= 0) {
 		$id = sly_Core::getCurrentArticleId();
@@ -61,7 +61,7 @@ function rex_getUrl($id = 0, $clang = false, $name = 'NoName', $params = '', $di
 	// Wenn eine rexExtension vorhanden ist, immer die clang mitgeben!
 	// Die rexExtension muss selbst entscheiden was sie damit macht.
 
-	if ($clangOrig === false && ($multilingual || rex_extension_is_registered('URL_REWRITE'))) {
+	if ($clangOrig === false && ($multilingual || $dispatcher->hasListeners('URL_REWRITE'))) {
 		$clang = sly_Core::getCurrentClang();
 	}
 
@@ -79,7 +79,6 @@ function rex_getUrl($id = 0, $clang = false, $name = 'NoName', $params = '', $di
 	// Listener nach der zu verwendenden URL fragen
 
 	$paramString = rex_param_string($params, $divider);
-	$dispatcher  = sly_Core::dispatcher();
 	$url         = $dispatcher->filter('URL_REWRITE', '', array(
 		'id'            => $id,
 		'name'          => $name,
@@ -95,11 +94,11 @@ function rex_getUrl($id = 0, $clang = false, $name = 'NoName', $params = '', $di
 	if (empty($url)) {
 		$clangString = '';
 
-		if ($multilingual && $clang != sly_Core::config()->get('START_CLANG_ID')) {
+		if ($multilingual && $clang != $config->get('START_CLANG_ID')) {
 			$clangString = $divider.'clang='.$clang;
 		}
 
-		$url = $REX['FRONTEND_FILE'].'?article_id='.$id.$clangString.$paramString;
+		$url = $config->get('FRONTEND_FILE').'?article_id='.$id.$clangString.$paramString;
 	}
 
 	$urlCache[$cacheKey] = $url;

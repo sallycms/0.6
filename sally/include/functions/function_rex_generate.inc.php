@@ -76,10 +76,7 @@ function rex_deleteCacheSliceContent($slice_id) {
  * @param  int $id  ArtikelId des Artikels, der gelöscht werden soll
  * @return array    array('state' => ..., 'message' => ...)
  */
-function rex_deleteArticle($id)
-{
-	global $REX;
-
+function rex_deleteArticle($id) {
 	// Artikel löschen
 	//
 	// Kontrolle ob Erlaubnis nicht hier.. muss vorher geschehen
@@ -93,21 +90,23 @@ function rex_deleteArticle($id)
 	// -> startpage = 1
 	// --> rekursiv aufrufen
 
+	$config = sly_Core::config();
 	$return = array();
 	$return['state'] = false;
 
-	if ($id == $REX['START_ARTICLE_ID']) {
+	if ($id == $config->get('START_ARTICLE_ID')) {
 		$return['message'] = t('cant_delete_sitestartarticle');
 		return $return;
 	}
 
-	if ($id == $REX['NOTFOUND_ARTICLE_ID']) {
+	if ($id == $config->get('NOTFOUND_ARTICLE_ID')) {
 		$return['message'] = t('cant_delete_notfoundarticle');
 		return $return;
 	}
 
 	$clang       = sly_Core::getCurrentClang();
-	$articleData = rex_sql::fetch('re_id, startpage', 'article', 'id = '.$id.' AND clang = '.$clang);
+	$sql         = sly_DB_Persistence::getInstance();
+	$articleData = $sql->magicFetch('article', 're_id, startpage', compact('id', 'clang'));
 
 	if ($articleData !== false) {
 		$re_id = (int) $articleData['re_id'];
@@ -129,7 +128,6 @@ function rex_deleteArticle($id)
 			$sql = sly_DB_Persistence::getInstance();
 			$sql->delete('article', array('id' => $id));
 			$sql->delete('article_slice', array('article_id' => $id));
-
 		}
 
 		return $return;
@@ -147,8 +145,7 @@ function rex_deleteArticle($id)
  * @param  bool   $isRecursion     wird beim rekursiven Aufruf auf true gesetzt, um zu vermeiden, immer wieder das Error-Reporting auf 0 zu setzen
  * @return bool                    true bei Erfolg, sonst false
  */
-function rex_deleteDir($file, $delete_folders = false, $isRecursion = false)
-{
+function rex_deleteDir($file, $delete_folders = false, $isRecursion = false) {
 	$state = true;
 	$level = $isRecursion ? -1 : error_reporting(0);
 	$file  = rtrim($file, '/\\');
@@ -222,8 +219,7 @@ function rex_deleteDir($file, $delete_folders = false, $isRecursion = false)
  * @param  string $file  Pfad zum Ordner
  * @return bool          true bei Erfolg, sonst false
  */
-function rex_deleteFiles($directory)
-{
+function rex_deleteFiles($directory) {
 	$directory = new sly_Util_Directory($directory);
 	return $directory->deleteFiles();
 }
@@ -235,8 +231,7 @@ function rex_deleteFiles($directory)
  * @param  string $dstdir    Zielpfad
  * @return bool              true bei Erfolg, false bei Fehler
  */
-function rex_copyDir($srcdir, $dstdir)
-{
+function rex_copyDir($srcdir, $dstdir) {
 	$state = true;
 
 	if (!is_dir($dstdir)) {

@@ -8,8 +8,6 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-global $REX;
-
 $base   = 'index.php?page=user&amp;func=';
 $thIcon = '<a href="'.$base.'add"><img class="sly-icon sly-sprite sly-sprite-sly-user-add" alt="" src="media/empty.png" title="'.t('create_user').'" /></a>';
 $table  = new sly_Table('users');
@@ -25,7 +23,8 @@ $table->setIsEmpty(false);
 $table->renderHeader(count($users));
 
 $tdIcon    = '';
-$currentID = $REX['USER']->getId();
+$user      = sly_Util_User::getCurrentUser();
+$currentID = $user->getId();
 
 foreach ($users as $user) {
 	$id    = (int) $user->getId();

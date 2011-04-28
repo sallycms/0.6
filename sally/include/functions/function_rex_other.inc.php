@@ -21,8 +21,7 @@
  * @param  boolean $setlocale   true, wenn die locale für die Umgebung gesetzt werden soll, sonst false
  * @return sly_I18N
  */
-function rex_create_lang($locale = 'de_de', $searchpath = '', $setlocale = true)
-{
+function rex_create_lang($locale = 'de_de', $searchpath = '', $setlocale = true) {
 	global $REX;
 
 	$_searchpath = $searchpath;
@@ -274,53 +273,12 @@ function rex_put_file_contents($path, $content) {
 	return $writtenBytes;
 }
 
-/**
- * Allgemeine Funktion die eine Datenbankspalte fortlaufend durchnummeriert.
- * Dies ist z.B. nützlich beim Umgang mit einer Prioritäts-Spalte
- *
- * @deprecated  extrem rechenaufwändig (SQL-Aufwand: n+1)
- */
-function rex_organize_priorities($tableName, $priorColumnName, $whereCondition = '', $orderBy = '', $id_field = 'id') {
-	$update = new rex_sql();
-	$select = new rex_sql();
-
-	$qry = 'SELECT '.$id_field.' FROM '.$tableName;
-
-	if (!empty($whereCondition)) {
-		$qry .= ' WHERE '.$whereCondition;
-	}
-
-	if (!empty($orderBy)) {
-		$qry .= ' ORDER BY '.$orderBy;
-	}
-
-	$select->setQuery($qry);
-	$gu = rex_sql::getInstance();
-
-	for ($i = 1; $i <= $select->getRows(); ++$i) {
-		$gu->setQuery('UPDATE '.$tableName.' SET '.$priorColumnName.' = '.$i.' WHERE '.$id_field.' = '.$select->getValue($id_field));
-		$select->next();
-	}
-
-	$select = null;
-	$update = null;
-	unset($select, $update);
-}
-
 function rex_is_multilingual() {
 	return sly_Util_Language::isMultilingual();
 }
 
 function rex_is_monolingual() {
 	return !rex_is_multilingual();
-}
-
-/**
- * @deprecated
- * @return int clangId
- */
-function rex_cur_clang() {
-	return (int) sly_Core::getCurrentClang();
 }
 
 function rex_get_clang($clang = false, $default = -1) {

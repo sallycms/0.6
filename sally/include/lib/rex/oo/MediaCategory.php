@@ -33,8 +33,7 @@ class OOMediaCategory
 
 	public static function _getTableName()
 	{
-		global $REX;
-		return $REX['DATABASE']['TABLE_PREFIX'].'file_category';
+		return sly_Core::config()->get('DATABASE/TABLE_PREFIX').'file_category';
 	}
 
 	/**

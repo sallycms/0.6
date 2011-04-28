@@ -728,10 +728,8 @@ class rex_sql {
 	}
 
 	public function addGlobalUpdateFields($user = null) {
-		global $REX;
-
 		if (!$user) {
-			$user = $REX['USER']->getLogin();
+			$user = sly_Util_User::getCurrentUser()->getLogin();
 		}
 
 		$this->setValue('updatedate', time());
@@ -739,10 +737,8 @@ class rex_sql {
 	}
 
 	public function addGlobalCreateFields($user = null) {
-		global $REX;
-
 		if (!$user) {
-			$user = $REX['USER']->getLogin();
+			$user = sly_Util_User::getCurrentUser()->getLogin();
 		}
 
 		$this->setValue('createdate', time());

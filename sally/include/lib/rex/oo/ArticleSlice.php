@@ -209,7 +209,7 @@ class OOArticleSlice {
 			$slice_content = $this->getOutput();
 
 			if (rex_put_file_contents($slice_content_file, $slice_content) === false) {
-				return $I18N->msg('slice_could_not_be_generated').' '.$I18N->msg('check_rights_in_directory').SLY_DYNFOLDER.'/internal/sally/articles/';
+				return t('slice_could_not_be_generated').' '.t('check_rights_in_directory').SLY_DYNFOLDER.'/internal/sally/articles/';
 			}
 		}
 

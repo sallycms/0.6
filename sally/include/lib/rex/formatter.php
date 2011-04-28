@@ -12,8 +12,7 @@
  *
  * @ingroup redaxo
  */
-abstract class rex_formatter
-{
+abstract class rex_formatter {
 	/**
 	 * Formatiert den String <code>$value</code>
 	 *
@@ -50,8 +49,7 @@ abstract class rex_formatter
 	 * - custom
 	 *    + formatiert den Wert anhand einer Benutzer definierten Callback Funktion
 	 */
-	public static function format($value, $format_type, $format)
-	{
+	public static function format($value, $format_type, $format) {
 		// Stringformatierung mit sprintf()
 		if ($format_type == 'sprintf') {
 			$value = rex_formatter::_formatSprintf($value, $format);
@@ -100,39 +98,30 @@ abstract class rex_formatter
 		return $value;
 	}
 
-	private static function _formatSprintf($value, $format)
-	{
+	private static function _formatSprintf($value, $format) {
 		if (empty($format)) $format = '%s';
 		return sprintf($format, $value);
 	}
 
-	private static function _formatDate($value, $format)
-	{
+	private static function _formatDate($value, $format) {
 		if (empty($format)) $format = 'd.m.Y';
 		return date($format, $value);
 	}
 
-	private static function _formatStrftime($value, $format)
-	{
-		global $I18N;
-
+	private static function _formatStrftime($value, $format) {
 		if (empty($value)) return '';
-		if (!is_object($I18N)) $I18N = rex_create_lang();
 
 		if ($format == '' || $format == 'date') {
-			// Default REX-Dateformat
-			$format = $I18N->msg('dateformat');
+			$format = t('dateformat');
 		}
 		elseif ($format == 'datetime') {
-			// Default REX-Datetimeformat
-			$format = $I18N->msg('datetimeformat');
+			$format = t('datetimeformat');
 		}
 
 		return sly_Util_String::formatStrftime($format, $value);
 	}
 
-	private static function _formatNumber($value, $format)
-	{
+	private static function _formatNumber($value, $format) {
 		if (!is_array($format)) $format = array();
 
 		if (empty($format[0])) $format[0] = 2;   // Kommastellen
@@ -142,8 +131,7 @@ abstract class rex_formatter
 		return number_format($value, $format[0], $format[1], $format[2]);
 	}
 
-	private static function _formatEmail($value, $format)
-	{
+	private static function _formatEmail($value, $format) {
 		if (!is_array($format)) $format = array();
 
 		// Linkattribute
@@ -163,8 +151,7 @@ abstract class rex_formatter
 		return '<a href="mailto:'.$value.$format['params'].'"'.$format['attr'].'>'.$value.'</a>';
 	}
 
-	private static function _formatUrl($value, $format)
-	{
+	private static function _formatUrl($value, $format) {
 		if (empty($value)) return '';
 		if (!is_array($format)) $format = array();
 
@@ -189,8 +176,7 @@ abstract class rex_formatter
 		return '<a href="'.$value.$format['params'].'"'.$format['attr'].'>'.$value.'</a>';
 	}
 
-	private static function _formatTruncate($value, $format)
-	{
+	private static function _formatTruncate($value, $format) {
 		if (!is_array($format)) $format = array();
 
 		if (empty($format['length']))      $format['length']      = 80;
@@ -200,13 +186,11 @@ abstract class rex_formatter
 		return truncate($value, $format['length'], $format['etc'], $format['break_words']);
 	}
 
-	private static function _formatNl2br($value, $format)
-	{
+	private static function _formatNl2br($value, $format) {
 		return nl2br($value);
 	}
 
-	private static function _formatCustom($value, $format)
-	{
+	private static function _formatCustom($value, $format) {
 		if (!is_callable($format)) {
 			if(!is_callable($format[0])) {
 				trigger_error('Unable to find callable '.$format[0].' for custom format!');
@@ -229,8 +213,7 @@ abstract class rex_formatter
 		return call_user_func($format, $value);
 	}
 
-	private static function _formatRexMedia($value, $format)
-	{
+	private static function _formatRexMedia($value, $format) {
 		if (!is_array($format)) $format = array('params' => array());
 		$params = $format['params'];
 
@@ -254,8 +237,7 @@ abstract class rex_formatter
 		return $value;
 	}
 
-	private static function _formatRexUrl($value, $format)
-	{
+	private static function _formatRexUrl($value, $format) {
 		if (empty($value)) return '';
 		if (!is_array($format)) $format = array();
 

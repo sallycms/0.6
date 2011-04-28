@@ -11,12 +11,10 @@
 /**
  * @ingroup layout
  */
-class sly_Layout_Sally extends sly_Layout_XHTML
-{
+class sly_Layout_Sally extends sly_Layout_XHTML {
 	private $hasNavigation = true;
 
-	public function __construct()
-	{
+	public function __construct() {
 		global $REX;
 
 		$config = sly_Core::config();
@@ -44,12 +42,11 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 	}
 
 	public function pageChecked($params) {
-		global $REX;
-
 		$body_id = str_replace('_', '-', $params['subject']);
 		$this->setBodyAttr('id', 'rex-page-'.$body_id);
 
 		$popups_arr = array('linkmap', 'mediapool');
+
 		if (in_array($body_id, $popups_arr)) {
 			$this->setBodyAttr('class', 'rex-popup');
 		}
@@ -79,21 +76,19 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		}
 
 		$this->appendToTitle($head);
+		$dispatcher = sly_Core::dispatcher();
 
-		$head = rex_register_extension_point('PAGE_TITLE', $head, array('page' => $REX['PAGE']));
+		$head = $dispatcher->filter('PAGE_TITLE', $head, array('page' => $REX['PAGE']));
 		print '<div id="sly-pagehead"><div class="pagehead-row"><h1>'.$head.'</h1></div>'.$subtitle.'</div>';
 
-		rex_register_extension_point('PAGE_TITLE_SHOWN', $subtitle, array('page' => $REX['PAGE']));
+		$dispatcher->notify('PAGE_TITLE_SHOWN', $subtitle, array('page' => $REX['PAGE']));
 		print '<!-- *** OUTPUT OF CONTENT - START *** -->';
 	}
 
 	/**
 	 * Helper function, die den Subtitle generiert
 	 */
-	public function getSubtitle($subline, $attr = '')
-	{
-		global $REX;
-
+	public function getSubtitle($subline, $attr = '') {
 		if (empty($subline)) {
 			return '';
 		}
@@ -102,11 +97,12 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 		$subtitle     = $subline;
 		$cur_subpage  = sly_request('subpage', 'string');
 		$cur_page     = urlencode(sly_request('page', 'string'));
+		$user         = sly_Util_User::getCurrentUser();
 
 		if (is_array($subline) && !empty($subline)) {
 			$subtitle = array();
 			$numPages = count($subline);
-			$isAdmin  = $REX['USER']->hasPerm('admin[]');
+			$isAdmin  = $user->hasPerm('admin[]');
 
 			foreach ($subline as $subpage) {
 				if (!is_array($subpage)) {
@@ -121,7 +117,7 @@ class sly_Layout_Sally extends sly_Layout_XHTML
 				// Berechtigung prüfen
 				// Hat der User das Recht für die aktuelle Subpage?
 
-				if (!empty($perm) && !$isAdmin && !$REX['USER']->hasPerm($perm)) {
+				if (!empty($perm) && !$isAdmin && !$user->hasPerm($perm)) {
 					// Wenn der User kein Recht hat, und diese Seite öffnen will -> Fehler
 					if ($cur_subpage == $link) {
 						exit('You have no permission to this area!');

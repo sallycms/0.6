@@ -144,12 +144,13 @@ if ($this->canAccessFile($media)) {
 else {
 	$catname = t('pool_kats_no');
 	$cat     = $rex_file_category != 0 ? OOMediaCategory::getCategoryById($rex_file_category) : null;
+	$user    = sly_Util_User::getCurrentUser();
 
 	if ($cat) {
 		$catname = $cat->getName();
 	}
 
-	if ($REX['USER']->hasPerm('advancedMode[]')) {
+	if ($user->hasPerm('advancedMode[]')) {
 		$ftitle  .= ' ['.$file_id.']';
 		$catname .= ' ['.$rex_file_category.']';
 	}

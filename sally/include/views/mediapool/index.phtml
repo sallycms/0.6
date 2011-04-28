@@ -41,7 +41,8 @@ foreach ($this->args as $name => $value) {
 	$form->addHiddenValue('args['.$name.']', $value);
 }
 
-$isAdmin = $REX['USER']->hasPerm('admin[]') || $REX['USER']->hasPerm('media[0]');
+$user    = sly_Util_User::getCurrentUser();
+$isAdmin = $user->hasPerm('admin[]') || $user->hasPerm('media[0]');
 
 ob_start();
 
@@ -159,7 +160,7 @@ ob_start();
 		$file_size = $file->getFormattedSize();
 
 		if ($file_title == '') $file_title = '['.t('pool_file_notitle').']';
-		if ($REX['USER']->hasPerm('advancedMode[]')) $file_title .= ' ['.$id.']';
+		if ($user->hasPerm('advancedMode[]')) $file_title .= ' ['.$id.']';
 
 		$ilink  = 'index.php?page=mediapool&amp;subpage=detail&amp;file_id='.$id.'&amp;rex_file_category='.$selected.$argUrl;
 		$add_td = '<td>&nbsp;</td>';

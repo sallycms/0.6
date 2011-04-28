@@ -15,8 +15,7 @@
  * @since   0.2
  * @ingroup event
  */
-class sly_Event_Dispatcher
-{
+class sly_Event_Dispatcher {
 	private $listeners;
 	private static $instance;
 

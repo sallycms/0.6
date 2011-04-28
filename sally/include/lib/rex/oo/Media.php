@@ -40,8 +40,7 @@ class OOMedia
 
 	public static function _getTableName()
 	{
-		global $REX;
-		return $REX['DATABASE']['TABLE_PREFIX'].'file';
+		return sly_Core::config()->get('DATABASE/TABLE_PREFIX').'file';
 	}
 
 	protected static function _getTableJoin()
@@ -359,11 +358,9 @@ class OOMedia
 
 	public function isInUse()
 	{
-		global $REX;
-
 		$sql      = new rex_sql();
 		$filename = addslashes($this->getFileName());
-		$prefix   = $REX['DATABASE']['TABLE_PREFIX'];
+		$prefix   = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 		$query    =
 			'SELECT s.article_id, s.clang FROM '.$prefix.'slice_value sv, '.$prefix.'article_slice s, '.$prefix.'article a '.
 			'WHERE sv.slice_id = s.slice_id AND a.id = s.article_id AND a.clang = s.clang AND ('.
@@ -442,10 +439,8 @@ class OOMedia
 
 	public function getIcon($useDefaultIcon = true)
 	{
-		global $REX;
-
 		$ext    = $this->getExtension();
-		$folder = $REX['HTDOCS_PATH'].'sally/media/';
+		$folder = SLY_HTDOCS_PATH.'sally/media/';
 		$icon   = $folder.'mime-'.$ext.'.gif';
 
 		// Dateityp für den kein Icon vorhanden ist
@@ -484,8 +479,6 @@ class OOMedia
 
 	public function delete($filename = null)
 	{
-		global $REX;
-
 		if ($filename != null) {
 			$OOMed = OOMedia::getMediaByFileName($filename);
 			if ($OOMed) return $OOMed->delete();
@@ -507,7 +500,6 @@ class OOMedia
 
 	public static function fileExists($filename)
 	{
-		global $REX;
 		return strlen($filename) > 0 && file_exists(sly_Util_Directory::join(SLY_MEDIAFOLDER, $filename));
 	}
 

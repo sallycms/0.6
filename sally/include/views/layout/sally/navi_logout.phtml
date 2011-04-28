@@ -8,10 +8,10 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-global $REX;
+$user = sly_Util_User::getCurrentUser();
 
-if ($REX['USER'] && $this->hasNavigation()) {
-	$user_name = $REX['USER']->getName() != '' ? $REX['USER']->getName() : $REX['USER']->getLogin();
+if ($user && $this->hasNavigation()) {
+	$user_name = $user->getName() != '' ? $user->getName() : $user->getLogin();
 	?>
 	<ul class="sly-meta">
 		<li class="rex-navi-first"><span><?= t('logged_in_as').' '.htmlspecialchars($user_name) ?></span></li>
