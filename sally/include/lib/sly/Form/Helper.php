@@ -19,9 +19,7 @@ abstract class sly_Form_Helper {
 	private static $clang;
 
 	public static function getMediaCategorySelect($name, $root = null, $user = null, $id = null) {
-		global $I18N;
-
-		$init   = array(0 => $I18N->msg('pool_kats_no'));
+		$init   = array(0 => t('pool_kats_no'));
 		$select = new sly_Form_Select_DropDown($name, '', -1, $init, $id);
 
 		if ($root === null) {
@@ -48,7 +46,7 @@ abstract class sly_Form_Helper {
 		return $select;
 	}
 
-	public static function getCategorySelect($name, $hideOffline = true, $clang = false, $root = null, $user = null, $id = null) {
+	public static function getCategorySelect($name, $hideOffline = true, $clang = null, $root = null, $user = null, $id = null) {
 		$select = new sly_Form_Select_DropDown($name, '', -1, array(0 => 'Homepage'), $id);
 
 		if ($root === null) {

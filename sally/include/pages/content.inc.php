@@ -617,41 +617,44 @@ if (!is_null($article)) {
 
 				$articleSlices = OOArticleSlice::getSliceIdsForSlot($article_id, $clang, $slot);
 
-				foreach($articleSlices as $articleSlice) {
+				foreach ($articleSlices as $articleSlice) {
 					$ooslice = OOArticleSlice::getArticleSliceById($articleSlice);
 
-					if($function == 'add' && $prior == $ooslice->getPrior()) {
+					if ($function == 'add' && $prior == $ooslice->getPrior()) {
 						$module = sly_request('module', 'string');
 						sly_Helper_Content::printAddSliceForm($prior, $module, $article_id, $clang, $slot);
-					}else {
+					}
+					else {
 						sly_Helper_Content::printAddModuleForm($article_id, $clang, $ooslice->getPrior(), $templateName, $slot);
 					}
 
-					if(empty($function) && $prior == $ooslice->getPrior()) {
-						if(!empty($info)) print rex_info($info);
-						if(!empty($warning)) print rex_warning ($warning);
+					if (empty($function) && $prior == $ooslice->getPrior()) {
+						if (!empty($info))    print rex_info($info);
+						if (!empty($warning)) print rex_warning ($warning);
 					}
 
-					if(($function == 'edit' || $function == 'moveup' || $function == 'movedown') && $slice_id == $ooslice->getId()) {
-						if(!empty($info)) print rex_info($info);
-						if(!empty($warning)) print rex_warning ($warning);
+					if (($function == 'edit' || $function == 'moveup' || $function == 'movedown') && $slice_id == $ooslice->getId()) {
+						if (!empty($info))    print rex_info($info);
+						if (!empty($warning)) print rex_warning ($warning);
 					}
 
-					if($function == 'edit' && $slice_id == $ooslice->getId()) {
+					if ($function == 'edit' && $slice_id == $ooslice->getId()) {
 						sly_Helper_Content::printSliceToolbar($ooslice);
 						sly_Helper_Content::printEditSliceForm($ooslice);
-					}else {
+					}
+					else {
 						sly_Helper_Content::printSliceToolbar($ooslice);
 						sly_Helper_Content::printSliceContent($ooslice);
 					}
 				}
 
-				if($function == 'add' && $prior == count($articleSlices)) {
+				if ($function == 'add' && $prior == count($articleSlices)) {
 					$module = sly_request('module', 'string');
-					if(!empty($info)) print rex_info($info);
-					if(!empty($warning)) print rex_warning ($warning);
+					if (!empty($info)) print rex_info($info);
+					if (!empty($warning)) print rex_warning ($warning);
 					sly_Helper_Content::printAddSliceForm($prior, $module, $article_id, $clang, $slot);
-				}else {
+				}
+				else {
 					sly_Helper_Content::printAddModuleForm($article_id, $clang, count($articleSlices), $templateName, $slot);
 				}
 
@@ -736,7 +739,7 @@ if (!is_null($article)) {
 				// ARTIKEL VERSCHIEBEN
 
 				if ($article->getStartpage() == 0 && ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('moveArticle[]'))) {
-					$select = sly_Form_Helper::getCategorySelect('category_id_new', false, false, null, $REX['USER']);
+					$select = sly_Form_Helper::getCategorySelect('category_id_new', false, null, null, $REX['USER']);
 					$select->setAttribute('value', $category_id);
 					$select->setLabel(t('move_article'));
 
@@ -749,7 +752,7 @@ if (!is_null($article)) {
 				// ARTIKEL KOPIEREN
 
 				if ($REX['USER']->isAdmin() || $REX['USER']->hasPerm('copyArticle[]')) {
-					$select = sly_Form_Helper::getCategorySelect('category_copy_id_new', false, false, null, $REX['USER']);
+					$select = sly_Form_Helper::getCategorySelect('category_copy_id_new', false, null, null, $REX['USER']);
 					$select->setAttribute('value', $category_id);
 					$select->setLabel(t('copy_article'));
 
