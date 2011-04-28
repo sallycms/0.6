@@ -12,8 +12,7 @@
  *
  * @ingroup redaxo2
  */
-class OOMediaCategory
-{
+class OOMediaCategory {
 	private $id = 0;
 	private $parent_id = 0;
 	private $name = '';
@@ -26,13 +25,11 @@ class OOMediaCategory
 	private $files = array();
 	private $revision = 0;
 
-	protected function __construct()
-	{
+	protected function __construct() {
 		/* empty by design */
 	}
 
-	public static function _getTableName()
-	{
+	public static function _getTableName() {
 		return sly_Core::config()->get('DATABASE/TABLE_PREFIX').'file_category';
 	}
 
@@ -44,16 +41,14 @@ class OOMediaCategory
 		$id = (int) $id;
 		if ($id <= 0) return null;
 
-		$query  = 'SELECT * FROM '.self::_getTableName().' WHERE id = '.$id;
-		$sql    = rex_sql::getInstance();
-		$result = $sql->getArray($query);
+		$sql    = sly_DB_Persistence::getInstance();
+		$result = $sql->magicFetch('file_category', '*', compact('id'));
 
-		if (empty($result)) {
+		if ($result === false) {
 			return null;
 		}
 
-		$result = $result[0];
-		$cat    = new self();
+		$cat = new self();
 
 		$cat->id         = (int) $result['id'];
 		$cat->parent_id  = (int) $result['re_id'];
@@ -69,49 +64,36 @@ class OOMediaCategory
 		return $cat;
 	}
 
-	public static function getRootCategories()
-	{
-		$query    = 'SELECT id FROM '.self::_getTableName().' WHERE re_id = 0 ORDER BY name';
-		$sql      = rex_sql::getInstance();
-		$result   = $sql->getArray($query);
-		$rootCats = array();
-
-		if (is_array($result)) {
-			foreach ($result as $line) {
-				$rootCats[] = self::getCategoryById($line['id']);
-			}
-		}
-
-		return $rootCats;
+	public static function getRootCategories() {
+		return self::findCategories(array('re_id' => 0));
 	}
 
 	/**
 	 * @return array
 	 */
-	public static function getCategoryByName($name)
-	{
-		$query  = 'SELECT id FROM '.self::_getTableName().' WHERE name = "'.$name.'"';
-		$sql    = rex_sql::getInstance();
-		$result = $sql->getArray($query);
-		$cats   = array();
+	public static function getCategoryByName($name) {
+		return self::findCategories(array('name' => $name));
+	}
 
-		if (is_array($result)) {
-			foreach ($result as $line) {
-				$cats[] = self::getCategoryById($line['id']);
-			}
+	private static function findCategories($where) {
+		$sql  = sly_DB_Persistence::getInstance();
+		$cats = array();
+
+		$sql->select('file_category', 'id', $where, null, 'name');
+		foreach ($sql as $row) $cats[] = $row['id'];
+
+		foreach ($cats as $idx => $id) {
+			$cats[$idx] = self::getCategoryById($id);
 		}
 
 		return $cats;
-
 	}
 
-	public function toString()
-	{
+	public function toString() {
 		return 'OOMediaCategory, "'.$this->getId().'", "'.$this->getName().'"'."<br/>\n";
 	}
 
-	public function __toString()
-	{
+	public function __toString() {
 		return $this->toString();
 	}
 
@@ -124,13 +106,11 @@ class OOMediaCategory
 	public function getCreateDate() { return $this->createdate; }
 	public function getParentId()   { return $this->parent_id;  }
 
-	public function setName($name)
-	{
+	public function setName($name) {
 		$this->name = $name;
 	}
 
-	public function getParent()
-	{
+	public function getParent() {
 		return self::getCategoryById($this->getParentId());
 	}
 
@@ -138,8 +118,7 @@ class OOMediaCategory
 	 * Get an array of all parentCategories.
 	 * Returns an array of OOMediaCategory objects sorted by $prior.
 	 */
-	public function getParentTree()
-	{
+	public function getParentTree() {
 		$tree = array();
 
 		if ($this->path) {
@@ -159,8 +138,7 @@ class OOMediaCategory
 	/**
 	 * Checks if $anObj is in the parent tree of the object
 	 */
-	public function inParentTree($anObj)
-	{
+	public function inParentTree($anObj) {
 		$tree = $this->getParentTree();
 
 		foreach ($tree as $treeObj) {
@@ -172,67 +150,45 @@ class OOMediaCategory
 		return false;
 	}
 
-	public function getChildren()
-	{
+	public function getChildren() {
 		if ($this->children === null) {
-			$this->children = array();
-
-			$qry    = 'SELECT id FROM '.self::_getTableName().' WHERE re_id = '.$this->getId().' ORDER BY name';
-			$sql    = rex_sql::getInstance();
-			$result = $sql->getArray($qry);
-
-			if (is_array($result)) {
-				foreach ($result as $row) {
-					$this->children[] = self::getCategoryById($row['id']);
-				}
-			}
+			$this->children = self::findCategories(array('re_id' => $this->getId()));
 		}
 
 		return $this->children;
 	}
 
-	public function countChildren()
-	{
+	public function countChildren() {
 		return count($this->getChildren());
 	}
 
-	public function getMedia()
-	{
+	public function getMedia() {
 		if ($this->files === null) {
 			$this->files = array();
 
-			$qry    = 'SELECT id FROM '.OOMedia::_getTableName().' WHERE category_id = '.$this->getId();
-			$sql    = rex_sql::getInstance();
-			$result = $sql->getArray($qry);
+			$sql    = sly_DB_Persistence::getInstance();
+			$result = array();
 
-			if (is_array($result)) {
-				foreach ($result as $line) {
-					$this->files[] = OOMedia::getMediaById($line['id']);
-				}
+			$sql->select('file', 'id', array('category_id' => $this->getId()));
+			foreach ($sql as $row) $result[] = $row['id'];
+
+			foreach ($result as $id) {
+				$this->files[] = OOMedia::getMediaById($id);
 			}
 		}
 
 		return $this->files;
 	}
 
-	public function countMedia()
-	{
+	public function countMedia() {
 		return count($this->getFiles());
 	}
 
-	public function isHidden()
-	{
-		trigger_error('Using OOMediaCategory::isHidden() is useless. It never worked.', E_USER_WARNING);
-		return false; // this field never existed in the database
-	}
-
-	public function isRootCategory()
-	{
+	public function isRootCategory() {
 		return $this->hasParent() === false;
 	}
 
-	public function isParent($mediaCat)
-	{
+	public function isParent($mediaCat) {
 		if (is_int($mediaCat)) {
 			return $mediaCat == $this->getParentId();
 		}
@@ -243,54 +199,54 @@ class OOMediaCategory
 		return null;
 	}
 
-	public static function isValid($obj)
-	{
+	public static function isValid($obj) {
 		return $obj instanceof self;
 	}
 
-	public function hasParent()
-	{
+	public function hasParent() {
 		return $this->getParentId() != 0;
 	}
 
-	public function hasChildren()
-	{
+	public function hasChildren() {
 		return count($this->getChildren()) > 0;
 	}
 
-	public function hasMedia()
-	{
+	public function hasMedia() {
 		return count($this->getMedia()) > 0;
 	}
 
 	/**
-	 * @return Returns <code>true</code> on success or <code>false</code> on error
+	 * @return boolean  returns <code>true</code> on success or <code>false</code> on error
 	 */
-	public function save()
-	{
-		$sql = rex_sql::getInstance();
-		$sql->setTable(self::_getTableName());
-		$sql->setValue('re_id', $this->getParentId());
-		$sql->setValue('name', $this->getName());
-		$sql->setValue('path', $this->getPath());
-		$sql->setValue('revision', $this->revision);
+	public function save() {
+		$sql  = sly_DB_Persistence::getInstance();
+		$data = array(
+			're_id'    => $this->getParentId(),
+			'name'     => $this->getName(),
+			'path'     => $this->getPath(),
+			'revision' => $this->revision
+		);
 
 		if ($this->getId() !== null) {
-			$sql->addGlobalUpdateFields();
-			$sql->setWhere('id = '.$this->getId().' LIMIT 1');
-			return $sql->update();
+			$data['updatedate'] = time();
+			$data['updateuser'] = sly_Util_User::getCurrentUser()->getLogin();
+
+			$sql->update('file_category', $data, array('id' => $this->getId()));
 		}
 		else {
-			$sql->addGlobalCreateFields();
-			return $sql->insert();
+			$data['createdate'] = time();
+			$data['createuser'] = sly_Util_User::getCurrentUser()->getLogin();
+
+			$sql->insert('file_category', $data);
 		}
+
+		return true;
 	}
 
 	/**
-	 * @return Returns <code>true</code> on success or <code>false</code> on error
+	 * @return boolean  returns <code>true</code> on success or <code>false</code> on error
 	 */
-	public function delete($recurse = false)
-	{
+	public function delete($recurse = false) {
 		// Rekursiv löschen?
 
 		if (!$recurse && $this->hasChildren()) {
@@ -315,10 +271,9 @@ class OOMediaCategory
 			}
 		}
 
-		$qry = 'DELETE FROM '.self::_getTableName().' WHERE id = '.$this->getId().' LIMIT 1';
-		$sql = rex_sql::getInstance();
-		$sql->setQuery($qry);
+		$sql = sly_DB_Persistence::getInstance();
+		$sql->delete('file_category', array('id' => $this->getId()));
 
-		return !$sql->hasError() || $sql->getRows() != 1;
+		return true;
 	}
 }

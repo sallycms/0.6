@@ -10,29 +10,29 @@
 
 /**
  * @deprecated
- * Wir wollen nur eine verbindung pro Datenbank. Wirklich nur eine!!!
- * Da das rex_sql singleton kaum benutzbar ist und dauernd neue Verbindungen aufgemacht werden
- * kapseln wir hier die Verbindung hier in diesem in einer Factory.
- * Kling irgendwie bescheuert, aber ist nicht wirklich zu ändern, da die Codebasis von Redaxo
- * (und wahrscheinlich sehr viele addons) leider kaum Spielraum lässt.
+ *
+ * Wir wollen nur eine Verbindung pro Datenbank. Wirklich nur eine!!!
+ * Da das rex_sql-Singleton kaum benutzbar ist und dauernd neue Verbindungen
+ * aufgemacht werden kapseln wir hier die Verbindung hier in diesem in einer
+ * Factory.
+ * Kling irgendwie bescheuert, aber ist nicht wirklich zu ändern, da die
+ * Codebasis von REDAXO (und wahrscheinlich sehr viele AddOns) leider kaum
+ * Spielraum lässt.
  *
  * @author  zozi
  * @ingroup database
  */
-class sly_DB_MySQL_Connection{
-
+class sly_DB_MySQL_Connection {
 	private $connection;
 	private $SQLInit = false;
 
-	private static $instances = array();
+	private static $instance = null;
 
-	private function __construct()
-	{
+	private function __construct() {
 		$config = sly_Core::config();
 		$db     = $config->get('DATABASE');
-		$this->connection = null;
+		$level  = error_reporting(0);
 
-		$level = error_reporting(0);
 		$this->connection = mysql_connect($db['HOST'], $db['LOGIN'], $db['PASSWORD']);
 
 		if (!mysql_select_db($db['NAME'], $this->connection)) {
@@ -50,13 +50,12 @@ class sly_DB_MySQL_Connection{
 		}
 	}
 
-	public static function factory($DBID = 1){
-		if(!isset(self::$instances[$DBID])) self::$instances[$DBID] = new self($DBID);
-		return self::$instances[$DBID];
+	public static function factory() {
+		if(!isset(self::$instance)) self::$instance = new self();
+		return self::$instance;
 	}
 
-	public  function getConnection(){
+	public  function getConnection() {
 		return $this->connection;
 	}
-
 }

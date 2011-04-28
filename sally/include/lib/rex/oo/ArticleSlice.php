@@ -231,10 +231,10 @@ class OOArticleSlice {
 		if (!$table)  $table  = $prefix.'article_slice';
 		if (!$fields) $fields = '*';
 
-		$sql  = new rex_sql();
-		$data = $sql->getArray('SELECT '.$fields.' FROM '.$table.' WHERE '.$where);
+		$sql = sly_DB_Persistence::getInstance();
+		$sql->query('SELECT '.$fields.' FROM '.$table.' WHERE '.$where);
 
-		foreach ($data as $row) {
+		foreach ($sql as $row) {
 			$slices[] = new OOArticleSlice(
 				$row['id'], $row['article_id'], $row['clang'], $row['slot'], $row['module'],
 				$row['prior'], $row['createdate'],

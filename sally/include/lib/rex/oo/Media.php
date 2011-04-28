@@ -61,15 +61,14 @@ class OOMedia
 		$media = sly_Core::cache()->get('sly.medium', $id, null);
 
 		if ($media === null) {
-			$query  = 'SELECT '.self::_getTableName().'.*, '.OOMediaCategory :: _getTableName().'.name catname FROM '.self::_getTableJoin().' WHERE '.self::_getTableName().'.id = '.$id;
-			$sql    = new rex_sql();
-			$result = $sql->getArray($query);
+			$sql    = sly_DB_Persistence::getInstance();
+			$result = $sql->magicFetch('file', '*', compact('id'));
 
-			if (empty($result)) {
+			if ($result === false) {
 				return null;
 			}
 
-			$result = $result[0];
+			$result['catname'] = $sql->magicFetch('file_category', 'name', array('id' => $result['category_id']));
 
 			static $aliasMap = array(
 				're_file_id'   => 'parent_id',
@@ -111,15 +110,14 @@ class OOMedia
 	 */
 	public static function getMediaByExtension($extension)
 	{
-		$query  = 'SELECT id FROM '.self::_getTableName().' WHERE SUBSTRING(filename, LOCATE(".", filename) + 1) = "'.$extension.'"';
-		$sql    = new rex_sql();
-		$result = $sql->getArray($query);
-		$media  = array();
+		$sql   = sly_DB_Persistence::getInstance();
+		$media = array();
 
-		if (is_array($result)) {
-			foreach ($result as $row) {
-				$media[] = self::getMediaById($row['id']);
-			}
+		$sql->select('file', 'id', array('SUBSTRING(filename, LOCATE(".", filename) + 1)' => $extension));
+		foreach ($sql as $row) $media[] = $row['id'];
+
+		foreach ($media as $idx => $id) {
+			$media[$idx] = self::getMediaById($id);
 		}
 
 		return $media;
@@ -130,17 +128,10 @@ class OOMedia
 	 */
 	public static function getMediaByFileName($name)
 	{
-		$query  = 'SELECT id FROM '.self::_getTableName().' WHERE filename = "'.$name.'" LIMIT 1';
-		$sql    = new rex_sql();
-		$result = $sql->getArray($query);
+		$sql    = sly_DB_Persistence::getInstance();
+		$result = $sql->magicFetch('file', 'id', array('filename' => $name));
 
-		if (is_array($result)) {
-			foreach ($result as $line) {
-				return self::getMediaById($line['id']);
-			}
-		}
-
-		return null;
+		return $result === false ? null : self::getMediaById($result);
 	}
 
 	public function getCategory()
@@ -358,21 +349,24 @@ class OOMedia
 
 	public function isInUse()
 	{
-		$sql      = new rex_sql();
+		$sql      = sly_DB_Persistence::getInstance();
 		$filename = addslashes($this->getFileName());
 		$prefix   = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
 		$query    =
 			'SELECT s.article_id, s.clang FROM '.$prefix.'slice_value sv, '.$prefix.'article_slice s, '.$prefix.'article a '.
 			'WHERE sv.slice_id = s.slice_id AND a.id = s.article_id AND a.clang = s.clang AND ('.
-			'(type = "'.rex_var_media::MEDIALIST.'" AND (value LIKE "'.$filename.',%" OR value LIKE "%,'.$filename.',%" OR value LIKE "%,'.$filename.'")) OR '.
-			'(type <> "'.rex_var_media::MEDIALIST.'" AND value LIKE "%'.$filename.'%")'.
+			'(sv.type = "'.rex_var_media::MEDIALIST.'" AND (value LIKE "'.$filename.',%" OR value LIKE "%,'.$filename.',%" OR value LIKE "%,'.$filename.'")) OR '.
+			'(sv.type <> "'.rex_var_media::MEDIALIST.'" AND value LIKE "%'.$filename.'%")'.
 			') GROUP BY s.article_id, s.clang';
 
-		$res    = $sql->getArray($query);
+		$res    = array();
 		$usages = array();
 
+		$sql->query($query);
+		foreach ($sql as $row) $res[] = $row;
+
 		foreach ($res as $row) {
-			$article = OOArticle::getArticleById($row['article_id'], $row['clang']);
+			$article = sly_Util_Article::findById($row['article_id'], $row['clang']);
 
 			$usages[] = array(
 				'title' => $article->getName(),
@@ -454,27 +448,33 @@ class OOMedia
 
 	public function save()
 	{
-		$sql = new rex_sql();
-		$sql->setTable($this->_getTableName());
-		$sql->setValue('re_file_id', $this->getParentId());
-		$sql->setValue('category_id', $this->getCategoryId());
-		$sql->setValue('filetype', $this->getType());
-		$sql->setValue('filename', $this->getFileName());
-		$sql->setValue('originalname', $this->getOrgFileName());
-		$sql->setValue('filesize', $this->getSize());
-		$sql->setValue('width', $this->getWidth());
-		$sql->setValue('height', $this->getHeight());
-		$sql->setValue('title', $this->getTitle());
+		$sql  = sly_DB_Persistence::getInstance();
+		$data = array(
+			're_file_id'   => $this->getParentId(),
+			'category_id'  => $this->getCategoryId(),
+			'filetype'     => $this->getType(),
+			'filename'     => $this->getFileName(),
+			'originalname' => $this->getOrgFileName(),
+			'filesize'     => $this->getSize(),
+			'width'        => $this->getWidth(),
+			'height'       => $this->getHeight(),
+			'title'        => $this->getTitle()
+		);
 
 		if ($this->getId() !== null) {
-			$sql->addGlobalUpdateFields();
-			$sql->setWhere('id = '.$this->getId().' LIMIT 1');
-			return $sql->update();
+			$data['updatedate'] = time();
+			$data['updateuser'] = sly_Util_User::getCurrentUser()->getLogin();
+
+			$sql->update('file', $data, array('id' => $this->getId()));
 		}
 		else {
-			$sql->addGlobalCreateFields();
-			return $sql->insert();
+			$data['createdate'] = time();
+			$data['createuser'] = sly_Util_User::getCurrentUser()->getLogin();
+
+			$sql->insert('file', $data);
 		}
+
+		return true;
 	}
 
 	public function delete($filename = null)
@@ -484,15 +484,14 @@ class OOMedia
 			if ($OOMed) return $OOMed->delete();
 		}
 		else {
-			$qry = 'DELETE FROM '.$this->_getTableName().' WHERE id = '.$this->getId().' LIMIT 1';
-			$sql = new rex_sql();
-			$sql->setQuery($qry);
+			$sql = sly_DB_Persistence::getInstance();
+			$sql->delete('file', array('id' => $this->getId()));
 
 			if (self::fileExists($this->getFileName())) {
 				unlink(SLY_MEDIAFOLDER.DIRECTORY_SEPARATOR.$this->getFileName());
 			}
 
-			return $sql->getError();
+			return true;
 		}
 
 		return false;
