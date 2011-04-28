@@ -29,15 +29,10 @@ class OOMediaCategory {
 		/* empty by design */
 	}
 
-	public static function _getTableName() {
-		return sly_Core::config()->get('DATABASE/TABLE_PREFIX').'file_category';
-	}
-
 	/**
 	 * @return OOMediaCategory
 	 */
-	public static function getCategoryById($id)
-	{
+	public static function getCategoryById($id) {
 		$id = (int) $id;
 		if ($id <= 0) return null;
 
@@ -89,12 +84,8 @@ class OOMediaCategory {
 		return $cats;
 	}
 
-	public function toString() {
-		return 'OOMediaCategory, "'.$this->getId().'", "'.$this->getName().'"'."<br/>\n";
-	}
-
 	public function __toString() {
-		return $this->toString();
+		return 'OOMediaCategory, "'.$this->getId().'", "'.$this->getName().'"'."<br/>\n";
 	}
 
 	public function getId()         { return $this->id;         }

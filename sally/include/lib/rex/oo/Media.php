@@ -12,10 +12,8 @@
  *
  * @ingroup redaxo2
  */
-class OOMedia
-{
+class OOMedia {
 	private $id = '';
-	private $parent_id = ''; // (FOR FUTURE USE!)
 	private $cat_id = '';
 	private $cat_name = '';
 	private $cat = '';
@@ -33,28 +31,14 @@ class OOMedia
 
 	private static $dummeFileSize = null;
 
-	protected function __construct($id = null)
-	{
-		$this->getMediaById($id);
-	}
-
-	public static function _getTableName()
-	{
-		return sly_Core::config()->get('DATABASE/TABLE_PREFIX').'file';
-	}
-
-	protected static function _getTableJoin()
-	{
-		$mediatable = self::_getTableName();
-		$cattable   = OOMediaCategory::_getTableName();
-		return $mediatable.' LEFT JOIN '.$cattable.' ON '.$mediatable.'.category_id = '.$cattable.'.id';
+	protected function __construct($id = null) {
+		/* empty by design */
 	}
 
 	/**
 	 * @return OOMedia
 	 */
-	public static function getMediaById($id)
-	{
+	public static function getMediaById($id) {
 		$id = (int) $id;
 		if ($id <= 0) return null;
 
@@ -71,7 +55,6 @@ class OOMedia
 			$result['catname'] = $sql->magicFetch('file_category', 'name', array('id' => $result['category_id']));
 
 			static $aliasMap = array(
-				're_file_id'   => 'parent_id',
 				'category_id'  => 'cat_id',
 				'catname'      => 'cat_name',
 				'filename'     => 'name',
@@ -82,7 +65,7 @@ class OOMedia
 
 	      $media = new OOMedia();
 
-	      foreach ($sql->getFieldNames() as $fieldName) {
+	      foreach (array_keys($result) as $fieldName) {
 	      	if (in_array($fieldName, array_keys($aliasMap))) {
 					$var_name = $aliasMap[$fieldName];
 				}
@@ -99,8 +82,7 @@ class OOMedia
 		return $media;
 	}
 
-	public static function getMediaByName($filename)
-	{
+	public static function getMediaByName($filename) {
 		return self::getMediaByFileName($filename);
 	}
 
@@ -108,8 +90,7 @@ class OOMedia
 	 * @example OOMedia::getMediaByExtension('css');
 	 * @example OOMedia::getMediaByExtension('gif');
 	 */
-	public static function getMediaByExtension($extension)
-	{
+	public static function getMediaByExtension($extension) {
 		$sql   = sly_DB_Persistence::getInstance();
 		$media = array();
 
@@ -126,16 +107,14 @@ class OOMedia
 	/**
 	 * @return OOMedia
 	 */
-	public static function getMediaByFileName($name)
-	{
+	public static function getMediaByFileName($name) {
 		$sql    = sly_DB_Persistence::getInstance();
 		$result = $sql->magicFetch('file', 'id', array('filename' => $name));
 
 		return $result === false ? null : self::getMediaById($result);
 	}
 
-	public function getCategory()
-	{
+	public function getCategory() {
 		if ($this->cat === null) {
 			$this->cat = OOMediaCategory::getCategoryById($this->getCategoryId());
 		}
@@ -146,7 +125,6 @@ class OOMedia
 	public function getId()           { return $this->id;         }
 	public function getCategoryName() { return $this->cat_name;   }
 	public function getCategoryId()   { return $this->cat_id;     }
-	public function getParentId()     { return $this->parent_id;  }
 	public function getTitle()        { return $this->title;      }
 	public function getFileName()     { return $this->name;       }
 	public function getOrgFileName()  { return $this->orgname;    }
@@ -157,29 +135,16 @@ class OOMedia
 	public function getUpdateUser()   { return $this->updateuser; }
 	public function getCreateUser()   { return $this->createuser; }
 
-	public function hasParent()
-	{
-		return $this->getParentId() != 0;
-	}
-
-	public function getPath()
-	{
+	public function getPath() {
 		return SLY_MEDIAFOLDER;
 	}
 
-	public function getFullPath()
-	{
+	public function getFullPath() {
 		return $this->getPath().'/'.$this->getFileName();
 	}
 
-	public function getFormattedSize()
-	{
-		return self::_getFormattedSize($this->getSize());
-	}
-
-	public static function _getFormattedSize($size)
-	{
-		return sly_Util_String::formatFilesize($size);
+	public function getFormattedSize() {
+		return sly_Util_String::formatFilesize($this->getSize());
 	}
 
 	/**
@@ -190,13 +155,11 @@ class OOMedia
 	 * If format is <code>''</code> the datestamp is formated
 	 * with the default <code>dateformat</code> (lang-files).
 	 */
-	public static function _getDate($date, $format = null)
-	{
+	private static function getDate($date, $format = null) {
 		if ($format !== null) {
 			if ($format == '') {
 				// TODO Im Frontend gibts kein I18N
-				// global $I18N;
-				//$format = $I18N->msg('dateformat');
+				// $format = t('dateformat');
 				$format = '%a %d. %B %Y';
 			}
 
@@ -206,27 +169,17 @@ class OOMedia
 		return $date;
 	}
 
-	/**
-	 * @see #_getDate
-	 */
-	public function getUpdateDate($format = null)
-	{
-		return self::_getDate($this->updatedate, $format);
+	public function getUpdateDate($format = null) {
+		return self::getDate($this->updatedate, $format);
 	}
 
-	/**
-	 * @see #_getDate
-	 */
-	public function getCreateDate($format = null)
-	{
-		return self::_getDate($this->createdate, $format);
+	public function getCreateDate($format = null) {
+		return self::getDate($this->createdate, $format);
 	}
 
-	public function toImage($params = array())
-	{
+	public function toImage($params = array()) {
 		$params = sly_makeArray($params);
-
-		$path = SLY_BASE;
+		$path   = SLY_BASE;
 
 		if (isset($params['path'])) {
 			$path = $params['path'];
@@ -256,7 +209,7 @@ class OOMedia
 			if (isset ($params['resize']) && $params['resize']) {
 				unset ($params['resize']);
 
-				$service = sly_Service_Factory::getService('AddOn');
+				$service = sly_Service_Factory::getAddOnService();
 
 				// Resize Addon installiert?
 				if ($service->isAvailable('image_resize')) {
@@ -302,7 +255,7 @@ class OOMedia
 
 		// Alternativtext hinzufügen
 
-		if (!isset($params['alt']) && $title != '') {
+		if (!isset($params['alt'])) {
 			$params['alt'] = $title;
 		}
 
@@ -313,42 +266,36 @@ class OOMedia
 		}
 
 		$params['src'] = $path.$file;
-		return sprintf('<img %s />', sly_Util_HTML::buildAttributeString($params));
+		return sprintf('<img %s />', sly_Util_HTML::buildAttributeString($params, array('alt')));
 	}
 
-	public function toLink($attributes = '')
-	{
+	public function toLink($attributes = '') {
 		return sprintf('<a href="%s" title="%s"%s>%s</a>', $this->getFullPath(), $this->getDescription(), $attributes, $this->getFileName());
 	}
 
-	public function toIcon($attributes = array())
-	{
+	public function toIcon($attributes = array()) {
 		if (!isset($attributes['alt']))   $attributes['alt']   = '"'.$this->getExtension().'"-Symbol';
 		if (!isset($attributes['title'])) $attributes['title'] = $attributes['alt'];
 		if (!isset($attributes['style'])) $attributes['style'] = 'width:44px;height:38px';
 
 		$attributes['src'] = $this->getIcon();
-		return sprintf('<img %s />', sly_Util_HTML::buildAttributeString($attributes));
+		return sprintf('<img %s />', sly_Util_HTML::buildAttributeString($attributes, array('alt')));
 	}
 
-	public static function isValid($media)
-	{
+	public static function isValid($media) {
 		return $media instanceof self;
 	}
 
-	public function isImage()
-	{
+	public function isImage() {
 		return self::_isImage($this->getFileName());
 	}
 
-	public static function _isImage($filename)
-	{
+	public static function _isImage($filename) {
 		static $imageExtensions = array('gif', 'jpeg', 'jpg', 'png', 'bmp');
 		return in_array(self::_getExtension($filename), $imageExtensions);
 	}
 
-	public function isInUse()
-	{
+	public function isInUse() {
 		$sql      = sly_DB_Persistence::getInstance();
 		$filename = addslashes($this->getFileName());
 		$prefix   = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
@@ -385,8 +332,7 @@ class OOMedia
 		return empty($usages) ? false : $usages;
 	}
 
-	public function toHTML($attributes = '')
-	{
+	public function toHTML($attributes = '') {
 		$file     = $this->getFullPath();
 		$filetype = $this->getExtension();
 
@@ -409,30 +355,21 @@ class OOMedia
 		}
 	}
 
-	public function toString()
-	{
+	public function __toString() {
 		return 'OOMedia, "'.$this->getId().'", "'.$this->getFileName().'"'."<br/>\n";
-	}
-
-	public function __toString()
-	{
-		return $this->toString();
 	}
 
 	// new functions by vscope
 
-	public function getExtension()
-	{
+	public function getExtension() {
 		return self::_getExtension($this->_name);
 	}
 
-	public static function _getExtension($filename)
-	{
+	public static function _getExtension($filename) {
 		return substr(strrchr($filename, '.'), 1);
 	}
 
-	public function getIcon($useDefaultIcon = true)
-	{
+	public function getIcon($useDefaultIcon = true) {
 		$ext    = $this->getExtension();
 		$folder = SLY_HTDOCS_PATH.'sally/media/';
 		$icon   = $folder.'mime-'.$ext.'.gif';
@@ -446,11 +383,10 @@ class OOMedia
 		return $icon;
 	}
 
-	public function save()
-	{
+	public function save() {
 		$sql  = sly_DB_Persistence::getInstance();
 		$data = array(
-			're_file_id'   => $this->getParentId(),
+			're_file_id'   => 0,
 			'category_id'  => $this->getCategoryId(),
 			'filetype'     => $this->getType(),
 			'filename'     => $this->getFileName(),
@@ -477,8 +413,7 @@ class OOMedia
 		return true;
 	}
 
-	public function delete($filename = null)
-	{
+	public function delete($filename = null) {
 		if ($filename != null) {
 			$OOMed = OOMedia::getMediaByFileName($filename);
 			if ($OOMed) return $OOMed->delete();
@@ -497,15 +432,13 @@ class OOMedia
 		return false;
 	}
 
-	public static function fileExists($filename)
-	{
+	public static function fileExists($filename) {
 		return strlen($filename) > 0 && file_exists(sly_Util_Directory::join(SLY_MEDIAFOLDER, $filename));
 	}
 
 	// allowed filetypes
 
-	public static function getDocTypes()
-	{
+	public static function getDocTypes() {
 		static $docTypes = array(
 			'bmp', 'css', 'doc', 'docx', 'eps', 'gif', 'gz', 'jpg', 'mov', 'mp3',
 			'ogg', 'pdf', 'png', 'ppt', 'pptx','pps', 'ppsx', 'rar', 'rtf', 'swf',
@@ -515,15 +448,13 @@ class OOMedia
 		return $docTypes;
 	}
 
-	public static function isDocType($type)
-	{
+	public static function isDocType($type) {
 		return in_array($type, self::getDocTypes());
 	}
 
 	// allowed image upload types
 
-	public static function getImageTypes()
-	{
+	public static function getImageTypes() {
 		static $imageTypes = array(
 			'image/gif',
 			'image/jpg',
@@ -537,13 +468,11 @@ class OOMedia
 		return $imageTypes;
 	}
 
-	public static function isImageType($type)
-	{
+	public static function isImageType($type) {
 		return in_array($type, self::getImageTypes());
 	}
 
-	public static function compareImageTypes($type1, $type2)
-	{
+	public static function compareImageTypes($type1, $type2) {
 		static $jpg = array(
 			'image/jpg',
 			'image/jpeg',
@@ -553,14 +482,12 @@ class OOMedia
 		return in_array($type1, $jpg) && in_array($type2, $jpg);
 	}
 
-	public function hasValue($value)
-	{
+	public function hasValue($value) {
 		if ($value[0] == '_') $value = substr($value, 1);
 		return isset($this->$value);
 	}
 
-	public function getValue($value)
-	{
+	public function getValue($value) {
 		if ($value[0] == '_') $value = substr($value, 1);
 
 		// damit alte rex_article felder wie copyright, description
