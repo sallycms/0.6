@@ -20,7 +20,7 @@ print '<span class="sly-widget sly-linklistbutton">';
 $values = array();
 
 foreach ($value as $idx => $id) {
-	$article = OOArticle::getArticleById($id);
+	$article = sly_Util_Article::findById($id);
 	if ($article) $values[$id] = $article->getName();
 }
 

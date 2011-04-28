@@ -269,7 +269,7 @@ abstract class rex_formatter {
 		}
 
 		$name = 'NoName';
-		$art  = OOArticle::getArticleById($value, $format['clang']);
+		$art  = sly_Util_Article::findById($value, $format['clang']);
 
 		if ($art) {
 			$name = $art->getName();

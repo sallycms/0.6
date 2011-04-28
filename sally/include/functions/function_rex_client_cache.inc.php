@@ -40,12 +40,12 @@ function rex_send_file($file, $contentType, $environment = 'backend') {
 }
 
 /**
- * Sendet einen OOArticle zum Client,
+ * Sendet einen sly_Model_Article zum Client,
  * fügt ggf. HTTP1.1 cache headers hinzu
  *
- * @param OOArticle   $article  der zu sendene Artikel
- * @param string      $content      Inhalt des Artikels
- * @param string      $environment  die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
+ * @param sly_Model_Article $article      der zu sendene Artikel
+ * @param string            $content      Inhalt des Artikels
+ * @param string            $environment  die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
 function rex_send_article($article, $content, $environment) {
 	$config = sly_Core::config();

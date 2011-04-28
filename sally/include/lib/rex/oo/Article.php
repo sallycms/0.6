@@ -13,14 +13,12 @@
  * @deprecated
  * @ingroup redaxo2
  */
-abstract class OOArticle
-{
+abstract class OOArticle {
 	/**
 	 * @return sly_Model_Article
 	 * @deprecated
 	 */
-	public static function getArticleById($article_id, $clang = false, $OOCategory = false)
-	{
+	public static function getArticleById($article_id, $clang = false) {
 		return sly_Util_Article::findById($article_id, $clang);
 	}
 
@@ -28,8 +26,7 @@ abstract class OOArticle
 	 * @return sly_Model_Article
 	 * @deprecated
 	 */
-	public static function getSiteStartArticle($clang = null)
-	{
+	public static function getSiteStartArticle($clang = null) {
 		return sly_Util_Article::findSiteStartArticle($clang);
 	}
 
@@ -37,8 +34,7 @@ abstract class OOArticle
 	 * @return array
 	 * @deprecated
 	 */
-	public static function getArticlesOfCategory($categoryId, $ignore_offlines = false, $clangId = false)
-	{
+	public static function getArticlesOfCategory($categoryId, $ignore_offlines = false, $clangId = false) {
 		return sly_Util_Article::findByCategory($categoryId, $ignore_offlines, $clangId);
 	}
 
@@ -47,20 +43,19 @@ abstract class OOArticle
 	 * @return array
 	 * @deprecated
 	 */
-	public static function getRootArticles($ignore_offlines = false, $clang = false)
-	{
+	public static function getRootArticles($ignore_offlines = false, $clang = false) {
 		return sly_Util_Article::getRootArticles($ignore_offlines, $clang);
 	}
-	
+
 	/**
 	 *
-	 * @param sly_Model_Article $article 
+	 * @param sly_Model_Article $article
 	 * @deprecated
 	 */
 	public static function isValid($article) {
 		return sly_Util_Article::isValid($article);
 	}
-	
+
 	/**
 	 *
 	 * @param int $article_id
@@ -69,5 +64,4 @@ abstract class OOArticle
 	public static function exists($article_id) {
 		return sly_Util_Article::exists($article_id);
 	}
-
 }

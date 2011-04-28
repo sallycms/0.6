@@ -93,7 +93,7 @@ class rex_var_article extends rex_var {
 						$varname = '$__rex_art';
 						$tpl     =
 							'<?php '.
-							$varname.' = OOArticle::getArticleById('.$article_id.', '.$clang.'); '.
+							$varname.' = sly_Util_Article::findById('.$article_id.', '.$clang.'); '.
 							'if ('.$varname.') print sly_html('.$this->handleGlobalVarParamsSerialized($var, $args, $varname.'->getValue(\''.addslashes($field).'\')').'); ?>';
 					}
 				}
@@ -104,7 +104,7 @@ class rex_var_article extends rex_var {
 					$varname = '$__rex_art';
 					$tpl     =
 						'<?php '.
-						$varname .' = OOArticle::getArticleById('.$article_id.', '.$clang.'); '.
+						$varname .' = sly_Util_Article::findById('.$article_id.', '.$clang.'); '.
 						'print '.$this->handleGlobalVarParamsSerialized($var, $args, $varname.'->getArticle('.$slot.')').'; ?>';
 				}
 			}

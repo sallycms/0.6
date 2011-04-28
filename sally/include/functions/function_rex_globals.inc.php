@@ -199,7 +199,7 @@ function _rex_cast_var($var, $vartype, $default, $mode, $addslashes = true)
 		case 'rex-category-id':
 			$var = (int) $var;
 			if ($mode == 'found') {
-				if (!OOCategory::isValid(OOCategory::getCategoryById($var))) {
+				if (!sly_Util_Category::isValid(sly_Util_Category::findById($var))) {
 					$var = (int) $default;
 				}
 			}

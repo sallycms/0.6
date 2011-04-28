@@ -98,7 +98,7 @@ class rex_var_link extends rex_var {
 		$article_id   = sly_request('article_id', 'int');
 
 		if ($article_id != 0) {
-			$art          = OOArticle::getArticleById($article_id);
+			$art          = sly_Util_Article::findById($article_id);
 			$def_category = $art->getCategoryId();
 		}
 
@@ -222,11 +222,11 @@ class rex_var_link extends rex_var {
 	public function getLinkButton($id, $article_id, $category = '') {
 		$art_name = '';
 		$clang    = '';
-		$art      = OOArticle::getArticleById($article_id);
+		$art      = sly_Util_Article::findById($article_id);
 
 		// Falls ein Artikel vorausgewählt ist, dessen Namen anzeigen und beim Öffnen der Linkmap dessen Kategorie anzeigen
 
-		if (OOArticle::isValid($art)) {
+		if (sly_Util_Article::isValid($art)) {
 			$art_name = $art->getName();
 			$category = $art->getCategoryId();
 		}

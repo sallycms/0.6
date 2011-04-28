@@ -58,7 +58,7 @@ class rex_var_category extends rex_var {
 					$varname_cat = '$__rex_cat';
 					$tpl         =
 						'<?php '.
-						$varname_art.' = OOArticle::getArticleById($REX[\'ARTICLE_ID\'], '.$clang.'); '.
+						$varname_art.' = sly_Util_Article::findById($REX[\'ARTICLE_ID\'], '.$clang.'); '.
 						$varname_cat.' = '.$varname_art.' ? '.$varname_art.'->getCategory() : null; '.
 						'if ('.$varname_cat.') print sly_html('.$this->handleGlobalVarParamsSerialized($var, $args, $varname_cat.'->getValue(\''.addslashes($field).'\')').'); ?>';
 				}
@@ -71,7 +71,7 @@ class rex_var_category extends rex_var {
 					$varname = '$__rex_cat';
 					$tpl     =
 						'<?php '.
-						$varname.' = OOCategory::getCategoryById('.$category_id.', '.$clang.'); '.
+						$varname.' = sly_Util_Category::findById('.$category_id.', '.$clang.'); '.
 						'if ('.$varname.') print sly_html('.$this->handleGlobalVarParamsSerialized($var, $args, $varname.'->getValue(\''.addslashes($field).'\')').'); ?>';
 				}
 			}

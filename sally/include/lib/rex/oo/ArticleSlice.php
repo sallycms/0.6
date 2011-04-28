@@ -116,8 +116,8 @@ class OOArticleSlice {
 		if ($clang === null) $clang = sly_Core::getCurrentClang();
 
 		if ($slot === null) {
-			$template = OOArticle::getArticleById($articleID)->getTemplateName();
-			$slot     = sly_Service_Factory::getService('Template')->getFirstSlot($template);
+			$template = sly_Util_Article::findById($articleID)->getTemplateName();
+			$slot     = sly_Service_Factory::getTemplateService()->getFirstSlot($template);
 
 			if ($slot === null) return null;
 		}
@@ -248,7 +248,7 @@ class OOArticleSlice {
 	}
 
 	public function getArticle() {
-		return OOArticle::getArticleById($this->getArticleId());
+		return sly_Util_Article::findById($this->getArticleId());
 	}
 
 	public function getArticleId()  { return $this->_article_id; }
@@ -268,7 +268,9 @@ class OOArticleSlice {
 	 *
 	 * @return Sly_Model_Slice
 	 */
-	public function getSlice()      { return sly_Service_Factory::getService('Slice')->findById($this->getSliceId()); }
+	public function getSlice() {
+		return sly_Service_Factory::getSliceService()->findById($this->getSliceId());
+	}
 
 	public function getValue($index)     { return $this->getRexVarValue('REX_VALUE', $index);     }
 	public function getLink($index)      { return $this->getRexVarValue('REX_LINK', $index);      }
@@ -370,7 +372,7 @@ class OOArticleSlice {
 
 	private static function getReplacementLink($articleID, $clang)
 	{
-		$art = OOArticle::getArticleById($articleID, $clang);
+		$art = sly_Util_Article::findById($articleID, $clang);
 		if ($art === null) return '';
 		return rex_getUrl($articleID, $clang, '', '', '', true);
 	}
