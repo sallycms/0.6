@@ -31,7 +31,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally {
 	}
 
 	public function index() {
-		$languageService = sly_Service_Factory::getService('Language');
+		$languageService = sly_Service_Factory::getLAnguageService();
 		$this->languages = $languageService->find(null, null, 'id');
 		$this->render('views/specials/languages.phtml');
 	}
@@ -44,7 +44,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally {
 
 			if (!empty($clangName)) {
 				try {
-					$languageService = sly_Service_Factory::getService('Language');
+					$languageService = sly_Service_Factory::getLanguageService();
 					$languageService->create(array('name' => $clangName, 'locale' => $clangLocale));
 					$this->info = t('clang_edited');
 				}
@@ -70,7 +70,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally {
 		if (sly_post('sly-submit', 'boolean', false)) {
 			$clangName = sly_post('clang_name', 'string');
 			$clangLocale = sly_post('clang_locale', 'string');
-			$languageService = sly_Service_Factory::getService('Language');
+			$languageService = sly_Service_Factory::getLanguageService();
 			$clang = $languageService->findById($this->id);
 
 			if ($clang) {
@@ -93,7 +93,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Sally {
 		$languages = sly_Util_Language::findAll();
 
 		if (isset($languages[$clangID])) {
-			$ok = sly_Service_Factory::getService('Language')->delete(array('id' =>$clangID));
+			$ok = sly_Service_Factory::getLanguageService()->delete(array('id' =>$clangID));
 			if ($ok > 0) $this->info = t('clang_deleted');
 			else $this->warning = t('clang_delete_error');
 		}

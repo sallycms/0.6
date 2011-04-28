@@ -33,7 +33,7 @@ class rex_var_link extends rex_var {
 	}
 
 	public function getACDatabaseValues($REX_ACTION, $slice_id) {
-		$service = sly_Service_Factory::getService('SliceValue');
+		$service = sly_Service_Factory::getSliceValueService();
 
 		foreach (array('REX_LINK', 'REX_LINKLIST') as $type) {
 			$values = $service->find(array('slice_id' => $slice_id, 'type' => $type));
@@ -47,7 +47,7 @@ class rex_var_link extends rex_var {
 	}
 
 	public function setACValues($slice_id, $REX_ACTION, $escape = false, $prependTableName = true) {
-		$slice = sly_Service_Factory::getService('Slice')->findById($slice_id);
+		$slice = sly_Service_Factory::getSliceService()->findById($slice_id);
 
 		foreach (array('REX_LINK', 'REX_LINKLIST') as $type) {
 			if (isset($REX_ACTION[$type])) {
@@ -104,7 +104,7 @@ class rex_var_link extends rex_var {
 
 		$var     = 'REX_LINK_BUTTON';
 		$matches = $this->getVarParams($content, $var);
-		$service = sly_Service_Factory::getService('SliceValue');
+		$service = sly_Service_Factory::getSliceValueService();
 
 		foreach ($matches as $match) {
 			list ($param_str, $args) = $match;
@@ -131,7 +131,7 @@ class rex_var_link extends rex_var {
 	public function matchLinkListButton($slice_id, $content) {
 		$var     = 'REX_LINKLIST_BUTTON';
 		$matches = $this->getVarParams($content, $var);
-		$service = sly_Service_Factory::getService('SliceValue');
+		$service = sly_Service_Factory::getSliceValueService();
 
 		foreach ($matches as $match) {
 			list ($param_str, $args) = $match;
@@ -155,7 +155,7 @@ class rex_var_link extends rex_var {
 	public function matchLink($slice_id, $content) {
 		$var     = 'REX_LINK';
 		$matches = $this->getVarParams($content, $var);
-		$service = sly_Service_Factory::getService('SliceValue');
+		$service = sly_Service_Factory::getSliceValueService();
 
 		foreach ($matches as $match) {
 			list ($param_str, $args) = $match;
@@ -178,7 +178,7 @@ class rex_var_link extends rex_var {
 	public function matchLinkId($slice_id, $content) {
 		$var     = 'REX_LINK_ID';
 		$matches = $this->getVarParams($content, $var);
-		$service = sly_Service_Factory::getService('SliceValue');
+		$service = sly_Service_Factory::getSliceValueService();
 
 		foreach ($matches as $match) {
 			list ($param_str, $args) = $match;
@@ -200,7 +200,7 @@ class rex_var_link extends rex_var {
 	public function matchLinkList($slice_id, $content) {
 		$var     = 'REX_LINKLIST';
 		$matches = $this->getVarParams($content, $var);
-		$service = sly_Service_Factory::getService('SliceValue');
+		$service = sly_Service_Factory::getSliceValueService();
 
 		foreach ($matches as $match) {
 			list ($param_str, $args) = $match;

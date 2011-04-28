@@ -43,7 +43,7 @@ class rex_var_media extends rex_var {
 	}
 
 	public function getACDatabaseValues($REX_ACTION, $slice_id) {
-		$service = sly_Service_Factory::getService('SliceValue');
+		$service = sly_Service_Factory::getSliceValueService();
 
 		foreach (array('REX_MEDIA', 'REX_MEDIALIST') as $type) {
 			$values = $service->find(array('slice_id' => $slice_id, 'type' => $type));
@@ -57,7 +57,7 @@ class rex_var_media extends rex_var {
 	}
 
 	public function setACValues($slice_id, $REX_ACTION, $escape = false, $prependTableName = true) {
-		$slice = sly_Service_Factory::getService('Slice')->findById($slice_id);
+		$slice = sly_Service_Factory::getSliceService()->findById($slice_id);
 
 		foreach (array('REX_MEDIA', 'REX_MEDIALIST') as $type) {
 			if (isset($REX_ACTION[$type])) {
@@ -141,7 +141,7 @@ class rex_var_media extends rex_var {
 	 */
 	public function matchMediaListButton($slice_id, $content) {
 		$vars    = array('REX_FILELIST_BUTTON', 'REX_MEDIALIST_BUTTON');
-		$service = sly_Service_Factory::getService('SliceValue');
+		$service = sly_Service_Factory::getSliceValueService();
 
 		foreach ($vars as $var) {
 			$matches = $this->getVarParams($content, $var);
@@ -173,7 +173,7 @@ class rex_var_media extends rex_var {
 	 */
 	public function matchMedia($slice_id, $content) {
 		$vars    = array(self::FILE, self::MEDIA);
-		$service = sly_Service_Factory::getService('SliceValue');
+		$service = sly_Service_Factory::getSliceValueService();
 
 		foreach ($vars as $var) {
 			$matches = $this->getVarParams($content, $var);
@@ -208,7 +208,7 @@ class rex_var_media extends rex_var {
 	 */
 	public function matchMediaList($slice_id, $content) {
 		$vars    = array(self::FILELIST, self::MEDIALIST);
-		$service = sly_Service_Factory::getService('SliceValue');
+		$service = sly_Service_Factory::getSliceValueService();
 
 		foreach ($vars as $var) {
 			$matches = $this->getVarParams($content, $var);

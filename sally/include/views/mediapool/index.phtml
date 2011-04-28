@@ -12,7 +12,7 @@
  */
 
 $thumbs       = true;
-$thumbsresize = sly_Service_Factory::getService('AddOn')->isAvailable('image_resize');
+$thumbsresize = sly_Service_Factory::getAddOnService()->isAvailable('image_resize');
 $selected     = $this->getCurrentCategory();
 
 ////////////////////////////////////////////////////////

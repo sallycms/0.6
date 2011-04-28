@@ -12,9 +12,9 @@
  * Business Model Klasse für Slices
  *
  * @author  zozi@webvariants.de
- * 
+ *
  * @method getSliceValues()
- * 
+ *
  * @ingroup model
  */
 class sly_Model_Slice extends sly_Model_Base_Id {
@@ -26,7 +26,7 @@ class sly_Model_Slice extends sly_Model_Base_Id {
 	public function setModule($module) { $this->module = $module; }
 
 	public function addValue($type, $finder, $value = null) {
-		$service = sly_Service_Factory::getService('SliceValue');
+		$service = sly_Service_Factory::getSliceValueService();
 		return $service->create(array('slice_id' => $this->getId(), 'type' => $type, 'finder' => $finder, 'value' => $value));
 	}
 
@@ -38,13 +38,13 @@ class sly_Model_Slice extends sly_Model_Base_Id {
 	 * @return Model_SliceValue
 	 */
 	public function getValue($type, $finder) {
-		$service    = sly_Service_Factory::getService('SliceValue');
+		$service    = sly_Service_Factory::getSliceValueService();
 		$sliceValue = $service->findBySliceTypeFinder(array('slice_id' => $this->getId(), 'type' => $type, 'finder' => $finder));
 		return $sliceValue;
 	}
 
 	public function flushValues() {
-		$service = sly_Service_Factory::getService('SliceValue');
+		$service = sly_Service_Factory::getSliceValueService();
 		return $service->delete(array('slice_id' => $this->getId()));
 	}
 

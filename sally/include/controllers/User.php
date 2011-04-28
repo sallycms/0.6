@@ -30,7 +30,7 @@ class sly_Controller_User extends sly_Controller_Sally {
 		if (sly_post('save', 'boolean', false)) {
 			$password = sly_post('userpsw', 'string');
 			$login    = sly_post('userlogin', 'string');
-			$service  = sly_Service_Factory::getService('User');
+			$service  = sly_Service_Factory::getUserService();
 			$error    = false;
 
 			if (empty($login)) {
@@ -94,7 +94,7 @@ class sly_Controller_User extends sly_Controller_Sally {
 		}
 
 		$save    = sly_post('save', 'boolean', false);
-		$service = sly_Service_Factory::getService('User');
+		$service = sly_Service_Factory::getUserService();
 		$currentUser = sly_Util_User::getCurrentUser();
 
 		if ($save) {
@@ -148,7 +148,7 @@ class sly_Controller_User extends sly_Controller_Sally {
 			return false;
 		}
 
-		$service = sly_Service_Factory::getService('User');
+		$service = sly_Service_Factory::getUserService();
 		$current = sly_Util_User::getCurrentUser();
 
 		if ($current->getId() == $user->getId()) {
@@ -169,14 +169,14 @@ class sly_Controller_User extends sly_Controller_Sally {
 	}
 
 	protected function listUsers() {
-		$service = sly_Service_Factory::getService('User');
+		$service = sly_Service_Factory::getUserService();
 		$users   = $service->find(null, null, 'name', null, null);
 		$this->render('views/user/list.phtml', array('users' => $users));
 	}
 
 	protected function getUser() {
 		$userID  = sly_request('id', 'int', 0);
-		$service = sly_Service_Factory::getService('User');
+		$service = sly_Service_Factory::getUserService();
 		$user    = $service->findById($userID);
 
 		return $user;
@@ -203,7 +203,7 @@ class sly_Controller_User extends sly_Controller_Sally {
 	}
 
 	protected function getPossibleStartpages() {
-		$service = sly_Service_Factory::getService('AddOn');
+		$service = sly_Service_Factory::getAddOnService();
 		$addons  = $service->getAvailableAddons();
 
 		$startpages = array();
@@ -223,7 +223,7 @@ class sly_Controller_User extends sly_Controller_Sally {
 	}
 
 	protected function getModules() {
-		$service = sly_Service_Factory::getService('Module');
+		$service = sly_Service_Factory::getModuleService();
 		return $service->getModules();
 	}
 

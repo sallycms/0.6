@@ -34,8 +34,8 @@
 
 		<?php
 
-		$addons  = sly_Service_Factory::getService('AddOn');
-		$plugins = sly_Service_Factory::getService('Plugin');
+		$addons  = sly_Service_Factory::getAddOnService();
+		$plugins = sly_Service_Factory::getPluginService();
 
 		foreach ($addons->getRegisteredAddons() as $addon) {
 			$params['type']        = 'addon';

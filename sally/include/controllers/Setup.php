@@ -254,7 +254,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 				}
 
 				if (empty($error)) {
-					$service    = sly_Service_Factory::getService('User');
+					$service    = sly_Service_Factory::getUserService();
 					$user       = $service->find(array('login' => $adminUser));
 					$user       = empty($user) ? new sly_Model_User() : reset($user);
 

@@ -22,8 +22,8 @@ class sly_Controller_Addon extends sly_Controller_Sally {
 		$layout->pageHeader(t('addons'));
 		print '<div class="sly-content">';
 
-		$this->addons  = sly_Service_Factory::getService('AddOn');
-		$this->plugins = sly_Service_Factory::getService('Plugin');
+		$this->addons  = sly_Service_Factory::getAddOnService();
+		$this->plugins = sly_Service_Factory::getPluginService();
 
 		$addon  = sly_request('addon', 'string', '');
 		$plugin = sly_request('plugin', 'string', '');

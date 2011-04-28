@@ -17,7 +17,7 @@ class sly_Util_Language {
 		$languages = $cache->get('sly.language', 'all', null);
 
 		if ($languages === null) {
-			$list      = sly_Service_Factory::getService('Language')->find(null, null, 'id');
+			$list      = sly_Service_Factory::getLanguageService()->find(null, null, 'id');
 			$languages = array();
 
 			foreach ($list as $language) {

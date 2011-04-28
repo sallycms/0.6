@@ -96,8 +96,8 @@ else {
 // synchronize develop
 
 if (!$config->get('SETUP')) {
-	sly_Service_Factory::getService('Template')->refresh();
-	sly_Service_Factory::getService('Module')->refresh();
+	sly_Service_Factory::getTemplateService()->refresh();
+	sly_Service_Factory::getModuleService()->refresh();
 }
 
 $layout = sly_Core::getLayout('Sally');

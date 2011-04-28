@@ -31,7 +31,7 @@ class rex_var_value extends rex_var {
 	}
 
 	public function getACDatabaseValues($REX_ACTION, $slice_id) {
-		$values = sly_Service_Factory::getService('SliceValue')->find(array('slice_id' => $slice_id, 'type' => 'REX_VALUE'));
+		$values = sly_Service_Factory::getSliceValueService()->find(array('slice_id' => $slice_id, 'type' => 'REX_VALUE'));
 
 		foreach ($values as $value) {
 			$REX_ACTION['REX_VALUE'][$value->getFinder()] = $value->getValue();
@@ -41,7 +41,7 @@ class rex_var_value extends rex_var {
 	}
 
 	public function setACValues($slice_id, $REX_ACTION, $escape = false, $prependTableName = true) {
-		$slice = sly_Service_Factory::getService('Slice')->findById($slice_id);
+		$slice = sly_Service_Factory::getSliceService()->findById($slice_id);
 
 		if (isset($REX_ACTION['REX_VALUE'])){
 			foreach ($REX_ACTION['REX_VALUE'] as $key => $value){
@@ -86,7 +86,7 @@ class rex_var_value extends rex_var {
 			list ($param_str, $args) = $match;
 			list ($id, $args) = $this->extractArg('id', $args, 0);
 
-			$replace = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($slice_id, 'REX_VALUE', $id);
+			$replace = sly_Service_Factory::getSliceValueService()->findBySliceTypeFinder($slice_id, 'REX_VALUE', $id);
 			$replace = $replace ? $replace->getValue() : '';
 
 			if ($booleanize) {

@@ -289,7 +289,7 @@ class OOArticleSlice {
 	private function replaceGlobals($content) {
 		// Slice-abhängige globale Variablen ersetzen
 
-		$slice   = sly_Service_Factory::getService('Slice')->findById($this->getSliceId());
+		$slice   = sly_Service_Factory::getSliceService()->findById($this->getSliceId());
 		$content = str_replace('REX_MODULE',   $slice->getModule(), $content);
 		$content = str_replace('REX_SLICE_ID', $this->getId(),      $content);
 		$content = str_replace('REX_CTYPE_ID', $this->getSlot(),    $content);
@@ -370,15 +370,14 @@ class OOArticleSlice {
 		return $content;
 	}
 
-	private static function getReplacementLink($articleID, $clang)
-	{
+	private static function getReplacementLink($articleID, $clang) {
 		$art = sly_Util_Article::findById($articleID, $clang);
 		if ($art === null) return '';
 		return rex_getUrl($articleID, $clang, '', '', '', true);
 	}
 
 	protected function getRexVarValue($type, $key) {
-		$value = sly_Service_Factory::getService('SliceValue')->findBySliceTypeFinder($this->getSliceId(), $type, $key);
+		$value = sly_Service_Factory::getSliceValueService()->findBySliceTypeFinder($this->getSliceId(), $type, $key);
 		if ($value) return $value->getValue();
 		return null;
 	}

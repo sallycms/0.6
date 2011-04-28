@@ -51,7 +51,7 @@ class sly_Controller_Profile extends sly_Controller_Sally {
 		// Passwort ändern?
 
 		$password = sly_post('password', 'string');
-		$service  = sly_Service_Factory::getService('User');
+		$service  = sly_Service_Factory::getUserService();
 
 		if (!empty($password)) {
 			$user->setPassword($password);
@@ -89,6 +89,6 @@ class sly_Controller_Profile extends sly_Controller_Sally {
 	}
 
 	protected function getUser() {
-		return sly_Service_Factory::getService('User')->getCurrentUser();
+		return sly_Util_User::getCurrentUser();
 	}
 }

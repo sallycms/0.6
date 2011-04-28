@@ -179,6 +179,6 @@ class sly_Model_User extends sly_Model_Base_Id {
 	// Misc
 
 	public function delete() {
-		return sly_Service_Factory::getService('User')->delete(array('id' => $this->id));
+		return sly_Service_Factory::getUserService()->delete(array('id' => $this->id));
 	}
 }
