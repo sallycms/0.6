@@ -65,107 +65,6 @@ class rex_sql {
 	}
 
 	/**
-	 * Hilfsmethode für genau eine Zeile
-	 *
-	 * Diese Methode dient dazu, genau eine Zeile zu holen. Sie gibt im
-	 * Erfolgsfall kein true, sondern die geholte Zeile zurück, wodurch ein
-	 * Aufruf von row() entfällt. Sollte das Ergebnis nur eine Spalte haben, so
-	 * wird direkt dieser Wert zurückgeliefert (und kein Array mit einem
-	 * Element).
-	 *
-	 * @param  string $what   Spalten, die geholt werden sollen
-	 * @param  string $from   Tabelle, aus der gelesen werden soll
-	 * @param  string $where  WHERE-Kriterium
-	 * @param  int    $mode   der Modus, in dem die Zeilen dann zurückgegeben werden sollen
-	 * @return mixed          false im Falle eines Fehlers, sonst mixed oder ein Array (je nach Spaltenanzahl)
-	 */
-	public static function fetch($what, $from, $where = '1', $mode = MYSQL_ASSOC) {
-		// Verbindung herstellen
-		self::getInstance();
-
-		$query = sprintf(
-			'SELECT %s FROM %s%s WHERE %s LIMIT 1',
-			$what, self::getPrefix(), $from, $where
-		);
-
-		$result = mysql_query($query);
-
-		if ($result === false || mysql_num_rows($result) == 0) {
-			return false;
-		}
-
-		$row = array();
-
-		switch ($mode) {
-			case MYSQL_BOTH : $row = mysql_fetch_array($result); break;
-			case MYSQL_NUM  : $row = mysql_fetch_row($result); break;
-			case MYSQL_ASSOC:
-			default         : $row = mysql_fetch_assoc($result);
-		}
-
-		mysql_free_result($result);
-
-		if (count($row) == 1) {
-			$ret = array_values($row);
-			return $ret[0];
-		}
-
-		return $row;
-	}
-
-	/**
-	 * Liefert ein Array zurück
-	 *
-	 * Diese Methode läuft über ein Resultset und gibt ein
-	 * normales Array mit dem Wert zurück. Es darf dazu nur
-	 * ein einzelnes Feld selektiert werden. Werden zwei
-	 * Felder selektiert, so ist das erste der Schlüssel und
-	 * der zweite der Wert des Ergebnisarrays.
-	 *
-	 * @param  string $query  die auszuführende Abfrage
-	 * @return array          ein Array mit den Werten
-	 */
-	public static function getArrayEx($query, $tablePrefix = '') {
-		// Verbindung herstellen
-		self::getInstance();
-
-		if (!empty($tablePrefix)) {
-			$query = str_replace($tablePrefix, self::getPrefix(), $query);
-		}
-
-		$result = mysql_query($query);
-
-		if ($result === false || mysql_num_rows($result) == 0 || mysql_num_fields($result) == 0) {
-			if ($result) mysql_free_result($result);
-			return array();
-		}
-
-		$res  = array();
-		$cols = mysql_num_fields($result);
-
-		while ($row = mysql_fetch_assoc($result)) {
-			$key = reset($row);
-
-			if ($cols == 1) {
-				$res[] = $key;
-			}
-			elseif ($cols == 2) {
-				$res[$key] = next($row);
-			}
-			else {
-				$columns = array_slice(array_keys($row), 1);
-
-				foreach ($columns as $col) {
-					$res[$key][$col] = $row[$col];
-				}
-			}
-		}
-
-		mysql_free_result($result);
-		return $res;
-	}
-
-	/**
 	 * Setzt eine Abfrage (SQL) ab
 	 *
 	 * @param $query Abfrage
@@ -544,29 +443,6 @@ class rex_sql {
 	}
 
 	/**
-	 * Lädt das komplette Resultset in ein Array und gibt dieses zurück
-	 *
-	 * @param  string $sql         Abfrage
-	 * @param  string $fetch_type  Default: MYSQL_ASSOC; weitere: MYSQL_NUM, MYSQL_BOTH
-	 * @return array
-	 */
-	public function getArray($sql = '', $fetch_type = MYSQL_ASSOC) {
-		if ($sql != '') {
-			$this->setQuery($sql);
-		}
-
-		$data  = array();
-		$level = error_reporting(0);
-
-		while ($row = mysql_fetch_array($this->result, $fetch_type)) {
-			$data[] = $row;
-		}
-
-		error_reporting($level);
-		return $data;
-	}
-
-	/**
 	 * Gibt die zuletzt aufgetretene Fehlernummer zurück
 	 */
 	function getErrno() {
@@ -585,29 +461,6 @@ class rex_sql {
 	 */
 	public function hasError() {
 		return !empty($this->error);
-	}
-
-	/**
-	 * Setzt eine Spalte auf den nächst möglich auto_increment Wert
-	 * @param $field Name der Spalte
-	 */
-	public function setNewId($field) {
-		$sql = new self();
-		$id  = false;
-
-		if ($sql->setQuery('SELECT `'.$field.'` FROM `'.$this->table.'` ORDER BY `'.$field.'` DESC LIMIT 1')) {
-			if ($sql->getRows() == 0) {
-				$id = 1;
-			}
-			else {
-				$id = $sql->getValue($field) + 1;
-			}
-
-			$this->setValue($field, $id);
-		}
-
-		$sql = null;
-		return $id;
 	}
 
 	/**
@@ -636,30 +489,6 @@ class rex_sql {
 		}
 
 		return $value;
-	}
-
-	public static function showTables($dbID = 1) {
-		$sql = new self(1);
-		$sql->setQuery('SHOW TABLES');
-
-		$config = sly_Core::config();
-		$tables = array();
-		$dbName = $config->get('DATABASE/NAME');
-
-		while ($sql->hasNext()) {
-			$tables[] = $sql->getValue('Tables_in_'.$dbName);
-			$sql->next();
-		}
-
-		$sql = null;
-		return $tables;
-	}
-
-	/**
-	 * Gibt die Serverversion zurück
-	 */
-	public static function getServerVersion() {
-		return $this->getArray('SELECT VERSION() AS v');
 	}
 
 	/**
