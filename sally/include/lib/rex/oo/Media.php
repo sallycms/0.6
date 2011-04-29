@@ -362,7 +362,7 @@ class OOMedia {
 	// new functions by vscope
 
 	public function getExtension() {
-		return self::_getExtension($this->_name);
+		return self::_getExtension($this->name);
 	}
 
 	public static function _getExtension($filename) {
