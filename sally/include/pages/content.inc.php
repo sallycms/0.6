@@ -194,70 +194,60 @@ if (!is_null($article)) {
 					else {
 						// SAVE / UPDATE SLICE
 
-						if ($function == 'add' || $function == 'edit') {
-							$newsql = new rex_sql();
-							$newsql->setTable('article_slice', true);
+						$sql = sly_DB_Persistence::getInstance();
+
+						if ($function === 'add' || $function === 'edit') {
+							$values = array(
+								'updatedate' => time(),
+								'updateuser' => $REX['USER']->getLogin()
+							);
 
 							if ($function == 'edit') {
 								$ooslice   = OOArticleSlice::getArticleSliceById($slice_id);
 								$realslice = sly_Service_Factory::getSliceService()->findById($ooslice->getSliceId());
 								$realslice->flushValues();
-								unset($ooslice);
-								$newsql->setWhere('id = '.$slice_id);
-								$newsql->setValue('slice_id', $realslice->getId());
 							}
-							elseif ($function == 'add') {
-								$prior = rex_post('prior', 'int');
+							else {
 								$realslice = sly_Service_Factory::getSliceService()->create(array('module' => $module));
 
-								$newsql->setValue('slice_id',   $realslice->getId());
-								$newsql->setValue('prior',      $prior);
-								$newsql->setValue('article_id', $article_id);
-								$newsql->setValue('module',     $module);
-								$newsql->setValue('clang',      $clang);
-								$newsql->setValue('slot',       $slot);
-								$newsql->setValue('revision',   $slice_revision);
+								$values['prior']      = sly_post('prior', 'int');
+								$values['article_id'] = $article_id;
+								$values['module']     = $module;
+								$values['clang']      = $clang;
+								$values['slot']       = $slot;
+								$values['revision']   = $slice_revision;
+								$values['createdate'] = time();
+								$values['createuser'] = $REX['USER']->getLogin();
 							}
 
-							// ****************** SPEICHERN FALLS NÖTIG
+							$values['slice_id'] = $realslice->getId();
+
+							// speichern falls nötig
 							foreach (sly_Core::getVarTypes() as $obj) {
 								$obj->setACValues($realslice->getId(), $REX_ACTION, true, false);
 							}
 
-							if ($function == 'edit') {
-								$newsql->addGlobalUpdateFields();
+							// fire query
 
-								if ($newsql->update()) {
-									rex_deleteCacheSliceContent($realslice->getId());
-									$info = $action_message.t('block_updated');
-								}
-								else {
-									$warning = $action_message.$newsql->getError();
-								}
+							if ($function === 'edit') {
+								$sql->update('article_slice', $values, array('id' => $slice_id));
+								rex_deleteCacheSliceContent($realslice->getId());
+								$info = $action_message.t('block_updated');
 							}
-							elseif ($function == 'add') {
-								$newsql->addGlobalUpdateFields();
-								$newsql->addGlobalCreateFields();
+							else {
+								$sql->insert('article_slice', $values);
 
-								if ($newsql->insert()) {
-									$last_id = $newsql->getLastId();
-									$query   =
-										'UPDATE ~article_slice SET prior = prior + 1 '.
-										'WHERE article_id = '.$article_id.' AND clang = '.$clang.' AND slot = "'.$slot.'" '.
-										'AND prior >= '.$prior.' AND id <> '.$last_id;
+								$id   = $sql->lastId();
+								$pre  = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+								$info = $action_message.t('block_added');
 
-									if ($newsql->setQuery($query, '~')) {
-										$info = $action_message.t('block_added');
-									}
-
-									$function = '';
-								}
-								else {
-									$global_warning = $action_message.$newsql->getError();
-								}
+								$sql->query('UPDATE '.$pre.'article_slice SET prior = prior + 1 '.
+									'WHERE article_id = '.$article_id.' AND clang = '.$clang.' AND slot = "'.$slot.'" '.
+									'AND prior >= '.$prior.' AND id <> '.$id
+								);
 							}
 
-							$newsql = null;
+							$function = '';
 						}
 						else {
 							if (rex_deleteArticleSlice($slice_id)) {
@@ -269,27 +259,18 @@ if (!is_null($article)) {
 						}
 						// ----- / SAVE SLICE
 
-						// Artikel neu generieren
-
-						$update = new rex_sql();
-						$update->setTable('article', true);
-						$update->setWhere('id = '.$article_id.' AND clang = '.$clang);
-						$update->addGlobalUpdateFields();
-						$update->update();
-						$update = null;
+						// update article
+						$value = array('updatedate' => time(), 'updateuser' => $REX['USER']->getLogin());
+						$sql->update('article', $value, array('id' => $article_id, 'clang' => $clang));
 
 						// POST SAVE ACTION [ADD/EDIT/DELETE]
 
 						$info .= rex_execPostSaveAction($module, $function, $REX_ACTION);
-
-						sly_Core::dispatcher()->notify('SLY_CONTENT_UPDATED', '', array(
-							'article_id' => $article_id,
-							'clang'      => $clang
-						));
+						sly_Core::dispatcher()->notify('SLY_CONTENT_UPDATED', '', compact('article_id', 'clang'));
 
 						// Update Button wurde gedrückt?
 
-						if (rex_post('btn_save', 'string')) {
+						if (sly_post('btn_save', 'string')) {
 							$function = '';
 						}
 					}
@@ -405,29 +386,21 @@ if (!is_null($article)) {
 			// START: SAVE METADATA META PAGE
 
 			if (sly_post('savemeta', 'string')) {
-				$meta_article_name = sly_post('meta_article_name', 'string');
+				$name   = sly_post('meta_article_name', 'string');
+				$sql    = sly_DB_Persistence::getInstance();
+				$values = array('name' => $name, 'updatedate' => time(), 'updateuser' => $REX['USER']->getLogin());
 
-				$meta_sql = new rex_sql();
-				$meta_sql->setTable('article', true);
-				$meta_sql->setWhere('id = '.$article_id.' AND clang = '.$clang);
-				$meta_sql->setValue('name', $meta_article_name);
-				$meta_sql->addGlobalUpdateFields();
+				$sql->update('article', $values, array('id' => $article_id, 'clang' => $clang));
 
-				if ($meta_sql->update()) {
-					$info     = t('metadata_updated');
-					$meta_sql = null;
+				// update cache
+				sly_Core::cache()->delete('sly.article', $article_id.'_'.$clang);
 
-					sly_Core::cache()->delete('sly.article', $article_id.'_'.$clang);
-
-					sly_Core::dispatcher()->notify('ART_META_UPDATED', $info, array(
-						'id'    => $article_id,
-						'clang' => $clang
-					));
-				}
-				else {
-					$meta_sql = null;
-					$warning  = $meta_sql->getError();
-				}
+				// notify system
+				$info = t('metadata_updated');
+				sly_Core::dispatcher()->notify('ART_META_UPDATED', $info, array(
+					'id'    => $article_id,
+					'clang' => $clang
+				));
 			}
 
 			// END: SAVE METADATA
