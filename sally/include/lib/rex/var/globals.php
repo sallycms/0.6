@@ -49,7 +49,7 @@ class rex_var_globals extends rex_var {
 	}
 
 	public function getACDatabaseValues($REX_ACTION, $slice_id) {
-		$artslice = OOArticleSlice::_getSliceWhere('slice_id = $slice_id');
+		$artslice = OOArticleSlice::_getSliceWhere('slice_id = '.$slice_id);
 		$slice    = sly_Service_Factory::getSliceService()->findById($slice_id);
 
 		// Variablen hier einfügen, damit sie in einer Aktion abgefragt werden können.
