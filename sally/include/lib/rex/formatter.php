@@ -16,11 +16,11 @@ abstract class rex_formatter {
 	/**
 	 * Formatiert den String <code>$value</code>
 	 *
-	 * @param $value zu formatierender String
-	 * @param $format_type Formatierungstype
-	 * @param $format Format
+	 * @param string $value        zu formatierender String
+	 * @param string $format_type  Formatierungstype
+	 * @param string $format       Format
 	 *
-	 * Unterst�tzte Formatierugen:
+	 * Unterstützte Formatierugen:
 	 *
 	 * - <Formatierungstype>
 	 *    + <Format>
@@ -40,8 +40,6 @@ abstract class rex_formatter {
 	 *    + array( 'attr' => <Linkattribute>, 'params' => <Linkparameter>,
 	 * - url
 	 *    + array( 'attr' => <Linkattribute>, 'params' => <Linkparameter>,
-	 * - truncate
-	 *    + array( 'length' => <String-Laenge>, 'etc' => <ETC Zeichen>, 'break_words' => <true/false>,
 	 * - nl2br
 	 *    + siehe www.php.net/nl2br
 	 * - rexmedia
@@ -73,10 +71,6 @@ abstract class rex_formatter {
 		// URL-Formatierung
 		elseif ($format_type == 'url') {
 			$value = rex_formatter::_formatUrl($value, $format);
-		}
-		// String auf eine eine Länge abschneiden
-		elseif ($format_type == 'truncate') {
-			$value = rex_formatter::_formatTruncate($value, $format);
 		}
 		// Newlines zu <br />
 		elseif ($format_type == 'nl2br') {
@@ -174,16 +168,6 @@ abstract class rex_formatter {
 		}
 
 		return '<a href="'.$value.$format['params'].'"'.$format['attr'].'>'.$value.'</a>';
-	}
-
-	private static function _formatTruncate($value, $format) {
-		if (!is_array($format)) $format = array();
-
-		if (empty($format['length']))      $format['length']      = 80;
-		if (empty($format['etc']))         $format['etc']         = '...';
-		if (empty($format['break_words'])) $format['break_words'] = false;
-
-		return truncate($value, $format['length'], $format['etc'], $format['break_words']);
 	}
 
 	private static function _formatNl2br($value, $format) {

@@ -63,33 +63,6 @@ function sly_set_locale(sly_I18N $i18n) {
 }
 
 /**
- * Returns the truncated $string
- *
- * @param  string  $string      Searchstring
- * @param  int     $length      max length
- * @param  string  $etc         string to append it $string is longer than $length
- * @param  boolean $breakWords  if false the truncation may not be exact
- * @return string
- */
-function truncate($string, $length = 80, $etc = '...', $breakWords = false) {
-	if ($length <= 0) {
-		return '';
-	}
-
-	if (strlen($string) > $length) {
-		$length -= strlen($etc);
-
-		if (!$breakWords) {
-			$string = preg_replace('/\s+?(\S+)?$/', '', substr($string, 0, $length + 1));
-		}
-
-		return substr($string, 0, $length).$etc;
-	}
-
-	return $string;
-}
-
-/**
  * Berechnet aus einem relativen Pfad einen absoluten
  *
  * @param  string  $rel_path        relativer Pfad
