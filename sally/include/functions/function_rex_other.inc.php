@@ -62,41 +62,6 @@ function sly_set_locale(sly_I18N $i18n) {
 	setlocale(LC_ALL, $locales);
 }
 
-/**
- * Berechnet aus einem relativen Pfad einen absoluten
- *
- * @param  string  $rel_path        relativer Pfad
- * @param  boolean $rel_to_current  wenn true wird nicht vom Sally-Root, sondern von getcwd() ausgegangen
- * @return string
- */
-function rex_absPath($rel_path, $rel_to_current = false) {
-	$stack = array();
-
-	// Pfad relativ zum aktuellen Verzeichnis?
-	// z.b. ../../files
-
-	if ($rel_to_current) {
-		$path  = realpath('.');
-		$stack = explode(DIRECTORY_SEPARATOR, $path);
-	}
-
-	foreach (explode('/', $rel_path) as $dir) {
-		// Aktuelles Verzeichnis, oder Ordner ohne Namen
-		if ($dir == '.' || $dir == '') continue;
-
-		// Zum Parent
-		if ($dir == '..') {
-			array_pop($stack);
-		}
-		// Normaler Ordner
-		else {
-			array_push($stack, $dir);
-		}
-	}
-
-	return implode('/', $stack);
-}
-
 function rex_message($message, $cssClass, $sorroundTag) {
 	$return = '<div class="rex-message"><'.$sorroundTag.' class="'.$cssClass.'">';
 
@@ -140,16 +105,6 @@ function rex_message_block($message, $cssClass, $sorroundTag) {
 	$return[] = '</'.$sorroundTag.'></div>';
 
 	return implode('', $return);
-}
-
-/**
- * @deprecated use sly_ini_get()
- *
- * @param  string $key
- * @return mixed
- */
-function rex_ini_get($key) {
-	return sly_ini_get($key);
 }
 
 /**
@@ -244,26 +199,6 @@ function rex_put_file_contents($path, $content) {
 	@chmod($path, $perm);
 
 	return $writtenBytes;
-}
-
-function rex_is_multilingual() {
-	return sly_Util_Language::isMultilingual();
-}
-
-function rex_is_monolingual() {
-	return !rex_is_multilingual();
-}
-
-function rex_get_clang($clang = false, $default = -1) {
-	if ($clang === false) {
-		$clang = $default;
-	}
-
-	if (!sly_Util_Language::exists($clang)) {
-		$clang = sly_Core::getCurrentClang();
-	}
-
-	return (int) $clang;
 }
 
 /**
