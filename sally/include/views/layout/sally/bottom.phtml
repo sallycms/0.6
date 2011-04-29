@@ -25,7 +25,7 @@ $usage .= ' in '.sly_Loader::getClassCount().' Klassen';
 		</ul>
 		<p>
 		<span title="<?= sly_html($usage) ?>"><?php print round(microtime(true) - SLY_START_TIME, 3) ?> Sek</span> |
-		<?php print rex_formatter::format(time(), 'strftime', 'date') ?>
+		<?php print sly_Util_String::formatStrftime(t('dateformat')) ?>
 		</p>
 	</div>
 </div>

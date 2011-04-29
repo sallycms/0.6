@@ -1,24 +1,26 @@
 <?php
-$base_url = 'index.php?page=structure&category_id=' . $category->getId() . '&clang=' . $this->clangId;
-$edit_url = 'index.php?page=structure&amp;category_id=' . $category->getParentId() . '&amp;clang=' . $this->clangId . '&amp;edit_id=' . $category->getId();
-$status = $statusTypes[$category->getStatus()][0];
+$base_url     = 'index.php?page=structure&category_id='.$category->getId().'&clang='.$this->clangId;
+$edit_url     = 'index.php?page=structure&amp;category_id='.$category->getParentId().'&amp;clang='.$this->clangId.'&amp;edit_id='.$category->getId();
+$status       = $statusTypes[$category->getStatus()][0];
 $status_class = $statusTypes[$category->getStatus()][1];
+
 if ($this->canPublishCategory($category->getId())) {
-	$status = '<a href="' . $edit_url . '&amp;func=editStatusCategory" class="' . $status_class . '">' . $status . '</a>';
+	$status = '<a href="'.$edit_url.'&amp;func=editStatusCategory" class="'.$status_class.'">'.$status.'</a>';
 }
 ?>
 <tr>
 	<td class="sly-icon"><?= sly_Util_HTML::getSpriteLink($base_url, $category->getCatName(), 'category') ?></td>
-	<?= $advancedMode ? '<td class="rex-small">' . sly_html($category->getId()) . '</td>' : '' ?>
+	<?= $advancedMode ? '<td class="rex-small">'.sly_html($category->getId()).'</td>' : '' ?>
 	<td><a href="<?= sly_html($base_url) ?>"><?= sly_html($category->getCatName()) ?></a></td>
 	<td><?= sly_html($category->getCatPrior()) ?></td>
 	<td>
 		<a href="<?= $edit_url ?>&amp;func=editCategory"><?= t('change') ?></a>&nbsp;
 		<?php
 		if ($this->canEditCategory($category->getId())) {
-			echo '<a href="' . $edit_url . '&amp;func=deleteCategory" onclick="return confirm(\'' . t('delete') . ' ?\')">' . t('delete') . '</a>';
-		} else {
-			echo '<span class="rex-strike">' . t('delete') . '</span>';
+			echo '<a href="'.$edit_url.'&amp;func=deleteCategory" class="sly-delete">'.t('delete').'</a>';
+		}
+		else {
+			echo '<span class="rex-strike">'.t('delete').'</span>';
 		}
 		?>
 		&nbsp;<?= $status ?>

@@ -7,7 +7,7 @@
 	</fieldset>
 
 	<?php
-	$add_url = 'index.php?page=structure&category_id=' . $this->categoryId . '&clang=' . $this->clangId . '&func=addCategory';
+	$add_url      = 'index.php?page=structure&category_id='.$this->categoryId.'&clang='.$this->clangId.'&func=addCategory';
 	$add_category = sly_Util_HTML::getSpriteLink($add_url, t('add_category'), 'category-add');
 
 	$table = new sly_Table();
@@ -28,29 +28,31 @@
 			echo '<td class="rex-small">-</td>';
 		}
 
-		echo '<td><a href="index.php?page=structure&amp;category_id=' . $currentCategory->getParentId() . '&amp;clang=' . $this->clangId . '">..</a></td>';
+		echo '<td><a href="index.php?page=structure&amp;category_id='.$currentCategory->getParentId().'&amp;clang='.$this->clangId.'">..</a></td>';
 		echo '<td>&nbsp;</td>';
 		echo '<td>&nbsp;</td>';
 		echo '</tr>';
 	}
 
 	if ($this->renderAddCategory) {
-		$this->render(sly_Controller_Structure::$viewPath . 'category_table_row_add.phtml', array('advancedMode' => $advancedMode));
+		$this->render(sly_Controller_Structure::$viewPath.'category_table_row_add.phtml', array('advancedMode' => $advancedMode));
 	}
 
 	foreach ($categories as $category) {
-		if($this->renderEditCategory && $this->renderEditCategory == $category->getId()) {
+		if ($this->renderEditCategory && $this->renderEditCategory == $category->getId()) {
 			$this->render(
-				sly_Controller_Structure::$viewPath . 'category_table_row_edit.phtml',
+				sly_Controller_Structure::$viewPath.'category_table_row_edit.phtml',
 				array('category' => $category, 'advancedMode' => $advancedMode)
 			);
-		}else {
+		}
+		else {
 			$this->render(
-				sly_Controller_Structure::$viewPath . 'category_table_row.phtml',
+				sly_Controller_Structure::$viewPath.'category_table_row.phtml',
 				array('category' => $category, 'advancedMode' => $advancedMode, 'statusTypes' => $statusTypes)
 			);
 		}
 	}
+
 	$table->renderFooter();
 	?>
 </form>
