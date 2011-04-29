@@ -99,32 +99,6 @@ abstract class rex_var {
 	}
 
 	/**
-	 * GetValue Wrapper, da hier immer auf die gleiche Tabelle gearbeitet wird und
-	 * mit MySQL 3.x mit Tabellenprefix angegeben werden muss, da der SQL gleichnamige
-	 * Spalten unterschiedlicher Tabellen enthält.
-	 */
-	public function getValue($sql, $value) {
-		if (!$sql instanceof rex_sql) debug_print_backtrace();
-		//return $sql->getValue($REX['DATABASE']['TABLE_PREFIX'] . 'article_slice.' . $value);
-	}
-
-	/**
-	 * setValue Wrapper, da hier immer auf die gleiche Tabelle gearbeitet wird und
-	 * mit MySQL 3.x mit Tabellenprefix angegeben werden muss, da der SQL gleichnamige
-	 * Spalten unterschiedlicher Tabellen enthält.
-	 */
-	public function setValue(rex_sql $sql, $fieldname, $value, $escape = false, $prependTableName = true) {
-		$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
-		$table  = $prependTableName ? $prefix.'article_slice.' : '';
-
-		if ($escape) {
-			$value = $sql->escape($value);
-		}
-
-		return $sql->setValue($table.$fieldname, $value);
-	}
-
-	/**
 	 * Callback um nicht explizit gehandelte OutputParameter zu behandeln
 	 */
 	protected function handleDefaultParam($varname, $args, $name, $value) {
