@@ -51,7 +51,7 @@ class sly_Core {
 		$instance = self::getInstance();
 
 		if (!isset($instance->curClang)) {
-			$instance->curClang = rex_request('clang', 'rex-clang-id', self::config()->get('START_CLANG_ID'));
+			$instance->curClang = sly_request('clang', 'rex-clang-id', self::config()->get('START_CLANG_ID'));
 		}
 
 		return $instance->curClang;
@@ -66,7 +66,7 @@ class sly_Core {
 		$instance = self::getInstance();
 
 		if (!isset($instance->curArticleId)) {
-			$instance->curArticleId = rex_request('article_id', 'int', $conf->get('START_ARTICLE_ID'));
+			$instance->curArticleId = sly_request('article_id', 'int', $conf->get('START_ARTICLE_ID'));
 
 			if (!sly_Util_Article::exists($instance->curArticleId)) {
 				$instance->curArticleId = $conf->get('NOTFOUND_ARTICLE_ID');
