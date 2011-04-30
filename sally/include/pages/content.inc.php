@@ -266,7 +266,8 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 
 				// POST SAVE ACTION [ADD/EDIT/DELETE]
 
-				$info .= rex_execPostSaveAction($module, $function, $REX_ACTION);
+				list($msg, $actions) = rex_execPostSaveAction($module, $function, $REX_ACTION);
+				$info .= $msg;
 				$dispatcher->notify('SLY_CONTENT_UPDATED', '', compact('article_id', 'clang'));
 
 				// Update Button wurde gedrückt?

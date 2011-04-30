@@ -146,7 +146,8 @@ function rex_module_exists($module) {
  * @return array               ein Array welches den Status sowie eine Fehlermeldung beinhaltet
  */
 function rex_execPreSaveAction($module_id, $function, $REX_ACTION) {
-	return _rex_execSaveAction('pre', $module_id, $function, $REX_ACTION);
+	// actions are disabled because we don't have sly_module_actions in the database
+	return array('', $REX_ACTION); // _rex_execSaveAction('pre', $module_id, $function, $REX_ACTION);
 }
 
 /**
@@ -158,7 +159,8 @@ function rex_execPreSaveAction($module_id, $function, $REX_ACTION) {
  * @return string              eine Meldung
  */
 function rex_execPostSaveAction($module_id, $function, $REX_ACTION) {
-	return _rex_execSaveAction('post', $module_id, $function, $REX_ACTION);
+	// actions are disabled because we don't have sly_module_actions in the database
+	return array('', $REX_ACTION); // _rex_execSaveAction('post', $module_id, $function, $REX_ACTION);
 }
 
 /**
@@ -203,7 +205,7 @@ function _rex_execSaveAction($type, $module_id, $function, $REX_ACTION) {
 		}
 	}
 
-	return $message;
+	return array($message, $REX_ACTION);
 }
 
 /**

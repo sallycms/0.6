@@ -14,15 +14,14 @@
  * @package redaxo4
  */
 
-$user = sly_Util_User::getCurrentUser();
+$_user = sly_Util_User::getCurrentUser();
 
 $KATPATH = '|'; // Standard für path Eintragungen in DB
-$KATPERM = $user->hasPerm('csw[0]') || $user->hasPerm('admin[]');
+$KATPERM = $_user->hasPerm('csw[0]') || $_user->hasPerm('admin[]');
 
 if (!isset($KATout)) {
 	$KATout = ''; // Variable definiert und vorbelegt wenn nicht existent
 }
-
 
 if (!sly_Util_Category::exists($category_id)) {
 	// Kategorie existiert nicht
@@ -40,24 +39,23 @@ else {
 		$catName = $parent->getName();
 		$catName = str_replace(' ', '&nbsp;', htmlspecialchars($catName));
 
-		if ($KATPERM || $user->hasPerm('csw['.$parent->getId().']') || $user->hasPerm('csr['.$parent->getId().']'))
-		{
+		if ($KATPERM || $_user->hasPerm('csw['.$parent->getId().']') || $_user->hasPerm('csr['.$parent->getId().']')) {
 			$KATout  .= '<li> : <a href="index.php?page=structure&amp;category_id='.$parent->getId().'&amp;clang='.$clang.'">'.$catName.'</a></li>';
 			$KATPATH .= $parent->getId().'|';
 
-			if ($user->hasPerm('csw['.$parent->getId().']')) {
+			if ($_user->hasPerm('csw['.$parent->getId().']')) {
 				$KATPERM = true;
 			}
 		}
 	}
 
-	if ($KATPERM || $user->hasPerm('csw['.$category_id.']') || $user->hasPerm('csr['.$category_id.']')) {
+	if ($KATPERM || $_user->hasPerm('csw['.$category_id.']') || $_user->hasPerm('csr['.$category_id.']')) {
 		$catName = str_replace(' ', '&nbsp;', sly_html($KAT->getCatname()));
 
 		$KATout  .= '<li> : <a href="index.php?page=structure&amp;category_id='.$category_id.'&amp;clang='.$clang.'">'.$catName.'</a></li>';
 		$KATPATH .= $category_id.'|';
 
-		if ($user->hasPerm('csw['.$category_id.']')) {
+		if ($_user->hasPerm('csw['.$category_id.']')) {
 			$KATPERM = true;
 		}
 	}
@@ -77,4 +75,4 @@ $KATout = '
 <!-- *** OUTPUT OF CATEGORY-TOOLBAR - END *** -->
 ';
 
-unset($user);
+unset($_user);

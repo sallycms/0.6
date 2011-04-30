@@ -18,9 +18,9 @@
 // clang[xx], clang[0]
 // $REX['USER']->isValueOf("rights","csw[0]")
 
-$langService = sly_Service_Factory::getLanguageService();
-$_languages  = $langService->find();
-$user        = sly_Util_User::getCurrentUser();
+$_langService = sly_Service_Factory::getLanguageService();
+$_languages   = $_langService->find();
+$_user        = sly_Util_User::getCurrentUser();
 
 
 if (count($_languages) > 1) {
@@ -45,7 +45,7 @@ if (count($_languages) > 1) {
 
 		$clangName = rex_translate($language->getName()); // enthält htmlspecialchars()
 
-		if (!$user->isAdmin() && !$user->hasPerm('clang[all]') && !$user->hasPerm('clang['.$clangID.']')) {
+		if (!$_user->isAdmin() && !$_user->hasPerm('clang[all]') && !$_user->hasPerm('clang['.$clangID.']')) {
 			print '<span class="rex-strike">'.$clangName.'</span>';
 			$stop |= $clang == $clangID;
 		}
@@ -70,11 +70,11 @@ if (count($_languages) > 1) {
 <!-- *** OUTPUT OF CLANG-TOOLBAR - END *** -->
 ';
 	if ($stop) {
-		$lang = $langService->findById($stop);
+		$lang = $_langService->findById($stop);
 		throw new sly_Authorisation_Exception(sprintf(t('authorisation_exception_language_denied'), rex_translate($lang->getName())));
 	}
 }
 
-unset($langService);
+unset($_langService);
 unset($_languages);
-unset($user);
+unset($_user);
