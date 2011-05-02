@@ -28,6 +28,7 @@ class sly_DB_PDO_Connection {
 		$this->pdo    = new PDO($dsn, $login, $password);
 
 		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 	}
 
 	/**
