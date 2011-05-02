@@ -72,7 +72,7 @@ class sly_Util_YAML {
 			 * 
 			 */
 			if(!isset($config)) {
-				sleep(100);
+				usleep(100000);
 				include $cachefile;
 				if(!isset($config)) {
 					throw new sly_Exception('YAML Cache File could not be read properly.');
