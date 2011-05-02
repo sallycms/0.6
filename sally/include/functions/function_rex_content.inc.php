@@ -108,7 +108,7 @@ function rex_deleteArticleSlice($slice_id) {
 
 		// TODO delete less entries in cache
 		sly_Core::cache()->flush(OOArticleSlice::CACHE_NS);
-		return $sql->getRows() == 1;
+		return $sql->affectedRows() == 1;
 	}
 
 	return false;
