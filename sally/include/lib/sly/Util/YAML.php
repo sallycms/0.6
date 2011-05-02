@@ -63,6 +63,21 @@ class sly_Util_YAML {
 		// get content from cache, when up to date
 		if (self::isCacheValid($filename, $cachefile)) {
 			include $cachefile;
+						
+			/*
+			 * This is the "LOCK_EX is not so nice"-fix.
+			 * We know that the var $config should be in the $cachefile.
+			 * If the var not exixts the script sleeps a Moment and tries again.
+			 * After this check again and throw a Exception to bing down further script execution
+			 * 
+			 */
+			if(!isset($config)) {
+				sleep(100);
+				include $cachefile;
+				if(!isset($config)) {
+					throw new sly_Exception('YAML Cache File could not be read properly.');
+				}
+			}
 		}
 		// get content from yaml file
 		else {
