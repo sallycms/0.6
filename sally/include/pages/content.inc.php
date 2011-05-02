@@ -244,7 +244,7 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 
 						$sql->query('UPDATE '.$pre.'article_slice SET prior = prior + 1 '.
 							'WHERE article_id = '.$article_id.' AND clang = '.$clang.' AND slot = "'.$slot.'" '.
-							'AND prior >= '.$prior.' AND id <> '.$id
+							'AND prior >= '.$values['prior'].' AND id <> '.$id
 						);
 					}
 
