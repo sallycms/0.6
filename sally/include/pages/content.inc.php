@@ -113,7 +113,7 @@ if ($mode == 'edit' && sly_post('save_article', 'string')) {
 	$article = $articleService->findById($article_id, $clang);
 
 	// change type and update database
-	$service->setType($article, $type);
+	$articleService->setType($article, $type);
 
 	$global_info = t('article_updated');
 	$article     = $articleService->findById($article_id, $clang);
