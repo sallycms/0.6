@@ -174,6 +174,10 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 		return $data;
 	}
 
+	public function quote($str, $paramType = PDO::PARAM_STR) {
+		return $this->connection->getPDO()->quote($str, $paramType);
+	}
+
 	// =========================================================================
 	// TRANSACTIONS
 	// =========================================================================
