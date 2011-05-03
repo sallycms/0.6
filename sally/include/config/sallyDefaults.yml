@@ -3,7 +3,6 @@ SERVER: sallycms.de
 SERVERNAME: SallyCMS-Projekt
 ERROR_EMAIL: webadmin@sallycms.de
 INSTNAME: sly20100511212501
-MYSQL_VERSION: null
 START_ARTICLE_ID: 1
 NOTFOUND_ARTICLE_ID: 1
 START_CLANG_ID: 1
@@ -14,9 +13,9 @@ USE_MD5: never
 DATABASE:
   DRIVER: mysql
   HOST: localhost
-  LOGIN: develop
-  PASSWORD: develop
-  NAME: webvariants_sally_base
+  LOGIN: sally
+  PASSWORD: ''
+  NAME: sally_base
   PERSISTENT: false
   TABLE_PREFIX: sly_
 PERM: ["mediapool[]"]
