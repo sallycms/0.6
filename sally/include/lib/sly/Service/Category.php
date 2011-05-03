@@ -27,12 +27,12 @@ class sly_Service_Category extends sly_Service_Model_Base {
 
 	public function findById($id, $clang = null) {
 		if ($clang === null || $clang === false) $clang = sly_Core::getCurrentClang();
-		
+
 		$key     = $id.'_'.$clang;
 		$category = sly_Core::cache()->get('sly.category', $key, null);
 		if ($category === null) {
 			$category = $this->findOne(array('id' => (int) $id, 'clang' => $clang));
-			
+
 			if ($category !== null) {
 				sly_Core::cache()->set('sly.category', $key, $category);
 			}
@@ -335,8 +335,11 @@ class sly_Service_Category extends sly_Service_Model_Base {
 
 		$cache = sly_Core::cache();
 		$cache->delete('sly.category', $categoryID.'_'.$clangID);
+		$cache->delete('sly.article', $categoryID.'_'.$clangID);
 		$cache->delete('sly.category.list', $re_id.'_'.$clangID.'_0');
+		$cache->delete('sly.article.list', $categoryID.'_'.$clangID.'_0');
 		$cache->delete('sly.category.list', $re_id.'_'.$clangID.'_1');
+		$cache->delete('sly.article.list', $categoryID.'_'.$clangID.'_1');
 
 		// Event auslösen
 		$dispatcher = sly_Core::dispatcher();
@@ -363,11 +366,11 @@ class sly_Service_Category extends sly_Service_Model_Base {
 
 	/**
 	 * return all categories of a parent
-	 * 
+	 *
 	 * @param  int     $parentId
 	 * @param  boolean $ignore_offlines
 	 * @param  int     $clang
-	 * @return array 
+	 * @return array
 	 */
 	public function findByParentId($parentId, $ignore_offlines = false, $clang = null) {
 		$parentId = (int) $parentId;

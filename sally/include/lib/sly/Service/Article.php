@@ -223,6 +223,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 				foreach ($db as $row) {
 					$cache->delete('sly.article', $row['id'].'_'.$clangID);
+					$cache->delete('sly.category', $row['id'].'_'.$clangID);
 				}
 
 				$cache->delete('sly.article.list', $parent.'_'.$clangID.'_0');
@@ -259,14 +260,18 @@ class sly_Service_Article extends sly_Service_Model_Base {
 			$db->query('UPDATE '.$prefix.'article SET prior = prior - 1 WHERE '.$where);
 
 			$cache->delete('sly.article', $articleID.'_'.$clangID);
+			$cache->delete('sly.category', $articleID.'_'.$clangID);
 			$cache->delete('sly.article.list', $parent.'_'.$clangID.'_0');
+			$cache->delete('sly.category.list', $parent.'_'.$clangID.'_0');
 			$cache->delete('sly.article.list', $parent.'_'.$clangID.'_1');
+			$cache->delete('sly.category.list', $parent.'_'.$clangID.'_1');
 
 			// Cache leeren
 			$db->select('article', 'id', $where);
 
 			foreach ($db as $row) {
 				$cache->delete('sly.article', $row['id'].'_'.$clangID);
+				$cache->delete('sly.category', $row['id'].'_'.$clangID);
 			}
 		}
 
@@ -284,6 +289,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 	public function changeStatus(sly_Model_Article $article, $newStatus = null) {
 		$stati     = $this->getStati();
 		$re_id     = $article->getParentId();
+		$clang     = $article->getClang();
 		$oldStatus = $article->getStatus();
 
 		// Status wurde nicht von außen vorgegeben,
@@ -299,9 +305,15 @@ class sly_Service_Article extends sly_Service_Model_Base {
 
 		// Cache leeren
 		$cache = sly_Core::cache();
-		$cache->delete('sly.article', $article->getId().'_'.$article->getClang());
-		$cache->delete('sly.article.list', $article->getParentId().'_'.$article->getClang().'_0');
-		$cache->delete('sly.article.list', $article->getParentId().'_'.$article->getClang().'_1');
+		$cache->delete('sly.article', $article->getId().'_'.$clang);
+		$cache->delete('sly.article.list', $re_id.'_'.$clang.'_0');
+		$cache->delete('sly.article.list', $re_id.'_'.$clang.'_1');
+
+		if ($article->isStartpage()) {
+			$cache->delete('sly.category', $article->getId().'_'.$clang);
+			$cache->delete('sly.category.list', $re_id.'_'.$clang.'_0');
+			$cache->delete('sly.category.list', $re_id.'_'.$clang.'_1');
+		}
 
 		// Event auslösen
 		$dispatcher = sly_Core::dispatcher();
@@ -379,6 +391,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		// Cache leeren
 		$cache = sly_Core::cache();
 		$cache->delete('sly.article', $article->getId().'_'.$article->getClang());
+		$cache->delete('sly.category', $article->getId().'_'.$article->getClang());
 
 		// Event auslösen
 		$dispatcher = sly_Core::dispatcher();
