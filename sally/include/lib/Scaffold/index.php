@@ -34,7 +34,7 @@ if(!isset($_SERVER['DOCUMENT_ROOT']))
 include 'config.php';
 
 # Load the libraries. Do it manually if you don't like this way.
-include 'libraries/Bootstrap.php';
+include $config['system'].'libraries/Bootstrap.php';
 
 /**
  * Set timezone, just in case it isn't set. PHP 5.2+ 
