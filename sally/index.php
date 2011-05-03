@@ -214,6 +214,7 @@ try {
 	}
 }
 catch (Exception $e) {
+	$layout->closeAllBuffers();
 	$layout->openBuffer();
 
 	if ($e instanceof sly_Authorisation_Exception) {
