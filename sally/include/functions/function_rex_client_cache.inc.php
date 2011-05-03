@@ -56,14 +56,15 @@ function rex_send_article($article, $content, $environment) {
 
 	if ($article) {
 		$lastModified = $article->getUpdateDate();
-		$etag         = $article->getId() . '_' . $article->getClang();
+		$etag         = $article->getId().'_'.$article->getClang();
 		$requestedID  = sly_request('article_id', 'int');
 		$notFoundID   = $config->get('NOTFOUND_ARTICLE_ID');
 
 		if ($requestedID != $notFoundID && $article->getId() == $notFoundID && $article->getId() != $config->get('START_ARTICLE_ID')) {
 			header('HTTP/1.0 404 Not Found');
 		}
-	} else {
+	}
+	else {
 		$lastModified = time();
 		// Dynamische Teile sollen die MD5-Summe nicht beeinflussen.
 		$etag = md5(preg_replace('@<!--DYN-->.*<!--/DYN-->@', '', $content));

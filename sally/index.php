@@ -76,20 +76,22 @@ if (!SLY_IS_TESTING && $config->get('SETUP')) {
 	date_default_timezone_set(@date_default_timezone_get());
 }
 else {
-	$locale = '';
-	$timezone = '';
+	$locale      = '';
+	$timezone    = '';
 	$REX['USER'] = sly_Util_User::getCurrentUser();
 
-	//get user values
+	// get user values
 	if ($REX['USER'] instanceof sly_Model_User) {
 		$locale   = $REX['USER']->getBackendLocale();
 		$timezone = $REX['USER']->getTimeZone();
 	}
+
 	// create $I18N and set locale
-	if(empty($locale)) $locale = $config->get('LANG');
+	if (empty($locale)) $locale = $config->get('LANG');
 	$I18N = rex_create_lang($locale);
+
 	// set timezone
-	if(empty($timezone)) $timezone = $config->get('TIMEZONE');
+	if (empty($timezone)) $timezone = $config->get('TIMEZONE');
 	date_default_timezone_set($timezone);
 }
 
@@ -166,7 +168,8 @@ if ($REX['USER']) {
 	// Startseite ermitteln
 
 	$REX['PAGE'] = sly_Controller_Base::getPage();
-}else {
+}
+else {
 	$REX['PAGE'] = $REX['SETUP'] ? 'setup' : 'login';
 }
 

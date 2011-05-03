@@ -17,38 +17,45 @@ abstract class sly_Controller_Base {
 	const ACTIONPARAM  = 'func';
 
 	protected $content_type = null;
-	protected $charset = null;
-	
-	protected function setContentType($type) {
-		$this->content_type = $type;
-	}
-	protected function getContentType() {
-		return $this->content_type;
-	}
-	protected function setCharset($charset) {
-		$this->charset = $charset;
-	}
-	protected function getCharset() {
-		return $this->charset;
-	}
-	protected function computeContentType() {
-		if (!empty ($this->content_type))
-			return $this->content_type . ($this->charset ?  ('; charset=' . $this->charset) : '');
-		return null;
-	}
-	protected function injectContentType() {
-		$content_type = $this->computeContentType();
-		if ($content_type) {
-			header('Content-Type: ' . $content_type);
-			$layout = sly_Core::getLayout('Sally');
-			$layout->addHttpMeta('Content-Type', $content_type);
-		}
-	}
-
+	protected $charset      = null;
 	protected $action;
 
 	protected function __construct() {
 		$this->action = self::getActionParam('index');
+	}
+
+	protected function setContentType($type) {
+		$this->content_type = $type;
+	}
+
+	protected function getContentType() {
+		return $this->content_type;
+	}
+
+	protected function setCharset($charset) {
+		$this->charset = $charset;
+	}
+
+	protected function getCharset() {
+		return $this->charset;
+	}
+
+	protected function computeContentType() {
+		if (!empty ($this->content_type)) {
+			return $this->content_type.($this->charset ?  ('; charset='.$this->charset) : '');
+		}
+
+		return null;
+	}
+
+	protected function injectContentType() {
+		$content_type = $this->computeContentType();
+
+		if ($content_type) {
+			header('Content-Type: '.$content_type);
+			$layout = sly_Core::getLayout('Sally');
+			$layout->addHttpMeta('Content-Type', $content_type);
+		}
 	}
 
 	public static function getPageParam($default = '')    { return sly_request(self::PAGEPARAM, 'string', $default);    }
@@ -56,7 +63,6 @@ abstract class sly_Controller_Base {
 	public static function getActionParam($default = '')  { return sly_request(self::ACTIONPARAM, 'string', $default);  }
 
 	public static function getPage() {
-
 		$config = sly_Core::config();
 		$page   = strtolower(self::getPageParam());
 
@@ -88,7 +94,7 @@ abstract class sly_Controller_Base {
 	}
 
 	public static function factory($forcePage = null, $forceSubpage = null) {
-		$config = sly_Core::config();
+		$config  = sly_Core::config();
 		$page    = $forcePage === null    ? self::getPageParam($config->get('START_PAGE')) : $forcePage;
 		$subpage = $forceSubpage === null ? strtolower(self::getSubpageParam()) : $forceSubpage;
 		$name    = 'sly_Controller_'.ucfirst($page);
@@ -140,7 +146,7 @@ abstract class sly_Controller_Base {
 		extract($paramsHtuG50hNCdikAvf7CZ1F);
 
 		ob_start();
-		include SLY_INCLUDE_PATH.DIRECTORY_SEPARATOR.$filenameHtuG50hNCdikAvf7CZ1F;	
+		include SLY_INCLUDE_PATH.DIRECTORY_SEPARATOR.$filenameHtuG50hNCdikAvf7CZ1F;
 		print ob_get_clean();
 	}
 
