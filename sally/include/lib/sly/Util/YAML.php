@@ -70,6 +70,7 @@ class sly_Util_YAML {
 
 			// release lock again
 			flock($handle, LOCK_UN);
+			fclose($handle);
 		}
 		// get content from yaml file
 		else {
