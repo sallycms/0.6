@@ -86,6 +86,7 @@ img, iframe {
 		text-shadow: 1px 1px 0px rgba(255,255,255,.8);
 	}
 	.pagehead-row {
+		+clearfix;
 		height: 40px;
 		line-height: 40px;
 		border-bottom: 1px dotted $md_grey;
@@ -93,10 +94,14 @@ img, iframe {
 		a.rex-active {
 			color: $drk_grey;
 		}
-
+		.sly-navi-path {
+			float: left;
+			
+		}
 		/* p = zweite Zeile der Pfadangabe */
 		p {
-			margin-top: 10px;
+			margin-left: 10px;
+			float: left;
 		}
 
 	}
