@@ -188,29 +188,6 @@ function rex_split_string($string) {
 	return $result;
 }
 
-function rex_put_file_contents($path, $content) {
-	static $perm = null;
-
-	if ($perm === null) {
-		$perm = sly_Core::config()->get('FILEPERM');
-	}
-
-	$writtenBytes = file_put_contents($path, $content);
-	@chmod($path, $perm);
-
-	return $writtenBytes;
-}
-
-/**
- * @deprecated use sly_Util_String::isInteger($value) instead
- *
- * @param  mixed $value
- * @return boolean
- */
-function rex_is_int($value) {
-	return sly_Util_String::isInteger($value);
-}
-
 function rex_highlight_string($string, $return = false) {
 	return _rex_highlight($string, $return, 'highlight_string');
 }
@@ -229,13 +206,6 @@ function _rex_highlight($arg1, $return, $func) {
 	print $s;
 }
 
-/**
- * Somewhat naive way to determine if an array is a hash.
- * @deprecated check sly_Util_Array::isAssoc() instead
- */
-function is_hash($array) {
-	return is_array($array) && sly_Util_Array::anyKey('is_string', $array);
-}
 
 // http://snippets.dzone.com/posts/show/4660
 function array_flatten(array $array) {
