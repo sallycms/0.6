@@ -208,7 +208,7 @@ class OOArticleSlice {
 		if (!file_exists($slice_content_file)) {
 			$slice_content = $this->getOutput();
 
-			if (rex_put_file_contents($slice_content_file, $slice_content) === false) {
+			if (!file_put_contents($slice_content_file, $slice_content)) {
 				return t('slice_could_not_be_generated').' '.t('check_rights_in_directory').SLY_DYNFOLDER.'/internal/sally/articles/';
 			}
 		}
