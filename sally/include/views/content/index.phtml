@@ -78,7 +78,7 @@ $KATout .= '</p>';
 sly_Core::getLayout()->pageHeader(t('content'), $KATout);
 
 // request params
-$mode     = sly_request('mode', 'string', 'edit');
+//$mode     = sly_request('mode', 'string', 'edit');
 $function = sly_request('function', 'string');
 $warning  = sly_request('warning', 'string');
 $info     = sly_request('info', 'string');
@@ -450,12 +450,12 @@ $listElements = array();
 $baseURL      = 'index.php?page=content&amp;article_id='.$article_id.'&amp;clang='.$clang.'&amp;slot='.$slot;
 
 if ($mode == 'edit') {
-	$listElements[] = '<a href="'.$baseURL.'&amp;mode=edit" class="rex-active">'.t('edit_mode').'</a>';
-	$listElements[] = '<a href="'.$baseURL.'&amp;mode=meta">'.t('metadata').'</a>';
+	$listElements[] = '<a href="'.$baseURL.'" class="rex-active">'.t('edit_mode').'</a>';
+	$listElements[] = '<a href="'.$baseURL.'&amp;subpage=meta">'.t('metadata').'</a>';
 }
 else {
-	$listElements[] = '<a href="'.$baseURL.'&amp;mode=edit">'.t('edit_mode').'</a>';
-	$listElements[] = '<a href="'.$baseURL.'&amp;mode=meta" class="rex-active">'.t('metadata').'</a>';
+	$listElements[] = '<a href="'.$baseURL.'">'.t('edit_mode').'</a>';
+	$listElements[] = '<a href="'.$baseURL.'&amp;subpage=meta" class="rex-active">'.t('metadata').'</a>';
 }
 
 $listElements[] = '<a href="../'.$REX['FRONTEND_FILE'].'?article_id='.$article_id.'&amp;clang='.$clang.'" onclick="window.open(this.href); return false;">'.t('show').'</a>';
@@ -593,7 +593,7 @@ if ($mode == 'edit') {
 				sly_Helper_Content::printAddSliceForm($prior, $module, $article_id, $clang, $slot);
 			}
 			else {
-				sly_Helper_Content::printAddModuleForm($article_id, $clang, $ooslice->getPrior(), $templateName, $slot);
+				$this->render('_add_slice_form.phtml', array('articleId' => $article_id, 'clangId' => $clang, 'prior' => $ooslice->getPrior(), 'template' => $templateName, 'slot' => $slot));
 			}
 
 			if (empty($function) && $prior == $ooslice->getPrior()) {
@@ -607,12 +607,13 @@ if ($mode == 'edit') {
 			}
 
 			if ($function == 'edit' && $slice_id == $ooslice->getId()) {
-				sly_Helper_Content::printSliceToolbar($ooslice);
+				$this->render('_slice_toolbar.phtml', array('articleSlice' => $ooslice));
 				sly_Helper_Content::printEditSliceForm($ooslice);
 			}
 			else {
-				sly_Helper_Content::printSliceToolbar($ooslice);
-				sly_Helper_Content::printSliceContent($ooslice);
+				//sly_Helper_Content::printSliceToolbar($ooslice);
+				$this->render('_slice_toolbar.phtml', array('articleSlice' => $ooslice));
+				$this->render('_slice_content.phtml', array('articleSlice' => $ooslice));
 			}
 		}
 
@@ -623,7 +624,7 @@ if ($mode == 'edit') {
 			sly_Helper_Content::printAddSliceForm($prior, $module, $article_id, $clang, $slot);
 		}
 		else {
-			sly_Helper_Content::printAddModuleForm($article_id, $clang, count($articleSlices), $templateName, $slot);
+			$this->render('_add_slice_form.phtml', array('articleId' => $article_id, 'clangId' => $clang, 'prior' => count($articleSlices), 'template' => $templateName, 'slot' => $slot));
 		}
 
 		print '</div>';

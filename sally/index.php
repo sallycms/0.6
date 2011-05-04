@@ -200,9 +200,6 @@ try {
 			$curPage  = $navigation->getActivePage();
 			$filename = SLY_INCLUDE_PATH.'/addons/'.$curPage->getName().'/pages/index.inc.php';
 		}
-		else {
-			$filename = SLY_INCLUDE_PATH.'/pages/'.$REX['PAGE'].'.inc.php';
-		}
 
 		if (empty($filename) || !file_exists($filename)) {
 			throw new sly_Controller_Exception(t('unknown_page'));
