@@ -127,7 +127,7 @@ abstract class sly_DB_PDO_SQLBuilder {
 	}
 
 	public function insert($hash) {
-		if (!is_hash($hash)) throw new Exception('Inserting requires a hash.');
+		if (!sly_Util_Array::isAssoc($hash)) throw new Exception('Inserting requires a hash.');
 
 		$this->operation = 'INSERT';
 		$this->data      = $hash;
@@ -136,7 +136,7 @@ abstract class sly_DB_PDO_SQLBuilder {
 	}
 
 	public function update($hash) {
-		if (!is_hash($hash)) throw new Exception('Updating requires a hash.');
+		if (!sly_Util_Array::isAssoc($hash)) throw new Exception('Updating requires a hash.');
 
 		$this->operation = 'UPDATE';
 		$this->data      = $hash;
@@ -249,7 +249,7 @@ abstract class sly_DB_PDO_SQLBuilder {
 	protected function apply_where_conditions($args) {
 		$num_args = count($args);
 
-		if ($num_args == 1 && is_hash($args[0])) {
+		if ($num_args == 1 && sly_Util_Array::isAssoc($args[0])) {
 			$e = new sly_DB_PDO_Expression($args[0]);
 			$e->set_connection($this->connection);
 			$this->where = $e->to_s();
