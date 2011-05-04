@@ -48,12 +48,12 @@ if (!SLY_IS_TESTING && $config->get('SETUP')) {
 	$REX['LANG'] = 'de_de';
 	$requestLang = sly_request('lang', 'string');
 	$langpath    = SLY_INCLUDE_PATH.'/lang';
-	$languages   = glob($langpath.'/*.lang');
+	$languages   = glob($langpath.'/*.yml');
 	$list        = array();
 
 	if ($languages) {
 		foreach ($languages as $language) {
-			$locale = substr(basename($language), 0, -5);
+			$locale = substr(basename($language), 0, -4);
 			$list[] = $locale;
 
 			if ($requestLang == $locale) {

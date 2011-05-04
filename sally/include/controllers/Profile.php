@@ -71,7 +71,7 @@ class sly_Controller_Profile extends sly_Controller_Sally {
 	protected function getBackendLocales() {
 		$cur_htmlcharset = t('htmlcharset');
 		$langpath        = SLY_INCLUDE_PATH.DIRECTORY_SEPARATOR.'lang';
-		$langs           = glob($langpath.'/*.lang');
+		$langs           = glob($langpath.'/*.yml');
 		$result          = array('' => 'default');
 
 		foreach ($langs as $file) {

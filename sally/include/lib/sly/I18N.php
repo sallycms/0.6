@@ -22,7 +22,7 @@ class sly_I18N implements sly_I18N_Base {
 	 * Constructor
 	 *
 	 * @param string $locale      locale name (like 'de_de')
-	 * @param string $searchpath  path to .lang file
+	 * @param string $searchpath  path to .yml file
 	 */
 	public function __construct($locale, $searchpath) {
 		$this->searchpath  = $searchpath;
@@ -48,7 +48,7 @@ class sly_I18N implements sly_I18N_Base {
 	 * @return boolean             true if the file was read, else false
 	 */
 	public function appendFile($searchPath, $prefix = '') {
-		$filename = $searchPath.'/'.$this->locale.'.lang';
+		$filename = $searchPath.'/'.$this->locale.'.yml';
 
 		if (is_readable($filename)) {
 			$lines = sly_Util_YAML::load($filename);
@@ -126,11 +126,11 @@ class sly_I18N implements sly_I18N_Base {
 		if ($this->locales === null && is_readable($searchpath)) {
 			$this->locales = array();
 
-			$files = glob($searchpath.'/*.lang');
+			$files = glob($searchpath.'/*.yml');
 
 			foreach ($files as $filename) {
-				// von 'C:\foo\bar.lang' nur 'bar' speichern
-				$this->locales[] = substr(basename($filename), 0, -5);
+				// von 'C:\foo\bar.yml' nur 'bar' speichern
+				$this->locales[] = substr(basename($filename), 0, -4);
 			}
 		}
 
