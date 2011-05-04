@@ -64,7 +64,7 @@ class sly_Controller_Linkmap extends sly_Controller_Sally {
 	}
 
 	public function checkPermission() {
-		$user = sly_Core::getCurrentUser();
+		$user = sly_Util_User::getCurrentUser();
 		return !empty($user);
 	}
 
@@ -77,7 +77,7 @@ class sly_Controller_Linkmap extends sly_Controller_Sally {
 	}
 
 	protected function formatLabel($object) {
-		$user  = sly_Core::getCurrentUser();
+		$user  = sly_Util_User::getCurrentUser();
 		$label = trim($object->getName());
 
 		if (empty($label)) $label = '&nbsp;';

@@ -21,7 +21,7 @@
  * Löscht den vollständigen Artikel-Cache.
  */
 function rex_generateAll() {
-	rex_deleteDir(SLY_DYNFOLDER.'/internal/sally/articles', false);
+	rex_deleteDir(SLY_DYNFOLDER.'/internal/sally/article_slice', false);
 	rex_deleteDir(SLY_DYNFOLDER.'/internal/sally/templates', false);
 	rex_deleteDir(SLY_DYNFOLDER.'/internal/sally/files', false);
 

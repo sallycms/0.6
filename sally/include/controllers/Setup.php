@@ -319,9 +319,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			SLY_DYNFOLDER.$s.'internal'.$s.'sally',
 			SLY_DYNFOLDER.$s.'internal'.$s.'sally'.$s.'css-cache',
 			SLY_DYNFOLDER.$s.'internal'.$s.'sally'.$s.'yaml-cache',
-			SLY_DYNFOLDER.$s.'internal'.$s.'sally'.$s.'articles',
 			SLY_DYNFOLDER.$s.'internal'.$s.'sally'.$s.'templates',
-			SLY_DYNFOLDER.$s.'internal'.$s.'sally'.$s.'files'
 		);
 
 		$level = error_reporting(0);
