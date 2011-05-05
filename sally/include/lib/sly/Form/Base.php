@@ -58,7 +58,7 @@ abstract class sly_Form_Base {
 	}
 
 	/**
-	 * Add a single form elements
+	 * Add a single form element
 	 *
 	 * This method adds a single form element using a new row. It's mostly an
 	 * alias for add().
@@ -72,7 +72,7 @@ abstract class sly_Form_Base {
 	}
 
 	/**
-	 * Add a single form elements
+	 * Add a single form element
 	 *
 	 * This method adds a single form element using a new row.
 	 *
