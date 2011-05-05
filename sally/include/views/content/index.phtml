@@ -56,26 +56,9 @@ $category_id = $article->getCategoryId();
 
 // Kategoriepfad und -rechte
 
-require SLY_INCLUDE_PATH.'/views/toolbars/breadcrumb.phtml';
-// $KATout kommt aus dem include
-// $KATPERM
-
-$KATout .= '<p>';
-
-if ($article->isStartArticle()) {
-	$KATout .= t('start_article').': ';
-}
-else {
-	$KATout .= t('article').': ';
-}
-
-$catname = str_replace(' ', '&nbsp;', sly_html($article->getName()));
-
-$KATout .= '<a href="index.php?page=content&amp;article_id='.$article_id.'&amp;mode=edit&amp;clang='.$clang.'">'.$catname.'</a>';
-$KATout .= '</p>';
 
 // Titel anzeigen
-sly_Core::getLayout()->pageHeader(t('content'), $KATout);
+
 
 // request params
 //$mode     = sly_request('mode', 'string', 'edit');
@@ -83,30 +66,8 @@ $function = sly_request('function', 'string');
 $warning  = sly_request('warning', 'string');
 $info     = sly_request('info', 'string');
 
-// Sprachenblock
 
-$sprachen_add = '&amp;mode='.$mode.'&amp;category_id='.$category_id.'&amp;article_id='.$article_id;
-require SLY_INCLUDE_PATH.'/views/toolbars/languages.phtml';
 
-// extend menu
-print $dispatcher->filter('PAGE_CONTENT_HEADER', '', array(
-	'article_id'       => $article_id,
-	'clang'            => $clang,
-	'function'         => $function,
-	'mode'             => $mode,
-	'slice_id'         => $slice_id,
-	'page'             => 'content',
-	'slot'             => $slot,
-	'category_id'      => $category_id,
-	'article_revision' => &$article_revision,
-	'slice_revision'   => &$slice_revision
-));
-
-// stop if no permissions
-if (!($KATPERM || $user->hasPerm('article['.$article_id.']'))) {
-	print rex_warning(t('no_rights_to_edit'));
-	return;
-}
 
 if ($mode == 'edit' && sly_post('save_article', 'string')) {
 	$type    = sly_post('article_type', 'string');
@@ -426,7 +387,6 @@ if ($numSlots > 1) {
 		'article_id' => $article_id,
 		'clang'      => $clang,
 		'function'   => $function,
-		'mode'       => $mode,
 		'slice_id'   => $slice_id
 	));
 
@@ -464,7 +424,6 @@ $listElements = $dispatcher->filter('PAGE_CONTENT_MENU', $listElements, array(
 	'article_id' => $article_id,
 	'clang'      => $clang,
 	'function'   => $function,
-	'mode'       => $mode,
 	'slice_id'   => $slice_id
 ));
 

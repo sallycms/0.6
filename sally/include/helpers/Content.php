@@ -260,5 +260,11 @@ class sly_Helper_Content {
 		$layout = sly_Core::getLayout();
 		$layout->addJavaScript('jQuery(function($) { $(":input:visible:enabled:not([readonly]):first", $("form#REX_FORM")).focus(); });');
 	}
+	
+	public static function metaFormAddButtonBar($form, $label, $name) {
+		$button = new sly_Form_Input_Button('submit', $name, $label);
+		$button->setAttribute('onclick', 'return confirm(\'' . $label . '?\')');
+		$form->add(new sly_Form_ButtonBar(array('submit' => $button)));
+	}
 
 }

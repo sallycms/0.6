@@ -1,28 +1,33 @@
 <?php
+/*
+ * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
 
 class sly_Controller_Content extends sly_Controller_Sally {
 
+	protected $article;
+	protected $clangId;
+
 	protected function init() {
-	
-		$category_id = sly_request('category_id', 'rex-category-id');
-		$article_id = sly_request('article_id', 'rex-article-id');
-		$slice_id = sly_request('slice_id', 'rex-slice-id', '');
-		$function = sly_request('function', 'string');
-		$slot = sly_request('slot', 'string');
-		$clang       = sly_Core::getCurrentClang();
-		
-		parent::render('views/toolbars/languages.phtml', array('clang' => $clang,
-			'sprachen_add' => '&amp;mode=edit&amp;category_id=' . $category_id . '&amp;article_id=' . $article_id)
+		$this->clangId = sly_Core::getCurrentClang();
+		$this->article = sly_Util_Article::findById(sly_request('article_id', 'rex-article-id'), $this->clangId);
+
+		sly_Core::getLayout()->pageHeader(t('content'), $this->getBreadcrumb());
+
+		parent::render('views/toolbars/languages.phtml', array('clang' => $this->article->getClang(),
+			'sprachen_add' => '&amp;mode=edit&amp;category_id=' . $this->article->getCategoryId() . '&amp;article_id=' . $this->article->getId())
 		);
 
 		// extend menu
 		print sly_Core::dispatcher()->filter('PAGE_CONTENT_HEADER', '', array(
-					'article_id' => $article_id,
-					'clang' => $clang,
-					'function' => $function,
-					'slice_id' => $slice_id,
-					'slot' => $slot,
-					'category_id' => $category_id,
+					'article_id' => $this->article->getId(),
+					'clang' => $this->article->getClang(),
+					'category_id' => $this->article->getCategoryId()
 				));
 	}
 
@@ -48,6 +53,40 @@ class sly_Controller_Content extends sly_Controller_Sally {
 		$categoryId = $article->getCategoryId();
 
 		return sly_Util_Category::hasPermissionOnCategory($user, $categoryId);
+	}
+
+	/**
+	 * returns the breadcrumb string
+	 *
+	 * @return string
+	 */
+	protected function getBreadcrumb() {
+		$user = sly_Util_User::getCurrentUser();
+		$cat = sly_Util_Category::findById($this->article->getCategoryId());
+		$result = '';
+
+
+		if ($cat) {
+			foreach ($cat->getParentTree() as $parent) {
+				if (sly_Util_Category::hasPermissionOnCategory($user, $parent->getId())) {
+					$result .= '<li> : <a href="index.php?page=structure&amp;category_id=' . $parent->getId() . '&amp;clang=' . $this->clangId . '">' . sly_html($parent->getName()) . '</a></li>';
+				}
+			}
+		}
+		$extra = '<p>';
+		$extra .= $this->article->isStartArticle() ? t('start_article') . ': ' : t('article') . ': ';
+		$extra .= '<a href="index.php?page=content&amp;article_id=' . $this->article->getId() . '&amp;mode=edit&amp;clang=' . $this->clangId . '">' . str_replace(' ', '&nbsp;', sly_html($this->article->getName())) . '</a>';
+		$extra .= '</p>';
+
+
+		$result = '
+			<ul class="sly-navi-path">
+				<li>' . t('path') . '</li>
+				<li> : <a href="index.php?page=structure&amp;category_id=0&amp;clang=' . $this->clangId . '">Homepage</a></li>
+				' . $result . '
+			</ul>' . $extra;
+
+		return $result;
 	}
 
 }
