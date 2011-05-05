@@ -19,6 +19,13 @@ class sly_Controller_Content_Meta extends sly_Controller_Content {
 		parent::render($filename, $params);
 	}
 	
-	
+	/**
+	 *
+	 * @param int $destinationCategory id of destination category
+	 */
+	protected function canMoveArticle($destinationCategory) {
+		$user = sly_Util_User::getCurrentUser();
+		return $user->isAdmin() || ($user->hasPerm('moveArticle[]') && sly_Util_Category::hasPermissionOnCategory($user, $destinationCategory));
+	}
 	
 }

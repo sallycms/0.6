@@ -14,9 +14,15 @@ class sly_Controller_Content extends sly_Controller_Sally {
 	protected $clangId;
 
 	protected function init() {
-		$this->clangId = sly_Core::getCurrentClang();
-		$this->article = sly_Util_Article::findById(sly_request('article_id', 'rex-article-id'), $this->clangId);
+		$clang = sly_Core::getCurrentClang();
+		$this->article = sly_Util_Article::findById(sly_request('article_id', 'rex-article-id'), $clang);
 
+		if (is_null($this->article)) {
+			sly_Core::getLayout()->pageHeader(t('content'));
+			print rex_warning(t('no_article_available'));
+			return;
+		}
+		
 		sly_Core::getLayout()->pageHeader(t('content'), $this->getBreadcrumb());
 
 		parent::render('views/toolbars/languages.phtml', array('clang' => $this->article->getClang(),
@@ -29,6 +35,8 @@ class sly_Controller_Content extends sly_Controller_Sally {
 					'clang' => $this->article->getClang(),
 					'category_id' => $this->article->getCategoryId()
 				));
+		
+		
 	}
 
 	protected function index() {
@@ -42,13 +50,11 @@ class sly_Controller_Content extends sly_Controller_Sally {
 
 	protected function checkPermission() {
 		$user = sly_Util_User::getCurrentUser();
-		if (is_null($user))
-			return false;
+		if (is_null($user))	return false;
 
 		$articleId = sly_request('article_id', 'int');
 		$article = sly_Util_Article::findById($articleId);
-		if (is_null($article))
-			return false;
+		if (is_null($article)) return true;
 
 		$categoryId = $article->getCategoryId();
 
@@ -69,20 +75,20 @@ class sly_Controller_Content extends sly_Controller_Sally {
 		if ($cat) {
 			foreach ($cat->getParentTree() as $parent) {
 				if (sly_Util_Category::hasPermissionOnCategory($user, $parent->getId())) {
-					$result .= '<li> : <a href="index.php?page=structure&amp;category_id=' . $parent->getId() . '&amp;clang=' . $this->clangId . '">' . sly_html($parent->getName()) . '</a></li>';
+					$result .= '<li> : <a href="index.php?page=structure&amp;category_id=' . $parent->getId() . '&amp;clang=' . $this->article->getClang() . '">' . sly_html($parent->getName()) . '</a></li>';
 				}
 			}
 		}
 		$extra = '<p>';
 		$extra .= $this->article->isStartArticle() ? t('start_article') . ': ' : t('article') . ': ';
-		$extra .= '<a href="index.php?page=content&amp;article_id=' . $this->article->getId() . '&amp;mode=edit&amp;clang=' . $this->clangId . '">' . str_replace(' ', '&nbsp;', sly_html($this->article->getName())) . '</a>';
+		$extra .= '<a href="index.php?page=content&amp;article_id=' . $this->article->getId() . '&amp;mode=edit&amp;clang=' . $this->article->getClang() . '">' . str_replace(' ', '&nbsp;', sly_html($this->article->getName())) . '</a>';
 		$extra .= '</p>';
 
 
 		$result = '
 			<ul class="sly-navi-path">
 				<li>' . t('path') . '</li>
-				<li> : <a href="index.php?page=structure&amp;category_id=0&amp;clang=' . $this->clangId . '">Homepage</a></li>
+				<li> : <a href="index.php?page=structure&amp;category_id=0&amp;clang=' . $this->article->getClang() . '">Homepage</a></li>
 				' . $result . '
 			</ul>' . $extra;
 
