@@ -1,0 +1,32 @@
+<?php
+
+$user = sly_Util_User::getCurrentUser();
+$service = sly_Service_Factory::getTemplateService();
+$modules = $service->getModules($template, $slot);
+
+$moduleSelect = new sly_Form_Select_DropDown('module', '', '', array());
+$moduleSelect->addClass('sly-module-select');
+$moduleSelect->addValue('', '----------------------------  ' . t('add_block'));
+
+foreach ($modules as $module => $moduleTitle) {
+	if ($user->isAdmin() || $user->hasPerm('module[' . $module . ']')) {
+		$moduleSelect->addValue($module, rex_translate($moduleTitle, null, false));
+	}
+}
+
+$formID = 'slice' . $prior;
+
+$form = new sly_Form('index.php', 'GET', t('add_block'), $formID, $formID);
+$form->addClass('rex-form-content-editmode');
+$form->addHiddenValue('article_id', $articleId);
+$form->addHiddenValue('page', 'content');
+$form->addHiddenValue('mode', 'edit');
+$form->addHiddenValue('prior', $prior);
+$form->addHiddenValue('function', 'add');
+$form->addHiddenValue('clang', $clangId);
+$form->addHiddenValue('slot', $slot);
+
+$form->add($moduleSelect);
+$form->setSubmitButton(null);
+$form->setResetButton(null);
+$form->render();

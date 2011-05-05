@@ -1,0 +1,48 @@
+<?php
+
+$user       = sly_Util_User::getCurrentUser();
+$module     = $articleSlice->getSlice()->getModule();
+$moduleName = sly_Service_Factory::getModuleService()->get($module, 'title', '');
+$sliceUrl   = 'index.php?page=content&amp;article_id=' . $articleSlice->getArticleId() . '&amp;mode=edit&amp;slice_id=' . $articleSlice->getId() . '&amp;clang=' . $articleSlice->getClang() . '&amp;slot=' . $articleSlice->getSlot() . '%s#slice' . $articleSlice->getPrior();
+
+$listElements = array();
+$listElements[] = '<a href="' . sprintf($sliceUrl, '&amp;function=edit') . '" class="rex-tx3">' . t('edit') . '</a>';
+$listElements[] = '<a href="' . sprintf($sliceUrl, '&amp;function=delete&amp;save=1') . '" class="rex-tx2 sly-delete">' . t('delete') . '</a>';
+
+if ($user->isAdmin() || $user->hasPerm('moveSlice[]')) {
+	$moveUp = t('move_slice_up');
+	$moveDown = t('move_slice_down');
+
+	// upd stamp übergeben, da sonst ein block nicht mehrfach hintereindander verschoben werden kann
+	// (Links wären sonst gleich und der Browser lässt das klicken auf den gleichen Link nicht zu)
+
+	$listElements[] = '<a href="' . sprintf($sliceUrl, '&amp;upd=' . time() . '&amp;function=moveup') . '" title="' . $moveUp . '" class="rex-slice-move-up"></a>';
+	$listElements[] = '<a href="' . sprintf($sliceUrl, '&amp;upd=' . time() . '&amp;function=movedown') . '" title="' . $moveDown . '" class="rex-slice-move-down"></a>';
+}
+
+$dispatcher = sly_Core::dispatcher();
+$listElements = $dispatcher->filter('ART_SLICE_MENU', $listElements, array(
+			'article_id' => $articleSlice->getArticleId(),
+			'clang' => $articleSlice->getClang(),
+			'ctype' => $articleSlice->getSlot(),
+			'slot' => $articleSlice->getSlot(),
+			'module' => $module,
+			'slice_id' => $articleSlice->getId()
+		));
+
+?>
+<div class="rex-content-editmode-module-name">
+	<h3 class="rex-hl4"><?= sly_html($moduleName) ?></h3>
+	<div class="sly-slice-actions">
+		<ul>
+			<?php
+			foreach ($listElements as $listElement) {
+			?>
+				<li><?= $listElement ?></li>
+			<?php
+			}
+			?>
+		</ul>
+	</div>
+</div>
+

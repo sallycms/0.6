@@ -256,10 +256,6 @@ ul.rex-ul1 {
 			da diese von anderen Layouts eventuell dargestellt werden sollen
 *******************************************************************************/
 
-.rex-navi-slice ul li span {
-	+hide;
-}
-
 .center {
 	text-align: center;
 }

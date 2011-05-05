@@ -1,0 +1,373 @@
+<?php
+/*
+ * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+
+$category_id = sly_request('category_id', 'rex-category-id');
+$article_id = sly_request('article_id', 'rex-article-id');
+$slice_id = sly_request('slice_id', 'rex-slice-id', '');
+$function = sly_request('function', 'string');
+$slot = sly_request('slot', 'string');
+$clang = sly_Core::getCurrentClang();
+$languages = sly_Util_Language::findAll();
+
+foreach ($languages as $id => $lang) {
+	$languages[$id] = $lang->getName();
+}
+
+$article_revision = 0;
+$slice_revision = 0;
+$warning = '';
+$global_warning = '';
+$info = '';
+$global_info = '';
+
+require SLY_INCLUDE_PATH . '/functions/function_rex_content.inc.php';
+
+// check article's existence
+$articleService = sly_Service_Factory::getArticleService();
+$article = $articleService->findById($article_id, $clang);
+
+if (is_null($article)) {
+	sly_Core::getLayout()->pageHeader(t('content'));
+	print rex_warning(t('no_article_available'));
+	return;
+}
+
+// init services
+$typeService = sly_Service_Factory::getArticleTypeService();
+$templateService = sly_Service_Factory::getTemplateService();
+$moduleService = sly_Service_Factory::getModuleService();
+$user = sly_Util_User::getCurrentUser();
+$dispatcher = sly_Core::dispatcher();
+
+// Artikel wurde gefunden - Kategorie holen
+$category_id = $article->getCategoryId();
+
+// request params
+//$mode     = sly_request('mode', 'string', 'edit');
+$function = sly_request('function', 'string');
+$warning = sly_request('warning', 'string');
+$info = sly_request('info', 'string');
+
+
+// START: ARTICLE2STARTARTICLE
+
+if (sly_post('article2startpage', 'string')) {
+	if ($user->isAdmin() || $user->hasPerm('article2startpage[]')) {
+		if (rex_article2startpage($article_id)) {
+			$info = t('content_tostartarticle_ok');
+			while (ob_get_level())
+				ob_end_clean();
+			header('Location: index.php?page=content&mode=meta&clang=' . $clang . '&slot=' . $slot . '&article_id=' . $article_id . '&info=' . urlencode($info));
+			exit;
+		} else {
+			$warning = t('content_tostartarticle_failed');
+		}
+	}
+}
+
+// END: ARTICLE2STARTARTICLE
+// START: COPY LANG CONTENT
+
+if (sly_post('copycontent', 'string')) {
+	if ($user->isAdmin() || $user->hasPerm('copyContent[]')) {
+		$clang_a = sly_post('clang_a', 'rex-clang-id');
+		$clang_b = sly_post('clang_b', 'rex-clang-id');
+
+		if (rex_copyContent($article_id, $article_id, $clang_a, $clang_b)) {
+			$info = t('content_contentcopy');
+		} else {
+			$warning = t('content_errorcopy');
+		}
+	}
+}
+
+// END: COPY LANG CONTENT
+// START: MOVE ARTICLE
+
+if (sly_post('movearticle', 'string') && $category_id != $article_id) {
+	$category_id_new = sly_post('category_id_new', 'rex-category-id');
+
+	if ($user->isAdmin() || ($user->hasPerm('moveArticle[]') && ($user->hasPerm('csw[0]') || $user->hasPerm('csw[' . $category_id_new . ']')))) {
+		if (rex_moveArticle($article_id, $category_id_new)) {
+			$info = t('content_articlemoved');
+			while (ob_get_level())
+				ob_end_clean();
+			header('Location: index.php?page=content&article_id=' . $article_id . '&mode=meta&clang=' . $clang . '&slot=' . $slot . '&info=' . urlencode($info));
+			exit;
+		} else {
+			$warning = t('content_errormovearticle');
+		}
+	} else {
+		$warning = t('no_rights_to_this_function');
+	}
+}
+
+// END: MOVE ARTICLE
+// START: COPY ARTICLE
+
+if (sly_post('copyarticle', 'string')) {
+	$category_copy_id_new = sly_post('category_copy_id_new', 'rex-category-id');
+
+	if ($user->isAdmin() || ($user->hasPerm('copyArticle[]') && ($user->hasPerm('csw[0]') || $user->hasPerm('csw[' . $category_copy_id_new . ']')))) {
+		if (($new_id = rex_copyArticle($article_id, $category_copy_id_new)) !== false) {
+			$info = t('content_articlecopied');
+			while (ob_get_level())
+				ob_end_clean();
+			header('Location: index.php?page=content&article_id=' . $new_id . '&mode=meta&clang=' . $clang . '&slot=' . $slot . '&info=' . urlencode($info));
+			exit;
+		} else {
+			$warning = t('content_errorcopyarticle');
+		}
+	} else {
+		$warning = t('no_rights_to_this_function');
+	}
+}
+
+// END: COPY ARTICLE
+// START: MOVE CATEGORY
+
+if (sly_post('movecategory', 'string')) {
+	$category_id_new = sly_post('category_id_new', 'rex-category-id');
+
+	if ($user->isAdmin() || ($user->hasPerm('moveCategory[]') && (($user->hasPerm('csw[0]') || $user->hasPerm('csw[' . $category_id . ']')) && ($user->hasPerm('csw[0]') || $user->hasPerm('csw[' . $category_id_new . ']'))))) {
+		if ($category_id != $category_id_new && rex_moveCategory($category_id, $category_id_new)) {
+			$info = t('category_moved');
+			while (ob_get_level())
+				ob_end_clean();
+			header('Location: index.php?page=content&article_id=' . $category_id . '&mode=meta&clang=' . $clang . '&slot=' . $slot . '&info=' . urlencode($info));
+			exit;
+		} else {
+			$warning = t('content_error_movecategory');
+		}
+	} else {
+		$warning = t('no_rights_to_this_function');
+	}
+}
+
+// END: MOVE CATEGORY
+// START: SAVE METADATA META PAGE
+
+if (sly_post('savemeta', 'string')) {
+	$name = sly_post('meta_article_name', 'string');
+	$sql = sly_DB_Persistence::getInstance();
+	$values = array('name' => $name, 'updatedate' => time(), 'updateuser' => $user->getLogin());
+
+	$sql->update('article', $values, array('id' => $article_id, 'clang' => $clang));
+
+	// update cache
+	sly_Core::cache()->delete('sly.article', $article_id . '_' . $clang);
+
+	// notify system
+	$info = t('metadata_updated');
+	sly_Core::dispatcher()->notify('ART_META_UPDATED', $info, array(
+		'id' => $article_id,
+		'clang' => $clang
+	));
+}
+
+// END: SAVE METADATA
+// START: CONTENT HEAD MENUE
+$hasType = $this->article->hasType();
+$hasTemplate = false;
+
+if ($hasType) {
+	$templateName = $typeService->getTemplate($this->article->getType());
+	$hasTemplate = !empty($templateName) && $templateService->exists($templateName);
+}
+
+$curSlots = $hasTemplate ? $templateService->getSlots($templateName) : false;
+
+$numSlots = $hasTemplate ? count($curSlots) : 0;
+$slotMenu = '';
+
+if ($numSlots > 1) {
+	$listElements = array(t($numSlots > 1 ? 'content_types' : 'content_type') . ' : ');
+
+	foreach ($curSlots as $tmpSlot) {
+		$slotTitle = rex_translate($templateService->getSlotTitle($templateName, $tmpSlot));
+
+		$listElements[] = '<a href="index.php?page=content&amp;article_id=' . $article_id . '&amp;clang=' . $clang . '&amp;slot=' . $tmpSlot . '&amp;mode=edit">' . $slotTitle . '</a>';
+	}
+
+	$listElements = $dispatcher->filter('PAGE_CONTENT_SLOT_MENU', $listElements, array(
+				'article_id' => $article_id,
+				'clang' => $clang,
+				'function' => $function,
+				'slice_id' => $slice_id
+			));
+
+	$slotMenu .= '<ul id="rex-navi-slots">';
+
+	foreach ($listElements as $idx => $listElement) {
+		$class = '';
+
+		if ($idx == 1) { // das erste Element ist nur Beschriftung -> überspringen
+			$class = ' class="rex-navi-first"';
+		}
+
+		$slotMenu .= '<li' . $class . '>' . $listElement . '</li>';
+	}
+
+	$slotMenu .= '</ul>';
+}
+
+$menu = $slotMenu;
+$baseURL = 'index.php?page=content&amp;article_id=' . $article_id . '&amp;clang=' . $clang . '&amp;slot=' . $slot;
+
+$listElements = array();
+$listElements[] = '<a href="' . $baseURL . '">' . t('edit_mode') . '</a>';
+$listElements[] = '<a href="' . $baseURL . '&amp;subpage=meta" class="rex-active">' . t('metadata') . '</a>';
+$listElements[] = '<a href="../' . $REX['FRONTEND_FILE'] . '?article_id=' . $article_id . '&amp;clang=' . $clang . '" onclick="window.open(this.href); return false;">' . t('show') . '</a>';
+
+$listElements = $dispatcher->filter('PAGE_CONTENT_MENU', $listElements, array(
+			'article_id' => $article_id,
+			'clang' => $clang,
+			'function' => $function,
+			'slice_id' => $slice_id
+		));
+
+$menu .= '<ul class="rex-navi-content">';
+
+foreach ($listElements as $idx => $element) {
+	$class = $idx == 0 ? ' class="rex-navi-first"' : '';
+	$menu .= '<li' . $class . '>' . $element . '</li>';
+}
+
+$menu .= '</ul>';
+
+// END: CONTENT HEAD MENUE
+// START: AUSGABE
+?>
+<!-- *** OUTPUT OF ARTICLE-CONTENT - START *** -->
+<div class="rex-content-header">
+	<?= $menu ?>
+</div>
+<?
+// Meldungen
+
+if (!empty($global_warning))
+	print rex_warning($global_warning);
+if (!empty($global_info))
+	print rex_info($global_info);
+
+if (!empty($warning))
+	print rex_warning($warning);
+if (!empty($info))
+	print rex_info($info);
+
+$dispatcher->notify('SLY_ART_MESSAGES', $this->article);
+
+print '<div class="rex-content-body">';
+
+// START: META VIEW
+
+$params = array('id' => $article_id, 'clang' => $clang, 'article' => $article);
+$form = new sly_Form('index.php', 'POST', t('general'), '', 'REX_FORM');
+
+/////////////////////////////////////////////////////////////////
+// init form
+
+$form->setEncType('multipart/form-data');
+$form->addHiddenValue('page', 'content');
+$form->addHiddenValue('article_id', $article_id);
+$form->addHiddenValue('mode', 'meta');
+$form->addHiddenValue('save', 1);
+$form->addHiddenValue('clang', $clang);
+$form->addHiddenValue('slot', $slot);
+$form->setSubmitButton(null);
+$form->setResetButton(null);
+
+/////////////////////////////////////////////////////////////////
+// article name / metadata
+
+$name = new sly_Form_Input_Text('meta_article_name', t('name_description'), $article->getName(), 'rex-form-meta-article-name');
+$form->add($name);
+
+$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM', $form, $params);
+
+$button = new sly_Form_Input_Button('submit', 'savemeta', t('update_metadata'));
+$form->add(new sly_Form_ButtonBar(array('submit' => $button)));
+
+$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM_FIELDSET', $form, $params);
+
+/////////////////////////////////////////////////////////////////
+// misc
+// ZUM STARTARTIKEL MACHEN
+
+if ($user->isAdmin() || $user->hasPerm('article2startpage[]')) {
+	$form->beginFieldset(t('content_startarticle'));
+
+	if ($article->getStartpage() == 0 && $article->getParentId() == 0) {
+		$form->add(new sly_Form_Text('', t('content_nottostartarticle')));
+	} else if ($article->getStartpage() == 1) {
+		$form->add(new sly_Form_Text('', t('content_isstartarticle')));
+	} else {
+		sly_Helper_Content::metaFormAddButtonBar($form, t('content_tostartarticle'), 'article2startpage');
+	}
+}
+
+// INHALTE KOPIEREN
+
+if (($user->isAdmin() || $user->hasPerm('copyContent[]')) && sly_Util_Language::isMultilingual()) {
+	$lang_a = new sly_Form_Select_DropDown('clang_a', t('content_contentoflang'), sly_request('clang_a', 'rex-clang-id', null), $languages, 'clang_a');
+	$lang_a->setSize(1);
+
+	$lang_b = new sly_Form_Select_DropDown('clang_b', t('content_to'), sly_request('clang_b', 'rex-clang-id', null), $languages, 'clang_b');
+	$lang_b->setSize(1);
+
+	$form->beginFieldset(t('content_submitcopycontent'), null, 2);
+	$form->addRow(array($lang_a, $lang_b));
+
+	sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitcopycontent'), 'copycontent');
+}
+
+// ARTIKEL VERSCHIEBEN
+
+if ($article->getStartpage() == 0 && ($user->isAdmin() || $user->hasPerm('moveArticle[]'))) {
+	$select = sly_Form_Helper::getCategorySelect('category_id_new', false, null, null, $user);
+	$select->setAttribute('value', $category_id);
+	$select->setLabel(t('move_article'));
+
+	$form->beginFieldset(t('content_submitmovearticle'));
+	$form->add($select);
+
+	sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitmovearticle'), 'movearticle');
+}
+
+// ARTIKEL KOPIEREN
+
+if ($user->isAdmin() || $user->hasPerm('copyArticle[]')) {
+	$select = sly_Form_Helper::getCategorySelect('category_copy_id_new', false, null, null, $user);
+	$select->setAttribute('value', $category_id);
+	$select->setLabel(t('copy_article'));
+
+	$form->beginFieldset(t('content_submitcopyarticle'));
+	$form->add($select);
+
+	sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitcopyarticle'), 'copyarticle');
+}
+
+// KATEGORIE/STARTARTIKEL VERSCHIEBEN
+
+if ($article->getStartpage() == 1 && ($user->isAdmin() || $user->hasPerm('moveCategory[]'))) {
+	$select = sly_Form_Helper::getCategorySelect('category_id_new', false, false, null, $user);
+	$select->setAttribute('value', $category_id);
+	$select->setLabel(t('move_category'));
+
+	$form->beginFieldset(t('content_submitmovecategory'));
+	$form->add($select);
+
+	sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitmovecategory'), 'movecategory');
+}
+
+$form->render();
+?>
+</div>
