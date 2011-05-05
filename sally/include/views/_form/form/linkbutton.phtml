@@ -19,7 +19,7 @@ if (sly_Util_Article::isValid($art)) {
 	$category = $art->getCategoryId();
 
 	if ($category) {
-		$params = '&category_id='.$category;
+		$params = '&amp;category_id='.$category;
 	}
 }
 

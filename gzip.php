@@ -69,7 +69,7 @@ header('Expires: Thu, 15 Apr '.(date('Y')+1).' 20:00:00 GMT');
 
 // gzip starten
 
-if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
+if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
 	if (CACHE_FILES) {
 		$dir       = 'data/dyn/internal/gzip-cache';
 		$cacheFile = $dir.'/'.md5($file).$extension.'.gz';
