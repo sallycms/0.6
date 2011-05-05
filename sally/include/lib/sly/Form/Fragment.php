@@ -9,29 +9,37 @@
  */
 
 /**
+ * A form fragment
+ *
+ * A fragment can be used as a last resort when you really, really need to
+ * inject custom HTML between to form elements. You can put any HTML code you
+ * like in a fragment, but be sure you don't screw up the form. And make sure
+ * you have a very good reason to do so.
+ *
+ * A common usecase for this is grouping multiple elements in a special <div>
+ * container, so that you can hide/show them all at once.
+ *
  * @ingroup form
+ * @author  Christoph
  */
-class sly_Form_Fragment extends sly_Form_ElementBase implements sly_Form_IElement {
-	protected $content;
-
+class sly_Form_Fragment extends sly_Form_Container {
+	/**
+	 * Constructur
+	 *
+	 * @param string $content  the fragment HTML code
+	 */
 	public function __construct($content = '') {
-		parent::__construct('', '', '', '', array());
+		parent::__construct(null, '', '');
+		$this->allowed = array(); // prohibit all attributes
 		$this->setContent($content);
 	}
 
-	public function setContent($content) {
-		$this->content = $content;
-	}
-
+	/**
+	 * Renders the element
+	 *
+	 * @return string  the XHTML code (the content)
+	 */
 	public function render() {
 		return $this->content;
-	}
-
-	public function isContainer() {
-		return true;
-	}
-
-	public function getDisplayValue() {
-		return md5($this->content);
 	}
 }

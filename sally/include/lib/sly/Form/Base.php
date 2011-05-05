@@ -93,9 +93,11 @@ abstract class sly_Form_Base {
 	 */
 	public function addRows(array $rows) {
 		$success = true;
+
 		foreach (array_filter($rows) as $row) {
 			$success &= $this->addRow($row);
 		}
+
 		return $success;
 	}
 
