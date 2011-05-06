@@ -196,7 +196,7 @@ class OOArticleSlice {
 		return $content;
 	}
 
-	public function printContent() {
+		public function printContent() {
 		global $REX, $I18N;
 
 		$cachedir = SLY_DYNFOLDER.'/internal/sally/article_slice/';
@@ -214,6 +214,13 @@ class OOArticleSlice {
 		}
 
 		if (file_exists($slice_content_file)) {
+			$this->includeContentFile($slice_content_file);
+		}
+	}
+	
+	private function includeContentFile($slice_content_file) {
+		if (file_exists($slice_content_file)) {
+			$article = $this->getArticle();
 			include $slice_content_file;
 		}
 	}
