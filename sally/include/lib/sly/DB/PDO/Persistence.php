@@ -43,6 +43,25 @@ class sly_DB_PDO_Persistence extends sly_DB_Persistence {
 		return true;
 	}
 
+	/**
+	 * Execute a single statement
+	 *
+	 * Use this method on crappy servers that fuck up serialized data when
+	 * importing a dump.
+	 *
+	 * @param  string $query
+	 * @return int
+	 */
+	public function exec($query) {
+		$retval = $this->connection->getPDO()->exec($query);
+
+		if ($retval === false) {
+			throw new sly_DB_PDO_Exception('Es trat ein Datenbankfehler auf!');
+		}
+
+		return $retval;
+	}
+
 	public function insert($table, $values) {
 		$sql = $this->getSQLbuilder(self::getPrefix().$table);
 		$sql->insert($values);

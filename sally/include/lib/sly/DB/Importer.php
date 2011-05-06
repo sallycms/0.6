@@ -141,7 +141,7 @@ class sly_DB_Importer {
 
 		foreach ($queries as $qry) {
 			try {
-				$sql->query($qry);
+				$sql->exec($qry);
 			} catch (sly_DB_PDO_Exception $e) {
 				$error[] = $e->getMessage();
 			}
