@@ -46,6 +46,10 @@ class sly_Layout_XHTML extends sly_Layout {
 		foreach ($this->javaScriptFiles as $group => $files) {
 			$isConditional = strtoupper(substr($group, 0, 3)) == 'IF ';
 
+			foreach ($files as $idx => $file) {
+				$files[$idx] = sly_html($file);
+			}
+
 			if ($isConditional) print '<!--[if '.strtoupper(substr($group, 3)).']>'."\n";
 			print '<script type="text/javascript" src="'.join('"></script>'."\n".'<script type="text/javascript" src="' , $files).'"></script>'."\n";
 			if ($isConditional) print '<![endif]-->'."\n";
