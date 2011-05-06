@@ -419,14 +419,19 @@ class OOMedia {
 			if ($OOMed) return $OOMed->delete();
 		}
 		else {
-			$sql = sly_DB_Persistence::getInstance();
-			$sql->delete('file', array('id' => $this->getId()));
+			try {
+				$sql = sly_DB_Persistence::getInstance();
+				$sql->delete('file', array('id' => $this->getId()));
 
-			if (self::fileExists($this->getFileName())) {
-				unlink(SLY_MEDIAFOLDER.DIRECTORY_SEPARATOR.$this->getFileName());
+				if (self::fileExists($this->getFileName())) {
+					unlink(SLY_MEDIAFOLDER.DIRECTORY_SEPARATOR.$this->getFileName());
+				}
+
+				return true;
 			}
-
-			return true;
+			catch (Exception $e) {
+				// fallthrough
+			}
 		}
 
 		return false;
