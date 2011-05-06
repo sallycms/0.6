@@ -131,10 +131,18 @@ foreach ($variants as $name => $settings) {
 	// Add starterkit contents (templates, modules, assets, ...)
 
 	if ($name === 'starterkit') {
-		chdir($target);
+		$params = array(
+			'-X .hg_archival.txt',
+			'-X .hgignore',
+			'-X .hgtags',
+			'-X make.bat',
+			'"'.$target.'"'
+		);
+
+		chdir($releases);
 		chdir('../demo');
 		exec('hg fetch');
-		exec('hg archive "'.$target.'"');
+		exec('hg archive '.implode(' ', $params));
 	}
 
 	// Create archives
