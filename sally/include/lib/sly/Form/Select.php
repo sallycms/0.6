@@ -9,21 +9,47 @@
  */
 
 /**
+ * Generic select wrapper
+ *
+ * Selects do not need to be <select> elements, but instead they offer a choice
+ * between elements of a predefined list. This includes radio- and check boxes.
+ *
+ * This class wraps a concrete select element and allows to change the style
+ * after the element has been created.
+ *
  * @ingroup form
+ * @author  Christoph
  */
 class sly_Form_Select extends sly_Form_Select_Base implements sly_Form_IElement {
-	protected $formElement;
+	protected $formElement; ///< sly_Form_Select_Base  the wrapped element
 
-	const STYLE_DROPDOWN = 0;
-	const STYLE_RADIO    = 1;
-	const STYLE_CHECKBOX = 2;
+	const STYLE_DROPDOWN = 0; ///< int
+	const STYLE_RADIO    = 1; ///< int
+	const STYLE_CHECKBOX = 2; ///< int
 
+	/**
+	 * Constructor
+	 *
+	 * Creates a selectbox by default.
+	 *
+	 * @param string $name    element name
+	 * @param string $label   the label
+	 * @param array  $value   the currently selected elements
+	 * @param array  $values  list of available values
+	 * @param string $id      optional ID (if not given, the name is used)
+	 */
 	public function __construct($name, $label, $value, $values, $id = null) {
 		$allowed = array('value', 'name', 'id', 'disabled', 'class', 'style', 'size', 'multiple', 'onselect', 'onchange');
 		parent::__construct($name, $label, $value, $values, $id, $allowed);
 		$this->setStyle(self::STYLE_DROPDOWN);
 	}
 
+	/**
+	 * Sets a new style for the wrapped element
+	 *
+	 * @param  int $newStyle         the new style (see constants in this class)
+	 * @return sly_Form_Select_Base  a newly created element
+	 */
 	public function setStyle($newStyle) {
 		$name   = $this->attributes['name'];
 		$label  = $this->label;
@@ -48,10 +74,22 @@ class sly_Form_Select extends sly_Form_Select_Base implements sly_Form_IElement 
 		return $this->formElement;
 	}
 
+	/**
+	 * Renders the wrapped element
+	 *
+	 * This method renders the form element and returns its XHTML code.
+	 *
+	 * @return string  the XHTML code
+	 */
 	public function render() {
 		return $this->formElement->render();
 	}
 
+	/**
+	 * Returns the outer row class
+	 *
+	 * @return string  the outer class
+	 */
 	public function getOuterClass() {
 		return $this->formElement->getOuterClass();
 	}
