@@ -105,7 +105,7 @@ class sly_Form_Fieldset {
 		$success = true;
 
 		foreach (array_filter($rows) as $row) {
-			$success &= $this->addRow($row);
+			$success &= $this->addRow(sly_makeArray($row));
 		}
 
 		return $success;
