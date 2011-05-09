@@ -8,7 +8,7 @@ else {
 }
 
 $base_url     = 'index.php?page=content&article_id='.$article->getId().'&clang='.$this->clangId;
-$edit_url     = 'index.php?page=structure&amp;category_id='.$article->getParentId().'&amp;clang='.$this->clangId.'&amp;edit_id='.$article->getId();
+$edit_url     = 'index.php?page=structure&amp;category_id='.$article->getCategoryId().'&amp;clang='.$this->clangId.'&amp;edit_id='.$article->getId();
 $status       = $statusTypes[$article->getStatus()][0];
 $status_class = $statusTypes[$article->getStatus()][1];
 
