@@ -309,7 +309,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		$cache->delete('sly.article.list', $re_id.'_'.$clang.'_0');
 		$cache->delete('sly.article.list', $re_id.'_'.$clang.'_1');
 
-		if ($article->isStartpage()) {
+		if ($article->isStartArticle()) {
 			$cache->delete('sly.category', $article->getId().'_'.$clang);
 			$cache->delete('sly.category.list', $re_id.'_'.$clang.'_0');
 			$cache->delete('sly.category.list', $re_id.'_'.$clang.'_1');
