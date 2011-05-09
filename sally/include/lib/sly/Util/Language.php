@@ -37,6 +37,20 @@ class sly_Util_Language {
 		return isset($languages[$languageID]);
 	}
 
+	public static function getLocale($languageID = null) {
+		if ($languageID === null) {
+			$languageID = sly_Core::getCurrentClang();
+		}
+		elseif (!self::exists($languageID)) {
+			throw new sly_Exception('Unknown language given.');
+		}
+
+		$languageID = (int) $languageID;
+		$language   = sly_Service_Factory::getLanguageService()->findById($languageID);
+
+		return $language->getLocale();
+	}
+
 	public static function isMultilingual() {
 		return count(self::findAll()) > 1;
 	}
