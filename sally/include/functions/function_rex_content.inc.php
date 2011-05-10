@@ -270,7 +270,7 @@ function rex_article2startpage($neu_id) {
 		foreach ($sql as $row) {
 			$id = $row['id'];
 			unset($row['id']);
-			$data[$id] = $row['id'];
+			$data[$id] = $row;
 		}
 
 		// overwrite re_id of new start article
