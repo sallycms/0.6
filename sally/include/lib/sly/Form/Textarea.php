@@ -9,22 +9,51 @@
  */
 
 /**
+ * Multiline textarea
+ *
+ * This form elements wraps the classic <textarea> element.
+ *
  * @ingroup form
+ * @author  Christoph
  */
 class sly_Form_Textarea extends sly_Form_Input_Base {
+	/**
+	 * Constructor
+	 *
+	 * @param string $name    element name
+	 * @param string $label   the label
+	 * @param array  $value   the current text
+	 * @param string $id      optional ID (if not given, the name is used)
+	 */
 	public function __construct($name, $label, $value, $id = null) {
-		$allowed = array('value', 'name', 'id', 'disabled', 'class', 'maxlength', 'readonly', 'style', 'rows', 'cols', 'wrap');
-		parent::__construct($name, $label, $value, $id, $allowed);
+		parent::__construct($name, $label, $value, $id);
 		$this->addClass('rex-form-textarea');
 		$this->setAttribute('rows', 10);
 		$this->setAttribute('cols', 50);
 	}
 
+	/**
+	 * Renders the element
+	 *
+	 * This method renders the element.
+	 *
+	 * @return string  the XHTML code
+	 */
 	public function render() {
 		$this->attributes['value'] = $this->getDisplayValue();
 		return $this->renderFilename('form/textarea.phtml');
 	}
 
+	/**
+	 * Returns the value to be displayed
+	 *
+	 * This method will return the values that shall be displayed in the form.
+	 * This is mostly useful when a form is submitted and the POST data will be
+	 * shown instead of those that were given when the form elements are
+	 * initialized.
+	 *
+	 * @return string  submitted text
+	 */
 	public function getDisplayValue() {
 		return $this->getDisplayValueHelper('string', false);
 	}

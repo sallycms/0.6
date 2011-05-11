@@ -12,11 +12,6 @@
  * @ingroup form
  */
 class sly_Form_Select_Checkbox extends sly_Form_Select_Base implements sly_Form_IElement {
-	public function __construct($name, $label, $value, $values, $id = null) {
-		$allowed = array('value', 'name', 'id', 'disabled', 'class', 'style');
-		parent::__construct($name, $label, $value, $values, $id, $allowed);
-	}
-
 	public function render() {
 		return $this->renderFilename('form/select/checkbox.phtml');
 	}

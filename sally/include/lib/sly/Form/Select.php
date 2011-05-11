@@ -39,8 +39,7 @@ class sly_Form_Select extends sly_Form_Select_Base implements sly_Form_IElement 
 	 * @param string $id      optional ID (if not given, the name is used)
 	 */
 	public function __construct($name, $label, $value, $values, $id = null) {
-		$allowed = array('value', 'name', 'id', 'disabled', 'class', 'style', 'size', 'multiple', 'onselect', 'onchange');
-		parent::__construct($name, $label, $value, $values, $id, $allowed);
+		parent::__construct($name, $label, $value, $values, $id);
 		$this->setStyle(self::STYLE_DROPDOWN);
 	}
 

@@ -22,14 +22,14 @@ class sly_Form_ButtonBar extends sly_Form_ElementBase implements sly_Form_IEleme
 	protected $buttons;  ///< array  list of buttons (sly_Form_Input_Button elements)
 
 	/**
-	 * Constructur
+	 * Constructor
 	 *
 	 * @param array  $buttons  list of buttons (or a single button)
 	 * @param string $id       the optional ID for the complete row
 	 */
 	public function __construct($buttons = array(), $id = null) {
 		$id = $id === null ? 'a'.uniqid() : $id;
-		parent::__construct('', '', '', $id, array('class', 'style', 'id'));
+		parent::__construct('', '', '', $id);
 		$this->buttons = sly_makeArray($buttons);
 	}
 

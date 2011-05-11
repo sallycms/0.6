@@ -25,15 +25,14 @@ class sly_Form_Container extends sly_Form_ElementBase implements sly_Form_IEleme
 	protected $content; ///< string  the content
 
 	/**
-	 * Constructur
+	 * Constructor
 	 *
 	 * @param string $id     optional ID
 	 * @param string $class  optional CSS class
 	 * @param string $style  optional inline CSS code
 	 */
 	public function __construct($id = null, $class = '', $style = '') {
-		$allowed = array('class', 'id', 'style');
-		parent::__construct('', '', '', $id, $allowed);
+		parent::__construct('', '', '', $id);
 		$this->setAttribute('class', $class);
 		$this->setAttribute('style', $style);
 	}

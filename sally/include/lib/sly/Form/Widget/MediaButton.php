@@ -12,8 +12,8 @@
  * @ingroup form
  */
 class sly_Form_Widget_MediaButton extends sly_Form_Widget implements sly_Form_IElement {
-	public function __construct($name, $label, $value, $id = null, $allowedAttributes = null) {
-		parent::__construct($name, $label, $value, $id, $allowedAttributes, 'mediabutton');
+	public function __construct($name, $label, $value, $id = null) {
+		parent::__construct($name, $label, $value, $id, 'mediabutton');
 		$this->setAttribute('class', 'rex-form-text');
 	}
 

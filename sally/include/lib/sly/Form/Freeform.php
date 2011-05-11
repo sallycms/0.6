@@ -22,7 +22,7 @@ class sly_Form_Freeform extends sly_Form_ElementBase implements sly_Form_IElemen
 	protected $content; ///< string the content
 
 	/**
-	 * Constructur
+	 * Constructor
 	 *
 	 * @param string $name     element name
 	 * @param string $label    the label
@@ -30,8 +30,7 @@ class sly_Form_Freeform extends sly_Form_ElementBase implements sly_Form_IElemen
 	 * @param string $id       optional ID
 	 */
 	public function __construct($name, $label, $content, $id = null) {
-		$allowed = array('name', 'class', 'id', 'style');
-		parent::__construct($name, $label, '', $id, $allowed);
+		parent::__construct($name, $label, '', $id);
 		$this->setContent($content);
 	}
 

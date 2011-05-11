@@ -24,13 +24,12 @@
  */
 class sly_Form_Fragment extends sly_Form_Container {
 	/**
-	 * Constructur
+	 * Constructor
 	 *
 	 * @param string $content  the fragment HTML code
 	 */
 	public function __construct($content = '') {
 		parent::__construct(null, '', '');
-		$this->allowed = array(); // prohibit all attributes
 		$this->setContent($content);
 	}
 

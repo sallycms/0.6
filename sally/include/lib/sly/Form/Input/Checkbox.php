@@ -16,8 +16,7 @@ class sly_Form_Input_Checkbox extends sly_Form_Input_Base {
 	protected $checks;
 
 	public function __construct($name, $label, $value, $description = 'ja', $id = null) {
-		$allowed = array('value', 'name', 'id', 'disabled', 'class', 'style', 'type', 'checked');
-		parent::__construct($name, $label, $value, $id, $allowed);
+		parent::__construct($name, $label, $value, $id);
 		$this->description = $description;
 		$this->checks      = array();
 		$this->setAttribute('type', 'checkbox');

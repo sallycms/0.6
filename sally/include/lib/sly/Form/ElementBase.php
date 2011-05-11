@@ -19,25 +19,22 @@
 abstract class sly_Form_ElementBase {
 	protected $label;         ///< string
 	protected $attributes;    ///< array
-	protected $allowed;       ///< mixed    null or an array
 	protected $helpText;      ///< string
 	protected $outerClass;    ///< string
 	protected $formRowClass;  ///< string
 	protected $multilingual;  ///< boolean
 
 	/**
-	 * Constructur
+	 * Constructor
 	 *
-	 * @param string  $name               the element's name
-	 * @param string  $label              the label
-	 * @param mixed   $value              the value
-	 * @param string  $id                 optional ID (if it should differ from $name)
-	 * @param boolean $allowedAttributes  list of allowed attributes or null to allow all
+	 * @param string  $name   the element's name
+	 * @param string  $label  the label
+	 * @param mixed   $value  the value
+	 * @param string  $id     optional ID (if it should differ from $name)
 	 */
-	public function __construct($name, $label, $value, $id = null, $allowedAttributes = null) {
+	public function __construct($name, $label, $value, $id = null) {
 		$this->attributes   = array();
 		$this->label        = $label;
-		$this->allowed      = $allowedAttributes;
 		$this->outerClass   = '';
 		$this->formRowClass = '';
 		$this->multilingual = false;
@@ -74,20 +71,11 @@ abstract class sly_Form_ElementBase {
 	/**
 	 * Sets an attribute
 	 *
-	 * This method will add a new attribute, if it's allowed or the name begins
-	 * with "data-" (generic HTML5 attribute).
-	 *
 	 * @param  string $name   the attribute's name
 	 * @param  mixed  $value  the new value
-	 * @return boolean        true if the attribute is allowed, else false
 	 */
 	public function setAttribute($name, $value) {
-		if ($this->allowed === null || strpos($name, 'data-') === 0 || in_array($name, $this->allowed)) {
-			$this->attributes[$name] = $value;
-			return true;
-		}
-
-		return false;
+		$this->attributes[$name] = $value;
 	}
 
 	/**

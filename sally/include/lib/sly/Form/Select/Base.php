@@ -14,12 +14,8 @@
 abstract class sly_Form_Select_Base extends sly_Form_ElementBase {
 	protected $values;
 
-	public function __construct($name, $label, $value, $values, $id = null, $allowedAttributes = null) {
-		if ($allowedAttributes === null) {
-			$allowedAttributes = array('value', 'name', 'id', 'disabled', 'class', 'style');
-		}
-
-		parent::__construct($name, $label, $value, $id, $allowedAttributes);
+	public function __construct($name, $label, $value, $values, $id = null) {
+		parent::__construct($name, $label, $value, $id);
 		$this->values = $values;
 
 		if (is_array($value)) {

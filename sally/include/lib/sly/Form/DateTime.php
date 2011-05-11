@@ -21,7 +21,7 @@ class sly_Form_DateTime extends sly_Form_ElementBase implements sly_Form_IElemen
 	protected $withTime; ///< boolean  toggles the time picker addon
 
 	/**
-	 * Constructur
+	 * Constructor
 	 *
 	 * @param string  $name      the element's name
 	 * @param string  $label     the label
@@ -30,8 +30,7 @@ class sly_Form_DateTime extends sly_Form_ElementBase implements sly_Form_IElemen
 	 * @param boolean $withTime  true to include the time picker, else false
 	 */
 	public function __construct($name, $label, $value, $id = null, $withTime = true) {
-		$allowedAttributes = array('value', 'name', 'id', 'class', 'style');
-		parent::__construct($name, $label, $value, $id, $allowedAttributes);
+		parent::__construct($name, $label, $value, $id);
 
 		$this->withTime   = (boolean) $withTime;
 		$this->outerClass = 'rex-form-text';

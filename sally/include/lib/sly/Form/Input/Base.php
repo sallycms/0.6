@@ -14,12 +14,8 @@
 abstract class sly_Form_Input_Base extends sly_Form_ElementBase implements sly_Form_IElement {
 	protected $annotation;
 
-	public function __construct($name, $label, $value, $id = null, $allowedAttributes = null) {
-		if ($allowedAttributes === null) {
-			$allowedAttributes = array('value', 'name', 'id', 'disabled', 'class', 'maxlength', 'readonly', 'style', 'type');
-		}
-
-		parent::__construct($name, $label, $value, $id, $allowedAttributes);
+	public function __construct($name, $label, $value, $id = null) {
+		parent::__construct($name, $label, $value, $id);
 		$this->annotation = '';
 	}
 

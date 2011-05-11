@@ -13,8 +13,7 @@
  */
 class sly_Form_Input_Button extends sly_Form_Input_Base {
 	public function __construct($type, $name, $value) {
-		$allowed = array('value', 'name', 'id', 'disabled', 'class', 'type', 'style', 'onclick');
-		parent::__construct($name, '', $value, null, $allowed);
+		parent::__construct($name, '', $value, null);
 		$this->setAttribute('type', in_array($type, array('button', 'reset', 'submit')) ? $type : 'button');
 	}
 

@@ -12,8 +12,8 @@
  * @ingroup form
  */
 class sly_Form_Widget_LinkListButton extends sly_Form_ElementBase implements sly_Form_IElement {
-	public function __construct($name, $label, $value, $id = null, $allowedAttributes = null) {
-		parent::__construct($name, $label, $value, $id, $allowedAttributes);
+	public function __construct($name, $label, $value, $id = null) {
+		parent::__construct($name, $label, $value, $id);
 		$this->setAttribute('class', 'rex-form-select');
 	}
 
