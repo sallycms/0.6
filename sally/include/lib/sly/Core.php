@@ -47,6 +47,13 @@ class sly_Core {
 		self::getInstance()->curClang = (int) $clangId;
 	}
 
+	/**
+	 * Returns the current language ID
+	 *
+	 * Checks the request param 'clang' and returns a validated value.
+	 *
+	 * @return int  the current clang
+	 */
 	public static function getCurrentClang() {
 		$instance = self::getInstance();
 
@@ -57,10 +64,28 @@ class sly_Core {
 		return $instance->curClang;
 	}
 
+	/**
+	 * Returns the current language
+	 *
+	 * @return sly_Model_Language  the current language
+	 */
+	public static function getCurrentLanguage() {
+		$clang = sly_Core::getCurrentClang();
+		return sly_Service_Factory::getLanguageService()->findById($clang);
+	}
+
 	public static function setCurrentArticleId($articleId) {
 		self::getInstance()->curArticleId = (int) $articleId;
 	}
 
+	/**
+	 * Returns the current article ID
+	 *
+	 * Checks the request param 'article_id' and returns a validated value. If
+	 * the article was not found, the ID of the Not Found article is returned.
+	 *
+	 * @return int  the current article ID
+	 */
 	public static function getCurrentArticleId() {
 		$conf     = self::config();
 		$instance = self::getInstance();
@@ -80,15 +105,23 @@ class sly_Core {
 		return $instance->curArticleId;
 	}
 
-	public static function getTempDir() {
-		$conf = self::config();
-		return $conf->get('MEDIAFOLDER').DIRECTORY_SEPARATOR.$conf->get('TEMP_PREFIX');
+	/**
+	 * Returns the current article
+	 *
+	 * @param  int $clang         null for the current clang, or else a specific clang
+	 * @return sly_Model_Article  the current article
+	 */
+	public static function getCurrentArticle($clang = null) {
+		$articleID = self::getCurrentArticleId();
+		$clang     = $clang === null ? self::getCurrentClang() : (int) $clang;
+
+		return sly_Util_Article::findById($articleID, $clang);
 	}
 
 	/**
 	 * API Methode um Variabletypen zu setzen.
 	 *
-	 * @param $varType Klassenname des Variablentyps
+	 * @param string $varType  Klassenname des Variablentyps
 	 */
 	public static function registerVarType($varType) {
 		self::getInstance()->varTypes[] = $varType;
@@ -132,7 +165,7 @@ class sly_Core {
 	/**
 	 * gibt ein sly_Layout Instanz zurück
 	 *
-	 * @param string $type
+	 * @param  string $type
 	 * @return sly_Layout
 	 */
 	public static function getLayout($type = 'XHTML') {
