@@ -66,8 +66,9 @@ abstract class sly_Form_Widget extends sly_Form_ElementBase {
 	public function consumeWidgetID() {
 		$registry = sly_Core::getTempRegistry();
 		$key      = $this->namespace.'.counter';
+		$lastID   = $registry->get($key, 1);
 
-		$registry->set($key, $this->getWidgetID() + 1);
+		$registry->set($key, $lastID + 1);
 	}
 
 	/**
