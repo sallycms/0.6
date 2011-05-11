@@ -118,15 +118,10 @@ class sly_Core {
 		return sly_Util_Article::findById($articleID, $clang);
 	}
 
-	public static function getTempDir() {
-		$conf = self::config();
-		return $conf->get('MEDIAFOLDER').DIRECTORY_SEPARATOR.$conf->get('TEMP_PREFIX');
-	}
-
 	/**
 	 * API Methode um Variabletypen zu setzen.
 	 *
-	 * @param $varType Klassenname des Variablentyps
+	 * @param string $varType  Klassenname des Variablentyps
 	 */
 	public static function registerVarType($varType) {
 		self::getInstance()->varTypes[] = $varType;
@@ -170,7 +165,7 @@ class sly_Core {
 	/**
 	 * gibt ein sly_Layout Instanz zurück
 	 *
-	 * @param string $type
+	 * @param  string $type
 	 * @return sly_Layout
 	 */
 	public static function getLayout($type = 'XHTML') {
