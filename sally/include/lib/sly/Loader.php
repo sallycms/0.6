@@ -38,8 +38,16 @@ class sly_Loader {
 				$filename = self::getCacheFile();
 
 				if (file_exists($filename)) {
+					// lock the file
+					$handle = fopen($filename, 'r');
+					flock($handle, LOCK_SH);
+
 					include $filename;
-					self::$pathCache = $config;
+					self::$pathCache = isset($config) ? $config : array();
+
+					// release lock again
+					flock($handle, LOCK_UN);
+					fclose($handle);
 				}
 				else {
 					self::$pathCache = array();
@@ -159,7 +167,7 @@ class sly_Loader {
 			$filename = self::getCacheFile();
 			$exists   = file_exists($filename);
 
-			file_put_contents($filename, '<?php $config = '.var_export(self::$pathCache, true).';');
+			file_put_contents($filename, '<?php $config = '.var_export(self::$pathCache, true).';', LOCK_EX);
 			if (!$exists) chmod($filename, 0777);
 		}
 	}
