@@ -9,50 +9,30 @@
  */
 
 /**
+ * Single checkbox
+ *
+ * This class wraps a single checkbox element with a description. If you need
+ * to toggle a list of elements, use sly_Form_Select_Checkbox. This one is used
+ * for boolean like values.
+ *
  * @ingroup form
+ * @author  Christoph
  */
-class sly_Form_Input_Checkbox extends sly_Form_Input_Base {
-	protected $description;
-	protected $checks;
-
+class sly_Form_Input_Checkbox extends sly_Form_Input_Boolean {
+	/**
+	 * Constructor
+	 *
+	 * @param string $name         element name
+	 * @param string $label        the label
+	 * @param array  $value        the current text
+	 * @param string $description  text to show right next to the checkbox
+	 * @param string $id           optional ID (if not given, the name is used)
+	 */
 	public function __construct($name, $label, $value, $description = 'ja', $id = null) {
-		parent::__construct($name, $label, $value, $id);
-		$this->description = $description;
-		$this->checks      = array();
+		parent::__construct($name, $label, $value, $description, $id);
+
 		$this->setAttribute('type', 'checkbox');
-	}
-
-	public function render() {
-		$this->addClass('sly-form-checkbox');
-
-		$this->attributes['checked'] = $this->getDisplayValue() ? 'checked' : '';
-		$attributeString = $this->getAttributeString();
-
-		return
-			'<input '.$attributeString.' /> '.
-			'<label class="sly-inline" for="'.$this->attributes['id'].'">'.sly_html($this->description).'</label>';
-	}
-
-	public function getOuterClass() {
 		$this->addOuterClass('rex-form-checkbox');
-		return $this->outerClass;
-	}
-
-	public function getDisplayValue() {
-		$name = $this->getAttribute('name');
-		return isset($_POST[$name]) ? $_POST[$name] : $this->getAttribute('checked') == 'checked';
-	}
-
-	public function setChecked($checked) {
-		if ($checked) $this->setAttribute('checked', 'checked');
-		else $this->removeAttribute('checked');
-	}
-
-	public function setChecks($checks) {
-		$this->checks = sly_makeArray($checks);
-	}
-
-	public function getChecks() {
-		return $this->checks;
+		$this->addClass('sly-form-checkbox');
 	}
 }
