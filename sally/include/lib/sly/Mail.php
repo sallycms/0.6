@@ -143,8 +143,16 @@ class sly_Mail implements sly_Mail_Interface {
 		return array($mail, $name);
 	}
 
+	/**
+	 * ASCII code characters excl. tab and CRLF. Matches any single non-printable
+	 * code character that may cause trouble in certain situations. Excludes tabs
+	 * and line breaks.
+	 *
+	 * @param string $str
+	 * @return string
+	 */
 	protected static function clean($str) {
-		return preg_replace('#[\x00-\x1F]#', '', trim($str));
+		return preg_replace('#[\x00\x08\x0B\x0C\x0E-\x1F]#', '', trim($str));
 	}
 
 	public function encode($str) {
