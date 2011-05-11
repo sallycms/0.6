@@ -284,6 +284,7 @@ function rex_article2startpage($neu_id) {
 
 		// update cache
 		$cache->delete('sly.article', $neu_id.'_'.$clang);
+		$cache->delete('sly.article', $alt_id.'_'.$clang);
 		$cache->delete('sly.category', $alt_id.'_'.$clang);
 		$cache->delete('sly.article.list', $alt_id.'_'.$clang.'_0');
 		$cache->delete('sly.article.list', $alt_id.'_'.$clang.'_1');
