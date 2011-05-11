@@ -272,8 +272,8 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 
 				// Update Button wurde gedrückt?
 
-				if (sly_post('btn_save', 'string')) {
-					$function = '';
+				if (sly_post('btn_update', 'string')) {
+					$function = 'edit';
 				}
 			}
 		}
