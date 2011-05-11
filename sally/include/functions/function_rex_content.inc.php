@@ -458,6 +458,9 @@ function rex_moveArticle($id, $target) {
 	}
 
 	$target = (int) $target;
+	
+	if($target !== 0 && !sly_Util_Category::exists($target)) return false;
+	
 	$source = (int) $article->getCategoryId();
 
 	if ($source === $target) {
@@ -468,30 +471,26 @@ function rex_moveArticle($id, $target) {
 	$cache = sly_Core::cache();
 	$login = sly_Util_User::getCurrentUser()->getLogin();
 	$pre   = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
-	$pos   = -1;
+	
+	//get the new prior, same for al anguages
+	$sql->query('SELECT MAX(prior) as prior from '.$pre.'article WHERE id = '.$target.' OR (re_id = '.$target.' AND startpage = 0)');
+	$sql->next();
+	$data  = $sql->current();
+	$pos   = $data['prior'] + 1;
 
 	foreach (sly_Util_Language::findAll(true) as $clang) {
-		$from = $sql->magicFetch('article', 'name, prior', array('clang' => $clang, 'id' => $id));
-
-		// validate target
+		$article = sly_Util_Article::findById($id, $clang);
+		$re_id   = $target;
+		
 		if ($target === 0) {
-			$re_id   = 0;
 			$path    = '|';
-			$catname = $from['name'];
+			$catname = $article->getName();
 		}
 		else {
-			$to_data = $sql->magicFetch('article', 'path, id, name', array('clang' => $clang, 'startpage' => 1, 'id' => $target));
-			if ($to_data === false) return false;
-
-			$re_id   = $to_data['id'];
-			$path    = $to_data['path'].$to_data['id'].'|';
-			$catname = $to_data['name'];
-		}
-
-		// get new prior (same for all languages)
-		if ($pos === -1) {
-			$where = 'id = '.$target.' OR (re_id = '.$target.' AND startpage = 0)';
-			$pos   = $sql->magicFetch('article', 'MAX(prior)', $where) + 1;
+			$targetCategory = sly_Util_Category::findById($target, $clang);
+			//$to_data = $sql->magicFetch('article', 'path, name', array('clang' => $clang, 'startpage' => 1, 'id' => $target));
+			$path    = $targetCategory->getPath().$target.'|';
+			$catname = $targetCategory->getName();
 		}
 
 		// move article at the end of new category
@@ -506,7 +505,7 @@ function rex_moveArticle($id, $target) {
 		), array('id' => $id, 'clang' => $clang));
 
 		// re-number old category
-		$sql->query('UPDATE '.$pre.'article SET prior = prior - 1 WHERE re_id = '.$source.' AND startpage = 0 AND clang = '.$clang.' AND prior > '.$from['prior']);
+		$sql->query('UPDATE '.$pre.'article SET prior = prior - 1 WHERE re_id = '.$source.' AND startpage = 0 AND clang = '.$clang.' AND prior > '.$article->getPrior());
 	}
 
 	// update cache (very generously since many articles have changed (-> been moved))
