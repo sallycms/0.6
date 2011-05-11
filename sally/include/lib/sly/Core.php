@@ -47,6 +47,13 @@ class sly_Core {
 		self::getInstance()->curClang = (int) $clangId;
 	}
 
+	/**
+	 * Returns the current language ID
+	 *
+	 * Checks the request param 'clang' and returns a validated value.
+	 *
+	 * @return int  the current clang
+	 */
 	public static function getCurrentClang() {
 		$instance = self::getInstance();
 
@@ -57,10 +64,28 @@ class sly_Core {
 		return $instance->curClang;
 	}
 
+	/**
+	 * Returns the current language
+	 *
+	 * @return sly_Model_Language  the current language
+	 */
+	public static function getCurrentLanguage() {
+		$clang = sly_Core::getCurrentClang();
+		return sly_Service_Factory::getLanguageService()->findById($clang);
+	}
+
 	public static function setCurrentArticleId($articleId) {
 		self::getInstance()->curArticleId = (int) $articleId;
 	}
 
+	/**
+	 * Returns the current article ID
+	 *
+	 * Checks the request param 'article_id' and returns a validated value. If
+	 * the article was not found, the ID of the Not Found article is returned.
+	 *
+	 * @return int  the current article ID
+	 */
 	public static function getCurrentArticleId() {
 		$conf     = self::config();
 		$instance = self::getInstance();
@@ -78,6 +103,19 @@ class sly_Core {
 		}
 
 		return $instance->curArticleId;
+	}
+
+	/**
+	 * Returns the current article
+	 *
+	 * @param  int $clang         null for the current clang, or else a specific clang
+	 * @return sly_Model_Article  the current article
+	 */
+	public static function getCurrentArticle($clang = null) {
+		$articleID = self::getCurrentArticleId();
+		$clang     = $clang === null ? self::getCurrentClang() : (int) $clang;
+
+		return sly_Util_Article::findById($articleID, $clang);
 	}
 
 	public static function getTempDir() {
