@@ -51,6 +51,30 @@
 }
 
 /*	Editmode */
+.sly-contentpage {
+	&-slice-input,	&-slice-output {
+		clear: both;
+		padding: 10px;
+		line-height: 1.6;
+		+border-radius(4px);
+		ol, ul { margin-left: 20px; }
+	}
+
+	&-slice-output {
+		/* border-bottom: 1px solid #fff; */
+		background-color: $lt_grey;
+		margin-bottom: 2px;
+		color: #999;
+
+		h1{ font-size: 2em;   }
+		h2 { font-size: 1.6em; }
+		h3 { font-size: 1.4em; }
+		h4 { font-size: 1.2em; }
+		h5 { font-size: 1.1em; }
+		h6 { font-size: 1em;   }
+	}
+}
+
 
 .rex-content-editmode {
 
@@ -121,28 +145,6 @@
 		+border-radius(0px);
 		border: 0;
 	}
-
-	&-slice-input,	&-slice-output {
-		clear: both;
-		padding: 10px;
-		line-height: 1.6;
-		+border-radius(4px);
-		ol, ul { margin-left: 20px; }
-	}
-
-	&-slice-output {
-		/* border-bottom: 1px solid #fff; */
-		background-color: $lt_grey;
-		margin-bottom: 2px;
-		color: #999;
-
-		h1{ font-size: 2em;   }
-		h2 { font-size: 1.6em; }
-		h3 { font-size: 1.4em; }
-		h4 { font-size: 1.2em; }
-		h5 { font-size: 1.1em; }
-		h6 { font-size: 1em;   }
-	}
 }
 
 /*	Editmode */
@@ -161,7 +163,7 @@
 		margin: 0 0 0 10px;
 	}
 
-	.rex-navi-slice {
+	.sly-slice-actions {
 		float: right;
 		margin-right: 5px; /* Schiebt die Edit, Delete- und Pfeil-Buttons rein*/
 	}
@@ -246,22 +248,16 @@
 
 /* Wird von rex_article ausgegeben */
 
-.rex-navi-slice li {
+.sly-slice-actions li {
 	display: block;
 	float: left;
-	padding: 0;
 	margin-top: 8px;
-
-	&.rex-navi-first {
-		padding-left: 0;
-	}
+	margin-left: 2px;
 
 	a {
 		display: block;
 		color: #fff;
-		font-weight: normal;
 		font-size: 1em;
-		margin-left: 2px;
 		height: 20px;
 		background-color: $link_color;
 		line-height: 20px;

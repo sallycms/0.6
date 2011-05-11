@@ -22,8 +22,8 @@ $dst = preg_replace('#[^a-z0-9_-]#i', '', $dst);
 
 define('BASE', realpath('sally/include/lang'));
 
-if (!file_exists(BASE.'/'.$src.'.lang')) {
-	die('Source language file ('.$src.'.lang) could not be found.');
+if (!file_exists(BASE.'/'.$src.'.yml')) {
+	die('Source language file ('.$src.'.yml) could not be found.');
 }
 
 require 'sally/include/lib/sly/Exception.php';
@@ -34,7 +34,7 @@ require 'sally/include/lib/sfYaml/sfYamlInline.php';
 $base      = new sly_Util_Directory(BASE);
 $files     = $base->listRecursive(false, true);
 $sources   = array();
-$len       = strlen($src.'.lang');
+$len       = strlen($src.'.yml');
 $known     = array();
 $originals = array();
 
@@ -45,7 +45,7 @@ foreach ($files as $file) {
 
 	$short    = substr($file, strlen(BASE) + 1);
 	$short    = str_replace('\\', '/', $short);
-	$isSource = substr($file, -$len) == $src.'.lang';
+	$isSource = substr($file, -$len) == $src.'.yml';
 	$data     = sfYaml::load($file);
 
 	if ($isSource) {
@@ -61,7 +61,7 @@ foreach ($files as $file) {
 }
 
 print PHP_EOL;
-$dstName = $dst.'.lang.rebuilt';
+$dstName = $dst.'.yml.rebuilt';
 
 foreach ($sources as $sourceName) {
 	$targetName = dirname($sourceName).'/'.$dstName;

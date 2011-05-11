@@ -185,11 +185,11 @@ class sly_Controller_User extends sly_Controller_Sally {
 	protected function getBackendLocales() {
 		$curCharset = t('htmlcharset');
 		$langpath   = SLY_INCLUDE_PATH.'/lang';
-		$langs      = glob($langpath.'/*.lang');
+		$langs      = glob($langpath.'/*.yml');
 		$result     = array('' => 'default');
 
 		foreach ($langs as $file) {
-			$locale  = substr(basename($file), 0, -5);
+			$locale  = substr(basename($file), 0, -4);
 			$tmpI18N = rex_create_lang($locale, $langpath, false); // Locale nicht neu setzen
 
 			if ($curCharset == $tmpI18N->msg('htmlcharset')) {

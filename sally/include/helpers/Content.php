@@ -12,58 +12,14 @@
  * @author zozi
  */
 class sly_Helper_Content {
-	private static $moduleSelect;
-
-	public static function getModuleSelect($templateName, $slot) {
-		if (empty(self::$moduleSelect)) {
-			$user    = sly_Util_User::getCurrentUser();
-			$service = sly_Service_Factory::getTemplateService();
-			$modules = $service->getModules($templateName, $slot);
-
-			self::$moduleSelect = new sly_Form_Select_DropDown('module', '', '', array());
-			self::$moduleSelect->addClass('sly-module-select');
-			self::$moduleSelect->addValue('', '----------------------------  '.t('add_block'));
-
-			foreach ($modules as $module => $moduleTitle) {
-				if ($user->isAdmin() || $user->hasPerm('module['.$module.']')) {
-					self::$moduleSelect->addValue($module, rex_translate($moduleTitle, null, false));
-				}
-			}
-		}
-
-		return self::$moduleSelect;
-	}
-
-	public static function printAddModuleForm($articleId, $clangId, $prior, $template, $slot) {
-		$moduleSelect = self::getModuleSelect($template, $slot);
-		$formID       = 'slice'.$prior;
-
-		$form = new sly_Form('index.php', 'GET', t('add_block'), $formID, $formID);
-		$form->addClass('rex-form-content-editmode');
-		$form->addHiddenValue('article_id', $articleId);
-		$form->addHiddenValue('page', 'content');
-		$form->addHiddenValue('mode', 'edit');
-		$form->addHiddenValue('prior', $prior);
-		$form->addHiddenValue('function', 'add');
-		$form->addHiddenValue('clang', $clangId);
-		$form->addHiddenValue('slot', $slot);
-
-		$form->add($moduleSelect);
-		$form->setSubmitButton(null);
-		$form->setResetButton(null);
-		$form->render();
-	}
 
 	// ----- ADD Slice
 	public static function printAddSliceForm($prior, $module, $articleId, $clang, $slot) {
-		global $REX, $I18N;
-
 		$moduleService = sly_Service_Factory::getModuleService();
 
 		if (!$moduleService->exists($module)) {
 			$slice_content = rex_warning(t('module_doesnt_exist'));
-		}
-		else {
+		} else {
 			$moduleContent = $moduleService->getContent($moduleService->getInputFilename($module));
 			ob_start();
 			?>
@@ -88,10 +44,8 @@ class sly_Helper_Content {
 						</div>
 
 						<div class="rex-form-row">
-							<div class="rex-content-editmode-slice-input">
-								<div class="rex-content-editmode-slice-input-2">
-								<? eval('?>'.self::replaceObjectVars(-1, $moduleContent)); ?>
-								</div>
+							<div class="sly-contentpage-slice-input">
+								<? eval('?>' . self::replaceObjectVars(-1, $moduleContent)); ?>
 							</div>
 						</div>
 					</fieldset>
@@ -109,7 +63,6 @@ class sly_Helper_Content {
 			</div>
 
 			<?
-
 			self::focusFirstElement();
 
 			$slice_content = ob_get_clean();
@@ -142,10 +95,8 @@ class sly_Helper_Content {
 						<input type="hidden" name="update" value="0" />
 						<input type="hidden" name="clang" value="<?= $articleSlice->getClang() ?>" />
 
-						<div class="rex-content-editmode-slice-input">
-							<div class="rex-content-editmode-slice-input-2">
-							<? eval('?>'.$articleSlice->getInput()); ?>
-							</div>
+						<div class="sly-contentpage-slice-input">
+							<? eval('?>' . $articleSlice->getInput()); ?>
 						</div>
 					</div>
 				</fieldset>
@@ -163,7 +114,6 @@ class sly_Helper_Content {
 			</form>
 		</div>
 		<?
-
 		self::focusFirstElement();
 
 		/*
@@ -224,89 +174,15 @@ class sly_Helper_Content {
 
 	private static function triggerSliceShowEP($content, OOArticleSlice $articleSlice, $func) {
 		return sly_Core::dispatcher()->filter('SLICE_SHOW', $content, array(
-			'article_id'        => $articleSlice->getArticleId(),
-			'clang'             => $articleSlice->getClang(),
-			'ctype'             => $articleSlice->getSlot(),
-			'slot'              => $articleSlice->getSlot(),
-			'module'            => $articleSlice->getModuleName(),
-			'slice_id'          => $articleSlice->getSliceId(),
-			'function'          => $func,
+			'article_id' => $articleSlice->getArticleId(),
+			'clang' => $articleSlice->getClang(),
+			'ctype' => $articleSlice->getSlot(),
+			'slot' => $articleSlice->getSlot(),
+			'module' => $articleSlice->getModuleName(),
+			'slice_id' => $articleSlice->getSliceId(),
+			'function' => $func,
 			'function_slice_id' => $articleSlice->getId()
 		));
-	}
-
-	public static function printSliceContent(OOArticleSlice $articleSlice) {
-		// Modulinhalt ausgeben
-		?>
-		<!-- *** OUTPUT OF MODULE-OUTPUT - START *** -->
-		<div class="rex-content-editmode-slice-output">
-			<div class="rex-content-editmode-slice-output-2">
-				<? $articleSlice->printContent() ?>
-			</div>
-		</div>
-		<!-- *** OUTPUT OF MODULE-OUTPUT - END *** -->
-		<?
-	}
-
-	public static function printSliceToolbar(OOArticleSlice $articleSlice, $function = '') {
-		$user       = sly_Util_User::getCurrentUser();
-		$module     = $articleSlice->getSlice()->getModule();
-		$moduleName = sly_Service_Factory::getModuleService()->get($module, 'title', '');
-		$sliceUrl   = 'index.php?page=content&amp;article_id='.$articleSlice->getArticleId().'&amp;mode=edit&amp;slice_id='.$articleSlice->getId().'&amp;clang='.$articleSlice->getClang().'&amp;slot='.$articleSlice->getSlot().'%s#slice'.$articleSlice->getPrior();
-
-		$listElements   = array();
-		$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;function=edit').'" class="rex-tx3">'.t('edit').' <span>'.sly_html($moduleName).'</span></a>';
-		$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;function=delete&amp;save=1').'" class="rex-tx2 sly-delete">'.t('delete').' <span>'.sly_html($moduleName).'</span></a>';
-
-		if ($user->isAdmin() || $user->hasPerm('moveSlice[]')) {
-			$moveUp   = t('move_slice_up');
-			$moveDown = t('move_slice_down');
-
-			// upd stamp übergeben, da sonst ein block nicht mehrfach hintereindander verschoben werden kann
-			// (Links wären sonst gleich und der Browser lässt das klicken auf den gleichen Link nicht zu)
-
-			$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;upd='.time().'&amp;function=moveup').'" title="'.$moveUp.'" class="rex-slice-move-up"><span>'.$moduleName.'</span></a>';
-			$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;upd='.time().'&amp;function=movedown').'" title="'.$moveDown.'" class="rex-slice-move-down"><span>'.$moduleName.'</span></a>';
-		}
-
-		$dispatcher   = sly_Core::dispatcher();
-		$listElements = $dispatcher->filter('ART_SLICE_MENU', $listElements, array(
-			'article_id' => $articleSlice->getArticleId(),
-			'clang'      => $articleSlice->getClang(),
-			'ctype'      => $articleSlice->getSlot(),
-			'slot'       => $articleSlice->getSlot(),
-			'module'     => $module,
-			'slice_id'   => $articleSlice->getId()
-		));
-
-		if ($function == 'edit') {
-			$mne = '<div class="rex-content-editmode-module-name rex-form-content-editmode-edit-slice">';
-		}
-		else {
-			$mne = '<div class="rex-content-editmode-module-name">';
-		}
-
-		$mne .= '
-			<h3 class="rex-hl4">'.sly_html($moduleName).'</h3>
-			<div class="rex-navi-slice">
-				<ul>';
-
-		$listElementFlag = true;
-
-		foreach ($listElements as $listElement) {
-			$class = '';
-
-			if ($listElementFlag) {
-				$class = ' class="rex-navi-first"';
-				$listElementFlag = false;
-			}
-
-			$mne .= '<li'.$class.'>'.$listElement.'</li>';
-		}
-
-		$mne .= '</ul></div></div>';
-
-		print $mne;
 	}
 
 	/**
@@ -324,8 +200,7 @@ class sly_Helper_Content {
 				// damit die nächsten Slices wieder die Werte aus der DB verwenden
 				$var->setACValues($slice_id, $REX['ACTION']);
 				$tmp = $var->getBEInput($slice_id, $content);
-			}
-			else {
+			} else {
 				// Slice normal parsen
 				$tmp = $var->getBEInput($slice_id, $content);
 			}
@@ -342,7 +217,7 @@ class sly_Helper_Content {
 	 * artikelweite globale Variablen werden ersetzt
 	 */
 	private static function replaceCommonVars($content, $articleId, $clang) {
-		static $user_id    = null;
+		static $user_id = null;
 		static $user_login = null;
 
 		// UserId gibt's nur im Backend
@@ -351,22 +226,21 @@ class sly_Helper_Content {
 			$user = sly_Util_User::getCurrentUser();
 
 			if (!empty($user)) {
-				$user_id    = $user->getId();
+				$user_id = $user->getId();
 				$user_login = $user->getLogin();
-			}
-			else {
-				$user_id    = '';
+			} else {
+				$user_id = '';
 				$user_login = '';
 			}
 		}
 
 		static $search = array(
-			'REX_ARTICLE_ID',
-			'REX_CATEGORY_ID',
-			'REX_CLANG_ID',
-			'REX_TEMPLATE_NAME',
-			'REX_USER_ID',
-			'REX_USER_LOGIN'
+	'REX_ARTICLE_ID',
+	'REX_CATEGORY_ID',
+	'REX_CLANG_ID',
+	'REX_TEMPLATE_NAME',
+	'REX_USER_ID',
+	'REX_USER_LOGIN'
 		);
 
 		$article = sly_Util_Article::findById($articleId);
@@ -386,4 +260,11 @@ class sly_Helper_Content {
 		$layout = sly_Core::getLayout();
 		$layout->addJavaScript('jQuery(function($) { $(":input:visible:enabled:not([readonly]):first", $("form#REX_FORM")).focus(); });');
 	}
+	
+	public static function metaFormAddButtonBar($form, $label, $name) {
+		$button = new sly_Form_Input_Button('submit', $name, $label);
+		$button->setAttribute('onclick', 'return confirm(\'' . $label . '?\')');
+		$form->add(new sly_Form_ButtonBar(array('submit' => $button)));
+	}
+
 }
