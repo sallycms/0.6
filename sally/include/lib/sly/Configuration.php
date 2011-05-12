@@ -67,7 +67,7 @@ class sly_Configuration {
 	public function loadDevelop() {
 		$dir = new sly_Util_Directory(SLY_BASE.DIRECTORY_SEPARATOR.'develop'.DIRECTORY_SEPARATOR.'config', true);
 		foreach($dir->listPlain() as $file) {
-			$this->loadProject($dir.DIRECTORY_SEPARATOR.$file, true);
+			$this->loadStatic($dir.DIRECTORY_SEPARATOR.$file);
 		}
 	}
 
