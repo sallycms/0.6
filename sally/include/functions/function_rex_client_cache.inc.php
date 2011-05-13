@@ -56,7 +56,6 @@ function rex_send_article($article, $content, $environment) {
 
 	if ($article) {
 		$lastModified = $article->getUpdateDate();
-		$etag         = $article->getId().'_'.$article->getClang();
 		$requestedID  = sly_request('article_id', 'int');
 		$notFoundID   = $config->get('NOTFOUND_ARTICLE_ID');
 
@@ -66,19 +65,20 @@ function rex_send_article($article, $content, $environment) {
 	}
 	else {
 		$lastModified = time();
-		$etag         = md5($content);
 	}
 
+	$etag = substr(md5($content), 0, 12);
 	rex_send_content(trim($content), $lastModified, $etag, $environment);
 }
 
 /**
- * Sendet den Content zum Client,
- * fügt ggf. HTTP1.1 cache headers hinzu
+ * Sendet den Content zum Client
+ *
+ * fügt ggf. HTTP1.1 Cache Header hinzu
  *
  * @param string $content       Inhalt des Artikels
  * @param int    $lastModified  Last-Modified Timestamp
- * @param string $cacheKey      Cachekey zur identifizierung des Caches
+ * @param string $etag          Cachekey zur Identifizierung des Caches
  * @param string $environment   die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
 function rex_send_content($content, $lastModified, $etag, $environment) {
