@@ -66,8 +66,7 @@ function rex_send_article($article, $content, $environment) {
 	}
 	else {
 		$lastModified = time();
-		// Dynamische Teile sollen die MD5-Summe nicht beeinflussen.
-		$etag = md5(preg_replace('@<!--DYN-->.*<!--/DYN-->@', '', $content));
+		$etag         = md5($content);
 	}
 
 	rex_send_content(trim($content), $lastModified, $etag, $environment);
@@ -99,11 +98,6 @@ function rex_send_content($content, $lastModified, $etag, $environment) {
 
 	if ($useEtag === true || $useEtag == $environment) {
 		rex_send_etag($etag);
-	}
-
-	// Dynamische Teile sollen die MD5-Summe nicht beeinflussen.
-	if ($md5 === true || $md5 == $environment) {
-		header('Content-MD5: '.md5(preg_replace('@<!--DYN-->.*<!--/DYN-->@', '', $content)));
 	}
 
 	if (!sly_ini_get('zlib.output_compression')) {
