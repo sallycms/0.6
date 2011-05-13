@@ -91,7 +91,6 @@ function rex_send_content($content, $lastModified, $etag, $environment) {
 	$config  = sly_Core::config();
 	$lastMod = $config->get('USE_LAST_MODIFIED');
 	$useEtag = $config->get('USE_ETAG');
-	$gzip    = $config->get('USE_GZIP');
 	$md5     = $config->get('USE_MD5');
 
 	if ($lastMod === true || $lastMod == $environment) {
@@ -102,17 +101,17 @@ function rex_send_content($content, $lastModified, $etag, $environment) {
 		rex_send_etag($etag);
 	}
 
-	if ($gzip === true || $gzip == $environment) {
-		$content = rex_send_gzip($content);
-	}
-
 	// Dynamische Teile sollen die MD5-Summe nicht beeinflussen.
 	if ($md5 === true || $md5 == $environment) {
 		header('Content-MD5: '.md5(preg_replace('@<!--DYN-->.*<!--/DYN-->@', '', $content)));
 	}
 
-	// content length schicken, damit der Browser einen Ladebalken anzeigen kann
-	header('Content-Length: '.strlen($content));
+	if (!sly_ini_get('zlib.output_compression')) {
+		if (ob_start('ob_gzhandler') === false) {
+			// manually send content length if everything fails
+			header('Content-Length: '.strlen($content));
+		}
+	}
 
 	print $content;
 }
@@ -165,34 +164,4 @@ function rex_send_etag($cacheKey) {
 		header('HTTP/1.1 304 Not Modified');
 		exit();
 	}
-}
-
-/**
- * Kodiert den Inhalt des Artikels in GZIP/X-GZIP, wenn der Browser eines der
- * Formate unterstützt
- *
- * XHTML 1.1: HTTP_ACCEPT_ENCODING feature
- *
- * @param string $content  Inhalt des Artikels
- */
-function rex_send_gzip($content) {
-	$enc          = '';
-	$encodings    = array();
-	$supportsGzip = false;
-
-	if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
-		$encodings = explode(',', strtolower(preg_replace('/\s+/', '', $_SERVER['HTTP_ACCEPT_ENCODING'])));
-	}
-
-	if ((in_array('gzip', $encodings) || in_array('x-gzip', $encodings)) && function_exists('ob_gzhandler') && !ini_get('zlib.output_compression')) {
-		$enc          = in_array('x-gzip', $encodings) ? 'x-gzip' : 'gzip';
-		$supportsGzip = true;
-	}
-
-	if ($supportsGzip) {
-		header('Content-Encoding: '.$enc);
-		$content = gzencode($content, 5, FORCE_GZIP);
-	}
-
-	return $content;
 }
