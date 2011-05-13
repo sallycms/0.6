@@ -82,11 +82,6 @@ function rex_send_article($article, $content, $environment) {
  * @param string $environment   die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
  */
 function rex_send_content($content, $lastModified, $etag, $environment) {
-	// Cachen erlauben, nach revalidierung
-	// see http://xhtmlforum.de/35221-php-session-etag-header.html#post257967
-	session_cache_limiter('none');
-	header('Cache-Control: must-revalidate, proxy-revalidate, private');
-
 	$config  = sly_Core::config();
 	$lastMod = $config->get('USE_LAST_MODIFIED');
 	$useEtag = $config->get('USE_ETAG');
