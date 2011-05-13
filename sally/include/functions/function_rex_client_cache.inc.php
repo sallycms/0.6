@@ -14,34 +14,9 @@
  */
 
 /**
- * Sendet eine Datei zum Client
+ * Sendet einen sly_Model_Article zum Client
  *
- * @param string $file         Pfad zur Datei
- * @param string $contentType  ContentType der Datei
- * @param string $environment  Die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
- */
-function rex_send_file($file, $contentType, $environment = 'backend') {
-	global $REX;
-
-	// Cachen für Dateien aktivieren
-	$temp = $REX['USE_LAST_MODIFIED'];
-	$REX['USE_LAST_MODIFIED'] = true;
-
-	header('Content-Type: '.$contentType);
-	header('Content-Disposition: inline; filename="'.basename($file).'"');
-
-	$content  = file_get_contents($file);
-	$cacheKey = md5($content.$file.$contentType.$environment);
-
-	rex_send_content($content, filemtime($file), $cacheKey, $environment);
-
-	// Setting zurücksetzen
-	$REX['USE_LAST_MODIFIED'] = $temp;
-}
-
-/**
- * Sendet einen sly_Model_Article zum Client,
- * fügt ggf. HTTP1.1 cache headers hinzu
+ * fügt ggf. HTTP1.1 Cache Header hinzu
  *
  * @param sly_Model_Article $article      der zu sendene Artikel
  * @param string            $content      Inhalt des Artikels
@@ -106,24 +81,17 @@ function rex_send_content($content, $lastModified, $etag, $environment) {
 }
 
 /**
- * Prüft, ob sich dateien geändert haben
+ * Prüft, ob sich Dateien geändert haben
  *
  * XHTML 1.1: HTTP_IF_MODIFIED_SINCE feature
  *
  * @param int $lastModified  Last-Modified Timestamp
  */
-function rex_send_last_modified($lastModified = null) {
-	if (!$lastModified) {
-		$lastModified = time();
-	}
-
+function rex_send_last_modified($lastModified) {
 	$lastModified = date('r', $lastModified);
+	header('Last-Modified: '.$lastModified);
 
-	// Sende Last-Modification time
-	header('Last-Modified: ' .$lastModified);
-
-	// Last-Modified Timestamp gefunden
-	// => den Browser anweisen, den Cache zu verwenden
+	// if browser has current version, send 304 only
 	if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $lastModified) {
 		while (ob_get_level()) ob_end_clean();
 		header('HTTP/1.1 304 Not Modified');
@@ -133,22 +101,18 @@ function rex_send_last_modified($lastModified = null) {
 
 /**
  * Prüft ob sich der Inhalt einer Seite im Cache des Browsers befindet und
- * verweisst ggf. auf den Cache
+ * verweißt ggf. auf den Cache
  *
  * XHTML 1.1: HTTP_IF_NONE_MATCH feature
  *
- * @param string $cacheKey  Cachekey zur identifizierung des Caches
+ * @param string $etag  Cachekey zur identifizierung des Caches
  */
-function rex_send_etag($cacheKey) {
-	// Laut HTTP Spec muss der Etag in " sein
-	$cacheKey = '"'.$cacheKey.'"';
+function rex_send_etag($etag) {
+	$etag = '"'.trim($etag, '"').'"';
+	header('ETag: '.$etag);
 
-	// Sende CacheKey als ETag
-	header('ETag: '.$cacheKey);
-
-	// CacheKey gefunden
-	// => den Browser anweisen, den Cache zu verwenden
-	if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] == $cacheKey) {
+	// if browser has current version, send 304 only
+	if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] == $etag) {
 		while (ob_get_level()) ob_end_clean();
 		header('HTTP/1.1 304 Not Modified');
 		exit();
