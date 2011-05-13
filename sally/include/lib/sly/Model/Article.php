@@ -91,13 +91,9 @@ class sly_Model_Article extends sly_Model_Base_Article {
 	/**
 	 * returns the rendered template with the articlecontent
 	 *
-	 * @global array $REX
 	 * @return string
 	 */
 	public function getArticleTemplate() {
-		// global $REX hier wichtig, damit in den Artikeln die Variable vorhanden ist!
-		global $REX;
-
 		$tplserv = sly_Service_Factory::getTemplateService();
 
 		if ($this->hasType() && $tplserv->exists($this->getTemplateName())) {
@@ -106,11 +102,11 @@ class sly_Model_Article extends sly_Model_Base_Article {
 			ob_implicit_flush(0);
 			$tplserv->includeFile($this->getTemplateName(), $params);
 			$content = ob_get_clean();
-		} else {
-			$content = 'No Template';
+		}
+		else {
+			$content = 'No article type or template given.';
 		}
 
 		return $content;
 	}
-
 }

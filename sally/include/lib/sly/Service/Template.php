@@ -310,9 +310,7 @@ class sly_Service_Template extends sly_Service_DevelopBase {
 	 */
 	public function includeFile($name_C3476zz3g21ug327ur623, $params = array()) {
 		$templateFile_C3476zz3g21ug327ur623 = $this->getGenerated($name_C3476zz3g21ug327ur623);
-		if (!empty($params))
-			extract($params);
+		if (!empty($params)) extract($params);
 		include $templateFile_C3476zz3g21ug327ur623;
 	}
-
 }
