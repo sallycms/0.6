@@ -78,7 +78,7 @@ abstract class sly_DB_PDO_SQLBuilder {
 		if ($this->get_where_values())
 			$ret = array_merge($ret,$this->get_where_values());
 
-		return array_flatten($ret);
+		return sly_Util_Array::flatten($ret);
 	}
 
 	public function get_where_values() {
@@ -253,7 +253,7 @@ abstract class sly_DB_PDO_SQLBuilder {
 			$e = new sly_DB_PDO_Expression($args[0]);
 			$e->set_connection($this->connection);
 			$this->where = $e->to_s();
-			$this->where_values = array_flatten($e->values());
+			$this->where_values = sly_Util_Array::flatten($e->values());
 		}
 		elseif ($num_args > 0) {
 			// if the values has a nested array then we'll need to use Expressions to expand the bind marker for us
@@ -265,7 +265,7 @@ abstract class sly_DB_PDO_SQLBuilder {
 					$e->set_connection($this->connection);
 					$e->bind_values($values);
 					$this->where = $e->to_s();
-					$this->where_values = array_flatten($e->values());
+					$this->where_values = sly_Util_Array::flatten($e->values());
 					return;
 				}
 			}

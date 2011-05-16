@@ -202,4 +202,28 @@ class sly_Util_Array {
 	public static function isMultiDim($array) {
 		return self::any('is_array', $array);
 	}
+
+	/**
+	 * Denests the nested arrays within the given array
+	 *
+	 * @see    http://snippets.dzone.com/posts/show/4660
+	 *
+	 * @param  array    $array  The array to flatten
+	 * @return array
+	 */
+	public static function flatten(array $array) {
+		$i = 0;
+		$n = count($array);
+
+		while ($i < $n) {
+			if (is_array($array[$i])) {
+				array_splice($array, $i, 1, $array[$i]);
+			}
+			else {
+				++$i;
+			}
+		}
+
+		return $array;
+	}
 }

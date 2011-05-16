@@ -183,21 +183,3 @@ function _rex_highlight($arg1, $return, $func) {
 
 	print $s;
 }
-
-
-// http://snippets.dzone.com/posts/show/4660
-function array_flatten(array $array) {
-	$i = 0;
-	$n = count($array);
-
-	while ($i < $n) {
-		if (is_array($array[$i])) {
-			array_splice($array, $i, 1, $array[$i]);
-		}
-		else {
-			++$i;
-		}
-	}
-
-	return $array;
-}
