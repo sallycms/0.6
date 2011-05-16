@@ -9,9 +9,6 @@
  */
 
 class sly_Util_User {
-
-	private static $currentUser = false;
-
 	/**
 	 * Generates a password hash for a given user and a given password sting.
 	 *
@@ -34,9 +31,6 @@ class sly_Util_User {
 	 * @return sly_Model_User
 	 */
 	public static function getCurrentUser() {
-		if (self::$currentUser === false) {
-			self::$currentUser = sly_Service_Factory::getUserService()->getCurrentUser();
-		}
-		return self::$currentUser;
+		return sly_Service_Factory::getUserService()->getCurrentUser();
 	}
 }
