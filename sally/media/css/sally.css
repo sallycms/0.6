@@ -77,11 +77,6 @@ caption, legend {
 		padding: 0 45px;
 	}
 
-	&-block {
-		clear: both;
-		margin-bottom: 10px;
-	}
-
 	&-content {
 		margin-left: 40px;
 		padding: 10px 5px;

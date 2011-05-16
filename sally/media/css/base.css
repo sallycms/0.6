@@ -96,7 +96,7 @@ img, iframe {
 		}
 		.sly-navi-path {
 			float: left;
-			
+
 		}
 		/* p = zweite Zeile der Pfadangabe */
 		p {
@@ -217,10 +217,6 @@ ul.rex-ul1 {
 	background-image: url(../excla_mark_green.gif);
 	background-position: 0% 50%;
 	background-color: #209eb5;
-
-	&-block {
-		a { color: #fff; }
-	}
 }
 
 .rex-ok, .rex-online {

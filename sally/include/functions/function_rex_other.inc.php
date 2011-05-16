@@ -85,28 +85,6 @@ function rex_warning($message, $cssClass = null, $sorroundTag = null) {
 	return rex_message($message, $cssClass, $sorroundTag);
 }
 
-function rex_info_block($message, $cssClass = null, $sorroundTag = null) {
-	if (!$cssClass)    $cssClass    = 'rex-info-block';
-	if (!$sorroundTag) $sorroundTag = 'div';
-	return rex_message_block($message, $cssClass, $sorroundTag);
-}
-
-function rex_warning_block($message, $cssClass = null, $sorroundTag = null) {
-	if (!$cssClass)    $cssClass    = 'rex-warning-block';
-	if (!$sorroundTag) $sorroundTag = 'div';
-	return rex_message_block($message, $cssClass, $sorroundTag);
-}
-
-function rex_message_block($message, $cssClass, $sorroundTag) {
-	$return[] = '<div class="rex-message-block"><'.$sorroundTag.' class="'.$cssClass.'">';
-	$return[] = '<div class="rex-message-content">';
-	$return[] = $message;
-	$return[] = '</div>';
-	$return[] = '</'.$sorroundTag.'></div>';
-
-	return implode('', $return);
-}
-
 /**
  * Übersetzt den text $text, falls dieser mit dem prefix "translate:" beginnt.
  *
