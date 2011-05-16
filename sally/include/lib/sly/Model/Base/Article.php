@@ -198,16 +198,58 @@ class sly_Model_Base_Article extends sly_Model_Base {
 	/**
 	 * return the url
 	 *
-	 * @param  array $params
-	 * @return string 
+	 * @param  array   $params
+	 * @param  string  $divider
+	 * @param  boolean $disableCache
+	 * @return string
 	 */
-	public function getUrl($params = '') {
-		return rex_getUrl($this->getId(), $this->getClang(), $this->getName(), $params);
+	public function getUrl($params = '', $divider = '&amp;', $disableCache = false) {
+		static $urlCache = array();
+
+		$id    = $this->getId();
+		$clang = $this->getClang();
+
+		// cache the URLs for this request (unlikely to change)
+
+		$cacheKey = substr(md5($id.'_'.$clang.'_'.json_encode($params).'_'.$divider), 0, 10);
+
+		if (!$disableCache && isset($urlCache[$cacheKey])) {
+			return $urlCache[$cacheKey];
+		}
+
+		// check for any fancy URL addOns
+
+		$paramString = sly_Util_HTTP::queryString($params, $divider);
+		$dispatcher  = sly_Core::dispatcher();
+		$url         = $dispatcher->filter('URL_REWRITE', '', array(
+			'id'            => $id,
+			'clang'         => $clang,
+			'params'        => $paramString,
+			'divider'       => $divider,
+			'disable_cache' => $disableCache
+		));
+
+		// if no listener is available, generate plain index.php?article_id URLs
+
+		if (empty($url)) {
+			$clangString  = '';
+			$multilingual = sly_Util_Language::isMultilingual();
+			$config       = sly_Core::config();
+
+			if ($multilingual && $clang != $config->get('START_CLANG_ID')) {
+				$clangString = $divider.'clang='.$clang;
+			}
+
+			$url = $config->get('FRONTEND_FILE').'?article_id='.$id.$clangString.$paramString;
+		}
+
+		$urlCache[$cacheKey] = $url;
+		return $url;
 	}
 
 	/**
 	 *
-	 * @return array 
+	 * @return array
 	 */
 	public function getParentTree() {
 		$return = array();
@@ -227,7 +269,7 @@ class sly_Model_Base_Article extends sly_Model_Base {
 	/**
 	 *
 	 * @param  sly_Model_Base_Article $anObj
-	 * @return boolean 
+	 * @return boolean
 	 */
 	public function inParentTree(sly_Model_Base_Article $anObj) {
 		$tree = $this->getParentTree();

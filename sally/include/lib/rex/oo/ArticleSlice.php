@@ -217,7 +217,7 @@ class OOArticleSlice {
 			$this->includeContentFile($slice_content_file);
 		}
 	}
-	
+
 	private function includeContentFile($slice_content_file) {
 		if (file_exists($slice_content_file)) {
 			$article = $this->getArticle();
@@ -286,7 +286,8 @@ class OOArticleSlice {
 	public function getMediaList($index) { return $this->getRexVarValue('REX_MEDIALIST', $index); }
 
 	public function getLinkUrl($index) {
-		return rex_getUrl($this->getLink());
+		$article = sly_Util_Article::findById($this->getLink($index));
+		return $article ? $article->getUrl() : '';
 	}
 
 	public function getMediaUrl($index) {
@@ -379,13 +380,11 @@ class OOArticleSlice {
 
 	private static function getReplacementLink($articleID, $clang) {
 		$art = sly_Util_Article::findById($articleID, $clang);
-		if ($art === null) return '';
-		return rex_getUrl($articleID, $clang, '', '', '', true);
+		return $art ? $art->getUrl('', '', true) : '';
 	}
 
 	protected function getRexVarValue($type, $key) {
 		$value = sly_Service_Factory::getSliceValueService()->findBySliceTypeFinder($this->getSliceId(), $type, $key);
-		if ($value) return $value->getValue();
-		return null;
+		return $value ? $value->getValue() : null;
 	}
 }

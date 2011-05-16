@@ -38,8 +38,8 @@ class sly_FunctionsTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testRexParamString() {
-		$this->assertEquals('&foo=bar', rex_param_string(array('foo' => 'bar'), '&'));
-		$this->assertEquals('&foo=%C3%9F%24', rex_param_string(array('foo' => 'ß$'), '&'));
+		$this->assertEquals('&foo=bar', sly_Util_HTTP::queryString(array('foo' => 'bar'), '&'));
+		$this->assertEquals('&foo=%C3%9F%24', sly_Util_HTTP::queryString(array('foo' => 'ß$'), '&'));
 		$this->assertEquals('foo=bar', 'foo=bar');
 	}
 }

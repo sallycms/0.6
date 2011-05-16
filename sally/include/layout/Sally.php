@@ -112,7 +112,7 @@ class sly_Layout_Sally extends sly_Layout_XHTML {
 				$link   = $subpage[0];
 				$label  = $subpage[1];
 				$perm   = !empty($subpage[2]) ? $subpage[2] : '';
-				$params = !empty($subpage[3]) ? rex_param_string($subpage[3]) : '';
+				$params = !empty($subpage[3]) ? sly_Util_HTTP::queryString($subpage[3]) : '';
 
 				// Berechtigung prüfen
 				// Hat der User das Recht für die aktuelle Subpage?

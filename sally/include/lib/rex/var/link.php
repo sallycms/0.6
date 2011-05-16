@@ -164,7 +164,7 @@ class rex_var_link extends rex_var {
 			$value = $service->findBySliceTypeFinder($slice_id, 'REX_LINK', $id);
 			$value = $value ? $value->getValue() : '';
 
-			$replace = $value != '' ? rex_getUrl($value) : '';
+			$replace = $value === '' ? '' : sly_Util_Article::findById($value)->getUrl();
 			$replace = $this->handleGlobalVarParams($var, $args, $replace);
 			$content = str_replace($var.'['.$param_str.']', $replace, $content);
 		}

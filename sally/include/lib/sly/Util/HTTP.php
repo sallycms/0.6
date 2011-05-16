@@ -48,9 +48,11 @@ class sly_Util_HTTP {
 		return $baseURL.'/'.$articleUrl;
 	}
 
-	public static function getUrl($targetArticle, $clang = false, $parameters = array(), $divider = '&amp;') {
+	public static function getUrl($targetArticle, $clang = null, $parameters = array(), $divider = '&amp;') {
 		$articleID = self::resolveArticle($targetArticle);
-		return rex_getUrl($articleID, $clang, 'NoName', $parameters, $divider);
+		$article   = sly_Util_Article::findById($articleID, $clang);
+
+		return $article->getUrl($parameters, $divider);
 	}
 
 	public static function getBaseUrl($addScriptPath = false) {
@@ -71,5 +73,25 @@ class sly_Util_HTTP {
 		if ($article instanceof sly_Model_Article) return (int) $article->getId();
 
 		return -1;
+	}
+
+	/**
+	 * Baut einen Parameter String anhand des array $params
+	 *
+	 * @param  mixed  $params   array or string
+	 * @param  string $divider  only used if $params is array
+	 * @return string
+	 */
+	public static function queryString($params, $divider = '&amp;') {
+		if (!empty($params)) {
+			if (is_array($params)) {
+				return $divider.http_build_query($params, '', $divider);
+			}
+			else {
+				return $params;
+			}
+		}
+
+		return '';
 	}
 }
