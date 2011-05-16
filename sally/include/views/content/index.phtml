@@ -691,7 +691,7 @@ elseif ($mode == 'meta') {
 		// KATEGORIE/STARTARTIKEL VERSCHIEBEN
 
 		if ($article->getStartpage() == 1 && ($user->isAdmin() || $user->hasPerm('moveCategory[]'))) {
-			$select = sly_Form_Helper::getCategorySelect('category_id_new', false, false, null, $user);
+			$select = sly_Form_Helper::getCategorySelect('category_id_new', false, null, null, $user);
 			$select->setAttribute('value', $category_id);
 			$select->setLabel(t('move_category'));
 
