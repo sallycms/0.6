@@ -18,21 +18,6 @@ class sly_FunctionsTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(sly_makeArray(array(1,2,3)), array(1,2,3));
 	}
 
-	public function testTruncate() {
-		$testText = 'Hi. I am just a small text.';
-
-		$this->assertEquals('Hi. I a...', truncate($testText, 10, '...', true));
-		$this->assertEquals('Hi. I am j', truncate($testText, 10, '', true));
-
-		$this->assertEquals('', truncate($testText, 0));
-
-		$this->assertEquals('Hi. I...', truncate($testText, 8, '...', false));
-		$this->assertEquals('Hi. I...', truncate($testText, 9, '...', false));
-		$this->assertEquals('Hi. I...', truncate($testText, 10, '...', false));
-		$this->assertEquals('Hi. I am...', truncate($testText, 11, '...', false));
-		$this->assertEquals('Hi. I am...', truncate($testText, 12, '...', false));
-	}
-
 	public function testRexSplitString() {
 		$this->assertEquals(array('a', 'b c', 'de', 'f g ', 'bla'), rex_split_string('a "b c" de \'f g \' bla'));
 	}
