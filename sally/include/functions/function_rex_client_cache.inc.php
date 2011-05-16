@@ -16,8 +16,6 @@
 /**
  * Sendet einen sly_Model_Article zum Client
  *
- * fügt ggf. HTTP1.1 Cache Header hinzu
- *
  * @param sly_Model_Article $article      der zu sendene Artikel
  * @param string            $content      Inhalt des Artikels
  * @param string            $environment  die Umgebung aus der der Inhalt gesendet wird (frontend/backend)
@@ -48,8 +46,6 @@ function rex_send_article($article, $content, $environment) {
 
 /**
  * Sendet den Content zum Client
- *
- * fügt ggf. HTTP1.1 Cache Header hinzu
  *
  * @param string $content       Inhalt des Artikels
  * @param int    $lastModified  Last-Modified Timestamp
@@ -83,8 +79,6 @@ function rex_send_content($content, $lastModified, $etag, $environment) {
 /**
  * Prüft, ob sich Dateien geändert haben
  *
- * XHTML 1.1: HTTP_IF_MODIFIED_SINCE feature
- *
  * @param int $lastModified  Last-Modified Timestamp
  */
 function rex_send_last_modified($lastModified) {
@@ -102,8 +96,6 @@ function rex_send_last_modified($lastModified) {
 /**
  * Prüft ob sich der Inhalt einer Seite im Cache des Browsers befindet und
  * verweißt ggf. auf den Cache
- *
- * XHTML 1.1: HTTP_IF_NONE_MATCH feature
  *
  * @param string $etag  Cachekey zur identifizierung des Caches
  */
