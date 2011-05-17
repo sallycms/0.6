@@ -118,7 +118,7 @@ abstract class sly_Form_Helper {
 				return self::$user->hasPerm('media['.$category->getId().']');
 
 			case 'structure':
-				return self::$user->hasCategoryPerm($category->getId());
+				return self::$user->hasCategoryRight($category->getId());
 
 			default:
 				return true;
