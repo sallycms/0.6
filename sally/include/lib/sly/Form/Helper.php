@@ -17,8 +17,14 @@ abstract class sly_Form_Helper {
 	private static $type;
 	private static $hideOffline;
 	private static $clang;
+	private static $i18nLoaded = false;
 
 	public static function getMediaCategorySelect($name, $root = null, $user = null, $id = null) {
+		if (!self::$i18nLoaded) {
+			sly_Core::getI18N()->appendFile(SLY_INCLUDE_PATH.'/lang/pages/mediapool/');
+			self::$i18nLoaded = true;
+		}
+
 		$init   = array(0 => t('pool_kats_no'));
 		$select = new sly_Form_Select_DropDown($name, '', -1, $init, $id);
 
