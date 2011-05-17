@@ -56,6 +56,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 		$parentID = (int) $parentID;
 		$position = (int) $position;
 		$status   = (int) $status;
+		$clang    = sly_Core::getCurrentClang(); // any existing clang ID will be sufficient
 
 		// Parent validieren
 
@@ -76,13 +77,13 @@ class sly_Service_Category extends sly_Service_Model_Base {
 
 		// Position validieren
 
-		$maxPos   = $db->magicFetch('article', 'MAX(catprior)', 're_id = '.$parentID.' AND catprior <> 0 AND clang = 1') + 1;
+		$maxPos   = $db->magicFetch('article', 'MAX(catprior)', 're_id = '.$parentID.' AND catprior <> 0 AND clang = '.$clang) + 1;
 		$position = ($position <= 0 || $position > $maxPos) ? $maxPos : $position;
 
 		// Pfad ermitteln
 
 		if ($parentID !== 0) {
-			$path  = $db->magicFetch('article', 'path', array('id' => $parentID, 'startpage' => 1, 'clang' => 0));
+			$path  = $db->magicFetch('article', 'path', array('id' => $parentID, 'startpage' => 1, 'clang' => $clang));
 			$path .= $parentID.'|';
 		}
 		else {
@@ -210,7 +211,7 @@ class sly_Service_Category extends sly_Service_Model_Base {
 			$oldPrio  = $cat->getCatprior();
 			$position = (int) $position;
 
-			$where   = 're_id = '.$parentID.' AND catprior <> 0 AND clang = 1';
+			$where   = 're_id = '.$parentID.' AND catprior <> 0 AND clang = '.$clangID;
 			$maxPrio = $db->magicFetch('article', 'MAX(catprior)', $where);
 			$newPrio = ($position <= 0 || $position > $maxPrio) ? $maxPrio : $position;
 
