@@ -51,8 +51,12 @@ class sly_Service_Language extends sly_Service_Model_Base_Id {
 			throw $e;
 		}
 
-		sly_Core::dispatcher()->notify('CLANG_ADDED', '', array('id' => $newLanguage->getId(), 'language' => $newLanguage));
+		// update cache before notifying the listeners (so that they can call findAll() and get fresh data)
 		$REX['CLANG'][$newLanguage->getId()] = $newLanguage;
+		sly_Core::cache()->set('sly.language', 'all', $REX['CLANG']);
+
+		// notify listeners
+		sly_Core::dispatcher()->notify('CLANG_ADDED', '', array('id' => $newLanguage->getId(), 'language' => $newLanguage));
 
 		return $newLanguage;
 	}
@@ -62,16 +66,21 @@ class sly_Service_Language extends sly_Service_Model_Base_Id {
 
 		$db = sly_DB_Persistence::getInstance();
 
-		//get languages first
+		// get languages first
 		$languages = $this->find($where);
 
-		//delete
+		// delete
 		$res = parent::delete($where);
 
-		//remove
+		// update cache (so that addOns can access fresh clang data when listening to CLANG_DELETED)
 		foreach ($languages as $language) {
 			unset($REX['CLANG'][$language->getId()]);
+		}
 
+		sly_Core::cache()->set('sly.language', 'all', $REX['CLANG']);
+
+		// remove
+		foreach ($languages as $language) {
 			$params = array('clang' => $language->getId());
 			$db->delete('article', $params);
 			$db->delete('article_slice', $params);
@@ -83,8 +92,6 @@ class sly_Service_Language extends sly_Service_Model_Base_Id {
 		}
 
 		rex_generateAll();
-		sly_Core::cache()->set('sly.language', 'all', $REX['CLANG']);
-
 		return $res;
 	}
 }

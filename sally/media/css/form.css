@@ -158,7 +158,7 @@ a.sly-button {
 
 .rex-form {
 	+border-radius($brd_rad);
-	
+
 	.rex-form-row {
 		p.rex-form-read span,
 		p.rex-form-text input,
@@ -369,7 +369,7 @@ a.sly-button {
 
 /* Linklist-Button */
 
-.sly-linklistbutton {
+.sly-form .rex-form-row .sly-linklistbutton {
 	select.sly-linklist { width: 305px; }
 
 	input.sly-link-filter {

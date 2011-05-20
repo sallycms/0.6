@@ -15,6 +15,7 @@
  * @ingroup service
  */
 class sly_Service_User extends sly_Service_Model_Base_Id {
+	private static $currentUser = false;
 	protected $tablename = 'user';
 
 	protected function makeInstance(array $params) {
@@ -45,8 +46,13 @@ class sly_Service_User extends sly_Service_Model_Base_Id {
 	 */
 	public function getCurrentUser() {
 		if (sly_Core::config()->get('SETUP')) return null;
-		$userID = SLY_IS_TESTING ? SLY_TESTING_USER_ID : sly_Util_Session::get('UID', 'int', -1);
-		return $this->findById($userID);
+
+		if (self::$currentUser === false) {
+			$userID = SLY_IS_TESTING ? SLY_TESTING_USER_ID : sly_Util_Session::get('UID', 'int', -1);
+			self::$currentUser = $this->findById($userID);
+		}
+
+		return self::$currentUser;
 	}
 
 	public function login($login, $password) {
@@ -65,6 +71,8 @@ class sly_Service_User extends sly_Service_Model_Base_Id {
 
 			$user->setLastTryDate(time());
 			$this->save($user);
+
+			self::$currentUser = false;
 		}
 
 		return $loginOK;

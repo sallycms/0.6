@@ -298,6 +298,9 @@ function rex_article2startpage($neu_id) {
 	$sql->update('article', array('re_id' => $neu_id), array('re_id' => $alt_id));
 	$sql->query('UPDATE '.$prefix.'article SET path = REPLACE(path, "|'.$alt_id.'|", "|'.$neu_id.'|") WHERE path LIKE "%|'.$alt_id.'|%"');
 
+	// notify system
+	sly_Core::dispatcher()->notify('SLY_ART_TO_STARTPAGE', $neu_id, array('old_cat' => $alt_id));
+
   	return true;
 }
 
@@ -346,6 +349,15 @@ function rex_copyContent($from_id, $to_id, $from_clang = 0, $to_clang = 0, $from
 			'createuser' => $login
 		));
 	}
+
+	// notify system
+	sly_Core::dispatcher()->notify('SLY_ART_CONTENT_COPIED', null, array(
+		'from_id'     => $from_id,
+		'from_clang'  => $from_id,
+		'to_id'       => $to_id,
+		'to_clang'    => $to_clang,
+		'start_slice' => $from_re_sliceid
+	));
 
 	rex_deleteCacheArticle($to_id, $to_clang);
 	return true;
@@ -459,9 +471,9 @@ function rex_moveArticle($id, $target) {
 	}
 
 	$target = (int) $target;
-	
+
 	if($target !== 0 && !sly_Util_Category::exists($target)) return false;
-	
+
 	$source = (int) $article->getCategoryId();
 
 	if ($source === $target) {
@@ -472,7 +484,8 @@ function rex_moveArticle($id, $target) {
 	$cache = sly_Core::cache();
 	$login = sly_Util_User::getCurrentUser()->getLogin();
 	$pre   = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
-	
+	$disp  = sly_Core::dispatcher();
+
 	//get the new prior, same for al anguages
 	$sql->query('SELECT MAX(prior) as prior from '.$pre.'article WHERE id = '.$target.' OR (re_id = '.$target.' AND startpage = 0)');
 	$sql->next();
@@ -482,7 +495,7 @@ function rex_moveArticle($id, $target) {
 	foreach (sly_Util_Language::findAll(true) as $clang) {
 		$article = sly_Util_Article::findById($id, $clang);
 		$re_id   = $target;
-		
+
 		if ($target === 0) {
 			$path    = '|';
 			$catname = $article->getName();
@@ -507,6 +520,12 @@ function rex_moveArticle($id, $target) {
 
 		// re-number old category
 		$sql->query('UPDATE '.$pre.'article SET prior = prior - 1 WHERE re_id = '.$source.' AND startpage = 0 AND clang = '.$clang.' AND prior > '.$article->getPrior());
+
+		// notify system
+		$disp->notify('SLY_ART_MOVED', $id, array(
+			'clang'  => $clang,
+			'target' => $target
+		));
 	}
 
 	// update cache (very generously since many articles have changed (-> been moved))
@@ -610,6 +629,16 @@ function rex_moveCategory($from_cat, $to_cat) {
 
 	// generiere Artikel neu - ohne neue Inhaltsgenerierung
 	foreach (array_keys($toDelete) as $id) rex_deleteCacheArticle($id);
+
+	// notify system
+	$dispatcher = sly_Core::dispatcher();
+
+	foreach (sly_Util_Language::findAll(true) as $clang) {
+		$dispatcher->notify('SLY_CAT_MOVED', $from_cat, array(
+			'clang'  => $clang,
+			'target' => $to_cat
+		));
+	}
 
 	return true;
 }

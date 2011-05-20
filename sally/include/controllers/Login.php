@@ -42,10 +42,11 @@ class sly_Controller_Login extends sly_Controller_Sally {
 		$user_psw   = sly_post('rex_user_psw', 'string');
 		$loginCheck = sly_Service_Factory::getUserService()->login($user_login, $user_psw);
 
-		if($loginCheck !== true) {
+		if ($loginCheck !== true) {
 			$this->message = t('login_error', '<strong>'.sly_Core::config()->get('RELOGINDELAY').'</strong>');
 			$this->index();
-		} else {
+		}
+		else {
 			// if relogin, forward to previous page
 			$referer = sly_post('referer', 'string', false);
 
@@ -54,10 +55,12 @@ class sly_Controller_Login extends sly_Controller_Sally {
 				$msg = t('redirect_previous_page', $referer);
 			}
 			else {
-				$url = 'index.php?page='.urlencode($REX['PAGE']);
-				$msg = t('redirect_startpage', $url);
+				$user = sly_Util_User::getCurrentUser();
+				$url  = 'index.php?page='.$user->getStartPage();
+				$msg  = t('redirect_startpage', $url);
 			}
-			sly_Util_HTTP::redirect($url, array(), $msg);
+
+			sly_Util_HTTP::redirect($url, array(), $msg, 302);
 		}
 	}
 

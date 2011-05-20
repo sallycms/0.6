@@ -181,4 +181,13 @@ class sly_Model_User extends sly_Model_Base_Id {
 	public function delete() {
 		return sly_Service_Factory::getUserService()->delete(array('id' => $this->id));
 	}
+
+	public function hasCategoryRight($categoryID) {
+		$categoryID = (int) $categoryID;
+		return $this->isAdmin() || $this->hasRight('csw[0]') || $this->hasRight('csr['.$categoryID.']') || $this->hasRight('csw['.$categoryID.']');
+	}
+
+	public function hasStructureRight() {
+		return $this->isAdmin() || strpos($this->rights, '#csw[') !== false || strpos($this->rights, '#csr[') !== false;
+	}
 }

@@ -22,6 +22,7 @@ abstract class sly_Form_Helper {
 	private static $type;         ///< string
 	private static $hideOffline;  ///< boolean
 	private static $clang;        ///< int
+	private static $i18nLoaded = false;
 
 	/**
 	 * Creates a select element with all visible media categories
@@ -33,6 +34,11 @@ abstract class sly_Form_Helper {
 	 * @return sly_Form_Select_DropDown  the generated select element
 	 */
 	public static function getMediaCategorySelect($name, $root = null, sly_Model_User $user = null, $id = null) {
+		if (!self::$i18nLoaded) {
+			sly_Core::getI18N()->appendFile(SLY_INCLUDE_PATH.'/lang/pages/mediapool/');
+			self::$i18nLoaded = true;
+		}
+
 		$init   = array(0 => t('pool_kats_no'));
 		$select = new sly_Form_Select_DropDown($name, '', -1, $init, $id);
 
@@ -168,7 +174,7 @@ abstract class sly_Form_Helper {
 				return self::$user->hasPerm('media['.$category->getId().']');
 
 			case 'structure':
-				return self::$user->hasCategoryPerm($category->getId());
+				return self::$user->hasCategoryRight($category->getId());
 
 			default:
 				return true;

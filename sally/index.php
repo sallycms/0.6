@@ -114,7 +114,7 @@ if ($REX['USER']) {
 	$navigation->addPage('system', 'profile');
 	$navigation->addPage('system', 'credits');
 
-	if ($REX['USER']->isAdmin() || $REX['USER']->hasStructurePerm()) {
+	if ($REX['USER']->isAdmin() || $REX['USER']->hasStructureRight()) {
 		$navigation->addPage('system', 'structure');
 		$navigation->addPage('system', 'mediapool', null, true);
 		$navigation->addPage('system', 'linkmap', null, true);

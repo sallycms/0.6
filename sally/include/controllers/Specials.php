@@ -35,7 +35,7 @@ class sly_Controller_Specials extends sly_Controller_Sally {
 		$startArticle    = sly_post('start_article',    'int');
 		$notFoundArticle = sly_post('notfound_article', 'int');
 		$defaultType     = sly_post('default_type',     'string');
-		$developerMode   = sly_post('developer_mode',     'string');
+		$developerMode   = sly_post('developer_mode',   'string');
 		$backendLocale   = sly_post('backend_locale',   'string');
 		$errorEMail      = sly_post('error_email',      'string');
 		$server          = sly_post('server',           'string');
@@ -93,6 +93,9 @@ class sly_Controller_Specials extends sly_Controller_Sally {
 
 		$this->info    = t('info_updated');
 		$this->warning = implode("<br />\n", $this->warning);
+
+		// notify system
+		sly_Core::dispatcher()->notify('SLY_SETTINGS_UPDATED');
 
 		$this->index();
 	}
