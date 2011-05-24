@@ -8,15 +8,8 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-if(!$this->article) return;
-
 $slot     = sly_request('slot', 'string');
 $baseURL = 'index.php?page=content&subpage=meta&article_id='.$this->article->getId().'&clang='.$this->article->getClang().'&slot='.$slot;
-
-$warning  = sly_get('warning', 'string', '');
-$info     = sly_get('info', 'string', '');
-
-require SLY_INCLUDE_PATH . '/functions/function_rex_content.inc.php';
 
 // init services
 $typeService = sly_Service_Factory::getArticleTypeService();
@@ -27,71 +20,6 @@ $dispatcher = sly_Core::dispatcher();
 
 // Artikel wurde gefunden - Kategorie holen
 $category_id = $this->article->getCategoryId();
-
-
-// START: COPY LANG CONTENT
-
-if (sly_post('copycontent', 'string')) {
-	if ($user->isAdmin() || $user->hasPerm('copyContent[]')) {
-		$clang_a = sly_post('clang_a', 'rex-clang-id');
-		$clang_b = sly_post('clang_b', 'rex-clang-id');
-
-		if (rex_copyContent($article_id, $article_id, $clang_a, $clang_b)) {
-			$info = t('content_contentcopy');
-		} else {
-			$warning = t('content_errorcopy');
-		}
-	}
-}
-
-// END: COPY LANG CONTENT
-// START: MOVE ARTICLE
-
-
-
-// END: MOVE ARTICLE
-// START: COPY ARTICLE
-
-if (sly_post('copyarticle', 'string')) {
-	$category_copy_id_new = sly_post('category_copy_id_new', 'rex-category-id');
-
-	if ($user->isAdmin() || ($user->hasPerm('copyArticle[]') && ($user->hasPerm('csw[0]') || $user->hasPerm('csw[' . $category_copy_id_new . ']')))) {
-		if (($new_id = rex_copyArticle($article_id, $category_copy_id_new)) !== false) {
-			$info = t('content_articlecopied');
-			while (ob_get_level())
-				ob_end_clean();
-			header('Location: index.php?page=content&article_id=' . $new_id . '&mode=meta&clang=' . $this->article->getClang() . '&slot=' . $slot . '&info=' . urlencode($info));
-			exit;
-		} else {
-			$warning = t('content_errorcopyarticle');
-		}
-	} else {
-		$warning = t('no_rights_to_this_function');
-	}
-}
-
-// END: COPY ARTICLE
-// START: MOVE CATEGORY
-
-if (sly_post('movecategory', 'string')) {
-	$category_id_new = sly_post('category_id_new', 'rex-category-id');
-
-	if ($user->isAdmin() || ($user->hasPerm('moveCategory[]') && (($user->hasPerm('csw[0]') || $user->hasPerm('csw[' . $category_id . ']')) && ($user->hasPerm('csw[0]') || $user->hasPerm('csw[' . $category_id_new . ']'))))) {
-		if ($category_id != $category_id_new && rex_moveCategory($category_id, $category_id_new)) {
-			$info = t('category_moved');
-			while (ob_get_level())
-				ob_end_clean();
-			header('Location: index.php?page=content&article_id=' . $category_id . '&mode=meta&clang=' . $clang . '&slot=' . $slot . '&info=' . urlencode($info));
-			exit;
-		} else {
-			$warning = t('content_error_movecategory');
-		}
-	} else {
-		$warning = t('no_rights_to_this_function');
-	}
-}
-
-// END: MOVE CATEGORY
 
 // START: CONTENT HEAD MENUE
 $hasType = $this->article->hasType();
@@ -108,32 +36,9 @@ $numSlots = $hasTemplate ? count($curSlots) : 0;
 $slotMenu = '';
 
 if ($numSlots > 1) {
-	$listElements = array(t($numSlots > 1 ? 'content_types' : 'content_type') . ' : ');
 
-	foreach ($curSlots as $tmpSlot) {
-		$slotTitle = rex_translate($templateService->getSlotTitle($templateName, $tmpSlot));
+	
 
-		$listElements[] = '<a href="index.php?page=content&amp;article_id=' . $this->article->getId() . '&amp;clang=' . $this->article->getClang() . '&amp;slot=' . $tmpSlot . '&amp;mode=edit">' . $slotTitle . '</a>';
-	}
-
-	$listElements = $dispatcher->filter('PAGE_CONTENT_SLOT_MENU', $listElements, array(
-				'article_id' => $this->article->getId(),
-				'clang' => $this->article->getClang(),
-			));
-
-	$slotMenu .= '<ul id="rex-navi-slots">';
-
-	foreach ($listElements as $idx => $listElement) {
-		$class = '';
-
-		if ($idx == 1) { // das erste Element ist nur Beschriftung -> überspringen
-			$class = ' class="rex-navi-first"';
-		}
-
-		$slotMenu .= '<li' . $class . '>' . $listElement . '</li>';
-	}
-
-	$slotMenu .= '</ul>';
 }
 
 $menu = $slotMenu;
@@ -157,21 +62,18 @@ foreach ($listElements as $idx => $element) {
 
 $menu .= '</ul>';
 
-// END: CONTENT HEAD MENUE
-// START: AUSGABE
+
 ?>
 <!-- *** OUTPUT OF ARTICLE-CONTENT - START *** -->
 <div class="rex-content-header">
 	<?= $menu ?>
 </div>
 <?
+
+
 // Meldungen
-
-if (!empty($this->warning))
-	print rex_warning($this->warning);
-if (!empty($this->info))
-	print rex_info($this->info);
-
+if (!empty($this->warning))	print rex_warning($this->warning);
+if (!empty($this->info))	print rex_info($this->info);
 
 $dispatcher->notify('SLY_ART_MESSAGES', $this->article);
 
@@ -215,7 +117,7 @@ if ($this->canMorphToStartpage()) {
 
 // INHALTE KOPIEREN
 
-if (($user->isAdmin() || $user->hasPerm('copyContent[]')) && sly_Util_Language::isMultilingual()) {
+if ($this->canCopyContent()) {
 	$languages = sly_Util_Language::findAll();
 
 	foreach ($languages as $id => $lang) {
@@ -249,7 +151,7 @@ if ($this->canMoveArticle()) {
 
 // ARTIKEL KOPIEREN
 
-if ($user->isAdmin() || $user->hasPerm('copyArticle[]')) {
+if ($this->canCopyArticle()) {
 	$select = sly_Form_Helper::getCategorySelect('category_copy_id_new', false, null, null, $user);
 	$select->setAttribute('value', $category_id);
 	$select->setLabel(t('copy_article'));
@@ -262,7 +164,7 @@ if ($user->isAdmin() || $user->hasPerm('copyArticle[]')) {
 
 // KATEGORIE/STARTARTIKEL VERSCHIEBEN
 
-if ($this->article->getStartpage() == 1 && ($user->isAdmin() || $user->hasPerm('moveCategory[]'))) {
+if ($this->canMoveCategory()) {
 	$select = sly_Form_Helper::getCategorySelect('category_id_new', false, null, null, $user);
 	$select->setAttribute('value', $category_id);
 	$select->setLabel(t('move_category'));
