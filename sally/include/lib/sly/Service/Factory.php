@@ -115,4 +115,11 @@ abstract class sly_Service_Factory {
 	public static function getLanguageService() {
 		return self::getService('Language');
 	}
+
+	/**
+	 * @return sly_Service_Asset  The asset service instance
+	 */
+	public static function getAssetService() {
+		return self::getService('Asset');
+	}
 }

@@ -19,7 +19,6 @@ class sly_Layout_Sally extends sly_Layout_XHTML {
 
 		$config = sly_Core::config();
 
-		$this->rebuildCSS();
 		$this->addCSSFile('media/css/import.css');
 
 		$this->addJavaScriptFile('media/js/jquery.min.js');
@@ -182,27 +181,5 @@ class sly_Layout_Sally extends sly_Layout_XHTML {
 
 	public function hasNavigation() {
 		return $this->hasNavigation;
-	}
-
-	private function rebuildCSS() {
-		$srcDir  = SLY_BASE.'/sally/media/css';
-		$destDir = SLY_DYNFOLDER.'/public/sally/css';
-		$dirObj  = new sly_Util_Directory($srcDir);
-		$files   = $dirObj->listRecursive(true, false);
-
-		if (!is_dir($destDir)) {
-			sly_Util_Directory::create($destDir);
-		}
-
-		foreach ($files as $file) {
-			$dest = $destDir.'/'.$file;
-
-			if (!file_exists($dest) || filemtime($srcDir.'/'.$file) > filemtime($dest)) {
-				rex_copyDir($srcDir, $destDir);
-				$result = sly_Util_Scaffold::process($destDir.'/import.css');
-				file_put_contents($destDir.'/import.css', $result);
-				return;
-			}
-		}
 	}
 }

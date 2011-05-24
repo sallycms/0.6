@@ -12,34 +12,14 @@ RewriteEngine On
 # RewriteCond %{HTTP_HOST} ^example\.de$
 # RewriteRule ^(.*)$ http://www.example.de/$1 [R=301,L]
 
-# Image Resize Cache
-# 1. get filename
-# 2. get document root
-#    %{DOCUMENT_ROOT} is not working on some hosters. we parse the document root out of %{REQUEST_FILENAME}
-#    because the %{REQUEST_FILENAME} might not contain the filename, its given by 1.
-# 3. check for file existence. both ways: with calculated document root and document root variable
-# 4. rewrite!
-RewriteCond %{REQUEST_URI} (.*/)?imageresize/(.*)
-RewriteCond %{REQUEST_FILENAME}###%2 (.*/)imageresize.*###(.*)
-RewriteCond %1/data/dyn/public/image_resize/cache__%2 -f
-RewriteRule imageresize/(.*)$ gzip.php?file=data/dyn/public/image_resize/cache__$1 [L]
 
-# Image Resize
-RewriteRule ^imageresize/(.*)$ index.php?rex_resize=$1 [L]
+# Image Resize >= 2.0
+RewriteRule ^imageresize/(.+)$ data/mediapool/$1 [L]
 
-# Deployer-AddOn (>= 2.0)
-RewriteRule ^assets/js/([0-9a-f]{6})\.[0-9a-f]+\.min\.js$   gzip.php?file=data/dyn/public/deployer/compressed_$1.js&forever=1 [L]
-RewriteRule ^assets/css/([0-9a-f]{6})\.[0-9a-f]+\.min\.css$ gzip.php?file=data/dyn/public/deployer/compressed_$1.css&forever=1 [L]
-RewriteRule ^assets/css/((\d+_){4}grid\.png)$               data/dyn/public/deployer/$1 [L]
+# Deployer >= 3.2
+RewriteRule ^assets/([^/]+)/deployer\.([a-f0-9]+)\.min\.(css|js)$ data/dyn/public/deployer/compressed_$2.$1 [L]
 
-# Scaffold für alle Frontend-CSS-Dateien
-RewriteCond %{REQUEST_FILENAME}  -f
-RewriteCond %{REQUEST_URI}       \.css$
+# Assets Cache
+RewriteCond %{REQUEST_FILENAME}  \.(css|js|gif|jpg|png|swf|ico)$
 RewriteCond %{REQUEST_URI}       !wym_styles.css$
-RewriteRule assets/css/(.+)$     sally/scaffold.php?f=assets/css/$1&%{QUERY_STRING} [L]
-
-# Komprimierung für statischen Content
-RewriteRule ^(assets/.*\.(css|js|png|gif|jpg|jpeg))$  gzip.php?file=$1 [L]
-
-# Backend-Assets sollen auch komprimiert werden
-RewriteRule ^data/dyn/public/(.*?)/(.*?)\.(js|css|png|gif|jpg|jpeg)$ gzip.php?file=data/dyn/public/$1/$2.$3
+RewriteRule ^(.*)$               data/dyn/public/sally/static-cache/$1 [L]

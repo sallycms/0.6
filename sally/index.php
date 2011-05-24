@@ -100,6 +100,7 @@ else {
 if (!$config->get('SETUP')) {
 	sly_Service_Factory::getTemplateService()->refresh();
 	sly_Service_Factory::getModuleService()->refresh();
+	sly_Service_Factory::getAssetService()->validateCache();
 }
 
 $layout = sly_Core::getLayout('Sally');
@@ -107,6 +108,9 @@ $layout = sly_Core::getLayout('Sally');
 // include AddOns
 
 sly_Core::loadAddons();
+
+// Asset-Processing, sofern Assets benötigt werden
+sly_Service_Factory::getAssetService()->process();
 
 if ($REX['USER']) {
 	// Core-Seiten initialisieren

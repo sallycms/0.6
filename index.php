@@ -36,9 +36,13 @@ sly_Core::loadAddons();
 
 if ($config->get('DEVELOPER_MODE')) {
 	require_once 'sally/include/functions/function_rex_generate.inc.php';
-	sly_Service_Factory::getService('Template')->refresh();
-	sly_Service_Factory::getService('Module')->refresh();
+	sly_Service_Factory::getTemplateService()->refresh();
+	sly_Service_Factory::getModuleService()->refresh();
+	sly_Service_Factory::getAssetService()->validateCache();
 }
+
+// Asset-Processing, sofern Assets benötigt werden
+sly_Service_Factory::getAssetService()->process();
 
 // Aktuellen Artikel finden und ausgeben
 
