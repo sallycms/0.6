@@ -28,7 +28,10 @@ class sly_Service_Asset {
 
 	public function __construct() {
 		$this->initCache();
-		sly_Core::dispatcher()->register(self::EVENT_PROCESS_ASSET, array($this, 'processScaffold'));
+
+		$dispatcher = sly_Core::dispatcher();
+		$dispatcher->register(self::EVENT_PROCESS_ASSET, array($this, 'processScaffold'));
+		$dispatcher->register('ALL_GENERATED', array(__CLASS__, 'clearCache'));
 	}
 
 	public function setForceGeneration($force = true) {
@@ -40,7 +43,12 @@ class sly_Service_Asset {
 
 		if (!isset($enc)) {
 			$enc = false;
-			if (!empty($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+			$e   = trim(sly_get('encoding', 'string'), '/');
+
+			if (in_array($e, array('plain', 'gzip', 'deflate'))) {
+				$enc = $e;
+			}
+			elseif (!empty($_SERVER['HTTP_ACCEPT_ENCODING'])) {
 				if (stripos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false) $enc = 'gzip';
 				elseif (stripos($_SERVER['HTTP_ACCEPT_ENCODING'], 'deflate') !== false) $enc = 'deflate';
 			}
@@ -103,7 +111,8 @@ class sly_Service_Asset {
 
 		// only process allowed files
 		if (sly_Util_String::endsWith($file, '.php') || sly_Util_String::endsWith($file, 'htaccess')) {
-			throw new sly_Exception('This file "'.$file.'" is not allowed!');
+			header('HTTP/1.0 403 Forbidden');
+			die;
 		}
 
 		$dispatcher  = sly_Core::dispatcher();
@@ -118,7 +127,10 @@ class sly_Service_Asset {
 			$tmpFile = $dispatcher->filter(self::EVENT_PROCESS_ASSET, $file);
 
 			// now we can check if a listener has generated a valid file
-			if (!file_exists($tmpFile)) throw new sly_Exception('Asset "'.$tmpFile.'" does not exist!');
+			if (!file_exists($tmpFile)) {
+				header('HTTP/1.0 404 Not Found');
+				die;
+			}
 
 			$this->generateCacheFile($tmpFile, $cacheFile);
 		}
@@ -210,10 +222,11 @@ class sly_Service_Asset {
 		$dir = sly_Util_Directory::join(SLY_DYNFOLDER, self::CACHE_DIR);
 		if (!is_dir($dir)) mkdir($dir, 0777, true);
 
+		$install  = SLY_INCLUDE_PATH.'/install/static-cache/';
 		$htaccess = sly_Util_Directory::join($dir, '.htaccess');
 
 		if (!file_exists($htaccess)) {
-			copy(SLY_INCLUDE_PATH.'/install/static-cache/.htaccess', $htaccess);
+			copy($install.'.htaccess', $htaccess);
 		}
 
 		$cache_php = sly_Util_Directory::join($dir, 'cache.php');
@@ -227,7 +240,7 @@ class sly_Service_Asset {
 
 		if (!file_exists($protect_php)) {
 			$jumper   = self::getJumper($dir);
-			$contents = file_get_contents(SLY_INCLUDE_PATH.'/install/static-cache/protect.php');
+			$contents = file_get_contents($install.'protect.php');
 			$contents = str_replace('___JUMPER___', $jumper, $contents);
 
 			file_put_contents($protect_php, $contents);
@@ -238,8 +251,8 @@ class sly_Service_Asset {
 			sly_Util_Directory::create($dir.'/'.$access.'/deflate', 0777);
 			sly_Util_Directory::create($dir.'/'.$access.'/plain',   0777);
 
-			if (!file_exists($dir.'/'.$access.'/gzip/.htaccess'))    file_put_contents($dir.'/'.$access.'/gzip/.htaccess',    'Header set Content-Encoding "gzip"');
-			if (!file_exists($dir.'/'.$access.'/deflate/.htaccess')) file_put_contents($dir.'/'.$access.'/deflate/.htaccess', 'Header set Content-Encoding "deflate"');
+			if (!file_exists($dir.'/'.$access.'/gzip/.htaccess'))    copy($install.'gzip.htaccess',    $dir.'/'.$access.'/gzip/.htaccess');
+			if (!file_exists($dir.'/'.$access.'/deflate/.htaccess')) copy($install.'deflate.htaccess', $dir.'/'.$access.'/deflate/.htaccess');
 		}
 
 		sly_Util_Directory::createHttpProtected($dir.'/'.self::ACCESS_PROTECTED);
@@ -254,6 +267,13 @@ class sly_Service_Asset {
 		}
 
 		return $jumper;
+	}
+
+	public static function clearCache(array $params) {
+		$dir = sly_Util_Directory::join(SLY_DYNFOLDER, self::CACHE_DIR);
+		rex_deleteDir($dir, true);
+
+		return isset($params['subject']) ? $params['subject'] : true;
 	}
 }
 
