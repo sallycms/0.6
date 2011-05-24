@@ -103,7 +103,7 @@ if ($isImage) {
 	);
 
 	$imageContainer = new sly_Form_Container();
-	$imageContainer->setContent('<img '.sly_Util_HTML::buildAttributeString($attrs).' />');
+	$imageContainer->setContent('<img '.sly_Util_HTML::buildAttributeString($attrs, array('alt')).' />');
 	$imageContainer->addFormRowClass('sly-mediapool-detail-image');
 	$form->add($imageContainer);
 }
