@@ -104,7 +104,13 @@ class sly_Service_Asset {
 
 	public function process() {
 		$file = sly_get('sly_asset', 'string');
-		if (empty($file)) return;
+		if (empty($file)) {
+			if (isset($_GET['sly_asset'])) {
+				header('HTTP/1.0 400 Bad Request');
+				die();
+			}
+			return;
+		}
 
 		while (ob_get_level()) ob_end_clean();
 		ob_start();

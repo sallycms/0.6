@@ -27,7 +27,7 @@ define('SLY_HTDOCS_PATH', './');
 require_once 'sally/include/master.inc.php';
 
 // Setup?
-if ($config->get('SETUP')) {
+if (!isset($_GET['sly_asset']) && $config->get('SETUP')) {
 	header('Location: sally/index.php');
 	exit('Bitte führe das <a href="sally/index.php">Setup</a> aus, um SallyCMS zu nutzen.');
 }
