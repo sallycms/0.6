@@ -7,9 +7,11 @@
  *
  * http://www.opensource.org/licenses/mit-license.php
  */
-
+?>
+<div class="rex-content-header">
+<?php
 $slot     = sly_request('slot', 'string');
-$baseURL = 'index.php?page=content&subpage=meta&article_id='.$this->article->getId().'&clang='.$this->article->getClang().'&slot='.$slot;
+$baseURL = 'index.php?page=content&article_id='.$this->article->getId().'&clang='.$this->article->getClang().'&slot='.$slot;
 
 // init services
 $typeService = sly_Service_Factory::getArticleTypeService();
@@ -21,32 +23,14 @@ $dispatcher = sly_Core::dispatcher();
 // Artikel wurde gefunden - Kategorie holen
 $category_id = $this->article->getCategoryId();
 
-// START: CONTENT HEAD MENUE
-$hasType = $this->article->hasType();
-$hasTemplate = false;
+$this->render('_slotmenu.phtml');
 
-if ($hasType) {
-	$templateName = $typeService->getTemplate($this->article->getType());
-	$hasTemplate = !empty($templateName) && $templateService->exists($templateName);
-}
-
-$curSlots = $hasTemplate ? $templateService->getSlots($templateName) : false;
-
-$numSlots = $hasTemplate ? count($curSlots) : 0;
-$slotMenu = '';
-
-if ($numSlots > 1) {
-
-	
-
-}
-
-$menu = $slotMenu;
+$menu = ''; 
 
 $listElements = array();
 $listElements[] = '<a href="' . $baseURL . '">' . t('edit_mode') . '</a>';
 $listElements[] = '<a href="' . $baseURL . '&amp;subpage=meta" class="rex-active">' . t('metadata') . '</a>';
-$listElements[] = '<a href="../' . sly_Core::config()->get('FRONTEND_FILE') . '?article_id=' . $this->article->getId() . '&amp;clang=' . $this->article->getClang() . '" onclick="window.open(this.href); return false;">' . t('show') . '</a>';
+$listElements[] = '<a href="../'.$this->article->getUrl().'" onclick="window.open(this.href); return false;">' . t('show') . '</a>';
 
 $listElements = $dispatcher->filter('PAGE_CONTENT_MENU', $listElements, array(
 			'article_id' => $this->article->getId(),
@@ -65,7 +49,6 @@ $menu .= '</ul>';
 
 ?>
 <!-- *** OUTPUT OF ARTICLE-CONTENT - START *** -->
-<div class="rex-content-header">
 	<?= $menu ?>
 </div>
 <?
@@ -97,7 +80,7 @@ $form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM', $form, $params);
 $button = new sly_Form_Input_Button('submit', 'savemeta', t('update_metadata'));
 $form->add(new sly_Form_ButtonBar(array('submit' => $button)));
 
-$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM_FIELDSET', $form, $params);
+$form = $dispatcher->filter('SLY_ART_META_FORM_FIELDSET', $form, $params);
 
 /////////////////////////////////////////////////////////////////
 // misc

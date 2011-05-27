@@ -10,15 +10,24 @@
 
 class sly_Controller_Content_Meta extends sly_Controller_Content {
 
-	protected function render($filename, $params = array()) {
-		$filename = DIRECTORY_SEPARATOR . 'meta' . DIRECTORY_SEPARATOR . $filename;
-		parent::render($filename, $params);
-	}
+	protected function header() {
+		sly_Core::getLayout()->pageHeader(t('content'), $this->getBreadcrumb());
 
+		$art = $this->article;
+
+		$this->renderLanguageBar('&amp;subpage=meta&amp;article_id='.$art->getId());
+		// extend menu
+		print sly_Core::dispatcher()->filter('PAGE_CONTENT_HEADER', '', array(
+			'article_id'  => $art->getId(),
+			'clang'       => $art->getClang(),
+			'category_id' => $art->getCategoryId()
+		));
+	}
+	
 	protected function index() {
 		if(!$this->article) return;
 		$this->header();
-		$this->render('index.phtml');
+		$this->render('meta/index.phtml');
 	}
 
 	protected function processMetaForm() {
