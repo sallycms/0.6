@@ -150,7 +150,7 @@ ob_start();
 					$attrs['src'] = '../data/mediapool/'.$encoded_file_name.'?t='.$file_update;
 				}
 
-				$thumbnail = '<img '.sly_Util_HTML::buildAttributeString($attrs).' />';
+				$thumbnail = '<img '.sly_Util_HTML::buildAttributeString($attrs, array('alt')).' />';
 			}
 		}
 

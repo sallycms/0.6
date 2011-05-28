@@ -21,7 +21,7 @@ CREATE TABLE `sly_article` (
   `clang` INT(11) NOT NULL,
   `createuser` VARCHAR(255) NOT NULL,
   `updateuser` VARCHAR(255) NOT NULL,
-  `revision` INT(11) NOT NULL,
+  `revision` INT(11) NOT NULL DEFAULT '0',
   UNIQUE KEY `id` (`id`, `clang`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -37,7 +37,7 @@ CREATE TABLE `sly_article_slice` (
   `updatedate` INT(11) NOT NULL,
   `createuser` VARCHAR(255) NOT NULL,
   `updateuser` VARCHAR(255) NOT NULL,
-  `revision` INT(11) NOT NULL,
+  `revision` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`, `article_id`, `module`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -45,7 +45,7 @@ CREATE TABLE `sly_clang` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `locale` VARCHAR(5) NOT NULL,
-  `revision` INT(11) NOT NULL,
+  `revision` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -65,7 +65,7 @@ CREATE TABLE `sly_file` (
   `updatedate` INT(11) NOT NULL,
   `createuser` VARCHAR(255) NOT NULL,
   `updateuser` VARCHAR(255) NOT NULL,
-  `revision` INT(11) NOT NULL,
+  `revision` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -79,7 +79,7 @@ CREATE TABLE `sly_file_category` (
   `createuser` VARCHAR(255) NOT NULL,
   `updateuser` VARCHAR(255) NOT NULL,
   `attributes` TEXT NULL,
-  `revision` INT(11) NOT NULL,
+  `revision` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`, `name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -97,7 +97,7 @@ CREATE TABLE `sly_user` (
   `updatedate` INT(11) NOT NULL ,
   `lasttrydate` INT(11) DEFAULT 0,
   `timezone` VARCHAR(64) DEFAULT NULL,
-  `revision` INT(11) NOT NULL,
+  `revision` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY(`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -122,7 +122,7 @@ CREATE TABLE `sly_registry` (
   `value` MEDIUMTEXT
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- propulate database with some initial data
+-- populate database with some initial data
 INSERT INTO `sly_clang` (`name`, `locale`) VALUES ('deutsch', 'de_DE');
 
 COMMIT;

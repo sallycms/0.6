@@ -1,8 +1,0 @@
-RewriteEngine On
-
-# Imageresize
-RewriteRule ^imageresize/(.*)$  index.php?rex_resize=$1 [L]
-
-# Backend-Assets
-RewriteRule media/css/import.css$ ../gzip.php?file=data/dyn/public/sally/css/import.css
-RewriteRule media/(.*?)$          ../gzip.php?file=sally/media/$1
