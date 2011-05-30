@@ -72,4 +72,25 @@ class sly_Util_HTTP {
 
 		return -1;
 	}
+
+	/**
+	 * @return string  the host or an empty string if none found
+	 */
+	public static function getHost() {
+		if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))   return $_SERVER['HTTP_X_FORWARDED_HOST'];
+		if (isset($_SERVER['HTTP_HOST']))               return $_SERVER['HTTP_HOST'];
+		if (isset($_SERVER['HTTP_X_FORWARDED_SERVER'])) return $_SERVER['HTTP_X_FORWARDED_SERVER'];
+		if (isset($_SERVER['SERVER_NAME']))             return $_SERVER['SERVER_NAME'];
+
+		return '';
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isSecure() {
+		return
+			(isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) === 'on' || $_SERVER['HTTPS'] == 1)) ||
+			(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https');
+	}
 }
