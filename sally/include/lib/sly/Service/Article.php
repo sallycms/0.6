@@ -381,17 +381,23 @@ class sly_Service_Article extends sly_Service_Model_Base {
 	}
 
 	public function setType(sly_Model_Article $article, $type) {
-		$oldType = $article->getType();
+		$oldType   = $article->getType();
+		$langs     = sly_Util_Language::findAll(true);
+		$articleID = $article->getId();
 
-		// Artikel updaten
-		$article->setType($type);
-		$article->setUpdateColumns();
-		$this->update($article);
+		foreach ($langs as $clangID) {
+			$article = sly_Util_Article::findById($articleID, $clangID);
 
-		// Cache leeren
-		$cache = sly_Core::cache();
-		$cache->delete('sly.article', $article->getId().'_'.$article->getClang());
-		$cache->delete('sly.category', $article->getId().'_'.$article->getClang());
+			// Artikel updaten
+			$article->setType($type);
+			$article->setUpdateColumns();
+			$this->update($article);
+
+			// Cache leeren
+			$cache = sly_Core::cache();
+			$cache->delete('sly.article', $article->getId().'_'.$clangID);
+			$cache->delete('sly.category', $article->getId().'_'.$clangID);
+		}
 
 		// Event auslösen
 		$dispatcher = sly_Core::dispatcher();
