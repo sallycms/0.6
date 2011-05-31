@@ -97,7 +97,7 @@ else {
 
 // synchronize develop
 
-if (!$config->get('SETUP')) {
+if (!$config->get('SETUP') && $config->get('DEVELOPER_MODE')) {
 	sly_Service_Factory::getTemplateService()->refresh();
 	sly_Service_Factory::getModuleService()->refresh();
 	sly_Service_Factory::getAssetService()->validateCache();
