@@ -48,9 +48,11 @@ if ($config->get('DEVELOPER_MODE')) {
 // Asset-Processing, sofern Assets benötigt werden
 sly_Service_Factory::getAssetService()->process();
 
-// Aktuellen Artikel finden und ausgeben
-
+// find current article
 $article = sly_Util_Article::findById(sly_Core::getCurrentArticleId(), sly_Core::getCurrentClang());
+
+// last chance to tamper with the page building process before the actual article processing starts
+sly_Core::dispatcher()->notify('SLY_PRE_FRONTEND', $article);
 
 if ($article) {
 	print $article->getArticleTemplate();
