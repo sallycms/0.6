@@ -36,8 +36,12 @@ sly_Core::loadAddons();
 
 if ($config->get('DEVELOPER_MODE')) {
 	require_once 'sally/include/functions/function_rex_generate.inc.php';
-	sly_Service_Factory::getTemplateService()->refresh();
-	sly_Service_Factory::getModuleService()->refresh();
+
+	if (!$config->get('SETUP')) {
+		sly_Service_Factory::getTemplateService()->refresh();
+		sly_Service_Factory::getModuleService()->refresh();
+	}
+
 	sly_Service_Factory::getAssetService()->validateCache();
 }
 
