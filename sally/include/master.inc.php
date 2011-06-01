@@ -76,6 +76,7 @@ if ($config->get('SETUP') === false) {
 	sly_Util_Cache::registerListener();
 }
 else {
+	$config->loadProjectDefaults(SLY_INCLUDE_PATH.'/config/sallyProjectDefaults.yml');
 	$config->loadLocalDefaults(SLY_INCLUDE_PATH.'/config/sallyLocalDefaults.yml');
 	$REX = array();
 }
