@@ -52,7 +52,7 @@ sly_Service_Factory::getAssetService()->process();
 $article = sly_Util_Article::findById(sly_Core::getCurrentArticleId(), sly_Core::getCurrentClang());
 
 // last chance to tamper with the page building process before the actual article processing starts
-sly_Core::dispatcher()->notify('SLY_PRE_FRONTEND', $article);
+$article = sly_Core::dispatcher()->filter('SLY_PRE_PROCESS_ARTICLE', $article);
 
 if ($article) {
 	print $article->getArticleTemplate();
