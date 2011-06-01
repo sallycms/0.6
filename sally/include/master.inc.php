@@ -59,12 +59,11 @@ require_once SLY_INCLUDE_PATH.'/loader.php';
 $config = sly_Core::config();
 $config->loadStatic(SLY_INCLUDE_PATH.'/config/sallyStatic.yml');
 $config->loadLocalConfig();
-$config->loadLocalDefaults(SLY_INCLUDE_PATH.'/config/sallyDefaults.yml');
 $config->loadProjectConfig();
 $config->loadDevelop();
 
 // Sync?
-if (!$config->get('SETUP')) {
+if ($config->get('SETUP') === false) {
 	// Standard-Variablen
 	sly_Core::registerCoreVarTypes();
 
@@ -77,6 +76,7 @@ if (!$config->get('SETUP')) {
 	sly_Util_Cache::registerListener();
 }
 else {
+	$config->loadLocalDefaults(SLY_INCLUDE_PATH.'/config/sallyLocalDefaults.yml');
 	$REX = array();
 }
 
