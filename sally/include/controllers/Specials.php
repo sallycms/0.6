@@ -87,7 +87,7 @@ class sly_Controller_Specials extends sly_Controller_Sally {
 
 		$conf->set('DEVELOPER_MODE', $developerMode === 'true');
 		$conf->set('LANG', $backendLocale);
-		$conf->setLocal('PROJECTNAME', $projectName);
+		$conf->set('PROJECTNAME', $projectName);
 		$conf->setLocal('CACHING_STRATEGY', $cachingStrategy);
 
 		if (class_exists('DateTimeZone')) {
