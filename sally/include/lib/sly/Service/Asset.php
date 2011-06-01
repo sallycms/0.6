@@ -276,8 +276,14 @@ class sly_Service_Asset {
 	}
 
 	public static function clearCache(array $params) {
-		$dir = sly_Util_Directory::join(SLY_DYNFOLDER, self::CACHE_DIR);
+		$me  = new self();
+		$dir = $me->getCacheDir('', '');
+
+		// clear the directory
 		rex_deleteDir($dir, true);
+
+		// re-init the cache dir
+		$me->initCache();
 
 		return isset($params['subject']) ? $params['subject'] : true;
 	}

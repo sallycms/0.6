@@ -13,38 +13,38 @@
  */
 (function($) {
 	$.fn.imgCheckbox = function(imgOff, imgOn, path) {
-		path = path || '';
+		return this.each(function() {
+			path = path || '';
 
-		var
-			// put images in an array to switch between them
-			images = [path + imgOff, path + imgOn],
+			var
+				// put images in an array to switch between them
+				images = [path + imgOff, path + imgOn],
 
-			// remember the checkbox
-			chkbx = this,
+				// remember the checkbox
+				chkbx = $(this),
 
-			// create a new img tag right after the checkbox
-			img = chkbx.hide().after('<img />').next(),
+				// create a new img tag right after the checkbox
+				img = chkbx.hide().after('<img />').next(),
 
-			isChecked = function() {
-				return chkbx.prop('checked') ? 1 : 0;
-			},
+				isChecked = function() {
+					return chkbx.prop('checked') ? 1 : 0;
+				},
 
-			copyAttr = function(attr) {
-				var a = chkbx.attr(attr);
-				img.attr(attr, a === null ? '' : a);
-			};
+				copyAttr = function(attr) {
+					var a = chkbx.attr(attr);
+					img.attr(attr, a === null ? '' : a);
+				};
 
-		// set src, title and alt
-		img.attr('src', images[isChecked()]);
-		copyAttr('title');
-		copyAttr('alt');
+			// set src, title and alt
+			img.attr('src', images[isChecked()]);
+			copyAttr('title');
+			copyAttr('alt');
 
-		img.click(function() {
-			var checked = 1 - isChecked();
-			img.attr('src', images[checked ? 1 : 0]);
-			chkbx.prop('checked', checked);
+			img.click(function() {
+				var checked = 1 - isChecked();
+				img.attr('src', images[checked ? 1 : 0]);
+				chkbx.prop('checked', checked);
+			});
 		});
-
-		return this;
 	};
 })(jQuery);

@@ -27,7 +27,7 @@ class sly_Util_HTTP {
 			$noticeText = t('redirect_to', sly_html($targetUrl));
 		}
 
-		$stati  = array(301 => 'Moved Permanently', 302 => 'Found', 303 => 'See Other');
+		$stati  = array(301 => 'Moved Permanently', 302 => 'Found', 303 => 'See Other', 401 => 'Unauthorized');
 		$status = isset($stati[$status]) ? $status : 301;
 		$text   = $stati[$status];
 
@@ -80,7 +80,7 @@ class sly_Util_HTTP {
 	 *
 	 * @param  mixed  $params   array or string
 	 * @param  string $divider  only used if $params is array
-	 * @return string
+	 * @return string  the host or an empty string if none found
 	 */
 	public static function queryString($params, $divider = '&amp;') {
 		if (!empty($params)) {
@@ -91,7 +91,23 @@ class sly_Util_HTTP {
 				return $params;
 			}
 		}
+	}
+
+	public static function getHost() {
+		if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))   return $_SERVER['HTTP_X_FORWARDED_HOST'];
+		if (isset($_SERVER['HTTP_HOST']))               return $_SERVER['HTTP_HOST'];
+		if (isset($_SERVER['HTTP_X_FORWARDED_SERVER'])) return $_SERVER['HTTP_X_FORWARDED_SERVER'];
+		if (isset($_SERVER['SERVER_NAME']))             return $_SERVER['SERVER_NAME'];
 
 		return '';
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isSecure() {
+		return
+			(isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) === 'on' || $_SERVER['HTTPS'] == 1)) ||
+			(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https');
 	}
 }

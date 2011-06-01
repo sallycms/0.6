@@ -113,7 +113,7 @@
 	};
 
 	setAllCheckBoxes = function(fieldName, checkbox) {
-		jQuery('input[name=' + fieldName + ']').attr('checked', checkbox.checked ? 'checked' : '');
+		jQuery('input[name=\'' + fieldName + '\']').prop('checked', checkbox.checked);
 	};
 
 	deleteREXLink = function(id) {
@@ -191,7 +191,7 @@
 
 		if (length >= 1) {
 			if (length <= position) position--;
-			$('#' + i_select + id + ' option:eq(' + position + ')').attr('selected', 'selected');
+			$('#' + i_select + id + ' option:eq(' + position + ')').prop('selected', true);
 		}
 
 		writeREX(id, i_list, i_select);
@@ -258,7 +258,7 @@
 	// Checkbox mit der ID <id> anhaken
 
 	checkInput = function(id) {
-		$('#' + id).attr('checked', 'checked');
+		$('#' + id).prop('checked', true);
 	};
 
 	// ------------------ Preview fuer REX_MEDIA_BUTTONS, REX_MEDIALIST_BUTTONS
@@ -274,7 +274,7 @@
 		}
 
 		var div = $('.rex-media-preview', this);
-		var url = '../index.php?rex_resize=246a__' + value;
+		var url = '../imageresize/246a__' + value;
 
 		if (value && value.length != 0 && $.inArray(extension, imageExtensions)) {
 			// img tag nur einmalig einfügen, ggf erzeugen wenn nicht vorhanden
@@ -308,7 +308,7 @@
 		}
 		else {
 			$('div.rex-message p span').html($('#loginformular').data('message'));
-			$('#loginformular input:not(:hidden)').attr('disabled', '');
+			$('#loginformular input:not(:hidden)').prop('disabled', false);
 			$('#rex_user_login').focus();
 		}
 	};
@@ -317,19 +317,19 @@
 		var timerElement = $('div.rex-message p span strong');
 
 		if (timerElement.length == 1) {
-			$('#loginformular input:not(:hidden)').attr('disabled', 'disabled');
+			$('#loginformular input:not(:hidden)').prop('disabled', true);
 			$('#loginformular').data('message', message);
 			setTimeout(sly_disableLogin, 1000, timerElement);
 		}
 	};
 
 	sly_catsChecked = function() {
-		var c_checked = $('#userperm_cat_all').is(':checked');
-		var m_checked = $('#userperm_media_all').is(':checked');
+		var c_checked = $('#userperm_cat_all').prop('checked');
+		var m_checked = $('#userperm_media_all').prop('checked');
 		var slider    = $('#rex-page-user .sly-form .rex-form-wrapper .sly-num7');
 
-		$('#userperm_cat').attr('disabled', c_checked ? 'disabled' : '');
-		$('#userperm_media').attr('disabled', m_checked ? 'disabled' : '');
+		$('#userperm_cat').prop('disabled', c_checked);
+		$('#userperm_media').prop('disabled', m_checked);
 
 		if (c_checked && m_checked)
 			slider.slideUp('slow');
@@ -340,7 +340,7 @@
 	sly_addListOption = function(parentSpan, title, key) {
 		var list = $('select', parentSpan);
 
-		if (list.find('option[value='+key+']').length == 0) {
+		if (list.find('option[value=\''+key+'\']').length == 0) {
 			list.append($('<option>').val(key).text(title));
 			sly_createList(list);
 		}
@@ -452,7 +452,8 @@ jQuery(function($) {
 				div.slideUp('normal');
 			}
 		});
-	$('#rex-navi-page-mediapool a').click(function(){
+
+	$('#rex-navi-page-mediapool a').click(function() {
 		newPoolWindow('index.php?page=mediapool');
 		return false;
 	});
@@ -472,11 +473,11 @@ jQuery(function($) {
 
 		$('#is_admin').change(function() {
 			if ($(this).is(':checked')) {
-				$('#userperm_module').attr('disabled', 'disabled');
+				$('#userperm_module').prop('disabled', true);
 				sliders.slideUp('slow');
 			}
 			else {
-				$('#userperm_module').attr('disabled', '');
+				$('#userperm_module').prop('disabled', false);
 				sliders.slideDown('slow');
 				sly_catsChecked();
 			}
@@ -488,7 +489,7 @@ jQuery(function($) {
 		// init behaviour
 
 		if ($('#is_admin').is(':checked')) {
-			$('#userperm_module').attr('disabled', 'disabled');
+			$('#userperm_module').prop('disabled', true);
 			sliders.hide();
 		}
 
@@ -502,7 +503,7 @@ jQuery(function($) {
 	$('.rex-form .sly-select-checkbox-list a').live('click', function() {
 		var rel   = $(this).attr('rel');
 		var boxes = $(this).parents('p').find('.rex-chckbx');
-		boxes.attr('checked', rel === 'all' ? 'checked' : '');
+		boxes.prop('checked', rel === 'all');
 		return false;
 	});
 
@@ -583,7 +584,7 @@ jQuery(function($) {
 		var next = sel.next();
 
 		sel.remove();
-		next.attr('selected', 'selected');
+		next.prop('selected', true);
 		sly_createList($(this));
 	});
 

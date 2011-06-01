@@ -65,9 +65,11 @@ class sly_Configuration {
 	}
 
 	public function loadDevelop() {
-		$dir = new sly_Util_Directory(SLY_BASE.DIRECTORY_SEPARATOR.'develop'.DIRECTORY_SEPARATOR.'config', true);
-		foreach($dir->listPlain() as $file) {
-			$this->loadStatic($dir.DIRECTORY_SEPARATOR.$file);
+		$dir = new sly_Util_Directory(SLY_BASE.DIRECTORY_SEPARATOR.'develop'.DIRECTORY_SEPARATOR.'config');
+		if($dir->exists()) {
+			foreach($dir->listPlain() as $file) {
+				$this->loadStatic($dir.DIRECTORY_SEPARATOR.$file);
+			}
 		}
 	}
 
