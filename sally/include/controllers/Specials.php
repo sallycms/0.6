@@ -34,12 +34,11 @@ class sly_Controller_Specials extends sly_Controller_Sally {
 	public function update() {
 		$startArticle    = sly_post('start_article',    'int');
 		$notFoundArticle = sly_post('notfound_article', 'int');
+		$startClang      = sly_post('start_clang',      'int');
 		$defaultType     = sly_post('default_type',     'string');
 		$developerMode   = sly_post('developer_mode',   'string');
 		$backendLocale   = sly_post('backend_locale',   'string');
-		$errorEMail      = sly_post('error_email',      'string');
-		$server          = sly_post('server',           'string');
-		$serverName      = sly_post('servername',       'string');
+		$projectName     = sly_post('projectname',      'string');
 		$cachingStrategy = sly_post('caching_strategy', 'string');
 		$timezone        = sly_post('timezone',         'string');
 
@@ -61,6 +60,12 @@ class sly_Controller_Specials extends sly_Controller_Sally {
 		else {
 			$this->warning[] = t('settings_invalid_notfound_article').'<br />';
 		}
+		var_dump($startClang);
+		if(sly_Util_Language::exists($startClang)) {
+			$conf->set('START_CLANG_ID', $startClang);
+		}else {
+			$this->warning[] = t('settings_invalid_sitestart_clang').'<br />';
+		}
 
 		// Standard-Artikeltyp
 
@@ -81,10 +86,8 @@ class sly_Controller_Specials extends sly_Controller_Sally {
 		// Sonstige Einstellungen
 
 		$conf->set('DEVELOPER_MODE', $developerMode === 'true');
-		$conf->setLocal('ERROR_EMAIL', strtolower($errorEMail));
 		$conf->set('LANG', $backendLocale);
-		$conf->setLocal('SERVER', $server);
-		$conf->setLocal('SERVERNAME', $serverName);
+		$conf->setLocal('PROJECTNAME', $projectName);
 		$conf->setLocal('CACHING_STRATEGY', $cachingStrategy);
 
 		if (class_exists('DateTimeZone')) {

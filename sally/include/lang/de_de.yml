@@ -267,6 +267,7 @@ specials_features: Features
 specials_settings: Einstellungen
 settings_invalid_sitestart_article: Ungültige Startartikel Id!
 settings_invalid_notfound_article: Ungültige Not-Found-Artikel Id!
+settings_invalid_sitestart_clang: Ungültige Id für Standardsprache!
 settings_invalid_default_type: Ungültiger Default-Artikeltyp!
 regenerate_article: "Regeneriere Artikel & Cache"
 regeneration_message: "Kategorien, Artikel und Templates werden neu generiert. Der gesamte Cache wird gelöscht. Kann länger dauerrn. Bitte den Vorgang nicht abbrechen."
@@ -431,6 +432,5 @@ recommended: empfohlen
 authorisation_exception_language_denied: Zugriff auf Sprache %s verweigert!
 exception_articletype_not_exists: Der Artikeltyp %s existiert nicht!
 
-config_server: Server
-config_servername: Projektname
-config_error_email: E-Mail-Adresse des Admins
+config_projectname: Projektname
+config_default_fe_language: Standard Frontendsprache

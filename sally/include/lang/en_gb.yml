@@ -267,6 +267,7 @@ specials_features: Features
 specials_settings: Settings
 settings_invalid_sitestart_article: 'Invalid ID for not-found article!'
 settings_invalid_notfound_article: 'Invalid ID for start article!'
+settings_invalid_sitestart_clang: 'Invalid ID for default language'
 settings_invalid_default_type: 'Invalid default Articletype!'
 regenerate_article: 'Regenerate articles & cache'
 regeneration_message: 'Categories, articles and templates are regenerated. Cache will be deleted. Might take longer. Don''t abort process!'
@@ -431,6 +432,5 @@ recommended: recommended
 
 authorisation_exception_language_denied: Permission to language %s denied!
 exception_articletype_not_exists: The articletype %s does not exist!
-config_server: Server
-config_servername: Project title
-config_error_email: Admin e-mail address
+config_projectname: Project title
+config_default_fe_language: Default Frontendlanguage
