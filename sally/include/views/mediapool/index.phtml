@@ -144,7 +144,7 @@ ob_start();
 				);
 
 				if ($thumbsresize && $width) {
-					$attrs['src'] = '../index.php?rex_resize='.$width.'w__'.$height.'h__'.$encoded_file_name.'&t='.$file_update;
+					$attrs['src'] = '../imageresize/'.$width.'w__'.$height.'h__'.$encoded_file_name.'?t='.$file_update;
 				}
 				else {
 					$attrs['src'] = '../data/mediapool/'.$encoded_file_name.'?t='.$file_update;

@@ -91,7 +91,7 @@ if ($isImage) {
 		$imgn = 'media/mime-error.gif';
 	}
 	else if ($thumbs && $thumbsresize && ($fwidth > 200 || $fheight > 70)) {
-		$imgn = '../index.php?rex_resize='.$rwidth.'w__'.$rheight.'h__'.$encoded_fname.'&t='.$ffile_update;
+		$imgn = '../imageresize/'.$rwidth.'w__'.$rheight.'h__'.$encoded_fname.'?t='.$ffile_update;
 	}
 
 	$attrs = array(

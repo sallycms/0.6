@@ -242,7 +242,7 @@ class OOMedia {
 
 			// Bild resizen?
 			if ($resize) {
-				$file = sly_Core::config()->get('FRONTEND_FILE').'?rex_resize='.$resizeParam.$resizeMode.'__'.$this->getFileName();
+				$file = '../imageresize/'.$resizeParam.$resizeMode.'__'.$this->getFileName();
 			}
 			else {
 				// Bild 1:1 anzeigen

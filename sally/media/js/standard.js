@@ -274,7 +274,7 @@
 		}
 
 		var div = $('.rex-media-preview', this);
-		var url = '../index.php?rex_resize=246a__' + value;
+		var url = '../imageresize/246a__' + value;
 
 		if (value && value.length != 0 && $.inArray(extension, imageExtensions)) {
 			// img tag nur einmalig einfügen, ggf erzeugen wenn nicht vorhanden
