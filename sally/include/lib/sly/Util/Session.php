@@ -18,7 +18,17 @@ class sly_Util_Session {
 	 * Start a session if it is not already started
 	 */
 	public static function start() {
-		if (!session_id()) session_start();
+		/*
+		Do NOT use session_id() here, because it could give you the wrong info.
+		Normally, in an ideal world, session_id() would be fine and we're all happy.
+		But when using FullPageCache, there (maybe) has already a session been
+		started and "closed" (session_write_close). In this particular case, a
+		call to session_id() would return the current session ID not no session
+		would be active.
+		To work around this limitation, we check for $_SESSION. This var will be
+		explicitely unset() by FullPageCache.
+		*/
+		if (!isset($_SESSION)) session_start();
 	}
 
 	/**
