@@ -113,7 +113,7 @@
 	};
 
 	setAllCheckBoxes = function(fieldName, checkbox) {
-		jQuery('input[name=' + fieldName + ']').prop('checked', checkbox.checked);
+		jQuery('input[name=\'' + fieldName + '\']').prop('checked', checkbox.checked);
 	};
 
 	deleteREXLink = function(id) {
@@ -340,7 +340,7 @@
 	sly_addListOption = function(parentSpan, title, key) {
 		var list = $('select', parentSpan);
 
-		if (list.find('option[value='+key+']').length == 0) {
+		if (list.find('option[value=\''+key+'\']').length == 0) {
 			list.append($('<option>').val(key).text(title));
 			sly_createList(list);
 		}
@@ -452,7 +452,8 @@ jQuery(function($) {
 				div.slideUp('normal');
 			}
 		});
-	$('#rex-navi-page-mediapool a').click(function(){
+
+	$('#rex-navi-page-mediapool a').click(function() {
 		newPoolWindow('index.php?page=mediapool');
 		return false;
 	});
