@@ -113,7 +113,7 @@
 	};
 
 	setAllCheckBoxes = function(fieldName, checkbox) {
-		jQuery('input[name=' + fieldName + ']').propr('checked', checkbox.checked);
+		jQuery('input[name=' + fieldName + ']').prop('checked', checkbox.checked);
 	};
 
 	deleteREXLink = function(id) {
