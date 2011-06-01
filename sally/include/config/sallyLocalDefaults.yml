@@ -3,14 +3,7 @@ SERVER: sallycms.de
 SERVERNAME: SallyCMS-Projekt
 ERROR_EMAIL: webadmin@sallycms.de
 INSTNAME: sly20100511212501
-START_ARTICLE_ID: 1
-NOTFOUND_ARTICLE_ID: 1
-START_CLANG_ID: 1
-DEFAULT_ARTICLE_TYPE: ""
-DEVELOPER_MODE: true
 CACHING_STRATEGY: "BabelCache_Blackhole"
-LANG: de_de
-USE_MD5: never
 DATABASE:
   DRIVER: mysql
   HOST: localhost
@@ -22,4 +15,3 @@ DATABASE:
 PERM: ["mediapool[]"]
 EXTPERM: ["advancedMode[]", "moveSlice[]", "copyContent[]", "moveArticle[]", "copyArticle[]", "moveCategory[]", "publishArticle[]", "publishCategory[]", "article2startpage[]", "changearttype[]"]
 EXTRAPERM: ["editContentOnly[]"]
-ADDON: []
