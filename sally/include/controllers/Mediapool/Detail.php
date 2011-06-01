@@ -122,6 +122,10 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 			$fileObj->setUpdateColumns();
 			$service->save($fileObj);
 
+			// re-validate asset cache
+			$service = sly_Service_Factory::getAssetService();
+			$service->validateCache();
+
 			// notify the listeners and clear our own cache
 			sly_Core::dispatcher()->notify('SLY_MEDIA_UPDATED', $fileObj);
 			sly_Core::cache()->delete('sly.medium', $fileID);

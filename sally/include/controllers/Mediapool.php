@@ -220,6 +220,11 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 
 			if ($usages === false) {
 				if ($media->delete() !== false) {
+					// re-validate asset cache
+					$service = sly_Service_Factory::getAssetService();
+					$service->validateCache();
+
+					// notify system
 					sly_Core::dispatcher()->notify('SLY_MEDIA_DELETED', $media);
 					$this->info[] = $this->t('file_deleted');
 				}
