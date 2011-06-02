@@ -66,9 +66,7 @@ setup_initdb_continue: Weiter zu Schritt 4
 
 setup_config_title: Setup: Schritt 4 von 5
 setup_config_header: Allgemeine SallyCMS-Einstellungen
-setup_config_server: Serverdomain
-setup_config_servername: Serverbezeichnung
-setup_config_error_email: Fehler E-Mailadresse
+setup_config_projectname: Projektname
 setup_config_timezone: Zeitzone
 setup_config_continue: Weiter zu Schritt 5
 

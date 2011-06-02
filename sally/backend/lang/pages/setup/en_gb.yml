@@ -66,9 +66,7 @@ setup_initdb_continue: 'Continue with step 4'
 
 setup_config_title: 'Setup: Step 4 of 5'
 setup_config_header: 'General SallyCMS Settings'
-setup_config_server: 'Server'
-setup_config_servername: 'Project Name'
-setup_config_error_email: 'Error eMail'
+setup_config_projectname: 'Project Name'
 setup_config_timezone: 'Timezone'
 setup_config_continue: 'Continue with step 5'
 

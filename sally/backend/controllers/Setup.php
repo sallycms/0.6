@@ -129,10 +129,8 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		$isSent = isset($_POST['submit']);
 
 		if ($isSent) {
-			$config->setLocal('SERVER', sly_post('server', 'string'));
-			$config->setLocal('SERVERNAME', sly_post('servername', 'string'));
+			$config->setLocal('PROJECTNAME', sly_post('projectname', 'string'));
 			$config->setLocal('INSTNAME', 'sly'.date('YmdHis'));
-			$config->setLocal('ERROR_EMAIL', sly_post('error_email', 'string'));
 
 			$config->set('TIMEZONE', sly_post('timezone', 'string', null));
 			$config->set('LANG', $this->lang);
@@ -143,10 +141,8 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		}
 
 		print $this->render('setup/config.phtml', array(
-			'server'     => $config->get('SERVER'),
-			'serverName' => $config->get('SERVERNAME'),
-			'errorEMail' => $config->get('ERROR_EMAIL'),
-			'timezone'   => @date_default_timezone_get()
+			'projectName' => $config->get('PROJECTNAME'),
+			'timezone'    => @date_default_timezone_get()
 		));
 	}
 
@@ -173,10 +169,6 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 			);
 
 			switch ($dbInitFunction) {
-				case 'nop': // Datenbank schon vorhanden, nichts tun
-
-					break;
-
 				case 'drop': // alte DB löschen
 
 					$db = sly_DB_Persistence::getInstance();
@@ -193,9 +185,8 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 
 					break;
 
-				default: // Extensions eine Chance geben
-
-					sly_Core::dispatcher()->notify('SLY_SETUP_INIT_DATABASE', $dbInitFunction);
+				case 'nop': // Datenbank schon vorhanden, nichts tun
+				default:
 			}
 
 			// Wenn kein Fehler aufgetreten ist, aber auch etwas geändert wurde, prüfen
