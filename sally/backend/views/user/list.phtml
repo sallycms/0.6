@@ -9,7 +9,7 @@
  */
 
 $base   = 'index.php?page=user&amp;func=';
-$thIcon = '<a href="'.$base.'add"><img class="sly-icon sly-sprite sly-sprite-sly-user-add" alt="" src="media/empty.png" title="'.t('create_user').'" /></a>';
+$thIcon = '<a href="'.$base.'add"><img class="sly-icon sly-sprite sly-sprite-sly-user-add" alt="" src="assets/empty.png" title="'.t('create_user').'" /></a>';
 $table  = new sly_Table('users');
 
 $table->addColumn(new sly_Table_Column($thIcon, '', '', array('class' => 'sly-icon')));
@@ -39,7 +39,7 @@ foreach ($users as $user) {
 	<tr>
 		<td class="sly-col-a sly-icon">
 			<a href="<?= $base ?>edit&amp;id=<?= $id ?>">
-				<img src="media/empty.png" class="sly-icon sly-sprite sly-sprite-sly-user" alt="" title="<?= sly_html($login) ?>" />
+				<img src="assets/empty.png" class="sly-icon sly-sprite sly-sprite-sly-user" alt="" title="<?= sly_html($login) ?>" />
 			</a>
 		</td>
 		<td class="sly-col-b sly-center"><?= $id ?></td>

@@ -114,14 +114,14 @@ ob_start();
 		// missing file?
 
 		if (!OOMedia::fileExists($file_name)) {
-			$thumbnail = '<img src="media/mime-error.gif" width="44" height="38" alt="file does not exist" />';
+			$thumbnail = '<img src="assets/mime-error.gif" width="44" height="38" alt="file does not exist" />';
 		}
 		else {
 			$file_ext = substr(strrchr($file_name, '.'), 1);
-			$icon_src = 'media/mime-default.gif';
+			$icon_src = 'assets/mime-default.gif';
 
 			if (OOMedia::isDocType($file_ext)) {
-				$icon_src = 'media/mime-'.$file_ext.'.gif';
+				$icon_src = 'assets/mime-'.$file_ext.'.gif';
 			}
 
 			$thumbnail = '<img src="'.$icon_src.'" alt="'.sly_html($alt).'" title="'.sly_html($alt).'" />';

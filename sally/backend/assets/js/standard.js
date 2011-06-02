@@ -533,7 +533,7 @@ jQuery(function($) {
 	var checkboxes = $('.sly-form-i18n-switch input[id^=equal__]');
 
 	if (checkboxes.length > 0) {
-		checkboxes.imgCheckbox('off.png', 'on.png', 'media/form-i18n-switch-').next().click(function() {
+		checkboxes.imgCheckbox('off.png', 'on.png', 'assets/form-i18n-switch-').next().click(function() {
 			var
 				checkbox       = $(this).prev('input'),
 				shown          = !checkbox[0].checked, // was already changed before this event handler
