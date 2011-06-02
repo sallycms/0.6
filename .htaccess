@@ -20,6 +20,6 @@ RewriteRule ^imageresize/(.+)$ data/mediapool/$1 [L]
 RewriteRule ^assets/([^/]+)/deployer\.([a-f0-9]+)\.min\.(css|js)$ data/dyn/public/deployer/compressed_$2.$1 [L]
 
 # Assets Cache
-RewriteCond %{REQUEST_FILENAME}  \.(css|js|gif|jpg|png|swf|ico)$
+RewriteCond %{REQUEST_FILENAME}  \.(css|js|gif|jpg|jpeg|png|swf|ico|pdf)$
 RewriteCond %{REQUEST_URI}       !wym_styles.css$
 RewriteRule ^(.*)$               data/dyn/public/sally/static-cache/$1 [L]

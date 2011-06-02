@@ -32,6 +32,9 @@ if (!isset($_GET['sly_asset']) && $config->get('SETUP')) {
 	exit('Bitte führe das <a href="sally/index.php">Setup</a> aus, um SallyCMS zu nutzen.');
 }
 
+// instantiate asset service before addons are loaded to make sure the scaffold css processing is first
+$assetService = sly_Service_Factory::getAssetService();
+
 sly_Core::loadAddons();
 
 if ($config->get('DEVELOPER_MODE')) {
@@ -42,11 +45,11 @@ if ($config->get('DEVELOPER_MODE')) {
 		sly_Service_Factory::getModuleService()->refresh();
 	}
 
-	sly_Service_Factory::getAssetService()->validateCache();
+	$assetService->validateCache();
 }
 
 // Asset-Processing, sofern Assets benötigt werden
-sly_Service_Factory::getAssetService()->process();
+$assetService->process();
 
 // find current article
 $article = sly_Util_Article::findById(sly_Core::getCurrentArticleId(), sly_Core::getCurrentClang());
