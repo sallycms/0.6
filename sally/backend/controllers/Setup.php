@@ -17,7 +17,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 
 	protected function init() {
 		$this->lang = sly_request('lang', 'string');
-		sly_Core::getI18N()->appendFile(SLY_COREFOLDER.'/lang/pages/setup/');
+		sly_Core::getI18N()->appendFile(SLY_SALLYFOLDER.'/backend/lang/pages/setup/');
 	}
 
 	public function index()	{

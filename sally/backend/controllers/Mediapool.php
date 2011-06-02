@@ -16,7 +16,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 
 	public function init() {
 		// load our i18n stuff
-		sly_Core::getI18N()->appendFile(SLY_COREFOLDER.'/lang/pages/mediapool/');
+		sly_Core::getI18N()->appendFile(SLY_SALLYFOLDER.'/backend/lang/pages/mediapool/');
 
 		$this->info    = sly_request('info', 'string');
 		$this->warning = sly_request('warning', 'string');
