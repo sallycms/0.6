@@ -1,9 +1,8 @@
 syntax:regexp
-^data/dyn/.*
-^data/config/.*
-^sally/include/tip
+^sally/data/dyn/.*
+^sally/data/config/.*
 ^\.project
 ^\.buildpath
 ^\.settings/.*
 ^nbproject/.*
-^docs/.*
+^sally/docs/.*
