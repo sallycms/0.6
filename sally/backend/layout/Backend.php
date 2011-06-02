@@ -24,7 +24,7 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 		$this->addJavaScriptFile('assets/js/jquery.min.js');
 		$this->addJavaScriptFile('assets/js/standard.min.js');
 
-		$this->setTitle($config->get('SERVERNAME').' - ');
+		$this->setTitle($config->get('PROJECTNAME').' - ');
 
 		$config = sly_Core::config();
 		$this->setBodyAttr('class', 'sally sally'.$config->get('VERSION').$config->get('SUBVERSION'));
