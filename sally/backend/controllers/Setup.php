@@ -63,7 +63,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		// init directories
 
 		$cantCreate = $this->checkDirsAndFiles();
-		$protected  = array('../develop', '../data/dyn/internal');
+		$protected  = array(SLY_DEVELOPFOLDER, SLY_DYNFOLDER.'/internal');
 		$protects   = array();
 
 		foreach ($protected as $i => $directory) {
