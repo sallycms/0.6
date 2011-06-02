@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Structure extends sly_Controller_Sally {
+class sly_Controller_Structure extends sly_Controller_Backend {
 	protected $categoryId;
 	protected $clangId;
 	protected $info;
@@ -28,7 +28,7 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 		$this->clangId    = sly_request('clang', 'rex-clang-id', sly_Core::config()->get('START_CLANG_ID'));
 
 		sly_Core::getLayout()->pageHeader(t('title_structure'), $this->getBreadcrumb());
-		$this->render('views/toolbars/languages.phtml', array('clang' => $this->clangId, 'sprachen_add' => '&amp;category_id='.$this->categoryId));
+		$this->render('toolbars/languages.phtml', array('clang' => $this->clangId, 'sprachen_add' => '&amp;category_id='.$this->categoryId));
 
 		print sly_Core::dispatcher()->filter('PAGE_STRUCTURE_HEADER', '', array(
 			'category_id' => $this->categoryId,

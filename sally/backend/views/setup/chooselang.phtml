@@ -16,7 +16,7 @@ $this->title('Setup: Sprachauswahl');
 	<ul class="rex-setup-language">
 	<?php
 
-	$langpath = SLY_INCLUDE_PATH.'/lang';
+	$langpath = SLY_COREFOLDER.'/lang';
 
 	foreach (sly_Controller_Setup::getLanguages() as $l) {
 		$i18n  = rex_create_lang($l, $langpath, false);

@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Specials extends sly_Controller_Sally {
+class sly_Controller_Specials extends sly_Controller_Backend {
 	protected $warning;
 	protected $info;
 
@@ -23,7 +23,7 @@ class sly_Controller_Specials extends sly_Controller_Sally {
 	}
 
 	public function index() {
-		$this->render('views/specials/index.phtml');
+		$this->render('specials/index.phtml');
 	}
 
 	public function clearcache() {

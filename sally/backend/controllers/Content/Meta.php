@@ -23,7 +23,7 @@ class sly_Controller_Content_Meta extends sly_Controller_Content {
 			'category_id' => $art->getCategoryId()
 		));
 	}
-	
+
 	protected function index() {
 		if(!$this->article) return;
 		$this->header();
@@ -32,7 +32,7 @@ class sly_Controller_Content_Meta extends sly_Controller_Content {
 
 	protected function processMetaForm() {
 
-		require_once SLY_INCLUDE_PATH . '/functions/function_rex_content.inc.php';
+		require_once SLY_COREFOLDER . '/functions/function_rex_content.inc.php';
 		try {
 			//save metadata
 			if (sly_post('savemeta', 'boolean', false)) {
@@ -87,7 +87,7 @@ class sly_Controller_Content_Meta extends sly_Controller_Content {
 					$this->warning = t('no_rights_to_this_function');
 				}
 			}
-			
+
 			if (sly_post('copyarticle', 'boolean', false)) {
 				$new_category_id = sly_post('category_copy_id_new', 'rex-category-id');
 
@@ -105,7 +105,7 @@ class sly_Controller_Content_Meta extends sly_Controller_Content {
 
 			if (sly_post('movecategory', 'string')) {
 				$new_category_id = sly_post('category_id_new', 'rex-category-id');
-				if (sly_Util_Category::hasPermissionOnCategory(sly_Util_User::getCurrentUser(), $new_category_id) && $this->canMoveCategory()) { 
+				if (sly_Util_Category::hasPermissionOnCategory(sly_Util_User::getCurrentUser(), $new_category_id) && $this->canMoveCategory()) {
 					if (rex_moveCategory($this->article->getCategoryId(), $new_category_id)) {
 						$this->info = t('category_moved');
 						$this->article = sly_Util_Article::findById($this->article->getCategoryId());
@@ -136,12 +136,12 @@ class sly_Controller_Content_Meta extends sly_Controller_Content {
 		$user = sly_Util_User::getCurrentUser();
 		return $user->isAdmin() || $user->hasPerm('article2startpage[]');
 	}
-	
+
 	protected function canCopyContent() {
 		$user = sly_Util_User::getCurrentUser();
 		return $user->isAdmin() || $user->hasPerm('copyContent[]') && sly_Util_Language::isMultilingual();
 	}
-	
+
 	protected function canCopyArticle() {
 		$user = sly_Util_User::getCurrentUser();
 		return $user->isAdmin() || $user->hasPerm('copyArticle[]');

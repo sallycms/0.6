@@ -29,9 +29,13 @@ else {
 	unset($REX);
 }
 
-define('SLY_HTDOCS_PATH', SLY_IS_TESTING ? SLY_TESTING_ROOT : '../');
+define('SLY_HTDOCS_PATH', SLY_IS_TESTING ? SLY_TESTING_ROOT : '../../');
 
-require 'include/master.inc.php';
+require '../core/master.inc.php';
+
+// add backend app
+sly_Loader::addLoadPath(SLY_SALLYFOLDER.'/backend/controllers/', 'sly_Controller_');
+sly_Loader::addLoadPath(SLY_SALLYFOLDER.'/backend/layout/', 'sly_Layout_');
 
 if (!SLY_IS_TESTING) sly_Util_Session::start();
 
@@ -47,7 +51,7 @@ $navigation = sly_Core::getNavigation();
 if (!SLY_IS_TESTING && $config->get('SETUP')) {
 	$REX['LANG'] = 'de_de';
 	$requestLang = sly_request('lang', 'string');
-	$langpath    = SLY_INCLUDE_PATH.'/lang';
+	$langpath    = SLY_COREFOLDER.'/lang';
 	$languages   = glob($langpath.'/*.yml');
 	$list        = array();
 
@@ -103,7 +107,7 @@ if (!$config->get('SETUP') && $config->get('DEVELOPER_MODE')) {
 	sly_Service_Factory::getAssetService()->validateCache();
 }
 
-$layout = sly_Core::getLayout('Sally');
+$layout = sly_Core::getLayout('Backend');
 
 // include AddOns
 
@@ -202,7 +206,7 @@ try {
 
 		if ($curGroup && $curGroup->getName() == 'addon') {
 			$curPage  = $navigation->getActivePage();
-			$filename = SLY_INCLUDE_PATH.'/addons/'.$curPage->getName().'/pages/index.inc.php';
+			$filename = SLY_COREFOLDER.'/addons/'.$curPage->getName().'/pages/index.inc.php';
 		}
 
 		if (empty($filename) || !file_exists($filename)) {

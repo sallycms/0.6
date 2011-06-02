@@ -43,21 +43,22 @@ if (ini_get('register_globals')) {
 // Wer das falsch setzt, hat es verdient, dass das Script nicht läuft.
 
 define('SLY_BASE',          realpath(SLY_HTDOCS_PATH));
-define('SLY_INCLUDE_PATH',  SLY_BASE.DIRECTORY_SEPARATOR.'sally'.DIRECTORY_SEPARATOR.'include');
-define('SLY_DATAFOLDER',    SLY_BASE.DIRECTORY_SEPARATOR.'data');
+define('SLY_SALLYFOLDER',   SLY_BASE.DIRECTORY_SEPARATOR.'sally');
+define('SLY_COREFOLDER',    SLY_SALLYFOLDER.DIRECTORY_SEPARATOR.'core');
+define('SLY_DATAFOLDER',    SLY_SALLYFOLDER.DIRECTORY_SEPARATOR.'data');
 define('SLY_DYNFOLDER',     SLY_DATAFOLDER.DIRECTORY_SEPARATOR.'dyn');
 define('SLY_MEDIAFOLDER',   SLY_DATAFOLDER.DIRECTORY_SEPARATOR.'mediapool');
 define('SLY_DEVELOPFOLDER', SLY_BASE.DIRECTORY_SEPARATOR.'develop');
-define('SLY_ADDONFOLDER',   SLY_INCLUDE_PATH.DIRECTORY_SEPARATOR.'addons');
+define('SLY_ADDONFOLDER',   SLY_SALLYFOLDER.DIRECTORY_SEPARATOR.'addons');
 
 // Loader initialisieren
 
-require_once SLY_INCLUDE_PATH.'/loader.php';
+require_once SLY_COREFOLDER.'/loader.php';
 
 // Kernkonfiguration laden
 
 $config = sly_Core::config();
-$config->loadStatic(SLY_INCLUDE_PATH.'/config/sallyStatic.yml');
+$config->loadStatic(SLY_COREFOLDER.'/config/sallyStatic.yml');
 $config->loadLocalConfig();
 $config->loadProjectConfig();
 $config->loadDevelop();
@@ -76,8 +77,8 @@ if ($config->get('SETUP') === false) {
 	sly_Util_Cache::registerListener();
 }
 else {
-	$config->loadProjectDefaults(SLY_INCLUDE_PATH.'/config/sallyProjectDefaults.yml');
-	$config->loadLocalDefaults(SLY_INCLUDE_PATH.'/config/sallyLocalDefaults.yml');
+	$config->loadProjectDefaults(SLY_COREFOLDER.'/config/sallyProjectDefaults.yml');
+	$config->loadLocalDefaults(SLY_COREFOLDER.'/config/sallyLocalDefaults.yml');
 	$REX = array();
 }
 

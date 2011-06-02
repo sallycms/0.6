@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Profile extends sly_Controller_Sally {
+class sly_Controller_Profile extends sly_Controller_Backend {
 	protected $func = '';
 
 	public function init() {
@@ -22,7 +22,7 @@ class sly_Controller_Profile extends sly_Controller_Sally {
 	}
 
 	public function index() {
-		$this->render('views/profile/index.phtml', array('user' => $this->getUser()));
+		$this->render('profile/index.phtml', array('user' => $this->getUser()));
 		return true;
 	}
 
@@ -70,7 +70,7 @@ class sly_Controller_Profile extends sly_Controller_Sally {
 
 	protected function getBackendLocales() {
 		$cur_htmlcharset = t('htmlcharset');
-		$langpath        = SLY_INCLUDE_PATH.DIRECTORY_SEPARATOR.'lang';
+		$langpath        = SLY_COREFOLDER.DIRECTORY_SEPARATOR.'lang';
 		$langs           = glob($langpath.'/*.yml');
 		$result          = array('' => 'default');
 

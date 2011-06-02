@@ -14,14 +14,14 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 	public function index() {
 		$fileID = $this->getCurrentFile();
 
-		$this->render('views/mediapool/toolbar.phtml');
+		$this->render('mediapool/toolbar.phtml');
 
 		if ($fileID == -1) {
 			$this->warning = $this->t('file_not_found');
-			return $this->render('views/mediapool/index.phtml');
+			return $this->render('mediapool/index.phtml');
 		}
 
-		$this->render('views/mediapool/detail.phtml');
+		$this->render('mediapool/detail.phtml');
 	}
 
 	protected function getCurrentFile() {

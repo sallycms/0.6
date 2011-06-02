@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Mediapool extends sly_Controller_Sally {
+class sly_Controller_Mediapool extends sly_Controller_Backend {
 	protected $warning;
 	protected $info;
 	protected $category;
@@ -16,7 +16,7 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 
 	public function init() {
 		// load our i18n stuff
-		sly_Core::getI18N()->appendFile(SLY_INCLUDE_PATH.'/lang/pages/mediapool/');
+		sly_Core::getI18N()->appendFile(SLY_COREFOLDER.'/lang/pages/mediapool/');
 
 		$this->info    = sly_request('info', 'string');
 		$this->warning = sly_request('warning', 'string');
@@ -150,8 +150,8 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 	}
 
 	public function index() {
-		$this->render('views/mediapool/toolbar.phtml');
-		$this->render('views/mediapool/index.phtml');
+		$this->render('mediapool/toolbar.phtml');
+		$this->render('mediapool/index.phtml');
 	}
 
 	public function batch() {

@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_User extends sly_Controller_Sally {
+class sly_Controller_User extends sly_Controller_Backend {
 	protected $func = '';
 
 	public function init() {
@@ -50,7 +50,7 @@ class sly_Controller_User extends sly_Controller_Sally {
 
 			if ($error) {
 				$this->func = 'add';
-				$this->render('views/user/edit.phtml', array('user' => null));
+				$this->render('user/edit.phtml', array('user' => null));
 				return true;
 			}
 
@@ -81,7 +81,7 @@ class sly_Controller_User extends sly_Controller_Sally {
 		}
 
 		$this->func = 'add';
-		$this->render('views/user/edit.phtml', array('user' => null));
+		$this->render('user/edit.phtml', array('user' => null));
 		return true;
 	}
 
@@ -136,7 +136,7 @@ class sly_Controller_User extends sly_Controller_Sally {
 		$params     = array('user' => $user);
 		$this->func = 'edit';
 
-		$this->render('views/user/edit.phtml', $params);
+		$this->render('user/edit.phtml', $params);
 		return true;
 	}
 
@@ -171,7 +171,7 @@ class sly_Controller_User extends sly_Controller_Sally {
 	protected function listUsers() {
 		$service = sly_Service_Factory::getUserService();
 		$users   = $service->find(null, null, 'name', null, null);
-		$this->render('views/user/list.phtml', array('users' => $users));
+		$this->render('user/list.phtml', array('users' => $users));
 	}
 
 	protected function getUser() {
@@ -184,7 +184,7 @@ class sly_Controller_User extends sly_Controller_Sally {
 
 	protected function getBackendLocales() {
 		$curCharset = t('htmlcharset');
-		$langpath   = SLY_INCLUDE_PATH.'/lang';
+		$langpath   = SLY_COREFOLDER.'/lang';
 		$langs      = glob($langpath.'/*.yml');
 		$result     = array('' => 'default');
 

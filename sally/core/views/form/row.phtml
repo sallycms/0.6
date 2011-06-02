@@ -22,7 +22,7 @@ for ($col = 0; $col < $columns; ++$col) {
 	if ($element === null) continue;
 
 	$column = $col;
-	include SLY_INCLUDE_PATH.'/views/_form/element.phtml';
+	$this->renderView('element.phtml', compact('column', 'col', 'element', 'formRowClass'));
 }
 
 print '</div>';

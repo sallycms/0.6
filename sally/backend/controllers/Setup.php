@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Setup extends sly_Controller_Sally {
+class sly_Controller_Setup extends sly_Controller_Backend {
 	protected $warning;
 	protected $info;
 	protected $lang;
@@ -17,7 +17,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 	protected function init() {
 		$this->lang = sly_request('lang', 'string');
-		sly_Core::getI18N()->appendFile(SLY_INCLUDE_PATH.'/lang/pages/setup/');
+		sly_Core::getI18N()->appendFile(SLY_COREFOLDER.'/lang/pages/setup/');
 	}
 
 	public function index()	{
@@ -31,11 +31,11 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			exit();
 		}
 
-		$this->render('views/setup/chooselang.phtml');
+		$this->render('setup/chooselang.phtml');
 	}
 
 	protected function license() {
-		$this->render('views/setup/license.phtml');
+		$this->render('setup/license.phtml');
 	}
 
 	protected function fsperms() {
@@ -78,7 +78,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		}
 
 		$params = compact('results', 'protects', 'errors', 'cantCreate', 'tester');
-		$this->render('views/setup/fsperms.phtml', $params);
+		$this->render('setup/fsperms.phtml', $params);
 	}
 
 	protected function dbconfig() {
@@ -114,7 +114,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			}
 		}
 
-		$this->render('views/setup/dbconfig.phtml', array(
+		$this->render('setup/dbconfig.phtml', array(
 			'host'   => $data['HOST'],
 			'user'   => $data['LOGIN'],
 			'pass'   => $data['PASSWORD'],
@@ -142,7 +142,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			return;
 		}
 
-		$this->render('views/setup/config.phtml', array(
+		$this->render('setup/config.phtml', array(
 			'server'     => $config->get('SERVER'),
 			'serverName' => $config->get('SERVERNAME'),
 			'errorEMail' => $config->get('ERROR_EMAIL'),
@@ -188,7 +188,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 				case 'setup': // leere Datenbank neu einrichten
 
-					$installScript = SLY_INCLUDE_PATH.'/install/sally0_4.sql';
+					$installScript = SLY_COREFOLDER.'/install/sally0_4.sql';
 					$error         = $this->setupImport($installScript);
 
 					break;
@@ -226,7 +226,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			}
 		}
 
-		$this->render('views/setup/initdb.phtml', array(
+		$this->render('setup/initdb.phtml', array(
 			'dbInitFunction'  => $dbInitFunction,
 			'dbInitFunctions' => array('setup', 'nop', 'drop')
 		));
@@ -287,7 +287,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 		}
 
 		$this->warning = $error;
-		$this->render('views/setup/createuser.phtml', array(
+		$this->render('setup/createuser.phtml', array(
 			'usersExist' => $usersExist,
 			'adminUser'  => $adminUser
 		));
@@ -295,7 +295,7 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 
 	public function finish() {
 		sly_Core::config()->setLocal('SETUP', false);
-		$this->render('views/setup/finish.phtml');
+		$this->render('setup/finish.phtml');
 	}
 
 	protected function title($title) {

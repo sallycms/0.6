@@ -40,7 +40,7 @@ $attributes = array(
 		if ($hasButtonBar) {
 			$fieldset = end($this->fieldsets);
 			if (!$fieldset) $fieldset = $this->beginFieldset($this->title);
-			include $viewRoot.'buttons.phtml';
+			$this->renderView('buttons.phtml', array('fieldset' => $fieldset, 'hasButtonBar' => $hasButtonBar));
 		}
 
 		foreach ($this->fieldsets as $i => $fieldset) {

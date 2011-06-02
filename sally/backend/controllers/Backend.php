@@ -15,6 +15,10 @@ abstract class sly_Controller_Backend extends sly_Controller_Base {
 		$this->setCharset(t('htmlcharset'));
 	}
 
+	protected function getViewFolder() {
+		return SLY_SALLYFOLDER.'/backend/views/';
+	}
+
 	public function dispatch() {
 		$layout = sly_Core::getLayout('Backend');
 

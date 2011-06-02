@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
@@ -9,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Content extends sly_Controller_Sally {
+class sly_Controller_Content extends sly_Controller_Backend {
 
 	protected $article;
 	//protected $clangId;
@@ -67,7 +66,7 @@ class sly_Controller_Content extends sly_Controller_Sally {
 	}
 
 	protected function renderLanguageBar($add) {
-		parent::render('views/toolbars/languages.phtml', array(
+		parent::render('toolbars/languages.phtml', array(
 			'clang' => $this->article->getClang(),
 			'sprachen_add' => $add
 		));

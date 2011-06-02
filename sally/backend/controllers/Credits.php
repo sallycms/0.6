@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Credits extends sly_Controller_Sally {
+class sly_Controller_Credits extends sly_Controller_Backend {
 	protected $func = '';
 
 	public function init() {
@@ -22,7 +22,7 @@ class sly_Controller_Credits extends sly_Controller_Sally {
 	}
 
 	public function index() {
-		$this->render('views/credits/index.phtml');
+		$this->render('credits/index.phtml');
 		return true;
 	}
 

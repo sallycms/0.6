@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Linkmap extends sly_Controller_Sally {
+class sly_Controller_Linkmap extends sly_Controller_Backend {
 	protected $globals;
 	protected $tree;
 
@@ -59,8 +59,8 @@ class sly_Controller_Linkmap extends sly_Controller_Sally {
 	}
 
 	public function index() {
-		$this->render('views/linkmap/javascript.phtml');
-		$this->render('views/linkmap/index.phtml');
+		$this->render('linkmap/javascript.phtml');
+		$this->render('linkmap/index.phtml');
 	}
 
 	public function checkPermission() {

@@ -26,10 +26,10 @@ $id = $this->id ? ' id="'.sly_html($this->id).'"' : '';
 			}
 			else {
 				if ($this->isMultilingual($elements)) {
-					include SLY_INCLUDE_PATH.'/views/_form/row_i18n.phtml';
+					$this->renderView('row_i18n.phtml', compact('rowNum', 'elements', 'columns'));
 				}
 				else {
-					include SLY_INCLUDE_PATH.'/views/_form/row.phtml';
+					$this->renderView('row.phtml', compact('rowNum', 'elements', 'columns'));
 				}
 			}
 		}

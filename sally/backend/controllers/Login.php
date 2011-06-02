@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Login extends sly_Controller_Sally {
+class sly_Controller_Login extends sly_Controller_Backend {
 	protected $func = '';
 
 	public function __construct() {
@@ -18,7 +18,7 @@ class sly_Controller_Login extends sly_Controller_Sally {
 			$this->action = 'index';
 		}
 
-		sly_Core::getI18N()->appendFile(SLY_INCLUDE_PATH.'/lang/pages/login/');
+		sly_Core::getI18N()->appendFile(SLY_COREFOLDER.'/lang/pages/login/');
 	}
 
 	public function init() {
@@ -34,7 +34,7 @@ class sly_Controller_Login extends sly_Controller_Sally {
 
 	public function index() {
 		if(empty($this->message)) $this->message = t('login_welcome');
-		$this->render('views/login/index.phtml');
+		$this->render('login/index.phtml');
 	}
 
 	protected function login() {

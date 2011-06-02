@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Addon extends sly_Controller_Sally {
+class sly_Controller_Addon extends sly_Controller_Backend {
 	protected $func    = '';
 	protected $addons  = null;
 	protected $plugins = null;
@@ -48,7 +48,7 @@ class sly_Controller_Addon extends sly_Controller_Sally {
 	public function index() {
 		$this->checkForNewComponents();
 
-		$this->render('views/addon/list.phtml', array(
+		$this->render('addon/list.phtml', array(
 			'addons'  => $this->addons,
 			'plugins' => $this->plugins,
 			'info'    => $this->info,

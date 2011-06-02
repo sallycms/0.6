@@ -11,7 +11,7 @@
 /**
  * @ingroup layout
  */
-class sly_Layout_Sally extends sly_Layout_XHTML {
+class sly_Layout_Backend extends sly_Layout_XHTML {
 	private $hasNavigation = true;
 
 	public function __construct() {
@@ -59,11 +59,11 @@ class sly_Layout_Sally extends sly_Layout_XHTML {
 
 	public function printHeader() {
 		parent::printHeader();
-		$this->renderView('views/layout/sally/top.phtml');
+		$this->renderView('layout/sally/top.phtml');
 	}
 
 	public function printFooter() {
-		$this->renderView('views/layout/sally/bottom.phtml');
+		$this->renderView('layout/sally/bottom.phtml');
 		parent::printFooter();
 	}
 
@@ -181,5 +181,12 @@ class sly_Layout_Sally extends sly_Layout_XHTML {
 
 	public function hasNavigation() {
 		return $this->hasNavigation;
+	}
+
+	protected function getViewFile($file) {
+		$full = SLY_SALLYFOLDER.'/backend/views/'.$file;
+		if (file_exists($full)) return $full;
+
+		return parent::getViewFile($file);
 	}
 }
