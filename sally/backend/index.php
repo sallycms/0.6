@@ -37,6 +37,8 @@ require '../core/master.inc.php';
 sly_Loader::addLoadPath(SLY_SALLYFOLDER.'/backend/controllers/', 'sly_Controller_');
 sly_Loader::addLoadPath(SLY_SALLYFOLDER.'/backend/layout/', 'sly_Layout_');
 
+require_once SLY_SALLYFOLDER.'/backend/functions.php';
+
 if (!SLY_IS_TESTING) sly_Util_Session::start();
 
 // addon/normal page path
