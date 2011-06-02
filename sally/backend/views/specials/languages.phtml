@@ -35,7 +35,7 @@ if (!empty($this->info))    print rex_info($this->info);
 	$table->addColumn(new sly_Table_Column(t('clang_locale')));
 	$table->addColumn(new sly_Table_Column(t('clang_function')));
 
-	$table->renderHeader();
+	$table->openBuffer();
 
 	// Das Formular für neue Sprachen erscheint immer vor den anderen Daten.
 
@@ -66,11 +66,10 @@ if (!empty($this->info))    print rex_info($this->info);
 		));
 	}
 
-	$table->renderFooter();
+	$table->closeBuffer();
+	print $table->render();
 
-	?>
-
-	<? if ($this->func == 'add' || $this->func == 'edit'): ?>
+	if ($this->func == 'add' || $this->func == 'edit'): ?>
 			<script type="text/javascript">
 			<!--
 			jQuery('input[name=clang_name]').focus();

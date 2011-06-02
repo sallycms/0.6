@@ -20,7 +20,7 @@ $table->addColumn(new sly_Table_Column(t('last_login'), '150px'));
 $table->addColumn(new sly_Table_Column(t('user_delete'), '150px'));
 
 $table->setIsEmpty(false);
-$table->renderHeader(count($users));
+$table->openBuffer();
 
 $tdIcon    = '';
 $user      = sly_Util_User::getCurrentUser();
@@ -56,4 +56,5 @@ foreach ($users as $user) {
 	<?
 }
 
-$table->renderFooter();
+$table->closeBuffer();
+print $table->render(count($users));
