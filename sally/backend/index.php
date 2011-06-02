@@ -53,7 +53,7 @@ $navigation = sly_Core::getNavigation();
 if (!SLY_IS_TESTING && $config->get('SETUP')) {
 	$REX['LANG'] = 'de_de';
 	$requestLang = sly_request('lang', 'string');
-	$langpath    = SLY_COREFOLDER.'/lang';
+	$langpath    = SLY_SALLYFOLDER.'/backend/lang';
 	$languages   = glob($langpath.'/*.yml');
 	$list        = array();
 
