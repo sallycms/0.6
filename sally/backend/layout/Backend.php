@@ -19,10 +19,10 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 
 		$config = sly_Core::config();
 
-		$this->addCSSFile('media/css/import.css');
+		$this->addCSSFile('assets/css/import.css');
 
-		$this->addJavaScriptFile('media/js/jquery.min.js');
-		$this->addJavaScriptFile('media/js/standard.min.js');
+		$this->addJavaScriptFile('assets/js/jquery.min.js');
+		$this->addJavaScriptFile('assets/js/standard.min.js');
 
 		$this->setTitle($config->get('SERVERNAME').' - ');
 

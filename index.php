@@ -24,7 +24,7 @@ define('SLY_HTDOCS_PATH', './');
 
 // Core laden
 
-require_once 'sally/include/master.inc.php';
+require_once 'sally/core/master.inc.php';
 
 // Setup?
 if (!isset($_GET['sly_asset']) && $config->get('SETUP')) {
@@ -38,7 +38,7 @@ $assetService = sly_Service_Factory::getAssetService();
 sly_Core::loadAddons();
 
 if ($config->get('DEVELOPER_MODE')) {
-	require_once 'sally/include/functions/function_rex_generate.inc.php';
+	require_once 'sally/core/functions/function_rex_generate.inc.php';
 
 	if (!$config->get('SETUP')) {
 		sly_Service_Factory::getTemplateService()->refresh();
