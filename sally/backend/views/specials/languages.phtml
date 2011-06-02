@@ -59,7 +59,7 @@ if (!empty($this->info))    print rex_info($this->info);
 	}
 
 	foreach ($this->languages as $language) {
-		$this->render('specials/languages_row.phtml', array(
+		print $this->render('specials/languages_row.phtml', array(
 			'clangID'     => $language->getId(),
 			'clangName'   => $language->getName(),
 			'clangLocale' => $language->getLocale()

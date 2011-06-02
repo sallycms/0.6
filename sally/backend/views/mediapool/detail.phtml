@@ -47,8 +47,8 @@ $thumbsresize = sly_Service_Factory::getAddOnService()->isAvailable('image_resiz
 ////////////////////////////////////////////////////////
 // info and error messages
 
-$this->render('mediapool/javascript.phtml');
-$this->render('mediapool/notices.phtml');
+print $this->render('mediapool/javascript.phtml');
+print $this->render('mediapool/notices.phtml');
 
 ////////////////////////////////////////////////////////
 // wysi-whatever integration
@@ -202,4 +202,4 @@ if ($this->canAccessFile($media)) {
 	$form->add($file);
 }
 
-$form->render();
+print $form->render();

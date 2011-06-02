@@ -22,7 +22,7 @@ class sly_Controller_Profile extends sly_Controller_Backend {
 	}
 
 	public function index() {
-		$this->render('profile/index.phtml', array('user' => $this->getUser()));
+		print $this->render('profile/index.phtml', array('user' => $this->getUser()));
 		return true;
 	}
 

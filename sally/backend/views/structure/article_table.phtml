@@ -20,28 +20,29 @@
 	$table->addColumn(new sly_Table_Column(t('header_date'), '115px'));
 	$table->addColumn(new sly_Table_Column(t('header_status'), '150px'));
 
-	$table->renderHeader();
-
-
+	$table->openBuffer();
 
 	if ($this->renderAddArticle) {
-		$this->render(sly_Controller_Structure::$viewPath . 'article_table_row_add.phtml', array('advancedMode' => $advancedMode));
+		print $this->render(sly_Controller_Structure::$viewPath . 'article_table_row_add.phtml', array('advancedMode' => $advancedMode));
 	}
 
 	foreach ($articles as $article) {
-		if($this->renderEditArticle && $this->renderEditArticle == $article->getId()) {
-			$this->render(
+		if ($this->renderEditArticle && $this->renderEditArticle == $article->getId()) {
+			print $this->render(
 				sly_Controller_Structure::$viewPath . 'article_table_row_edit.phtml',
 				array('article' => $article, 'advancedMode' => $advancedMode)
 			);
-		}else {
-			$this->render(
+		}
+		else {
+			print $this->render(
 				sly_Controller_Structure::$viewPath . 'article_table_row.phtml',
 				array('article' => $article, 'advancedMode' => $advancedMode, 'statusTypes' => $statusTypes, 'canEdit' => $canEdit)
 			);
 		}
 	}
-	$table->renderFooter();
+
+	$table->closeBuffer();
+	print $table->render();
 	?>
 </form>
 

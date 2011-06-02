@@ -13,13 +13,11 @@ $config = sly_Core::config();
 
 <div id="sly-page">
 	<div id="sly-navi-top">
-		<?php $this->renderView('layout/sally/navi_logout.phtml') ?>
+		<?php print $this->renderView('layout/sally/navi_logout.phtml'); ?>
 	</div>
 	<?php if (sly_Util_User::getCurrentUser() && $this->hasNavigation()): ?>
 	<div id="sly-navi-main">
-		<?php
-		$this->renderView('layout/sally/navi_main.phtml');
-		?>
+		<?php print $this->renderView('layout/sally/navi_main.phtml'); ?>
 	</div>
 	<?php endif ?>
 

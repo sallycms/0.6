@@ -10,7 +10,7 @@
 
 class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 	public function index() {
-		$this->render('mediapool/structure.phtml');
+		print $this->render('mediapool/structure.phtml');
 	}
 
 	public function add() {

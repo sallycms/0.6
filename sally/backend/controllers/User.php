@@ -50,7 +50,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 
 			if ($error) {
 				$this->func = 'add';
-				$this->render('user/edit.phtml', array('user' => null));
+				print $this->render('user/edit.phtml', array('user' => null));
 				return true;
 			}
 
@@ -81,7 +81,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 		}
 
 		$this->func = 'add';
-		$this->render('user/edit.phtml', array('user' => null));
+		print $this->render('user/edit.phtml', array('user' => null));
 		return true;
 	}
 
@@ -136,7 +136,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 		$params     = array('user' => $user);
 		$this->func = 'edit';
 
-		$this->render('user/edit.phtml', $params);
+		print $this->render('user/edit.phtml', $params);
 		return true;
 	}
 
@@ -171,7 +171,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 	protected function listUsers() {
 		$service = sly_Service_Factory::getUserService();
 		$users   = $service->find(null, null, 'name', null, null);
-		$this->render('user/list.phtml', array('users' => $users));
+		print $this->render('user/list.phtml', array('users' => $users));
 	}
 
 	protected function getUser() {

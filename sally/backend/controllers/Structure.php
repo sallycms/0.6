@@ -22,13 +22,13 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 
 	protected function init() {
 		parent::init();
-		self::$viewPath = 'views/structure/';
+		self::$viewPath = 'structure/';
 
 		$this->categoryId = sly_request('category_id', 'rex-category-id');
 		$this->clangId    = sly_request('clang', 'rex-clang-id', sly_Core::config()->get('START_CLANG_ID'));
 
 		sly_Core::getLayout()->pageHeader(t('title_structure'), $this->getBreadcrumb());
-		$this->render('toolbars/languages.phtml', array('clang' => $this->clangId, 'sprachen_add' => '&amp;category_id='.$this->categoryId));
+		print $this->render('toolbars/languages.phtml', array('clang' => $this->clangId, 'sprachen_add' => '&amp;category_id='.$this->categoryId));
 
 		print sly_Core::dispatcher()->filter('PAGE_STRUCTURE_HEADER', '', array(
 			'category_id' => $this->categoryId,
@@ -53,14 +53,14 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		if (!empty($this->info))    print rex_info($this->info);
 		if (!empty($this->warning)) print rex_warning($this->warning);
 
-		$this->render(self::$viewPath.'category_table.phtml', array(
+		print $this->render(self::$viewPath.'category_table.phtml', array(
 			'categories'      => $categories,
 			'currentCategory' => $currentCategory,
 			'advancedMode'    => $advancedMode,
 			'statusTypes'     => $cat_service->getStati()
 		));
 
-		$this->render(self::$viewPath.'article_table.phtml', array(
+		print $this->render(self::$viewPath.'article_table.phtml', array(
 			'articles'        => $articles,
 			'advancedMode'    => $advancedMode,
 			'statusTypes'     => $art_service->getStati(),

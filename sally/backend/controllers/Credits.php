@@ -22,7 +22,7 @@ class sly_Controller_Credits extends sly_Controller_Backend {
 	}
 
 	public function index() {
-		$this->render('credits/index.phtml');
+		print $this->render('credits/index.phtml');
 		return true;
 	}
 

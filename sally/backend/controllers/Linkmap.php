@@ -59,8 +59,8 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 	}
 
 	public function index() {
-		$this->render('linkmap/javascript.phtml');
-		$this->render('linkmap/index.phtml');
+		print $this->render('linkmap/javascript.phtml');
+		print $this->render('linkmap/index.phtml');
 	}
 
 	public function checkPermission() {

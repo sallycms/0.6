@@ -23,9 +23,9 @@ $dispatcher = sly_Core::dispatcher();
 // Artikel wurde gefunden - Kategorie holen
 $category_id = $this->article->getCategoryId();
 
-$this->render('_slotmenu.phtml');
+print $this->render('_slotmenu.phtml');
 
-$menu = ''; 
+$menu = '';
 
 $listElements = array();
 $listElements[] = '<a href="' . $baseURL . '">' . t('edit_mode') . '</a>';
@@ -106,7 +106,7 @@ if ($this->canCopyContent()) {
 	foreach ($languages as $id => $lang) {
 		$languages[$id] = $lang->getName();
 	}
-	
+
 	$lang_a = new sly_Form_Select_DropDown('clang_a', t('content_contentoflang'), sly_request('clang_a', 'rex-clang-id', null), $languages, 'clang_a');
 	$lang_a->setSize(1);
 
@@ -159,5 +159,5 @@ if ($this->canMoveCategory()) {
 }
 ?>
 <div class="rex-content-body">
-<?php $form->render(); ?>
+<?= $form->render() ?>
 </div>

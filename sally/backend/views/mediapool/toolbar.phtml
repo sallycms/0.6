@@ -41,6 +41,6 @@ if (count($values) > 1) { // empty / 'no category' will hide the form
 	$form = $dispatcher->filter('SLY_MEDIA_LIST_TOOLBAR', $form, array('category_id' => $selected));
 
 	if ($form instanceof sly_Form) {
-		$form->render();
+		print $form->render();
 	}
 }

@@ -23,7 +23,7 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 	}
 
 	public function index() {
-		$this->render('specials/index.phtml');
+		print $this->render('specials/index.phtml');
 	}
 
 	public function clearcache() {

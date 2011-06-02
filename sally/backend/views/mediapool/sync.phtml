@@ -80,5 +80,5 @@ else {
 $form = sly_Core::dispatcher()->filter('SLY_MEDIA_FORM_SYNC', $form);
 
 if ($form instanceof sly_Form) {
-	$form->render();
+	print $form->render();
 }

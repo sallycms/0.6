@@ -14,10 +14,10 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 
 		if (empty($diff)) {
 			$this->info = $this->t('sync_no_diffs');
-			$this->render('mediapool/notices.phtml');
+			print $this->render('mediapool/notices.phtml');
 		}
 		else {
-			$this->render('mediapool/sync.phtml', array('diffFiles' => $diff));
+			print $this->render('mediapool/sync.phtml', array('diffFiles' => $diff));
 		}
 	}
 

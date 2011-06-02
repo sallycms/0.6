@@ -18,8 +18,8 @@ $selected     = $this->getCurrentCategory();
 ////////////////////////////////////////////////////////
 // info and error messages
 
-$this->render('mediapool/javascript.phtml');
-$this->render('mediapool/notices.phtml');
+print $this->render('mediapool/javascript.phtml');
+print $this->render('mediapool/notices.phtml');
 
 ////////////////////////////////////////////////////////
 // if file types are restricted, inform the user
@@ -213,4 +213,4 @@ $container->setContent(ob_get_clean());
 $form->add($container);
 $form->setResetButton(null);
 $form->setSubmitButton(null);
-$form->render();
+print $form->render();

@@ -41,7 +41,7 @@ class sly_Controller_Addon_Help extends sly_Controller_Backend {
 	public function index() {
 		if ($this->addon === null) return;
 
-		$this->render('addon/help.phtml', array(
+		print $this->render('addon/help.phtml', array(
 			'addon'  => $this->addon,
 			'plugin' => $this->plugin
 		));

@@ -35,7 +35,7 @@ $form->getSubmitButton()->setAttribute('value', t('setup_createuser_continue'));
 // render it!
 
 $form->setFocus('admin_user');
-$form->render();
+print $form->render();
 
 if ($usersExist):
 ?>

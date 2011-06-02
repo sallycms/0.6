@@ -48,7 +48,7 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 	public function index() {
 		$this->checkForNewComponents();
 
-		$this->render('addon/list.phtml', array(
+		print $this->render('addon/list.phtml', array(
 			'addons'  => $this->addons,
 			'plugins' => $this->plugins,
 			'info'    => $this->info,

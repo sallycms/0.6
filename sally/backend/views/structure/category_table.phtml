@@ -19,7 +19,7 @@
 	$table->addColumn(new sly_Table_Column(t('header_priority'), '40px'));
 	$table->addColumn(new sly_Table_Column(t('header_status'), '150px'));
 
-	$table->renderHeader();
+	$table->openBuffer();
 
 	if ($this->categoryId != 0 && $currentCategory) {
 		echo '<tr>';
@@ -35,25 +35,26 @@
 	}
 
 	if ($this->renderAddCategory) {
-		$this->render(sly_Controller_Structure::$viewPath.'category_table_row_add.phtml', array('advancedMode' => $advancedMode));
+		print $this->render(sly_Controller_Structure::$viewPath.'category_table_row_add.phtml', array('advancedMode' => $advancedMode));
 	}
 
 	foreach ($categories as $category) {
 		if ($this->renderEditCategory && $this->renderEditCategory == $category->getId()) {
-			$this->render(
+			print $this->render(
 				sly_Controller_Structure::$viewPath.'category_table_row_edit.phtml',
 				array('category' => $category, 'advancedMode' => $advancedMode)
 			);
 		}
 		else {
-			$this->render(
+			print $this->render(
 				sly_Controller_Structure::$viewPath.'category_table_row.phtml',
 				array('category' => $category, 'advancedMode' => $advancedMode, 'statusTypes' => $statusTypes)
 			);
 		}
 	}
 
-	$table->renderFooter();
+	$table->closeBuffer();
+	print $table->render();
 	?>
 </form>
 

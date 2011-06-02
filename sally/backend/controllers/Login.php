@@ -34,7 +34,7 @@ class sly_Controller_Login extends sly_Controller_Backend {
 
 	public function index() {
 		if(empty($this->message)) $this->message = t('login_welcome');
-		$this->render('login/index.phtml');
+		print $this->render('login/index.phtml');
 	}
 
 	protected function login() {

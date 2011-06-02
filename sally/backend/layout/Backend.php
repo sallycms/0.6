@@ -59,11 +59,11 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 
 	public function printHeader() {
 		parent::printHeader();
-		$this->renderView('layout/sally/top.phtml');
+		print $this->renderView('layout/sally/top.phtml');
 	}
 
 	public function printFooter() {
-		$this->renderView('layout/sally/bottom.phtml');
+		print $this->renderView('layout/sally/bottom.phtml');
 		parent::printFooter();
 	}
 

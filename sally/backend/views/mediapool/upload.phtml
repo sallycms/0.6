@@ -11,7 +11,7 @@
 ////////////////////////////////////////////////////////
 // info and error messages
 
-$this->render('mediapool/notices.phtml');
+print $this->render('mediapool/notices.phtml');
 
 ////////////////////////////////////////////////////////
 // init form
@@ -70,5 +70,5 @@ if (sly_Util_Session::get('media[opener_input_field]') != '') {
 $form = sly_Core::dispatcher()->filter('SLY_MEDIA_FORM_ADD', $form);
 
 if ($form instanceof sly_Form) {
-	$form->render();
+	print $form->render();
 }

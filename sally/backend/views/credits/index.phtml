@@ -46,7 +46,7 @@
 			$params['author']      = $addons->getAuthor($addon);
 			$params['supportPage'] = $addons->getSupportPageEx($addon);
 
-			$this->render('/views/credits/row.phtml', $params);
+			print $this->render('/views/credits/row.phtml', $params);
 
 			if ($addons->isAvailable($addon)) {
 				$params['type'] = 'plugin';
@@ -60,7 +60,7 @@
 					$params['author']      = $plugins->getAuthor(array($addon, $plugin));
 					$params['supportPage'] = $plugins->getSupportPageEx(array($addon, $plugin));
 
-					$this->render('/views/credits/row.phtml', $params);
+					print $this->render('/views/credits/row.phtml', $params);
 				}
 			}
 		}

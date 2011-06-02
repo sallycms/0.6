@@ -33,7 +33,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Backend {
 	public function index() {
 		$languageService = sly_Service_Factory::getLAnguageService();
 		$this->languages = $languageService->find(null, null, 'id');
-		$this->render('specials/languages.phtml');
+		print $this->render('specials/languages.phtml');
 	}
 
 	public function add() {

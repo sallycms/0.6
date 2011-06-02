@@ -31,11 +31,11 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 			exit();
 		}
 
-		$this->render('setup/chooselang.phtml');
+		print $this->render('setup/chooselang.phtml');
 	}
 
 	protected function license() {
-		$this->render('setup/license.phtml');
+		print $this->render('setup/license.phtml');
 	}
 
 	protected function fsperms() {
@@ -78,7 +78,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		}
 
 		$params = compact('results', 'protects', 'errors', 'cantCreate', 'tester');
-		$this->render('setup/fsperms.phtml', $params);
+		print $this->render('setup/fsperms.phtml', $params);
 	}
 
 	protected function dbconfig() {
@@ -114,7 +114,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 			}
 		}
 
-		$this->render('setup/dbconfig.phtml', array(
+		print $this->render('setup/dbconfig.phtml', array(
 			'host'   => $data['HOST'],
 			'user'   => $data['LOGIN'],
 			'pass'   => $data['PASSWORD'],
@@ -142,7 +142,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 			return;
 		}
 
-		$this->render('setup/config.phtml', array(
+		print $this->render('setup/config.phtml', array(
 			'server'     => $config->get('SERVER'),
 			'serverName' => $config->get('SERVERNAME'),
 			'errorEMail' => $config->get('ERROR_EMAIL'),
@@ -226,7 +226,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 			}
 		}
 
-		$this->render('setup/initdb.phtml', array(
+		print $this->render('setup/initdb.phtml', array(
 			'dbInitFunction'  => $dbInitFunction,
 			'dbInitFunctions' => array('setup', 'nop', 'drop')
 		));
@@ -287,7 +287,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		}
 
 		$this->warning = $error;
-		$this->render('setup/createuser.phtml', array(
+		print $this->render('setup/createuser.phtml', array(
 			'usersExist' => $usersExist,
 			'adminUser'  => $adminUser
 		));
@@ -295,7 +295,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 
 	public function finish() {
 		sly_Core::config()->setLocal('SETUP', false);
-		$this->render('setup/finish.phtml');
+		print $this->render('setup/finish.phtml');
 	}
 
 	protected function title($title) {

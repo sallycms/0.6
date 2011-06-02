@@ -29,7 +29,7 @@ $form->add(new sly_Form_Input_Password('rex_user_psw', t('login_password'), ''))
 
 $form->setResetButton(null);
 $form->getSubmitButton()->setAttribute('value', t('login'));
-$form->render();
+print $form->render();
 
 ?>
 

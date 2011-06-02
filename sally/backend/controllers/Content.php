@@ -42,12 +42,12 @@ class sly_Controller_Content extends sly_Controller_Backend {
 		if (!$this->article)
 			return;
 		$this->header();
-		$this->render('index.phtml');
+		print $this->render('index.phtml');
 	}
 
 	protected function render($filename, $params = array()) {
 		$filename = 'views' . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR . $filename;
-		parent::render($filename, $params);
+		return parent::render($filename, $params);
 	}
 
 	protected function checkPermission() {
@@ -66,7 +66,7 @@ class sly_Controller_Content extends sly_Controller_Backend {
 	}
 
 	protected function renderLanguageBar($add) {
-		parent::render('toolbars/languages.phtml', array(
+		return parent::render('toolbars/languages.phtml', array(
 			'clang' => $this->article->getClang(),
 			'sprachen_add' => $add
 		));

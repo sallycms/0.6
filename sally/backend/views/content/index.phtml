@@ -529,7 +529,7 @@ if ($mode == 'edit') {
 	$button = new sly_Form_Input_Button('submit', 'save_article', t('article_save'));
 	$form->setSubmitButton($button );
 
-	$form->render();
+	print $form->render();
 
 	if (!$hasType || !$hasTemplate || $slot === null) {
 		if (!$hasType) print rex_warning(t('content_select_type'));
@@ -550,7 +550,7 @@ if ($mode == 'edit') {
 				sly_Helper_Content::printAddSliceForm($prior, $module, $article_id, $clang, $slot);
 			}
 			else {
-				$this->render('_add_slice_form.phtml', array('articleId' => $article_id, 'clangId' => $clang, 'prior' => $ooslice->getPrior(), 'template' => $templateName, 'slot' => $slot));
+				print $this->render('_add_slice_form.phtml', array('articleId' => $article_id, 'clangId' => $clang, 'prior' => $ooslice->getPrior(), 'template' => $templateName, 'slot' => $slot));
 			}
 
 			if (empty($function) && $prior == $ooslice->getPrior()) {
@@ -564,13 +564,13 @@ if ($mode == 'edit') {
 			}
 
 			if ($function == 'edit' && $slice_id == $ooslice->getId()) {
-				$this->render('_slice_toolbar.phtml', array('articleSlice' => $ooslice));
+				print $this->render('_slice_toolbar.phtml', array('articleSlice' => $ooslice));
 				sly_Helper_Content::printEditSliceForm($ooslice);
 			}
 			else {
 				//sly_Helper_Content::printSliceToolbar($ooslice);
-				$this->render('_slice_toolbar.phtml', array('articleSlice' => $ooslice));
-				$this->render('_slice_content.phtml', array('articleSlice' => $ooslice));
+				print $this->render('_slice_toolbar.phtml', array('articleSlice' => $ooslice));
+				print $this->render('_slice_content.phtml', array('articleSlice' => $ooslice));
 			}
 		}
 
@@ -581,7 +581,7 @@ if ($mode == 'edit') {
 			sly_Helper_Content::printAddSliceForm($prior, $module, $article_id, $clang, $slot);
 		}
 		else {
-			$this->render('_add_slice_form.phtml', array('articleId' => $article_id, 'clangId' => $clang, 'prior' => count($articleSlices), 'template' => $templateName, 'slot' => $slot));
+			print $this->render('_add_slice_form.phtml', array('articleId' => $article_id, 'clangId' => $clang, 'prior' => count($articleSlices), 'template' => $templateName, 'slot' => $slot));
 		}
 
 		print '</div>';
@@ -703,7 +703,7 @@ elseif ($mode == 'meta') {
 	}
 	// SONSTIGES ENDE
 
-	$form->render();
+	print $form->render();
 
 	// END: META VIEW
 }

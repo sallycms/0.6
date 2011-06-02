@@ -27,7 +27,7 @@ class sly_Controller_Content_Meta extends sly_Controller_Content {
 	protected function index() {
 		if(!$this->article) return;
 		$this->header();
-		$this->render('meta/index.phtml');
+		print $this->render('meta/index.phtml');
 	}
 
 	protected function processMetaForm() {

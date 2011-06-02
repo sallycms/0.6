@@ -10,7 +10,7 @@
 
 class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 	public function index() {
-		$this->render('mediapool/upload.phtml');
+		print $this->render('mediapool/upload.phtml');
 	}
 
 	public function upload() {
@@ -28,8 +28,8 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 			// close the popup, if requested
 
 			if (sly_post('saveandexit', 'boolean', false) && $file !== null) {
-				$this->render('mediapool/javascript.phtml');
-				$this->render('mediapool/upload_js.phtml', array('file' => $file));
+				print $this->render('mediapool/javascript.phtml');
+				print $this->render('mediapool/upload_js.phtml', array('file' => $file));
 				exit;
 			}
 			elseif ($file !== null) {

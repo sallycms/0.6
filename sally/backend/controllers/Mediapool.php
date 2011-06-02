@@ -150,8 +150,8 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 	}
 
 	public function index() {
-		$this->render('mediapool/toolbar.phtml');
-		$this->render('mediapool/index.phtml');
+		print $this->render('mediapool/toolbar.phtml');
+		print $this->render('mediapool/index.phtml');
 	}
 
 	public function batch() {
