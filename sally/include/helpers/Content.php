@@ -20,6 +20,8 @@ class sly_Helper_Content {
 			$service = sly_Service_Factory::getTemplateService();
 			$modules = $service->getModules($templateName, $slot);
 
+			uasort($modules, 'strnatcasecmp');
+
 			self::$moduleSelect = new sly_Form_Select_DropDown('module', '', '', array());
 			self::$moduleSelect->addClass('sly-module-select');
 			self::$moduleSelect->addValue('', '----------------------------  '.t('add_block'));
