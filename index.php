@@ -28,8 +28,8 @@ require_once 'sally/core/master.inc.php';
 
 // Setup?
 if (!isset($_GET['sly_asset']) && $config->get('SETUP')) {
-	header('Location: sally/index.php');
-	exit('Bitte führe das <a href="sally/index.php">Setup</a> aus, um SallyCMS zu nutzen.');
+	header('Location: backend/index.php');
+	exit('Bitte führe das <a href="backend/index.php">Setup</a> aus, um SallyCMS zu nutzen.');
 }
 
 // instantiate asset service before addons are loaded to make sure the scaffold css processing is first
