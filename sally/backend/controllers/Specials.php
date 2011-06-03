@@ -60,7 +60,7 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 		else {
 			$this->warning[] = t('settings_invalid_notfound_article').'<br />';
 		}
-		var_dump($startClang);
+
 		if(sly_Util_Language::exists($startClang)) {
 			$conf->set('START_CLANG_ID', $startClang);
 		}else {
