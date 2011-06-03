@@ -147,7 +147,7 @@ ob_start();
 					$attrs['src'] = '../imageresize/'.$width.'w__'.$height.'h__'.$encoded_file_name.'?t='.$file_update;
 				}
 				else {
-					$attrs['src'] = '../data/mediapool/'.$encoded_file_name.'?t='.$file_update;
+					$attrs['src'] = '../sally/data/mediapool/'.$encoded_file_name.'?t='.$file_update;
 				}
 
 				$thumbnail = '<img '.sly_Util_HTML::buildAttributeString($attrs, array('alt')).' />';

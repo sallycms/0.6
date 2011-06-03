@@ -85,7 +85,7 @@ else {
 // image container (same for both forms)
 
 if ($isImage) {
-	$imgn = '../data/mediapool/'.$encoded_fname.'?t='.$ffile_update;
+	$imgn = '../sally/data/mediapool/'.$encoded_fname.'?t='.$ffile_update;
 
 	if (!file_exists(SLY_MEDIAFOLDER.'/'.$fname)) {
 		$imgn = 'assets/mime-error.gif';
@@ -180,7 +180,7 @@ if ($isImage) {
 
 // display filename
 
-$filename = '<a href="../data/mediapool/'.$encoded_fname.'">'.sly_html($fname).'</a> ['.$ffile_size.']';
+$filename = '<a href="../sally/data/mediapool/'.$encoded_fname.'">'.sly_html($fname).'</a> ['.$ffile_size.']';
 $filename = new sly_Form_Text(t('pool_filename'), $filename);
 $filename->setIsHTML(true);
 $form->add($filename);
