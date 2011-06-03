@@ -29,7 +29,7 @@ else {
 	unset($REX);
 }
 
-define('SLY_HTDOCS_PATH', SLY_IS_TESTING ? SLY_TESTING_ROOT : '../../');
+define('SLY_HTDOCS_PATH', SLY_IS_TESTING ? SLY_TESTING_ROOT : '../');
 
 require '../core/master.inc.php';
 
@@ -214,7 +214,7 @@ try {
 		if (empty($filename) || !file_exists($filename)) {
 			throw new sly_Controller_Exception(t('unknown_page'));
 		}
-
+		
 		include $filename;
 		$layout->closeBuffer();
 		$CONTENT = $layout->render();
