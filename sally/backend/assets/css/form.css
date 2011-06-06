@@ -3,6 +3,31 @@ input.rex-form-text {
 	border: 1px solid $lt_grey;
 }
 
+.sly-form .rex-form-row {
+	input.rex-form-text[type="range"] {
+		width: 114px;
+
+		&.ua-supported {
+			width: 228px;
+			border: 0 none;
+		}
+	}
+
+	input.rex-form-text[type="number"] {
+		width: 114px;
+	}
+
+	input.rex-form-text[type="date"],
+	input.rex-form-text[type="datetime"],
+	input.rex-form-text[type="datetime-local"] {
+		width: 114px;
+
+		&.ua-supported {
+			width: auto;
+		}
+	}
+}
+
 p.rex-button a, input.rex-form-submit, a.sly-button {
 	background-image: url(../button.gif);
 	background-repeat: repeat-x;

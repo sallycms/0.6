@@ -507,6 +507,16 @@ jQuery(function($) {
 		return false;
 	});
 
+	// allen vom Browser unterstützten Elementen die Klasse ua-supported geben
+
+	var types = Modernizr.inputtypes;
+
+	for (var type in types) {
+		if (types.hasOwnProperty(type) && types[type]) {
+			$('input[type='+type+']').addClass('ua-supported');
+		}
+	}
+
 	// Mehrsprachige Formulare initialisieren
 
 	// Checkboxen erzeugen
