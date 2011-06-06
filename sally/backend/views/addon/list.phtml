@@ -11,26 +11,6 @@
 if (!empty($info))    print rex_info($info);
 if (!empty($warning)) print rex_warning($warning);
 
-print_r($_POST);
-
-$form = new sly_Form('index.php?page=addon', 'POST', 'Testformular');
-
-$range = new sly_Form_Input_Range('foo', 'Range');
-$range->setBounds(0, 100, 4);
-$form->add($range);
-
-$range = new sly_Form_Input_Number('foo2', 'Number');
-$range->setBounds(0, 100, 4);
-$form->add($range);
-
-$range = new sly_Form_Input_Email('foo3', 'Email');
-$form->add($range);
-
-$range = new sly_Form_DateTime('foo4', 'Email', time());
-$form->add($range);
-
-print $form->render();
-
 ?>
 <table class="rex-table sly-addonlist">
 	<caption><?= t('addon_caption') ?></caption>
