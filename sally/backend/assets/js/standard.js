@@ -517,6 +517,32 @@ jQuery(function($) {
 		}
 	}
 
+	// Fallback-Implementierung für type=range via jQuery UI Slider
+
+	$('input[type=range]:not(.ua-supported)').each(function() {
+		var input  = $(this);
+		var slider = $('<div></div>').attr('id', input.attr('id') + '-slider');
+		var hidden = $('<input type="hidden" value="" />');
+
+		// remove the old input element and replace it with a new, hidden one
+		input.after(hidden);
+		hidden.val(input.val()).attr('name', input.attr('name')).attr('id', input.attr('id'));
+
+		// create a new div that will be the slider
+		input.after(slider);
+		slider.addClass('sly-slider').slider({
+			min:   input.attr('min'),
+			max:   input.attr('max'),
+			value: input.val(),
+			change: function(event) {
+				hidden.val(slider.slider('value'));
+			}
+		});
+
+		// remove it
+		input.remove();
+	});
+
 	// Mehrsprachige Formulare initialisieren
 
 	// Checkboxen erzeugen

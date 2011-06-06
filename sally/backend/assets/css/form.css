@@ -26,6 +26,12 @@ input.rex-form-text {
 			width: auto;
 		}
 	}
+
+	.sly-slider {
+		margin-left: 145px;
+		width: 228px;
+		top: 4px;
+	}
 }
 
 p.rex-button a, input.rex-form-submit, a.sly-button {
