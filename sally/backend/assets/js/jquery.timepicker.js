@@ -80,6 +80,97 @@ rewrite (xrstf) / 100711:
 				.data('userLang', userLang)
 				.data('b24Hour', b24Hour);
 
+			function writeTime(fragment, type) {
+				var time = '';
+
+				switch (type) {
+					case 'hour':
+						var hours = parseInt(fragment, 10);
+
+						if (!$('#pickerplug').data('b24Hour') && hours > 11) {
+							hours -= 12;
+							$('.dayPeriod').text('pm');
+						}
+						else if (!$('#pickerplug').data('b24Hour')) {
+							$('.dayPeriod').text('am');
+						}
+
+						if (hours < 10) {
+							hours = '0'.concat(hours);
+						}
+
+						if (fragment < 10) {
+							fragment = '0'.concat(parseInt(fragment, 10));
+						}
+
+						$('#tpSelectedTime .selHrs').text(hours);
+						time = fragment + ':' + $('#tpSelectedTime .selMins').text();
+						break;
+
+					case 'minute':
+						var minutes = ((fragment < 10) ? '0' :'') + parseInt(fragment, 10);
+						$('#tpSelectedTime .selMins').text(minutes);
+						time = $('#hourSlider').slider('option', 'value') + ':' + minutes;
+						break;
+				}
+
+				return time;
+			}
+
+			function parseTime(obj) {
+				var time = ($(obj).val() || $(this).val()).split(' ');
+				var date = null;
+
+				// Bei Zeitangaben wie "01. Jan 1990 01:00" erhalten wir ["01.", "Jan", "1990", "01:00"].
+				// Das korrigieren wir einfach wieder, indem die ersten (n-1) Elemente wieder
+				// zusammengesetzt werden.
+
+				if (time.length >= 2) {
+					date = time.slice(0, -1).join(' ');
+					time = time.pop();
+				}
+				else {
+					date = time[0];
+					time = '00:00:00';
+				}
+
+				$('#pickerplug').data('lastdate', date).data('lasttime', time);
+
+				time = time.split(':');
+
+				if (time.length < 2) {
+					time.push('00');
+				}
+
+				var hour	  = time[0] || '00';
+				var minute = time[1] || '00';
+
+				writeTime(hour, 'hour');
+				writeTime(minute, 'minute');
+
+				$('#hourSlider').slider('option', 'value', hour);
+				$('#minuteSlider').slider('option', 'value', minute);
+
+				$('#datepicker').datepicker(
+					'setDate',
+					$.datepicker.parseDate(datepicker_def.dateFormat, $('#pickerplug').data('lastdate'))
+				);
+			}
+
+			function closePickPlug(event) {
+				var t = $(event.target);
+
+				if ((t.parents('#pickerplug').length || t.hasClass(markerClass)) && !t.hasClass('ui-datepicker-close')) {
+					return;
+				}
+
+				$('#pickerplug').hide('slow');
+				$(this)
+					.unbind('click', closePickPlug)
+					.unbind('keyup', parseTime)
+					.removeClass(markerClass);
+			}
+
 			function renderPickerPlug(b24Hour_, lang_) {
 				var loadedLang = lang[lang_] || lang.en;
 
@@ -232,96 +323,6 @@ rewrite (xrstf) / 100711:
 				me.bind('keyup',parseTime).addClass(markerClass);
 				tpicker.data('inputfield', this);
 			});
-
-			function parseTime(obj) {
-				var time = ($(obj).val() || $(this).val()).split(' ');
-
-				// Bei Zeitangaben wie "01. Jan 1990 01:00" erhalten wir ["01.", "Jan", "1990", "01:00"].
-				// Das korrigieren wir einfach wieder, indem die ersten (n-1) Elemente wieder
-				// zusammengesetzt werden.
-
-				if (time.length >= 2) {
-					date = time.slice(0, -1).join(' ');
-					time = time.pop();
-				}
-				else {
-					date = time[0];
-					time = '00:00:00';
-				}
-
-				$('#pickerplug').data('lastdate', date).data('lasttime', time);
-
-				time = time.split(':');
-
-				if (time.length < 2) {
-					time.push('00');
-				}
-
-				var hour	  = time[0] || '00';
-				var minute = time[1] || '00';
-
-				writeTime(hour, 'hour');
-				writeTime(minute, 'minute');
-
-				$('#hourSlider').slider('option', 'value', hour);
-				$('#minuteSlider').slider('option', 'value', minute);
-
-				$('#datepicker').datepicker(
-					'setDate',
-					$.datepicker.parseDate(datepicker_def.dateFormat, $('#pickerplug').data('lastdate'))
-				);
-			}
-
-			function writeTime(fragment, type) {
-				var time = '';
-
-				switch (type) {
-					case 'hour':
-						var hours = parseInt(fragment, 10);
-
-						if (!$('#pickerplug').data('b24Hour') && hours > 11) {
-							hours -= 12;
-							$('.dayPeriod').text('pm');
-						}
-						else if (!$('#pickerplug').data('b24Hour')) {
-							$('.dayPeriod').text('am');
-						}
-
-						if (hours < 10) {
-							hours = '0'.concat(hours);
-						}
-
-						if (fragment < 10) {
-							fragment = '0'.concat(parseInt(fragment, 10));
-						}
-
-						$('#tpSelectedTime .selHrs').text(hours);
-						time = fragment + ':' + $('#tpSelectedTime .selMins').text();
-						break;
-
-					case 'minute':
-						var minutes = ((fragment < 10) ? '0' :'') + parseInt(fragment, 10);
-						$('#tpSelectedTime .selMins').text(minutes);
-						time = $('#hourSlider').slider('option', 'value') + ':' + minutes;
-						break;
-				}
-
-				return time;
-			}
-
-			function closePickPlug(event) {
-				var t = $(event.target);
-
-				if ((t.parents('#pickerplug').length || t.hasClass(markerClass)) && !t.hasClass('ui-datepicker-close')) {
-					return;
-				}
-
-				$('#pickerplug').hide('slow');
-				$(this)
-					.unbind('click', closePickPlug)
-					.unbind('keyup', parseTime)
-					.removeClass(markerClass);
-			}
 		});
 	};
 })(jQuery);
