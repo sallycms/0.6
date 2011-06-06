@@ -217,7 +217,7 @@ class OOArticleSlice {
 			$this->includeContentFile($slice_content_file);
 		}
 	}
-	
+
 	private function includeContentFile($slice_content_file) {
 		if (file_exists($slice_content_file)) {
 			$article = $this->getArticle();
