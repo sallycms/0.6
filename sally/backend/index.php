@@ -36,6 +36,7 @@ require '../core/master.inc.php';
 // add backend app
 sly_Loader::addLoadPath(SLY_SALLYFOLDER.'/backend/controllers/', 'sly_Controller_');
 sly_Loader::addLoadPath(SLY_SALLYFOLDER.'/backend/layout/', 'sly_Layout_');
+sly_Loader::addLoadPath(SLY_SALLYFOLDER.'/backend/helpers/', 'sly_Helper_');
 
 require_once SLY_SALLYFOLDER.'/backend/functions.php';
 
@@ -214,7 +215,7 @@ try {
 		if (empty($filename) || !file_exists($filename)) {
 			throw new sly_Controller_Exception(t('unknown_page'));
 		}
-		
+
 		include $filename;
 		$layout->closeBuffer();
 		$CONTENT = $layout->render();
