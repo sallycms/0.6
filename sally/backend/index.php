@@ -34,9 +34,7 @@ define('SLY_HTDOCS_PATH', SLY_IS_TESTING ? SLY_TESTING_ROOT : '../');
 require '../core/master.inc.php';
 
 // add backend app
-sly_Loader::addLoadPath(SLY_SALLYFOLDER.'/backend/controllers/', 'sly_Controller_');
-sly_Loader::addLoadPath(SLY_SALLYFOLDER.'/backend/layout/', 'sly_Layout_');
-sly_Loader::addLoadPath(SLY_SALLYFOLDER.'/backend/helpers/', 'sly_Helper_');
+sly_Loader::addLoadPath(SLY_SALLYFOLDER.'/backend/lib/', 'sly_');
 
 require_once SLY_SALLYFOLDER.'/backend/functions.php';
 
