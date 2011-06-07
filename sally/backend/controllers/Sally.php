@@ -12,7 +12,7 @@ abstract class sly_Controller_Backend extends sly_Controller_Base {
 	protected function __construct() {
 		parent::__construct();
 		$this->setContentType('text/html');
-		$this->setCharset(t('htmlcharset'));
+		$this->setCharset('UTF-8');
 	}
 
 	public function dispatch() {

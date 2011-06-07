@@ -37,7 +37,6 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 		$this->pageChecked(array('subject' => isset($REX['PAGE']) ? $REX['PAGE'] : ''));
 		sly_Core::dispatcher()->register('PAGE_CHECKED', array($this, 'pageChecked'));
 
-		$this->addHttpMeta('Content-Type', 'text/html; charset='.t('htmlcharset'));
 		$this->addMeta('robots', 'noindex,nofollow');
 	}
 
