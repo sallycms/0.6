@@ -129,8 +129,11 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		$isSent = isset($_POST['submit']);
 
 		if ($isSent) {
+			$uid = sha1(microtime(true).mt_rand(10000, 90000));
+			$uid = substr($uid, 0, 20);
+
 			$config->setLocal('PROJECTNAME', sly_post('projectname', 'string'));
-			$config->setLocal('INSTNAME', 'sly'.date('YmdHis'));
+			$config->setLocal('INSTNAME', 'sly'.$uid);
 
 			$config->set('TIMEZONE', sly_post('timezone', 'string', null));
 			$config->set('LANG', $this->lang);
