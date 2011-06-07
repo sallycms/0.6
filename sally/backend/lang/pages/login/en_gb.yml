@@ -1,9 +1,7 @@
-login_title: 'Login'
-login_welcome: 'Please login.'
+login_title: Login
+login_welcome: Please login.
 login_name: Username
-login_password: 'Password'
-new_password: 'New password'
-login_error: 'Error on login. Try again in {0} seconds.'
-login_session_expired: 'Session expired.'
-login_user_not_found: 'User does not exist.'
-login_logged_out: 'Signed out.'
+login_password: Password
+new_password: New password
+login_error: 'Error logging in. Please try again in {0} seconds.'
+login_logged_out: Signed out.

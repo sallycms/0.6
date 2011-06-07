@@ -20,16 +20,16 @@ $dst = trim($args[2]);
 $src = preg_replace('#[^a-z0-9_-]#i', '', $src);
 $dst = preg_replace('#[^a-z0-9_-]#i', '', $dst);
 
-define('BASE', realpath('sally/include/lang'));
+define('BASE', realpath('sally/backend/lang'));
 
 if (!file_exists(BASE.'/'.$src.'.yml')) {
 	die('Source language file ('.$src.'.yml) could not be found.');
 }
 
-require 'sally/include/lib/sly/Exception.php';
-require 'sally/include/lib/sly/Util/Directory.php';
-require 'sally/include/lib/sfYaml/sfYaml.php';
-require 'sally/include/lib/sfYaml/sfYamlInline.php';
+require 'sally/core/lib/sly/Exception.php';
+require 'sally/core/lib/sly/Util/Directory.php';
+require 'sally/core/lib/sfYaml/sfYaml.php';
+require 'sally/core/lib/sfYaml/sfYamlInline.php';
 
 $base      = new sly_Util_Directory(BASE);
 $files     = $base->listRecursive(false, true);

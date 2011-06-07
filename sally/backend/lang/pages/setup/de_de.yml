@@ -9,7 +9,7 @@ setup_license_not_found: Die Lizenzdatei konnte nicht gefunden werden.
 setup_license_accept: Setup starten und Lizenzbestimmungen akzeptieren
 
 setup_fsperms_title: Setup: Schritt 1 von 5
-setup_fsperms_security_msg: Der Ordner sally/include ist unsicher. Bitte schützen Sie diesen Ordner und starten das Setup erneut!
+setup_fsperms_security_msg: Der Ordner sally/core ist unsicher. Bitte schützen Sie diesen Ordner und starten das Setup erneut!
 setup_fsperms_header: Systemvoraussetzungen
 setup_fsperms_property: Eigenschaft
 setup_fsperms_required: benötigt
@@ -19,7 +19,7 @@ setup_fsperms_php_version: PHP-Version
 setup_fsperms_mysql_version: MySQL-Version
 setup_fsperms_php_time_limit: PHP Laufzeitlimit
 setup_fsperms_php_mem_limit: PHP Speicherlimit
-setup_fsperms_php_pseudo: PHP Pseudosicherheit (open_basedir, safe_mode)
+setup_fsperms_php_pseudo: 'PHP Pseudosicherheit (open_basedir, safe_mode)'
 setup_fsperms_php_gd: PHP::gd
 setup_fsperms_php_xmlreader: PHP::xmlreader
 setup_fsperms_php_xmlwriter: PHP::xmlwriter
@@ -32,8 +32,8 @@ setup_fsperms_no_mysql_mysqli: weder MySQL noch MySQLi
 setup_fsperms_available: verfügbar
 setup_fsperms_not_available: nicht verfügbar
 setup_fsperms_timeout: Timeout
-setup_fsperms_exec_time: "{0}s, änderbar"
-setup_fsperms_memory: "{0}B, änderbar"
+setup_fsperms_exec_time: '{0}s, änderbar'
+setup_fsperms_memory: '{0}B, änderbar'
 setup_fsperms_safemode_openbasedir: safe_mode und open_basedir
 setup_fsperms_please_fix: Bitte beheben Sie die o.g. Probleme um fortzufahren.
 setup_fsperms_fsproblems: Dateisystemprobleme
@@ -46,7 +46,7 @@ setup_dbconfig_header: Datenbankinformationen
 setup_dbconfig_driver_notice: Alle Datenbanken außer MySQL sind als hoch experimentell anzusehen und dienen zu Testzwecken!
 setup_dbconfig_driver: Datenbank-Typ
 setup_dbconfig_prefix: Tabellen-Präfix
-setup_dbconfig_prefix_notice: "Ermöglicht es, mehrere Sally-Installationen in einer Datenbank parallel zu verwalten."
+setup_dbconfig_prefix_notice: 'Ermöglicht es, mehrere Sally-Installationen in einer Datenbank parallel zu verwalten.'
 setup_dbconfig_host: Host
 setup_dbconfig_login: Login
 setup_dbconfig_password: Passwort
@@ -59,9 +59,9 @@ setup_initdb_header: Datenbank anlegen
 setup_initdb_reinit: Bitte richten Sie die Datenbank erneut ein.
 setup_initdb_func_setup: Datenbank einrichten
 setup_initdb_func_drop: Datenbank einrichten und alte überschreiben falls vorhanden
-setup_initdb_func_nop: "Datenbank existiert schon [Weiter ohne Datenbankimport]"
+setup_initdb_func_nop: 'Datenbank existiert schon [Weiter ohne Datenbankimport]'
 setup_initdb_func_drop_notice: Vorsicht - Alte Seite wird komplett gelöscht!
-setup_initdb_table_not_found: "Tabelle {0} wurde nicht gefunden!"
+setup_initdb_table_not_found: 'Tabelle {0} wurde nicht gefunden!'
 setup_initdb_continue: Weiter zu Schritt 4
 
 setup_config_title: Setup: Schritt 4 von 5
@@ -75,7 +75,7 @@ setup_createuser_header: Administrator anlegen
 setup_createuser_login: Login
 setup_createuser_password: Passwort
 setup_createuser_no_admin: Keinen User anlegen
-setup_createuser_no_admin_notice: "Geben Sie einen bereits bestehenden Benutzernamen ein, um dessen Passwort zu überschreiben."
+setup_createuser_no_admin_notice: 'Geben Sie einen bereits bestehenden Benutzernamen ein, um dessen Passwort zu überschreiben.'
 setup_createuser_continue: Setup abschließen
 setup_createuser_no_admin_given: Bitte geben Sie das Administratorlogin ein!
 setup_createuser_no_password_given: Bitte geben Sie das Administratorpasswort ein!
@@ -86,6 +86,6 @@ setup_finish_title: Setup: Abschluss
 setup_finish_header: Herzlichen Glückwunsch zu Ihrem SallyCMS!
 setup_finish_done: Die Einrichtung Ihres CMS ist nun abgeschlossen.
 setup_finish_login: Sie können Sich nun <a href="index.php">einloggen</a> und loslegen!
-setup_finish_signature: "Viel Spaß und Erfolg,\nDas SallyCMS-Team"
+setup_finish_signature: 'Viel Spaß und Erfolg,\nDas SallyCMS-Team'
 
 setup_import_cant_find_exports: Export-Dateien konnten nicht gefunden werden!

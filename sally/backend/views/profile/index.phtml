@@ -23,7 +23,6 @@ $username     = new sly_Form_Input_Text('username', t('name'), $user->getName())
 $userdesc     = new sly_Form_Input_Text('description', t('description'), $user->getDescription());
 $localeSelect = new sly_Form_Select_DropDown('locale', t('backend_language'), $user->getBackendLocale(), $this->getBackendLocales());
 
-$password->setHelpText(t('psw_encrypted'));
 $localeSelect->setMultiple(false);
 
 $form->beginFieldset(t('profile_myprofile'), '', 2);
@@ -31,12 +30,13 @@ $form->addRow(array($login, $password));
 $form->addRow(array($username, $userdesc));
 $fields = array($localeSelect);
 
-if(class_exists('DateTimeZone')) {
-	$timezone = $user->getTimeZone();
-	$timezone = $timezone ? $timezone : sly_Core::config()->get('TIMEZONE');
-	$timezoneList = DateTimeZone::listIdentifiers();
-	$timezoneList = array_combine($timezoneList, $timezoneList);
+if (class_exists('DateTimeZone')) {
+	$timezone       = $user->getTimeZone();
+	$timezone       = $timezone ? $timezone : sly_Core::config()->get('TIMEZONE');
+	$timezoneList   = DateTimeZone::listIdentifiers();
+	$timezoneList   = array_combine($timezoneList, $timezoneList);
 	$timezoneSelect = new sly_Form_Select_DropDown('timezone', t('specials_timezone'), $timezone, $timezoneList);
+
 	$fields[] = $timezoneSelect;
 }
 

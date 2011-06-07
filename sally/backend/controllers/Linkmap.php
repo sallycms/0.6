@@ -87,7 +87,7 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 		}
 
 		if (sly_Util_Article::isValid($object) && !$object->hasType()) {
-			$label .= ' ['.t('lmap_has_no_template').']';
+			$label .= ' ['.t('lmap_has_no_type').']';
 		}
 
 		return $label;

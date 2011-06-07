@@ -104,14 +104,9 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 	}
 
 	public function setup() {
-		try {
-			sly_Core::config()->setLocal('SETUP', true);
-			$this->info = t('setup_error1', '<a href="index.php">', '</a>');
-		}
-		catch (Exception $e) {
-			$this->warning = t('setup_error2');
-		}
+		sly_Core::config()->setLocal('SETUP', true);
 
+		$this->info = t('setup_error1', '<a href="index.php">', '</a>');
 		$this->index();
 	}
 

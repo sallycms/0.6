@@ -78,7 +78,7 @@ if (count($_languages) > 1) {
 ';
 	if ($stop) {
 		$lang = $_langService->findById($stop);
-		throw new sly_Authorisation_Exception(sprintf(t('authorisation_exception_language_denied'), rex_translate($lang->getName())));
+		throw new sly_Authorisation_Exception(t('authorisation_exception_language_denied', rex_translate($lang->getName())));
 	}
 }
 

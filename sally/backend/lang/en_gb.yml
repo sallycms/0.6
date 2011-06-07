@@ -1,6 +1,5 @@
 lang: English
 htmllang: en
-htmlcharset: utf-8
 yes: yes
 no: no
 month: month
@@ -8,33 +7,28 @@ year: year
 general: general
 dateformat: '%Y-%b-%d'
 setlocale: 'en_GB,en_UK,en_US,en_EN,en_AU,en_CA,American,ENG,English'
-phpini_settings: 'PHP.ini settings'
 
 datetimeformat: '%Y-%b-%d %H:%M'
-ctrl: 'multiselect using CTRL'
-
-# Sprachspezifische Sonderzeichen für Url-Umschreibung
-special_chars: 'ä|ö|ü|Ä|Ö|Ü|ß|&'
-special_chars_rewrite: 'ae|oe|ue|Ae|Oe|Ue|ss|and'
+ctrl: multiselect using CTRL
 
 # sally/index.php
-start_article_not_selected: 'start article not selected'
+start_article_not_selected: start article not selected
 redirect_previous_page: 'You are being redirected to your <a href="{0}">previous page</a>.'
 redirect_startpage: 'You are being redirected to your <a href="{0}">homepage</a>.'
-unknown_page: 'Unknown Page'
-security_violation: 'Security Violation'
-controller_error: 'Controller Error'
-unexpected_exception: 'Unexpected Exception'
+unknown_page: Unknown Page
+security_violation: Security Violation
+controller_error: Controller Error
+unexpected_exception: Unexpected Exception
 
-importer_bad_version: 'translate:importer_bad_version' # In der Importdatei konnte keine gültige Version gefunden werden.
-importer_no_valid_charset: 'translate:importer_no_valid_charset' # In der Importdatei konnte keine Angabe über die Kodierung gefunden werden.
-importer_charset_mismatch: 'translate:importer_charset_mismatch' # Die in der Importdatei angegebene Kodierung weicht von der dieses Projekts ab.
-importer_no_valid_import_file_version: 'translate:importer_no_valid_import_file_version' # Die Importdatei ist ungültig: Versionsstempel von Version {0} gefunden, aber {1} erwartet.
-importer_no_valid_import_file_prefix: 'translate:importer_no_valid_import_file_prefix' # Die Importdatei ist ungültig: Es wurde kein Tabellenpräfix angegeben.
-importer_entry_count: ({0} entries)
+importer_bad_version: The import file contained no valid export version.
+importer_no_valid_charset: The import file contained no encoding definition.
+importer_charset_mismatch: The encodings of this installation and the one in the import file do not match.
+importer_no_valid_import_file_version: 'Import file is invalid. Version stamp {0} found, but {1} expected.'
+importer_no_valid_import_file_prefix: Import file is invalid. No table prefix was found.
 importer_database_imported: Database imported
+importer_entry_count: '({0} rows)'
 
-homepage: 'Homepage'
+homepage: Homepage
 
 # sally/index.php
 specials: System
@@ -43,127 +37,114 @@ mediapool: Mediapool
 import: Im-/export
 content: Article
 structure: Structure
-profile: Profile
+profile: My Profile
 logout: Logout
-navigation_basis: 'Basic Navigation'
+navigation_basis: Basic Navigation
 navigation_addons: AddOns
 
 # sally/include/classes/class.login.inc.php
 login_name: Username
 password: Password
-new_password: 'New password'
-login_error: 'Error on login. Try again in {0} seconds.'
-login_session_expired: 'Session expired.'
-login_user_not_found: 'User does not exist.'
-login_welcome: 'Please login.'
-login_logged_out: 'Signed out.'
+new_password: New password
 
 # sally/include/layout/top.php
-logged_out: 'Not signed in'
-logged_in_as: 'logged in as'
+logged_out: not signed in
+logged_in_as: Logged in as
 
 # sally/include/classes/class.article.inc.php
-add_block: 'add slice'
+add_block: add slice
 edit: edit
 delete: delete
-no_editing_rights: 'permission denied'
-no_article_available: 'no article available'
+no_editing_rights: permission denied
+no_article_available: no article available
 module_doesnt_exist: 'modul doesn''t exist'
 dont_delete_block: 'don''t delete slice'
-delete_block: 'delete slice'
+delete_block: delete slice
 submit: submit
-update_block: 'update slice'
-save_block: 'save slice'
-edit_block: 'edit slice'
-
-# sally/include/classes/class.mail_decode.inc.php
-download: download
-clipboard: clipboard
+update_block: update slice
+save_block: save slice
+edit_block: edit slice
 
 # sally/include/functions/function_rex_generate.inc.php
-article_moved: 'Article moved!'
-article_deleted: 'Article deleted!'
-could_not_move_article: 'Could not move article.'
-article_could_not_be_generated: 'Article could not be generated.'
-check_rights_in_directory: 'Check folder permissions.'
-category_deleted: 'Category deleted!'
+article_moved: Article moved!
+article_deleted: Article deleted!
+could_not_move_article: Could not move article.
+check_rights_in_directory: Check folder permissions.
+category_deleted: Category deleted!
 category_doesnt_exist: 'Category doesn''t exist!'
-cant_delete_sitestartarticle: 'Start Article can not be deleted.'
-cant_delete_notfoundarticle: 'Not-Found-article can not be deleted.'
+cant_delete_sitestartarticle: The website start article can not be deleted.
+cant_delete_notfoundarticle: The "Not Found" article cannot be deleted.
 
 # sally\include\pages\content.inc.php
-move_slice_up: 'move up'
-move_slice_down: 'move down'
-block_updated: 'Block updated!'
-block_added: 'Block added!'
-no_rights_to_this_function: 'Improper permissions for this function.'
-module_not_found: 'Error! Module not found.'
-block_deleted: 'Block deleted!'
-block_not_deleted: 'Block not deleted.'
-no_rights_to_this_module: 'Improper permissions for this module.'
-error: 'An error occured.'
+move_slice_up: move up
+move_slice_down: move down
+block_updated: Block has been updated!
+block_added: Block has been added!
+no_rights_to_this_function: Improper permissions for this function.
+module_not_found: Error! Module could not be found.
+block_deleted: Block has been deleted!
+block_not_deleted: Block could not be deleted.
+no_rights_to_this_module: Improper permissions for this module.
+error: An error occured!
 preview: Preview
-edit_mode: 'Edit mode'
+edit_mode: Edit mode
 metadata: Metadata/Others
-article_cannot_be_moved: 'Article cannot be moved.'
+article_cannot_be_moved: Article cannot be moved.
 start_article_has_to_stay_in_category: 'Start-article has to stay in it''s category!'
-article_copied: 'Article copied.'
-file: 'File {0] not found.'
-moving_file_error: 'Moving file {0} failed.'
-metadata_updated: 'Metadata updated'
+article_copied: Article has been copied.
+file: 'File {0] could not be found.'
+moving_file_error: 'Moving file {0} has failed.'
+metadata_updated: Metadata has been updated.
 online_from: 'Online from'
 online_to: to
 name_description: Name/Description
 description: Description
-keywords: Keywords
-metadata_image: Metafile/Image
-delete_file: 'Delete file'
+delete_file: Delete file
 teaser: Teaser
-update_metadata: 'Update metadata'
-other_functions: 'Other functions'
+update_metadata: Update metadata
+other_functions: Other functions
 category: Categorie
-move_article: 'Move article'
-copy_article: 'to categorie'
-no_rights_to_edit: 'Insufficient permission for edit!'
+move_article: Move article
+copy_article: to categorie
+no_rights_to_edit: Insufficient permission for edit!
 show: Show
-cache_remove: 'Delete cache'
-slice_moved: 'Slice moved.'
-slice_moved_error: 'Error. Slice not moved.'
-slice_deleted_error: 'Error. Slice not deleted.'
-slice_saved_error: 'Error. Slice not saved.'
-content_contentcopy: 'Content copied.'
-content_errorcopy: 'You cannot copy article content to the same language.'
+slice_moved: Slice has been moved.
+slice_moved_error: Error. Slice could not be moved.
+slice_deleted_error: Error. Slice could not be deleted.
+slice_saved_error: Error. Slice could not be saved.
+content_contentcopy: Content has been copied.
+content_errorcopy: You cannot copy article content to the same language.
 content_copy: copy
-content_contentoflang: 'from language'
-content_to: 'to language'
-content_submitcopycontent: 'Copy content'
-content_movearticle: 'Move article'
-content_submitmovearticle: 'Move article'
-content_errormovearticle: 'Error. Article not moved.'
-content_articlemoved: 'Article moved.'
-content_choose_new_category: 'Choose new category.'
-content_movearticle_no_startpage: 'Cannot move start-articles.'
-content_copyarticle: 'Copy article.'
-content_submitcopyarticle: 'Copy article.'
-content_articlecopied: 'Article copied.'
-content_errorcopyarticle: 'Error. Article not copied.'
-content_error_movecategory: 'Error. Category not moved.'
-content_submitmovecategory: 'Move Category'
+content_contentoflang: from language
+content_to: to language
+content_submitcopycontent: Copy content
+content_movearticle: Move article
+content_submitmovearticle: Move article
+content_errormovearticle: Error. Article could not be moved.
+content_articlemoved: Article has been moved.
+content_choose_new_category: Choose new category.
+content_movearticle_no_startpage: Cannot move start-articles.
+content_copyarticle: Copy article.
+content_submitcopyarticle: Copy article.
+content_articlecopied: Article has been copied.
+content_errorcopyarticle: Error. Article not copied.
+content_error_movecategory: Error. Category could not be moved.
+content_submitmovecategory: Move Category
 content_startarticle: Start-article
-content_isstartarticle: 'Article is start-article'
-content_tostartarticle: 'Make this start-article'
-content_nottostartarticle: 'Cannot make this article start-article.'
-content_tostartarticle_failed: 'Error. Article not changed to start-article.'
-content_tostartarticle_ok: 'Article was changed to start-article.'
-content_select_type: Please select an articletype!
-content_configure_article_type: Configure the tempalte for this articletype!
+content_isstartarticle: Article is start-article'
+content_tostartarticle: Make this the start-article
+content_nottostartarticle: Cannot make this article start-article.
+content_tostartarticle_failed: Error. Article not changed to start-article.
+content_tostartarticle_ok: Article was changed to start-article.
+content_select_type: Please select an article type!
+content_configure_article_type: Configure the tempalte for this article type!
 content_no_slots: This article cannot contain any content.
 move_category: to
-category_moved: 'Category moved'
+category_moved: Category has been moved
 content_types: Columns
 content_type: Column
 option: optional
-content_arttype: 'Article type'
+content_arttype: Article type
 
 input: Input
 output: Output
@@ -171,44 +152,42 @@ action: Action
 actions: Actions
 
 # sally\include\pages\structure.inc.php
-title_structure: 'Structure management'
-no_such_category: 'Category not found!'
-category_updated: 'Category updated.'
-category_could_not_be_deleted: 'Error. Category not deleted!'
-category_still_contains_articles: 'Category still contains articles.'
-category_still_contains_subcategories: 'Category still contains subcategories.'
-category_status_updated: 'Category status updated.'
-category_added_and_startarticle_created: 'Category added and start-article created!'
-category_edit_delete: 'Rename/delete category'
-article_status_updated: 'Article status updated.'
-article_updated: 'Article updated.'
-article_added: 'Article added.'
+title_structure: Structure management
+no_such_category: Category not found!
+category_updated: Category has been updated.
+category_still_contains_articles: Category still contains articles.
+category_still_contains_subcategories: Category still contains subcategories.
+category_status_updated: Category status has been updated.
+category_added_and_startarticle_created: Category and start-article have created!
+category_edit_delete: Rename/delete category
+article_status_updated: Article status has been updated.
+article_updated: Article has been updated.
+article_added: Article has been added.
 header_category: Category
-header_edit_category: 'Edit category'
+header_edit_category: Edit category
 header_priority: Prio
 header_status: Status/Function
 header_id: ID
-add_category: 'Add category'
-edit_category: 'Change category'
-delete_category: 'Delete category'
-save_category: 'Save category'
+add_category: Add category
+edit_category: Change category
+delete_category: Delete category
+save_category: Save category
 status_online: online
 status_offline: offline
-no_permission_to_edit: 'No permission to edit'
-option_no_type: 'No Articletype'
-template_default_name: 'NO TEMPLATE'
-header_article_name: 'Article name'
+no_permission_to_edit: No permission to edit
+option_no_type: No Articletype
+header_article_name: Article name
 header_date: Created
-header_article_type: 'Article type'
+header_article_type: Article type
 change: change
-article_add: 'Add article'
-article_edit: 'Change article'
-article_save: 'Save article'
+article_add: Add article
+article_edit: Change article
+article_save: Save article
 article: Article
-structure_categories_summary: 'List of subcategories in {0}'
-structure_categories_caption: 'List of subcategories in {0}'
-structure_articles_summary: 'List of all articles in {0}'
-structure_articles_caption: 'List of articles in {0}'
+structure_categories_summary: 'List of subcategories in "{0}"'
+structure_categories_caption: 'List of subcategories in "{0}"'
+structure_articles_summary: 'List of all articles in "{0}"'
+structure_articles_caption: 'List of articles in "{0}"'
 
 # sally\include\functions\function_rex_category.inc.php
 article: Article
@@ -217,63 +196,52 @@ path: Path
 
 # sally\include\pages\user.inc.php
 title_user: User
-user_data_updated: 'User data updated!'
-user_deleted: 'User deleted!'
-user_added: 'User added!'
-create_user: 'Add user'
-add_user: 'Add user'
-edit_user: 'Edit user'
-user_reset_tries: 'The login has been blocked due to repeated password mismatch (max. attempts: {0}). Activate checkbox to unblock.'
-user_login_exists: 'Login exists!'
-user_admin: 'Admin (Full permissions / Everything visible)'
-user_developer: 'Developer (Templates/Modules/AddOns)'
-user_notdeleteself: '***** You cannot delete yourself!'
-user_lang_xs: 'Language permissions'
+user_data_updated: User data updated!
+user_deleted: User deleted!
+user_added: User added!
+create_user: Create new user
+add_user: Add user
+edit_user: Edit user
+user_login_exists: The chosen login already exists!
+user_admin: Admin (full permissions / everything visible)
+user_notdeleteself: You cannot delete yourself!
+user_lang_xs: Language permissions
 user_all: General
-user_save: 'Save user'
-user_apply: 'Update user'
-user_delete: 'Delete user'
+user_save: Save user
+user_apply: Update user
+user_delete: Delete user
 user_functions: Functions
 user_options: Options
-all_categories: 'All categories'
-all_mediafolder: 'All media categories'
+all_categories: All categories
+all_mediafolder: All media categories
 categories: Categories
-mediafolder: 'Media categories'
+mediafolder: Media categories
 modules: Modules
 extras: Extras
-last_login: 'Last login'
+last_login: Last login
 login: Login
 name: Name
 permissions: Permissions
 add: add
 update: update
-psw_encrypted: 'This password is encrypted - enter new password to change'
-user_caption: 'List of users'
-user_summary: 'List of all users'
+user_caption: List of users
+user_summary: List of all users
 user_status: Status
-backend_language: 'Backend language'
+backend_language: Backend language
 startpage: Startpage
 
 # sally\include\pages\special.inc.php
-articles_generated: 'Articles and Templates regenerated, cache deleted!'
-old_articles_deleted: '[Old articles and templates deleted]'
-links_ok: 'All links valid.'
-links_not_ok: 'Following links are invalid:'
-info_updated: 'Information updated!'
-delete_cache: 'Delete cache'
+info_updated: Information updated!
+delete_cache: Delete cache
 delete_cache_description: 'Templates and languages files will be created, article case will be deleted. The cache of the respective article will be recreated on front-end call of the article.'
-delete_cache_message: 'Cache deleted'
+delete_cache_message: The cache has been deleted.
 specials_features: Features
 specials_settings: Settings
-settings_invalid_sitestart_article: 'Invalid ID for not-found article!'
-settings_invalid_notfound_article: 'Invalid ID for start article!'
-settings_invalid_sitestart_clang: 'Invalid ID for default language'
-settings_invalid_default_type: 'Invalid default Articletype!'
-regenerate_article: 'Regenerate articles & cache'
-regeneration_message: 'Categories, articles and templates are regenerated. Cache will be deleted. Might take longer. Don''t abort process!'
-general_info_header: 'General information:'
-db1_can_only_be_changed_by_setup: 'Database[1] can only be changed during setup.'
-db2_text: 'Database[2] - only necessary for sql-class with 2 databases.'
+settings_invalid_sitestart_article: Invalid ID for not-found article!
+settings_invalid_notfound_article: Invalid ID for start article!
+settings_invalid_sitestart_clang: Invalid ID for default language!
+settings_invalid_default_type: Invalid default Articletype!
+general_info_header: General information:
 specials_others: Others
 specials_update: Update
 update_button: update
@@ -281,156 +249,145 @@ delete_button: delete
 main_preferences: Settings
 languages: Languages
 types: Types
-enter_name: 'Enter a name'
-clang_id: Language-ID
-clang_add: 'Add language'
-clang_edit: 'Edit language'
-clang_update: 'Update language'
-clang_created: 'Language added.'
-clang_edited: 'Language updated.'
-clang_deleted: 'Language deleted.'
-clang_delete_error: 'Language could not be deleted.'
-clang_name: Description/Name
-clang_delete: 'Delete language'
-clang_caption: 'List of available languages'
-clang_summary: 'List of languages'
+enter_name: Enter a name
+clang_id: Language ID
+clang_add: Add language
+clang_edit: Edit language
+clang_update: Update language
+clang_created: Language has been added.
+clang_edited: Language has been updated.
+clang_deleted: Language has been deleted.
+clang_delete_error: Language could not be deleted.
+clang_name: Name
+clang_delete: Delete language
+clang_caption: List of available languages
+clang_summary: List of languages
 clang_function: Functions
 clang_locale: Locale
 version: Version
 host: Host
 database: Database
-specials_caching_strategy: 'Cache Strategy'
-specials_developer_mode: 'Enable Developer Mode'
-specials_server: 'Server'
-specials_servername: 'Project Name'
-specials_error_email: 'Error eMail'
+specials_caching_strategy: Cache Strategy
+specials_developer_mode: Enable Developer Mode
+specials_servername: Project Name
 specials_start_article: Startpage
-specials_default_type: 'Default Articletype'
-specials_lang: 'Default Backend Locale'
-specials_timezone: 'Timezone'
-specials_not_found_article: 'Not-Found Article'
+specials_default_type: Default Articletype
+specials_lang: Default Backend Locale
+specials_timezone: Timezone
+specials_not_found_article: Not-Found Article
 
 setup: Setup
-setup_text: 'You can initiat the setup process here. This is only for emergency and not required on normal conditions.'
-setup_error1: 'Setup activated. Please click {0}>continue<{1} and execute setup.'
-setup_error2: 'Error. master.inc.php is not writeable. Please insert SETUP: true in master.inc.php'
+setup_text: 'You can initiate the setup process here. This is only for emergency and not required on normal conditions.'
+setup_error1: 'Setup activated. Please click {0}>continue<{1} and execute the setup.'
 
 # sally\include\pages\addon.inc.php
 addon: AddOn
 addons: AddOns
-addon_help: Help
-addon_no_help_file: 'No help file found'
+addon_help: 'Help for {0}'
+addon_no_help_file: No help file (help.inc.php) found
 addon_back: back
-addon_install_not_found: 'Install file not found (install.inc.php)!'
-addon_uninstall_not_found: 'Uninstall file not found (uninstall.inc.php)!'
-addon_config_not_found: 'Config file not found (config.inc.php)!'
-addon_no_install: 'AddOn {0} <strong>not</strong> installed because:<br /> {1}'
-addon_no_uninstall: 'AddOn {0} <strong>not</strong> uninstalled because:<br />{1}'
-addon_no_reason: 'No reason.'
-addon_no_activation: 'AddOn {0} <strong>not</strong> actived since it is not installed yet!'
-addon_installed: 'AddOn {0} installed'
-addon_activated: 'AddOn {0} activated'
-addon_deactivated: 'AddOn {0} deactivated'
-addon_uninstalled: 'AddOn {0} uninstalled'
-addon_uninstall_question: 'Deinstall {0} AddOn?'
+addon_config_not_found: Config file (config.inc.php) could not be found!
+addon_no_install: 'AddOn {0} has not been installed because of the following error:<br /> {1}'
+addon_no_uninstall: 'AddOn {0} has not been uninstalled because of the following error:<br />{1}'
+addon_no_reason: No reason was given.
+addon_no_activation: 'AddOn {0} was not activated since it is not installed yet!'
+addon_installed: 'AddOn {0} has been installed.'
+addon_activated: 'AddOn {0} has been activated.'
+addon_deactivated: 'AddOn {0} has been deactivated.'
+addon_uninstalled: 'AddOn {0} has been uninstalled.'
+addon_uninstall_question: 'Uninstall addOn {0}?'
 addon_hname: name
 addon_hinstall: Installed
 addon_hactive: Activated
-addon_hdelete: Uninstall
 addon_hassets: Assets
+addon_hdelete: Uninstall
 addon_reinit_assets: re-init
-addon_assets_copied: The asset files have been copied.
-plugin_assets_copied: The asset files have been copied.
-addon_addon_required: "The addOn {0} is required to install the addOn {1}."
-addon_plugin_required: "The plugIn {0} is required to install the addOn {1}."
-addon_sally_incompatible: "This addOn is not marked as compatible with your SallyCMS version ({0})."
+addon_assets_copied: The assets have been copied.
+plugin_assets_copied: The assets have been copied.
+addon_addon_required: 'The addOn {0} is required to install the addOn {1}.'
+addon_plugin_required: 'The plugIn {0} is required to install the addOn {1}.'
+addon_sally_incompatible: 'This addOn is not marked as compatible with your SallyCMS version ({0}).'
 addon_has_no_sally_version_info: This addOn has no compatibility-information. It can not be installed.
 addon_reinstall: re-install
 addon_install: install
-addon_notinstalled: 'Not installed'
+addon_notinstalled: not installed
 addon_uninstall: uninstall
-addon_delete: delete
 addon_deactivate: deactivate
 addon_activate: activate
 addon_yes: yes
 addon_no: no
-addon_caption: 'List of available addons'
-addon_summary: 'List of addons'
-addon_systemaddon: 'System addOn'
-addon_systemaddon_delete_not_allowed: 'System addons cannot be deleted!'
-addon_install_cant_copy_files: 'translate:addon_install_cant_copy_files' # Fehler beim Kopieren des /files Ordners!
-addon_install_cant_delete_files: 'translate:addon_install_cant_delete_files' # Fehler beim Löschen des /files Ordners!
-addon_empty_list: 'No addOns found. Put new addOns in <strong>sally/include/addons</strong>.'
-plugin_plugins_installed: 'PlugIns are installed'
-plugin_install_not_found: 'translate:plugin_install_not_found' # Installationsdatei wurde nicht gefunden (install.inc.php)!
-plugin_uninstall_not_found: 'translate:plugin_uninstall_not_found' # Deinstallationsdatei wurde nicht gefunden (uninstall.inc.php)!
-plugin_config_not_found: 'translate:plugin_config_not_found' # Konfigurationsdatei wurde nicht gefunden (config.inc.php)!
-plugin_no_install: 'PlugIn has not been installed'
-plugin_no_uninstall: 'translate:plugin_no_uninstall' # PlugIn {0} konnte aus folgendem Grund <b>nicht</b> deinstalliert werden:
-plugin_no_reason: 'No reason was given by the plugin.'
-plugin_no_activation: 'translate:plugin_no_activation' # PlugIn {0} konnte <b>nicht</b> aktiviert werden, da es noch nicht installiert wurde!
-plugin_installed: 'PlugIn has been installed'
-plugin_activated: 'PlugIn activated'
-plugin_deactivated: 'PlugIn deactivated'
+addon_caption: List of available addOns
+addon_install_cant_copy_files: Error while copying the assets directory!
+addon_install_cant_delete_files: Error while deleting the assets directory!
+addon_empty_list: No addOns found. Put new addOns in sally/addons.
+plugin_plugins_installed: plugIns are installed
+plugin_config_not_found: Config file (config.inc.php) could not be found!
+plugin_no_install: 'PlugIn {0} has not been installed because of the following error:<br />{1}'
+plugin_no_uninstall: 'PlugIn {0} has not been uninstalled because of the following error:<br />{1}'
+plugin_no_reason: No reason was given.
+plugin_no_activation: 'PlugIn {0} could not be activated because is has not yet been installed!'
+plugin_installed: 'PlugIn {0} has been installed.'
+plugin_activated: 'PlugIn {0} has been activated.'
+plugin_deactivated: 'PlugIn {0} has been deactivated.'
 plugin_uninstalled: 'PlugIn {0} has been uninstalled.'
-plugin_uninstall_question: 'Uninstall PlugIn?'
-plugin_install_cant_copy_files: 'Error while copying the assets directory.'
-plugin_install_cant_delete_files: 'Error while deleting the assets directory.'
+plugin_uninstall_question: 'Uninstall plugIn {0}?'
+plugin_install_cant_copy_files: Error while copying the assets directory!
+plugin_install_cant_delete_files: Error while deleting the assets directory!
 
 # sally\include\pages\credits.inc.php
-credits: credits
+credits: Credits
 credits_name: AddOn
 credits_version: Version
 credits_author: Author
 credits_supportpage: Help
-credits_addon_inactive: 'Addon inactive'
-credits_caption: 'translate:credits_caption' # Liste der verwendeten AddOns/PlugIns
-credits_summary: 'translate:credits_summary' # Auflistung aller verwendeten AddOns/PlugIns
+credits_addon_inactive: Addon inactive
+credits_caption: List of used addOns/plugins
 
 # sally\include\pages\profile.inc.php
-profile_myprofile: 'Edit my profile'
-profile_title: 'My profile'
-profile_save: 'save profile'
+profile_myprofile: Edit my profile
+profile_title: My profile
+profile_save: Save profile
 
 # sally\include\pages\linkmap.inc.php
 linkmap: Linkmap
 lmap_title: Linkmap
 lmap_categories: Categories
 lmap_articles: Articles
-lmap_has_no_template: 'has not templates'
+lmap_has_no_type: has no type
 
 # sally\include\classes\variables\class.rex_var_media.inc.php
-var_media_open: 'Choose media'
-var_media_new: 'Add media'
-var_media_remove: 'Delete selected Media'
-var_medialist_move_top: 'Move selected media to top'
-var_medialist_move_up: 'move selected media up'
-var_medialist_move_down: 'move selected media down'
-var_medialist_move_bottom: 'move selected media to bottom'
+var_media_open: Choose media
+var_media_new: Add media
+var_media_remove: Delete selected media
+var_medialist_move_top: Move selected media to top
+var_medialist_move_up: Move selected media up
+var_medialist_move_down: Move selected media down
+var_medialist_move_bottom: Move selected media to bottom
 
 # sally\include\classes\variables\class.rex_var_link.inc.php
-var_link_open: 'translate:var_link_open' # Link auswählen
-var_link_new: 'translate:var_link_new' # Neuen Link hinzufügen
-var_link_remove: 'translate:var_link_remove' # Ausgewählten Link löschen
-var_linklist_move_top: 'translate:var_linklist_move_top' # Ausgewählten Link an den Anfang verschieben
-var_linklist_move_up: 'translate:var_linklist_move_up' # Ausgewählten Link nach oben verschieben
-var_linklist_move_down: 'translate:var_linklist_move_down' # Ausgewählten Link nach unten verschieben
-var_linklist_move_bottom: 'translate:var_linklist_move_bottom' # Ausgewählten Link an das Ende verschieben
+var_link_open: Choose link
+var_link_new: Add link
+var_link_remove: Delete selected link
+var_linklist_move_top: Move selected link to top
+var_linklist_move_up: Move selected link up
+var_linklist_move_down: Move selected link down
+var_linklist_move_bottom: Move selected link to bottom
 
-available: 'available'
-unavailable: 'unavailable'
-required: 'required'
+available: available
+unavailable: unavailable
+required: required
 is_required: 'is required by {0}'
-activated: 'activated'
-optional: 'optional'
-deactivated: 'deactivated'
-allowed: 'allowed'
-disallowed: 'disallowed'
-any: 'any'
-none: 'none'
+activated: activated
+optional: optional
+deactivated: deactivated
+allowed: allowed
+disallowed: disallowed
+any: any
+none: none
 recommended: recommended
 
-authorisation_exception_language_denied: Permission to language %s denied!
-exception_articletype_not_exists: The articletype %s does not exist!
+authorisation_exception_language_denied: 'Permission to language {0} denied!'
+exception_articletype_not_exists: 'The article type {0} does not exist!'
+
 config_projectname: Project title
-config_default_fe_language: Default Frontendlanguage
+config_default_fe_language: Default Frontend Language

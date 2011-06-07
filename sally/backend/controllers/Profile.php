@@ -69,20 +69,15 @@ class sly_Controller_Profile extends sly_Controller_Backend {
 	}
 
 	protected function getBackendLocales() {
-		$cur_htmlcharset = t('htmlcharset');
-		$langpath        = SLY_COREFOLDER.DIRECTORY_SEPARATOR.'lang';
-		$langs           = glob($langpath.'/*.yml');
-		$result          = array('' => 'default');
+		$langpath = SLY_SALLYFOLDER.'/backend/lang';
+		$langs    = glob($langpath.'/*.yml');
+		$result   = array('' => 'default');
 
 		foreach ($langs as $file) {
-			$locale  = substr(basename($file), 0, -5);
-			$tmpI18N = rex_create_lang($locale, $langpath, false); // Locale nicht neu setzen
+			$locale = substr(basename($file), 0, -4);
+			$i18n   = new sly_I18N($locale, $langpath);
 
-			if ($cur_htmlcharset == $tmpI18N->msg('htmlcharset')) {
-				$result[$locale] = $tmpI18N->msg('lang');
-			}
-
-			$tmpI18N = null;
+			$result[$locale] = $i18n->msg('lang');
 		}
 
 		return $result;

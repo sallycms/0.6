@@ -42,11 +42,11 @@ class sly_Controller_Content extends sly_Controller_Backend {
 		if (!$this->article)
 			return;
 		$this->header();
-		print $this->render('index.phtml');
+		print $this->render('index.phtml', array('mode' => 'edit'));
 	}
 
 	protected function render($filename, $params = array()) {
-		$filename = 'views' . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR . $filename;
+		$filename = 'content/'.$filename;
 		return parent::render($filename, $params);
 	}
 
