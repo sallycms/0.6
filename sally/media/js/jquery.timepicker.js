@@ -229,12 +229,12 @@ rewrite (xrstf) / 100711:
 					tpicker.show('slow');
 				}
 
-				me.bind('keyup',parseTime).addClass(markerClass);
+				me.bind('keyup', parseTime).addClass(markerClass);
 				tpicker.data('inputfield', this);
 			});
 
 			function parseTime(obj) {
-				var time = ($(obj).val() || $(this).val()).split(' ');
+				var time = $(obj || this).val().split(' ');
 
 				// Bei Zeitangaben wie "01. Jan 1990 01:00" erhalten wir ["01.", "Jan", "1990", "01:00"].
 				// Das korrigieren wir einfach wieder, indem die ersten (n-1) Elemente wieder
