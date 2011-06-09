@@ -12,7 +12,7 @@ $edit_url     = 'index.php?page=structure&amp;category_id='.$article->getCategor
 $status       = $statusTypes[$article->getStatus()][0];
 $status_class = $statusTypes[$article->getStatus()][1];
 
-if ($this->canPublishCategory($article->getId()) && $this->categoryId != $article->getId()) {
+if ($this->canPublishCategory($this->categoryId) && $this->categoryId != $article->getId()) {
 	$status = '<a href="'.$edit_url.'&amp;func=editStatusArticle" class="'.$status_class.'">'.$status.'</a>';
 }
 else {
