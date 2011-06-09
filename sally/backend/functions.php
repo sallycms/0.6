@@ -33,7 +33,7 @@ function rex_create_lang($locale = 'de_de', $searchpath = '', $setlocale = true)
 	$lang_object = new sly_I18N($locale, $searchpath);
 
 	if (empty($_searchpath)) {
-		$REX['LOCALES'] = $lang_object->getLocales($searchpath);
+		$REX['LOCALES'] = sly_I18N::getLocales($searchpath);
 	}
 
 	if ($setlocale) {
