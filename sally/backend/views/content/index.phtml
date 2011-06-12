@@ -416,7 +416,7 @@ else {
 	$listElements[] = '<a href="'.$baseURL.'&amp;subpage=meta" class="rex-active">'.t('metadata').'</a>';
 }
 
-$listElements[] = '<a href="../'.$REX['FRONTEND_FILE'].'?article_id='.$article_id.'&amp;clang='.$clang.'" onclick="window.open(this.href); return false;">'.t('show').'</a>';
+$listElements[] = '<a href="../index.php?article_id='.$article_id.'&amp;clang='.$clang.'" onclick="window.open(this.href); return false;">'.t('show').'</a>';
 
 $listElements = $dispatcher->filter('PAGE_CONTENT_MENU', $listElements, array(
 	'article_id' => $article_id,
