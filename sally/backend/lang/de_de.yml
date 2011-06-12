@@ -304,8 +304,8 @@ addon_hdelete: Deinstallieren
 addon_reinit_assets: re-initialisieren
 addon_assets_copied: Die Assets wurden kopiert.
 plugin_assets_copied: Die Assets wurden kopiert.
-addon_addon_required: 'Das AddOn {0} wird für das AddOn {1} benötigt.'
-addon_plugin_required: 'Das AddOn {0} wird für das PlugIn {1} benötigt.'
+addon_requires_addon: 'Das AddOn {0} wird für das AddOn {1} benötigt.'
+addon_requires_plugin: 'Das PlugIn {0} wird für das AddOn {1} benötigt.'
 addon_sally_incompatible: 'Dieses AddOn ist nicht mit ihrer Version von SallyCMS ({0}) kompatibel.'
 addon_has_no_sally_version_info: Dieses AddOn hat keine Kompatibilitätsinformationen. Es kann nicht installiert werden.
 addon_reinstall: re-installieren
@@ -333,6 +333,8 @@ plugin_uninstalled: 'PlugIn {0} wurde deinstalliert.'
 plugin_uninstall_question: 'PlugIn {0} de-installieren?'
 plugin_install_cant_copy_files: Fehler beim Kopieren der Assets!
 plugin_install_cant_delete_files: Fehler beim Löschen der Assets!
+plugin_requires_addon: 'Das AddOn {0} wird für das PlugIn {1} benötigt.'
+plugin_requires_plugin: 'Das PlugIn {0} wird für das PlugIn {1} benötigt.'
 
 # sally\include\pages\credits.inc.php
 credits: Credits

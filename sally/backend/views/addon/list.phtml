@@ -98,14 +98,22 @@ if (!empty($warning)) print rex_warning($warning);
 
 		if ($addons->isAvailable($addon)) {
 			foreach ($registeredPlugins as $plugin) {
-				$comp    = array($addon, $plugin);
-				$base    = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;plugin='.urlencode($plugin).'&amp;func=';
-				$classes = array('sly-plugin');
+				$comp       = array($addon, $plugin);
+				$isRequired = $plugins->isActivated($comp) ? $plugins->isRequired($comp) : false;
+				$required   = $isRequired ? sly_html(t('is_required', is_array($isRequired) ? reset($isRequired).'/'.end($isRequired) : $isRequired)) : '';
+				$base       = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;plugin='.urlencode($plugin).'&amp;func=';
+				$classes    = array('sly-plugin');
 
 				if ($plugins->isInstalled($comp)) {
 					$install   = t('addon_yes').' - <a href="'.$base.'install">'.t('addon_reinstall').'</a>';
-					$uninstall = '<a href="'. $base .'uninstall" onclick="return confirm(\''.sly_html(t('plugin_uninstall_question', $addon)).'\');">'.t('addon_uninstall').'</a>';
 					$classes[] = 'sly-installed';
+
+					if ($isRequired) {
+						$uninstall = '<del title="'.$required.'">'.t('addon_uninstall').'</del>';
+					}
+					else {
+						$uninstall = '<a href="'. $base .'uninstall" onclick="return confirm(\''.sly_html(t('plugin_uninstall_question', $addon)).'\');">'.t('addon_uninstall').'</a>';
+					}
 				}
 				else {
 					$install   = t('addon_no').' - <a href="'.$base.'install">'.t('addon_install').'</a>';
@@ -114,7 +122,7 @@ if (!empty($warning)) print rex_warning($warning);
 				}
 
 				if ($plugins->isActivated($comp)) {
-					$status    = t('addon_yes').' - <a href="'.$base.'deactivate">'.t('addon_deactivate').'</a>';
+					$status    = t('addon_yes').($isRequired ? ' - <del title="'.$required.'">'.t('addon_deactivate').'</del>' : ' - <a href="'.$base.'deactivate">'.t('addon_deactivate').'</a>');
 					$classes[] = 'sly-activated';
 					$assets    = '<a href="'.$base.'assets">'.t('addon_reinit_assets').'</a>';
 				}
