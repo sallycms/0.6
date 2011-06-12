@@ -17,8 +17,9 @@ $this->title('Setup: Sprachauswahl');
 	<?php
 
 	$langpath = SLY_SALLYFOLDER.'/backend/lang';
+	$locales  = sly_I18N::getLocales($langpath);
 
-	foreach (sly_Controller_Setup::getLanguages() as $l) {
+	foreach ($locales as $l) {
 		$i18n  = new sly_I18N($l, $langpath, false);
 		$label = $i18n->msg('lang');
 

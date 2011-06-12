@@ -46,21 +46,18 @@ $REX['USER'] = null;
 // Setup vorbereiten
 
 if (!SLY_IS_TESTING && $config->get('SETUP')) {
-	$locale        = 'de_de';
+	$locale        = $config->get('LANG');
 	$locales       = sly_I18N::getLocales(SLY_SALLYFOLDER.'/backend/lang');
 	$requestLocale = sly_request('lang', 'string');
+	$timezone      = @date_default_timezone_get();
 
 	if (in_array($requestLocale, $locales)) {
 		$locale = $requestLocale;
 	}
 
-	// store languages
-	sly_Controller_Setup::setLanguages($list);
-
+	// force setup page
 	$REX['PAGE']      = 'setup';
 	$_REQUEST['page'] = 'setup';
-
-	date_default_timezone_set(@date_default_timezone_get());
 }
 else {
 	$locale      = '';
@@ -76,9 +73,6 @@ else {
 	// re-set the values if the user profile has no value (meaining 'default')
 	if (empty($locale))   $locale   = $config->get('LANG');
 	if (empty($timezone)) $timezone = $config->get('TIMEZONE');
-
-	// set timezone
-	date_default_timezone_set($timezone);
 }
 
 // set the i18n object
@@ -92,6 +86,9 @@ $navigation = sly_Core::getNavigation();
 if (!SLY_IS_TESTING && $config->get('SETUP')) {
 	$navigation->addPage('system', 'setup', false);
 }
+
+// set timezone
+date_default_timezone_set($timezone);
 
 // synchronize develop
 

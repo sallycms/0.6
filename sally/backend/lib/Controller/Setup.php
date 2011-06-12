@@ -13,22 +13,19 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 	protected $info;
 	protected $lang;
 
-	private static $languages;
-
 	protected function init() {
 		$this->lang = sly_request('lang', 'string');
 		sly_Core::getI18N()->appendFile(SLY_SALLYFOLDER.'/backend/lang/pages/setup/');
 	}
 
 	public function index()	{
-		$languages = self::$languages;
+		$languages = sly_I18N::getLocales(SLY_SALLYFOLDER.'/backend/lang');
 
 		// wenn nur eine Sprache -> direkte Weiterleitung
 
-		if (count($languages) == 1) {
-			header('HTTP/1.1 301 Moved Permanently');
-			header('Location: index.php?subpage=license&lang='.urlencode(key($languages)));
-			exit();
+		if (count($languages) === 1) {
+			$url = 'index.php?subpage=license&lang='.urlencode(reset($languages));
+			sly_Util_HTTP::redirect($url);
 		}
 
 		print $this->render('setup/chooselang.phtml');
@@ -367,13 +364,5 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 
 	protected function checkPermission() {
 		return sly_Core::config()->get('SETUP') === true;
-	}
-
-	public static function setLanguages(array $languages) {
-		self::$languages = $languages;
-	}
-
-	public static function getLanguages() {
-		return self::$languages;
 	}
 }
