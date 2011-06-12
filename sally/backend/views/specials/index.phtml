@@ -65,7 +65,7 @@ $buttonBar = new sly_Form_ButtonBar(array(
 					<p class="sly-button"><a class="sly-button" href="index.php?page=specials&amp;func=setup" onclick="return confirm(\'<?= t('setup') ?>?\');"><?= t('setup') ?></a></p>
 
 					<h4 class="rex-hl3"><?= t('version') ?></h4>
-					<p class="rex-tx1">SallyCMS <?= sly_Core::getVersion() ?></p>
+					<p class="rex-tx1">SallyCMS <?= sly_Core::getVersion() ?> &ndash; PHP <?= PHP_VERSION ?></p>
 
 					<h4 class="rex-hl3"><?= t('database') ?></h4>
 					<p class="rex-tx1"><?= t('name') ?>: <?= sly_html($config->get('DATABASE/NAME')) ?><br /><?= t('host') ?>: <?= sly_html($config->get('DATABASE/HOST')) ?></p>
