@@ -16,14 +16,14 @@ body {
 	font-family: Calibri, Verdana, Arial, sans-serif;
 	position: relative;
 	color: $drk_grey;
-	background: #f2f2f2 url(../body.gif) 0 0 repeat-x;;
+	background: #f2f2f2 url(../body.png) 0 0 repeat-x;;
 }
 
 #sly-page {
 	width: 1000px;
 	margin: 0 auto;
 	font-size: 0.9em;
-	background-image: url(../website.gif);
+	background-image: url(../website.png);
 	background-repeat: repeat-x;
 	+clearfix;
 }
@@ -39,7 +39,7 @@ input, textarea, select {
 }
 
 p.rex-button a {
-	background-image: url(../button.gif);
+	background-image: url(../button.png);
 	background-repeat: repeat-x;
 	padding: 1px 6px;
 	color: $drk_grey;
@@ -214,7 +214,7 @@ ul.rex-ul1 {
 }
 
 .rex-info {
-	background-image: url(../excla_mark_green.gif);
+	background-image: url(../excla_mark_green.png);
 	background-position: 0% 50%;
 	background-color: #209eb5;
 }

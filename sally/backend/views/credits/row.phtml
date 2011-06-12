@@ -11,7 +11,6 @@
 $author  = is_array($author) ? sly_Util_String::humanImplode($author) : $author;
 $author  = !empty($author) ? sly_html($author) : 'N/A';
 $version = !empty($version) ? sly_html($version) : 'N/A';
-$icon    = 'assets/'.$type.'.gif';
 
 if ($isActive) $class = ' sly-activated';
 elseif ($isInstalled) $class = ' sly-installed';

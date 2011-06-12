@@ -59,8 +59,8 @@ caption, legend {
 	.rex-info, .rex-warning {
 		padding: 8px 0;
 		color: #fff;
-		background-color: $link_color;;
-		background-image: url(../warning.gif);
+		background-color: $link_color;
+		background-image: url(../warning.png);
 		background-position: 0% 50%;
 		background-repeat: no-repeat;
 		+border-radius(4px);
@@ -214,7 +214,7 @@ input, textarea, select {
 
 .rex-back {
 	padding-left: 8px;
-	background-image: url(../back.gif);
+	background-image: url(../back.png);
 	background-position: 0 4px;
 }
 

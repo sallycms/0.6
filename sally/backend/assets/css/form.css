@@ -35,7 +35,7 @@ input.rex-form-text {
 }
 
 p.rex-button a, input.rex-form-submit, a.sly-button {
-	background-image: url(../button.gif);
+	background-image: url(../button.png);
 	background-repeat: repeat-x;
 	padding: 1px 6px;
 	color: $drk_grey;

@@ -39,19 +39,19 @@
 	}
 
 	.rex-area-col-b ul li a {
-		background-image: url(../document.gif);
+		background-image: url(../document.png);
 		padding-left: 20px;
 		background-repeat: no-repeat;
 	}
 
 	&, ul li ul {
-		background-image: url(../file_vert.gif);
+		background-image: url(../file_vert.png);
 		background-position: 49% 0px;
 		background-repeat: repeat-y;
 	}
 
 	.rex-area-col-b ul li.rex-linkmap-startpage a {
-		background-image: url(../liste.gif);
+		background-image: url(../liste.png);
 	}
 
 	ul {
@@ -61,13 +61,13 @@
 
 		li.rex-children ul li,
 		li ul li.rex-children-last {
-			background-image: url(../file.gif);
+			background-image: url(../file.png);
 			background-position: -21px 0px;
 			background-repeat: no-repeat;
 		}
 
 		li ul li.rex-children-last {
-			background-image: url(../file_last_2.gif);
+			background-image: url(../file_last_2.png);
 			background-repeat: no-repeat;
 		}
 
@@ -84,7 +84,7 @@
 			/*	Folder */
 
 			a {
-				background-image: url(../folder_off_empty.gif);
+				background-image: url(../folder_off_empty.png);
 				background-repeat: no-repeat;
 				display: block;
 				margin-bottom: 4px;
@@ -93,15 +93,15 @@
 			}
 
 			a.rex-linkmap-is-not-empty {
-				background-image: url(../folder_off.gif);
+				background-image: url(../folder_off.png);
 			}
 
 			&.rex-active a.rex-active {
-				background-image: url(../folder_on_empty.gif);
+				background-image: url(../folder_on_empty.png);
 			}
 
 			&.rex-active a.rex-linkmap-is-not-empty.rex-active {
-				background-image: url(../folder_on.gif);
+				background-image: url(../folder_on.png);
 			}
 
 			a.rex-offline { color: $link_color_offline; }
