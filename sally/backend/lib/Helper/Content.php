@@ -74,7 +74,7 @@ class sly_Helper_Content {
 
 	// ----- EDIT Slice
 	public static function printEditSliceForm(OOArticleSlice $articleSlice) {
-		global $REX, $I18N;
+		global $REX;
 
 		ob_start();
 		?>
@@ -260,7 +260,7 @@ class sly_Helper_Content {
 		$layout = sly_Core::getLayout();
 		$layout->addJavaScript('jQuery(function($) { $(":input:visible:enabled:not([readonly]):first", $("form#REX_FORM")).focus(); });');
 	}
-	
+
 	public static function metaFormAddButtonBar($form, $label, $name) {
 		$button = new sly_Form_Input_Button('submit', $name, $label);
 		$button->setAttribute('onclick', 'return confirm(\'' . $label . '?\')');

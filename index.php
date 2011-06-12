@@ -32,6 +32,9 @@ if (!isset($_GET['sly_asset']) && $config->get('SETUP')) {
 	exit('Bitte führe das <a href="backend/index.php">Setup</a> aus, um SallyCMS zu nutzen.');
 }
 
+// init i18n (TODO: This makes no sense... but addOns require the i18n object to be present)
+sly_Core::setI18N(new sly_I18N($config->get('LANG'), SLY_SALLYFOLDER.'/backend/lang'));
+
 // instantiate asset service before addons are loaded to make sure the scaffold css processing is first
 $assetService = sly_Service_Factory::getAssetService();
 

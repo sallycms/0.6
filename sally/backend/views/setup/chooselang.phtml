@@ -19,7 +19,7 @@ $this->title('Setup: Sprachauswahl');
 	$langpath = SLY_SALLYFOLDER.'/backend/lang';
 
 	foreach (sly_Controller_Setup::getLanguages() as $l) {
-		$i18n  = rex_create_lang($l, $langpath, false);
+		$i18n  = new sly_I18N($l, $langpath, false);
 		$label = $i18n->msg('lang');
 
 		print '<li><a href="index.php?func=license&amp;lang='.urlencode($l).'">'.sly_html($label).'</a></li>';

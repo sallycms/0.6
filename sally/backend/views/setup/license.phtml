@@ -8,11 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-global $REX;
-
 $this->title(t('setup_license_title'));
-
-$REX['LANG'] = $this->lang;
 
 $license = SLY_BASE.'/_lizenz.txt';
 $license = file_exists($license) ? file_get_contents($license) : t('setup_license_not_found');

@@ -36,44 +36,26 @@ require '../core/master.inc.php';
 // add backend app
 sly_Loader::addLoadPath(SLY_SALLYFOLDER.'/backend/lib/', 'sly_');
 
-require_once SLY_SALLYFOLDER.'/backend/functions.php';
-
+// only start session if not running unit tests
 if (!SLY_IS_TESTING) sly_Util_Session::start();
 
-// addon/normal page path
-$REX['PAGEPATH'] = '';
-$REX['PAGE']     = '';
-$REX['USER']     = null;
-
-$navigation = sly_Core::getNavigation();
+// set current page and user
+$REX['PAGE'] = '';
+$REX['USER'] = null;
 
 // Setup vorbereiten
 
 if (!SLY_IS_TESTING && $config->get('SETUP')) {
-	$REX['LANG'] = 'de_de';
-	$requestLang = sly_request('lang', 'string');
-	$langpath    = SLY_SALLYFOLDER.'/backend/lang';
-	$languages   = glob($langpath.'/*.yml');
-	$list        = array();
+	$locale        = 'de_de';
+	$locales       = sly_I18N::getLocales(SLY_SALLYFOLDER.'/backend/lang');
+	$requestLocale = sly_request('lang', 'string');
 
-	if ($languages) {
-		foreach ($languages as $language) {
-			$locale = substr(basename($language), 0, -4);
-			$list[] = $locale;
-
-			if ($requestLang == $locale) {
-				$REX['LANG'] = $locale;
-			}
-		}
+	if (in_array($requestLocale, $locales)) {
+		$locale = $requestLocale;
 	}
 
 	// store languages
 	sly_Controller_Setup::setLanguages($list);
-
-	// create our global i18n object
-	$I18N = rex_create_lang($REX['LANG']);
-
-	$navigation->addPage('system', 'setup', false);
 
 	$REX['PAGE']      = 'setup';
 	$_REQUEST['page'] = 'setup';
@@ -91,13 +73,24 @@ else {
 		$timezone = $REX['USER']->getTimeZone();
 	}
 
-	// create $I18N and set locale
-	if (empty($locale)) $locale = $config->get('LANG');
-	$I18N = rex_create_lang($locale);
+	// re-set the values if the user profile has no value (meaining 'default')
+	if (empty($locale))   $locale   = $config->get('LANG');
+	if (empty($timezone)) $timezone = $config->get('TIMEZONE');
 
 	// set timezone
-	if (empty($timezone)) $timezone = $config->get('TIMEZONE');
 	date_default_timezone_set($timezone);
+}
+
+// set the i18n object
+$i18n = new sly_I18N($locale, SLY_SALLYFOLDER.'/backend/lang');
+sly_Core::setI18N($i18n);
+
+// set navigation object (after i18n has been initialized!)
+$navigation = sly_Core::getNavigation();
+
+// add setup page to make the permission system work and allow access to the controller
+if (!SLY_IS_TESTING && $config->get('SETUP')) {
+	$navigation->addPage('system', 'setup', false);
 }
 
 // synchronize develop

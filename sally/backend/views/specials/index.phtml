@@ -15,7 +15,8 @@ $config = sly_Core::config();
 if (!empty($this->warning)) print rex_warning($this->warning);
 if (!empty($this->info))    print rex_info($this->info);
 
-$locales   = array_combine($REX['LOCALES'], $REX['LOCALES']);
+$locales   = sly_I18N::getLocales(SLY_SALLYFOLDER.'/backend/lang');
+$locales   = array_combine($locales, $locales);
 $yesNo     = array('true' => t('yes'), 'false' => t('no'));
 $types     = array('' => t('option_no_type'));
 $languages = sly_Util_Language::findAll();
