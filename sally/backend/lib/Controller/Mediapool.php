@@ -394,7 +394,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 	}
 
 	protected function correctEncoding($filename) {
-		$enc = mb_detect_encoding($filename, 'Windows-1252, ISO-8859-1, ISO-8859-2, MacRoman, UTF-8');
+		$enc = mb_detect_encoding($filename, 'Windows-1252, ISO-8859-1, ISO-8859-2, UTF-8');
 		if ($enc != 'UTF-8') $filename = mb_convert_encoding($filename, 'UTF-8', $enc);
 		return $filename;
 	}
