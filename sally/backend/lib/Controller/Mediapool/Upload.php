@@ -48,7 +48,7 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 		// check category
 
 		$category = (int) $category;
-		$service  = sly_Service_Factory::getService('Media_Category');
+		$service  = sly_Service_Factory::getMediaCategoryService();
 
 		if ($service->findById($category) === null) {
 			$category = 0;
@@ -73,7 +73,7 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 			// create and save our file
 
 			$file    = $this->createFileObject($dstFile, $fileData['type'], $title, $category, $filename);
-			$service = sly_Service_Factory::getService('Media_Medium');
+			$service = sly_Service_Factory::getMediumService();
 
 			$service->save($file);
 

@@ -53,7 +53,7 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 		// create and save the file
 
 		$file    = $this->createFileObject($newName, null, $title, $category);
-		$service = sly_Service_Factory::getService('Media_Medium');
+		$service = sly_Service_Factory::getMediumService();
 
 		$service->save($file);
 

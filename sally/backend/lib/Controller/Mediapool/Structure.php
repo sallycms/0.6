@@ -15,8 +15,8 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 
 	public function add() {
 		if (!empty($_POST)) {
-			$service  = sly_Service_Factory::getService('Media_Category');
-			$category = new sly_Model_Media_Category();
+			$service  = sly_Service_Factory::getService('MediaCategory');
+			$category = new sly_Model_MediaCategory();
 			$name     = sly_post('catname', 'string');
 
 			$category->setName($name);
@@ -37,7 +37,7 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 	public function edit() {
 		if (!empty($_POST)) {
 			$editID   = sly_request('edit_id', 'int');
-			$service  = sly_Service_Factory::getService('Media_Category');
+			$service  = sly_Service_Factory::getMediaCategoryService();
 			$category = $service->findById($editID);
 
 			if ($category) {
@@ -57,7 +57,7 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 
 	public function delete() {
 		$editID   = sly_request('edit_id', 'int');
-		$service  = sly_Service_Factory::getService('Media_Category');
+		$service  = sly_Service_Factory::getMediaCategoryService();
 		$category = $service->findById($editID);
 
 		if ($category) {

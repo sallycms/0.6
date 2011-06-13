@@ -72,7 +72,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 	protected function getCurrentCategory() {
 		if ($this->category === null) {
 			$category = sly_request('rex_file_category', 'int', -1);
-			$service  = sly_Service_Factory::getService('Media_Category');
+			$service  = sly_Service_Factory::getMediaCategoryService();
 
 			if ($category == -1) {
 				$category = sly_Util_Session::get('media[rex_file_category]', 'int');
@@ -93,7 +93,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		sly_util_Session::set('media[opener_input_field]', $this->opener);
 	}
 
-	protected function getOpenerLink(/* OOMedia | sly_Model_Media_Medium */ $file) {
+	protected function getOpenerLink(/* OOMedia | sly_Model_Medium */ $file) {
 		$field    = $this->opener;
 		$link     = '';
 		$title    = sly_html($file->getTitle());
@@ -316,7 +316,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 			}
 		}
 
-		$file = new sly_Model_Media_Medium();
+		$file = new sly_Model_Medium();
 		$file->setFiletype($type);
 		$file->setTitle($title);
 		$file->setOriginalName(basename($origFilename === null ? $filename : $origFilename));

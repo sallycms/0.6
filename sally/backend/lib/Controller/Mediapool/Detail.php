@@ -29,7 +29,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 		if ($this->file === null) {
 			$fileID   = sly_request('file_id', 'int');
 			$fileName = sly_request('file_name', 'string');
-			$service  = sly_Service_Factory::getService('Media_Medium');
+			$service  = sly_Service_Factory::getMediumService();
 
 			if (!empty($fileName)) {
 				$files = $service->find(array('filename' => $fileName), null, null, 'LIMIT 1');
@@ -76,7 +76,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 
 		// update our file
 
-		$service = sly_Service_Factory::getService('Media_Medium');
+		$service = sly_Service_Factory::getMediumService();
 		$fileObj = $service->findById($fileID);
 
 		$fileObj->setTitle(sly_request('ftitle', 'string'));
