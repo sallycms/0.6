@@ -52,7 +52,7 @@ if (count($_languages) > 1) {
 
 		$clangName = rex_translate($language->getName()); // enthält htmlspecialchars()
 
-		if (!$_user->isAdmin() && !$_user->hasPerm('clang[all]') && !$_user->hasPerm('clang['.$clangID.']')) {
+		if (!$_user->isAdmin() && !$_user->hasRight('clang[all]') && !$_user->hasRight('clang['.$clangID.']')) {
 			print '<span class="rex-strike">'.$clangName.'</span>';
 			$stop |= $clang == $clangID;
 		}

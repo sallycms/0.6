@@ -9,7 +9,7 @@ $listElements = array();
 $listElements[] = '<a href="' . sprintf($sliceUrl, '&amp;function=edit') . '" class="rex-tx3">' . t('edit') . '</a>';
 $listElements[] = '<a href="' . sprintf($sliceUrl, '&amp;function=delete&amp;save=1') . '" class="rex-tx2 sly-delete">' . t('delete') . '</a>';
 
-if ($user->isAdmin() || $user->hasPerm('moveSlice[]')) {
+if ($user->isAdmin() || $user->hasRight('moveSlice[]')) {
 	$moveUp = t('move_slice_up');
 	$moveDown = t('move_slice_down');
 

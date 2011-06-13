@@ -119,7 +119,7 @@ if ($REX['USER']) {
 		$navigation->addPage('system', 'linkmap', null, true);
 		$navigation->addPage('system', 'content');
 	}
-	elseif ($REX['USER']->hasPerm('mediapool[]')) {
+	elseif ($REX['USER']->hasRight('mediapool[]')) {
 		$navigation->addPage('system', 'mediapool', null, true);
 	}
 
@@ -142,7 +142,7 @@ if ($REX['USER']) {
 		$perm = $addonService->getProperty($addon, 'perm', '');
 		$page = $addonService->getProperty($addon, 'page', '');
 
-		if (!empty($page) && (empty($perm) || $REX['USER']->hasPerm($perm) || $REX['USER']->isAdmin())) {
+		if (!empty($page) && (empty($perm) || $REX['USER']->hasRight($perm) || $REX['USER']->isAdmin())) {
 			$name  = $addonService->getProperty($addon, 'name', '');
 			$popup = $addonService->getProperty($addon, 'popup', false);
 
@@ -155,7 +155,7 @@ if ($REX['USER']) {
 			$perm        = $pluginService->getProperty($pluginArray, 'perm', '');
 			$page        = $pluginService->getProperty($pluginArray, 'page', '');
 
-			if (!empty($page) && (empty($perm) || $REX['USER']->hasPerm($perm) || $REX['USER']->isAdmin())) {
+			if (!empty($page) && (empty($perm) || $REX['USER']->hasRight($perm) || $REX['USER']->isAdmin())) {
 				$name  = $pluginService->getProperty($pluginArray, 'name', '');
 				$popup = $pluginService->getProperty($pluginArray, 'popup', false);
 

@@ -101,7 +101,7 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 		if (is_array($subline) && !empty($subline)) {
 			$subtitle = array();
 			$numPages = count($subline);
-			$isAdmin  = $user->hasPerm('admin[]');
+			$isAdmin  = $user->hasRight('admin[]');
 
 			foreach ($subline as $subpage) {
 				if (!is_array($subpage)) {
@@ -116,7 +116,7 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 				// Berechtigung prüfen
 				// Hat der User das Recht für die aktuelle Subpage?
 
-				if (!empty($perm) && !$isAdmin && !$user->hasPerm($perm)) {
+				if (!empty($perm) && !$isAdmin && !$user->hasRight($perm)) {
 					// Wenn der User kein Recht hat, und diese Seite öffnen will -> Fehler
 					if ($cur_subpage == $link) {
 						exit('You have no permission to this area!');

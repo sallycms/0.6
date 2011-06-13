@@ -118,7 +118,7 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 			$slice_id       = '';
 			$function       = '';
 		}
-		elseif (!($user->isAdmin() || $user->hasPerm('module['.$module.']') || $user->hasPerm('module[0]'))) {
+		elseif (!($user->isAdmin() || $user->hasRight('module['.$module.']') || $user->hasRight('module[0]'))) {
 			$global_warning = t('no_rights_to_this_function');
 			$slice_id       = '';
 			$function       = '';
@@ -247,7 +247,7 @@ if ($mode == 'meta') {
 	// START: ARTICLE2STARTARTICLE
 
 	if (sly_post('article2startpage', 'string')) {
-		if ($user->isAdmin() || $user->hasPerm('article2startpage[]')) {
+		if ($user->isAdmin() || $user->hasRight('article2startpage[]')) {
 			if (rex_article2startpage($article_id)) {
 				$info = t('content_tostartarticle_ok');
 				while (ob_get_level()) ob_end_clean();
@@ -264,7 +264,7 @@ if ($mode == 'meta') {
 	// START: COPY LANG CONTENT
 
 	if (sly_post('copycontent', 'string')) {
-		if ($user->isAdmin() || $user->hasPerm('copyContent[]')) {
+		if ($user->isAdmin() || $user->hasRight('copyContent[]')) {
 			$clang_a = sly_post('clang_a', 'rex-clang-id');
 			$clang_b = sly_post('clang_b', 'rex-clang-id');
 
@@ -283,7 +283,7 @@ if ($mode == 'meta') {
 	if (sly_post('movearticle', 'string') && $category_id != $article_id) {
 		$category_id_new = sly_post('category_id_new', 'rex-category-id');
 
-		if ($user->isAdmin() || ($user->hasPerm('moveArticle[]') && ($user->hasPerm('csw[0]') || $user->hasPerm('csw['.$category_id_new.']')))) {
+		if ($user->isAdmin() || ($user->hasRight('moveArticle[]') && ($user->hasRight('csw[0]') || $user->hasRight('csw['.$category_id_new.']')))) {
 			if (rex_moveArticle($article_id, $category_id_new)) {
 				$info = t('content_articlemoved');
 				while (ob_get_level()) ob_end_clean();
@@ -305,7 +305,7 @@ if ($mode == 'meta') {
 	if (sly_post('copyarticle', 'string')) {
 		$category_copy_id_new = sly_post('category_copy_id_new', 'rex-category-id');
 
-		if ($user->isAdmin() || ($user->hasPerm('copyArticle[]') && ($user->hasPerm('csw[0]') || $user->hasPerm('csw['.$category_copy_id_new.']')))) {
+		if ($user->isAdmin() || ($user->hasRight('copyArticle[]') && ($user->hasRight('csw[0]') || $user->hasRight('csw['.$category_copy_id_new.']')))) {
 			if (($new_id = rex_copyArticle($article_id, $category_copy_id_new)) !== false) {
 				$info = t('content_articlecopied');
 				while (ob_get_level()) ob_end_clean();
@@ -327,7 +327,7 @@ if ($mode == 'meta') {
 	if (sly_post('movecategory', 'string')) {
 		$category_id_new = sly_post('category_id_new', 'rex-category-id');
 
-		if ($user->isAdmin() || ($user->hasPerm('moveCategory[]') && (($user->hasPerm('csw[0]') || $user->hasPerm('csw['.$category_id.']')) && ($user->hasPerm('csw[0]') || $user->hasPerm('csw['.$category_id_new.']'))))) {
+		if ($user->isAdmin() || ($user->hasRight('moveCategory[]') && (($user->hasRight('csw[0]') || $user->hasRight('csw['.$category_id.']')) && ($user->hasRight('csw[0]') || $user->hasRight('csw['.$category_id_new.']'))))) {
 			if ($category_id != $category_id_new && rex_moveCategory($category_id, $category_id_new)) {
 				$info = t('category_moved');
 				while (ob_get_level()) ob_end_clean();
@@ -465,7 +465,7 @@ if ($mode == 'edit') {
 	// START: Slice move up/down
 
 	if ($hasTemplate && ($function == 'moveup' || $function == 'movedown')) {
-		if ($user->isAdmin() || $user->hasPerm('moveSlice[]')) {
+		if ($user->isAdmin() || $user->hasRight('moveSlice[]')) {
 			// Modul und Rechte vorhanden?
 
 			$module = rex_slice_module_exists($slice_id, $clang);
@@ -478,7 +478,7 @@ if ($mode == 'edit') {
 			}
 			else {
 				// RECHTE AM MODUL ?
-				if ($user->isAdmin() || $user->hasPerm('module['.$module.']') || $user->hasPerm('module[0]')) {
+				if ($user->isAdmin() || $user->hasRight('module['.$module.']') || $user->hasRight('module[0]')) {
 					list($success, $message) = rex_moveSlice($slice_id, $clang, $function);
 
 					if ($success) {
@@ -633,10 +633,10 @@ elseif ($mode == 'meta') {
 		$form->add(new sly_Form_ButtonBar(array('submit' => $button)));
 	}
 
-	if ($user->isAdmin() || $user->hasPerm('article2startpage[]') || $user->hasPerm('moveArticle[]') || $user->hasPerm('copyArticle[]') || ($user->hasPerm('copyContent[]') && sly_Util_Language::isMultilingual())) {
+	if ($user->isAdmin() || $user->hasRight('article2startpage[]') || $user->hasRight('moveArticle[]') || $user->hasRight('copyArticle[]') || ($user->hasRight('copyContent[]') && sly_Util_Language::isMultilingual())) {
 		// ZUM STARTARTIKEL MACHEN
 
-		if ($user->isAdmin() || $user->hasPerm('article2startpage[]')) {
+		if ($user->isAdmin() || $user->hasRight('article2startpage[]')) {
 			$form->beginFieldset(t('content_startarticle'));
 
 			if ($article->getStartpage() == 0 && $article->getParentId() == 0) {
@@ -652,7 +652,7 @@ elseif ($mode == 'meta') {
 
 		// INHALTE KOPIEREN
 
-		if (($user->isAdmin() || $user->hasPerm('copyContent[]')) && sly_Util_Language::isMultilingual()) {
+		if (($user->isAdmin() || $user->hasRight('copyContent[]')) && sly_Util_Language::isMultilingual()) {
 			$lang_a = new sly_Form_Select_DropDown('clang_a', t('content_contentoflang'), sly_request('clang_a', 'rex-clang-id', null), $languages, 'clang_a');
 			$lang_a->setSize(1);
 
@@ -667,7 +667,7 @@ elseif ($mode == 'meta') {
 
 		// ARTIKEL VERSCHIEBEN
 
-		if ($article->getStartpage() == 0 && ($user->isAdmin() || $user->hasPerm('moveArticle[]'))) {
+		if ($article->getStartpage() == 0 && ($user->isAdmin() || $user->hasRight('moveArticle[]'))) {
 			$select = sly_Form_Helper::getCategorySelect('category_id_new', false, null, null, $user);
 			$select->setAttribute('value', $category_id);
 			$select->setLabel(t('move_article'));
@@ -680,7 +680,7 @@ elseif ($mode == 'meta') {
 
 		// ARTIKEL KOPIEREN
 
-		if ($user->isAdmin() || $user->hasPerm('copyArticle[]')) {
+		if ($user->isAdmin() || $user->hasRight('copyArticle[]')) {
 			$select = sly_Form_Helper::getCategorySelect('category_copy_id_new', false, null, null, $user);
 			$select->setAttribute('value', $category_id);
 			$select->setLabel(t('copy_article'));
@@ -693,7 +693,7 @@ elseif ($mode == 'meta') {
 
 		// KATEGORIE/STARTARTIKEL VERSCHIEBEN
 
-		if ($article->getStartpage() == 1 && ($user->isAdmin() || $user->hasPerm('moveCategory[]'))) {
+		if ($article->getStartpage() == 1 && ($user->isAdmin() || $user->hasRight('moveCategory[]'))) {
 			$select = sly_Form_Helper::getCategorySelect('category_id_new', false, null, null, $user);
 			$select->setAttribute('value', $category_id);
 			$select->setLabel(t('move_category'));

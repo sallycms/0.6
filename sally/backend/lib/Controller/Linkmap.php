@@ -82,7 +82,7 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 
 		if (empty($label)) $label = '&nbsp;';
 
-		if ($user->hasPerm('advancedMode[]')) {
+		if ($user->hasRight('advancedMode[]')) {
 			$label .= ' ['.$object->getId().']';
 		}
 
