@@ -172,7 +172,7 @@
 	.sly-mediapool-list {
 		width: 690px;
 
-		th, td                   { vertical-align: middle; }
+		th, td      { vertical-align: middle; }
 		th.sly-icon { padding-bottom: 6px;    }
 
 		tr th {
@@ -184,9 +184,10 @@
 			padding: 6px 0;
 		}
 
+		/* reset the checkboxes (prevents ugly checkboxes in Opera) */
 		td.sly-icon input {
 			margin: 0;
-			width: 20px;
+			border: 0 none;
 		}
 
 		select {
