@@ -114,7 +114,7 @@ ob_start();
 		// missing file?
 
 		if (!OOMedia::fileExists($file_name)) {
-			$thumbnail = '<img src="assets/mime-error.png" width="44" height="38" alt="file does not exist" />';
+			$thumbnail = '<img src="assets/mime-error.png" width="44" height="38" alt="'.t('pool_file_not_found').'" />';
 		}
 		else {
 			$file_ext = substr(strrchr($file_name, '.'), 1);

@@ -114,7 +114,7 @@ if ($isImage) {
 if ($this->canAccessFile($media)) {
 	// title
 
-	$title = new sly_Form_Input_Text('ftitle', 'Titel', $ftitle);
+	$title = new sly_Form_Input_Text('ftitle', t('pool_file_title'), $ftitle);
 	$title->addFormRowClass('sly-mediapool-detail-title');
 	$form->add($title);
 
@@ -157,7 +157,7 @@ else {
 
 	// title & cat
 
-	$title = new sly_Form_Text('Titel', $ftitle);
+	$title = new sly_Form_Text(t('pool_file_title'), $ftitle);
 	$title->addFormRowClass('sly-mediapool-detail-title');
 
 	$form->add($title);
@@ -172,8 +172,8 @@ else {
 // file dimensions, if image
 
 if ($isImage) {
-	$label      = t('pool_img_width') .' / '.t('pool_img_height');
-	$dimensions = $fwidth .' px / '. $fheight .' px';
+	$label      = t('pool_img_width').' / '.t('pool_img_height');
+	$dimensions = $fwidth.' px / '.$fheight.' px';
 	$dimensions = new sly_Form_Text($label, $dimensions);
 	$form->add($dimensions);
 }

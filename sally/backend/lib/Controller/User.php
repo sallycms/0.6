@@ -9,21 +9,13 @@
  */
 
 class sly_Controller_User extends sly_Controller_Backend {
-	protected $func = '';
-
 	public function init() {
 		$layout = sly_Core::getLayout();
 		$layout->pageHeader(t('title_user'));
-		print '<div class="sly-content">';
-	}
-
-	public function teardown() {
-		print '</div>';
 	}
 
 	public function index() {
 		$this->listUsers();
-		return true;
 	}
 
 	public function add() {
@@ -82,19 +74,17 @@ class sly_Controller_User extends sly_Controller_Backend {
 
 		$this->func = 'add';
 		print $this->render('user/edit.phtml', array('user' => null));
-		return true;
 	}
 
 	public function edit() {
 		$user = $this->getUser();
 
 		if ($user === null) {
-			$this->listUsers();
-			return false;
+			return $this->listUsers();
 		}
 
-		$save    = sly_post('save', 'boolean', false);
-		$service = sly_Service_Factory::getUserService();
+		$save        = sly_post('save', 'boolean', false);
+		$service     = sly_Service_Factory::getUserService();
 		$currentUser = sly_Util_User::getCurrentUser();
 
 		if ($save) {
@@ -137,15 +127,13 @@ class sly_Controller_User extends sly_Controller_Backend {
 		$this->func = 'edit';
 
 		print $this->render('user/edit.phtml', $params);
-		return true;
 	}
 
 	public function delete() {
 		$user = $this->getUser();
 
 		if ($user === null) {
-			$this->listUsers();
-			return false;
+			return $this->listUsers();
 		}
 
 		$service = sly_Service_Factory::getUserService();
@@ -160,7 +148,6 @@ class sly_Controller_User extends sly_Controller_Backend {
 		print rex_info(t('user_deleted'));
 
 		$this->listUsers();
-		return true;
 	}
 
 	public function checkPermission() {
@@ -184,13 +171,11 @@ class sly_Controller_User extends sly_Controller_Backend {
 
 	protected function getBackendLocales() {
 		$langpath = SLY_SALLYFOLDER.'/backend/lang';
-		$langs    = glob($langpath.'/*.yml');
+		$locales  = sly_I18N::getLocales($langpath);
 		$result   = array('' => 'default');
 
-		foreach ($langs as $file) {
-			$locale = substr(basename($file), 0, -4);
-			$i18n   = new sly_I18N($locale, $langpath);
-
+		foreach ($locales as $locale) {
+			$i18n = new sly_I18N($locale, $langpath);
 			$result[$locale] = $i18n->msg('lang');
 		}
 

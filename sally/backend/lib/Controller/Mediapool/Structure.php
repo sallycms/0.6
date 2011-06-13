@@ -15,7 +15,7 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 
 	public function add() {
 		if (!empty($_POST)) {
-			$service  = sly_Service_Factory::getService('MediaCategory');
+			$service  = sly_Service_Factory::getMediaCategoryService();
 			$category = new sly_Model_MediaCategory();
 			$name     = sly_post('catname', 'string');
 

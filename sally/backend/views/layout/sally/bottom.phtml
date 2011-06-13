@@ -8,9 +8,10 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$usage  = function_exists('memory_get_peak_usage') ? memory_get_peak_usage() : memory_get_usage();
-$usage  = sly_Util_String::formatFilesize($usage);
-$usage .= ' in '.sly_Loader::getClassCount().' Klassen';
+$usage   = function_exists('memory_get_peak_usage') ? memory_get_peak_usage() : memory_get_usage();
+$memory  = sly_Util_String::formatFilesize($usage);
+$classes = sly_Loader::getClassCount();
+$usage   = t('used_ressources', $memory, $classes);
 
 ?>
 	</div>

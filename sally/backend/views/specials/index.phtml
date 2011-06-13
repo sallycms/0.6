@@ -8,8 +8,6 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-global $REX;
-
 $config = sly_Core::config();
 
 if (!empty($this->warning)) print rex_warning($this->warning);
@@ -20,7 +18,8 @@ $locales   = array_combine($locales, $locales);
 $yesNo     = array('true' => t('yes'), 'false' => t('no'));
 $types     = array('' => t('option_no_type'));
 $languages = sly_Util_Language::findAll();
-foreach($languages as $id => $language) {
+
+foreach ($languages as $id => $language) {
 	$languages[$id] = $language->getName();
 }
 

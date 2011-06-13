@@ -17,7 +17,7 @@ class sly_Controller_Api extends sly_Controller_Ajax {
 		$query  = sly_get('q', 'string');
 		$sql    = sly_DB_Persistence::getInstance();
 		$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
-		$user = sly_Util_User::getCurrentUser();
+		$user   = sly_Util_User::getCurrentUser();
 
 		$sql->query('SELECT id,clang FROM '.$prefix.'article WHERE name LIKE ? GROUP BY id', array("%$query%"));
 

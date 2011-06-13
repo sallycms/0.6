@@ -55,10 +55,9 @@ $form->add(new sly_Form_ButtonBar($buttons));
 // start list of dangling files
 
 $diffCount = count($diffFiles);
-
 $label     = t('pool_sync_affected_files');
+$title     = $label;
 
-$title = $label;
 if ($diffCount) $title .= ' ('.$diffCount.')';
 
 $form->beginFieldset($title);

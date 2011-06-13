@@ -9,21 +9,13 @@
  */
 
 class sly_Controller_Profile extends sly_Controller_Backend {
-	protected $func = '';
-
 	public function init() {
 		$layout = sly_Core::getLayout();
 		$layout->pageHeader(t('profile_title'));
-		print '<div class="sly-content">';
-	}
-
-	public function teardown() {
-		print '</div>';
 	}
 
 	public function index() {
 		print $this->render('profile/index.phtml', array('user' => $this->getUser()));
-		return true;
 	}
 
 	public function update() {
@@ -70,13 +62,11 @@ class sly_Controller_Profile extends sly_Controller_Backend {
 
 	protected function getBackendLocales() {
 		$langpath = SLY_SALLYFOLDER.'/backend/lang';
-		$langs    = glob($langpath.'/*.yml');
+		$langs    = sly_I18N::getLocales($langpath);
 		$result   = array('' => 'default');
 
-		foreach ($langs as $file) {
-			$locale = substr(basename($file), 0, -4);
-			$i18n   = new sly_I18N($locale, $langpath);
-
+		foreach ($langs as $locale) {
+			$i18n = new sly_I18N($locale, $langpath);
 			$result[$locale] = $i18n->msg('lang');
 		}
 

@@ -40,14 +40,9 @@ if (!empty($this->info))    print rex_info($this->info);
 	// Das Formular für neue Sprachen erscheint immer vor den anderen Daten.
 
 	if ($this->func == 'add') {
-		$name = sly_post('clang_name', 'string');
+		$name   = sly_post('clang_name', 'string');
 		$locale = sly_post('clang_locale', 'string');
 
-/*		$ids = array();
-		foreach ($this->languages as $lang) $ids[] = $lang->getId();
-
-		$sel  = new sly_Form_Select_DropDown('clang_id', null, null, array_diff(range(0, 20), $ids));
-		$sel->setSize(1);*/
 		?>
 		<tr class="rex-table-row-activ">
 			<td class="sly-icon sly-col-a"><?= sly_Util_HTML::getSpriteLink('', $name, 'language') ?></td>

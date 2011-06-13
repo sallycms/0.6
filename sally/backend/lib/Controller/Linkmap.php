@@ -14,7 +14,7 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 
 	public function init() {
 		$catID     = $this->getGlobals('category_id', 0);
-		$naviPath = '<ul class="sly-navi-path">';
+		$naviPath  = '<ul class="sly-navi-path">';
 		$isRoot    = $catID === 0;
 		$category  = sly_Util_Category::findById($catID);
 		$link      = $this->url(array('category_id' => 0));
@@ -34,8 +34,8 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 
 		$naviPath .= '</ul>';
 		$layout    = sly_Core::getLayout();
-		$layout->showNavigation(false);
 
+		$layout->showNavigation(false);
 		$layout->pageHeader(t('linkmap'), $naviPath);
 	}
 

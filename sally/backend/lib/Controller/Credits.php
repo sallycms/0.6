@@ -9,24 +9,16 @@
  */
 
 class sly_Controller_Credits extends sly_Controller_Backend {
-	protected $func = '';
-
 	public function init() {
 		$layout = sly_Core::getLayout();
 		$layout->pageHeader(t('credits'));
-		print '<div class="sly-content">';
-	}
-
-	public function teardown() {
-		print '</div>';
 	}
 
 	public function index() {
 		print $this->render('credits/index.phtml');
-		return true;
 	}
 
 	public function checkPermission() {
-		return true;
+		return sly_Util_User::getCurrentUser() !== null;
 	}
 }

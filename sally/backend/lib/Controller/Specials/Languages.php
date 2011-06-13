@@ -14,10 +14,10 @@ class sly_Controller_Specials_Languages extends sly_Controller_Backend {
 	// for now just copy those two fields and the init() method, until
 	// I find a nice way to generalize it into. --xrstf
 
-	protected $warning = '';
-	protected $info = '';
-	protected $func = '';
-	protected $id = '';
+	protected $warning   = '';
+	protected $info      = '';
+	protected $func      = '';
+	protected $id        = '';
 	protected $languages = array();
 
 	public function init() {
@@ -31,7 +31,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Backend {
 	}
 
 	public function index() {
-		$languageService = sly_Service_Factory::getLAnguageService();
+		$languageService = sly_Service_Factory::getLanguageService();
 		$this->languages = $languageService->find(null, null, 'id');
 		print $this->render('specials/languages.phtml');
 	}
@@ -39,13 +39,15 @@ class sly_Controller_Specials_Languages extends sly_Controller_Backend {
 	public function add() {
 		if (sly_post('sly-submit', 'boolean', false)) {
 			$this->id = sly_post('clang_id', 'int', -1);
-			$clangName = sly_post('clang_name', 'string');
+
+			$clangName   = sly_post('clang_name', 'string');
 			$clangLocale = sly_post('clang_locale', 'string');
 
 			if (!empty($clangName)) {
 				try {
 					$languageService = sly_Service_Factory::getLanguageService();
 					$languageService->create(array('name' => $clangName, 'locale' => $clangLocale));
+
 					$this->info = t('clang_edited');
 				}
 				catch (Exception $e) {
@@ -54,7 +56,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Backend {
 			}
 			else {
 				$this->warning = t('enter_name');
-				$this->func = 'add';
+				$this->func    = 'add';
 			}
 		}
 		else {
@@ -68,10 +70,10 @@ class sly_Controller_Specials_Languages extends sly_Controller_Backend {
 		$this->id = sly_request('clang_id', 'int', -1);
 
 		if (sly_post('sly-submit', 'boolean', false)) {
-			$clangName = sly_post('clang_name', 'string');
-			$clangLocale = sly_post('clang_locale', 'string');
+			$clangName       = sly_post('clang_name', 'string');
+			$clangLocale     = sly_post('clang_locale', 'string');
 			$languageService = sly_Service_Factory::getLanguageService();
-			$clang = $languageService->findById($this->id);
+			$clang           = $languageService->findById($this->id);
 
 			if ($clang) {
 				$clang->setName($clangName);
@@ -102,6 +104,6 @@ class sly_Controller_Specials_Languages extends sly_Controller_Backend {
 	}
 
 	public function checkPermission() {
-		return sly_Util_User::getCurrentUser() != null;
+		return sly_Util_User::getCurrentUser() !== null;
 	}
 }

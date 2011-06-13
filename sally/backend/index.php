@@ -197,7 +197,7 @@ try {
 
 		if ($curGroup && $curGroup->getName() == 'addon') {
 			$curPage  = $navigation->getActivePage();
-			$filename = SLY_COREFOLDER.'/addons/'.$curPage->getName().'/pages/index.inc.php';
+			$filename = SLY_ADDONFOLDER.'/'.$curPage->getName().'/pages/index.inc.php';
 		}
 
 		if (empty($filename) || !file_exists($filename)) {

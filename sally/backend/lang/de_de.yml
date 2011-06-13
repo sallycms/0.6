@@ -393,3 +393,7 @@ exception_articletype_not_exists: 'Der Artikeltyp {0} existiert nicht!'
 
 config_projectname: Projektname
 config_default_fe_language: Standard Frontendsprache
+
+no_startarticle: 'Kein Startartikel selektiert. Bitte setze ihn im <a href="{0}">Backend</a>.'
+used_ressources: '{0} in {1} Klassen'
+to_website: zur Website

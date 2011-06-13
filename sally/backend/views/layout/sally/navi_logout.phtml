@@ -14,16 +14,16 @@ if ($user && $this->hasNavigation()) {
 	$user_name = $user->getName() != '' ? $user->getName() : $user->getLogin();
 	?>
 	<ul class="sly-meta">
-		<li class="rex-navi-first"><span><?= t('logged_in_as').' '.htmlspecialchars($user_name) ?></span></li>
+		<li class="rex-navi-first"><span><?= t('logged_in_as').' '.sly_html($user_name) ?></span></li>
 		<li><a href="index.php?page=profile"><?= t('profile_title') ?></a></li>
 		<li><a href="index.php?page=login&amp;func=logout"><?= t('logout') ?></a></li>
-		<li><a href="../">zur Website</a></li>
+		<li><a href="../"><?= t('to_website') ?></a></li>
 	</ul>
 	<?php
 }
 elseif ($this->hasNavigation()) {
-	echo '<p class="sly-meta">'.t('logged_out').'</p>';
+	print '<p class="sly-meta">'.t('logged_out').'</p>';
 }
 else {
-	echo '<p class="sly-meta">&nbsp;</p>';
+	print '<p class="sly-meta">&nbsp;</p>';
 }

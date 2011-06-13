@@ -64,7 +64,7 @@ if ($article) {
 	print $article->getArticleTemplate();
 }
 else {
-	print 'Kein Startartikel selektiert. Bitte setze ihn im <a href="sally/index.php">Backend</a>.';
+	print t('no_startarticle', 'backend/index.php');
 }
 
 $content = ob_get_clean();

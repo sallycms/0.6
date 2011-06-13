@@ -9,8 +9,6 @@
  */
 
 class sly_Controller_Login extends sly_Controller_Backend {
-	protected $func = '';
-
 	public function __construct() {
 		parent::__construct();
 
@@ -25,15 +23,10 @@ class sly_Controller_Login extends sly_Controller_Backend {
 		$layout = sly_Core::getLayout();
 		$layout->showNavigation(false);
 		$layout->pageHeader(t('login_title'));
-		print '<div class="sly-content">';
-	}
-
-	public function teardown() {
-		print '</div>';
 	}
 
 	public function index() {
-		if(empty($this->message)) $this->message = t('login_welcome');
+		if (empty($this->message)) $this->message = t('login_welcome');
 		print $this->render('login/index.phtml');
 	}
 
