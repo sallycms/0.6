@@ -4,7 +4,7 @@
 	<title>SallyCMS</title>
 	<briefdescription>API-Dokumentation</briefdescription>
 	<basedir>../</basedir>
-	<include menu="Lizenz" target="license.html" type="framed" builder="license" pos="bottom" keep="yes">../LICENSE</include>
-	<versionfile type="plain">../version</versionfile>
+	<include menu="Lizenz" target="license.html" type="framed" builder="license" pos="bottom" keep="yes">../../LICENSE</include>
+	<versionfile type="plain">../../version</versionfile>
 	<doxyfile keep="yes">doxyfile</doxyfile>
 </coco>
