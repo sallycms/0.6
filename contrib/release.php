@@ -44,8 +44,8 @@ if (substr($output, 0, 6) == 'abort:') {
 
 // Create releases directory
 
-if (!is_dir('../releases')) mkdir('../releases');
-$releases = realpath('../releases');
+if (!is_dir('../../releases')) mkdir('../../releases');
+$releases = realpath('../../releases');
 
 // Create variants
 

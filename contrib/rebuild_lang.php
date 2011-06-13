@@ -20,6 +20,7 @@ $dst = trim($args[2]);
 $src = preg_replace('#[^a-z0-9_-]#i', '', $src);
 $dst = preg_replace('#[^a-z0-9_-]#i', '', $dst);
 
+chdir('..');
 define('BASE', realpath('sally/backend/lang'));
 
 if (!file_exists(BASE.'/'.$src.'.yml')) {
