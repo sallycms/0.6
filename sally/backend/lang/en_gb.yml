@@ -23,6 +23,14 @@ open_linkmap: Open linkmap
 remove_link: Remove link
 press_del: 'Press [Del] to remove the selected element.'
 
+sort_asc: Sort ascending
+sort_desc: Sort descending
+sort_none: No sorting
+pages: Pages
+filter: Filter
+begin_sorting: Sort table
+end_sorting: End sorting mode
+
 # sally/index.php
 start_article_not_selected: start article not selected
 redirect_previous_page: 'You are being redirected to your <a href="{0}">previous page</a>.'

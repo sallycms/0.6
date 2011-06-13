@@ -23,6 +23,14 @@ open_linkmap: Öffne Strukturansicht
 remove_link: Link entfernen
 press_del: 'Drücken Sie [Entf], um den ausgewählten Eintrag zu entfernen.'
 
+sort_asc: Aufsteigend sortieren
+sort_desc: Absteigend sortieren
+sort_none: Keine Sortierung
+pages: Seiten
+filter: Filter
+begin_sorting: Tabelle sortieren
+end_sorting: Sortiermodus beenden
+
 # sally/index.php
 start_article_not_selected: Kein Startartikel ausgewählt
 redirect_previous_page: 'Sie werden zu Ihrer <a href="{0}">vorherigen Seite</a> weitergeleitet.'
