@@ -20,60 +20,58 @@
 	</div>
 </div>
 
-<div class="rex-area">
-	<table class="sly-table sly-addonlist" summary="<?= t('credits_caption') ?>">
-		<caption><?= t('credits_caption') ?></caption>
-		<thead><tr>
-			<th class="sly-col-a sly-icon">&nbsp;</th>
-			<th class="sly-col-b"><?= t('credits_name') ?></th>
-			<th class="sly-col-c"><?= t('credits_version') ?></th>
-			<th class="sly-col-d"><?= t('credits_author') ?></th>
-			<th class="sly-col-e"><?= t('credits_supportpage') ?></th>
-		</tr></thead>
-		<tbody>
+<table class="sly-table sly-addonlist" summary="<?= t('credits_caption') ?>">
+	<caption><?= t('credits_caption') ?></caption>
+	<thead><tr>
+		<th class="sly-col-a sly-icon">&nbsp;</th>
+		<th class="sly-col-b"><?= t('credits_name') ?></th>
+		<th class="sly-col-c"><?= t('credits_version') ?></th>
+		<th class="sly-col-d"><?= t('credits_author') ?></th>
+		<th class="sly-col-e"><?= t('credits_supportpage') ?></th>
+	</tr></thead>
+	<tbody>
 
-		<?php
+	<?php
 
-		$addons  = sly_Service_Factory::getAddOnService();
-		$plugins = sly_Service_Factory::getPluginService();
+	$addons  = sly_Service_Factory::getAddOnService();
+	$plugins = sly_Service_Factory::getPluginService();
 
-		foreach ($addons->getRegisteredAddons() as $addon) {
-			$params['type']        = 'addon';
-			$params['name']        = $addon;
-			$params['isActive']    = $addons->isActivated($addon);
-			$params['isInstalled'] = $addons->isInstalled($addon);
-			$params['version']     = $addons->getVersion($addon);
-			$params['author']      = $addons->getAuthor($addon);
-			$params['supportPage'] = $addons->getSupportPageEx($addon);
+	foreach ($addons->getRegisteredAddons() as $addon) {
+		$params['type']        = 'addon';
+		$params['name']        = $addon;
+		$params['isActive']    = $addons->isActivated($addon);
+		$params['isInstalled'] = $addons->isInstalled($addon);
+		$params['version']     = $addons->getVersion($addon);
+		$params['author']      = $addons->getAuthor($addon);
+		$params['supportPage'] = $addons->getSupportPageEx($addon);
 
-			print $this->render('credits/row.phtml', $params);
+		print $this->render('credits/row.phtml', $params);
 
-			if ($addons->isAvailable($addon)) {
-				$params['type'] = 'plugin';
+		if ($addons->isAvailable($addon)) {
+			$params['type'] = 'plugin';
 
-				foreach ($plugins->getRegisteredPlugins($addon) as $plugin) {
-					$params['type']        = 'plugin';
-					$params['name']        = $plugin;
-					$params['isActive']    = $plugins->isActivated(array($addon, $plugin));
-					$params['isInstalled'] = $plugins->isInstalled(array($addon, $plugin));
-					$params['version']     = $plugins->getVersion(array($addon, $plugin));
-					$params['author']      = $plugins->getAuthor(array($addon, $plugin));
-					$params['supportPage'] = $plugins->getSupportPageEx(array($addon, $plugin));
+			foreach ($plugins->getRegisteredPlugins($addon) as $plugin) {
+				$params['type']        = 'plugin';
+				$params['name']        = $plugin;
+				$params['isActive']    = $plugins->isActivated(array($addon, $plugin));
+				$params['isInstalled'] = $plugins->isInstalled(array($addon, $plugin));
+				$params['version']     = $plugins->getVersion(array($addon, $plugin));
+				$params['author']      = $plugins->getAuthor(array($addon, $plugin));
+				$params['supportPage'] = $plugins->getSupportPageEx(array($addon, $plugin));
 
-					print $this->render('credits/row.phtml', $params);
-				}
+				print $this->render('credits/row.phtml', $params);
 			}
 		}
+	}
 
-		if (count($addons->getRegisteredAddons()) == 0) {
-			?>
-			<tr>
-				<td class="rex-col-a center" colspan="5"><?= t('addon_empty_list') ?></td>
-			</tr>
-			<?php
-		}
-
+	if (count($addons->getRegisteredAddons()) == 0) {
 		?>
-		</tbody>
-	</table>
-</div>
+		<tr>
+			<td class="rex-col-a center" colspan="5"><?= t('addon_empty_list') ?></td>
+		</tr>
+		<?php
+	}
+
+	?>
+	</tbody>
+</table>
