@@ -63,17 +63,15 @@ foreach ($variants as $name => $settings) {
 		'-X .hg_archival.txt',
 		'-X .hgignore',
 		'-X .hgtags',
-		'-X release.php',
-		'-X rebuild_lang.php',
-		'-X compile-*',
+		'-X contrib'
 	);
 
 	if (!$settings['tests']) {
-		$params[] = '-X tests';
+		$params[] = '-X sally/tests';
 	}
 
 	if (!$settings['docs']) {
-		$params[] = '-X docs';
+		$params[] = '-X sally/docs';
 	}
 
 	$params[] = '"'.$target.'"';
@@ -85,13 +83,13 @@ foreach ($variants as $name => $settings) {
 
 	chdir($target);
 	mkdir('data');
-	mkdir('sally/include/addons');
+	mkdir('sally/addons');
 	file_put_contents('data/empty', 'This directory is intentionally left blank. Please make sure it\'s chmod to 0777.');
 
 	// Generate documentation
 
 	if ($settings['docs']) {
-		chdir('docs');
+		chdir('sally/docs');
 		print 'coco...';
 		exec('php '.$cocoBin.' . doconly 2>&0');
 		chdir($target);
@@ -100,7 +98,7 @@ foreach ($variants as $name => $settings) {
 	// Put addOns in the archive
 
 	if (empty($settings['addons'])) {
-		file_put_contents('sally/include/addons/empty', 'Put all your addOns in this directory. PHP does not need writing permissions in here.');
+		file_put_contents('sally/addons/empty', 'Put all your addOns in this directory. PHP does not need writing permissions in here.');
 	}
 	else {
 		print ' addons...';
@@ -121,7 +119,7 @@ foreach ($variants as $name => $settings) {
 				'-X .hgignore',
 				'-X .hgtags',
 				'-X make.bat',
-				'"'.$target.'/sally/include/addons/'.$addon.'"'
+				'"'.$target.'/sally/addons/'.$addon.'"'
 			);
 
 			exec('hg archive '.implode(' ', $params));
