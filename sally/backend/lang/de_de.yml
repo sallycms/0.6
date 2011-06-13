@@ -16,6 +16,13 @@ apply: Übernehmen
 reset: Zurücksetzen
 delete: Löschen
 
+select_all: alle auswählen
+select_none: nichts auswählen
+
+open_linkmap: Öffne Strukturansicht
+remove_link: Link entfernen
+press_del: 'Drücken Sie [Entf], um den ausgewählten Eintrag zu entfernen.'
+
 # sally/index.php
 start_article_not_selected: Kein Startartikel ausgewählt
 redirect_previous_page: 'Sie werden zu Ihrer <a href="{0}">vorherigen Seite</a> weitergeleitet.'

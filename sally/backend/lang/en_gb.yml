@@ -16,6 +16,13 @@ apply: Apply
 reset: Reset
 delete: Delete
 
+select_all: select all
+select_none: select none
+
+open_linkmap: Open linkmap
+remove_link: Remove link
+press_del: 'Press [Del] to remove the selected element.'
+
 # sally/index.php
 start_article_not_selected: start article not selected
 redirect_previous_page: 'You are being redirected to your <a href="{0}">previous page</a>.'
