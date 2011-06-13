@@ -11,6 +11,11 @@ setlocale: 'de_DE,de_DE@euro,deu_deu,german_germany,de,ge'
 datetimeformat: %d. %b. %Y - %H:%Mh
 ctrl: Mehrfachauswahl mit STRG
 
+save: Speichern
+apply: Übernehmen
+reset: Zurücksetzen
+delete: Löschen
+
 # sally/index.php
 start_article_not_selected: Kein Startartikel ausgewählt
 redirect_previous_page: 'Sie werden zu Ihrer <a href="{0}">vorherigen Seite</a> weitergeleitet.'

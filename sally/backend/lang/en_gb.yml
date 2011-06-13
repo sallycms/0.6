@@ -11,6 +11,11 @@ setlocale: 'en_GB,en_UK,en_US,en_EN,en_AU,en_CA,American,ENG,English'
 datetimeformat: '%Y-%b-%d %H:%M'
 ctrl: multiselect using CTRL
 
+save: Save
+apply: Apply
+reset: Reset
+delete: Delete
+
 # sally/index.php
 start_article_not_selected: start article not selected
 redirect_previous_page: 'You are being redirected to your <a href="{0}">previous page</a>.'
