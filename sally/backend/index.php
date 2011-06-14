@@ -201,7 +201,7 @@ try {
 		}
 
 		if (empty($filename) || !file_exists($filename)) {
-			throw new sly_Controller_Exception(t('unknown_page'));
+			throw new sly_Controller_Exception(t('unknown_page'), 404);
 		}
 
 		include $filename;
@@ -214,12 +214,18 @@ catch (Exception $e) {
 	$layout->openBuffer();
 
 	if ($e instanceof sly_Authorisation_Exception) {
+		header('HTTP/1.0 403 Forbidden');
 		$layout->pageHeader(t('security_violation'));
 	}
 	elseif ($e instanceof sly_Controller_Exception) {
+		if ($e->getCode() === 404) {
+			header('HTTP/1.0 404 Not Found');
+		}
+
 		$layout->pageHeader(t('controller_error'));
 	}
 	else {
+		header('HTTP/1.0 500 Internal Server Error');
 		$layout->pageHeader(t('unexpected_exception'));
 	}
 
