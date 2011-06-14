@@ -36,6 +36,8 @@ start_article_not_selected: start article not selected
 redirect_previous_page: 'You are being redirected to your <a href="{0}">previous page</a>.'
 redirect_startpage: 'You are being redirected to your <a href="{0}">homepage</a>.'
 unknown_page: Unknown Page
+unknown_action: 'Method {0} in {1} not found!'
+page_not_allowed: 'Access to {0} in {1} not allowed!'
 security_violation: Security Violation
 controller_error: Controller Error
 unexpected_exception: Unexpected Exception
