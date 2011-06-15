@@ -49,10 +49,10 @@ class sly_Service_Module extends sly_Service_DevelopBase {
 	protected function flush($name = null) {
 		$sql = sly_DB_Persistence::getInstance();
 		$where = $name === null ? null : array('module' => $name);
-		$sql->select('article_slice', 'slice_id', $where);
+		$sql->select('article_slice', 'id', $where);
 
 		foreach ($sql as $row) {
-			rex_deleteCacheSliceContent((int) $row['slice_id']);
+			rex_deleteCacheSliceContent((int) $row['id']);
 		}
 	}
 
