@@ -369,72 +369,10 @@ if ($mode == 'meta') {
 // START: CONTENT HEAD MENUE
 
 $numSlots = $hasTemplate ? count($curSlots) : 0;
-$slotMenu = '';
 
-if ($numSlots > 1) {
-	$listElements = array(t($numSlots > 1 ? 'content_types' : 'content_type').' : ');
+print $this->render('content/_slotmenu.phtml');
+print $this->render('content/_subpagemenu.phtml');
 
-	foreach ($curSlots as $tmpSlot) {
-		$class     = ($tmpSlot == $slot && $mode == 'edit') ? ' class="rex-active"' : '';
-		$slotTitle = rex_translate($templateService->getSlotTitle($templateName, $tmpSlot));
-
-		$listElements[] = '<a href="index.php?page=content&amp;article_id='.$article_id.'&amp;clang='.$clang.'&amp;slot='.$tmpSlot.'&amp;mode=edit"'.$class.'>'.$slotTitle.'</a>';
-	}
-
-	$listElements = $dispatcher->filter('PAGE_CONTENT_SLOT_MENU', $listElements, array(
-		'article_id' => $article_id,
-		'clang'      => $clang,
-		'function'   => $function,
-		'slice_id'   => $slice_id
-	));
-
-	$slotMenu  .= '<ul id="rex-navi-slots">';
-
-	foreach ($listElements as $idx => $listElement) {
-		$class = '';
-
-		if ($idx == 1) { // das erste Element ist nur Beschriftung -> überspringen
-			$class = ' class="rex-navi-first"';
-		}
-
-		$slotMenu .= '<li'.$class.'>'.$listElement.'</li>';
-	}
-
-	$slotMenu .= '</ul>';
-}
-
-$menu         = $slotMenu;
-$listElements = array();
-$baseURL      = 'index.php?page=content&amp;article_id='.$article_id.'&amp;clang='.$clang.'&amp;slot='.$slot;
-
-if ($mode == 'edit') {
-	$listElements[] = '<a href="'.$baseURL.'" class="rex-active">'.t('edit_mode').'</a>';
-	$listElements[] = '<a href="'.$baseURL.'&amp;subpage=meta">'.t('metadata').'</a>';
-}
-else {
-	$listElements[] = '<a href="'.$baseURL.'">'.t('edit_mode').'</a>';
-	$listElements[] = '<a href="'.$baseURL.'&amp;subpage=meta" class="rex-active">'.t('metadata').'</a>';
-}
-
-$listElements[] = '<a href="../index.php?article_id='.$article_id.'&amp;clang='.$clang.'" onclick="window.open(this.href); return false;">'.t('show').'</a>';
-
-$listElements = $dispatcher->filter('PAGE_CONTENT_MENU', $listElements, array(
-	'article_id' => $article_id,
-	'clang'      => $clang,
-	'function'   => $function,
-	'slice_id'   => $slice_id
-));
-
-$menu .= '<ul class="rex-navi-content">';
-
-foreach ($listElements as $idx => $element) {
-	$class = $idx == 0 ? ' class="rex-navi-first"' : '';
-	$menu .= '<li'.$class.'>'.$element.'</li>';
-}
-
-$menu .= '</ul>';
-
-// END: CONTENT HEAD MENUE
 // START: AUSGABE
 
 ?>

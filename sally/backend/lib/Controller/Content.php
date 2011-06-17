@@ -11,13 +11,13 @@
 class sly_Controller_Content extends sly_Controller_Backend {
 
 	protected $article;
-	//protected $clangId;
 	protected $slot;
 
 	protected function init() {
 		$clang = sly_Core::getCurrentClang();
 		$this->article = sly_Util_Article::findById(sly_request('article_id', 'rex-article-id'), $clang);
-		$this->slot = sly_request('slot', 'string');
+		$this->slot = sly_request('slot', 'string', sly_Util_Session::get('contentpage_slot', ''));
+		sly_Util_Session::set('contentpage_slot', $this->slot);
 		if (is_null($this->article)) {
 			sly_Core::getLayout()->pageHeader(t('content'));
 			throw new sly_Exception(t('no_article_available'));
@@ -42,12 +42,7 @@ class sly_Controller_Content extends sly_Controller_Backend {
 		if (!$this->article)
 			return;
 		$this->header();
-		print $this->render('index.phtml', array('mode' => 'edit'));
-	}
-
-	protected function render($filename, $params = array()) {
-		$filename = 'content/'.$filename;
-		return parent::render($filename, $params);
+		print $this->render('content/index.phtml', array('mode' => 'edit'));
 	}
 
 	protected function checkPermission() {
@@ -66,7 +61,7 @@ class sly_Controller_Content extends sly_Controller_Backend {
 	}
 
 	protected function renderLanguageBar($add) {
-		return parent::render('toolbars/languages.phtml', array(
+		return $this->render('toolbars/languages.phtml', array(
 			'clang' => $this->article->getClang(),
 			'sprachen_add' => $add
 		));

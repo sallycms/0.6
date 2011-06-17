@@ -5,7 +5,7 @@
 }
 
 
-.rex-content-header {
+.sly-content-header {
 	width: 100%;
 	margin-bottom: 10px;
 	+border-radius($brd_rad);
@@ -46,7 +46,7 @@
 	}
 }
 
-.rex-content-header ul li a {
+.sly-content-header ul li a {
 	color: #1f9eb5;
 }
 

@@ -28,20 +28,15 @@ if (count($slots) < 1) return;
 		$listElements[] = '<a href="index.php?' . http_build_query($params) . '"' . $class . '>' . $slotTitle . '</a>';
 	}
 
-	$listElements = sly_Core::dispatcher()->filter('PAGE_CONTENT_SLOT_MENU', $listElements, array(
+	$listElements = sly_Core::dispatcher()->filter('SLY_PAGE_CONTENT_SLOT_MENU', $listElements, array(
 				'article_id' => $this->article->getId(),
 				'clang' => $this->article->getClang()
 			));
 
 
 	foreach ($listElements as $idx => $listElement) {
-		$class = '';
-
-		if ($idx == 0) { // das erste Element ist nur Beschriftung -> überspringen
-			$class = ' class="rex-navi-first"';
-		}
 		?>
-		<li<?= $class ?>><?= $listElement ?></li>
+		<li><?= $listElement ?></li>
 		<?php
 	}
 	?>
