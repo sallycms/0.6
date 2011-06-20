@@ -107,6 +107,33 @@ class sly_Util_String {
 
 		return $return;
 	}
+	/**
+	 * shortens a filename to a max lenght and leaves an optional suffix
+	 * prior to the extension
+	 *
+	 * @param string $name          filename to be shorten
+	 * @param int    $maxLength     maximum string length
+	 * @param int    $suffixLength  length of last characters
+	 * @return string  returns false on error
+	 */
+	public static function shortenFilename($name, $maxLength, $suffixLength = 3) {
+		if (!is_string($name) || !$name || !is_int($maxLength) || $maxLength < 1
+			|| !is_int($suffixLength) || $suffixLength < 0 ) {
+
+			return false;
+		}
+		$pos = strrpos($name, '.');
+		if ($pos === false || $pos <= $maxLength) return $name;
+
+		$shortname  = substr($name, 0, min($maxLength - $suffixLength, $pos));
+		if ($maxLength - $suffixLength < $pos) {
+			if ($suffixLength > 0) $shortname .= '…';
+			$shortname .= substr($name, $pos - $suffixLength, 3);
+		}
+		$shortname .= substr($name, $pos);
+
+		return $shortname;
+	}
 
 	/**
 	 * Dateigröße formatieren
