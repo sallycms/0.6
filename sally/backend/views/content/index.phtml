@@ -1,84 +1,52 @@
 <?php
 /*
- * Copyright (C) 2009 REDAXO
+ * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License Version 2 as published by the
- * Free Software Foundation.
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
  */
-
-/**
- * @package redaxo4
- */
-
+?>
+<?php
 $category_id = sly_request('category_id', 'rex-category-id');
-$article_id  = sly_request('article_id',  'rex-article-id');
-$slice_id    = sly_request('slice_id',    'rex-slice-id', '');
-$function    = sly_request('function',    'string');
-$slot        = sly_request('slot',        'string');
-$clang       = sly_Core::getCurrentClang();
-$languages   = sly_Util_Language::findAll();
+$article_id = sly_request('article_id', 'rex-article-id');
+$slice_id = sly_request('slice_id', 'rex-slice-id', '');
+$function = sly_request('function', 'string');
+$slot = sly_request('slot', 'string');
+$clang = sly_Core::getCurrentClang();
+$languages = sly_Util_Language::findAll();
 
 foreach ($languages as $id => $lang) {
 	$languages[$id] = $lang->getName();
 }
 
 $article_revision = 0;
-$slice_revision   = 0;
-$warning          = '';
-$global_warning   = '';
-$info             = '';
-$global_info      = '';
+$slice_revision = 0;
 
-require SLY_COREFOLDER.'/functions/function_rex_content.inc.php';
+require SLY_COREFOLDER . '/functions/function_rex_content.inc.php';
 
 // check article's existence
 $articleService = sly_Service_Factory::getArticleService();
-$article        = $articleService->findById($article_id, $clang);
-
-if (is_null($article)) {
-	sly_Core::getLayout()->pageHeader(t('content'));
-	print rex_warning(t('no_article_available'));
-	return;
-}
+$article = $articleService->findById($article_id, $clang);
 
 // init services
-$typeService     = sly_Service_Factory::getArticleTypeService();
+$typeService = sly_Service_Factory::getArticleTypeService();
 $templateService = sly_Service_Factory::getTemplateService();
-$moduleService   = sly_Service_Factory::getModuleService();
-$user            = sly_Util_User::getCurrentUser();
-$dispatcher      = sly_Core::dispatcher();
+$moduleService = sly_Service_Factory::getModuleService();
+$user = sly_Util_User::getCurrentUser();
+$dispatcher = sly_Core::dispatcher();
 
 // Artikel wurde gefunden - Kategorie holen
 $category_id = $article->getCategoryId();
 
 // Kategoriepfad und -rechte
-
-
 // Titel anzeigen
-
-
 // request params
 //$mode     = sly_request('mode', 'string', 'edit');
 $function = sly_request('function', 'string');
-$warning  = sly_request('warning', 'string');
-$info     = sly_request('info', 'string');
 
-
-
-
-if ($mode == 'edit' && sly_post('save_article', 'string')) {
-	$type    = sly_post('article_type', 'string');
-	$article = $articleService->findById($article_id, $clang);
-
-	// change type and update database
-	$articleService->setType($article, $type);
-
-	$global_info = t('article_updated');
-	$article     = $articleService->findById($article_id, $clang);
-}
-
-$hasType     = $article->hasType();
+$hasType = $article->hasType();
 $hasTemplate = false;
 
 if ($hasType) {
@@ -100,30 +68,26 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 	// check module
 
 	if ($function == 'edit' || $function == 'delete') {
-		$module = rex_slice_module_exists($slice_id, $clang);
-	}
-	else { // add
+		$module = rex_slice_module_exists($slice_id);
+	} else { // add
 		$module = sly_post('module', 'string');
 	}
 
 	if (!$moduleService->exists($module)) {
 		$global_warning = t('module_not_found');
-		$slice_id       = '';
-		$function       = '';
-	}
-	else {
+		$slice_id = '';
+		$function = '';
+	} else {
 		// Rechte am Modul
 		if (!$templateService->hasModule($templateName, $module, $slot)) {
 			$global_warning = t('no_rights_to_this_function');
-			$slice_id       = '';
-			$function       = '';
-		}
-		elseif (!($user->isAdmin() || $user->hasRight('module['.$module.']') || $user->hasRight('module[0]'))) {
+			$slice_id = '';
+			$function = '';
+		} elseif (!($user->isAdmin() || $user->hasRight('module[' . $module . ']') || $user->hasRight('module[0]'))) {
 			$global_warning = t('no_rights_to_this_function');
-			$slice_id       = '';
-			$function       = '';
-		}
-		else {
+			$slice_id = '';
+			$function = '';
+		} else {
 			// Daten einlesen
 			$REX_ACTION = array('SAVE' => true);
 
@@ -143,18 +107,15 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 				// DONT SAVE/UPDATE SLICE
 				if (!empty($action_message)) {
 					$warning = $action_message;
-				}
-				elseif ($function == 'delete') {
+				} elseif ($function == 'delete') {
 					$warning = t('slice_deleted_error');
-				}
-				else {
+				} else {
 					$warning = t('slice_saved_error');
 				}
-			}
-			else {
+			} else {
 				// SAVE / UPDATE SLICE
 
-				$sql          = sly_DB_Persistence::getInstance();
+				$sql = sly_DB_Persistence::getInstance();
 				$sliceService = sly_Service_Factory::getSliceService();
 
 				if ($function === 'add' || $function === 'edit') {
@@ -164,19 +125,18 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 					);
 
 					if ($function == 'edit') {
-						$ooslice   = OOArticleSlice::getArticleSliceById($slice_id);
+						$ooslice = OOArticleSlice::getArticleSliceById($slice_id);
 						$realslice = $sliceService->findById($ooslice->getSliceId());
 						$realslice->flushValues();
-					}
-					else {
+					} else {
 						$realslice = $sliceService->create(array('module' => $module));
 
-						$values['prior']      = sly_post('prior', 'int');
+						$values['prior'] = sly_post('prior', 'int');
 						$values['article_id'] = $article_id;
-						$values['module']     = $module;
-						$values['clang']      = $clang;
-						$values['slot']       = $slot;
-						$values['revision']   = $slice_revision;
+						$values['module'] = $module;
+						$values['clang'] = $clang;
+						$values['slot'] = $slot;
+						$values['revision'] = $slice_revision;
 						$values['createdate'] = time();
 						$values['createuser'] = $user->getLogin();
 					}
@@ -192,33 +152,29 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 					if ($function === 'edit') {
 						$sql->update('article_slice', $values, array('id' => $slice_id));
 						rex_deleteCacheSliceContent($realslice->getId());
-						$info = $action_message.t('block_updated');
-					}
-					else {
+						$info = $action_message . t('block_updated');
+					} else {
 						$sql->insert('article_slice', $values);
 
-						$id   = $sql->lastId();
-						$pre  = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
-						$info = $action_message.t('block_added');
+						$id = $sql->lastId();
+						$pre = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+						$info = $action_message . t('block_added');
 
-						$sql->query('UPDATE '.$pre.'article_slice SET prior = prior + 1 '.
-							'WHERE article_id = '.$article_id.' AND clang = '.$clang.' AND slot = "'.$slot.'" '.
-							'AND prior >= '.$values['prior'].' AND id <> '.$id
+						$sql->query('UPDATE ' . $pre . 'article_slice SET prior = prior + 1 ' .
+								'WHERE article_id = ' . $article_id . ' AND clang = ' . $clang . ' AND slot = "' . $slot . '" ' .
+								'AND prior >= ' . $values['prior'] . ' AND id <> ' . $id
 						);
 					}
 
 					$function = '';
-				}
-				else {
+				} else {
 					if (rex_deleteArticleSlice($slice_id)) {
 						$global_info = t('block_deleted');
-					}
-					else {
+					} else {
 						$global_warning = t('block_not_deleted');
 					}
 				}
 				// ----- / SAVE SLICE
-
 				// update article
 				$value = array('updatedate' => time(), 'updateuser' => $user->getLogin());
 				$sql->update('article', $value, array('id' => $article_id, 'clang' => $clang));
@@ -241,200 +197,51 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 	// Flush slice cache
 	sly_Core::cache()->flush(OOArticleSlice::CACHE_NS);
 }
-
-// END: Slice add/edit/delete
-if ($mode == 'meta') {
-	// START: ARTICLE2STARTARTICLE
-
-	if (sly_post('article2startpage', 'string')) {
-		if ($user->isAdmin() || $user->hasRight('article2startpage[]')) {
-			if (rex_article2startpage($article_id)) {
-				$info = t('content_tostartarticle_ok');
-				while (ob_get_level()) ob_end_clean();
-				header('Location: index.php?page=content&mode=meta&clang='.$clang.'&slot='.$slot.'&article_id='.$article_id.'&info='.urlencode($info));
-				exit;
-			}
-			else {
-				$warning = t('content_tostartarticle_failed');
-			}
-		}
-	}
-
-	// END: ARTICLE2STARTARTICLE
-	// START: COPY LANG CONTENT
-
-	if (sly_post('copycontent', 'string')) {
-		if ($user->isAdmin() || $user->hasRight('copyContent[]')) {
-			$clang_a = sly_post('clang_a', 'rex-clang-id');
-			$clang_b = sly_post('clang_b', 'rex-clang-id');
-
-			if (rex_copyContent($article_id, $article_id, $clang_a, $clang_b)) {
-				$info = t('content_contentcopy');
-			}
-			else {
-				$warning = t('content_errorcopy');
-			}
-		}
-	}
-
-	// END: COPY LANG CONTENT
-	// START: MOVE ARTICLE
-
-	if (sly_post('movearticle', 'string') && $category_id != $article_id) {
-		$category_id_new = sly_post('category_id_new', 'rex-category-id');
-
-		if ($user->isAdmin() || ($user->hasRight('moveArticle[]') && ($user->hasRight('csw[0]') || $user->hasRight('csw['.$category_id_new.']')))) {
-			if (rex_moveArticle($article_id, $category_id_new)) {
-				$info = t('content_articlemoved');
-				while (ob_get_level()) ob_end_clean();
-				header('Location: index.php?page=content&article_id='.$article_id.'&mode=meta&clang='.$clang.'&slot='.$slot.'&info='.urlencode($info));
-				exit;
-			}
-			else {
-				$warning = t('content_errormovearticle');
-			}
-		}
-		else {
-			$warning = t('no_rights_to_this_function');
-		}
-	}
-
-	// END: MOVE ARTICLE
-	// START: COPY ARTICLE
-
-	if (sly_post('copyarticle', 'string')) {
-		$category_copy_id_new = sly_post('category_copy_id_new', 'rex-category-id');
-
-		if ($user->isAdmin() || ($user->hasRight('copyArticle[]') && ($user->hasRight('csw[0]') || $user->hasRight('csw['.$category_copy_id_new.']')))) {
-			if (($new_id = rex_copyArticle($article_id, $category_copy_id_new)) !== false) {
-				$info = t('content_articlecopied');
-				while (ob_get_level()) ob_end_clean();
-				header('Location: index.php?page=content&article_id='.$new_id.'&mode=meta&clang='.$clang.'&slot='.$slot.'&info='.urlencode($info));
-				exit;
-			}
-			else {
-				$warning = t('content_errorcopyarticle');
-			}
-		}
-		else {
-			$warning = t('no_rights_to_this_function');
-		}
-	}
-
-	// END: COPY ARTICLE
-	// START: MOVE CATEGORY
-
-	if (sly_post('movecategory', 'string')) {
-		$category_id_new = sly_post('category_id_new', 'rex-category-id');
-
-		if ($user->isAdmin() || ($user->hasRight('moveCategory[]') && (($user->hasRight('csw[0]') || $user->hasRight('csw['.$category_id.']')) && ($user->hasRight('csw[0]') || $user->hasRight('csw['.$category_id_new.']'))))) {
-			if ($category_id != $category_id_new && rex_moveCategory($category_id, $category_id_new)) {
-				$info = t('category_moved');
-				while (ob_get_level()) ob_end_clean();
-				header('Location: index.php?page=content&article_id='.$category_id.'&mode=meta&clang='.$clang.'&slot='.$slot.'&info='.urlencode($info));
-				exit;
-			}
-			else {
-				$warning = t('content_error_movecategory');
-			}
-		}
-		else {
-			$warning = t('no_rights_to_this_function');
-		}
-	}
-
-	// END: MOVE CATEGORY
-	// START: SAVE METADATA META PAGE
-
-	if (sly_post('savemeta', 'string')) {
-		$name   = sly_post('meta_article_name', 'string');
-		$sql    = sly_DB_Persistence::getInstance();
-		$values = array('name' => $name, 'updatedate' => time(), 'updateuser' => $user->getLogin());
-
-		$sql->update('article', $values, array('id' => $article_id, 'clang' => $clang));
-
-		// update cache
-		sly_Core::cache()->delete('sly.article', $article_id.'_'.$clang);
-
-		// notify system
-		$info = t('metadata_updated');
-		sly_Core::dispatcher()->notify('ART_META_UPDATED', $info, array(
-			'id'    => $article_id,
-			'clang' => $clang
-		));
-	}
-
-	// END: SAVE METADATA
-}
-// START: CONTENT HEAD MENUE
-
-$numSlots = $hasTemplate ? count($curSlots) : 0;
-
-print $this->render('content/_slotmenu.phtml');
-print $this->render('content/_subpagemenu.phtml');
-
-// START: AUSGABE
-
 ?>
-<!-- *** OUTPUT OF ARTICLE-CONTENT - START *** -->
-<div class="rex-content-header">
-	<div class="rex-content-header-2">
-		<?= $menu ?>
-	</div>
+<div class="sly-content-header">
+	<?php
+	//navigation
+	print $this->render('content/_slotmenu.phtml');
+	print $this->render('content/_subpagemenu.phtml');
+	?>
 </div>
-<?
-
-// Meldungen
-
-if (!empty($global_warning)) print rex_warning($global_warning);
-if (!empty($global_info))    print rex_info($global_info);
-
-$article = $articleService->findById($article_id, $clang);
-$dispatcher->notify('SLY_ART_MESSAGES', $article);
-
-if ($mode != 'edit') {
-	if (!empty($warning)) print rex_warning($warning);
-	if (!empty($info))    print rex_info($info);
-}
-
-print '<div class="rex-content-body">';
-
-if ($mode == 'edit') {
+<?php
+	//messages
+	print $this->render('content/_messages.phtml');
+?>
+<div class="sly-content-body">
+	<?php
 	// START: Slice move up/down
 
 	if ($hasTemplate && ($function == 'moveup' || $function == 'movedown')) {
 		if ($user->isAdmin() || $user->hasRight('moveSlice[]')) {
 			// Modul und Rechte vorhanden?
 
-			$module = rex_slice_module_exists($slice_id, $clang);
+			$module = rex_slice_module_exists($slice_id);
 
 			if (!$module) {
 				// MODUL IST NICHT VORHANDEN
-				$warning  = t('module_not_found');
+				$warning = t('module_not_found');
 				$slice_id = '';
 				$function = '';
-			}
-			else {
+			} else {
 				// RECHTE AM MODUL ?
-				if ($user->isAdmin() || $user->hasRight('module['.$module.']') || $user->hasRight('module[0]')) {
+				if ($user->isAdmin() || $user->hasRight('module[' . $module . ']') || $user->hasRight('module[0]')) {
 					list($success, $message) = rex_moveSlice($slice_id, $clang, $function);
 
 					if ($success) {
 						$info = $message;
-					}
-					else {
+					} else {
 						$warning = $message;
 					}
-				}
-				else {
+				} else {
 					$warning = t('no_rights_to_this_function');
 				}
 			}
 
 			// Flush slice cache
 			sly_Core::cache()->flush(OOArticleSlice::CACHE_NS);
-		}
-		else {
+		} else {
 			$warning = t('no_rights_to_this_function');
 		}
 	}
@@ -442,18 +249,17 @@ if ($mode == 'edit') {
 
 	$params = array('id' => $article_id, 'clang' => $clang, 'article' => $article);
 
-	$form   = new sly_Form('index.php', 'POST', t('general'), '', 'content_article_form');
+	$form = new sly_Form('index.php', 'POST', t('general'), '', 'content_article_form');
 
 	/////////////////////////////////////////////////////////////////
 	// init form
 
 	$form->setEncType('multipart/form-data');
-	$form->addHiddenValue('page',       'content');
-	$form->addHiddenValue('article_id', $article_id);
-	$form->addHiddenValue('mode',       'edit');
-	$form->addHiddenValue('save',       1);
-	$form->addHiddenValue('clang',      $clang);
-	$form->addHiddenValue('slot',       $slot);
+	$form->addHiddenValue('page', 'content');
+	$form->addHiddenValue('article_id', $this->article->getId());
+	$form->addHiddenValue('func', 'setArticleType');
+	$form->addHiddenValue('clang', $this->article->getClang());
+	$form->addHiddenValue('slot', $this->slot);
 
 	/////////////////////////////////////////////////////////////////
 	// articletype
@@ -468,14 +274,17 @@ if ($mode == 'edit') {
 
 	//buttons
 	$button = new sly_Form_Input_Button('submit', 'save_article', t('article_save'));
-	$form->setSubmitButton($button );
+	$form->setSubmitButton($button);
 
 	print $form->render();
 
 	if (!$hasType || !$hasTemplate || $slot === null) {
-		if (!$hasType) print rex_warning(t('content_select_type'));
-		elseif (!$hasTemplate) print rex_warning(t('content_configure_article_type'));
-		else print rex_info(t('content_no_slots'));
+		if (!$hasType)
+			print rex_warning(t('content_select_type'));
+		elseif (!$hasTemplate)
+			print rex_warning(t('content_configure_article_type'));
+		else
+			print rex_info(t('content_no_slots'));
 	}
 	else {
 		print '<div class="rex-content-editmode">';
@@ -489,166 +298,46 @@ if ($mode == 'edit') {
 			if ($function == 'add' && $prior == $ooslice->getPrior()) {
 				$module = sly_request('module', 'string');
 				sly_Helper_Content::printAddSliceForm($prior, $module, $article_id, $clang, $slot);
-			}
-			else {
-				print $this->render('_add_slice_form.phtml', array('articleId' => $article_id, 'clangId' => $clang, 'prior' => $ooslice->getPrior(), 'template' => $templateName, 'slot' => $slot));
+			} else {
+				print $this->render('content/_add_slice_form.phtml', array('articleId' => $article_id, 'clangId' => $clang, 'prior' => $ooslice->getPrior(), 'template' => $templateName, 'slot' => $slot));
 			}
 
 			if (empty($function) && $prior == $ooslice->getPrior()) {
-				if (!empty($info))    print rex_info($info);
-				if (!empty($warning)) print rex_warning ($warning);
+				if (!empty($info))
+					print rex_info($info);
+				if (!empty($warning))
+					print rex_warning($warning);
 			}
 
 			if (($function == 'edit' || $function == 'moveup' || $function == 'movedown') && $slice_id == $ooslice->getId()) {
-				if (!empty($info))    print rex_info($info);
-				if (!empty($warning)) print rex_warning ($warning);
+				if (!empty($info))
+					print rex_info($info);
+				if (!empty($warning))
+					print rex_warning($warning);
 			}
 
 			if ($function == 'edit' && $slice_id == $ooslice->getId()) {
-				print $this->render('_slice_toolbar.phtml', array('articleSlice' => $ooslice));
+				print $this->render('content/_slice_toolbar.phtml', array('articleSlice' => $ooslice));
 				sly_Helper_Content::printEditSliceForm($ooslice);
-			}
-			else {
-				//sly_Helper_Content::printSliceToolbar($ooslice);
-				print $this->render('_slice_toolbar.phtml', array('articleSlice' => $ooslice));
-				print $this->render('_slice_content.phtml', array('articleSlice' => $ooslice));
+			} else {
+				print $this->render('content/_slice_toolbar.phtml', array('articleSlice' => $ooslice));
+				print $this->render('content/_slice_content.phtml', array('articleSlice' => $ooslice));
 			}
 		}
 
 		if ($function == 'add' && $prior == count($articleSlices)) {
 			$module = sly_request('module', 'string');
-			if (!empty($info)) print rex_info($info);
-			if (!empty($warning)) print rex_warning ($warning);
+			if (!empty($info))
+				print rex_info($info);
+			if (!empty($warning))
+				print rex_warning($warning);
 			sly_Helper_Content::printAddSliceForm($prior, $module, $article_id, $clang, $slot);
 		}
 		else {
-			print $this->render('_add_slice_form.phtml', array('articleId' => $article_id, 'clangId' => $clang, 'prior' => count($articleSlices), 'template' => $templateName, 'slot' => $slot));
+			print $this->render('content/_add_slice_form.phtml', array('articleId' => $article_id, 'clangId' => $clang, 'prior' => count($articleSlices), 'template' => $templateName, 'slot' => $slot));
 		}
 
 		print '</div>';
-
-		// END: MODULE EDITIEREN/ADDEN ETC.
 	}
-}
-elseif ($mode == 'meta') {
-	// START: META VIEW
-
-	$params = array('id' => $article_id, 'clang' => $clang, 'article' => $article);
-	$form   = new sly_Form('index.php', 'POST', t('general'), '', 'REX_FORM');
-
-	/////////////////////////////////////////////////////////////////
-	// init form
-
-	$form->setEncType('multipart/form-data');
-	$form->addHiddenValue('page',       'content');
-	$form->addHiddenValue('article_id', $article_id);
-	$form->addHiddenValue('mode',       'meta');
-	$form->addHiddenValue('save',       1);
-	$form->addHiddenValue('clang',      $clang);
-	$form->addHiddenValue('slot',       $slot);
-	$form->setSubmitButton(null);
-	$form->setResetButton(null);
-
-	/////////////////////////////////////////////////////////////////
-	// article name / metadata
-
-	$name = new sly_Form_Input_Text('meta_article_name', t('name_description'), $article->getName(), 'rex-form-meta-article-name');
-	$form->add($name);
-
-	$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM', $form, $params);
-
-	$button = new sly_Form_Input_Button('submit', 'savemeta', t('update_metadata'));
-	$form->add(new sly_Form_ButtonBar(array('submit' => $button)));
-
-	$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM_FIELDSET', $form, $params);
-
-	/////////////////////////////////////////////////////////////////
-	// misc
-
-	function addButtonBar($form, $label, $name) {
-		$button = new sly_Form_Input_Button('submit', $name, $label);
-		$button->setAttribute('onclick', 'return confirm(\''.$label.'?\')');
-		$form->add(new sly_Form_ButtonBar(array('submit' => $button)));
-	}
-
-	if ($user->isAdmin() || $user->hasRight('article2startpage[]') || $user->hasRight('moveArticle[]') || $user->hasRight('copyArticle[]') || ($user->hasRight('copyContent[]') && sly_Util_Language::isMultilingual())) {
-		// ZUM STARTARTIKEL MACHEN
-
-		if ($user->isAdmin() || $user->hasRight('article2startpage[]')) {
-			$form->beginFieldset(t('content_startarticle'));
-
-			if ($article->getStartpage() == 0 && $article->getParentId() == 0) {
-				$form->add(new sly_Form_Text('', t('content_nottostartarticle')));
-			}
-			else if ($article->getStartpage() == 1) {
-				$form->add(new sly_Form_Text('', t('content_isstartarticle')));
-			}
-			else {
-				addButtonBar($form, t('content_tostartarticle'), 'article2startpage');
-			}
-		}
-
-		// INHALTE KOPIEREN
-
-		if (($user->isAdmin() || $user->hasRight('copyContent[]')) && sly_Util_Language::isMultilingual()) {
-			$lang_a = new sly_Form_Select_DropDown('clang_a', t('content_contentoflang'), sly_request('clang_a', 'rex-clang-id', null), $languages, 'clang_a');
-			$lang_a->setSize(1);
-
-			$lang_b = new sly_Form_Select_DropDown('clang_b', t('content_to'), sly_request('clang_b', 'rex-clang-id', null), $languages, 'clang_b');
-			$lang_b->setSize(1);
-
-			$form->beginFieldset(t('content_submitcopycontent'), null, 2);
-			$form->addRow(array($lang_a, $lang_b));
-
-			addButtonBar($form, t('content_submitcopycontent'), 'copycontent');
-		}
-
-		// ARTIKEL VERSCHIEBEN
-
-		if ($article->getStartpage() == 0 && ($user->isAdmin() || $user->hasRight('moveArticle[]'))) {
-			$select = sly_Form_Helper::getCategorySelect('category_id_new', false, null, null, $user);
-			$select->setAttribute('value', $category_id);
-			$select->setLabel(t('move_article'));
-
-			$form->beginFieldset(t('content_submitmovearticle'));
-			$form->add($select);
-
-			addButtonBar($form, t('content_submitmovearticle'), 'movearticle');
-		}
-
-		// ARTIKEL KOPIEREN
-
-		if ($user->isAdmin() || $user->hasRight('copyArticle[]')) {
-			$select = sly_Form_Helper::getCategorySelect('category_copy_id_new', false, null, null, $user);
-			$select->setAttribute('value', $category_id);
-			$select->setLabel(t('copy_article'));
-
-			$form->beginFieldset(t('content_submitcopyarticle'));
-			$form->add($select);
-
-			addButtonBar($form, t('content_submitcopyarticle'), 'copyarticle');
-		}
-
-		// KATEGORIE/STARTARTIKEL VERSCHIEBEN
-
-		if ($article->getStartpage() == 1 && ($user->isAdmin() || $user->hasRight('moveCategory[]'))) {
-			$select = sly_Form_Helper::getCategorySelect('category_id_new', false, null, null, $user);
-			$select->setAttribute('value', $category_id);
-			$select->setLabel(t('move_category'));
-
-			$form->beginFieldset(t('content_submitmovecategory'));
-			$form->add($select);
-
-			addButtonBar($form, t('content_submitmovecategory'), 'movecategory');
-		}
-	}
-	// SONSTIGES ENDE
-
-	print $form->render();
-
-	// END: META VIEW
-}
-
-?>
-	</div>
-	<!-- *** OUTPUT OF ARTICLE-CONTENT - END *** -->
+	?>
+</div>
