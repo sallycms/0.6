@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
@@ -12,6 +13,8 @@ class sly_Controller_Content extends sly_Controller_Backend {
 
 	protected $article;
 	protected $slot;
+	protected $info;
+	protected $warning;
 
 	protected function init() {
 		$clang = sly_Core::getCurrentClang();
@@ -25,23 +28,27 @@ class sly_Controller_Content extends sly_Controller_Backend {
 	}
 
 	protected function header() {
-		sly_Core::getLayout()->pageHeader(t('content'), $this->getBreadcrumb());
+		if (is_null($this->article)) {
+			sly_Core::getLayout()->pageHeader(t('content'));
+			print rex_warning(t('no_article_available'));
+		} else {
+			sly_Core::getLayout()->pageHeader(t('content'), $this->getBreadcrumb());
 
-		$art = $this->article;
+			$art = $this->article;
 
-		$this->renderLanguageBar('&amp;article_id=' . $art->getId());
-		// extend menu
-		print sly_Core::dispatcher()->filter('PAGE_CONTENT_HEADER', '', array(
-					'article_id' => $art->getId(),
-					'clang' => $art->getClang(),
-					'category_id' => $art->getCategoryId()
-				));
+			$this->renderLanguageBar();
+			// extend menu
+			print sly_Core::dispatcher()->filter('PAGE_CONTENT_HEADER', '', array(
+						'article_id' => $art->getId(),
+						'clang' => $art->getClang(),
+						'category_id' => $art->getCategoryId()
+					));
+		}
 	}
 
 	protected function index() {
-		if (!$this->article)
-			return;
 		$this->header();
+		if (is_null($this->article)) return;
 		print $this->render('content/index.phtml', array('mode' => 'edit'));
 	}
 
@@ -60,11 +67,11 @@ class sly_Controller_Content extends sly_Controller_Backend {
 		return sly_Util_Category::hasPermissionOnCategory($user, $article->getCategoryId());
 	}
 
-	protected function renderLanguageBar($add) {
-		return $this->render('toolbars/languages.phtml', array(
-			'clang' => $this->article->getClang(),
-			'sprachen_add' => $add
-		));
+	protected function renderLanguageBar() {
+		print $this->render('toolbars/languages.phtml', array(
+					'clang' => $this->article->getClang(),
+					'sprachen_add' => '&amp;article_id=' . $this->article->getId()
+				));
 	}
 
 	/**
@@ -75,7 +82,7 @@ class sly_Controller_Content extends sly_Controller_Backend {
 	protected function getBreadcrumb() {
 		$art = $this->article;
 		$user = sly_Util_User::getCurrentUser();
-		$cat = sly_Util_Category::findById($art->getCategoryId());
+		$cat = $art->getCategory();
 		$result = '<ul class="sly-navi-path">
 				<li>' . t('path') . '</li>
 				<li> : <a href="index.php?page=structure&amp;category_id=0&amp;clang=' . $art->getClang() . '">Homepage</a></li>';
@@ -89,12 +96,28 @@ class sly_Controller_Content extends sly_Controller_Backend {
 			}
 		}
 
+		$subpage = self::getSubpageParam();
 		$result .= '</ul><p>';
 		$result .= $art->isStartArticle() ? t('start_article') . ': ' : t('article') . ': ';
-		$result .= '<a href="index.php?page=content&amp;article_id=' . $art->getId() . '&amp;mode=edit&amp;clang=' . $art->getClang() . '">' . str_replace(' ', '&nbsp;', sly_html($art->getName())) . '</a>';
+		$result .= '<a href="index.php?page=content' . (!empty($subpage) ? '&amp;subpage=' . $subpage : '') . '&amp;article_id=' . $art->getId() . '&amp;clang=' . $art->getClang() . '">' . str_replace(' ', '&nbsp;', sly_html($art->getName())) . '</a>';
 		$result .= '</p>';
 
 		return $result;
+	}
+
+	protected function setArticleType() {
+		$type = sly_post('article_type', 'string');
+		$service = sly_Service_Factory::getArticleService();
+		// change type and update database
+		$service->setType($this->article, $type);
+
+		$this->info= t('article_updated');
+		$this->article = $service->findById($this->article->getId(), $this->article->getClang());
+		$this->index();
+	}
+	
+	protected function moveSlice() {
+		
 	}
 
 }

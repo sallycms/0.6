@@ -16,11 +16,9 @@
 ?>
 </div>
 <?
-	//navigation
-	$this->render('content/messages.phtml');
-	sly_Core::dispatcher()->notify('SLY_ART_MESSAGES', $this->article);
+	//messages
+	print $this->render('content/_messages.phtml');
 
-	// START: META VIEW
 	$category_id = $this->article->getCategoryId();
 	$user        = sly_Util_User::getCurrentUser();
 

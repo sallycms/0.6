@@ -1,0 +1,25 @@
+<?php
+$baseURL = 'index.php?page=content&article_id='.$this->article->getId().'&clang='.$this->article->getClang();
+
+$menu = '';
+
+$listElements = array();
+$listElements[] = '<a href="' . $baseURL . '"'.(get_class($this) == 'sly_Controller_Content' ? ' class="rex-active"' : '').'>' . t('edit_mode') . '</a>';
+$listElements[] = '<a href="' . $baseURL . '&amp;subpage=meta"'.(get_class($this) == 'sly_Controller_Content_Meta' ? ' class="rex-active"' : '').'>' . t('metadata') . '</a>';
+$listElements[] = '<a href="../'.$this->article->getUrl().'" onclick="window.open(this.href); return false;">' . t('show') . '</a>';
+
+$listElements = sly_Core::dispatcher()->filter('SLY_PAGE_CONTENT_ACTIONS_MENU', $listElements, array(
+			'article_id' => $this->article->getId(),
+			'clang' => $this->article->getClang()
+		));
+?>
+<ul class="rex-navi-content">
+<?php
+foreach ($listElements as $idx => $element) {
+	$class = $idx == 0 ? ' class="rex-navi-first"' : '';
+	$menu .= '<li' . $class . '>' . $element . '</li>';
+}
+
+print $menu;
+?>
+</ul>
