@@ -150,26 +150,20 @@ class sly_Util_String {
 	 * @param  int $size  die Dateigröße in Byte
 	 * @return string     die Dateigröße im Format "X.YY _B" oder "< 1 KB"
 	 */
-	public static function formatFilesize($size) {
+	public static function formatFilesize($size, $precision=2, $unit='Bytes') {
 		// Wir teilen in die Funktion immer durch 999 anstatt durch 1024, damit
 		// als Größenangaben nicht "1023 KB", sondern "0,99 MB" errechnet werden.
 		// Das ist benutzerfreundlicher.
-
 		if ($size < 999) {
-			return $size.' Bytes';
+			return $size.' '.$unit;
 		}
-
-		$units = array('K','M','G','T','P','E','Z','Y');
-		$unit  = '';
-
-		while ($size > 999 && !empty($units)) {
+		$unitPrefixes = array('K','M','G','T','P','E','Z','Y');
+		while ($size > 999 && !empty($unitPrefixes)) {
 			$size /= 1024.0;
-			$unit = array_shift($units);
+			$unitPrefix = array_shift($unitPrefixes);
 		}
-
-		return self::formatNumber($size, 2).' '.$unit.'Bytes';
+		return self::formatNumber($size, $precision).' '.$unitPrefix.$unit;
 	}
-
 	/**
 	 * Führt eine Liste zusammen
 	 *
