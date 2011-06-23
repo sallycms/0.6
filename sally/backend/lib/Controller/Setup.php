@@ -179,8 +179,9 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 					// kein break;
 
 				case 'setup': // leere Datenbank neu einrichten
-
-					$installScript = SLY_COREFOLDER.'/install/sally0_4.sql';
+					$version    = $config->get('VERSION');
+					$subversion = $config->get('SUBVERSION');
+					$installScript = SLY_COREFOLDER.'/install/sally'.$version.'_'.$subversion.'.sql';
 					$error         = $this->setupImport($installScript);
 
 					break;
