@@ -88,13 +88,17 @@ class sly_Service_Asset {
 						$realfile   = SLY_BASE.'/'.reset($translated); // "there can only be one!" ... or at least we hope so
 					}
 
+					$relative = str_replace(SLY_BASE, '', $realfile);
+					$relative = str_replace('\\', '/', $relative);
+					$relative = trim($relative, '/');
+
 					// delete cache file if original is missing or outdated
 					if (!file_exists($realfile) || filemtime($cacheFile) < filemtime($realfile)) {
 						unlink($cacheFile);
 					}
 
 					// delete file if it's protected but where in public or vice versa
-					elseif (in_array(basename($realfile), $protected) !== ($access === self::ACCESS_PROTECTED)) {
+					elseif (in_array($relative, $protected) !== ($access === self::ACCESS_PROTECTED)) {
 						unlink($cacheFile);
 					}
 				}
