@@ -179,6 +179,8 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 		$what = array('category_id' => $this->category, 'updateuser' => $user->getLogin(), 'updatedate' => time());
 		$db->update('file', $what, array('id' => $files));
 
+		sly_Service_Factory::getAssetService()->validateCache();
+
 		$this->info = $this->t('selectedmedia_moved');
 		$this->index();
 	}
@@ -205,6 +207,8 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 				$this->warning[] = $this->t('file_not_found');
 			}
 		}
+
+		sly_Service_Factory::getAssetService()->validateCache();
 
 		$this->index();
 	}
