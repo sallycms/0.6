@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Content_Meta extends sly_Controller_Content {
+class sly_Controller_Contentmeta extends sly_Controller_Content {
 
 	protected function header() {
 		sly_Core::getLayout()->pageHeader(t('content'), $this->getBreadcrumb());
