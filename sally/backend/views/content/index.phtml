@@ -210,43 +210,8 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 ?>
 <div class="sly-content-body">
 	<?php
-	// START: Slice move up/down
 
-	if ($hasTemplate && ($function == 'moveup' || $function == 'movedown')) {
-		if ($user->isAdmin() || $user->hasRight('moveSlice[]')) {
-			// Modul und Rechte vorhanden?
-
-			$module = rex_slice_module_exists($slice_id);
-
-			if (!$module) {
-				// MODUL IST NICHT VORHANDEN
-				$warning = t('module_not_found');
-				$slice_id = '';
-				$function = '';
-			} else {
-				// RECHTE AM MODUL ?
-				if ($user->isAdmin() || $user->hasRight('module[' . $module . ']') || $user->hasRight('module[0]')) {
-					list($success, $message) = rex_moveSlice($slice_id, $clang, $function);
-
-					if ($success) {
-						$info = $message;
-					} else {
-						$warning = $message;
-					}
-				} else {
-					$warning = t('no_rights_to_this_function');
-				}
-			}
-
-			// Flush slice cache
-			sly_Core::cache()->flush(OOArticleSlice::CACHE_NS);
-		} else {
-			$warning = t('no_rights_to_this_function');
-		}
-	}
-	// END: Slice move up/down
-
-	$params = array('id' => $article_id, 'clang' => $clang, 'article' => $article);
+	$params = array('id' => $article->getId(), 'clang' => $article->getClang(), 'article' => $article);
 
 	$form = new sly_Form('index.php', 'POST', t('general'), '', 'content_article_form');
 
@@ -262,10 +227,8 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 
 	/////////////////////////////////////////////////////////////////
 	// articletype
-	$types = $typeService->getArticleTypes();
-	uasort($types, 'strnatcasecmp');
 
-	$type = new sly_Form_Select_DropDown('article_type', t('content_arttype'), $article->getType(), $types, 'article_type');
+	$type = new sly_Form_Select_DropDown('article_type', t('content_arttype'), $article->getType(), $articletypes, 'article_type');
 	$form->add($type);
 
 	//additional form elements

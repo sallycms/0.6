@@ -15,6 +15,8 @@ class sly_Controller_Content extends sly_Controller_Backend {
 	protected $slot;
 	protected $info;
 	protected $warning;
+	protected $localInfo;
+	protected $localWarning;
 
 	protected function init() {
 		$clang = sly_Core::getCurrentClang();
@@ -48,8 +50,12 @@ class sly_Controller_Content extends sly_Controller_Backend {
 
 	protected function index() {
 		$this->header();
-		if (is_null($this->article)) return;
-		print $this->render('content/index.phtml', array('mode' => 'edit'));
+		if (is_null($this->article))
+			return;
+		
+		$articletypes = sly_Service_Factory::getArticleTypeService()->getArticleTypes();
+		uasort($articletypes, 'strnatcasecmp');
+		print $this->render('content/index.phtml', array('article' => $this->article, 'articletypes' => $articletypes));
 	}
 
 	protected function checkPermission() {
@@ -111,13 +117,41 @@ class sly_Controller_Content extends sly_Controller_Backend {
 		// change type and update database
 		$service->setType($this->article, $type);
 
-		$this->info= t('article_updated');
+		$this->info = t('article_updated');
 		$this->article = $service->findById($this->article->getId(), $this->article->getClang());
 		$this->index();
 	}
-	
+
 	protected function moveSlice() {
+		$user      = sly_Util_User::getCurrentUser();
+		$slice_id  = sly_get('slice_id', 'int', null);
+		$direction = sly_get('direction', 'string', null);
 		
+		if ($user->isAdmin() || $user->hasRight('moveSlice[]')) {
+			// Modul und Rechte vorhanden?
+
+			$module = rex_slice_module_exists($slice_id);
+
+			if (!$module) {
+				// MODUL IST NICHT VORHANDEN
+				$this->warning = t('module_not_found');
+			} else {
+				// RECHTE AM MODUL ?
+				if ($user->isAdmin() || $user->hasRight('module[' . $module . ']') || $user->hasRight('module[0]')) {
+					list($success, $message) = rex_moveSlice($slice_id, $clang, $direction);
+
+					if ($success) {
+						$this->localInfo = $message;
+					} else {
+						$this->localWarning = $message;
+					}
+				} else {
+					$this->warning = t('no_rights_to_this_function');
+				}
+			}
+		} else {
+			$this->warning = t('no_rights_to_this_function');
+		}
 	}
 
 }

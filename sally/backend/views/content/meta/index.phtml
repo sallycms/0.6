@@ -9,119 +9,117 @@
  */
 ?>
 <div class="sly-content-header">
-<?php
+	<?php
 	//navigation
-	print	$this->render('content/_slotmenu.phtml');
-	print	$this->render('content/_subpagemenu.phtml');
-?>
+	print $this->render('content/_slotmenu.phtml');
+	print $this->render('content/_subpagemenu.phtml');
+	?>
 </div>
 <?
-	//messages
-	print $this->render('content/_messages.phtml');
+$category_id = $article->getCategoryId();
+$user = sly_Util_User::getCurrentUser();
 
-	$category_id = $this->article->getCategoryId();
-	$user        = sly_Util_User::getCurrentUser();
+$params = array('id' => $article->getId(), 'clang' => $article->getClang(), 'article' => $article);
+$form = new sly_Form('index.php', 'POST', t('general'), '', 'REX_FORM');
+$form->setEncType('multipart/form-data');
+$form->addHiddenValue('page', 'content');
+$form->addHiddenValue('subpage', 'meta');
+$form->addHiddenValue('func', 'processMetaForm');
+$form->addHiddenValue('article_id', $article->getId());
+$form->addHiddenValue('clang', $article->getClang());
+$form->setSubmitButton(null);
+$form->setResetButton(null);
 
-	$params = array('id' => $this->article->getId(), 'clang' => $this->article->getClang(), 'article' => $this->article);
-	$form = new sly_Form('index.php', 'POST', t('general'), '', 'REX_FORM');
-	$form->setEncType('multipart/form-data');
-	$form->addHiddenValue('page', 'content');
-	$form->addHiddenValue('subpage', 'meta');
-	$form->addHiddenValue('func', 'processMetaForm');
-	$form->addHiddenValue('article_id', $this->article->getId());
-	$form->addHiddenValue('clang', $this->article->getClang());
-	$form->setSubmitButton(null);
-	$form->setResetButton(null);
+/////////////////////////////////////////////////////////////////
+// article name / metadata
 
-	/////////////////////////////////////////////////////////////////
-	// article name / metadata
+$name = new sly_Form_Input_Text('meta_article_name', t('name_description'), $article->getName(), 'rex-form-meta-article-name');
+$form->add($name);
 
-	$name = new sly_Form_Input_Text('meta_article_name', t('name_description'), $this->article->getName(), 'rex-form-meta-article-name');
-	$form->add($name);
+$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM', $form, $params);
 
-	$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM', $form, $params);
+$button = new sly_Form_Input_Button('submit', 'savemeta', t('update_metadata'));
+$form->add(new sly_Form_ButtonBar(array('submit' => $button)));
 
-	$button = new sly_Form_Input_Button('submit', 'savemeta', t('update_metadata'));
-	$form->add(new sly_Form_ButtonBar(array('submit' => $button)));
+$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM_FIELDSET', $form, $params);
 
-	$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM_FIELDSET', $form, $params);
+/////////////////////////////////////////////////////////////////
+// misc
+// ZUM STARTARTIKEL MACHEN
 
-	/////////////////////////////////////////////////////////////////
-	// misc
-	// ZUM STARTARTIKEL MACHEN
+if ($this->canMorphToStartpage()) {
+	$form->beginFieldset(t('content_startarticle'));
 
-	if ($this->canMorphToStartpage()) {
-		$form->beginFieldset(t('content_startarticle'));
+	if ($article->getStartpage() == 0 && $article->getParentId() == 0) {
+		$form->add(new sly_Form_Text('', t('content_nottostartarticle')));
+	} else if ($article->getStartpage() == 1) {
+		$form->add(new sly_Form_Text('', t('content_isstartarticle')));
+	} else {
+		sly_Helper_Content::metaFormAddButtonBar($form, t('content_tostartarticle'), 'article2startpage');
+	}
+}
 
-		if ($this->article->getStartpage() == 0 && $this->article->getParentId() == 0) {
-			$form->add(new sly_Form_Text('', t('content_nottostartarticle')));
-		} else if ($this->article->getStartpage() == 1) {
-			$form->add(new sly_Form_Text('', t('content_isstartarticle')));
-		} else {
-			sly_Helper_Content::metaFormAddButtonBar($form, t('content_tostartarticle'), 'article2startpage');
-		}
+// INHALTE KOPIEREN
+
+if ($this->canCopyContent()) {
+	$languages = sly_Util_Language::findAll();
+
+	foreach ($languages as $id => $lang) {
+		$languages[$id] = $lang->getName();
 	}
 
-	// INHALTE KOPIEREN
+	$lang_a = new sly_Form_Select_DropDown('clang_a', t('content_contentoflang'), sly_request('clang_a', 'rex-clang-id', null), $languages, 'clang_a');
+	$lang_a->setSize(1);
 
-	if ($this->canCopyContent()) {
-		$languages = sly_Util_Language::findAll();
+	$lang_b = new sly_Form_Select_DropDown('clang_b', t('content_to'), sly_request('clang_b', 'rex-clang-id', null), $languages, 'clang_b');
+	$lang_b->setSize(1);
 
-		foreach ($languages as $id => $lang) {
-			$languages[$id] = $lang->getName();
-		}
+	$form->beginFieldset(t('content_submitcopycontent'), null, 2);
+	$form->addRow(array($lang_a, $lang_b));
 
-		$lang_a = new sly_Form_Select_DropDown('clang_a', t('content_contentoflang'), sly_request('clang_a', 'rex-clang-id', null), $languages, 'clang_a');
-		$lang_a->setSize(1);
+	sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitcopycontent'), 'copycontent');
+}
 
-		$lang_b = new sly_Form_Select_DropDown('clang_b', t('content_to'), sly_request('clang_b', 'rex-clang-id', null), $languages, 'clang_b');
-		$lang_b->setSize(1);
+// ARTIKEL VERSCHIEBEN
 
-		$form->beginFieldset(t('content_submitcopycontent'), null, 2);
-		$form->addRow(array($lang_a, $lang_b));
+if ($this->canMoveArticle()) {
+	$select = sly_Form_Helper::getCategorySelect('category_id_new', false, null, null, $user);
+	$select->setAttribute('value', $category_id);
+	$select->setLabel(t('move_article'));
 
-		sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitcopycontent'), 'copycontent');
-	}
+	$form->beginFieldset(t('content_submitmovearticle'));
+	$form->add($select);
 
-	// ARTIKEL VERSCHIEBEN
+	sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitmovearticle'), 'movearticle');
+}
 
-	if ($this->canMoveArticle()) {
-		$select = sly_Form_Helper::getCategorySelect('category_id_new', false, null, null, $user);
-		$select->setAttribute('value', $category_id);
-		$select->setLabel(t('move_article'));
+// ARTIKEL KOPIEREN
 
-		$form->beginFieldset(t('content_submitmovearticle'));
-		$form->add($select);
+if ($this->canCopyArticle()) {
+	$select = sly_Form_Helper::getCategorySelect('category_copy_id_new', false, null, null, $user);
+	$select->setAttribute('value', $category_id);
+	$select->setLabel(t('copy_article'));
 
-		sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitmovearticle'), 'movearticle');
-	}
+	$form->beginFieldset(t('content_submitcopyarticle'));
+	$form->add($select);
 
-	// ARTIKEL KOPIEREN
+	sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitcopyarticle'), 'copyarticle');
+}
 
-	if ($this->canCopyArticle()) {
-		$select = sly_Form_Helper::getCategorySelect('category_copy_id_new', false, null, null, $user);
-		$select->setAttribute('value', $category_id);
-		$select->setLabel(t('copy_article'));
+// KATEGORIE/STARTARTIKEL VERSCHIEBEN
 
-		$form->beginFieldset(t('content_submitcopyarticle'));
-		$form->add($select);
+if ($this->canMoveCategory()) {
+	$select = sly_Form_Helper::getCategorySelect('category_id_new', false, null, null, $user);
+	$select->setAttribute('value', $category_id);
+	$select->setLabel(t('move_category'));
 
-		sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitcopyarticle'), 'copyarticle');
-	}
+	$form->beginFieldset(t('content_submitmovecategory'));
+	$form->add($select);
 
-	// KATEGORIE/STARTARTIKEL VERSCHIEBEN
-
-	if ($this->canMoveCategory()) {
-		$select = sly_Form_Helper::getCategorySelect('category_id_new', false, null, null, $user);
-		$select->setAttribute('value', $category_id);
-		$select->setLabel(t('move_category'));
-
-		$form->beginFieldset(t('content_submitmovecategory'));
-		$form->add($select);
-
-		sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitmovecategory'), 'movecategory');
-	}
+	sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitmovecategory'), 'movecategory');
+}
 ?>
 <div class="sly-content-body">
-<?= $form->render() ?>
+	<?= $this->render('content/_messages.phtml') ?>
+	<?= $form->render() ?>
 </div>
