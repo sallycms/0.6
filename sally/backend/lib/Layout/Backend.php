@@ -28,7 +28,7 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 		$this->setTitle($config->get('PROJECTNAME').' - ');
 
 		$config = sly_Core::config();
-		$this->setBodyAttr('class', 'sally sally'.$config->get('VERSION').$config->get('SUBVERSION'));
+		$this->setBodyAttr('class', 'sally sally'.sly_Core::getVersion('XY'));
 
 		// Falls ein AddOn bereits in seiner config.inc.php auf das Layout
 		// zugegriffen hat, ist $REX['PAGE'] noch nicht bekannt. Wir hängen uns
