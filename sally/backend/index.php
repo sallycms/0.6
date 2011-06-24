@@ -90,7 +90,7 @@ if (!SLY_IS_TESTING && $config->get('SETUP')) {
 // set timezone
 date_default_timezone_set($timezone);
 
-$layout = sly_Core::getLayout('Sally');
+$layout = sly_Core::getLayout('Backend');
 
 // instantiate asset service before addons are loaded to make sure the scaffold css processing is first
 $assetService = sly_Service_Factory::getAssetService();
