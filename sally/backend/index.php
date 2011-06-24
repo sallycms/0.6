@@ -90,6 +90,14 @@ if (!SLY_IS_TESTING && $config->get('SETUP')) {
 // set timezone
 date_default_timezone_set($timezone);
 
+$layout = sly_Core::getLayout('Sally');
+
+// instantiate asset service before addons are loaded to make sure the scaffold css processing is first
+$assetService = sly_Service_Factory::getAssetService();
+
+// include AddOns
+sly_Core::loadAddons();
+
 // synchronize develop
 
 if (!$config->get('SETUP') && $config->get('DEVELOPER_MODE')) {
@@ -97,12 +105,6 @@ if (!$config->get('SETUP') && $config->get('DEVELOPER_MODE')) {
 	sly_Service_Factory::getModuleService()->refresh();
 	sly_Service_Factory::getAssetService()->validateCache();
 }
-
-$layout = sly_Core::getLayout('Backend');
-
-// include AddOns
-
-sly_Core::loadAddons();
 
 // Asset-Processing, sofern Assets benötigt werden
 sly_Service_Factory::getAssetService()->process();

@@ -179,6 +179,16 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		$what = array('category_id' => $this->category, 'updateuser' => $user->getLogin(), 'updatedate' => time());
 		$db->update('file', $what, array('id' => $files));
 
+		// clear system cache
+		$cache = sly_Core::cache();
+
+		foreach ($files as $fileID) {
+			$cache->delete('sly.medium', $fileID);
+		}
+
+		// refresh asset cache in case permissions have changed
+		sly_Service_Factory::getAssetService()->validateCache();
+
 		$this->info = $this->t('selectedmedia_moved');
 		$this->index();
 	}
@@ -220,6 +230,9 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 
 			if ($usages === false) {
 				if ($media->delete() !== false) {
+					// clear system cache
+					sly_Core::cache()->delete('sly.medium', $media->getId());
+
 					// re-validate asset cache
 					$service = sly_Service_Factory::getAssetService();
 					$service->validateCache();
