@@ -12,7 +12,6 @@
 $category_id = sly_request('category_id', 'rex-category-id');
 $article_id = sly_request('article_id', 'rex-article-id');
 $slice_id = sly_request('slice_id', 'rex-slice-id', '');
-$function = sly_request('function', 'string');
 $slot = sly_request('slot', 'string');
 $clang = sly_Core::getCurrentClang();
 $languages = sly_Util_Language::findAll();
@@ -49,22 +48,9 @@ $function = sly_request('function', 'string');
 $hasType = $article->hasType();
 $hasTemplate = false;
 
-if ($hasType) {
-	$templateName = $typeService->getTemplate($article->getType());
-	$hasTemplate = !empty($templateName) && $templateService->exists($templateName);
-}
-
-// validate slot
-
-if ($hasTemplate && !$templateService->hasSlot($templateName, $slot)) {
-	$slot = $templateService->getFirstSlot($templateName);
-}
-
-$curSlots = $hasTemplate ? $templateService->getSlots($templateName) : false;
-
 // Slice add/edit/delete
 
-if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array($function, array('add', 'edit', 'delete'))) {
+if ($article->hasTemplate() && $this->slot !== null && sly_request('save', 'boolean') && in_array($function, array('add', 'edit', 'delete'))) {
 	// check module
 
 	if ($function == 'edit' || $function == 'delete') {
@@ -210,10 +196,8 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 ?>
 <div class="sly-content-body">
 	<?php
-
 	$params = array('id' => $article->getId(), 'clang' => $article->getClang(), 'article' => $article);
-
-	$form = new sly_Form('index.php', 'POST', t('general'), '', 'content_article_form');
+	$form   = new sly_Form('index.php', 'POST', t('general'), '', 'content_article_form');
 
 	/////////////////////////////////////////////////////////////////
 	// init form
@@ -223,7 +207,6 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 	$form->addHiddenValue('article_id', $this->article->getId());
 	$form->addHiddenValue('func', 'setArticleType');
 	$form->addHiddenValue('clang', $this->article->getClang());
-	$form->addHiddenValue('slot', $this->slot);
 
 	/////////////////////////////////////////////////////////////////
 	// articletype
@@ -240,6 +223,8 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 
 	print $form->render();
 
+	$hasType     = $article->hasType();
+	$hasTemplate = $article->hasTemplate();
 	if (!$hasType || !$hasTemplate || $slot === null) {
 		if (!$hasType)
 			print rex_warning(t('content_select_type'));
@@ -251,6 +236,7 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 	else {
 		print '<div class="rex-content-editmode">';
 		$prior = sly_request('prior', 'int', 0);
+		$function = sly_request('function', 'string');
 
 		$articleSlices = OOArticleSlice::getSliceIdsForSlot($article_id, $clang, $slot);
 
@@ -261,21 +247,14 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 				$module = sly_request('module', 'string');
 				sly_Helper_Content::printAddSliceForm($prior, $module, $article_id, $clang, $slot);
 			} else {
-				print $this->render('content/_add_slice_form.phtml', array('articleId' => $article_id, 'clangId' => $clang, 'prior' => $ooslice->getPrior(), 'template' => $templateName, 'slot' => $slot));
+				print $this->render('content/_add_slice_form.phtml', array('article' => $article, 'prior' => $ooslice->getPrior(), 'slot' => $slot));
 			}
 
-			if (empty($function) && $prior == $ooslice->getPrior()) {
-				if (!empty($info))
-					print rex_info($info);
-				if (!empty($warning))
-					print rex_warning($warning);
-			}
-
-			if (($function == 'edit' || $function == 'moveup' || $function == 'movedown') && $slice_id == $ooslice->getId()) {
-				if (!empty($info))
-					print rex_info($info);
-				if (!empty($warning))
-					print rex_warning($warning);
+			if ($prior == $ooslice->getPrior()) {
+				if (!empty($this->locaInfo))
+					print rex_info($this->locaInfo);
+				if (!empty($this->localWarning))
+					print rex_warning($this->localWarning);
 			}
 
 			if ($function == 'edit' && $slice_id == $ooslice->getId()) {
@@ -289,14 +268,10 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 
 		if ($function == 'add' && $prior == count($articleSlices)) {
 			$module = sly_request('module', 'string');
-			if (!empty($info))
-				print rex_info($info);
-			if (!empty($warning))
-				print rex_warning($warning);
-			sly_Helper_Content::printAddSliceForm($prior, $module, $article_id, $clang, $slot);
+			sly_Helper_Content::printAddSliceForm($prior, $module, $article->getId(), $article->getClang(), $this->slot);
 		}
 		else {
-			print $this->render('content/_add_slice_form.phtml', array('articleId' => $article_id, 'clangId' => $clang, 'prior' => count($articleSlices), 'template' => $templateName, 'slot' => $slot));
+			print $this->render('content/_add_slice_form.phtml', array('article' => $article, 'prior' => count($articleSlices), 'slot' => $slot));
 		}
 
 		print '</div>';

@@ -2,7 +2,7 @@
 
 $user    = sly_Util_User::getCurrentUser();
 $service = sly_Service_Factory::getTemplateService();
-$modules = $service->getModules($template, $slot);
+$modules = $service->getModules($article->getTemplateName(), $slot);
 
 uasort($modules, 'strnatcasecmp');
 
@@ -20,12 +20,11 @@ $formID = 'slice' . $prior;
 
 $form = new sly_Form('index.php', 'GET', t('add_block'), $formID, $formID);
 $form->addClass('rex-form-content-editmode');
-$form->addHiddenValue('article_id', $articleId);
 $form->addHiddenValue('page', 'content');
-$form->addHiddenValue('mode', 'edit');
+$form->addHiddenValue('article_id', $article->getId());
+$form->addHiddenValue('clang', $article->getClang());
 $form->addHiddenValue('prior', $prior);
 $form->addHiddenValue('function', 'add');
-$form->addHiddenValue('clang', $clangId);
 $form->addHiddenValue('slot', $slot);
 
 $form->add($moduleSelect);

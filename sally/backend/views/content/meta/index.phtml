@@ -17,13 +17,11 @@
 </div>
 <?
 $category_id = $article->getCategoryId();
-$user = sly_Util_User::getCurrentUser();
 
 $params = array('id' => $article->getId(), 'clang' => $article->getClang(), 'article' => $article);
 $form = new sly_Form('index.php', 'POST', t('general'), '', 'REX_FORM');
 $form->setEncType('multipart/form-data');
-$form->addHiddenValue('page', 'content');
-$form->addHiddenValue('subpage', 'meta');
+$form->addHiddenValue('page', 'contentmeta');
 $form->addHiddenValue('func', 'processMetaForm');
 $form->addHiddenValue('article_id', $article->getId());
 $form->addHiddenValue('clang', $article->getClang());

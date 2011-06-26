@@ -217,33 +217,25 @@ class sly_Helper_Content {
 	 * artikelweite globale Variablen werden ersetzt
 	 */
 	private static function replaceCommonVars($content, $articleId, $clang) {
-		static $user_id = null;
-		static $user_login = null;
-
-		// UserId gibt's nur im Backend
-
-		if ($user_id === null) {
-			$user = sly_Util_User::getCurrentUser();
-
-			if (!empty($user)) {
-				$user_id = $user->getId();
-				$user_login = $user->getLogin();
-			} else {
-				$user_id = '';
-				$user_login = '';
-			}
+		$user = sly_Util_User::getCurrentUser();
+		if (!empty($user)) {
+			$user_id = $user->getId();
+			$user_login = $user->getLogin();
+		} else {
+			$user_id = '';
+			$user_login = '';
 		}
+		$article = sly_Util_Article::findById($articleId);
 
-		static $search = array(
-	'REX_ARTICLE_ID',
-	'REX_CATEGORY_ID',
-	'REX_CLANG_ID',
-	'REX_TEMPLATE_NAME',
-	'REX_USER_ID',
-	'REX_USER_LOGIN'
+		$search = array(
+			'REX_ARTICLE_ID',
+			'REX_CATEGORY_ID',
+			'REX_CLANG_ID',
+			'REX_TEMPLATE_NAME',
+			'REX_USER_ID',
+			'REX_USER_LOGIN'
 		);
 
-		$article = sly_Util_Article::findById($articleId);
 		$replace = array(
 			$articleId,
 			$article->getCategoryId(),
