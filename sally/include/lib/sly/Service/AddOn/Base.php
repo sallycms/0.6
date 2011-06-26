@@ -182,8 +182,9 @@ abstract class sly_Service_AddOn_Base {
 		$aService = sly_Service_Factory::getAddOnService();
 
 		foreach ($requires as $requiredAddon) {
-			if (!$this->isAvailable($requiredAddon)) {
-				return $this->I18N('addon_required', $requiredAddon, $componentName);
+			if (!$aService->isAvailable($requiredAddon)) {
+				$key = is_array($component) ? 'plugin_required' : 'addon_required';
+				return $aService->I18N($key, $requiredAddon, $componentName);
 			}
 		}
 
