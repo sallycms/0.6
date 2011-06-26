@@ -1,4 +1,4 @@
 <?php
 if (!empty($this->warning))	print rex_warning($this->warning);
 if (!empty($this->info))	print rex_info($this->info);
-print sly_Core::dispatcher()->notify('SLY_ART_MESSAGES', $this->article);
+sly_Core::dispatcher()->notify('SLY_ART_MESSAGES', $this->article);

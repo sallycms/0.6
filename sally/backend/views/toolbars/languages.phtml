@@ -13,26 +13,19 @@
  * @package redaxo4
  */
 
-// rechte einbauen
-// admin[]
-// clang[xx], clang[0]
-// $REX['USER']->isValueOf("rights","csw[0]")
-
-$_langService = sly_Service_Factory::getLanguageService();
-$_languages   = $_langService->find();
+$_languages   = sly_Util_Language::findAll();
 $_user        = sly_Util_User::getCurrentUser();
 
-if (!isset($clang)) {
-	$clang = sly_Core::getCurrentClang();
+if (!isset($curClang)) {
+	$curClang = sly_Core::getCurrentClang();
 }
 
-if (!isset($sprachen_add)) {
-	$sprachen_add = '';
+if (!isset($params)) {
+	$params = array();
 }
 
 if (count($_languages) > 1) {
 	print '
-<!-- *** OUTPUT OF CLANG-TOOLBAR - START *** -->
 	<div id="rex-clang" class="rex-toolbar">
 		<div class="rex-toolbar-content">
 			<ul>
@@ -52,18 +45,18 @@ if (count($_languages) > 1) {
 
 		$clangName = rex_translate($language->getName()); // enthält htmlspecialchars()
 
-		if (!$_user->isAdmin() && !$_user->hasRight('clang[all]') && !$_user->hasRight('clang['.$clangID.']')) {
+		if (!sly_Util_Language::hasPermissionOnLanguage($_user, $clangID)) {
 			print '<span class="rex-strike">'.$clangName.'</span>';
-			$stop |= $clang == $clangID;
+			$stop |= $curClang == $clangID;
 		}
 		else {
 			$class = '';
 
-			if ($clangID == $clang) {
+			if ($clangID == $curClang) {
 				$class = ' class="rex-active"';
 			}
-
-			print '<a'.$class.' href="index.php?page='.$REX['PAGE'].'&amp;clang='.$clangID.$sprachen_add.(isset($slot) ? '&amp;slot='.$slot : '').'">'.$clangName.'</a>';
+			$params['clang'] = $clangID;
+			print '<a'.$class.' href="index.php?'.  http_build_query($params).'">'.$clangName.'</a>';
 		}
 
 		print '</li>';
@@ -74,14 +67,10 @@ if (count($_languages) > 1) {
 		</ul>
 	</div>
 </div>
-<!-- *** OUTPUT OF CLANG-TOOLBAR - END *** -->
 ';
 	if ($stop) {
+		$_langService = sly_Service_Factory::getLanguageService();
 		$lang = $_langService->findById($stop);
 		throw new sly_Authorisation_Exception(t('authorisation_exception_language_denied', rex_translate($lang->getName())));
 	}
 }
-
-unset($_langService);
-unset($_languages);
-unset($_user);

@@ -15,11 +15,19 @@ class sly_Controller_Content extends sly_Controller_Backend {
 	protected $slot;
 	protected $info;
 	protected $warning;
+	protected $localInfo;
+	protected $localWarning;
 
 	protected function init() {
 		$clang = sly_Core::getCurrentClang();
 		$this->article = sly_Util_Article::findById(sly_request('article_id', 'rex-article-id'), $clang);
 		$this->slot = sly_request('slot', 'string', sly_Util_Session::get('contentpage_slot', ''));
+		//validate slot
+		$templateName = $this->article->getTemplateName();
+		if ($this->article->hasTemplate()
+				&& !sly_Service_Factory::getTemplateService()->hasSlot($templateName, $this->slot)) {
+			$this->slot = sly_Service_Factory::getTemplateService()->getFirstSlot($templateName);
+		}
 		sly_Util_Session::set('contentpage_slot', $this->slot);
 		if (is_null($this->article)) {
 			sly_Core::getLayout()->pageHeader(t('content'));
@@ -31,6 +39,7 @@ class sly_Controller_Content extends sly_Controller_Backend {
 		if (is_null($this->article)) {
 			sly_Core::getLayout()->pageHeader(t('content'));
 			print rex_warning(t('no_article_available'));
+			return false;
 		} else {
 			sly_Core::getLayout()->pageHeader(t('content'), $this->getBreadcrumb());
 
@@ -43,13 +52,21 @@ class sly_Controller_Content extends sly_Controller_Backend {
 						'clang' => $art->getClang(),
 						'category_id' => $art->getCategoryId()
 					));
+			return true;
 		}
 	}
 
 	protected function index() {
-		$this->header();
-		if (is_null($this->article)) return;
-		print $this->render('content/index.phtml', array('mode' => 'edit'));
+		if ($this->header() !== true)
+			return;
+
+		$articletypes = sly_Service_Factory::getArticleTypeService()->getArticleTypes();
+		uasort($articletypes, 'strnatcasecmp');
+		print $this->render('content/index.phtml', array(
+					'article' => $this->article,
+					'articletypes' => $articletypes,
+					'slot' => $this->slot
+				));
 	}
 
 	protected function checkPermission() {
@@ -64,13 +81,20 @@ class sly_Controller_Content extends sly_Controller_Backend {
 		if (is_null($article))
 			return true;
 
-		return sly_Util_Category::hasPermissionOnCategory($user, $article->getCategoryId());
+		$categoryOk = sly_Util_Category::hasPermissionOnCategory($user, $article->getCategoryId());
+
+		$clang = sly_Core::getCurrentClang();
+		$clangOk = sly_Util_Language::hasPermissionOnLanguage($user, $clang);
+
+		return $categoryOk && $clangOk;
 	}
 
 	protected function renderLanguageBar() {
-		print $this->render('toolbars/languages.phtml', array(
-					'clang' => $this->article->getClang(),
-					'sprachen_add' => '&amp;article_id=' . $this->article->getId()
+		print $this->render('toolbars/languages.phtml', array('curClang' => $this->article->getClang(),
+					'params' => array(
+						'page' => $this->getPageName(),
+						'article_id' => $this->article->getId()
+					)
 				));
 	}
 
@@ -96,13 +120,16 @@ class sly_Controller_Content extends sly_Controller_Backend {
 			}
 		}
 
-		$subpage = self::getSubpageParam();
 		$result .= '</ul><p>';
 		$result .= $art->isStartArticle() ? t('start_article') . ': ' : t('article') . ': ';
-		$result .= '<a href="index.php?page=content' . (!empty($subpage) ? '&amp;subpage=' . $subpage : '') . '&amp;article_id=' . $art->getId() . '&amp;clang=' . $art->getClang() . '">' . str_replace(' ', '&nbsp;', sly_html($art->getName())) . '</a>';
+		$result .= '<a href="index.php?page=' . $this->getPageName() . '&amp;article_id=' . $art->getId() . '&amp;clang=' . $art->getClang() . '">' . str_replace(' ', '&nbsp;', sly_html($art->getName())) . '</a>';
 		$result .= '</p>';
 
 		return $result;
+	}
+
+	protected function getPageName() {
+		return 'content';
 	}
 
 	protected function setArticleType() {
@@ -111,13 +138,41 @@ class sly_Controller_Content extends sly_Controller_Backend {
 		// change type and update database
 		$service->setType($this->article, $type);
 
-		$this->info= t('article_updated');
+		$this->info = t('article_updated');
 		$this->article = $service->findById($this->article->getId(), $this->article->getClang());
 		$this->index();
 	}
-	
+
 	protected function moveSlice() {
-		
+		$user = sly_Util_User::getCurrentUser();
+		$slice_id = sly_get('slice_id', 'int', null);
+		$direction = sly_get('direction', 'string', null);
+
+		if ($user->isAdmin() || $user->hasRight('moveSlice[]')) {
+			// Modul und Rechte vorhanden?
+
+			$module = rex_slice_module_exists($slice_id);
+
+			if (!$module) {
+				// MODUL IST NICHT VORHANDEN
+				$this->warning = t('module_not_found');
+			} else {
+				// RECHTE AM MODUL ?
+				if ($user->isAdmin() || $user->hasRight('module[' . $module . ']') || $user->hasRight('module[0]')) {
+					list($success, $message) = rex_moveSlice($slice_id, $clang, $direction);
+
+					if ($success) {
+						$this->localInfo = $message;
+					} else {
+						$this->localWarning = $message;
+					}
+				} else {
+					$this->warning = t('no_rights_to_this_function');
+				}
+			}
+		} else {
+			$this->warning = t('no_rights_to_this_function');
+		}
 	}
 
 }

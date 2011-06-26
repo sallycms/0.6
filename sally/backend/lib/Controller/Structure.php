@@ -28,7 +28,13 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		$this->clangId    = sly_request('clang', 'rex-clang-id', sly_Core::config()->get('START_CLANG_ID'));
 
 		sly_Core::getLayout()->pageHeader(t('title_structure'), $this->getBreadcrumb());
-		print $this->render('toolbars/languages.phtml', array('clang' => $this->clangId, 'sprachen_add' => '&amp;category_id='.$this->categoryId));
+		print $this->render('toolbars/languages.phtml',
+								array(	'curClang' => $this->clangId,
+										'params' => array(
+											'page'        => 'structure',
+											'category_id' => $this->categoryId
+										)
+								));
 
 		print sly_Core::dispatcher()->filter('PAGE_STRUCTURE_HEADER', '', array(
 			'category_id' => $this->categoryId,

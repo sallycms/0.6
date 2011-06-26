@@ -3,7 +3,7 @@
 $user       = sly_Util_User::getCurrentUser();
 $module     = $articleSlice->getSlice()->getModule();
 $moduleName = sly_Service_Factory::getModuleService()->get($module, 'title', '');
-$sliceUrl   = 'index.php?page=content&amp;article_id=' . $articleSlice->getArticleId() . '&amp;mode=edit&amp;slice_id=' . $articleSlice->getId() . '&amp;clang=' . $articleSlice->getClang() . '&amp;slot=' . $articleSlice->getSlot() . '%s#slice' . $articleSlice->getPrior();
+$sliceUrl   = 'index.php?page=content&amp;article_id=' . $articleSlice->getArticleId() . '&amp;slice_id=' . $articleSlice->getId() . '&amp;clang=' . $articleSlice->getClang() . '%s#slice' . $articleSlice->getPrior();
 
 $listElements = array();
 $listElements[] = '<a href="' . sprintf($sliceUrl, '&amp;function=edit') . '" class="rex-tx3">' . t('edit') . '</a>';

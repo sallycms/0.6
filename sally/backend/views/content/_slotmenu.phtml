@@ -22,7 +22,7 @@ if (count($slots) < 1) return;
 	$listElements = array();
 	foreach ($slots as $tmpSlot) {
 		$params['slot'] = $tmpSlot;
-		$class = ($tmpSlot == $this->slot && !($this instanceof sly_Controller_Content_Meta)) ? ' class="rex-active"' : '';
+		$class = ($tmpSlot == $this->slot && !($this instanceof sly_Controller_Contentmeta)) ? ' class="rex-active"' : '';
 		$slotTitle = rex_translate($templateService->getSlotTitle($templateName, $tmpSlot));
 
 		$listElements[] = '<a href="index.php?' . http_build_query($params) . '"' . $class . '>' . $slotTitle . '</a>';
