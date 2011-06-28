@@ -186,7 +186,7 @@ class sly_Util_Pager {
 				case $this->currentPage:
 					$url     = '';
 					$text    = $pageCode + 1;
-					$attribs = array('class' => 'active page'.$this->currentPage);
+					$attribs = array('class' => 'active page'.($this->currentPage + 1));
 					break;
 
 				default:
