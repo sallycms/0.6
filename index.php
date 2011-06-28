@@ -38,7 +38,11 @@ sly_Core::setI18N(new sly_I18N($config->get('LANG'), SLY_SALLYFOLDER.'/backend/l
 // instantiate asset service before addons are loaded to make sure the scaffold css processing is first
 $assetService = sly_Service_Factory::getAssetService();
 
+// include AddOns
 sly_Core::loadAddons();
+
+// register listeners
+sly_Core::registerListeners();
 
 if ($config->get('DEVELOPER_MODE')) {
 	require_once 'sally/core/functions/function_rex_generate.inc.php';

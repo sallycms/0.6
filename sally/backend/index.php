@@ -98,6 +98,9 @@ $assetService = sly_Service_Factory::getAssetService();
 // include AddOns
 sly_Core::loadAddons();
 
+// register listeners
+sly_Core::registerListeners();
+
 // synchronize develop
 
 if (!$config->get('SETUP') && $config->get('DEVELOPER_MODE')) {
