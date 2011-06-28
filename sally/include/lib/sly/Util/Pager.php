@@ -240,7 +240,7 @@ class sly_Util_Pager {
 
 			$attributes = implode(' ', $data['attributes']);
 			$attributes = empty($attributes) ? '' : " $attributes";
-			$link       = empty($data['url']) ? $data['text'] : '<a href="'.$data['url'].'">'.$data['text'].'</a>';
+			$link       = empty($data['url']) ? '<span>'.$data['text'].'</span>' : '<a href="'.$data['url'].'">'.$data['text'].'</a>';
 			$result    .= "\n<li$attributes>$link</li>";
 		}
 
