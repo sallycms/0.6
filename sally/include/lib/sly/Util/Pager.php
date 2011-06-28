@@ -234,7 +234,8 @@ class sly_Util_Pager {
 
 		foreach ($links as $idx => $data) {
 			foreach ($data['attributes'] as $name => $value) {
-				$data['attributes'][$name] = $name.'="'.$value.'"';
+				if ($name == 'class' && $value == 'first') unset($data['attributes'][$name]);
+				else $data['attributes'][$name] = $name.'="'.$value.'"';
 			}
 
 			$attributes = implode(' ', $data['attributes']);
