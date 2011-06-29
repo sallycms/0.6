@@ -294,3 +294,9 @@ a.sly-action {
 .sly-strike {
 	text-decoration: line-through;
 }
+
+#sly-clang {
+	a.rex-active {
+		color: $drk_grey;	
+	}
+}

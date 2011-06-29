@@ -48,7 +48,7 @@ if (!empty($this->info))    print rex_info($this->info);
 			<td class="sly-icon sly-col-a"><?= sly_Util_HTML::getSpriteLink('', $name, 'language') ?></td>
 			<td class="sly-col-b"><input class="rex-form-text" type="text" name="clang_name" value="<?= sly_html($name) ?>" /></td>
 			<td class="sly-col-c"><input class="rex-form-text" type="text" name="clang_locale" value="<?= sly_html($locale) ?>" /></td>
-			<td class="sly-col-d"><input class="rex-form-submit" type="submit" name="sly-submit" value="<?= t('clang_add') ?>" /></td>
+			<td class="sly-col-d"><input type="submit" name="sly-submit" value="<?= t('clang_add') ?>" /></td>
 		</tr>
 		<?php
 	}

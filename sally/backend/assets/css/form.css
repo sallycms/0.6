@@ -34,7 +34,7 @@ input.rex-form-text {
 	}
 }
 
-p.rex-button a, input.rex-form-submit, a.sly-button {
+p.rex-button a, .sly-button, input[type=submit], input[type=reset] {
 	background-image: url(../button.png);
 	background-repeat: repeat-x;
 	padding: 1px 6px;
@@ -260,8 +260,8 @@ a.sly-button {
 	}
 }
 
-.rex-form {
-	&-row {
+.sly-form {
+	.rex-form-row {
 		padding: 7px;
 		clear: both;
 		float: left;
@@ -281,7 +281,7 @@ a.sly-button {
 	/* Überschrift | dunkelgrau hinterlegt mit runden Ecken*/
 	legend {
 		color: #fff;
-		background-color: $md_grey;
+		background-color: $drk_grey;
 		font-size: 1.1em;
 		width: 787px; /* Breite des Loginbereichs abzüglich des padding links*/
 		padding: 8px 0 8px 10px;
@@ -298,7 +298,6 @@ a.sly-button {
 		+border-bottom-radius(4px);
 		clear: both;
 		float: left;
-		width: 797px;
 		padding: 0;
 		margin-bottom: 20px;
 	}

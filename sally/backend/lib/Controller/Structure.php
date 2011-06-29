@@ -303,18 +303,19 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	 */
 	protected function checkPermission() {
 		$categoryId = sly_request('category_id', 'rex-category-id');
+		$clang = sly_Core::getCurrentClang();
 		$user       = sly_Util_User::getCurrentUser();
 
-		if ($this->action == 'index') {
-			return!is_null($user);
-		}
-		elseif (sly_Util_String::startsWith($this->action, 'editStatus')) {
+		$clangOk = sly_Util_Language::hasPermissionOnLanguage($user, $clang);
+		if(is_null($user) || !$clangOk) return false;
+		
+		if (sly_Util_String::startsWith($this->action, 'editStatus')) {
 			return $this->canPublishCategory($categoryId);
 		}
 		elseif (sly_Util_String::startsWith($this->action, 'edit') || sly_Util_String::startsWith($this->action, 'add') || sly_Util_String::startsWith($this->action, 'delete')) {
 			return $this->canEditCategory($categoryId);
 		}
 
-		return false;
+		return true;
 	}
 }

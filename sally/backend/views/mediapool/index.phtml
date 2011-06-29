@@ -76,10 +76,10 @@ ob_start();
 			$add_input =
 				'<label for="rex_move_file_dest_category">'.t('pool_selectedmedia').'</label>'.
 				$select->render().
-				'<input class="rex-form-submit rex-form-submit-2 sly-button-changecat" type="submit" name="move" value="'.t('pool_changecat_selectedmedia').'" />';
+				'<input class="rex-form-submit-2 sly-button-changecat" type="submit" name="move" value="'.t('pool_changecat_selectedmedia').'" />';
 		}
 
-		$add_input .= '<input class="rex-form-submit rex-form-submit-2 sly-button-delete" type="submit" name="delete" value="'.t('pool_delete_selectedmedia').'" />';
+		$add_input .= '<input class="rex-form-submit-2 sly-button-delete" type="submit" name="delete" value="'.t('pool_delete_selectedmedia').'" />';
 
 		?>
 		<tfoot><tr>

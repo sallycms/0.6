@@ -234,7 +234,7 @@ if ($article->hasTemplate() && $this->slot !== null && sly_request('save', 'bool
 			print rex_info(t('content_no_slots'));
 	}
 	else {
-		print '<div class="rex-content-editmode">';
+		print '<div class="sly-content-editmode">';
 		$prior = sly_request('prior', 'int', 0);
 		$function = sly_request('function', 'string');
 

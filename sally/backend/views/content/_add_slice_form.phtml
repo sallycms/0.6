@@ -19,7 +19,7 @@ foreach ($modules as $module => $moduleTitle) {
 $formID = 'slice' . $prior;
 
 $form = new sly_Form('index.php', 'GET', t('add_block'), $formID, $formID);
-$form->addClass('rex-form-content-editmode');
+$form->addClass('sly-form-add-slice');
 $form->addHiddenValue('page', 'content');
 $form->addHiddenValue('article_id', $article->getId());
 $form->addHiddenValue('clang', $article->getClang());
