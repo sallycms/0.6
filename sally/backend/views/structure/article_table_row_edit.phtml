@@ -19,5 +19,5 @@ $base_url = 'index.php?page=structure&category_id='.$article->getId().'&clang='.
 	<td><input type="text" class="rex-form-text" id="sly-form-field-name" name="article_name" value="<?= sly_html($article->getName()) ?>" /></td>
 	<td><input type="text" class="rex-form-text" id="sly-form-field-prior" name="article_position" value="<?= sly_html($article->getPrior()) ?>" /></td>
 	<td><?= sly_Util_String::formatStrftime(t('dateformat'), $article->getCreateDate()) ?></td>
-	<td><input type="submit" class="rex-form-submit" name="do_edit_article" value="<?= t('article_save') ?>" /></td>
+	<td><input type="submit" name="do_edit_article" value="<?= t('article_save') ?>" /></td>
 </tr>

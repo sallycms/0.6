@@ -13,7 +13,7 @@ $slots = $templateService->getSlots($templateName);
 if (count($slots) < 1) return;
 
 ?>
-<ul id="rex-navi-slots">
+<ul class="rex-navi-slots">
 	<li><?= t('content_types') ?></li>
 	<?php
 	$params['page']       = 'content';
@@ -22,7 +22,7 @@ if (count($slots) < 1) return;
 	$listElements = array();
 	foreach ($slots as $tmpSlot) {
 		$params['slot'] = $tmpSlot;
-		$class = ($tmpSlot == $this->slot && !($this instanceof sly_Controller_Contentmeta)) ? ' class="rex-active"' : '';
+		$class = (($this instanceof sly_Controller_Content) && $tmpSlot == $this->slot) ? ' class="rex-active"' : '';
 		$slotTitle = rex_translate($templateService->getSlotTitle($templateName, $tmpSlot));
 
 		$listElements[] = '<a href="index.php?' . http_build_query($params) . '"' . $class . '>' . $slotTitle . '</a>';

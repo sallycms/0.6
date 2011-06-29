@@ -9,7 +9,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Contentmeta extends sly_Controller_Content {
+class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 
 	protected function index() {
 		if ($this->header() !== true)
