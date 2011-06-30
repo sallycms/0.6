@@ -111,7 +111,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			//create the slice
 			$slice = $sliceService->create(array('module' => $module));
 			foreach (sly_Core::getVarTypes() as $obj) {
-				$obj->setACValues($slice->getId(), $REX_ACTION, true, false);
+				$obj->setACValues($slice->getId(), $slicedata, true, false);
 			}
 
 			//create the articleslice
@@ -137,8 +137,8 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 					'AND prior >= ' . $values['prior'] . ' AND id <> ' . $id
 			);
 
-			$this->localInfo = $action_message . t('block_added');
-			
+			$this->localInfo = t('block_added');
+
 			$this->postSliceEdit('add');
 		}
 		$this->index();
@@ -149,12 +149,31 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 	}
 
 	protected function deleteArticleSlice() {
+		$ok = false;
+		if ($this->preSliceEdit('delete') !== false) {
+			$slice_id = sly_request('slice_id', 'rex-slice-id', '');
+			$ok = sly_Util_ArticleSlice::deleteById($slice_id);
+		}
 		
+		if($ok) {
+			$this->info = t('block_deleted');
+		}else {
+			$this->warning = t('block_not_deleted');
+		}
+		$this->postSliceEdit('delete');
+		$this->index();
 	}
 
 	private function preSliceEdit($function) {
+		if(!$this->article->hasTemplate()) return false;
 		$user = sly_Util_User::getCurrentUser();
-		$module = sly_post('module', 'string');
+		if ($function == 'delete' || $function == 'edit') {
+			$slice_id = sly_request('slice_id', 'rex-slice-id', '');
+			if(!sly_Util_ArticleSlice::exists($slice_id)) return false;
+			$module = sly_Util_ArticleSlice::getModuleNameForSlice($slice_id );
+		} else {
+			$module = sly_post('module', 'string');
+		}
 		if (!sly_Service_Factory::getModuleService()->exists($module)) {
 			$this->warning = t('module_not_found');
 			return false;
@@ -165,18 +184,22 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 		}
 
 		// Daten einlesen
-		$slicedata = array('SAVE' => true);
+		$slicedata = array('SAVE' => true, 'MESSAGES' => array());
 
-		foreach (sly_Core::getVarTypes() as $idx => $obj) {
-			$slicedata = $obj->getACRequestValues($slicedata);
+		if ($function != 'delete') {
+			foreach (sly_Core::getVarTypes() as $idx => $obj) {
+				$slicedata = $obj->getACRequestValues($slicedata);
+			}
 		}
 
-		// ----- PRE SAVE ACTION [ADD/EDIT/DELETE]
-		$slicedata = sly_Core::dispatcher()->filter('SLY_SLICE_PRESAVE', $slicedata, array('function' => $function));
+		// ----- PRE SAVE EVENT [ADD/EDIT/DELETE]
+		$slicedata = sly_Core::dispatcher()->filter('SLY_SLICE_PRESAVE_' . strtoupper($function), $slicedata);
 
 		if (!$slicedata['SAVE']) {
 			// DONT SAVE/UPDATE SLICE
-			if ($this->action == 'deleteArticleSlice') {
+			if (!empty($slicedata['MESSAGES'])) {
+				$this->localWarning = join('<br />', $slicedata['MESSAGES']);
+			} elseif ($this->action == 'deleteArticleSlice') {
 				$this->localWarning = t('slice_deleted_error');
 			} else {
 				$this->localWarning = t('slice_saved_error');
@@ -190,9 +213,16 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 	private function postSliceEdit($function) {
 		$user = sly_Util_User::getCurrentUser();
 		sly_Service_Factory::getArticleService()->touch($this->article, $user);
-		
-		sly_Core::dispatcher()->filter('SLY_SLICE_POSTSAVE', '', array('function' => $function));
-		
+
+		$messages = sly_Core::dispatcher()->filter('SLY_SLICE_POSTSAVE_' . strtoupper($function), array());
+
+		if (!empty($messages)) {
+			if($function == 'delete')
+				$this->info .= join('<br />', $messages);
+			else
+				$this->localInfo .= join('<br />', $messages);
+		}
+		sly_Core::cache()->flush(OOArticleSlice::CACHE_NS);
 		sly_core::dispatcher()->notify('SLY_CONTENT_UPDATED', '', array('article_id' => $this->article->getId(), 'clang' => $this->article->getClang()));
 	}
 
