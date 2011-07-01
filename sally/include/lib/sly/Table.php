@@ -21,6 +21,7 @@ class sly_Table {
 	protected $enableDragAndDrop;
 	protected $dragAndDropHandler;
 	protected $totalElements;
+	protected $caption;
 
 	protected static $perPage = 30;
 
@@ -39,6 +40,7 @@ class sly_Table {
 		$this->enableDragAndDrop  = false;
 		$this->dragAndDropHandler = '';
 		$this->totalElements      = null;
+		$this->caption            = null;
 	}
 
 	/**
@@ -90,6 +92,10 @@ class sly_Table {
 	 */
 	public function setIsEmpty($isEmpty) {
 		$this->isEmpty = (bool) $isEmpty;
+	}
+
+	public function setCaption($string) {
+		if (is_string($string)) $this->caption = $string;
 	}
 
 	/**
