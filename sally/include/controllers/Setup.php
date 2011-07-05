@@ -312,7 +312,6 @@ class sly_Controller_Setup extends sly_Controller_Sally {
 			SLY_DEVELOPFOLDER,
 			SLY_DEVELOPFOLDER.$s.'templates',
 			SLY_DEVELOPFOLDER.$s.'modules',
-			SLY_DEVELOPFOLDER.$s.'actions',
 			SLY_DYNFOLDER,
 			SLY_DYNFOLDER.$s.'public',
 			SLY_DYNFOLDER.$s.'internal',
