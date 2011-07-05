@@ -2,7 +2,7 @@ setup_license_title: Setup: Lizenz
 setup_license_header: Willkommen beim Setup von SallyCMS.
 setup_license_whats_next: Was passiert jetzt:
 setup_license_whats_next_1: Die Dateirechte werden überprüft.
-setup_license_whats_next_2: Der Datenbankzugang wird überprüft und in die master.inc.php eingetragen.
+setup_license_whats_next_2: Der Datenbankzugang wird überprüft und in die lokale Konfiguration eingetragen.
 setup_license_whats_next_3: Die Datenbank wird (neu) eingerichtet.
 setup_license_whats_next_4: Ein Adminzugang wird eingerichtet.
 setup_license_not_found: Die Lizenzdatei konnte nicht gefunden werden.
