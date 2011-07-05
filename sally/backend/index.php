@@ -31,7 +31,7 @@ else {
 
 define('SLY_HTDOCS_PATH', SLY_IS_TESTING ? SLY_TESTING_ROOT : '../');
 
-require '../core/master.inc.php';
+require '../core/master.php';
 
 // add backend app
 sly_Loader::addLoadPath(SLY_SALLYFOLDER.'/backend/lib/', 'sly_');

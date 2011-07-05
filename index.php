@@ -24,7 +24,7 @@ define('SLY_HTDOCS_PATH', './');
 
 // Core laden
 
-require_once 'sally/core/master.inc.php';
+require_once 'sally/core/master.php';
 
 // Setup?
 if (!isset($_GET['sly_asset']) && $config->get('SETUP')) {
