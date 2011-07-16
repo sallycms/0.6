@@ -16,17 +16,10 @@ if (!defined('SLY_IS_TESTING')) {
 	define('SLY_IS_TESTING', false);
 }
 
-// Only remove $REX if we're not in test mode, or else we have no global $REX
-// (this file is included in PHPUnit method context) and the system will crash
-// and burrrrn.
-
-if (SLY_IS_TESTING) {
-	global $REX;
-}
-else {
+// start output buffering
+if (!SLY_IS_TESTING) {
 	ob_start();
 	ob_implicit_flush(0);
-	unset($REX);
 }
 
 define('SLY_HTDOCS_PATH', SLY_IS_TESTING ? SLY_TESTING_ROOT : '../');
@@ -39,35 +32,32 @@ sly_Loader::addLoadPath(SLY_SALLYFOLDER.'/backend/lib/', 'sly_');
 // only start session if not running unit tests
 if (!SLY_IS_TESTING) sly_Util_Session::start();
 
-// set current page and user
-$REX['PAGE'] = '';
-$REX['USER'] = null;
+// prepare setup
+$isSetup = $config->get('SETUP');
 
-// Setup vorbereiten
-
-if (!SLY_IS_TESTING && $config->get('SETUP')) {
+if (!SLY_IS_TESTING && $isSetup) {
 	$locale        = $config->get('LANG');
 	$locales       = sly_I18N::getLocales(SLY_SALLYFOLDER.'/backend/lang');
 	$requestLocale = sly_request('lang', 'string');
 	$timezone      = @date_default_timezone_get();
+	$user          = null;
 
 	if (in_array($requestLocale, $locales)) {
 		$locale = $requestLocale;
 	}
 
 	// force setup page
-	$REX['PAGE']      = 'setup';
-	$_REQUEST['page'] = 'setup';
+	sly_Controller_Base::setCurrentPage('setup');
 }
 else {
-	$locale      = '';
-	$timezone    = '';
-	$REX['USER'] = sly_Util_User::getCurrentUser();
+	$locale   = '';
+	$timezone = '';
+	$user     = sly_Util_User::getCurrentUser();
 
 	// get user values
-	if ($REX['USER'] instanceof sly_Model_User) {
-		$locale   = $REX['USER']->getBackendLocale();
-		$timezone = $REX['USER']->getTimeZone();
+	if ($user instanceof sly_Model_User) {
+		$locale   = $user->getBackendLocale();
+		$timezone = $user->getTimeZone();
 	}
 
 	// re-set the values if the user profile has no value (meaining 'default')
@@ -83,7 +73,7 @@ sly_Core::setI18N($i18n);
 $navigation = sly_Core::getNavigation();
 
 // add setup page to make the permission system work and allow access to the controller
-if (!SLY_IS_TESTING && $config->get('SETUP')) {
+if (!SLY_IS_TESTING && $isSetup) {
 	$navigation->addPage('system', 'setup', false);
 }
 
@@ -103,7 +93,7 @@ sly_Core::registerListeners();
 
 // synchronize develop
 
-if (!$config->get('SETUP') && $config->get('DEVELOPER_MODE')) {
+if (!$isSetup && $config->get('DEVELOPER_MODE')) {
 	sly_Service_Factory::getTemplateService()->refresh();
 	sly_Service_Factory::getModuleService()->refresh();
 	sly_Service_Factory::getAssetService()->validateCache();
@@ -112,23 +102,25 @@ if (!$config->get('SETUP') && $config->get('DEVELOPER_MODE')) {
 // Asset-Processing, sofern Assets benötigt werden
 sly_Service_Factory::getAssetService()->process();
 
-if ($REX['USER']) {
+if ($user) {
+	$isAdmin = $user->isAdmin();
+
 	// Core-Seiten initialisieren
 
 	$navigation->addPage('system', 'profile');
 	$navigation->addPage('system', 'credits');
 
-	if ($REX['USER']->isAdmin() || $REX['USER']->hasStructureRight()) {
+	if ($isAdmin || $user->hasStructureRight()) {
 		$navigation->addPage('system', 'structure');
 		$navigation->addPage('system', 'mediapool', null, true);
 		$navigation->addPage('system', 'linkmap', null, true);
 		$navigation->addPage('system', 'content');
 	}
-	elseif ($REX['USER']->hasRight('mediapool[]')) {
+	elseif ($user->hasRight('mediapool[]')) {
 		$navigation->addPage('system', 'mediapool', null, true);
 	}
 
-	if ($REX['USER']->isAdmin()) {
+	if ($isAdmin) {
 		$navigation->addPage('system', 'user');
 		$navigation->addPage('system', 'addon', 'translate:addons', false);
 
@@ -147,7 +139,7 @@ if ($REX['USER']) {
 		$perm = $addonService->getProperty($addon, 'perm', '');
 		$page = $addonService->getProperty($addon, 'page', '');
 
-		if (!empty($page) && (empty($perm) || $REX['USER']->hasRight($perm) || $REX['USER']->isAdmin())) {
+		if (!empty($page) && ($isAdmin || empty($perm) || $user->hasRight($perm))) {
 			$name  = $addonService->getProperty($addon, 'name', '');
 			$popup = $addonService->getProperty($addon, 'popup', false);
 
@@ -160,7 +152,7 @@ if ($REX['USER']) {
 			$perm        = $pluginService->getProperty($pluginArray, 'perm', '');
 			$page        = $pluginService->getProperty($pluginArray, 'page', '');
 
-			if (!empty($page) && (empty($perm) || $REX['USER']->hasRight($perm) || $REX['USER']->isAdmin())) {
+			if (!empty($page) && ($isAdmin || empty($perm) || $user->hasRight($perm))) {
 				$name  = $pluginService->getProperty($pluginArray, 'name', '');
 				$popup = $pluginService->getProperty($pluginArray, 'popup', false);
 
@@ -169,49 +161,29 @@ if ($REX['USER']) {
 		}
 	}
 
-	// Startseite ermitteln
-
-	$REX['PAGE'] = sly_Controller_Base::getPage();
+	// find best starting page
+	sly_Controller_Base::getPage();
 }
 else {
-	$REX['PAGE'] = $REX['SETUP'] ? 'setup' : 'login';
+	sly_Controller_Base::setCurrentPage($isSetup ? 'setup' : 'login');
 }
 
-// Seite gefunden. AddOns benachrichtigen
+// notify addOns about the page to be rendered
+$page = sly_Controller_Base::getPage();
+sly_Core::dispatcher()->notify('PAGE_CHECKED', $page);
 
-sly_Core::dispatcher()->notify('PAGE_CHECKED', $REX['PAGE']);
-
-// Im Testmodus verlassen wir das Script jetzt.
-
+// leave the index.php when only unit testing the API
 if (SLY_IS_TESTING) return;
 
 // Gewünschte Seite einbinden
-$forceLogin = !$REX['SETUP'] && !$REX['USER'];
-$controller = sly_Controller_Base::factory($forceLogin ? 'login' : null, $forceLogin ? 'index' : null);
+$controller = sly_Controller_Base::factory();
 
 try {
 	if ($controller !== null) {
 		$CONTENT = $controller->dispatch();
 	}
 	else {
-		// View laden
-		$layout->openBuffer();
-
-		$filename = '';
-		$curGroup = $navigation->getActiveGroup();
-
-		if ($curGroup && $curGroup->getName() == 'addon') {
-			$curPage  = $navigation->getActivePage();
-			$filename = SLY_ADDONFOLDER.'/'.$curPage->getName().'/pages/index.inc.php';
-		}
-
-		if (empty($filename) || !file_exists($filename)) {
-			throw new sly_Controller_Exception(t('unknown_page'), 404);
-		}
-
-		include $filename;
-		$layout->closeBuffer();
-		$CONTENT = $layout->render();
+		throw new sly_Controller_Exception(t('unknown_page'), 404);
 	}
 }
 catch (Exception $e) {

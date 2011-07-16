@@ -58,9 +58,7 @@ class sly_Controller_Login extends sly_Controller_Backend {
 	}
 
 	public function logout() {
-		global $REX;
 		sly_Service_Factory::getUserService()->logout();
-		$REX['USER'] = null;
 		$this->message = t('login_logged_out');
 		$this->index();
 	}

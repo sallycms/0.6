@@ -63,8 +63,6 @@ class sly_Helper_Content {
 
 	// ----- EDIT Slice
 	/* public static function printEditSliceForm(OOArticleSlice $articleSlice) {
-	  global $REX;
-
 	  ob_start();
 	  ?>
 	  <a name="editslice"></a>
@@ -173,28 +171,16 @@ class sly_Helper_Content {
 	  } */
 
 	/**
-	 * REX_VAR-Ersetzungen
+	 * Perform REX_VAR replacements
+	 *
+	 * @param  int    $slice_id  the slice's ID
+	 * @param  string $content   current slice content
+	 * @return string            parsed content
 	 */
 	private static function replaceObjectVars($slice_id, $content) {
-		global $REX;
-
 		foreach (sly_Core::getVarTypes() as $idx => $var) {
-			if (isset($REX['ACTION']['SAVE']) && $REX['ACTION']['SAVE'] === false) {
-				// Wenn der aktuelle Slice nicht gespeichert werden soll
-				// (via Action wurde das Nicht-Speichern-Flag gesetzt)
-				// Dann die Werte manuell aus dem Post übernehmen
-				// und anschließend die Werte wieder zurücksetzen,
-				// damit die nächsten Slices wieder die Werte aus der DB verwenden
-				$var->setACValues($slice_id, $REX['ACTION']);
-				$tmp = $var->getBEInput($slice_id, $content);
-			} else {
-				// Slice normal parsen
-				$tmp = $var->getBEInput($slice_id, $content);
-			}
-
-			if ($tmp !== null) {
-				$content = $tmp;
-			}
+			$tmp = $var->getBEInput($slice_id, $content);
+			if ($tmp !== null) $content = $tmp;
 		}
 
 		return $content;
@@ -204,15 +190,17 @@ class sly_Helper_Content {
 	 * artikelweite globale Variablen werden ersetzt
 	 */
 	private static function replaceCommonVars($content, $articleId, $clang) {
-		$user = sly_Util_User::getCurrentUser();
+		$user    = sly_Util_User::getCurrentUser();
+		$article = sly_Util_Article::findById($articleId);
+
 		if (!empty($user)) {
-			$user_id = $user->getId();
+			$user_id    = $user->getId();
 			$user_login = $user->getLogin();
-		} else {
-			$user_id = '';
+		}
+		else {
+			$user_id    = '';
 			$user_login = '';
 		}
-		$article = sly_Util_Article::findById($articleId);
 
 		$search = array(
 			'REX_ARTICLE_ID',
@@ -242,8 +230,7 @@ class sly_Helper_Content {
 
 	public static function metaFormAddButtonBar($form, $label, $name) {
 		$button = new sly_Form_Input_Button('submit', $name, $label);
-		$button->setAttribute('onclick', 'return confirm(\'' . $label . '?\')');
+		$button->setAttribute('onclick', 'return confirm(\''.$label.'?\')');
 		$form->add(new sly_Form_ButtonBar(array('submit' => $button)));
 	}
-
 }

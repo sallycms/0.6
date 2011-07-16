@@ -25,21 +25,6 @@ foreach (array('credits', 'profile', 'content', 'linkmap') as $page) {
 	if ($pageObj) $pageObj->setHidden(true);
 }
 
-// integrate addon submenus that were created via the old API
-
-$pages = $nav->getGroup('addon')->getPages();
-
-foreach ($pages as $page) {
-	$name = $page->getName();
-
-	if ($page->isActive() && !empty($REX['ADDON'][$name]['SUBPAGES'])) {
-		foreach ($REX['ADDON'][$name]['SUBPAGES'] as $subpage) {
-			$param = isset($subpage[3]) ? $subpage[3] : $subpage[0];
-			$page->addSubpage($param, $subpage[1], !empty($subpage[2]));
-		}
-	}
-}
-
 foreach ($groups as $group) {
 	$topic    = $group->getName();
 	$headline = $group->getTitle();

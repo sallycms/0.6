@@ -31,12 +31,8 @@ class sly_Layout_Navigation_Page {
 	}
 
 	public function isActive() {
-		global $REX;
-
 		$forced = $this->forceStatus;
-		$isPage = $REX['PAGE'] == $this->pageParam;
-
-		return $forced !== null ? $forced : $isPage;
+		return $forced !== null ? $forced : (sly_Core::getCurrentPage() == $this->pageParam);
 	}
 
 	public function getName()      { return $this->name;      }

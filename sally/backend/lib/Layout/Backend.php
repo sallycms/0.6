@@ -15,8 +15,6 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 	private $hasNavigation = true;
 
 	public function __construct() {
-		global $REX;
-
 		$config = sly_Core::config();
 
 		$this->addCSSFile('assets/css/import.css');
@@ -29,18 +27,12 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 
 		$config = sly_Core::config();
 		$this->setBodyAttr('class', 'sally sally'.sly_Core::getVersion('XY'));
-
-		// Falls ein AddOn bereits in seiner config.inc.php auf das Layout
-		// zugegriffen hat, ist $REX['PAGE'] noch nicht bekannt. Wir hängen uns
-		// daher in PAGE_CHECKED, um den Wert später noch einmal zu validieren.
-
-		$this->pageChecked(array('subject' => isset($REX['PAGE']) ? $REX['PAGE'] : ''));
-		sly_Core::dispatcher()->register('PAGE_CHECKED', array($this, 'pageChecked'));
-
 		$this->addMeta('robots', 'noindex,nofollow');
+
+		sly_Core::dispatcher()->register('PAGE_CHECKED', array($this, 'pageChecked'));
 	}
 
-	public function pageChecked($params) {
+	public function pageChecked(array $params) {
 		$body_id = str_replace('_', '-', $params['subject']);
 		$this->setBodyAttr('id', 'rex-page-'.$body_id);
 
@@ -68,8 +60,6 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 	}
 
 	public function pageHeader($head, $subtitle = '') {
-		global $REX;
-
 		if (!empty($subtitle)) {
 			$subtitle = '<div class="pagehead-row">'.$this->getSubtitle($subtitle).'</div>';
 		}
@@ -77,10 +67,11 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 		$this->appendToTitle($head);
 		$dispatcher = sly_Core::dispatcher();
 
-		$head = $dispatcher->filter('PAGE_TITLE', $head, array('page' => $REX['PAGE']));
+		$page = sly_Core::getCurrentPage();
+		$head = $dispatcher->filter('PAGE_TITLE', $head, compact('page'));
 		print '<div id="sly-pagehead"><div class="pagehead-row"><h1>'.$head.'</h1></div>'.$subtitle.'</div>';
 
-		$dispatcher->notify('PAGE_TITLE_SHOWN', $subtitle, array('page' => $REX['PAGE']));
+		$dispatcher->notify('PAGE_TITLE_SHOWN', $subtitle, compact('page'));
 		print '<!-- *** OUTPUT OF CONTENT - START *** -->';
 	}
 
@@ -101,7 +92,7 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 		if (is_array($subline) && !empty($subline)) {
 			$subtitle = array();
 			$numPages = count($subline);
-			$isAdmin  = $user->hasRight('admin[]');
+			$isAdmin  = $user->isAdmin();
 
 			foreach ($subline as $subpage) {
 				if (!is_array($subpage)) {
