@@ -12,7 +12,7 @@ if (!empty($info))    print rex_info($info);
 if (!empty($warning)) print rex_warning($warning);
 
 ?>
-<table class="rex-table sly-addonlist">
+<table class="sly-table sly-addonlist">
 	<caption><?= t('addon_caption') ?></caption>
 	<colgroup>
 		<col width="40" />
@@ -24,12 +24,12 @@ if (!empty($warning)) print rex_warning($warning);
 	</colgroup>
 		<thead>
 			<tr>
-				<th class="sly-icon rex-col-a">&nbsp;</th>
-				<th class="rex-col-b"><?= t('addon_hname') ?></th>
-				<th class="rex-col-c"><?= t('addon_hinstall') ?></th>
-				<th class="rex-col-d"><?= t('addon_hactive') ?></th>
-				<th class="rex-col-e"><?= t('addon_hassets') ?></th>
-				<th class="rex-col-f"><?= t('addon_hdelete') ?></th>
+				<th class="sly-icon">&nbsp;</th>
+				<th><?= t('addon_hname') ?></th>
+				<th><?= t('addon_hinstall') ?></th>
+				<th><?= t('addon_hactive') ?></th>
+				<th><?= t('addon_hassets') ?></th>
+				<th><?= t('addon_hdelete') ?></th>
 			</tr>
 		</thead>
 	<tbody>
@@ -87,12 +87,12 @@ if (!empty($warning)) print rex_warning($warning);
 
 		?>
 		<tr class="<?= implode(' ', $classes) ?>">
-			<td class="sly-icon rex-col-a"><?= sly_Util_HTML::getSpriteLink('', $addon, 'addon') ?></td>
-			<td class="rex-col-b"><a href="index.php?page=addon&amp;subpage=help&amp;addon=<?= urlencode($addon) ?>"><?= sly_html($addon) ?></a></td>
-			<td class="rex-col-c"><?= $install ?></td>
-			<td class="rex-col-d"><?= $status ?></td>
-			<td class="rex-col-e"><?= $assets ?></td>
-			<td class="rex-col-f"><?= $uninstall ?></td>
+			<td class="sly-icon"><?= sly_Util_HTML::getSpriteLink('', $addon, 'addon') ?></td>
+			<td><a href="index.php?page=addon&amp;subpage=help&amp;addon=<?= urlencode($addon) ?>"><?= sly_html($addon) ?></a></td>
+			<td><?= $install ?></td>
+			<td><?= $status ?></td>
+			<td><?= $assets ?></td>
+			<td><?= $uninstall ?></td>
 		</tr>
 		<?php
 
@@ -137,12 +137,12 @@ if (!empty($warning)) print rex_warning($warning);
 
 				?>
 				<tr class="<?= implode(' ', $classes) ?>">
-					<td class="sly-icon rex-col-a"><span class="rex-i-element rex-i-plugin"><span class="rex-i-element-text"><?= sly_html($plugin) ?></span></span></td>
-					<td class="rex-col-b"><a href="index.php?page=addon&amp;subpage=help&amp;addon=<?= urlencode($addon) ?>&amp;plugin=<?= urlencode($plugin) ?>"><?= sly_html($plugin) ?></a></td>
-					<td class="rex-col-c"><?= $install ?></td>
-					<td class="rex-col-d"><?= $status ?></td>
-					<td class="rex-col-e"><?= $assets ?></td>
-					<td class="rex-col-f"><?= $uninstall ?></td>
+					<td class="sly-icon"><span class="rex-i-element rex-i-plugin"><span class="rex-i-element-text"><?= sly_html($plugin) ?></span></span></td>
+					<td><a href="index.php?page=addon&amp;subpage=help&amp;addon=<?= urlencode($addon) ?>&amp;plugin=<?= urlencode($plugin) ?>"><?= sly_html($plugin) ?></a></td>
+					<td><?= $install ?></td>
+					<td><?= $status ?></td>
+					<td><?= $assets ?></td>
+					<td><?= $uninstall ?></td>
 				</tr>
 				<?php
 			}
@@ -152,7 +152,7 @@ if (!empty($warning)) print rex_warning($warning);
 	if (empty($addonList)) {
 		?>
 		<tr>
-			<td class="rex-col-a center" colspan="6"><?= t('addon_empty_list') ?></td>
+			<td class="center" colspan="6"><?= t('addon_empty_list') ?></td>
 		</tr>
 		<?php
 	}
