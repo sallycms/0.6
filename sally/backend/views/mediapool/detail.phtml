@@ -9,7 +9,7 @@
  */
 
 $fileID = $this->getCurrentFile();
-$media  = OOMedia::getMediaById($fileID);
+$media  = sly_Util_Medium::findById($fileID);
 
 $ftitle            = $media->getTitle();
 $fname             = $media->getFileName();
@@ -22,7 +22,7 @@ $encoded_fname     = urlencode($fname);
 $file_ext          = substr(strrchr($fname, '.'),1);
 $icon_src          = 'assets/mime-default.png';
 
-if (OOMedia::isDocType($file_ext)) {
+if ($this->isDocType($media)) {
 	$icon_src = 'assets/mime-'.$file_ext.'.png';
 }
 

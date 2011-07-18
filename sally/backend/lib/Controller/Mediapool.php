@@ -14,7 +14,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 	protected $category;
 	protected $selectBox;
 
-	public function init() {
+	protected function init() {
 		// load our i18n stuff
 		sly_Core::getI18N()->appendFile(SLY_SALLYFOLDER.'/backend/lang/pages/mediapool/');
 
@@ -93,25 +93,25 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		sly_util_Session::set('media[opener_input_field]', $this->opener);
 	}
 
-	protected function getOpenerLink(/* OOMedia | sly_Model_Medium */ $file) {
+	protected function getOpenerLink(sly_Model_Medium $file) {
 		$field    = $this->opener;
 		$link     = '';
-		$title    = sly_html($file->getTitle());
 		$filename = $file->getFilename();
 		$uname    = urlencode($filename);
 
-		if ($field == 'TINYIMG') {
-			if (OOMedia::_isImage($filename)) {
-				$link = '<a href="javascript:insertImage(\''.$uname.'\',\''.$title.'\')">'.$this->t('image_get').'</a> | ';
+		if ($field === 'TINYIMG') {
+			if ($this->isImage($file)) {
+				$title = sly_html($file->getTitle());
+				$link  = '<a href="javascript:insertImage(\''.$uname.'\',\''.$title.'\')">'.$this->t('image_get').'</a> | ';
 			}
 		}
-		elseif ($field == 'TINY') {
+		elseif ($field === 'TINY') {
 			$link = '<a href="javascript:insertLink(\''.$uname.'\')">'.$this->t('link_get').'</a>';
 		}
-		elseif ($field != '') {
+		elseif ($field !== '') {
 			$link = '<a href="javascript:selectMedia(\''.$uname.'\')">'.$this->t('file_get').'</a>';
 
-			if (substr($field, 0, 14) == 'REX_MEDIALIST_') {
+			if (substr($field, 0, 14) === 'REX_MEDIALIST_') {
 				$link = '<a href="javascript:selectMedialist(\''.$uname.'\')">'.$this->t('file_get').'</a>';
 			}
 		}
@@ -143,18 +143,18 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		$db->query($query);
 
 		foreach ($db as $row) {
-			$files[$row['id']] = OOMedia::getMediaById($row['id']);
+			$files[$row['id']] = sly_Util_Medium::findById($row['id']);
 		}
 
 		return $files;
 	}
 
-	public function index() {
+	protected function index() {
 		print $this->render('mediapool/toolbar.phtml');
 		print $this->render('mediapool/index.phtml');
 	}
 
-	public function batch() {
+	protected function batch() {
 		if (!empty($_POST['delete'])) {
 			return $this->delete();
 		}
@@ -162,7 +162,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		return $this->move();
 	}
 
-	public function move() {
+	protected function move() {
 		if (!$this->isMediaAdmin()) {
 			return $this->index();
 		}
@@ -193,7 +193,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		$this->index();
 	}
 
-	public function delete() {
+	protected function delete() {
 		if (!$this->isMediaAdmin()) {
 			return $this->index();
 		}
@@ -206,7 +206,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		}
 
 		foreach ($files as $fileID) {
-			$media = OOMedia::getMediaById($fileID);
+			$media = sly_Util_Medium::findById($fileID);
 
 			if ($media) {
 				$retval = $this->deleteMedia($media);
@@ -219,29 +219,28 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		$this->index();
 	}
 
-	protected function deleteMedia(OOMedia $media) {
-		$filename = $media->getFileName();
+	protected function deleteMedia(sly_Model_Medium $medium) {
+		$filename = $medium->getFileName();
 		$user     = sly_Util_User::getCurrentUser();
 
 		// TODO: Is $this->isMediaAdmin() redundant? The user rights are already checked in delete()...
 
-		if ($this->isMediaAdmin() || $user->hasRight('media['.$media->getCategoryId().']')) {
-			$usages = $media->isInUse();
+		if ($this->isMediaAdmin() || $user->hasRight('media['.$medium->getCategoryId().']')) {
+			$usages = $this->isInUse($medium);
 
 			if ($usages === false) {
-				if ($media->delete() !== false) {
-					// clear system cache
-					sly_Core::cache()->delete('sly.medium', $media->getId());
+				$service = sly_Service_Factory::getMediumService();
+
+				try {
+					$service->delete($medium);
 
 					// re-validate asset cache
 					$service = sly_Service_Factory::getAssetService();
 					$service->validateCache();
 
-					// notify system
-					sly_Core::dispatcher()->notify('SLY_MEDIA_DELETED', $media);
 					$this->info[] = $this->t('file_deleted');
 				}
-				else {
+				catch (sly_Exception $e) {
 					$this->warning[] = $this->t('file_delete_error_1', $filename);
 				}
 			}
@@ -268,18 +267,18 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		}
 	}
 
-	public function checkPermission() {
+	protected function checkPermission() {
 		$user = sly_Util_User::getCurrentUser();
 		return !empty($user);
 	}
 
 	protected function isMediaAdmin() {
 		$user = sly_Util_User::getCurrentUser();
-		return $user->hasRight('admin[]') || $user->hasRight('media[0]');
+		return $user->isAdmin() || $user->hasRight('media[0]');
 	}
 
-	protected function canAccessFile(OOMedia $file) {
-		return $this->canAccessCategory($file->getCategoryId());
+	protected function canAccessFile(sly_Model_Medium $medium) {
+		return $this->canAccessCategory($medium->getCategoryId());
 	}
 
 	protected function canAccessCategory($cat) {
@@ -300,96 +299,6 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		return $this->selectBox;
 	}
 
-	protected function createFileObject($filename, $type, $title, $category, $origFilename = null) {
-		$size = getimagesize($filename);
-
-		// finfo:             PHP >= 5.3, PECL fileinfo
-		// mime_content_type: PHP >= 4.3 (deprecated)
-
-		if (empty($type)) {
-			// if it's an image, we know the type
-			if (isset($size['mime'])) {
-				$type = $size['mime'];
-			}
-
-			// or else try the new, recommended way
-			elseif (function_exists('finfo_file')) {
-				$finfo = finfo_open(FILEINFO_MIME_TYPE);
-				$type  = finfo_file($finfo, $filename);
-			}
-
-			// argh, let's see if this old one exists
-			elseif (function_exists('mime_content_type')) {
-				$type = mime_content_type($filename);
-			}
-
-			// fallback to a generic type
-			else {
-				$type = 'application/octet-stream';
-			}
-		}
-
-		$file = new sly_Model_Medium();
-		$file->setFiletype($type);
-		$file->setTitle($title);
-		$file->setOriginalName(basename($origFilename === null ? $filename : $origFilename));
-		$file->setFilename(basename($filename));
-		$file->setFilesize(filesize($filename));
-		$file->setCategoryId((int) $category);
-		$file->setRevision(0); // totally useless...
-		$file->setReFileId(0); // even more useless
-		$file->setCreateColumns();
-
-		if ($size) {
-			$file->setWidth($size[0]);
-			$file->setHeight($size[1]);
-		}
-
-		return $file;
-	}
-
-	protected function createFilename($filename, $doSubindexing = true) {
-		$filename    = $this->correctEncoding($filename);
-		$newFilename = strtolower($filename);
-		$newFilename = str_replace(array('ä','ö', 'ü', 'ß'), array('ae', 'oe', 'ue', 'ss'), $newFilename);
-		$newFilename = preg_replace('#[^a-z0-9.+-]#i', '_', $newFilename);
-		$lastDotPos  = strrpos($newFilename, '.');
-		$fileLength  = strlen($newFilename);
-
-		// split up extension
-
-		if ($lastDotPos !== false) {
-			$newName = substr($newFilename, 0, $lastDotPos);
-			$newExt  = substr($newFilename, $lastDotPos);
-		}
-		else {
-			$newName = $newFilename;
-			$newExt  = '';
-		}
-
-		// check for disallowed extensions (broken by design...)
-
-		$blocked = sly_Core::config()->get('MEDIAPOOL/BLOCKED_EXTENSIONS');
-
-		if (in_array($newExt, $blocked)) {
-			$newName .= $newExt;
-			$newExt   = '.txt';
-		}
-
-		$newFilename = $newName.$newExt;
-
-		if ($doSubindexing) {
-			// increment filename suffix until an unique one was found
-
-			if (file_exists(SLY_MEDIAFOLDER.'/'.$newFilename)) {
-				for ($cnt = 1; file_exists(SLY_MEDIAFOLDER.'/'.$newName.'_'.$cnt.$newExt); ++$cnt);
-				$newFilename = $newName.'_'.$cnt.$newExt;
-			}
-		}
-
-		return $newFilename;
-	}
-
 	protected function getDimensions($width, $height, $maxWidth, $maxHeight) {
 		if ($width > $maxWidth) {
 			$factor  = (float) $maxWidth / $width;
@@ -406,9 +315,55 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		return array(ceil($width), ceil($height));
 	}
 
-	protected function correctEncoding($filename) {
-		$enc = mb_detect_encoding($filename, 'Windows-1252, ISO-8859-1, ISO-8859-2, UTF-8');
-		if ($enc != 'UTF-8') $filename = mb_convert_encoding($filename, 'UTF-8', $enc);
-		return $filename;
+	protected function isDocType(sly_Model_Medium $medium) {
+		static $docTypes = array(
+			'bmp', 'css', 'doc', 'docx', 'eps', 'gif', 'gz', 'jpg', 'mov', 'mp3',
+			'ogg', 'pdf', 'png', 'ppt', 'pptx','pps', 'ppsx', 'rar', 'rtf', 'swf',
+			'tar', 'tif', 'txt', 'wma', 'xls', 'xlsx', 'zip'
+		);
+
+		return in_array($medium->getExtension(), $docTypes);
+	}
+
+	protected function isImage(sly_Model_Medium $medium) {
+		static $exts = array('gif', 'jpeg', 'jpg', 'png', 'bmp', 'tif', 'tiff', 'webp');
+		return in_array($medium->getExtension(), $exts);
+	}
+
+	protected function isInUse(sly_Model_Medium $medium) {
+		$sql      = sly_DB_Persistence::getInstance();
+		$filename = addslashes($medium->getFilename());
+		$prefix   = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+		$query    =
+			'SELECT s.article_id, s.clang FROM '.$prefix.'slice_value sv, '.$prefix.'article_slice s, '.$prefix.'article a '.
+			'WHERE sv.slice_id = s.slice_id AND a.id = s.article_id AND a.clang = s.clang AND ('.
+			'(sv.type = "'.rex_var_media::MEDIALIST.'" AND (value LIKE "'.$filename.',%" OR value LIKE "%,'.$filename.',%" OR value LIKE "%,'.$filename.'")) OR '.
+			'(sv.type <> "'.rex_var_media::MEDIALIST.'" AND value LIKE "%'.$filename.'%")'.
+			') GROUP BY s.article_id, s.clang';
+
+		$res    = array();
+		$usages = array();
+
+		$sql->query($query);
+		foreach ($sql as $row) $res[] = $row;
+
+		foreach ($res as $row) {
+			$article = sly_Util_Article::findById($row['article_id'], $row['clang']);
+
+			$usages[] = array(
+				'title' => $article->getName(),
+				'type'  => 'rex-article',
+				'id'    => (int) $row['article_id'],
+				'clang' => (int) $row['clang'],
+				'link'  => 'index.php?page=content&article_id='.$row['article_id'].'&mode=edit&clang='.$row['clang']
+			);
+		}
+
+		$usages = sly_Core::dispatcher()->filter('SLY_OOMEDIA_IS_IN_USE', $usages, array(
+			'filename' => $medium->getFilename(),
+			'media'    => $medium
+		));
+
+		return empty($usages) ? false : $usages;
 	}
 }

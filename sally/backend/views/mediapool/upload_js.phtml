@@ -12,7 +12,7 @@ $opener = $this->opener;
 $format = '';
 
 if ($opener == 'TINYIMG') {
-	if (OOMedia::_isImage($file->getFilename())) {
+	if ($this->isImage($file)) {
 		$format = 'insertImage("%s", "%s");';
 	}
 }

@@ -44,46 +44,14 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 		$this->index();
 	}
 
-	protected function saveMedium($fileData, $category, $title) {
-		// check category
-
-		$category = (int) $category;
-		$service  = sly_Service_Factory::getMediaCategoryService();
-
-		if ($service->findById($category) === null) {
-			$category = 0;
-		}
-
-		$filename    = $fileData['name'];
-		$newFilename = $this->createFilename($filename);
-
-		// create filenames
-
-		$dstFile = SLY_MEDIAFOLDER.'/'.$newFilename;
-		$file    = null;
-
-		// move uploaded file
-
-		if (!@move_uploaded_file($fileData['tmp_name'], $dstFile)) {
-			$this->warning = $this->t('file_movefailed');
-		}
-		else {
-			@chmod($dstFile, sly_Core::config()->get('FILEPERM'));
-
-			// create and save our file
-
-			$file    = $this->createFileObject($dstFile, $fileData['type'], $title, $category, $filename);
-			$service = sly_Service_Factory::getMediumService();
-
-			$service->save($file);
-
-			// notify the system
-
-			sly_Core::dispatcher()->notify('SLY_MEDIA_ADDED', $file);
+	protected function saveMedium(array $fileData, $category, $title) {
+		try {
+			sly_Util_Medium::upload($fileData, $category, $title);
 			$this->info = $this->t('file_added');
 		}
-
-		// return the new file
+		catch (sly_Exception $e) {
+			$this->warning = $this->t('file_movefailed');
+		}
 
 		return $file;
 	}

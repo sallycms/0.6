@@ -41,27 +41,28 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 	}
 
 	protected function syncMedium($filename, $category, $title) {
-		$absFile = SLY_MEDIAFOLDER.DIRECTORY_SEPARATOR.$filename;
-		if (!file_exists($absFile)) {
-			return false;
+		$absFile = SLY_MEDIAFOLDER.'/'.$filename;
+		if (!file_exists($absFile)) return false;
+
+		// get cleaned filename
+		$newName = SLY_MEDIAFOLDER.'/'.sly_Util_Medium::createFilename($filename, false);
+
+		if ($newName !== $absName) {
+			// move file to cleaned filename
+			rename($absFile, $newName);
 		}
-		//get cleaned filename
-		$newName = SLY_MEDIAFOLDER.DIRECTORY_SEPARATOR.$this->createFilename($filename, false);
-		//move file to cleaned filename
-		rename($absFile, $newName);
 
 		// create and save the file
 
-		$file    = $this->createFileObject($newName, null, $title, $category);
 		$service = sly_Service_Factory::getMediumService();
 
-		$service->save($file);
-
-		// notify the system
-		sly_Core::dispatcher()->notify('SLY_MEDIA_SYNCED', $file);
-
-		// and we're done
-		return true;
+		try {
+			$service->add($newName, $title, $category);
+			return true;
+		}
+		catch (sly_Exception $e) {
+			return false;
+		}
 	}
 
 	protected function getFilesFromFilesystem() {
@@ -87,7 +88,7 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 
 		// possibly broken encoded filename + utf8 filename
 		foreach ($diff as $filename) {
-			$res[$filename] = $this->correctEncoding($filename);
+			$res[$filename] = sly_Util_Medium::correctEncoding($filename);
 		}
 
 		return $res;

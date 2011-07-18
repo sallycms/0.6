@@ -98,43 +98,33 @@ ob_start();
 	$argUrl = $this->getArgumentString();
 
 	foreach ($files as $file) {
-		$id                = $file->getId();
-		$file_name         = $file->getFileName();
-		$file_oname        = $file->getOrgFileName();
-		$file_title        = $file->getTitle();
-		$file_type         = $file->getValue('filetype');
-		$file_size         = $file->getValue('filesize');
-		$file_update       = $file->getUpdateDate();
-		$file_stamp        = $file->getUpdateDate('%a %d. %B %Y');
-		$file_updateuser   = $file->getUpdateUser();
-		$encoded_file_name = urlencode($file_name);
-		$alt               = $file->getTitle();
-		$desc              = '';
+		$id         = $file->getId();
+		$filename   = $file->getFilename();
+		$title      = $file->getTitle();
+		$updatedate = sly_Util_String::formatStrftime(t('datetimeformat'), $file->getUpdateDate());
+		$updateuser = $file->getUpdateUser();
 
 		// missing file?
 
-		if (!OOMedia::fileExists($file_name)) {
+		if (!$file->exists()) {
 			$thumbnail = '<img src="assets/mime-error.png" width="44" height="38" alt="'.t('pool_file_not_found').'" />';
 		}
 		else {
-			$file_ext = substr(strrchr($file_name, '.'), 1);
+			$file_ext = $file->getExtension();
 			$icon_src = 'assets/mime-default.png';
 
-			if (OOMedia::isDocType($file_ext)) {
+			if ($this->isDocType($file)) {
 				$icon_src = 'assets/mime-'.$file_ext.'.png';
 			}
 
+			$alt       = $file->getTitle();
 			$thumbnail = '<img src="'.$icon_src.'" alt="'.sly_html($alt).'" title="'.sly_html($alt).'" />';
 
-			if (OOMedia::_isImage($file_name) && $thumbs) {
-				$width  = false;
-				$height = false;
+			if ($thumbs && $this->isImage($file)) {
+				$width  = $file->getWidth();
+				$height = $file->getHeight();
 
-				if ($size = @getimagesize(SLY_MEDIAFOLDER.'/'.$file_name)) {
-					$width  = $size[0];
-					$height = $size[1];
-					list($width, $height) = $this->getDimensions($width, $height, 80, 70);
-				}
+				list($width, $height) = $this->getDimensions($width, $height, 80, 70);
 
 				$attrs = array(
 					'alt'    => $alt,
@@ -143,24 +133,22 @@ ob_start();
 					'height' => $height
 				);
 
+				$encoded   = urlencode($filename);
+				$timestamp = $file->getUpdateDate();
+
 				if ($thumbsresize && $width) {
-					$attrs['src'] = '../imageresize/'.$width.'w__'.$height.'h__'.$encoded_file_name.'?t='.$file_update;
+					$attrs['src'] = '../imageresize/'.$width.'w__'.$height.'h__'.$encoded.'?t='.$timestamp;
 				}
 				else {
-					$attrs['src'] = '../sally/data/mediapool/'.$encoded_file_name.'?t='.$file_update;
+					$attrs['src'] = '../sally/data/mediapool/'.$encoded.'?t='.$timestamp;
 				}
 
 				$thumbnail = '<img '.sly_Util_HTML::buildAttributeString($attrs, array('alt')).' />';
 			}
 		}
 
-		// get file size
-
-		$size      = $file_size;
-		$file_size = $file->getFormattedSize();
-
-		if ($file_title == '') $file_title = '['.t('pool_file_notitle').']';
-		if ($user->hasRight('advancedMode[]')) $file_title .= ' ['.$id.']';
+		if ($title == '') $title = '['.t('pool_file_notitle').']';
+		if ($user->hasRight('advancedMode[]')) $title .= ' ['.$id.']';
 
 		$ilink  = 'index.php?page=mediapool&amp;subpage=detail&amp;file_id='.$id.'&amp;rex_file_category='.$selected.$argUrl;
 		$add_td = '<td>&nbsp;</td>';
@@ -174,23 +162,14 @@ ob_start();
 			<?= $add_td ?>
 			<td class="rex-thumbnail"><a href="<?= $ilink ?>"><?= $thumbnail ?></a></td>
 			<td>
-				<p class="rex-tx4"><a href="<?= $ilink ?>"><?= sly_html($file_title) ?></a></p>
-				<p class="rex-tx4"><?= $desc ?><span class="rex-suffix"><?= sly_html($file_name) ?> [<?= $file_size ?>]</span></p>
-				<p class="rex-tx1"><?= $file_stamp ?> | <?= sly_html($file_updateuser) ?></p>
+				<p class="rex-tx4"><a href="<?= $ilink ?>"><?= sly_html($title) ?></a></p>
+				<p class="rex-tx4"><span class="rex-suffix"><?= sly_html($filename) ?> [<?= $file->getFormattedSize() ?>]</span></p>
+				<p class="rex-tx1"><?= $updatedate ?> | <?= sly_html($updateuser) ?></p>
 			</td>
 			<td><?
 
 			$opener_link = $this->getOpenerLink($file);
-			print sly_Core::dispatcher()->filter('MEDIA_LIST_FUNCTIONS', $opener_link, array(
-				'id'              => $id,
-				'file_name'       => $file_name,
-				'file_oname'      => $file_oname,
-				'file_title'      => $file_title,
-				'file_type'       => $file_type,
-				'file_size'       => $file_size,
-				'file_stamp'      => $file->getUpdateDate(),
-				'file_updateuser' => $file_updateuser
-			));
+			print sly_Core::dispatcher()->filter('SLY_MEDIA_LIST_FUNCTIONS', $opener_link, array('medium' => $file));
 
 			?></td>
 		</tr>

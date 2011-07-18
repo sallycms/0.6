@@ -63,7 +63,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 
 	public function update() {
 		$fileID = $this->getCurrentFile();
-		$media  = OOMedia::getMediaById($fileID);
+		$media  = sly_Util_Medium::findById($fileID);
 		$target = $this->getCurrentCategory();
 
 		// only continue if a file was found, we can access it and have access
@@ -76,11 +76,8 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 
 		// update our file
 
-		$service = sly_Service_Factory::getMediumService();
-		$fileObj = $service->findById($fileID);
-
-		$fileObj->setTitle(sly_request('ftitle', 'string'));
-		$fileObj->setCategoryId($target);
+		$media->setTitle(sly_request('ftitle', 'string'));
+		$media->setCategoryId($target);
 
 		$msg = $this->t('file_infos_updated');
 		$ok  = true;
@@ -89,20 +86,20 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 			$filename = $_FILES['file_new']['tmp_name'];
 			$filetype = $_FILES['file_new']['type'];
 			$filesize = (int) $_FILES['file_new']['size'];
-			$oldType  = $fileObj->getFiletype();
+			$oldType  = $media->getFiletype();
 
 			if ($filetype == $oldType || OOMedia::compareImageTypes($filetype, $oldType)) {
-				$targetFile = SLY_MEDIAFOLDER.'/'.$fileObj->getFilename();
+				$targetFile = SLY_MEDIAFOLDER.'/'.$media->getFilename();
 
 				if (@move_uploaded_file($filename, $targetFile)) {
 					$msg = $this->t('file_changed');
 
-					$fileObj->setFiletype($filetype);
-					$fileObj->setFilesize($filesize);
+					$media->setFiletype($filetype);
+					$media->setFilesize($filesize);
 
 					if ($size = getimagesize($targetFile)) {
-						$fileObj->setWidth($size[0]);
-						$fileObj->setHeight($size[1]);
+						$media->setWidth($size[0]);
+						$media->setHeight($size[1]);
 					}
 
 					@chmod($targetFile, sly_Core::config()->get('FILEPERM'));
@@ -120,15 +117,15 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 
 		if ($ok) {
 			// save changes
-			$fileObj->setUpdateColumns();
-			$service->save($fileObj);
+			$media->setUpdateColumns();
+			$service->save($media);
 
 			// re-validate asset cache
 			$service = sly_Service_Factory::getAssetService();
 			$service->validateCache();
 
 			// notify the listeners and clear our own cache
-			sly_Core::dispatcher()->notify('SLY_MEDIA_UPDATED', $fileObj);
+			sly_Core::dispatcher()->notify('SLY_MEDIA_UPDATED', $media);
 			sly_Core::cache()->delete('sly.medium', $fileID);
 		}
 
@@ -142,7 +139,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 
 	public function delete() {
 		$fileID = $this->getCurrentFile();
-		$media  = OOMedia::getMediaById($fileID);
+		$media  = sly_Util_Medium::findById($fileID);
 
 		// only continue if a file was found and we can access it
 
