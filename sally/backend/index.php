@@ -122,12 +122,8 @@ if ($user) {
 
 	if ($isAdmin) {
 		$navigation->addPage('system', 'user');
-		$navigation->addPage('system', 'addon', 'translate:addons', false);
-
-		$specials = $navigation->createPage('specials');
-		$specials->addSubpage('', t('main_preferences'));
-		$specials->addSubpage('languages', t('languages'));
-		$navigation->addPageObj('system', $specials);
+		$navigation->addPage('system', 'addon', 'translate:addons');
+		$navigation->addPage('system', 'specials');
 	}
 
 	// AddOn-Seiten initialisieren

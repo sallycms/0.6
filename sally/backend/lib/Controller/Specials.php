@@ -12,26 +12,46 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 	protected $warning;
 	protected $info;
 
-	public function init() {
+	protected function init() {
 		$subline = array(
 			array('',          t('main_preferences')),
 			array('languages', t('languages'))
 		);
 
+		// add subpages
+
+		$navigation = sly_Core::getNavigation();
+		$specials   = $navigation->get('specials', 'system');
+
+		$specials->addSubpage('', t('main_preferences'));
+		$specials->addSubpage('languages', t('languages'));
+
+		// show error log when using the original system error handler
+		// (that's the only case when we can ensure that we're able to parse the error log)
+
+		if (!sly_Core::isDeveloperMode()) {
+			$handler = sly_Core::getErrorHandler();
+
+			if (get_class($handler) === 'sly_ErrorHandler_Production') {
+				$specials->addSubpage('errorlog', t('errorlog'));
+				$subline[] = array('errorlog',  t('errorlog'));
+			}
+		}
+
 		$layout = sly_Core::getLayout();
 		$layout->pageHeader(t('specials'), $subline);
 	}
 
-	public function index() {
+	protected function index() {
 		print $this->render('specials/index.phtml');
 	}
 
-	public function clearcache() {
+	protected function clearcache() {
 		$this->info = rex_generateAll();
 		$this->index();
 	}
 
-	public function update() {
+	protected function update() {
 		$startArticle    = sly_post('start_article',    'int');
 		$notFoundArticle = sly_post('notfound_article', 'int');
 		$startClang      = sly_post('start_clang',      'int');
@@ -61,9 +81,10 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 			$this->warning[] = t('settings_invalid_notfound_article').'<br />';
 		}
 
-		if(sly_Util_Language::exists($startClang)) {
+		if (sly_Util_Language::exists($startClang)) {
 			$conf->set('START_CLANG_ID', $startClang);
-		}else {
+		}
+		else {
 			$this->warning[] = t('settings_invalid_sitestart_clang').'<br />';
 		}
 
@@ -103,15 +124,14 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 		$this->index();
 	}
 
-	public function setup() {
+	protected function setup() {
 		sly_Core::config()->setLocal('SETUP', true);
 
 		$this->info = t('setup_error1', '<a href="index.php">', '</a>');
 		$this->index();
 	}
 
-	public function checkPermission() {
-		$user = sly_Util_User::getCurrentUser();
-		return !is_null($user);
+	protected function checkPermission() {
+		return sly_Util_User::getCurrentUser() !== null;
 	}
 }
