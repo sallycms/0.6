@@ -9,34 +9,28 @@
  */
 
 $fileID = $this->getCurrentFile();
-$media  = sly_Util_Medium::findById($fileID);
+$medium = sly_Util_Medium::findById($fileID);
 
-$ftitle            = $media->getTitle();
-$fname             = $media->getFileName();
-$ffiletype         = $media->getType();
-$ffile_size        = $media->getSize();
-$ffile_size        = $media->getFormattedSize();
-$ffile_update      = $media->getUpdateDate();
-$rex_file_category = $media->getCategoryId();
-$encoded_fname     = urlencode($fname);
-$file_ext          = substr(strrchr($fname, '.'),1);
-$icon_src          = 'assets/mime-default.png';
+$title      = $medium->getTitle();
+$filename   = $medium->getFilename();
+$filetype   = $medium->getFiletype();
+$filesize   = $medium->getFormattedSize();
+$updatedate = $medium->getUpdateDate();
+$categoryID = $medium->getCategoryId();
+$encoded    = urlencode($filename);
+$file_ext   = $medium->getExtension();
+$icon_src   = 'assets/mime-default.png';
 
-if ($this->isDocType($media)) {
+if ($this->isDocType($medium)) {
 	$icon_src = 'assets/mime-'.$file_ext.'.png';
 }
 
-$thumbnail = '<img src="'.$icon_src.'" alt="'.sly_html($ftitle).'" title="'.sly_html($ftitle).'" />';
-$isImage   = $media->isImage();
+$thumbnail = '<img src="'.$icon_src.'" alt="'.sly_html($title).'" title="'.sly_html($title).'" />';
+$isImage   = $this->isImage($medium);
 
 if ($isImage) {
-	$fwidth  = $media->getWidth();
-	$fheight = $media->getHeight();
-
-	if ($size = @getimagesize(SLY_MEDIAFOLDER.'/'.$fname)) {
-		$fwidth  = $size[0];
-		$fheight = $size[1];
-	}
+	$fwidth  = $medium->getWidth();
+	$fheight = $medium->getHeight();
 
 	list($rwidth, $rheight) = $this->getDimensions($fwidth, $fheight, 115, 60);
 }
@@ -56,13 +50,13 @@ print $this->render('mediapool/notices.phtml');
 // disabled until we find a nice way to include this link in our form
 // (legends do not allow HTML)
 
-// $opener_link = $this->getOpenerLink($media);
+// $opener_link = $this->getOpenerLink($medium);
 // if (!empty($opener_link)) $opener_link = ' | '.$opener_link;
 
 ////////////////////////////////////////////////////////
 // start forms
 
-if ($this->canAccessFile($media)) {
+if ($this->canAccessFile($medium)) {
 	$form = new sly_Form('index.php', 'POST', t('pool_file_edit'), '', 'rex-form-mediapool-detail');
 	$form->setEncType('multipart/form-data');
 
@@ -85,19 +79,19 @@ else {
 // image container (same for both forms)
 
 if ($isImage) {
-	$imgn = '../sally/data/mediapool/'.$encoded_fname.'?t='.$ffile_update;
+	$imgn = '../sally/data/mediapool/'.$encoded.'?t='.$updatedate;
 
-	if (!file_exists(SLY_MEDIAFOLDER.'/'.$fname)) {
+	if (!$medium->exists()) {
 		$imgn = 'assets/mime-error.png';
 	}
-	else if ($thumbs && $thumbsresize && ($fwidth > 200 || $fheight > 70)) {
-		$imgn = '../imageresize/'.$rwidth.'w__'.$rheight.'h__'.$encoded_fname.'?t='.$ffile_update;
+	elseif ($thumbs && $thumbsresize && ($fwidth > 200 || $fheight > 70)) {
+		$imgn = '../imageresize/'.$rwidth.'w__'.$rheight.'h__'.$encoded.'?t='.$updatedate;
 	}
 
 	$attrs = array(
 		'src'    => $imgn,
-		'alt'    => $ftitle,
-		'title'  => $ftitle,
+		'alt'    => $title,
+		'title'  => $title,
 		'width'  => $rwidth,
 		'height' => $rheight
 	);
@@ -111,10 +105,10 @@ if ($isImage) {
 ////////////////////////////////////////////////////////
 // add more elements to our forms
 
-if ($this->canAccessFile($media)) {
+if ($this->canAccessFile($medium)) {
 	// title
 
-	$title = new sly_Form_Input_Text('ftitle', t('pool_file_title'), $ftitle);
+	$title = new sly_Form_Input_Text('title', t('pool_file_title'), $title);
 	$title->addFormRowClass('sly-mediapool-detail-title');
 	$form->add($title);
 
@@ -124,12 +118,12 @@ if ($this->canAccessFile($media)) {
 	$select->setLabel(t('pool_file_category'));
 	$select->setAttribute('id', 'rex_file_new_category');
 	$select->setAttribute('onchange', '');
-	$select->setAttribute('value', $rex_file_category);
+	$select->setAttribute('value', $categoryID);
 	$form->add($select);
 
 	// extensions
 
-	$form = sly_Core::dispatcher()->filter('SLY_MEDIA_FORM_EDIT', $form, array('file_id' => $fileID, 'media' => $media));
+	$form = sly_Core::dispatcher()->filter('SLY_MEDIA_FORM_EDIT', $form, array('file_id' => $fileID, 'media' => $medium));
 
 	// setup buttons
 
@@ -143,7 +137,7 @@ if ($this->canAccessFile($media)) {
 }
 else {
 	$catname = t('pool_kats_no');
-	$cat     = $rex_file_category != 0 ? OOMediaCategory::getCategoryById($rex_file_category) : null;
+	$cat     = $categoryID != 0 ? OOMediaCategory::getCategoryById($categoryID) : null;
 	$user    = sly_Util_User::getCurrentUser();
 
 	if ($cat) {
@@ -151,13 +145,13 @@ else {
 	}
 
 	if ($user->hasPerm('advancedMode[]')) {
-		$ftitle  .= ' ['.$file_id.']';
-		$catname .= ' ['.$rex_file_category.']';
+		$title   .= ' ['.$file_id.']';
+		$catname .= ' ['.$categoryID.']';
 	}
 
 	// title & cat
 
-	$title = new sly_Form_Text(t('pool_file_title'), $ftitle);
+	$title = new sly_Form_Text(t('pool_file_title'), $title);
 	$title->addFormRowClass('sly-mediapool-detail-title');
 
 	$form->add($title);
@@ -180,24 +174,24 @@ if ($isImage) {
 
 // display filename
 
-$filename = '<a href="../sally/data/mediapool/'.$encoded_fname.'">'.sly_html($fname).'</a> ['.$ffile_size.']';
+$filename = '<a href="../sally/data/mediapool/'.$encoded.'">'.sly_html($filename).'</a> ['.$filesize.']';
 $filename = new sly_Form_Text(t('pool_filename'), $filename);
 $filename->setIsHTML(true);
 $form->add($filename);
 
 // display update date
 
-$updated = $media->getUpdateDate('%a %d. %B %Y').' ['.$media->getUpdateUser().']';
+$updated = sly_Util_String::formatStrftime(t('datetimeformat'), $medium->getUpdateDate()).' ['.$medium->getUpdateUser().']';
 $updated = new sly_Form_Text(t('pool_last_update'), $updated);
 $form->add($updated);
 
 // display creation date
 
-$created = $media->getCreateDate('%a %d. %B %Y').' ['.$media->getCreateUser().']';
+$created = sly_Util_String::formatStrftime(t('datetimeformat'), $medium->getCreateDate()).' ['.$medium->getCreateUser().']';
 $created = new sly_Form_Text(t('pool_created'), $created);
 $form->add($created);
 
-if ($this->canAccessFile($media)) {
+if ($this->canAccessFile($medium)) {
 	$file = new sly_Form_Input_File('file_new', t('pool_file_exchange'));
 	$form->add($file);
 }
