@@ -59,9 +59,6 @@
 
 
 .sly-content-editmode {
-
-	color: $drk_grey;
-
 	.rex-message, .sly-content-body {
 		+border-radius(0px);
 		border: 0;
@@ -69,6 +66,8 @@
 }
 
 #addslice {
+	margin-top: 10px;
+	
 	.rex-form-row {
 		background-color: #e8e8e8;
 		clear: both;
@@ -92,6 +91,10 @@
 
 	.rex-form-row {
 		border-top: 0;
+	}
+	.rex-form-wrapper {
+		margin: 2px 0;
+		background-color: #e8e8e8;
 	}
 	legend, label { +hide; }
 	select.sly-module-select {width: 100%}
@@ -120,7 +123,7 @@
 
 /* METAMODE ------------------------------------------------------------------------------------- METAMODE */
 
-#rex-form-content-metamode {
+#aaarex-page-contentmeta {
 
 	padding: 0px;
 	margin-bottom: 10px;
@@ -184,8 +187,6 @@
 	}
 }
 
-/* Wird von rex_article ausgegeben */
-
 .sly-slice-actions li {
 	display: block;
 	float: left;
@@ -200,15 +201,14 @@
 		background-color: $link_color;
 		line-height: 20px;
 		padding-left: 20px;
+		background-repeat: no-repeat;
 		+border-radius(3px);
 
 		/* Editbutton auf Artikelseite */
 		&.rex-tx3 {
 			background-image: url(../background_btn_edit.png);
 			background-position: 6px 0;
-			background-repeat: no-repeat;
 			width: 60px;
-
 
 			&:hover {
 				background-color: #4bcee4;
@@ -219,7 +219,6 @@
 		&.rex-tx2 {
 			background-image: url(../background_btn_dlt.png);
 			background-position: 6px 0;
-			background-repeat: no-repeat;
 			width: 55px;
 
 			&:hover {
@@ -241,13 +240,11 @@
 			&move-down {
 				background-image: url(../background_btn_down.png);
 				background-position: 7px 0;
-				background-repeat: no-repeat;
 			}
 
 			&move-up {
 				background-image: url(../background_btn_up.png);
 				background-position: 7px 0;
-				background-repeat: no-repeat;
 			}
 		}
 

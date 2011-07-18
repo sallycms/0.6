@@ -168,6 +168,10 @@ class sly_Util_Directory {
 
 		return true;
 	}
+	
+	public function copyTo($dir) {
+		
+	}
 
 	public function __toString() {
 		$dir = realpath($this->directory);

@@ -111,7 +111,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			//create the slice
 			$slice = $sliceService->create(array('module' => $module));
 			foreach (sly_Core::getVarTypes() as $obj) {
-				$obj->setACValues($slice->getId(), $slicedata, true, false);
+				$obj->setSliceValues($slice->getId(), $slicedata);
 			}
 
 			//create the articleslice
@@ -156,9 +156,9 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 		}
 		
 		if($ok) {
-			$this->info = t('block_deleted');
+			$this->localInfo = t('block_deleted');
 		}else {
-			$this->warning = t('block_not_deleted');
+			$this->localWarning = t('block_not_deleted');
 		}
 		$this->postSliceEdit('delete');
 		$this->index();
@@ -188,7 +188,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 
 		if ($function != 'delete') {
 			foreach (sly_Core::getVarTypes() as $idx => $obj) {
-				$slicedata = $obj->getACRequestValues($slicedata);
+				$slicedata = $obj->getRequestValues($slicedata);
 			}
 		}
 
@@ -217,10 +217,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 		$messages = sly_Core::dispatcher()->filter('SLY_SLICE_POSTSAVE_' . strtoupper($function), array());
 
 		if (!empty($messages)) {
-			if($function == 'delete')
-				$this->info .= join('<br />', $messages);
-			else
-				$this->localInfo .= join('<br />', $messages);
+			$this->localInfo .= join('<br />', $messages);
 		}
 		sly_Core::cache()->flush(OOArticleSlice::CACHE_NS);
 		sly_core::dispatcher()->notify('SLY_CONTENT_UPDATED', '', array('article_id' => $this->article->getId(), 'clang' => $this->article->getClang()));

@@ -187,41 +187,32 @@ $slice_id = sly_request('slice_id', 'rex-slice-id', '');
 
 		$articleSlices = OOArticleSlice::getSliceIdsForSlot($this->article->getId(), $this->article->getClang(), $this->slot);
 
-		foreach ($articleSlices as $articleSlice) {
-			$ooslice = OOArticleSlice::getArticleSliceById($articleSlice);
-
-			if ($function == 'add' && $prior == $ooslice->getPrior()) {
+		for($i = 0; $i <= count($articleSlices); $i++) {
+			if ($function == 'add' && $prior == $i) {
 				$module = sly_request('module', 'string');
-				sly_Helper_Content::printAddSliceForm($prior, $module, $article_id, $clang, $slot);
+				sly_Helper_Content::printAddSliceForm($prior, $module, $article->getId(), $article->getClang(), $slot);
 			} else {
-				print $this->render('content/_add_slice_form.phtml', array('article' => $article, 'prior' => $ooslice->getPrior(), 'slot' => $slot));
+				print $this->render('content/_add_slice_form.phtml', array('article' => $article, 'prior' => $i, 'slot' => $slot));
 			}
-sly_dump($prior);
-sly_dump($ooslice->getPrior());
-			if ($prior == $ooslice->getPrior()) {
-				if (!empty($this->locaInfo))
-					print rex_info($this->locaInfo);
+			if ($prior == $i) {
+				if (!empty($this->localInfo))
+					print rex_info($this->localInfo);
 				if (!empty($this->localWarning))
 					print rex_warning($this->localWarning);
 			}
-
-			if ($function == 'edit' && $slice_id == $ooslice->getId()) {
-				print $this->render('content/_slice_toolbar.phtml', array('articleSlice' => $ooslice));
-				sly_Helper_Content::printEditSliceForm($ooslice);
-			} else {
-				print $this->render('content/_slice_toolbar.phtml', array('articleSlice' => $ooslice));
-				print $this->render('content/_slice_content.phtml', array('articleSlice' => $ooslice));
+			
+			
+			if(isset($articleSlices[$i])) {
+				$artslice = OOArticleSlice::getArticleSliceById($articleSlices[$i]);
+				print $this->render('content/_slice_toolbar.phtml', array('articleSlice' => $artslice));
+				if ($function == 'edit' && $slice_id == $artslice->getId()) {
+					sly_Helper_Content::printEditSliceForm($artslice);
+				} else {
+					print $this->render('content/_slice_content.phtml', array('articleSlice' => $artslice));
+				}
 			}
 		}
-
-		if ($function == 'add' && $prior == count($articleSlices)) {
-			$module = sly_request('module', 'string');
-			sly_Helper_Content::printAddSliceForm($prior, $module, $article->getId(), $article->getClang(), $this->slot);
-		}
-		else {
-			print $this->render('content/_add_slice_form.phtml', array('article' => $article, 'prior' => count($articleSlices), 'slot' => $slot));
-		}
-
+		
 		print '</div>';
 	}
 	?>
