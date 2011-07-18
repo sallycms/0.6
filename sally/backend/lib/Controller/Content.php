@@ -111,7 +111,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			//create the slice
 			$slice = $sliceService->create(array('module' => $module));
 			foreach (sly_Core::getVarTypes() as $obj) {
-				$obj->setACValues($slice->getId(), $slicedata, true, false);
+				$obj->setSliceValues($slice->getId(), $slicedata);
 			}
 
 			//create the articleslice
@@ -188,7 +188,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 
 		if ($function != 'delete') {
 			foreach (sly_Core::getVarTypes() as $idx => $obj) {
-				$slicedata = $obj->getACRequestValues($slicedata);
+				$slicedata = $obj->getRequestValues($slicedata);
 			}
 		}
 

@@ -122,7 +122,7 @@ class sly_Helper_Content {
 	  // (1. Aufruf via Editieren Link)
 	  else {
 	  foreach (sly_Core::getVarTypes() as $obj) {
-	  $REX_ACTION = $obj->getACDatabaseValues($REX_ACTION, $articleSlice->getSliceId());
+	  $REX_ACTION = $obj->getDatabaseValues($REX_ACTION, $articleSlice->getSliceId());
 	  }
 	  }
 
@@ -165,7 +165,7 @@ class sly_Helper_Content {
 	  'article_id' => $articleSlice->getArticleId(),
 	  'clang' => $articleSlice->getClang(),
 	  'slot' => $articleSlice->getSlot(),
-	  'module' => $articleSlice->getModuleName(),
+	  'module' => $articleSlice->getModule(),
 	  'slice_id' => $articleSlice->getSliceId(),
 	  'function' => $func,
 	  'function_slice_id' => $articleSlice->getId()
@@ -185,7 +185,7 @@ class sly_Helper_Content {
 				// Dann die Werte manuell aus dem Post übernehmen
 				// und anschließend die Werte wieder zurücksetzen,
 				// damit die nächsten Slices wieder die Werte aus der DB verwenden
-				$var->setACValues($slice_id, $REX['ACTION']);
+				$var->setSliceValues($slice_id, $REX['ACTION']);
 				$tmp = $var->getBEInput($slice_id, $content);
 			} else {
 				// Slice normal parsen
