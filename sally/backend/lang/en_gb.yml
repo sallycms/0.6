@@ -6,9 +6,10 @@ month: month
 year: year
 general: general
 dateformat: '%Y-%b-%d'
+timeformat: '%H:%M'
+datetimeformat: '%Y-%b-%d %H:%M'
 setlocale: 'en_GB,en_UK,en_US,en_EN,en_AU,en_CA,American,ENG,English'
 
-datetimeformat: '%Y-%b-%d %H:%M'
 ctrl: multiselect using CTRL
 
 save: Save

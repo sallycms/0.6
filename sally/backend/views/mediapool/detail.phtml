@@ -181,13 +181,13 @@ $form->add($filename);
 
 // display update date
 
-$updated = sly_Util_String::formatStrftime(t('datetimeformat'), $medium->getUpdateDate()).' ['.$medium->getUpdateUser().']';
+$updated = sly_Util_String::formatDatetime($medium->getUpdateDate()).' ['.$medium->getUpdateUser().']';
 $updated = new sly_Form_Text(t('pool_last_update'), $updated);
 $form->add($updated);
 
 // display creation date
 
-$created = sly_Util_String::formatStrftime(t('datetimeformat'), $medium->getCreateDate()).' ['.$medium->getCreateUser().']';
+$created = sly_Util_String::formatDatetime($medium->getCreateDate()).' ['.$medium->getCreateUser().']';
 $created = new sly_Form_Text(t('pool_created'), $created);
 $form->add($created);
 

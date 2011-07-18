@@ -25,7 +25,7 @@ else {
 	<?= $advancedMode ? '<td class="rex-small">'.sly_html($article->getId()).'</td>' : '' ?>
 	<td><a href="<?= sly_html($base_url) ?>"><?= sly_html($article->getName()) ?></a></td>
 	<td><?= sly_html($article->getPrior()) ?></td>
-	<td><?= sly_Util_String::formatStrftime(t('dateformat'), $article->getCreateDate()) ?></td>
+	<td><?= sly_Util_String::formatDate($article->getCreateDate()) ?></td>
 	<td>
 		<a href="<?= $edit_url ?>&amp;func=editArticle"><?= t('change') ?></a>&nbsp;
 		<?php

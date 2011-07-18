@@ -6,9 +6,10 @@ month: Monat
 year: Jahr
 general: Allgemein
 dateformat: %d. %b. %Y
+timeformat: %H:%Mh
+datetimeformat: %d. %b. %Y - %H:%Mh
 setlocale: 'de_DE,de_DE@euro,deu_deu,german_germany,de,ge'
 
-datetimeformat: %d. %b. %Y - %H:%Mh
 ctrl: Mehrfachauswahl mit STRG
 
 save: Speichern

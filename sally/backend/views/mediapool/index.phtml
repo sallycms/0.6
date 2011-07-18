@@ -101,7 +101,7 @@ ob_start();
 		$id         = $file->getId();
 		$filename   = $file->getFilename();
 		$title      = $file->getTitle();
-		$updatedate = sly_Util_String::formatStrftime(t('datetimeformat'), $file->getUpdateDate());
+		$updatedate = sly_Util_String::formatDatetime($file->getUpdateDate());
 		$updateuser = $file->getUpdateUser();
 
 		// missing file?

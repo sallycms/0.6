@@ -45,7 +45,7 @@ foreach ($users as $user) {
 		<td class="sly-col-b sly-center"><?= $id ?></td>
 		<td class="sly-col-c"><a href="<?= $base ?>edit&amp;id=<?= $id ?>"><?= sly_html($name) ?></a></td>
 		<td class="sly-col-d"><?= sly_html($user->getLogin()) ?></td>
-		<td class="sly-col-e"><?= sly_Util_String::formatStrftime(t('datetimeformat'), $user->getLastTryDate()) ?></td>
+		<td class="sly-col-e"><?= sly_Util_String::formatDatetime($user->getLastTryDate()) ?></td>
 
 		<? if ($id == $currentID): ?>
 		<td class="sly-col-f"><span class="rex-strike"><?= t('user_delete') ?></span></td>
