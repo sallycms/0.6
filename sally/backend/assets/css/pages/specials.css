@@ -18,9 +18,11 @@
 	fieldset { padding-bottom: 1em; }
 
 	legend {
-		padding-left: 0;
-		padding-top: 0;
+		padding: 0;
 		background-color: transparent;
+		font-size: 100%;
+		color: $drk_grey;
+		width: auto;
 	}
 
 	.rex-form-row {
@@ -58,6 +60,10 @@
 	.rex-form-col-1 {
 		padding-bottom: 0;
 		.rex-form-wrapper { margin-bottom: 10px; }
+	}
+
+	p.button {
+		margin: 0 0 15px 5px;
 	}
 }
 
