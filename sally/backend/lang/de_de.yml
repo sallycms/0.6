@@ -419,3 +419,14 @@ config_default_fe_language: Standard Frontendsprache
 no_startarticle: 'Kein Startartikel selektiert. Bitte setze ihn im <a href="{0}">Backend</a>.'
 used_ressources: '{0} in {1} Klassen'
 to_website: zur Website
+
+errorlog: Fehlerprotokoll
+cant_work_with_foreign_errorhandler: 'Kann Protokoll nicht erzeugen, da der ausgewählte Error Handler ({0}) unbekannten Typs ist.'
+errorlog_is_empty: Das Fehlerprotokoll ist leer.
+errorlog_recenterrors: 'Hier sehen Sie die letzten {0} aufgetretenen Fehler.'
+errorlog_total: 'Im Fehlerlog sind <strong>{0}</strong> Fehler vorhanden.'
+clear_errorlog: Protokoll leeren
+errorlog_message: Fehlerdetails
+errorlog_line: Zeile
+errorlog_cleared: Das Protokoll wurde geleert.
+errorlog_not_cleared: Das Protokoll konnte nicht geleert werden.

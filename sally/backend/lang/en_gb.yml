@@ -419,3 +419,14 @@ config_default_fe_language: Default Frontend Language
 no_startarticle: 'No start article given. Please select one in your <a href="{0}">backend</a>.'
 used_ressources: '{0} in {1} classes'
 to_website: Go to website
+
+errorlog: Error Log
+cant_work_with_foreign_errorhandler: 'Cannot display protocol because the current error handler ({0}) has an unknown type.'
+errorlog_is_empty: The error log is empty.
+errorlog_recenterrors: 'Here you can see the last {0} errors.'
+errorlog_total: 'Your error log contains <strong>{0}</strong> errors.'
+clear_errorlog: Clear Log
+errorlog_message: Error details
+errorlog_line: line
+errorlog_cleared: The log has been cleared.
+errorlog_not_cleared: The log could not be cleared.

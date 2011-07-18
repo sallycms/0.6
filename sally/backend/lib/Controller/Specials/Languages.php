@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
@@ -9,34 +8,21 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Specials_Languages extends sly_Controller_Backend {
-
+class sly_Controller_Specials_Languages extends sly_Controller_Specials {
 	// for now just copy those two fields and the init() method, until
 	// I find a nice way to generalize it into. --xrstf
 
-	protected $warning   = '';
-	protected $info      = '';
 	protected $func      = '';
 	protected $id        = '';
 	protected $languages = array();
 
-	public function init() {
-		$subline = array(
-			array('', t('main_preferences')),
-			array('languages', t('languages'))
-		);
-
-		$layout = sly_Core::getLayout();
-		$layout->pageHeader(t('specials'), $subline);
-	}
-
-	public function index() {
+	protected function index() {
 		$languageService = sly_Service_Factory::getLanguageService();
 		$this->languages = $languageService->find(null, null, 'id');
 		print $this->render('specials/languages.phtml');
 	}
 
-	public function add() {
+	protected function add() {
 		if (sly_post('sly-submit', 'boolean', false)) {
 			$this->id = sly_post('clang_id', 'int', -1);
 
@@ -66,7 +52,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Backend {
 		$this->index();
 	}
 
-	public function edit() {
+	protected function edit() {
 		$this->id = sly_request('clang_id', 'int', -1);
 
 		if (sly_post('sly-submit', 'boolean', false)) {
@@ -90,7 +76,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Backend {
 		$this->index();
 	}
 
-	public function delete() {
+	protected function delete() {
 		$clangID   = sly_request('clang_id', 'int', -1);
 		$languages = sly_Util_Language::findAll();
 
@@ -103,7 +89,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Backend {
 		$this->index();
 	}
 
-	public function checkPermission() {
+	protected function checkPermission() {
 		return sly_Util_User::getCurrentUser() !== null;
 	}
 }
