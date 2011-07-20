@@ -45,8 +45,6 @@ sly_Core::loadAddons();
 sly_Core::registerListeners();
 
 if ($config->get('DEVELOPER_MODE')) {
-	require_once 'sally/core/functions/function_rex_generate.inc.php';
-
 	if (!$config->get('SETUP')) {
 		sly_Service_Factory::getTemplateService()->refresh();
 		sly_Service_Factory::getModuleService()->refresh();
