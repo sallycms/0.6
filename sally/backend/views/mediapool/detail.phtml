@@ -25,19 +25,6 @@ if ($this->isDocType($medium)) {
 	$icon_src = 'assets/mime-'.$file_ext.'.png';
 }
 
-$thumbnail = '<img src="'.$icon_src.'" alt="'.sly_html($title).'" title="'.sly_html($title).'" />';
-$isImage   = $this->isImage($medium);
-
-if ($isImage) {
-	$fwidth  = $medium->getWidth();
-	$fheight = $medium->getHeight();
-
-	list($rwidth, $rheight) = $this->getDimensions($fwidth, $fheight, 115, 60);
-}
-
-$thumbs       = true;
-$thumbsresize = sly_Service_Factory::getAddOnService()->isAvailable('image_resize');
-
 ////////////////////////////////////////////////////////
 // info and error messages
 
@@ -78,22 +65,31 @@ else {
 ////////////////////////////////////////////////////////
 // image container (same for both forms)
 
+$isImage = $this->isImage($medium);
+
 if ($isImage) {
-	$imgn = '../sally/data/mediapool/'.$encoded.'?t='.$updatedate;
+	$imgn    = '../sally/data/mediapool/'.$encoded.'?t='.$updatedate;
+	$resize  = sly_Service_Factory::getAddOnService()->isAvailable('image_resize');
+	$fwidth  = $medium->getWidth();
+	$fheight = $medium->getHeight();
 
 	if (!$medium->exists()) {
 		$imgn = 'assets/mime-error.png';
 	}
-	elseif ($thumbs && $thumbsresize && ($fwidth > 200 || $fheight > 70)) {
-		$imgn = '../imageresize/'.$rwidth.'w__'.$rheight.'h__'.$encoded.'?t='.$updatedate;
+	elseif ($fwidth > 115 || $fheight > 60) {
+		list($rwidth, $rheight) = $this->getDimensions($fwidth, $fheight, 115, 60);
+
+		if ($resize) {
+			$imgn = '../imageresize/'.$rwidth.'w__'.$rheight.'h__'.$encoded.'?t='.$updatedate;
+		}
 	}
 
 	$attrs = array(
 		'src'    => $imgn,
 		'alt'    => $title,
 		'title'  => $title,
-		'width'  => $rwidth,
-		'height' => $rheight
+		'width'  => isset($rwidth) ? $rwidth : '',
+		'height' => isset($rheight) ? $rheight : ''
 	);
 
 	$imageContainer = new sly_Form_Container();
