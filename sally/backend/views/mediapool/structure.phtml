@@ -13,10 +13,10 @@
 $base     = 'index.php?page=mediapool&amp;subpage=structure&amp;cat_id=';
 $textpath = '<li> : <a href="'.$base.'0">Start</a></li>';
 $catID    = sly_request('cat_id', 'int');
-$ooCat    = $catID > 0 ? OOMediaCategory::getCategoryById($catID) : null;
+$ooCat    = $catID > 0 ? sly_Util_MediaCategory::findById($catID) : null;
 
 if ($ooCat === null) {
-	$categories = OOMediaCategory::getRootCategories();
+	$categories = sly_Util_MediaCategory::getRootCategories();
 	$catID      = 0;
 	$catPath    = '|';
 }

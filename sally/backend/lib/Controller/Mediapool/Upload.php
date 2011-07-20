@@ -45,8 +45,10 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 	}
 
 	protected function saveMedium(array $fileData, $category, $title) {
+		$file = null;
+
 		try {
-			sly_Util_Medium::upload($fileData, $category, $title);
+			$file = sly_Util_Medium::upload($fileData, $category, $title);
 			$this->info = $this->t('file_added');
 		}
 		catch (sly_Exception $e) {

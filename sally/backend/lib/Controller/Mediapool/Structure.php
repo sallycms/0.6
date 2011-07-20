@@ -16,19 +16,21 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 	public function add() {
 		if (!empty($_POST)) {
 			$service  = sly_Service_Factory::getMediaCategoryService();
-			$category = new sly_Model_MediaCategory();
 			$name     = sly_post('catname', 'string');
+			$parentID = sly_post('cat_id', 'int');
 
-			$category->setName($name);
-			$category->setParentId(sly_post('cat_id', 'string'));
-			$category->setPath(sly_post('catpath', 'string'));
-			$category->setRevision(0);
-			$category->setCreateColumns();
+			try {
+				$parent = $service->findById($parentID);
+				if (!$parent) throw new sly_Exception('Parent category not found.');
 
-			$service->save($category);
+				$service->add($name, $parent);
 
-			$this->info   = $this->t('kat_saved', $name);
-			$this->action = '';
+				$this->info   = $this->t('kat_saved', $name);
+				$this->action = '';
+			}
+			catch (Exception $e) {
+				$this->warning = $e->getMessage();
+			}
 		}
 
 		$this->index();
@@ -43,12 +45,16 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 			if ($category) {
 				$name = sly_post('catname', 'string');
 
-				$category->setName($name);
-				$category->setUpdateColumns();
-				$service->save($category);
+				try {
+					$category->setName($name);
+					$service->update($category);
 
-				$this->info   = $this->t('kat_updated', $name);
-				$this->action = '';
+					$this->info   = $this->t('kat_updated', $name);
+					$this->action = '';
+				}
+				catch (Exception $e) {
+					$this->warning = $e->getMessage();
+				}
 			}
 		}
 
@@ -61,17 +67,11 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 		$category = $service->findById($editID);
 
 		if ($category) {
-			// we can only delete empty categories with no children
-
-			$db       = sly_DB_Persistence::getInstance();
-			$files    = $db->magicFetch('file', 'COUNT(*)', array('category_id' => $editID));
-			$children = $db->magicFetch('file_category', 'COUNT(*)', array('re_id' => $editID));
-
-			if ($files == 0 && $children == 0) {
-				$service->delete(array('id' => $editID));
+			try {
+				$service->delete($category);
 				$this->info = $this->t('kat_deleted');
 			}
-			else {
+			catch (Exception $e) {
 				$this->warning = $this->t('kat_not_deleted');
 			}
 		}

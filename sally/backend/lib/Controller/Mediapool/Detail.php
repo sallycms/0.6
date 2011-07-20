@@ -63,70 +63,42 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 
 	public function update() {
 		$fileID = $this->getCurrentFile();
-		$media  = sly_Util_Medium::findById($fileID);
+		$medium = sly_Util_Medium::findById($fileID);
 		$target = $this->getCurrentCategory();
 
 		// only continue if a file was found, we can access it and have access
 		// to the target category
 
-		if (!$media || !$this->canAccessFile($media) || !$this->canAccessCategory($target)) {
+		if (!$medium || !$this->canAccessFile($medium) || !$this->canAccessCategory($target)) {
 			$this->warning = t('no_permission');
 			return $this->index();
 		}
 
 		// update our file
 
-		$media->setTitle(sly_request('ftitle', 'string'));
-		$media->setCategoryId($target);
+		$title = sly_request('title', 'string');
+		$msg   = $this->t('file_infos_updated');
+		$ok    = true;
 
-		$msg = $this->t('file_infos_updated');
-		$ok  = true;
+		// upload new file or just change file properties?
 
 		if (!empty($_FILES['file_new']['name']) && $_FILES['file_new']['name'] != 'none') {
-			$filename = $_FILES['file_new']['tmp_name'];
-			$filetype = $_FILES['file_new']['type'];
-			$filesize = (int) $_FILES['file_new']['size'];
-			$oldType  = $media->getFiletype();
-
-			if ($filetype == $oldType || OOMedia::compareImageTypes($filetype, $oldType)) {
-				$targetFile = SLY_MEDIAFOLDER.'/'.$media->getFilename();
-
-				if (@move_uploaded_file($filename, $targetFile)) {
-					$msg = $this->t('file_changed');
-
-					$media->setFiletype($filetype);
-					$media->setFilesize($filesize);
-
-					if ($size = getimagesize($targetFile)) {
-						$media->setWidth($size[0]);
-						$media->setHeight($size[1]);
-					}
-
-					@chmod($targetFile, sly_Core::config()->get('FILEPERM'));
-				}
-				else {
-					$msg = $this->t('file_upload_error');
-					$ok  = false;
-				}
+			try {
+				sly_Util_Medium::upload($_FILES['file_new'], $target, $title, $medium);
+				$msg = $this->t('file_changed');
 			}
-			else {
-				$msg = $this->t('file_upload_errortype');
-				$ok  = false;
+			catch (Exception $e) {
+				$ok   = false;
+				$code = $e->getCode();
+				$msg  = $this->t($code === sly_Util_Medium::ERR_TYPE_MISMATCH ? 'file_upload_errortype' : 'file_upload_error');
 			}
 		}
+		else {
+			$medium->setTitle($title);
+			$medium->setCategoryId($target);
 
-		if ($ok) {
-			// save changes
-			$media->setUpdateColumns();
-			$service->save($media);
-
-			// re-validate asset cache
-			$service = sly_Service_Factory::getAssetService();
-			$service->validateCache();
-
-			// notify the listeners and clear our own cache
-			sly_Core::dispatcher()->notify('SLY_MEDIA_UPDATED', $media);
-			sly_Core::cache()->delete('sly.medium', $fileID);
+			$service = sly_Service_Factory::getMediumService();
+			$service->update($medium);
 		}
 
 		// setup messages

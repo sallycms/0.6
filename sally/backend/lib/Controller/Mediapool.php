@@ -167,27 +167,25 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 			return $this->index();
 		}
 
-		$files = sly_postArray('selectedmedia', 'int', array());
+		$media = sly_postArray('selectedmedia', 'int', array());
 
-		if (empty($files)) {
+		if (empty($media)) {
 			$this->warning = $this->t('selectedmedia_error');
 			return $this->index();
 		}
 
-		$user = sly_Util_User::getCurrentUser();
-		$db   = sly_DB_Persistence::getInstance();
-		$what = array('category_id' => $this->category, 'updateuser' => $user->getLogin(), 'updatedate' => time());
-		$db->update('file', $what, array('id' => $files));
+		$service = sly_Service_Factory::getMediumService();
 
-		// clear system cache
-		$cache = sly_Core::cache();
+		foreach ($media as $mediumID) {
+			$medium = sly_Util_Medium::findById($fileID);
+			if (!$medium) continue;
 
-		foreach ($files as $fileID) {
-			$cache->delete('sly.medium', $fileID);
+			$medium->setCategoryId($this->category);
+			$service->update($medium);
 		}
 
 		// refresh asset cache in case permissions have changed
-		sly_Service_Factory::getAssetService()->validateCache();
+		$this->revalidate();
 
 		$this->info = $this->t('selectedmedia_moved');
 		$this->index();
@@ -232,12 +230,8 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 				$service = sly_Service_Factory::getMediumService();
 
 				try {
-					$service->delete($medium);
-
-					// re-validate asset cache
-					$service = sly_Service_Factory::getAssetService();
-					$service->validateCache();
-
+					$service->delete($medium->getId());
+					$this->revalidate();
 					$this->info[] = $this->t('file_deleted');
 				}
 				catch (sly_Exception $e) {
@@ -365,5 +359,10 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		));
 
 		return empty($usages) ? false : $usages;
+	}
+
+	protected function revalidate() {
+		// re-validate asset cache
+		sly_Service_Factory::getAssetService()->validateCache();
 	}
 }

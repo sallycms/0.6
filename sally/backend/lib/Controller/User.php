@@ -289,7 +289,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 	}
 
 	protected function getMediaStructure() {
-		$rootCats          = OOMediaCategory::getRootCategories();
+		$rootCats          = sly_Util_MediaCategory::getRootCategories();
 		$this->mediaStruct = array();
 
 		if ($rootCats) {

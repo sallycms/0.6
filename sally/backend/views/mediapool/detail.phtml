@@ -137,7 +137,7 @@ if ($this->canAccessFile($medium)) {
 }
 else {
 	$catname = t('pool_kats_no');
-	$cat     = $categoryID != 0 ? OOMediaCategory::getCategoryById($categoryID) : null;
+	$cat     = $categoryID != 0 ? sly_Util_MediaCategory::findById($categoryID) : null;
 	$user    = sly_Util_User::getCurrentUser();
 
 	if ($cat) {
