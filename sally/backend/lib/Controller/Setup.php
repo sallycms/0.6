@@ -156,7 +156,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 
 			// benötigte Tabellen prüfen
 
-			$requiredTables = array (
+			$requiredTables = array(
 				$prefix.'article',
 				$prefix.'article_slice',
 				$prefix.'clang',
@@ -179,9 +179,9 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 					// kein break;
 
 				case 'setup': // leere Datenbank neu einrichten
-					$version    = $config->get('VERSION');
-					$subversion = $config->get('SUBVERSION');
-					$installScript = SLY_COREFOLDER.'/install/sally'.$version.'_'.$subversion.'.sql';
+					$version       = $config->get('VERSION');
+					$subversion    = $config->get('SUBVERSION');
+					$installScript = SLY_COREFOLDER.'/install/sally.sql';
 					$error         = $this->setupImport($installScript);
 
 					break;
