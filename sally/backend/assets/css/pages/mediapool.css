@@ -41,6 +41,13 @@
 	.rex-form-submit {
 		margin: 0 10px 0 0;
 	}
+
+	.sly-icon  { width: 40px; }
+	.sly-col-b { width: 40px; }
+	.sly-col-c { width: auto; }
+	.sly-col-d { width: 190px; }
+	.sly-col-e { width: 95px; }
+	.sly-col-f { width: 95px; }
 }
 
 #sly-mediapool-structure-form {
@@ -156,11 +163,6 @@
 		width: 690px;
 		padding: 0;
 		margin-bottom: 10px;
-
-		.rex-form-row {
-			width: 680px;
-			padding: 7px 5px;
-		}
 	}
 
 	fieldset.sly-file-properties {
@@ -219,6 +221,13 @@
 
 	.rex-form-row.sly-mediapool-detail-title {
 		border-top: 0 none;
+	}
+}
+
+#rex-form-mediapool-detail {
+	.rex-form-row {
+		width: 680px;
+		padding: 7px 5px;
 	}
 }
 

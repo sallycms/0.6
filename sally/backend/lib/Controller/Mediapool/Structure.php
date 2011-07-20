@@ -20,9 +20,7 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 			$parentID = sly_post('cat_id', 'int');
 
 			try {
-				$parent = $service->findById($parentID);
-				if (!$parent) throw new sly_Exception('Parent category not found.');
-
+				$parent = $service->findById($parentID); // may be null
 				$service->add($name, $parent);
 
 				$this->info   = $this->t('kat_saved', $name);
@@ -68,11 +66,14 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 
 		if ($category) {
 			try {
-				$service->delete($category);
+				$service->delete($editID);
 				$this->info = $this->t('kat_deleted');
 			}
 			catch (Exception $e) {
-				$this->warning = $this->t('kat_not_deleted');
+				$code  = $e->getCode();
+				$media = $code == sly_Service_MediaCategory::ERR_CAT_HAS_MEDIA;
+
+				$this->warning = $this->t($media ? 'kat_not_deleted_media' : 'kat_not_deleted_subcats');
 			}
 		}
 

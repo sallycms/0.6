@@ -13,23 +13,21 @@
 $base     = 'index.php?page=mediapool&amp;subpage=structure&amp;cat_id=';
 $textpath = '<li> : <a href="'.$base.'0">Start</a></li>';
 $catID    = sly_request('cat_id', 'int');
-$ooCat    = $catID > 0 ? sly_Util_MediaCategory::findById($catID) : null;
+$cat      = sly_Util_MediaCategory::findById($catID);
 
-if ($ooCat === null) {
+if ($cat === null) {
 	$categories = sly_Util_MediaCategory::getRootCategories();
 	$catID      = 0;
-	$catPath    = '|';
 }
 else {
-	$categories = $ooCat->getChildren();
-	$parents    = $ooCat->getParentTree();
+	$categories = $cat->getChildren();
+	$parents    = $cat->getParentTree();
 
 	foreach ($parents as $parent) {
 		$textpath .= '<li> : <a href="'.$base.$parent->getId().'">'.sly_html($parent->getName()).'</a></li>';
 	}
 
-	$textpath .= '<li> : <a href="'.$base.$catID.'">'.sly_html($ooCat->getName()).'</a></li>';
-	$catPath   = $ooCat->getPath().$catID.'|';
+	$textpath .= '<li> : <a href="'.$base.$catID.'">'.sly_html($cat->getName()).'</a></li>';
 }
 
 ?>
@@ -59,7 +57,6 @@ if ($this->action == 'add' || $this->action == 'edit') {
 	$form->addHiddenValue('page', 'mediapool');
 	$form->addHiddenValue('subpage', 'structure');
 	$form->addHiddenValue('cat_id', $catID);
-	$form->addHiddenValue('catpath', $catPath); // that's braindead
 	$form->addHiddenValue('func', $this->action);
 
 	if ($this->action) {
@@ -79,70 +76,77 @@ if ($this->action == 'add' || $this->action == 'edit') {
 ?>
 <table class="rex-table" id="sly-mediapool-structure" summary="<?= sly_html(t('pool_kat_summary')) ?>">
 	<caption class="rex-hide"><?= sly_html(t('pool_kat_caption')) ?></caption>
-	<colgroup>
-		<col width="40" />
-		<col width="40" />
-		<col width="*" />
-		<col width="77" />
-		<col width="76" />
-	</colgroup>
 	<thead><tr>
 		<th class="sly-icon">
 			<a class="rex-i-element rex-i-mediapool-category-add sly-sprite" href="<?= $base.$catID ?>&amp;func=add">
 				<span class="rex-i-element-text"><?= t('pool_kat_create') ?></span>
 			</a>
 		</th>
-		<th class="rex-small">ID</th>
-		<th><?= t('pool_kat_name') ?></th>
-		<th colspan="2"><?= t('pool_kat_function') ?></th>
+		<th class="rex-small sly-col-b">ID</th>
+		<th class="sly-col-c"><?= t('pool_kat_name') ?></th>
+		<th class="sly-col-d" colspan="2"><?= t('pool_kat_function') ?></th>
 	</tr></thead>
 	<tbody><?php
 
 	if ($this->action == 'add') {
-		?><tr class="rex-table-row-activ">
+		?>
+		<tr class="rex-table-row-activ">
 			<td class="sly-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?= t('pool_kat_create') ?></span></span></td>
 			<td class="rex-small">-</td>
 			<td>
 				<label class="rex-form-hidden-label" for="rex-form-field-name"><?= t('pool_kat_name') ?></label>
 				<input class="rex-form-text" type="text" size="10" id="rex-form-field-name" name="catname" value="" />
 			</td>
-			<td colspan="2">
+			<td class="sly-col-d" colspan="2">
 				<input type="submit" class="rex-form-submit" value="<?= t('pool_kat_create') ?>" />
 			</td>
-		</tr><?php
+		</tr>
+		<?
 	}
 
 	foreach ($categories as $cat) {
 		$id = $cat->getId();
 
 		if ($this->action == 'edit' && $editID == $id) {
-			?><tr class="rex-table-row-activ">
-			<td class="sly-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?= sly_html($cat->getName())?></span></span></td>
-			<td class="rex-small"><?= $id ?></td>
-			<td>
-				<label class="rex-form-hidden-label" for="rex-form-field-name"><?= t('pool_kat_name') ?></label>
-				<input class="rex-form-text" type="text" id="rex-form-field-name" name="catname" value="<?= sly_html($cat->getName()) ?>" />
-			</td>
-			<td colspan="2">
-				<input type="submit" class="rex-form-submit" value="<?= t('pool_kat_update') ?>" />
-			</td>
-			</tr><?php
+			?>
+			<tr class="rex-table-row-activ">
+				<td class="sly-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?= sly_html($cat->getName())?></span></span></td>
+				<td class="rex-small"><?= $id ?></td>
+				<td>
+					<label class="rex-form-hidden-label" for="rex-form-field-name"><?= t('pool_kat_name') ?></label>
+					<input class="rex-form-text" type="text" id="rex-form-field-name" name="catname" value="<?= sly_html($cat->getName()) ?>" />
+				</td>
+				<td class="sly-col-d" colspan="2">
+					<input type="submit" class="rex-form-submit" value="<?= t('pool_kat_update') ?>" />
+				</td>
+			</tr>
+			<?
 		}
 		else {
-			?><tr>
-			<td class="sly-icon"><a class="rex-i-element rex-i-mediapool-category sly-sprite" href="<?= $base.$id ?>"><span class="rex-i-element-text"><?= sly_html($cat->getName())?></span></a></td>
-			<td class="rex-small"><?= $id ?></td>
-			<td><a href="<?= $base.$id ?>"><?= sly_html($cat->getName()) ?></a></td>
-			<td><a href="<?= $base.$catID ?>&amp;func=edit&amp;edit_id=<?= $id ?>"><?= t('pool_kat_edit')?></a></td>
-			<td><a href="<?= $base.$catID ?>&amp;func=delete&amp;edit_id=<?= $id ?>" class="sly-delete"><?= t('pool_kat_delete') ?></a></td>
-			</tr><?php
+			?>
+			<tr>
+				<td class="sly-icon"><a class="rex-i-element rex-i-mediapool-category sly-sprite" href="<?= $base.$id ?>"><span class="rex-i-element-text"><?= sly_html($cat->getName())?></span></a></td>
+				<td class="rex-small"><?= $id ?></td>
+				<td><a href="<?= $base.$id ?>"><?= sly_html($cat->getName()) ?></a></td>
+				<td class="sly-col-e"><a href="<?= $base.$catID ?>&amp;func=edit&amp;edit_id=<?= $id ?>"><?= t('pool_kat_edit')?></a></td>
+				<td class="sly-col-f"><a href="<?= $base.$catID ?>&amp;func=delete&amp;edit_id=<?= $id ?>" class="sly-delete"><?= t('pool_kat_delete') ?></a></td>
+			</tr>
+			<?
 		}
+	}
+
+	if (empty($categories) && $this->action !== 'add' && $this->action !== 'edit') {
+		?>
+		<tr>
+			<td colspan="5" class="center"><?= t('pool_kat_empty') ?></td>
+		</tr>
+		<?
 	}
 
 	?></tbody>
 </table>
 
-<?php
+<?
 
 if ($this->action == 'add' || $this->action == 'edit') {
 	$container = new sly_Form_Container();
@@ -151,5 +155,5 @@ if ($this->action == 'add' || $this->action == 'edit') {
 	$form->add($container);
 	$form->setResetButton(null);
 	$form->setSubmitButton(null);
-	$form->render();
+	print $form->render();
 }

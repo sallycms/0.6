@@ -31,7 +31,8 @@ pool_kat_create_label: Add new category
 pool_kat_create: 'Add category'
 pool_kat_edit: Edit
 pool_kat_id: ID
-pool_kat_not_deleted: 'Category cannot be deleted, because it is not empty!'
+pool_kat_not_deleted_media: 'Category cannot be deleted, because it still contains files!'
+pool_kat_not_deleted_subcats: 'Category cannot be deleted, because it still contains subcategories!'
 pool_kat_name: Name
 pool_kat_function: Function
 pool_kat_add: Create
@@ -42,6 +43,7 @@ pool_kat_hide: Thumbnail
 pool_kat_path: Path
 pool_kat_caption: List of media categories
 pool_kat_summary: List of all media categories
+pool_kat_empty: No categories where found.
 pool_file_detail: Media: Details
 pool_filename: Filename
 pool_file_exchange: Replace file

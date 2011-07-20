@@ -31,17 +31,19 @@ pool_kat_create_label: Neue Medienkategorie anlegen
 pool_kat_create: Medienkategorie hinzufügen
 pool_kat_edit: Medienkategorie bearbeiten
 pool_kat_id: ID
-pool_kat_not_deleted: 'Kategorie kann nicht gelöscht werden, da sich noch Dateien in dieser Kategorie befinden!'
+pool_kat_not_deleted_media: 'Kategorie kann nicht gelöscht werden, da sich noch Dateien in dieser Kategorie befinden!'
+pool_kat_not_deleted_subcats: 'Kategorie kann nicht gelöscht werden, da sie noch Unterkategorien enthält!'
 pool_kat_name: Name
 pool_kat_function: Funktion
 pool_kat_add: Erstellen
 pool_kat_update: Aktualisieren
-pool_kat_edit: Editieren
-pool_kat_delete: Löschen
+pool_kat_edit: ändern
+pool_kat_delete: löschen
 pool_kat_hide: Thumbnail
 pool_kat_path: Pfad
 pool_kat_caption: Liste der Medienkategorien
 pool_kat_summary: Auflistung der Medienkategorien
+pool_kat_empty: Es wurden keine Kategorien gefunden.
 pool_file_detail: Medien: Detailansicht
 pool_filename: Dateiname
 pool_file_exchange: Datei austauschen
