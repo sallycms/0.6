@@ -160,8 +160,8 @@ if ($user) {
 	// find best starting page
 	sly_Controller_Base::getPage();
 }
-else {
-	sly_Controller_Base::setCurrentPage($isSetup ? 'setup' : 'login');
+elseif (!$isSetup) {
+	sly_Controller_Base::setCurrentPage('login');
 }
 
 // notify addOns about the page to be rendered
