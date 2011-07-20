@@ -11,7 +11,7 @@ pool_sync_files: Dateien Synchronisieren
 pool_sync_button: Synchronisieren
 pool_sync_title: Dateien Synchronisieren
 pool_sync_affected_files: Betroffene Dateien
-pool_sync_no_diffs: keine Unterschiede festgestellt!
+pool_sync_no_diffs: Es wurden keine Unterschiede festgestellt.
 pool_sync_files_synced: Dateien wurden synchronisiert.
 pool_file_not_found: Datei wurde nicht gefunden.
 pool_file_not_found_maybe_too_big: Datei wurde nicht gefunden. Vielleicht war sie zu groß?

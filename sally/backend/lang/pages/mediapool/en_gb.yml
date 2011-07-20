@@ -11,12 +11,12 @@ pool_sync_files: Synchronize files
 pool_sync_button: Synchronize
 pool_sync_title: Synchronize files
 pool_sync_affected_files: Affected Files
-pool_sync_no_diffs: no differences found!
+pool_sync_no_diffs: No differences have been found.
 pool_sync_files_synced: Files have been synchronized.
 pool_file_not_found: File could not be found.
 pool_file_not_found_maybe_too_big: File could not be found. Maybe it was too big?
 pool_file_upload_error: Error on file upload
-pool_file_upload_errortype: 'This file cannot be used for exchange because file type does not match!'
+pool_file_upload_errortype: 'This file cannot be used for exchange because the file types do not match!'
 pool_file_title: Title
 pool_file_file: File
 pool_file_infos_updated: File information updated.

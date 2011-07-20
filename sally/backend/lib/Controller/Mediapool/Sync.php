@@ -47,7 +47,7 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 		// get cleaned filename
 		$newName = SLY_MEDIAFOLDER.'/'.sly_Util_Medium::createFilename($filename, false);
 
-		if ($newName !== $absName) {
+		if ($newName !== $absFile) {
 			// move file to cleaned filename
 			rename($absFile, $newName);
 		}
