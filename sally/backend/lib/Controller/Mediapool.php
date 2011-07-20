@@ -177,7 +177,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		$service = sly_Service_Factory::getMediumService();
 
 		foreach ($media as $mediumID) {
-			$medium = sly_Util_Medium::findById($fileID);
+			$medium = sly_Util_Medium::findById($mediumID);
 			if (!$medium) continue;
 
 			$medium->setCategoryId($this->category);
