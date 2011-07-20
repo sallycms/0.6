@@ -4,6 +4,7 @@
 
 (function($, undef) {
 	var imageExtensions = ['png', 'gif', 'jpg', 'jpeg', 'bmp'];
+	var winObj = [];
 
 	changeImage = function(id, img) {
 		$('#' + id).attr('src', img);
@@ -29,34 +30,35 @@
 	};
 
 	newWindow = function(name, link, width, height, type) {
-		if (width == 0)  width  = 550;
-		if (height == 0) height = 400;
+		if (width === 0)  width  = 550;
+		if (height === 0) height = 400;
+
+		var extra = type;
 
 		if (type == 'scrollbars') extra = 'toolbar';
 		else if (type == 'empty') extra = 'empty';
-		else extra = type;
+
+		var posx,posy;
 
 		if (type == 'nav') {
-			posx   = parseInt(screen.width / 2) - 390;
-			posy   = parseInt(screen.height / 2) - 314;
+			posx   = parseInt(screen.width / 2, 10) - 390;
+			posy   = parseInt(screen.height / 2, 10) - 314;
 			width  = 320;
 			height = 580;
 		}
 		else if (type == 'content') {
-			posx   = parseInt(screen.width / 2) - 60;
-			posy   = parseInt(screen.height / 2) - 314;
+			posx   = parseInt(screen.width / 2, 10) - 60;
+			posy   = parseInt(screen.height / 2, 10) - 314;
 			width  = 470;
 			height = 580;
 		}
 		else {
-			posx = parseInt((screen.width-width) / 2);
-			posy = parseInt((screen.height-height) / 2) - 24;
+			posx = parseInt((screen.width-width) / 2, 10);
+			posy = parseInt((screen.height-height) / 2, 10) - 24;
 		}
 
 		winObj.push(new makeWinObj(name, link, posx, posy, width, height, extra));
 	};
-
-	winObj = [];
 
 	// -------------------------------------------------------------------------------------------------------------------
 
@@ -124,12 +126,13 @@
 	openREXMedialist = function(id) {
 		var medialist = 'REX_MEDIALIST_' + id;
 		var selected  = $('#REX_MEDIALIST_SELECT_' + id + ' option:selected');
+		var param     = '';
 
 		if (selected.length > 0) {
-			var param = '&action=media_details&file_name=' + selected.val();
+			param = '&action=media_details&file_name=' + selected.val();
 		}
 		else if (param === undef) {
-			var param = '';
+			param = '';
 		}
 
 		newPoolWindow('index.php?page=mediapool' + param + '&opener_input_field=' + medialist);
@@ -218,7 +221,7 @@
 		}
 
 		writeREX(id, i_list, i_select);
-	}
+	};
 
 	/* übertrage Werte aus der Selectbox in einer hidden input field */
 	writeREX = function(id, input, select) {
