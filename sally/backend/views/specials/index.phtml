@@ -82,8 +82,8 @@ $buttonBar = new sly_Form_ButtonBar(array(
 					$fieldset = new sly_Form_Fieldset(t('general_info_header'));
 					$fields   = array(
 						new sly_Form_Input_Text('projectname', t('config_projectname'), $config->get('PROJECTNAME')),
-						new sly_Form_Widget_LinkButton('start_article', t('specials_start_article'), $config->get('START_ARTICLE_ID')),
-						new sly_Form_Widget_LinkButton('notfound_article', t('specials_not_found_article'), $config->get('NOTFOUND_ARTICLE_ID')),
+						new sly_Form_Widget_Link('start_article', t('specials_start_article'), $config->get('START_ARTICLE_ID')),
+						new sly_Form_Widget_Link('notfound_article', t('specials_not_found_article'), $config->get('NOTFOUND_ARTICLE_ID')),
 						$defaultClang,
 						$defaultType,
 						$frontendSync,
