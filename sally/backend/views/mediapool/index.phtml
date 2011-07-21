@@ -82,8 +82,8 @@ ob_start();
 		?>
 		<tfoot><tr>
 			<td class="sly-icon">
-				<label class="rex-form-hidden-label" for="checkie"><?= t('pool_select_all') ?></label>
-				<input class="rex-form-checkbox" type="checkbox" name="checkie" id="checkie" value="0" onclick="setAllCheckBoxes('selectedmedia[]', this)" />
+				<label class="rex-form-hidden-label" for="check_all"><?= t('pool_select_all') ?></label>
+				<input class="rex-form-checkbox sly-check-all" type="checkbox" id="check_all" data-target="selectedmedia[]" />
 			</td>
 			<td colspan="3"><?= $add_input ?></td>
 		</tr></tfoot>

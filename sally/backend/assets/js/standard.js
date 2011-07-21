@@ -66,7 +66,7 @@ var slyMediaWidgetCallback = null;
 		if (value) {
 			url += '&subpage=detail&file_name='+value;
 		}
-		else if (subpage.length && (subpage != 'detail' || value)) {
+		else if (subpage && (subpage != 'detail' || value)) {
 			url += '&subpage=' + subpage;
 		}
 
@@ -236,8 +236,8 @@ var slyMediaWidgetCallback = null;
 			this.input.val('');
 		},
 
-		addValue: function(filename) {
-			this.list.append($('<option>').val(filename).text(filename));
+		addValue: function(identifier, title) {
+			this.list.append($('<option>').val(identifier).text(title));
 			this.createList();
 			return false; // signalize the popup to keep open
 		},
@@ -295,6 +295,14 @@ var slyMediaWidgetCallback = null;
 
 		createList: function() {
 			this.input.val(this.getElements().join(','));
+		},
+
+		onOpen: function() {
+			return false;
+		},
+
+		onAdd: function() {
+			return false;
 		}
 	};
 
@@ -319,18 +327,32 @@ var slyMediaWidgetCallback = null;
 		return false;
 	};
 
+	sly.MedialistWidget.prototype.addValue = function(identifier, title) {
+		this.list.append($('<option>').val(identifier).text(identifier));
+		this.createList();
+		return false; // signalize the popup to keep open
+	};
+
 	/////////////////////////////////////////////////////////////////////////////
-	// Popups
+	// Linklist Widgets
 
-	setAllCheckBoxes = function(fieldName, checkbox) {
-		$('input[name=\'' + fieldName + '\']').prop('checked', checkbox.checked);
+	sly.LinklistWidget = function(elem) {
+		sly.AbstractListWidget.call(this, elem);
 	};
 
-	// Checkbox mit der ID <id> anhaken
+	inherit(sly.LinklistWidget, sly.AbstractListWidget);
 
-	checkInput = function(id) {
-		$('#' + id).prop('checked', true);
+	sly.LinklistWidget.prototype.onOpen = function() {
+		var catID = this.element.data('catid');
+
+		sly.openLinkmap(catID, 'slyLinkWidgetCallback');
+		slyLinkWidgetCallback = $.proxy(this.addValue, this);
+
+		return false;
 	};
+
+	/////////////////////////////////////////////////////////////////////////////
+	// Misc functions
 
 	sly_disableLogin = function(timerElement) {
 		var nextTime = parseInt(timerElement.html(), 10) - 1;
@@ -370,58 +392,6 @@ var slyMediaWidgetCallback = null;
 		else
 			slider.slideDown('slow');
 	};
-
-	sly_addListOption = function(parentSpan, title, key) {
-		var list = $('select', parentSpan);
-
-		if (list.find('option[value=\''+key+'\']').length == 0) {
-			list.append($('<option>').val(key).text(title));
-			sly_createList(list);
-		}
-	};
-
-	sly_moveListItem = function(ev) {
-		var
-			link     = $(this),
-			span     = link.parents('span.sly-widget'),
-			list     = $('select', span),
-			func     = link.attr('rel'),
-			selected = $('option:selected', list);
-
-		if (selected) {
-			switch (func) {
-				case 'up':
-					selected.insertBefore(selected.prev());
-					break;
-				case 'down':
-					selected.insertAfter(selected.next());
-					break;
-				case 'top':
-					selected.detach();
-					list.prepend(selected);
-					break;
-				case 'bottom':
-					selected.detach();
-					list.append(selected);
-					break;
-			}
-
-			sly_createList(list);
-		}
-
-		return false;
-	};
-
-	sly_createList = function(list) {
-		var ids = [], options = $('option', list), len = options.length, i = 0;
-
-		for (; i < len; ++i) {
-			ids.push(options[i].value);
-		}
-
-		list.parents('span').find('input[type=hidden]').val(ids.join(','));
-	};
-
 })(jQuery, sly);
 
 jQuery(function($) {
@@ -436,9 +406,19 @@ jQuery(function($) {
 		else if (self.is('.sly-mediabutton')) {
 			new sly.MediaWidget(this);
 		}
+		else if (self.is('.sly-linklistbutton')) {
+			new sly.LinklistWidget(this);
+		}
 		else if (self.is('.sly-medialistbutton')) {
 			new sly.MedialistWidget(this);
 		}
+	});
+
+	// "check all" function for mediapool
+
+	$('.sly-check-all').click(function() {
+		var target = $(this).data('target');
+		$('input[name=\'' + target + '\']').prop('checked', this.checked);
 	});
 
 	// Lösch-Links in Tabellen
@@ -489,7 +469,7 @@ jQuery(function($) {
 
 	$('a.sly-blank').attr('target', '_blank');
 
-   // Medialist-Preview neu anzeigen, beim Wechsel der Auswahl
+   // open mediapool in popup
 
 	$('#rex-navi-page-mediapool a').click(function() {
 		sly.openMediapool();
@@ -569,9 +549,9 @@ jQuery(function($) {
 		// create a new div that will be the slider
 		input.after(slider);
 		slider.addClass('sly-slider').slider({
-			min:   input.attr('min'),
-			max:   input.attr('max'),
-			value: input.val(),
+			min:    input.attr('min'),
+			max:    input.attr('max'),
+			value:  input.val(),
 			change: function(event) {
 				hidden.val(slider.slider('value'));
 			}
@@ -629,40 +609,7 @@ jQuery(function($) {
 		});
 	}
 
-	// Linklist-Buttons
-
-	if ($.fn.autocomplete) {
-		$('.sly-link-filter').autocomplete({
-			url:            'index.php',
-			paramName:      'q',
-			extraParams:    {page: 'api', func: 'linklistbutton_search'},
-			maxCacheLength: 50,
-			matchContains:  true,
-			resultsClass:   'sly-filter-results',
-			showResult:     function(value, data) {
-				return '<span class="name"><strong>' + value + '</strong></span><br/><span class="cat">' + data[1] + '</span>';
-			},
-			onItemSelect:   function(item) {
-				var
-					input = $('input:focus'),
-					span  = input.parents('.sly-widget');
-
-				sly_addListOption(span, item.value, item.data[0]);
-				input.val('');
-			}
-		});
-	}
-
-	$('select.sly-linklist').bind('keydown', 'del', function() {
-		var sel  = $('option:selected', $(this));
-		var next = sel.next();
-
-		sel.remove();
-		next.prop('selected', true);
-		sly_createList($(this));
-	});
-
-	$('body').delegate('.sly-linklistbutton .sly-icons a[rel]', 'click', sly_moveListItem);
+	// Module selection on content page
 
 	$('.sly-module-select').change(function() {
 		$(this).closest('form').submit();
