@@ -11,10 +11,6 @@
 if (!empty($info))    print rex_info($info);
 if (!empty($warning)) print rex_warning($warning);
 
-$form = new sly_Form('index.php', 'POST', 'foo');
-$form->add(new sly_Form_Widget_MediaListButton('mediabutton', 'Datei X', 'foo.jpg'));
-print $form->render();
-
 ?>
 <table class="sly-table sly-addonlist">
 	<caption><?= t('addon_caption') ?></caption>
