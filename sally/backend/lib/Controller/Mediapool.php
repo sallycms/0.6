@@ -23,7 +23,6 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		$this->args    = sly_requestArray('args', 'string');
 
 		$this->getCurrentCategory();
-		$this->initOpener();
 
 		// Header
 
@@ -39,7 +38,8 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 
 		// ArgUrl an Menü anhängen
 
-		$args = '&amp;'.$this->getArgumentString();
+		$argString = $this->getArgumentString();
+		$args      = empty($argString) ? '' : '&amp;'.$argString;
 
 		foreach ($subline as &$item) {
 			$item[2] = '';
@@ -51,6 +51,8 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 
 		$layout->showNavigation(false);
 		$layout->pageHeader($this->t('media'), $subline);
+
+		print $this->render('mediapool/javascript.phtml');
 	}
 
 	protected function t($args) {
@@ -88,32 +90,14 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		return $this->category;
 	}
 
-	protected function initOpener() {
-		$this->opener = sly_request('opener_input_field', 'string', sly_Util_Session::get('media[opener_input_field]', 'string'));
-		sly_util_Session::set('media[opener_input_field]', $this->opener);
-	}
-
 	protected function getOpenerLink(sly_Model_Medium $file) {
-		$field    = $this->opener;
+		$callback = sly_request('callback', 'string');
 		$link     = '';
-		$filename = $file->getFilename();
-		$uname    = urlencode($filename);
 
-		if ($field === 'TINYIMG') {
-			if ($this->isImage($file)) {
-				$title = sly_html($file->getTitle());
-				$link  = '<a href="javascript:insertImage(\''.$uname.'\',\''.$title.'\')">'.$this->t('image_get').'</a> | ';
-			}
-		}
-		elseif ($field === 'TINY') {
-			$link = '<a href="javascript:insertLink(\''.$uname.'\')">'.$this->t('link_get').'</a>';
-		}
-		elseif ($field !== '') {
-			$link = '<a href="javascript:selectMedia(\''.$uname.'\')">'.$this->t('file_get').'</a>';
-
-			if (substr($field, 0, 14) === 'REX_MEDIALIST_') {
-				$link = '<a href="javascript:selectMedialist(\''.$uname.'\')">'.$this->t('file_get').'</a>';
-			}
+		if (!empty($callback)) {
+			$filename = $file->getFilename();
+			$title    = $file->getTitle();
+			$link     = '<a href="#" data-filename="'.sly_html($filename).'" data-title="'.sly_html($title).'">'.$this->t('file_get').'</a>';
 		}
 
 		return $link;

@@ -1,54 +1,47 @@
 <?php
 /*
- * Copyright (C) 2009 REDAXO
+ * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License Version 2 as published by the
- * Free Software Foundation.
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
  */
 
+$callback = sly_request('callback', '');
+$callback = preg_replace('#[^a-z0-9.]#i', '', $callback);
+
+if ($callback):
 ?>
 <script type="text/javascript">
-function selectMedia(filename) {
-	<?	if (!empty($this->opener)): ?>
-	window.opener.jQuery('#<?= addslashes($this->opener) ?>').val(filename);
-	<? endif ?>
-	self.close();
-}
+$(function() {
+	$('#sly-wrapper').delegate('a[href="#"]', 'click', function() {
+		var self     = $(this);
+		var filename = self.data('filename');
+		var title    = self.data('title');
+		var link     = 'data/mediapool/' + filename;
+		var callback = window.opener['<?= $callback ?>'];
+		var close    = true;
 
-function selectMedialist(filename) {
-	<?php
-	if (substr($this->opener, 0, 14) == 'REX_MEDIALIST_') {
-		$id = substr($this->opener, 14);
+		// execute callback (media widget, WYMeditor, ...)
+		if (typeof callback === 'function') {
+			close = callback(filename, title, link);
+		}
 
-		?>
-		var medialist    = 'REX_MEDIALIST_SELECT_<?= $id ?>';
-		var source       = opener.document.getElementById(medialist);
-		var sourcelength = source.options.length;
+		// close the popup
+		if (close) window.close();
+	});
 
-		option = opener.document.createElement('OPTION');
-		option.text  = filename;
-		option.value = filename;
+	var links = $('a[href!="#"]:visible'), len = links.length, i = 0;
 
-		source.options.add(option, sourcelength);
-		opener.writeREXMedialist('<?= $id ?>');
-		<?php
+	for (; i < len; ++i) {
+		links[i].href = links[i].href += '&callback=<?= $callback ?>';
 	}
-	?>
-}
-
-function insertImage(src, alt) {
-	window.opener.insertImage('data/mediapool/' + src, alt);
-	self.close();
-}
-
-function insertLink(src) {
-	window.opener.insertFileLink('data/mediapool/' + src);
-	self.close();
-}
+});
 
 function openPage(src) {
 	window.opener.location.href = src;
 	self.close();
 }
 </script>
+<? endif ?>

@@ -45,7 +45,7 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 		$active = sly_Core::getNavigation()->getActivePage();
 
 		if ($active && $active->isPopup()) {
-			$this->setBodyAttr('onunload', 'closeAll()');
+			$this->setBodyAttr('onunload', 'sly.closeAllPopups()');
 		}
 	}
 

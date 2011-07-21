@@ -27,9 +27,10 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 
 			// close the popup, if requested
 
-			if (sly_post('saveandexit', 'boolean', false) && $file !== null) {
-				print $this->render('mediapool/javascript.phtml');
-				print $this->render('mediapool/upload_js.phtml', array('file' => $file));
+			$callback = sly_request('callback', 'string');
+
+			if ($callback && sly_post('saveandexit', 'boolean', false) && $file !== null) {
+				print $this->render('mediapool/upload_js.phtml', compact('file', 'callback'));
 				exit;
 			}
 			elseif ($file !== null) {

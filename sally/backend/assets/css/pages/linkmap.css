@@ -1,7 +1,7 @@
 #rex-page-linkmap {
-	#sly-page        { width: 100%;            }
-	#rex-redaxo-link { display: none;          }
-	#sly-footer      { display: none;          }
+	#sly-page     { width: 100%;   }
+	#sly-navi-top { display: none; }
+	#sly-footer   { display: none; }
 
 	#sly-wrapper {
 		float: none;

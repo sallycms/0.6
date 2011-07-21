@@ -42,12 +42,9 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 	protected function getGlobals($key = null, $default = null) {
 		if ($this->globals === null) {
 			$this->globals = array(
-				'page'                    => 'linkmap',
-				'HTMLArea'                => sly_request('HTMLArea', 'string'),
-				'opener_input_field'      => sly_request('opener_input_field', 'string'),
-				'opener_input_field_name' => sly_request('opener_input_field_name', 'string'),
-				'category_id'             => sly_request('category_id', 'rex-category-id'),
-				'clang'                   => sly_request('clang', 'rex-clang-id')
+				'page'        => 'linkmap',
+				'category_id' => sly_request('category_id', 'rex-category-id'),
+				'clang'       => sly_request('clang', 'rex-clang-id')
 			);
 		}
 
@@ -70,10 +67,6 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 
 	protected function url($local = array()) {
 		return '?'.http_build_query(array_merge($this->getGlobals(), $local), '', '&amp;');
-	}
-
-	protected function backlink($id, $name) {
-		return sprintf("javascript:insertLink('sally://%d','%s');", $id, addslashes($name));
 	}
 
 	protected function formatLabel($object) {

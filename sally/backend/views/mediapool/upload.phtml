@@ -22,6 +22,7 @@ $form->setEncType('multipart/form-data');
 $form->addHiddenValue('page', 'mediapool');
 $form->addHiddenValue('subpage', 'upload');
 $form->addHiddenValue('func', 'upload');
+$form->addHiddenValue('callback', sly_request('callback', 'string'));
 
 ////////////////////////////////////////////////////////
 // file title
@@ -59,7 +60,7 @@ $submit->setAttribute('value', t('pool_file_upload'));
 
 $form->setResetButton(null);
 
-if (sly_Util_Session::get('media[opener_input_field]') != '') {
+if (sly_request('callback', 'string') != '') {
 	$apply = new sly_Form_Input_Button('submit', 'saveandexit', t('pool_file_upload_get'));
 	$form->setApplyButton($apply);
 }

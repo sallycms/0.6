@@ -8,31 +8,21 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$opener = $this->opener;
-$format = '';
-
-if ($opener == 'TINYIMG') {
-	if ($this->isImage($file)) {
-		$format = 'insertImage("%s", "%s");';
-	}
-}
-elseif ($opener == 'TINY') {
-	$format = 'insertLink("%s");';
-}
-elseif ($opener != '') {
-	if (substr($opener, 0, 14) == 'REX_MEDIALIST_') {
-		$format = 'selectMedialist("%s");';
-	}
-	else {
-		$format = 'selectMedia("%s");';
-	}
-}
-
+$callback = preg_replace('#[^a-z0-9.]#i', '', $callback);
 $filename = addslashes($file->getFilename());
 $title    = addslashes($file->getTitle());
 
 ?>
 <script type="text/javascript">
-<? printf($format, $filename, $title); ?>
-self.close();
+var filename = '<?= $filename ?>';
+var title    = '<?= $title ?>';
+var link     = 'data/mediapool/<?= $filename ?>';
+var callback = window.opener['<?= $callback ?>'];
+
+// execute callback (media widget, WYMeditor, ...)
+if (typeof callback === 'function') {
+	callback(filename, title, link);
+}
+
+window.close();
 </script>

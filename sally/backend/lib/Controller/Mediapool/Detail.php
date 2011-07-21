@@ -27,7 +27,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 
 	protected function getCurrentFile() {
 		if ($this->file === null) {
-			$fileID   = sly_request('file_id', 'int');
+			$fileID   = sly_request('file_id', 'int', -1);
 			$fileName = sly_request('file_name', 'string');
 			$service  = sly_Service_Factory::getMediumService();
 

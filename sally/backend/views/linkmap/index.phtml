@@ -22,7 +22,7 @@
 
 		<div class="rex-area-col-b">
 			<h3 class="rex-hl2"><?= t('lmap_articles') ?></h3>
-			<div class="rex-area-content">
+			<div class="rex-area-content articlelist">
 				<ul>
 				<?php
 
@@ -41,11 +41,11 @@
 
 					$label    = $this->formatLabel($article);
 					$selected = $article->getId() == $this->getGlobals('category_id', 0);
-					$url      = $this->backlink($article->getId(), sly_html($article->getName()));
 					$liAttr   = $selected ? ' id="rex-linkmap-active"' : '';
-					$linkAttr = 'class="'.($article->isOnline() ? 'rex-online' : 'rex-offine').'" href="'.$url.'"';
+					$class    = $article->isOnline() ? 'rex-online' : 'rex-offine';
+					$linkAttr = 'class="'.$class.'" data-id="'.$article->getId().'" data-name="'.sly_html($article->getName()).'"';
 
-					print '<li '.$liAttr.'><a '.$linkAttr.'>'.sly_html($label).'</a></li>';
+					print '<li '.$liAttr.'><a href="#" '.$linkAttr.'>'.sly_html($label).'</a></li>';
 				}
 				?>
 				</ul>

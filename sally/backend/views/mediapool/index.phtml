@@ -11,14 +11,12 @@
  * @package redaxo4
  */
 
-$thumbs       = true;
-$thumbsresize = sly_Service_Factory::getAddOnService()->isAvailable('image_resize');
-$selected     = $this->getCurrentCategory();
+$resize   = sly_Service_Factory::getAddOnService()->isAvailable('image_resize');
+$selected = $this->getCurrentCategory();
 
 ////////////////////////////////////////////////////////
 // info and error messages
 
-print $this->render('mediapool/javascript.phtml');
 print $this->render('mediapool/notices.phtml');
 
 ////////////////////////////////////////////////////////
@@ -120,7 +118,7 @@ ob_start();
 			$alt       = $file->getTitle();
 			$thumbnail = '<img src="'.$icon_src.'" alt="'.sly_html($alt).'" title="'.sly_html($alt).'" />';
 
-			if ($thumbs && $this->isImage($file)) {
+			if ($this->isImage($file)) {
 				$width  = $file->getWidth();
 				$height = $file->getHeight();
 
@@ -136,7 +134,7 @@ ob_start();
 				$encoded   = urlencode($filename);
 				$timestamp = $file->getUpdateDate();
 
-				if ($thumbsresize && $width) {
+				if ($resize && $width) {
 					$attrs['src'] = '../imageresize/'.$width.'w__'.$height.'h__'.$encoded.'?t='.$timestamp;
 				}
 				else {

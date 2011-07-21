@@ -1,56 +1,43 @@
 <?php
 /*
- * Copyright (C) 2009 REDAXO
+ * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
- * This program is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License Version 2 as published by the
- * Free Software Foundation.
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
  */
 
-$openerField     = $this->getGlobals('opener_input_field', '');
-$openerFieldName = $this->getGlobals('opener_input_field_name', '');
-$htmlArea        = $this->getGlobals('HTMLArea', '');
+$callback = sly_get('callback', '');
+$callback = preg_replace('#[^a-z0-9.]#i', '', $callback);
 
-// default value for opener field names
-if (!empty($openerField) && empty($openerFieldName)) {
-	$openerFieldName = $openerField.'_NAME';
-}
-
-// constructing JS via PHP code sucks...
-
+if ($callback):
 ?>
 
 <script type="text/javascript">
-function insertLink(link, name) {
-<? if (!empty($htmlArea)): ?>
-	<? if ($htmlArea == 'TINY'): ?>
-	window.opener.tinyMCE.insertLink(link);
-	<? else: ?>
-	window.opener.<?= preg_replace('#[^a-z0-9-_.]#i', '', $htmlArea) ?>.surroundHTML("<a href="+link+">","</a>");
-	<? endif ?>
-<? endif ?>
+$(function() {
+	$('.articlelist').delegate('a', 'click', function() {
+		var self     = $(this);
+		var id       = self.data('id');
+		var name     = self.data('name');
+		var link     = 'sally://' + id + '/';
+		var callback = window.opener['<?= $callback ?>'];
+		var close    = true;
 
-<? if ($openerField == 'TINY'): ?>
-	window.opener.insertLink(link,name);
-	self.close();
-<? elseif (substr($openerField, 0, 13) == 'REX_LINKLIST_'): $id = substr($openerField, 13); ?>
+		// execute callback (link widget, WYMeditor, ...)
+		if (typeof callback === 'function') {
+			close = callback(id, name, link);
+		}
 
-	var linklist     = 'REX_LINKLIST_SELECT_<?= $id ?>';
-	var linkid       = link.replace('sally://', '');
-	var source       = opener.document.getElementById(linklist);
-	var sourcelength = source.options.length;
+		// close the popup
+		if (close) window.close();
+	});
 
-	option = opener.document.createElement("OPTION");
-	option.text  = name;
-	option.value = linkid;
+	var links = $('a[href!="#"]:visible'), len = links.length, i = 0;
 
-	source.options.add(option, sourcelength);
-	opener.writeREXLinklist('<?= $id ?>');
-<? else: ?>
-	var linkid = link.replace('sally://', '');
-	window.opener.jQuery('#<?= $openerField ?>').val(linkid);
-	window.opener.jQuery('#<?= $openerFieldName ?>').val(name);
-	self.close();
-<? endif ?>
-}
+	for (; i < len; ++i) {
+		links[i].href = links[i].href += '&callback=<?= $callback ?>';
+	}
+});
 </script>
+<? endif ?>

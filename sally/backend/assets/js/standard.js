@@ -2,303 +2,333 @@
  * SallyCMS - JavaScript-Bibliothek
  */
 
-(function($, undef) {
+var sly = {};
+
+// do not use dots inside callback names
+var slyLinkWidgetCallback  = null;
+var slyMediaWidgetCallback = null;
+
+(function($, sly, undef) {
 	var imageExtensions = ['png', 'gif', 'jpg', 'jpeg', 'bmp'];
-	var winObj = [];
 
-	changeImage = function(id, img) {
-		$('#' + id).attr('src', img);
-	};
+	/////////////////////////////////////////////////////////////////////////////
+	// Popups
 
-	makeWinObj = function(name, url, posx, posy, width, height, extra) {
-		if (extra == 'toolbar') extra = 'scrollbars=yes,toolbar=yes';
-		else if (extra == 'empty') extra = 'scrollbars=no,toolbar=no';
-		else extra = 'scrollbars=yes,toolbar=no' + extra;
+	var openPopups = [];
 
+	sly.Popup = function(name, url, posx, posy, width, height, extra) {
 		this.name = name;
 		this.url  = url;
-		this.obj  = window.open(url, name, 'width='+width+',height='+height+',' + extra);
+		this.obj  = window.open(url, name, 'width='+width+',height='+height+extra);
 
 		this.obj.moveTo(posx, posy);
 		this.obj.focus();
+
+		openPopups[name] = this;
+
+		this.close = function() {
+			this.obj.close();
+		};
+
+		this.setGlobal = function(name, value) {
+			this.obj[name] = value;
+		};
 	};
 
-	closeAll = function() {
-		for (var i in winObj) {
-			winObj[i].obj.close();
+	sly.closeAllPopups = function() {
+		for (var name in openPopups) {
+			if (openPopups.hasOwnProperty(name)) {
+				openPopups[name].close();
+			}
 		}
 	};
 
-	newWindow = function(name, link, width, height, type) {
+	sly.openCenteredPopup = function(name, link, width, height, extra) {
 		if (width === 0)  width  = 550;
 		if (height === 0) height = 400;
 
-		var extra = type;
-
-		if (type == 'scrollbars') extra = 'toolbar';
-		else if (type == 'empty') extra = 'empty';
-
-		var posx,posy;
-
-		if (type == 'nav') {
-			posx   = parseInt(screen.width / 2, 10) - 390;
-			posy   = parseInt(screen.height / 2, 10) - 314;
-			width  = 320;
-			height = 580;
-		}
-		else if (type == 'content') {
-			posx   = parseInt(screen.width / 2, 10) - 60;
-			posy   = parseInt(screen.height / 2, 10) - 314;
-			width  = 470;
-			height = 580;
-		}
-		else {
-			posx = parseInt((screen.width-width) / 2, 10);
-			posy = parseInt((screen.height-height) / 2, 10) - 24;
+		if (extra === undef) {
+			extra = ',scrollbars=yes,toolbar=no,status=yes,resizable=yes';
 		}
 
-		winObj.push(new makeWinObj(name, link, posx, posy, width, height, extra));
+		var posx = parseInt((screen.width-width) / 2, 10);
+		var posy = parseInt((screen.height-height) / 2, 10) - 24;
+
+		return new sly.Popup(name, link, posx, posy, width, height, extra);
 	};
 
-	// -------------------------------------------------------------------------------------------------------------------
+	/////////////////////////////////////////////////////////////////////////////
+	// Mediapool
 
-	newPoolWindow = function(link) {
-		newWindow('rexmediapopup', link, 760, 600, ',status=yes,resizable=yes');
-	};
-
-	newLinkMapWindow = function(link) {
-		newWindow('linkmappopup', link, 760, 600, ',status=yes,resizable=yes');
-	};
-
-	openMediaDetails = function(id, file_id, file_category_id) {
-		if (id === undef) id = '';
-		newPoolWindow('index.php?page=mediapool&subpage=detail&opener_input_field=' + id + '&file_id=' + file_id + '&file_category_id=' + file_category_id);
-	};
-
-	openMediaPool = function(id) {
-		if (id === undef) id = '';
-		newPoolWindow('index.php?page=mediapool&opener_input_field=' + id);
-	};
-
-	openREXMedia = function(id, param) {
-		var mediaid = 'REX_MEDIA_'+id;
-		var value   = $('#' + mediaid).val();
-
-		if (param === undef) {
-			param = '';
-		}
+	sly.openMediapool = function(subpage, value, callback) {
+		var url = 'index.php?page=mediapool';
 
 		if (value) {
-			param += '&subpage=detail&file_name=' + value;
+			url += '&subpage=detail&file_name='+value;
+		}
+		else if (subpage.length && (subpage != 'detail' || value)) {
+			url += '&subpage=' + subpage;
 		}
 
-		newPoolWindow('index.php?page=mediapool' + param + '&opener_input_field=' + mediaid);
+		if (callback) {
+			url += '&callback='+callback;
+		}
+
+		return sly.openCenteredPopup('slymediapool', url, 760, 600);
 	};
 
-	deleteREXMedia = function(id) {
-		$('#REX_MEDIA_' + id).val('');
+	sly.openLinkmap = function(value, callback) {
+		var url = 'index.php?page=linkmap';
+
+		if (value) {
+			url += '&category_id='+value;
+		}
+
+		if (callback) {
+			url += '&callback='+callback;
+		}
+
+		return sly.openCenteredPopup('slylinkmap', url, 760, 600);
 	};
 
-	addREXMedia = function(id, params) {
-		if (params === undef) params = '';
-		newPoolWindow('index.php?page=mediapool&subpage=upload&opener_input_field=REX_MEDIA_'+id+params);
+	/////////////////////////////////////////////////////////////////////////////
+	// Helper
+
+	var inherit = function(subClass, baseClass) {
+		var tmpClass = function() {};
+		tmpClass.prototype = baseClass.prototype;
+		subClass.prototype = new tmpClass();
 	};
 
-	openLinkMap = function(id, param) {
-		if (id    === undef) id    = '';
-		if (param === undef) param = '';
-		newLinkMapWindow('index.php?page=linkmap&opener_input_field='+id+param);
+	/////////////////////////////////////////////////////////////////////////////
+	// Abstract Widget
+
+	sly.AbstractWidget = function(elem) {
+		this.element = $(elem);
+		this.input   = this.element.find('input[type=hidden]');
+		this.id      = this.element.data('id');
+		this.inputID = this.input.attr('id');
+
+		// register events
+		var icons = this.element.find('.sly-icons');
+		icons.delegate('a[rel=open]',   'click', $.proxy(this.onOpen,   this));
+		icons.delegate('a[rel=add]',    'click', $.proxy(this.onAdd,    this));
+		icons.delegate('a[rel=delete]', 'click', $.proxy(this.onDelete, this));
 	};
 
-	setValue = function(id, value) {
-		$('#'+id).val(value);
+	sly.AbstractWidget.prototype = {
+		getValue: function() {
+			return this.input.val();
+		},
+
+		setValue: function(val) {
+			this.input.val(val);
+			return true; // signalize the popup to close itself
+		},
+
+		clear: function() {
+			this.setValue('');
+		},
+
+		onOpen: function() {
+			return false;
+		},
+
+		onAdd: function() {
+			return false;
+		},
+
+		onDelete: function() {
+			this.clear();
+			return false;
+		}
 	};
+
+	/////////////////////////////////////////////////////////////////////////////
+	// Media Widgets
+
+	sly.MediaWidget = function(elem) {
+		sly.AbstractWidget.call(this, elem);
+
+		// media widgets don't use hidden input fields, so overwrite the default one
+		this.input = this.element.find('input');
+	};
+
+	inherit(sly.MediaWidget, sly.AbstractWidget);
+
+	sly.MediaWidget.prototype.onOpen = function() {
+		sly.openMediapool('detail', this.getValue(), 'slyMediaWidgetCallback');
+		slyMediaWidgetCallback = $.proxy(this.setValue, this);
+		return false;
+	};
+
+	sly.MediaWidget.prototype.onAdd = function() {
+		sly.openMediapool('upload', '', 'slyMediaWidgetCallback');
+		slyMediaWidgetCallback = $.proxy(this.setValue, this);
+		return false;
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+	// Link Widgets
+
+	sly.LinkWidget = function(elem) {
+		sly.AbstractWidget.call(this, elem);
+
+		this.nameInput = this.element.find('input[type=text]');
+	};
+
+	inherit(sly.LinkWidget, sly.AbstractWidget);
+
+	sly.LinkWidget.prototype.setValue = function(articleID, articleName) {
+		this.input.val(articleID || '');
+		this.nameInput.val(articleName || '');
+	};
+
+	sly.LinkWidget.prototype.onOpen = function() {
+		var catID = this.element.data('catid');
+
+		sly.openLinkmap(catID, 'slyLinkWidgetCallback');
+		slyLinkWidgetCallback = $.proxy(this.setValue, this);
+
+		return false;
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+	// Generic lists
+
+	sly.AbstractListWidget = function(elem) {
+		this.element = $(elem);
+		this.input   = this.element.find('input');
+		this.list    = this.element.find('select');
+		this.id      = this.element.data('id');
+		this.inputID = this.input.attr('id');
+
+		// register events
+		var icons = this.element.find('.sly-icons.move');
+		icons.delegate('a', 'click', $.proxy(this.onMove, this));
+
+		icons = this.element.find('.sly-icons.edit');
+		icons.delegate('a[rel=open]',   'click', $.proxy(this.onOpen,   this));
+		icons.delegate('a[rel=add]',    'click', $.proxy(this.onAdd,    this));
+		icons.delegate('a[rel=delete]', 'click', $.proxy(this.onDelete, this));
+	};
+
+	sly.AbstractListWidget.prototype = {
+		getElements: function() {
+			var options = this.list.find('option');
+			var result  = [];
+
+			for (var i = 0, len = options.length; i < len; ++i) {
+				result.push(options[i].value);
+			}
+
+			return result;
+		},
+
+		getSelected: function() {
+			var selected = this.list.find('option:selected');
+			return selected.length ? selected.val() : null;
+		},
+
+		clear: function() {
+			this.list.find('option').remove();
+			this.input.val('');
+		},
+
+		addValue: function(filename) {
+			this.list.append($('<option>').val(filename).text(filename));
+			this.createList();
+			return false; // signalize the popup to keep open
+		},
+
+		onDelete: function() {
+			var selected = this.list.find('option:selected');
+
+			if (selected.length === 0) {
+				return false;
+			}
+
+			// find the element to select
+			var toSelect = selected.next();
+
+			if (toSelect.length === 0) {
+				toSelect = selected.prev();
+			}
+
+			// remove element and mark the next/prev one
+			selected.remove();
+			toSelect.prop('selected', true);
+
+			// re-create the <input>
+			this.createList();
+
+			// done
+			return false;
+		},
+
+		onMove: function(event) {
+			var direction = $(event.target).closest('a').attr('rel');
+			var list      = this.list;
+			var selected  = list.find('option:selected');
+
+			if (selected.length === 0) {
+				return false;
+			}
+
+			if (direction === 'top') {
+				list.prepend(selected);
+			}
+			else if (direction === 'up') {
+				selected.prev().insertAfter(selected);
+			}
+			else if (direction === 'down') {
+				selected.next().insertBefore(selected);
+			}
+			else if (direction === 'bottom') {
+				list.append(selected);
+			}
+
+			this.createList();
+			return false;
+		},
+
+		createList: function() {
+			this.input.val(this.getElements().join(','));
+		}
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+	// Medialist Widgets
+
+	sly.MedialistWidget = function(elem) {
+		sly.AbstractListWidget.call(this, elem);
+	};
+
+	inherit(sly.MedialistWidget, sly.AbstractListWidget);
+
+	sly.MedialistWidget.prototype.onOpen = function() {
+		sly.openMediapool('detail', this.getSelected(), 'slyMediaWidgetCallback');
+		slyMediaWidgetCallback = $.proxy(this.addValue, this);
+		return false;
+	};
+
+	sly.MedialistWidget.prototype.onAdd = function() {
+		sly.openMediapool('upload', '', 'slyMediaWidgetCallback');
+		slyMediaWidgetCallback = $.proxy(this.addValue, this);
+		return false;
+	};
+
+	/////////////////////////////////////////////////////////////////////////////
+	// Popups
 
 	setAllCheckBoxes = function(fieldName, checkbox) {
-		jQuery('input[name=\'' + fieldName + '\']').prop('checked', checkbox.checked);
-	};
-
-	deleteREXLink = function(id) {
-		$('#LINK_' + id).val('');
-		$('#LINK_' + id + '_NAME').val('');
-	};
-
-	openREXMedialist = function(id) {
-		var medialist = 'REX_MEDIALIST_' + id;
-		var selected  = $('#REX_MEDIALIST_SELECT_' + id + ' option:selected');
-		var param     = '';
-
-		if (selected.length > 0) {
-			param = '&action=media_details&file_name=' + selected.val();
-		}
-		else if (param === undef) {
-			param = '';
-		}
-
-		newPoolWindow('index.php?page=mediapool' + param + '&opener_input_field=' + medialist);
-	};
-
-	addREXMedialist = function(id, params) {
-		if (params === undef) params = '';
-		newPoolWindow('index.php?page=mediapool&subpage=upload&opener_input_field=REX_MEDIALIST_'+id+params);
-	};
-
-	deleteREXMedialist = function(id) {
-		deleteREX(id, 'REX_MEDIALIST_', 'REX_MEDIALIST_SELECT_');
-	};
-
-	moveREXMedialist = function(id, direction) {
-		moveREX(id, 'REX_MEDIALIST_', 'REX_MEDIALIST_SELECT_', direction);
-	};
-
-	writeREXMedialist = function(id) {
-		writeREX(id, 'REX_MEDIALIST_', 'REX_MEDIALIST_SELECT_');
-	};
-
-	openREXLinklist = function(id, param) {
-		var
-			linklist = 'REX_LINKLIST_' + id,
-			selected = $('#REX_LINKLIST_SELECT_' + id + ' option:selected');
-
-		if (selected.length > 0) {
-			param = '&action=link_details&file_name=' + selected.val();
-		}
-		else if (param === undef) {
-			param = '';
-		}
-
-		newLinkMapWindow('index.php?page=linkmap&opener_input_field='+linklist+param);
-	};
-
-	deleteREXLinklist = function(id) {
-		deleteREX(id, 'REX_LINKLIST_', 'REX_LINKLIST_SELECT_');
-	};
-
-	moveREXLinklist = function(id, direction) {
-		moveREX(id, 'REX_LINKLIST_', 'REX_LINKLIST_SELECT_', direction);
-	};
-
-	writeREXLinklist = function(id) {
-		writeREX(id, 'REX_LINKLIST_', 'REX_LINKLIST_SELECT_');
-	};
-
-	deleteREX = function(id, i_list, i_select) {
-		var
-			$select  = $('#' + i_select + id),
-			position = $('option:selected', $select).index();
-
-		if (position == -1) return;
-		$('option:eq(' + position + ')', $select).remove();
-
-		var length = $('option', $select).length;
-
-		if (length >= 1) {
-			if (length <= position) position--;
-			$('#' + i_select + id + ' option:eq(' + position + ')').prop('selected', true);
-		}
-
-		writeREX(id, i_list, i_select);
-	};
-
-	moveREX = function(id, i_list, i_select, direction) {
-		var
-			$select   = $('#' + i_select + id),
-			$selected = $('option:selected', $select);
-
-		if (!$selected.length) return;
-
-		if (direction == 'top') {
-			$select.prepend($selected);
-		}
-		else if (direction == 'up') {
-			$($selected).prev().insertAfter($selected);
-		}
-		else if (direction == 'down') {
-			$($selected).next().insertBefore($selected);
-		}
-		else if (direction == 'bottom') {
-			$select.append($selected);
-		}
-
-		writeREX(id, i_list, i_select);
-	};
-
-	/* übertrage Werte aus der Selectbox in einer hidden input field */
-	writeREX = function(id, input, select) {
-		var
-			$target  = $('#' + input + id),
-			elements = [];
-
-		$('#' + select + id + ' option').each(function(){
-			elements.push($(this).val());
-		});
-
-		$target.val(elements.join(','));
-	};
-
-	moveItem = function(arr, from, to) {
-		if (from == to || to < 0) {
-			return arr;
-		}
-
-		var tmp = arr[from], index = from;
-
-		if (from > to) {
-			for (; index > to; index--) {
-				arr[index] = arr[index-1];
-			}
-		}
-		else {
-			for (; index < to; index++) {
-				arr[index] = arr[index+1];
-			}
-		}
-
-		arr[to] = tmp;
-		return arr;
+		$('input[name=\'' + fieldName + '\']').prop('checked', checkbox.checked);
 	};
 
 	// Checkbox mit der ID <id> anhaken
 
 	checkInput = function(id) {
 		$('#' + id).prop('checked', true);
-	};
-
-	// ------------------ Preview fuer REX_MEDIA_BUTTONS, REX_MEDIALIST_BUTTONS
-
-	rexShowMediaPreview = function() {
-		var value;
-
-		if ($(this).hasClass('rex-widget-media')) {
-			value = $('input[type=text]', this).val();
-		}
-		else {
-			value = $('select option:selected', this).text();
-		}
-
-		var div = $('.rex-media-preview', this);
-		var url = '../imageresize/246a__' + value;
-
-		if (value && value.length != 0 && $.inArray(extension, imageExtensions)) {
-			// img tag nur einmalig einfügen, ggf erzeugen wenn nicht vorhanden
-			var img = $('img', div);
-
-			if (img.length == 0) {
-				div.html('<img />');
-				img = $('img', div);
-			}
-
-			img.attr('src', url);
-
-			// warten bis der layer komplett ausgeblendet ist
-
-			if (div.css('height') == 'auto') {
-				div.fadeIn('normal');
-			}
-		}
-		else {
-			div.slideUp('fast');
-		}
 	};
 
 	sly_disableLogin = function(timerElement) {
@@ -338,7 +368,7 @@
 			slider.slideUp('slow');
 		else
 			slider.slideDown('slow');
-	},
+	};
 
 	sly_addListOption = function(parentSpan, title, key) {
 		var list = $('select', parentSpan);
@@ -347,7 +377,7 @@
 			list.append($('<option>').val(key).text(title));
 			sly_createList(list);
 		}
-	},
+	};
 
 	sly_moveListItem = function(ev) {
 		var
@@ -379,7 +409,7 @@
 		}
 
 		return false;
-	},
+	};
 
 	sly_createList = function(list) {
 		var ids = [], options = $('option', list), len = options.length, i = 0;
@@ -391,9 +421,25 @@
 		list.parents('span').find('input[type=hidden]').val(ids.join(','));
 	};
 
-})(jQuery);
+})(jQuery, sly);
 
 jQuery(function($) {
+	// Init widgets
+
+	$('.sly-widget').each(function() {
+		var self = $(this);
+
+		if (self.is('.sly-linkbutton')) {
+			new sly.LinkWidget(this);
+		}
+		else if (self.is('.sly-mediabutton')) {
+			new sly.MediaWidget(this);
+		}
+		else if (self.is('.sly-medialistbutton')) {
+			new sly.MedialistWidget(this);
+		}
+	});
+
 	// Lösch-Links in Tabellen
 
 	$('table.rex-table').delegate('a.sly-delete, input.sly-button-delete', 'click', function() {
@@ -444,20 +490,8 @@ jQuery(function($) {
 
    // Medialist-Preview neu anzeigen, beim Wechsel der Auswahl
 
-	$('.rex-widget-medialist.rex-widget-preview').click(rexShowMediaPreview);
-
-	$('.rex-widget-media.rex-widget-preview, .rex-widget-medialist.rex-widget-preview')
-		.bind('mousemove', rexShowMediaPreview)
-		.bind('mouseleave', function() {
-			var div = $('.rex-media-preview', this);
-
-			if (div.css('height') != 'auto') {
-				div.slideUp('normal');
-			}
-		});
-
 	$('#rex-navi-page-mediapool a').click(function() {
-		newPoolWindow('index.php?page=mediapool');
+		sly.openMediapool();
 		return false;
 	});
 
@@ -556,7 +590,7 @@ jQuery(function($) {
 			equal   = $this.is(':visible'),
 			id      = $this.attr('rel'),
 			checked = equal ? ' checked="checked"': '',
-			span    = '<span class="sly-form-i18n-switch"><input type="checkbox" name="equal__'+id+'" id="equal__'+id+'" value="1"'+checked+' /><\/span>'
+			span    = '<span class="sly-form-i18n-switch"><input type="checkbox" name="equal__'+id+'" id="equal__'+id+'" value="1"'+checked+' /><\/span>';
 
 		if (equal) {
 			$('label:first', this).after(span);
@@ -629,7 +663,7 @@ jQuery(function($) {
 
 	$('body').delegate('.sly-linklistbutton .sly-icons a[rel]', 'click', sly_moveListItem);
 
-	$('.sly-module-select').change(function(){
+	$('.sly-module-select').change(function() {
 		$(this).closest('form').submit();
 	});
 });
