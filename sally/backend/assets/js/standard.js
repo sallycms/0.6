@@ -182,6 +182,7 @@ var slyMediaWidgetCallback = null;
 	sly.LinkWidget.prototype.setValue = function(articleID, articleName) {
 		this.input.val(articleID || '');
 		this.nameInput.val(articleName || '');
+		return true; // signalize the popup to close itself
 	};
 
 	sly.LinkWidget.prototype.onOpen = function() {
