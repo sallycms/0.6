@@ -354,13 +354,13 @@ var slyMediaWidgetCallback = null;
 	/////////////////////////////////////////////////////////////////////////////
 	// Misc functions
 
-	sly_disableLogin = function(timerElement) {
+	sly.disableLogin = function(timerElement) {
 		var nextTime = parseInt(timerElement.html(), 10) - 1;
 
 		timerElement.html(nextTime + '');
 
 		if (nextTime > 0) {
-			setTimeout(sly_disableLogin, 1000, timerElement);
+			setTimeout(sly.disableLogin, 1000, timerElement);
 		}
 		else {
 			$('div.rex-message p span').html($('#loginformular').data('message'));
@@ -369,13 +369,13 @@ var slyMediaWidgetCallback = null;
 		}
 	};
 
-	sly_startLoginTimer = function(message) {
+	sly.startLoginTimer = function(message) {
 		var timerElement = $('div.rex-message p span strong');
 
 		if (timerElement.length == 1) {
 			$('#loginformular input:not(:hidden)').prop('disabled', true);
 			$('#loginformular').data('message', message);
-			setTimeout(sly_disableLogin, 1000, timerElement);
+			setTimeout(sly.disableLogin, 1000, timerElement);
 		}
 	};
 
