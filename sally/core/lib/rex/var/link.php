@@ -8,10 +8,10 @@
  */
 
 /**
- * REX_LINK_BUTTON,
+ * REX_LINK_WIDGET,
  * REX_LINK,
  * REX_LINK_ID,
- * REX_LINKLIST_BUTTON,
+ * REX_LINKLIST_WIDGET,
  * REX_LINKLIST
  *
  * @ingroup redaxo
@@ -19,10 +19,10 @@
 class rex_var_link extends rex_var {
 	
 	const LINK           = 'REX_LINK';
-	const LINKID        = 'REX_LINK_ID';
+	const LINKID         = 'REX_LINK_ID';
 	const LINKLIST       = 'REX_LINKLIST';
-	const LINKBUTTON     = 'REX_LINK_BUTTON';
-	const LINKLISTBUTTON = 'REX_LINKLIST_BUTTON';
+	const LINKWIDGET     = 'REX_LINK_WIDGET';
+	const LINKLISTWIDGET = 'REX_LINKLIST_WIDGET';
 
 	public function getRequestValues($REX_ACTION) {
 		foreach (array('LINK', 'LINKLIST') as $type) {
@@ -67,8 +67,8 @@ class rex_var_link extends rex_var {
 
 	public function getBEInput($REX_ACTION, $content) {
 		$content = $this->getOutput($REX_ACTION, $content);
-		$content = $this->matchLinkButton($REX_ACTION, $content);
-		$content = $this->matchLinkListButton($REX_ACTION, $content);
+		$content = $this->matchLinkWidget($REX_ACTION, $content);
+		$content = $this->matchLinkListWidget($REX_ACTION, $content);
 
 		return $content;
 	}
@@ -92,9 +92,9 @@ class rex_var_link extends rex_var {
 	}
 
 	/**
-	 * Button für die Eingabe
+	 * Widget für die Eingabe
 	 */
-	public function matchLinkButton($REX_ACTION, $content) {
+	public function matchLinkWidget($REX_ACTION, $content) {
 		$def_category = '';
 		$article_id   = sly_request('article_id', 'int');
 
@@ -103,7 +103,7 @@ class rex_var_link extends rex_var {
 			$def_category = $art->getCategoryId();
 		}
 
-		$var     = self::LINKBUTTON;
+		$var     = self::LINKWIDGET;
 		$matches = $this->getVarParams($content, $var);
 
 		foreach ($matches as $match) {
@@ -116,7 +116,7 @@ class rex_var_link extends rex_var {
 			// die Linkmap mit der aktuellen Kategorie öffnen
 			list ($category, $args) = $this->extractArg('category', $args, $def_category);
 
-			$replace = $this->getLinkButton($id, $value, $category, $args);
+			$replace = $this->getLinkWidget($id, $value, $category, $args);
 			$replace = $this->handleGlobalWidgetParams($var, $args, $replace);
 			$content = str_replace($var.'['.$param_str.']', $replace, $content);
 		}
@@ -125,10 +125,10 @@ class rex_var_link extends rex_var {
 	}
 
 	/**
-	 * Button für die Eingabe
+	 * Widget für die Eingabe
 	 */
 	public function matchLinkListButton($REX_ACTION, $content) {
-		$var     = self::LINKLISTBUTTON;
+		$var     = self::LINKLISTWIDGET;
 		$matches = $this->getVarParams($content, $var);
 
 		foreach ($matches as $match) {
@@ -138,7 +138,7 @@ class rex_var_link extends rex_var {
 
 			$value = isset($REX_ACTION[self::LINKLIST][$id]) ? strval($REX_ACTION[self::LINKLIST][$id]) : '';
 
-			$replace = $this->getLinklistButton($id, $value, $category);
+			$replace = $this->getLinklistWidget($id, $value, $category);
 			$replace = $this->handleGlobalWidgetParams($var, $args, $replace);
 			$content = str_replace($var.'['.$param_str.']', $replace, $content);
 		}
@@ -208,24 +208,24 @@ class rex_var_link extends rex_var {
 	}
 
 	/**
-	 * Gibt das Button Template zurück
+	 * Gibt das Widget Template zurück
 	 */
-	public function getLinkButton($id, $article_id, $category = '') {
-		// TODO: Build something like $button->setRootCat($category);
-		$button = new sly_Form_Widget_LinkButton('LINK['.$id.']', null, $article_id, $id);
-		$widget = '<div class="rex-widget">'.$button->render().'</div>';
+	public function getLinkWidget($id, $article_id, $category = '') {
+		// TODO: Build something like $widget->setRootCat($category);
+		$widget = new sly_Form_Widget_Link('LINK['.$id.']', null, $article_id, $id);
+		$widget = '<div class="rex-widget">'.$widget->render().'</div>';
 
 		return $widget;
 	}
 
 	/**
-	 * Gibt das ListButton Template zurück
+	 * Gibt das ListWidget Template zurück
 	 */
-	public function getLinklistButton($id, $value, $category = '') {
-		// TODO: Build something like $button->setRootCat($category);
+	public function getLinklistWidget($id, $value, $category = '') {
+		// TODO: Build something like $widget->setRootCat($category);
 		$articles = explode(',', $value);
-		$button   = new sly_Form_Widget_LinkListButton('LINKLIST['.$id.']', null, $articles, $id);
-		$widget   = '<div class="rex-widget">'.$button->render().'</div>';
+		$widget   = new sly_Form_Widget_LinkList('LINKLIST['.$id.']', null, $articles, $id);
+		$widget   = '<div class="rex-widget">'.$widget->render().'</div>';
 
 		return $widget;
 	}

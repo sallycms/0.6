@@ -400,16 +400,16 @@ jQuery(function($) {
 	$('.sly-widget').each(function() {
 		var self = $(this);
 
-		if (self.is('.sly-linkbutton')) {
+		if (self.is('.sly-link')) {
 			new sly.LinkWidget(this);
 		}
-		else if (self.is('.sly-mediabutton')) {
+		else if (self.is('.sly-media')) {
 			new sly.MediaWidget(this);
 		}
-		else if (self.is('.sly-linklistbutton')) {
+		else if (self.is('.sly-linklist')) {
 			new sly.LinklistWidget(this);
 		}
-		else if (self.is('.sly-medialistbutton')) {
+		else if (self.is('.sly-medialist')) {
 			new sly.MedialistWidget(this);
 		}
 	});

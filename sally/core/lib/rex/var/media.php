@@ -8,16 +8,10 @@
  */
 
 /**
- * REX_FILE[1],
- * REX_FILELIST[1],
- * REX_FILE_BUTTON[1],
- * REX_FILELIST_BUTTON[1],
  * REX_MEDIA[1],
  * REX_MEDIALIST[1],
- * REX_MEDIA_BUTTON[1],
- * REX_MEDIALIST_BUTTON[1]
- *
- * Alle Variablen die mit REX_FILE beginnnen sind als deprecated anzusehen!
+ * REX_MEDIA_WIDGET[1],
+ * REX_MEDIALIST_WIDGET[1]
  *
  * @ingroup redaxo
  */
@@ -26,8 +20,8 @@ class rex_var_media extends rex_var {
 
 	const MEDIA           = 'REX_MEDIA';
 	const MEDIALIST       = 'REX_MEDIALIST';
-	const MEDIABUTTON     = 'REX_MEDIA_BUTTON';
-	const MEDIALISTBUTTON = 'REX_MEDIALIST_BUTTON';
+	const MEDIAWIDGET     = 'REX_MEDIA_WIDGET';
+	const MEDIALISTWIDGET = 'REX_MEDIALIST_WIDGET';
 
 	public function getRequestValues($REX_ACTION) {
 		foreach (array('MEDIA', 'MEDIALIST') as $type) {
@@ -71,8 +65,8 @@ class rex_var_media extends rex_var {
 	// --------------------------------- Output
 
 	public function getBEInput($REX_ACTION, $content) {
-		$content = $this->matchMediaButton($REX_ACTION, $content);
-		$content = $this->matchMediaListButton($REX_ACTION, $content);
+		$content = $this->matchMediaWidget($REX_ACTION, $content);
+		$content = $this->matchMediaListWidget($REX_ACTION, $content);
 		$content = $this->getOutput($REX_ACTION, $content);
 		return $content;
 	}
@@ -109,11 +103,11 @@ class rex_var_media extends rex_var {
 	}
 
 	/**
-	 * MediaButton für die Eingabe
+	 * MediaWidget für die Eingabe
 	 */
-	public function matchMediaButton($REX_ACTION, $content) {
-
-		$matches = $this->getVarParams($content, self::MEDIABUTTON);
+	public function matchMediaWidget($REX_ACTION, $content) {
+		$var = self::MEDIAWIDGET;
+		$matches = $this->getVarParams($content, self::MEDIAWIDGET);
 
 		foreach ($matches as $match) {
 			list ($param_str, $args) = $match;
@@ -122,19 +116,20 @@ class rex_var_media extends rex_var {
 
 			$value = isset($REX_ACTION[self::MEDIA][$id]) ? strval($REX_ACTION[self::MEDIA][$id]) : '';
 
-			$replace = $this->getMediaButton($id, $value, $category, $args);
-			$replace = $this->handleGlobalWidgetParams(self::MEDIABUTTON, $args, $replace);
-			$content = str_replace(self::MEDIABUTTON.'['.$param_str.']', $replace, $content);
+			$replace = $this->getMediaWidget($id, $value, $category, $args);
+			$replace = $this->handleGlobalWidgetParams($var, $args, $replace);
+			$content = str_replace($var.'['.$param_str.']', $replace, $content);
 		}
 
 		return $content;
 	}
 
 	/**
-	 * MediaListButton für die Eingabe
+	 * MediaListWidget für die Eingabe
 	 */
-	public function matchMediaListButton($slice_id, $content) {
-		$matches = $this->getVarParams($content, self::MEDIALISTBUTTON);
+	public function matchMediaListWidget($REX_ACTION, $content) {
+		$var = self::MEDIALISTWIDGET;
+		$matches = $this->getVarParams($content, $var);
 
 		foreach ($matches as $match) {
 			list ($param_str, $args) = $match;
@@ -149,8 +144,8 @@ class rex_var_media extends rex_var {
 			}
 
 			$replace = $this->getMedialistButton($id, $value, $category, $args);
-			$replace = $this->handleGlobalWidgetParams(self::MEDIALISTBUTTON, $args, $replace);
-			$content = str_replace(self::MEDIALISTBUTTON.'['.$param_str.']', $replace, $content);
+			$replace = $this->handleGlobalWidgetParams($var, $args, $replace);
+			$content = str_replace($var.'['.$param_str.']', $replace, $content);
 		}
 
 		return $content;
@@ -159,72 +154,69 @@ class rex_var_media extends rex_var {
 	/**
 	 * Wert für die Ausgabe
 	 */
-	public function matchMedia($slice_id, $content) {
-			$matches = $this->getVarParams($content, self::MEDIA);
+	public function matchMedia($REX_ACTION, $content) {
+		$var = self::MEDIA;
+		$matches = $this->getVarParams($content, $var);
+		foreach ($matches as $match) {
+			list ($param_str, $args) = $match;
+			list ($id, $args) = $this->extractArg('id', $args, 0);
+			
+			$value = isset($REX_ACTION[$var][$id]) ? strval($REX_ACTION[$var][$id]) : '';
 
-			foreach ($matches as $match) {
-				list ($param_str, $args) = $match;
-				list ($id, $args)        = $this->extractArg('id', $args, 0);
-
-				$value = isset($REX_ACTION[self::MEDIA][$id]) ? strval($REX_ACTION[self::MEDIA][$id]) : '';
-
-				// Mimetype ausgeben
-				if (isset($args['mimetype'])) {
-					$medium = sly_Util_Medium::findByFilename($value);
-					if ($medium) $replace = $medium->getType();
-				}
-				// "normale" Ausgabe
-				else {
-					$replace = $value;
-				}
-
-				$replace = $this->handleGlobalVarParams(self::MEDIA, $args, $replace);
-				$content = str_replace(self::MEDIA.'['.$param_str.']', $replace, $content);
+			// Mimetype ausgeben
+			if (isset($args['mimetype'])) {
+				$medium = sly_Util_Medium::findByFilename($value);
+				if ($medium) $replace = $medium->getType();
+			}else {
+				$replace = $value;
 			}
 
+			$replace = $this->handleGlobalVarParams($var, $args, $replace);
+			$content = str_replace($var.'['.$param_str.']', $replace, $content);
+		}
 		return $content;
 	}
 
 	/**
 	 * Wert für die Ausgabe
 	 */
-	public function matchMediaList($slice_id, $content) {
-			$matches = $this->getVarParams($content, self::MEDIALIST);
+	public function matchMediaList($REX_ACTION, $content) {
+		$var = self::MEDIALIST;
+		$matches = $this->getVarParams($content, $var);
 
-			foreach ($matches as $match) {
-				list ($param_str, $args) = $match;
-				list ($id, $args) = $this->extractArg('id', $args, 0);
+		foreach ($matches as $match) {
+			list ($param_str, $args) = $match;
+			list ($id, $args) = $this->extractArg('id', $args, 0);
 
-				$value = isset($REX_ACTION[self::MEDIALIST][$id]) ? strval($REX_ACTION[self::MEDIALIST][$id]) : '';
+			$value = isset($REX_ACTION[$var][$id]) ? strval($REX_ACTION[$var][$id]) : '';
 
-				$replace = $this->handleGlobalVarParams(self::MEDIALIST, $args, $value);
-				$content = str_replace(self::MEDIALIST.'['.$param_str.']', $replace, $content);
-			}
-
+			$replace = $this->handleGlobalVarParams($var, $args, $value);
+			$content = str_replace($var.'['.$param_str.']', $replace, $content);
+		}
 		return $content;
 	}
 
 	/**
-	 * Gibt das Button Template zurück
+	 * Gibt das Widget Template zurück
 	 */
-	public function getMediaButton($id, $value, $category = '', $args = array()) {
-		// TODO: Build something like $button->setRootCat($category);
+	public function getMediaWidget($id, $value, $category = '', $args = array()) {
+		// TODO: Build something like $widget->setRootCat($category);
 
-		$button = new sly_Form_Widget_MediaButton('MEDIA['.$id.']', null, $value, $id);
-		$widget = '<div class="rex-widget">'.$button->render().'</div>';
+		$widget = new sly_Form_Widget_Media('MEDIA['.$id.']', null, $value, $id);
+		$widget = '<div class="rex-widget">'.$widget->render().'</div>';
 
 		return $widget;
 	}
 
 	/**
-	 * Gibt das ListButton Template zurück
+	 * Gibt das ListWidget Template zurück
 	 */
-	public function getMedialistButton($id, $value, $category = '', $args = array()) {
-		// TODO: Build something like $button->setRootCat($category);
+	public function getMedialistWidget($id, $value, $category = '', $args = array()) {
+		// TODO: Build something like $widget->setRootCat($category);
 
 		$files  = array_filter(explode(',', $value));
-		$button = new sly_Form_Widget_MediaListButton('MEDIALIST['.$id.']', null, $medialistarray, $id);
-		$widget = '<div class="rex-widget">'.$button->render().'</div>';
+		$widget = new sly_Form_Widget_MediaList('MEDIALIST['.$id.']', null, $medialistarray, $id);
+		$widget = '<div class="rex-widget">'.$widget->render().'</div>';
 
 		return $widget;
 	}

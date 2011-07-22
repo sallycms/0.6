@@ -154,7 +154,7 @@ a.sly-button {
 /* sly widgets */
 .sly-widget {
 	+clearfix;
-	&.sly-medialistbutton {
+	&.sly-medialist {
 		display: block;
 
 		select {
@@ -173,7 +173,7 @@ a.sly-button {
 		}
 	}
 
-	&.sly-mediabutton, &.sly-linkbutton {
+	&.sly-media, &.sly-link {
 		input {
 			width: 393px;
 			margin: 0;
@@ -399,7 +399,7 @@ a.sly-button {
 
 /* Linklist-Button */
 
-.sly-form .rex-form-row .sly-linklistbutton {
+.sly-form .rex-form-row .sly-linklist {
 	select.sly-linklist { width: 305px; }
 
 	input.sly-link-filter {
