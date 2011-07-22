@@ -8,127 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 ?>
-<?php
-/*
-$category_id = sly_request('category_id', 'rex-category-id');
-$article_id = sly_request('article_id', 'rex-article-id');
-$slice_id = sly_request('slice_id', 'rex-slice-id', '');
-$slot = sly_request('slot', 'string');
-$clang = sly_Core::getCurrentClang();
-$languages = sly_Util_Language::findAll();
 
-foreach ($languages as $id => $lang) {
-	$languages[$id] = $lang->getName();
-}
-
-$article_revision = 0;
-$slice_revision = 0;
-
-require SLY_COREFOLDER . '/functions/function_rex_content.inc.php';
-
-// check article's existence
-$articleService = sly_Service_Factory::getArticleService();
-$article = $articleService->findById($article_id, $clang);
-
-// init services
-$typeService = sly_Service_Factory::getArticleTypeService();
-$templateService = sly_Service_Factory::getTemplateService();
-$moduleService = sly_Service_Factory::getModuleService();
-$user = sly_Util_User::getCurrentUser();
-$dispatcher = sly_Core::dispatcher();
-
-// Artikel wurde gefunden - Kategorie holen
-$category_id = $article->getCategoryId();
-
-// Kategoriepfad und -rechte
-// Titel anzeigen
-// request params
-//$mode     = sly_request('mode', 'string', 'edit');
-$function = sly_request('function', 'string');
-
-$hasType = $article->hasType();
-$hasTemplate = false;
-
-// Slice add/edit/delete
-
-if ($article->hasTemplate() && $this->slot !== null && sly_request('save', 'boolean') && in_array($function, array('add', 'edit', 'delete'))) {
-	// check module
-
-	if (!$moduleService->exists($module)) {
-		$global_warning = t('module_not_found');
-		$slice_id = '';
-		$function = '';
-	} else {
-		// Rechte am Modul
-		if (!$templateService->hasModule($templateName, $module, $slot)) {
-			$global_warning = t('no_rights_to_this_function');
-			$slice_id = '';
-			$function = '';
-		} elseif (!($user->isAdmin() || $user->hasRight('module[' . $module . ']') || $user->hasRight('module[0]'))) {
-			$global_warning = t('no_rights_to_this_function');
-			$slice_id = '';
-			$function = '';
-		} else {
-			// Daten einlesen
-			$REX_ACTION = array('SAVE' => true);
-
-			foreach (sly_Core::getVarTypes() as $idx => $obj) {
-				$REX_ACTION = $obj->getACRequestValues($REX_ACTION);
-			}
-
-			// ----- PRE SAVE ACTION [ADD/EDIT/DELETE]
-			list($action_message, $REX_ACTION) = rex_execPreSaveAction($module, $function, $REX_ACTION);
-
-			// Statusspeicherung für die rex_article Klasse
-			$REX['ACTION'] = $REX_ACTION;
-
-			// Werte werden aus den REX_ACTIONS übernommen wenn SAVE=true
-
-			
-				// SAVE / UPDATE SLICE
-
-				$sql = sly_DB_Persistence::getInstance();
-				$sliceService = sly_Service_Factory::getSliceService();
-
-				if ($function === 'add' || $function === 'edit') {
-					$values = array(
-						'updatedate' => time(),
-						'updateuser' => $user->getLogin()
-					);
-
-					if ($function == 'edit') {
-						$ooslice = OOArticleSlice::getArticleSliceById($slice_id);
-						$realslice = $sliceService->findById($ooslice->getSliceId());
-						$realslice->flushValues();
-					} 
-
-					// speichern falls nötig
-					foreach (sly_Core::getVarTypes() as $obj) {
-						$obj->setACValues($realslice->getId(), $REX_ACTION, true, false);
-					}
-
-					// fire query
-					if ($function === 'edit') {
-						$sql->update('article_slice', $values, array('id' => $slice_id));
-						rex_deleteCacheSliceContent($realslice->getId());
-						$info = $action_message . t('block_updated');
-					} 
-
-					$function = '';
-				}
-
-				if (sly_post('btn_update', 'string')) {
-					$function = 'edit';
-				}
-			}
-		}
-	}
-
-	// Flush slice cache
-	sly_Core::cache()->flush(OOArticleSlice::CACHE_NS);
-}*/
-
-?>
 <div class="sly-content-header">
 	<?php
 	//navigation
@@ -193,7 +73,7 @@ if ($article->hasTemplate() && $this->slot !== null && sly_request('save', 'bool
 			}
 			
 			if ($function == 'add' && $prior == $i) {
-				$module = sly_request('module', 'string');
+				$module = sly_request('add_module', 'string');
 				sly_Helper_Content::printAddSliceForm($prior, $module, $article->getId(), $article->getClang(), $slot, isset($slicevalues) ? $slicevalues : array());
 			} else {
 				print $this->render('content/_add_slice_form.phtml', array('article' => $article, 'prior' => $i, 'slot' => $slot));
