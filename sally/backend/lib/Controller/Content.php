@@ -154,7 +154,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			}
 			$extraparams['slicevalues'] = $slicevalues;
 		}
-		
+
 		$this->index($extraparams);
 	}
 
@@ -164,27 +164,27 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 		$ooslice      = OOArticleSlice::getArticleSliceById($slice_id);
 		$sliceService = sly_Service_Factory::getSliceService();
 		$realslice    = $sliceService->findById($ooslice->getSliceId());
-		
+
 		$slicedata = $this->preSliceEdit('edit');
 		if ($slicedata !== false) {
 			$realslice->flushValues();
 			foreach (sly_Core::getVarTypes() as $obj) {
 				$obj->setSliceValues($slicedata, $realslice->getId());
 			}
-			
+
 			$values = array(
 				'updatedate' => time(),
 				'updateuser' => sly_Util_User::getCurrentUser()->getLogin()
 			);
 			sly_DB_Persistence::getInstance()->update('article_slice', $values, array('id' => $slice_id));
-			rex_deleteCacheSliceContent($realslice->getId());
+			sly_Util_Slice::clearSliceCache($realslice->getId());
 			$this->localInfo .= t('block_updated');
-			
+
 			$this->postSliceEdit('edit', $slice_id);
 		}
-		
+
 		$extraparams = array();
-		
+
 		if(!$slicedata && $function == 'edit') {
 			$slicevalues = array();
 			foreach (sly_Core::getVarTypes() as $idx => $obj) {
@@ -195,7 +195,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 		if (sly_post('btn_update', 'string')) {
 			$extraparams['function'] = 'edit';
 		}
-		
+
 		$this->index($extraparams);
 	}
 
@@ -205,7 +205,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			$slice_id = sly_request('slice_id', 'rex-slice-id', '');
 			$ok = sly_Util_ArticleSlice::deleteById($slice_id);
 		}
-		
+
 		if($ok) {
 			$this->localInfo = t('block_deleted');
 		}else {
@@ -245,7 +245,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 
 		// ----- PRE SAVE EVENT [ADD/EDIT/DELETE]
 		$eventparams = array('module' => $module, 'article_id' => $this->article->getId(), 'clang' => $this->article->getClang());
-		
+
 		$slicedata = sly_Core::dispatcher()->filter('SLY_SLICE_PRESAVE_' . strtoupper($function), $slicedata, $eventparams);
 		if (!$slicedata['SAVE']) {
 			// DONT SAVE/UPDATE SLICE
