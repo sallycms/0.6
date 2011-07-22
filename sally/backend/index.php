@@ -12,9 +12,9 @@ define('IS_SALLY', true);
 define('IS_SALLY_BACKEND', true);
 define('SLY_START_TIME', microtime(true));
 
-if (!defined('SLY_IS_TESTING')) {
-	define('SLY_IS_TESTING', false);
-}
+if (!defined('SLY_IS_TESTING')) define('SLY_IS_TESTING', false);
+
+define('SLY_HTDOCS_PATH', SLY_IS_TESTING ? SLY_TESTING_ROOT : '../');
 
 // start output buffering
 if (!SLY_IS_TESTING) {
@@ -22,8 +22,7 @@ if (!SLY_IS_TESTING) {
 	ob_implicit_flush(0);
 }
 
-define('SLY_HTDOCS_PATH', SLY_IS_TESTING ? SLY_TESTING_ROOT : '../');
-
+// load core
 require '../core/master.php';
 
 // add backend app

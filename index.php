@@ -10,20 +10,14 @@
 
 define('IS_SALLY', true);
 define('IS_SALLY_BACKEND', false);
+define('SLY_HTDOCS_PATH', './');
 
 if (!defined('SLY_IS_TESTING')) define('SLY_IS_TESTING', false);
 
 ob_start();
 ob_implicit_flush(0);
 
-// $REX vorbereiten
-
-unset($REX);
-
-define('SLY_HTDOCS_PATH', './');
-
-// Core laden
-
+// load core system
 require_once 'sally/core/master.php';
 
 // Setup?
