@@ -10,6 +10,7 @@
 
 $callback = sly_get('callback', '');
 $callback = preg_replace('#[^a-z0-9.]#i', '', $callback);
+$advanced = sly_Util_User::getCurrentUser()->hasRight('advancedMode[]');
 
 if ($callback):
 ?>
@@ -23,10 +24,11 @@ $(function() {
 		var link     = 'sally://' + id + '/';
 		var callback = window.opener['<?= $callback ?>'];
 		var close    = true;
+		var fullName = <?= $advanced ? "name + ' [' + id + ']'" : 'name' ?>;
 
 		// execute callback (link widget, WYMeditor, ...)
 		if (typeof callback === 'function') {
-			close = callback(id, name, link);
+			close = callback(id, fullName, name, link);
 		}
 
 		// close the popup

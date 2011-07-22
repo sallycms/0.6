@@ -11,6 +11,7 @@
 $callback = preg_replace('#[^a-z0-9.]#i', '', $callback);
 $filename = addslashes($file->getFilename());
 $title    = addslashes($file->getTitle());
+$advanced = sly_Util_User::getCurrentUser()->hasRight('advancedMode[]');
 
 ?>
 <script type="text/javascript">
@@ -18,10 +19,11 @@ var filename = '<?= $filename ?>';
 var title    = '<?= $title ?>';
 var link     = 'data/mediapool/<?= $filename ?>';
 var callback = window.opener['<?= $callback ?>'];
+var fullName = <?= $advanced ? "title + ' (' + filename + ')'" : 'title' ?>;
 
 // execute callback (media widget, WYMeditor, ...)
 if (typeof callback === 'function') {
-	callback(filename, title, link);
+	callback(filename, fullName, title, link);
 }
 
 window.close();
