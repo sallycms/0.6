@@ -206,5 +206,5 @@ catch (Exception $e) {
 	$layout->closeBuffer();
 	$CONTENT = $layout->render();
 }
-
-rex_send_article(null, $CONTENT, 'backend');
+print $CONTENT;
+//rex_send_article(null, $CONTENT, 'backend');
