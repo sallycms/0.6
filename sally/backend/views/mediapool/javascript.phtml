@@ -10,6 +10,7 @@
 
 $callback = sly_request('callback', '');
 $callback = preg_replace('#[^a-z0-9.]#i', '', $callback);
+$advanced = sly_Util_User::getCurrentUser()->hasRight('advancedMode[]');
 
 if ($callback):
 ?>
@@ -22,10 +23,11 @@ $(function() {
 		var link     = 'data/mediapool/' + filename;
 		var callback = window.opener['<?= $callback ?>'];
 		var close    = true;
+		var fullName = <?= $advanced ? "title + ' (' + filename + ')'" : 'title' ?>;
 
 		// execute callback (media widget, WYMeditor, ...)
 		if (typeof callback === 'function') {
-			close = callback(filename, title, link);
+			close = callback(filename, fullName, title, link);
 		}
 
 		// close the popup

@@ -79,6 +79,7 @@ $clangSelect   = new sly_Form_Select_DropDown('userperm_sprachen', t('user_lang_
 $localeSelect  = new sly_Form_Select_DropDown('userperm_mylang', t('backend_language'), $backendLocale, $this->getBackendLocales());
 
 $localeSelect->setMultiple(false);
+$clangSelect->setMultiple(true);
 $clangSelect->setSize(3);
 $clangSelect->setHelpText(t('ctrl'));
 
@@ -107,6 +108,8 @@ $allPermSelect->setSize(10);
 $extPermSelect->setSize(10);
 $allPermSelect->setHelpText(t('ctrl'));
 $extPermSelect->setHelpText(t('ctrl'));
+$allPermSelect->setMultiple(true);
+$extPermSelect->setMultiple(true);
 
 $form->addRow(array($allPermSelect, $extPermSelect));
 
@@ -136,6 +139,8 @@ $categorySelect->setSize(20);
 $mediaCatSelect->setSize(20);
 $categorySelect->setHelpText(t('ctrl'));
 $mediaCatSelect->setHelpText(t('ctrl'));
+$categorySelect->setMultiple(true);
+$mediaCatSelect->setMultiple(true);
 
 $form->addRow(array($categorySelect, $mediaCatSelect));
 
@@ -150,6 +155,8 @@ $moduleSelect->setSize(10);
 $extraPermSelect->setSize(10);
 $moduleSelect->setHelpText(t('ctrl'));
 $extraPermSelect->setHelpText(t('ctrl'));
+$moduleSelect->setMultiple(true);
+$extraPermSelect->setMultiple(true);
 
 $form->addRow(array($moduleSelect, $extraPermSelect));
 

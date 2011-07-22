@@ -104,10 +104,9 @@ var slyMediaWidgetCallback = null;
 	// Abstract Widget
 
 	sly.AbstractWidget = function(elem) {
-		this.element = $(elem);
-		this.input   = this.element.find('input[type=hidden]');
-		this.id      = this.element.data('id');
-		this.inputID = this.input.attr('id');
+		this.element    = $(elem);
+		this.valueInput = this.element.find('input[rel=value]');
+		this.nameInput  = this.element.find('input[rel=name]');
 
 		// register events
 		var icons = this.element.find('.sly-icons');
@@ -118,16 +117,17 @@ var slyMediaWidgetCallback = null;
 
 	sly.AbstractWidget.prototype = {
 		getValue: function() {
-			return this.input.val();
+			return this.valueInput.val();
 		},
 
-		setValue: function(val) {
-			this.input.val(val);
+		setValue: function(identifier, title) {
+			this.valueInput.val(identifier);
+			this.nameInput.val(title);
 			return true; // signalize the popup to close itself
 		},
 
 		clear: function() {
-			this.setValue('');
+			this.setValue('', '');
 		},
 
 		onOpen: function() {
@@ -149,9 +149,6 @@ var slyMediaWidgetCallback = null;
 
 	sly.MediaWidget = function(elem) {
 		sly.AbstractWidget.call(this, elem);
-
-		// media widgets don't use hidden input fields, so overwrite the default one
-		this.input = this.element.find('input');
 	};
 
 	inherit(sly.MediaWidget, sly.AbstractWidget);
@@ -173,17 +170,9 @@ var slyMediaWidgetCallback = null;
 
 	sly.LinkWidget = function(elem) {
 		sly.AbstractWidget.call(this, elem);
-
-		this.nameInput = this.element.find('input[type=text]');
 	};
 
 	inherit(sly.LinkWidget, sly.AbstractWidget);
-
-	sly.LinkWidget.prototype.setValue = function(articleID, articleName) {
-		this.input.val(articleID || '');
-		this.nameInput.val(articleName || '');
-		return true; // signalize the popup to close itself
-	};
 
 	sly.LinkWidget.prototype.onOpen = function() {
 		var catID = this.element.data('catid');
@@ -201,8 +190,6 @@ var slyMediaWidgetCallback = null;
 		this.element = $(elem);
 		this.input   = this.element.find('input');
 		this.list    = this.element.find('select');
-		this.id      = this.element.data('id');
-		this.inputID = this.input.attr('id');
 
 		// register events
 		var icons = this.element.find('.sly-icons.move');
@@ -327,12 +314,6 @@ var slyMediaWidgetCallback = null;
 		return false;
 	};
 
-	sly.MedialistWidget.prototype.addValue = function(identifier, title) {
-		this.list.append($('<option>').val(identifier).text(identifier));
-		this.createList();
-		return false; // signalize the popup to keep open
-	};
-
 	/////////////////////////////////////////////////////////////////////////////
 	// Linklist Widgets
 
@@ -379,7 +360,7 @@ var slyMediaWidgetCallback = null;
 		}
 	};
 
-	sly_catsChecked = function() {
+	var catsChecked = function() {
 		var c_checked = $('#userperm_cat_all').prop('checked');
 		var m_checked = $('#userperm_media_all').prop('checked');
 		var slider    = $('#rex-page-user .sly-form .rex-form-wrapper .sly-num7');
@@ -392,226 +373,229 @@ var slyMediaWidgetCallback = null;
 		else
 			slider.slideDown('slow');
 	};
-})(jQuery, sly);
 
-jQuery(function($) {
-	// Init widgets
+	/////////////////////////////////////////////////////////////////////////////
+	// dom:loaded handler
 
-	$('.sly-widget').each(function() {
-		var self = $(this);
+	$(function() {
+		// Init widgets
 
-		if (self.is('.sly-link')) {
-			new sly.LinkWidget(this);
-		}
-		else if (self.is('.sly-media')) {
-			new sly.MediaWidget(this);
-		}
-		else if (self.is('.sly-linklist')) {
-			new sly.LinklistWidget(this);
-		}
-		else if (self.is('.sly-medialist')) {
-			new sly.MedialistWidget(this);
-		}
-	});
+		$('.sly-widget').each(function() {
+			var self = $(this);
 
-	// "check all" function for mediapool
-
-	$('.sly-check-all').click(function() {
-		var target = $(this).data('target');
-		$('input[name=\'' + target + '\']').prop('checked', this.checked);
-	});
-
-	// Lösch-Links in Tabellen
-
-	$('table.rex-table').delegate('a.sly-delete, input.sly-button-delete', 'click', function() {
-		var table    = $(this).parents('table');
-		var question = table.attr('rel');
-
-		if (!question) {
-			question = 'Löschen?';
-		}
-
-		return confirm(question);
-	});
-
-	// Filter-Funktionen in sly_Table
-
-	$('.sly-table-extras-filter input[class^=filter_input_]').keyup(function(event) {
-		// Klassen- und Tabellennamen ermitteln
-
-		var
-			className = $(this).attr('class'),
-			tableName = className.replace('filter_input_', ''),
-			table     = $('#' + tableName),
-			c         = event.keyCode;
-
-		// Wert auch in allen anderen Suchfeldern übernehmen
-
-		$('input.' + className).val($(this).val());
-
-		// Tabelle filtern
-
-		event.preventDefault();
-
-		if (c == 8 || c == 46 || c == 109 || c == 189 || (c >= 65 && c <= 90) || (c >= 48 && c <= 57)) {
-			var keyword = new RegExp($(this).val(), 'i');
-
-			$('tbody tr', table).each(function() {
-				var $tr = $(this);
-				$('td', $tr).filter(function() {
-					return keyword.test($(this).text());
-				}).length ? $tr.show() : $tr.hide();
-			});
-		}
-	});
-
-	// Links in neuem Fenster öffnen
-
-	$('a.sly-blank').attr('target', '_blank');
-
-   // open mediapool in popup
-
-	$('#rex-navi-page-mediapool a').click(function() {
-		sly.openMediapool();
-		return false;
-	});
-
-	// Login-Formular
-
-	if ($('#rex-form-login').length > 0) {
-		$('#rex-form-login').focus();
-		$('#javascript').val('1');
-	}
-
-	// Benutzer-Formular
-
-	if ($('#rex-page-user .sly-form').length > 0) {
-		var wrapper = $('#rex-page-user .sly-form .rex-form-wrapper');
-		var sliders = wrapper.find('.sly-num6,.sly-num7');
-
-		$('#is_admin').change(function() {
-			if ($(this).is(':checked')) {
-				$('#userperm_module').prop('disabled', true);
-				sliders.slideUp('slow');
+			if (self.is('.sly-link')) {
+				new sly.LinkWidget(this);
 			}
-			else {
-				$('#userperm_module').prop('disabled', false);
-				sliders.slideDown('slow');
-				sly_catsChecked();
+			else if (self.is('.sly-media')) {
+				new sly.MediaWidget(this);
+			}
+			else if (self.is('.sly-linklist')) {
+				new sly.LinklistWidget(this);
+			}
+			else if (self.is('.sly-medialist')) {
+				new sly.MedialistWidget(this);
 			}
 		});
 
-		sly_catsChecked();
-		$('#userperm_cat_all, #userperm_media_all').change(sly_catsChecked);
+		// "check all" function for mediapool
 
-		// init behaviour
-
-		if ($('#is_admin').is(':checked')) {
-			$('#userperm_module').prop('disabled', true);
-			sliders.hide();
-		}
-
-		if ($('#userperm_cat_all').is(':checked') && $('#userperm_media_all').is(':checked')) {
-			wrapper.find('.sly-num7').hide();
-		}
-	}
-
-	// Formularframework
-
-	$('.rex-form .sly-select-checkbox-list a').live('click', function() {
-		var rel   = $(this).attr('rel');
-		var boxes = $(this).parents('p').find('.rex-chckbx');
-		boxes.prop('checked', rel === 'all');
-		return false;
-	});
-
-	// allen vom Browser unterstützten Elementen die Klasse ua-supported geben
-
-	var types = Modernizr.inputtypes;
-
-	for (var type in types) {
-		if (types.hasOwnProperty(type) && types[type]) {
-			$('input[type='+type+']').addClass('ua-supported');
-		}
-	}
-
-	// Fallback-Implementierung für type=range via jQuery UI Slider
-
-	$('input[type=range]:not(.ua-supported)').each(function() {
-		var input  = $(this);
-		var slider = $('<div></div>').attr('id', input.attr('id') + '-slider');
-		var hidden = $('<input type="hidden" value="" />');
-
-		// remove the old input element and replace it with a new, hidden one
-		input.after(hidden);
-		hidden.val(input.val()).attr('name', input.attr('name')).attr('id', input.attr('id'));
-
-		// create a new div that will be the slider
-		input.after(slider);
-		slider.addClass('sly-slider').slider({
-			min:    input.attr('min'),
-			max:    input.attr('max'),
-			value:  input.val(),
-			change: function(event) {
-				hidden.val(slider.slider('value'));
-			}
+		$('.sly-check-all').click(function() {
+			var target = $(this).data('target');
+			$('input[name=\'' + target + '\']').prop('checked', this.checked);
 		});
 
-		// remove it
-		input.remove();
-	});
+		// Lösch-Links in Tabellen
 
-	// Mehrsprachige Formulare initialisieren
+		$('table.rex-table').delegate('a.sly-delete, input.sly-button-delete', 'click', function() {
+			var table    = $(this).parents('table');
+			var question = table.attr('rel');
 
-	// Checkboxen erzeugen
+			if (!question) {
+				question = 'Löschen?';
+			}
 
-	$('.rex-form-row.sly-form-multilingual').each(function() {
-		var
-			$this   = $(this),
-			equal   = $this.is(':visible'),
-			id      = $this.attr('rel'),
-			checked = equal ? ' checked="checked"': '',
-			span    = '<span class="sly-form-i18n-switch"><input type="checkbox" name="equal__'+id+'" id="equal__'+id+'" value="1"'+checked+' /><\/span>';
+			return confirm(question);
+		});
 
-		if (equal) {
-			$('label:first', this).after(span);
-		}
-		else {
-			var container = $this.next('div.sly-form-i18n-container');
-			$('label:first', container).after(span);
-		}
-	});
+		// Filter-Funktionen in sly_Table
 
-	// Checkboxen initialisieren
+		$('.sly-table-extras-filter input[class^=filter_input_]').keyup(function(event) {
+			// Klassen- und Tabellennamen ermitteln
 
-	var checkboxes = $('.sly-form-i18n-switch input[id^=equal__]');
-
-	if (checkboxes.length > 0) {
-		checkboxes.imgCheckbox('off.png', 'on.png', 'assets/form-i18n-switch-').next().click(function() {
 			var
-				checkbox       = $(this).prev('input'),
-				shown          = !checkbox[0].checked, // was already changed before this event handler
-				id             = checkbox.attr('id').replace(/^equal__/, ''),
-				container      = $('div[rel="'+id+'"]'),
-				span           = checkbox.parent('span'),
-				equalcontainer = $('div.sly-form-i18n-container.c-'+id);
+				className = $(this).attr('class'),
+				tableName = className.replace('filter_input_', ''),
+				table     = $('#' + tableName),
+				c         = event.keyCode;
 
-			if (shown) {
-				container.hide();
-				equalcontainer.show();
-				$('label:first', equalcontainer).after(span);
+			// Wert auch in allen anderen Suchfeldern übernehmen
+
+			$('input.' + className).val($(this).val());
+
+			// Tabelle filtern
+
+			event.preventDefault();
+
+			if (c == 8 || c == 46 || c == 109 || c == 189 || (c >= 65 && c <= 90) || (c >= 48 && c <= 57)) {
+				var keyword = new RegExp($(this).val(), 'i');
+
+				$('tbody tr', table).each(function() {
+					var $tr = $(this);
+					$('td', $tr).filter(function() {
+						return keyword.test($(this).text());
+					}).length ? $tr.show() : $tr.hide();
+				});
+			}
+		});
+
+		// Links in neuem Fenster öffnen
+
+		$('a.sly-blank').attr('target', '_blank');
+
+	   // open mediapool in popup
+
+		$('#rex-navi-page-mediapool a').click(function() {
+			sly.openMediapool();
+			return false;
+		});
+
+		// Login-Formular
+
+		if ($('#rex-form-login').length > 0) {
+			$('#rex-form-login').focus();
+			$('#javascript').val('1');
+		}
+
+		// Benutzer-Formular
+
+		if ($('#rex-page-user .sly-form').length > 0) {
+			var wrapper = $('#rex-page-user .sly-form .rex-form-wrapper');
+			var sliders = wrapper.find('.sly-num6,.sly-num7');
+
+			$('#is_admin').change(function() {
+				if ($(this).is(':checked')) {
+					$('#userperm_module').prop('disabled', true);
+					sliders.slideUp('slow');
+				}
+				else {
+					$('#userperm_module').prop('disabled', false);
+					sliders.slideDown('slow');
+					catsChecked();
+				}
+			});
+
+			catsChecked();
+			$('#userperm_cat_all, #userperm_media_all').change(catsChecked);
+
+			// init behaviour
+
+			if ($('#is_admin').is(':checked')) {
+				$('#userperm_module').prop('disabled', true);
+				sliders.hide();
+			}
+
+			if ($('#userperm_cat_all').is(':checked') && $('#userperm_media_all').is(':checked')) {
+				wrapper.find('.sly-num7').hide();
+			}
+		}
+
+		// Formularframework
+
+		$('.rex-form .sly-select-checkbox-list a').live('click', function() {
+			var rel   = $(this).attr('rel');
+			var boxes = $(this).parents('p').find('.rex-chckbx');
+			boxes.prop('checked', rel === 'all');
+			return false;
+		});
+
+		// allen vom Browser unterstützten Elementen die Klasse ua-supported geben
+
+		var types = Modernizr.inputtypes;
+
+		for (var type in types) {
+			if (types.hasOwnProperty(type) && types[type]) {
+				$('input[type='+type+']').addClass('ua-supported');
+			}
+		}
+
+		// Fallback-Implementierung für type=range via jQuery UI Slider
+
+		$('input[type=range]:not(.ua-supported)').each(function() {
+			var input  = $(this);
+			var slider = $('<div></div>').attr('id', input.attr('id') + '-slider');
+			var hidden = $('<input type="hidden" value="" />');
+
+			// remove the old input element and replace it with a new, hidden one
+			input.after(hidden);
+			hidden.val(input.val()).attr('name', input.attr('name')).attr('id', input.attr('id'));
+
+			// create a new div that will be the slider
+			input.after(slider);
+			slider.addClass('sly-slider').slider({
+				min:    input.attr('min'),
+				max:    input.attr('max'),
+				value:  input.val(),
+				change: function(event) {
+					hidden.val(slider.slider('value'));
+				}
+			});
+
+			// remove it
+			input.remove();
+		});
+
+		// Mehrsprachige Formulare initialisieren
+
+		// Checkboxen erzeugen
+
+		$('.rex-form-row.sly-form-multilingual').each(function() {
+			var
+				$this   = $(this),
+				equal   = $this.is(':visible'),
+				id      = $this.attr('rel'),
+				checked = equal ? ' checked="checked"': '',
+				span    = '<span class="sly-form-i18n-switch"><input type="checkbox" name="equal__'+id+'" id="equal__'+id+'" value="1"'+checked+' /><\/span>';
+
+			if (equal) {
+				$('label:first', this).after(span);
 			}
 			else {
-				container.show();
-				equalcontainer.hide();
+				var container = $this.next('div.sly-form-i18n-container');
 				$('label:first', container).after(span);
 			}
 		});
-	}
 
-	// Module selection on content page
+		// Checkboxen initialisieren
 
-	$('.sly-module-select').change(function() {
-		$(this).closest('form').submit();
+		var checkboxes = $('.sly-form-i18n-switch input[id^=equal__]');
+
+		if (checkboxes.length > 0) {
+			checkboxes.imgCheckbox('off.png', 'on.png', 'assets/form-i18n-switch-').next().click(function() {
+				var
+					checkbox       = $(this).prev('input'),
+					shown          = !checkbox[0].checked, // was already changed before this event handler
+					id             = checkbox.attr('id').replace(/^equal__/, ''),
+					container      = $('div[rel="'+id+'"]'),
+					span           = checkbox.parent('span'),
+					equalcontainer = $('div.sly-form-i18n-container.c-'+id);
+
+				if (shown) {
+					container.hide();
+					equalcontainer.show();
+					$('label:first', equalcontainer).after(span);
+				}
+				else {
+					container.show();
+					equalcontainer.hide();
+					$('label:first', container).after(span);
+				}
+			});
+		}
+
+		// Module selection on content page
+
+		$('.sly-module-select').change(function() {
+			$(this).closest('form').submit();
+		});
 	});
-});
+})(jQuery, sly);
