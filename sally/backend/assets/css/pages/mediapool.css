@@ -224,8 +224,8 @@
 	}
 }
 
-#rex-form-mediapool-detail {
-	.rex-form-row {
+#rex-form-mediapool-detail, #rex-form-mediapool-other, #rex-form-mediapool-sync {
+	.rex-form-wrapper .rex-form-row {
 		width: 680px;
 		padding: 7px 5px;
 	}
@@ -234,6 +234,10 @@
 #rex-form-mediapool-media {
 	.rex-form-wrapper .rex-form-row.sly-num0 {
 		padding: 0;
+	}
+
+	.rex-form-row {
+		width: 690px;
 	}
 }
 
