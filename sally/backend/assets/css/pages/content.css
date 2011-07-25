@@ -36,7 +36,7 @@
 }
 
 /*	Editmode */
-.sly-contentpage {
+.sly-content-body {
 	&-slice-input,	&-slice-output {
 	    background-color: $lt_grey;
 		clear: both;
@@ -63,11 +63,24 @@
 		+border-radius(0px);
 		border: 0;
 	}
+	
+	input[type=submit] {
+		margin-left: 10px;
+	}
+	
+}
+.sly-form-add-slice {
+	margin: 10px 0;
+}
+
+.sly-contentpage-slice-output {
+	background-color: #e8e8e8;
+	padding: 7px;
+	+border-bottom-radius(4px);
 }
 
 #addslice {
 	margin-top: 10px;
-	
 	.rex-form-row {
 		background-color: #e8e8e8;
 		clear: both;
@@ -77,10 +90,6 @@
 		padding-left: 0;
 		padding-right: 0;
 		width: 797px;
-
-		input[type=submit] {
-			margin-left: 10px;
-		}
 	}
 }
 
@@ -101,11 +110,11 @@
 }
 /*	Editmode */
 .rex-content-editmode-module-name {
-	float: left;
 	width: 100%;
 	line-height: 35px;
 	background-color: $drk_grey;
 	+border-radius(4px);
+	+clearfix;
 
 	h3 {
 		float: left;
@@ -118,72 +127,6 @@
 	.sly-slice-actions {
 		float: right;
 		margin-right: 5px; /* Schiebt die Edit, Delete- und Pfeil-Buttons rein*/
-	}
-}
-
-/* METAMODE ------------------------------------------------------------------------------------- METAMODE */
-
-#aaarex-page-contentmeta {
-
-	padding: 0px;
-	margin-bottom: 10px;
-
-	.rex-widget {
-		margin-bottom: 0px;
-	}
-
-	.rex-form {
-
-		&-row {
-			vertical-align: middle;
-			border: 0;
-		}
-
-		&-col-1, &-col-2 {
-
-			.rex-form-wrapper {
-				margin-top: -17px; /* Ausgleich f��r Legend */
-				padding: 0 10px 10px 10px;
-				line-height: 25px;
-				background-color: #fff;
-				margin:0 0 20px -1px;
-				+border-bottom-radius(4px);
-				border: 1px solid #efefef;
-				color: $drk_grey;
-				float: left;
-				width: 777px;
-			}
-
-			input[type=submit], input.rex-form-text, select {border: 1px solid $md_grey; margin-bottom: 0;}
-
-			legend {
-				color: #fff;
-				font-size: 1.1em;
-				+border-top-radius(4px);
-				width: 787px; /* Breite des Loginbereichs abz��glich des padding links*/
-				padding: 8px 0 8px 10px;
-			}
-
-			p.rex-form-read span {
-				margin-left: 155px;
-				color: $md_grey;
-			}
-
-		}
-
-		/* Spezialfall mit zwei Spalten*/
-		&-col-2 {
-
-			.rex-form-col-a {
-				width:49%;
-				float: left;
-			}
-
-			.rex-form-col-b {
-				width:49%;
-				float: right;
-			}
-		}
 	}
 }
 

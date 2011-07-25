@@ -67,22 +67,23 @@ class sly_Helper_Content {
 
 		<div class="rex-form rex-form-content-editmode-edit-slice">
 			<form enctype="multipart/form-data" action="index.php#slice<?= $articleSlice->getPrior() ?>" method="post" id="REX_FORM">
+				<div>
+					<input type="hidden" name="page" value="content" />
+					<input type="hidden" name="func" value="editArticleSlice" />
+					<input type="hidden" name="article_id" value="<?= $articleSlice->getArticleId() ?>" />
+					<input type="hidden" name="clang" value="<?= $articleSlice->getClang() ?>" />
+					<input type="hidden" name="slice_id" value="<?= $articleSlice->getId() ?>" />
+					<input type="hidden" name="slot" value="<?= $articleSlice->getSlot() ?>" />
+					<input type="hidden" name="prior" value="<?= $articleSlice->getPrior() ?>" />
+				</div>
 				<fieldset class="rex-form-col-1">
-					<legend><span><?= t('edit_block') ?></span></legend>
+					<legend><?= t('edit_block') ?>: <?= sly_html($moduleService->getTitle($module)) ?></legend>
 					<div class="rex-form-row">
-						<input type="hidden" name="page" value="content" />
-						<input type="hidden" name="func" value="editArticleSlice" />
-						<input type="hidden" name="article_id" value="<?= $articleSlice->getArticleId() ?>" />
-						<input type="hidden" name="clang" value="<?= $articleSlice->getClang() ?>" />
-						<input type="hidden" name="slice_id" value="<?= $articleSlice->getId() ?>" />
-						<input type="hidden" name="slot" value="<?= $articleSlice->getSlot() ?>" />
-						<input type="hidden" name="prior" value="<?= $articleSlice->getPrior() ?>" />
 						<div class="sly-contentpage-slice-input">
 							<? eval('?>' . self::replaceObjectVars($values, $articleSlice->getInput())); ?>
 						</div>
 					</div>
 				</fieldset>
-
 				<fieldset class="rex-form-col-2">
 					<div class="rex-form-wrapper">
 						<div class="rex-form-row">
