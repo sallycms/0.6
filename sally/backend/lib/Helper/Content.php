@@ -61,11 +61,12 @@ class sly_Helper_Content {
 	}
 
 	public static function printEditSliceForm(OOArticleSlice $articleSlice, $values = array()) {
+		$moduleService = sly_Service_Factory::getModuleService();
 		ob_start();
 		?>
 		<a name="editslice"></a>
 
-		<div class="rex-form rex-form-content-editmode-edit-slice">
+		<div class="sly-form" id="editslice">
 			<form enctype="multipart/form-data" action="index.php#slice<?= $articleSlice->getPrior() ?>" method="post" id="REX_FORM">
 				<div>
 					<input type="hidden" name="page" value="content" />
@@ -77,15 +78,11 @@ class sly_Helper_Content {
 					<input type="hidden" name="prior" value="<?= $articleSlice->getPrior() ?>" />
 				</div>
 				<fieldset class="rex-form-col-1">
-					<legend><?= t('edit_block') ?>: <?= sly_html($moduleService->getTitle($module)) ?></legend>
-					<div class="rex-form-row">
+					<legend><?= t('edit_block') ?>: <?= sly_html($moduleService->getTitle($articleSlice->getModule())) ?></legend>
+					<div class="rex-form-wrapper">
 						<div class="sly-contentpage-slice-input">
 							<? eval('?>' . self::replaceObjectVars($values, $articleSlice->getInput())); ?>
 						</div>
-					</div>
-				</fieldset>
-				<fieldset class="rex-form-col-2">
-					<div class="rex-form-wrapper">
 						<div class="rex-form-row">
 							<p class="rex-form-submit">
 								<input class="rex-form-submit" type="submit" value="<?= t('save_block') ?>" name="btn_save" />

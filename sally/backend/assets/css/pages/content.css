@@ -69,8 +69,9 @@
 	}
 	
 }
+.sly-contentpage-slice-output,
 .sly-form-add-slice {
-	margin: 10px 0;
+	margin: 0 0 10px;
 }
 
 .sly-contentpage-slice-output {
@@ -79,6 +80,7 @@
 	+border-bottom-radius(4px);
 }
 
+#editslice,
 #addslice {
 	margin-top: 10px;
 	.rex-form-row {
@@ -90,6 +92,9 @@
 		padding-left: 0;
 		padding-right: 0;
 		width: 797px;
+	}
+	.rex-form-wrapper {
+		margin-bottom: 10px; 
 	}
 }
 
@@ -113,7 +118,7 @@
 	width: 100%;
 	line-height: 35px;
 	background-color: $drk_grey;
-	+border-radius(4px);
+	+border-radius(4px 4px 0 0);
 	+clearfix;
 
 	h3 {

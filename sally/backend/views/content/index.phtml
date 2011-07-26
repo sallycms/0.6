@@ -81,7 +81,6 @@
 			
 			if(isset($articleSlices[$i])) {
 				$artslice = OOArticleSlice::getArticleSliceById($articleSlices[$i]);
-				print $this->render('content/_slice_toolbar.phtml', array('articleSlice' => $artslice));
 				if ($function == 'edit' && $slice_id == $artslice->getId()) {
 					if(!isset($slicevalues)) {
 						$slicevalues = array();
@@ -91,6 +90,7 @@
 					}
 					sly_Helper_Content::printEditSliceForm($artslice, $slicevalues);
 				} else {
+					print $this->render('content/_slice_toolbar.phtml', array('articleSlice' => $artslice));
 					print $this->render('content/_slice_content.phtml', array('articleSlice' => $artslice));
 				}
 			}
