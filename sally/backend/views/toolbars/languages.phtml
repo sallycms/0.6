@@ -13,8 +13,8 @@
  * @package redaxo4
  */
 
-$_languages   = sly_Util_Language::findAll();
-$_user        = sly_Util_User::getCurrentUser();
+$languages = sly_Util_Language::findAll();
+$user      = sly_Util_User::getCurrentUser();
 
 if (!isset($curClang)) {
 	$curClang = sly_Core::getCurrentClang();
@@ -24,7 +24,7 @@ if (!isset($params)) {
 	$params = array();
 }
 
-if (count($_languages) > 1) {
+if (count($languages) > 1) {
 	print '
 	<div class="sly-clang-toolbar rex-toolbar">
 		<div class="rex-toolbar-content">
@@ -34,7 +34,7 @@ if (count($_languages) > 1) {
 	$stop = false;
 	$i    = 1;
 
-	foreach ($_languages as $language) {
+	foreach ($languages as $language) {
 		$clangID = $language->getId();
 
 		if ($i == 1) {
@@ -46,7 +46,7 @@ if (count($_languages) > 1) {
 
 		$clangName = rex_translate($language->getName()); // enthält htmlspecialchars()
 
-		if (!sly_Util_Language::hasPermissionOnLanguage($_user, $clangID)) {
+		if (!sly_Util_Language::hasPermissionOnLanguage($user, $clangID)) {
 			print '<span class="rex-strike">'.$clangName.'</span>';
 			$stop = $clangID;
 		}
