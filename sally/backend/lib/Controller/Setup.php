@@ -133,7 +133,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 			$config->setLocal('INSTNAME', 'sly'.$uid);
 
 			$config->set('TIMEZONE', sly_post('timezone', 'string', null));
-			$config->set('LANG', $this->lang);
+			$config->set('DEFAULT_LOCALE', $this->lang);
 
 			unset($_POST['submit']);
 			$this->createUser();

@@ -54,7 +54,7 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 	protected function update() {
 		$startArticle    = sly_post('start_article',    'int');
 		$notFoundArticle = sly_post('notfound_article', 'int');
-		$startClang      = sly_post('start_clang',      'int');
+		$defaultClang    = sly_post('default_clang',    'int');
 		$defaultType     = sly_post('default_type',     'string');
 		$developerMode   = sly_post('developer_mode',   'string');
 		$backendLocale   = sly_post('backend_locale',   'string');
@@ -81,8 +81,8 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 			$this->warning[] = t('settings_invalid_notfound_article').'<br />';
 		}
 
-		if (sly_Util_Language::exists($startClang)) {
-			$conf->set('START_CLANG_ID', $startClang);
+		if (sly_Util_Language::exists($defaultClang)) {
+			$conf->set('DEFAULT_CLANG_ID', $defaultClang);
 		}
 		else {
 			$this->warning[] = t('settings_invalid_sitestart_clang').'<br />';
@@ -107,7 +107,7 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 		// Sonstige Einstellungen
 
 		$conf->set('DEVELOPER_MODE', $developerMode === 'true');
-		$conf->set('LANG', $backendLocale);
+		$conf->set('DEFAULT_LOCALE', $backendLocale);
 		$conf->set('PROJECTNAME', $projectName);
 		$conf->setLocal('CACHING_STRATEGY', $cachingStrategy);
 
