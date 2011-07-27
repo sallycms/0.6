@@ -9,9 +9,11 @@
  */
 
 // Navigation erzeugen
+?>
 
-print '<dl>';
-
+<dl class="sly-navigation">
+	
+<?php
 $nav    = sly_Core::getNavigation();
 $groups = $nav->getGroups();
 
@@ -54,9 +56,9 @@ foreach ($groups as $group) {
 
 	foreach ($pages as $page) {
 		if ($page->isHidden()) continue;
-
-		$liclass  = $page->isActive() ? 'rex-active' : '';
-		$liclass .= $page->isPopup()  ? 'popup'      : '';
+		$liclass = 'sly-navigation-level-1';
+		$liclass .= $page->isActive() ? ' rex-active' : '';
+		$liclass .= $page->isPopup()  ? ' popup'      : '';
 		$li = array(
 			'class' => $liclass,
 			'id'    => 'rex-navi-page-'.$page->getPageParam()
@@ -84,7 +86,7 @@ foreach ($groups as $group) {
 
 			foreach ($subpages as $sp) {
 				$param = $sp->getPageParam();
-				$class = '';
+				$class = 'sly-navigation-level-2';
 				$id    = 'rex-navi-'.$p.'-subpage-'.$param;
 				$href  = 'index.php?page='.$page->getPageParam();
 
@@ -108,5 +110,5 @@ foreach ($groups as $group) {
 
 	print '</ul></dd>';
 }
-
-print '</dl>';
+?>
+</dl>

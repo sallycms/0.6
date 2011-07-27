@@ -17,86 +17,83 @@
 	?>
 </div>
 <?php
-	//messages
-	print $this->render('content/_messages.phtml');
-?>
-<div class="sly-content-body">
-	<?php
-	$params = array('id' => $article->getId(), 'clang' => $article->getClang(), 'article' => $article);
-	$form   = new sly_Form('index.php', 'POST', t('general'), '', 'content_article_form');
+//messages
+print $this->render('content/_messages.phtml');
 
-	/////////////////////////////////////////////////////////////////
-	// init form
+$params = array('id' => $article->getId(), 'clang' => $article->getClang(), 'article' => $article);
+$form   = new sly_Form('index.php', 'POST', t('general'), '', 'content_article_form');
 
-	$form->setEncType('multipart/form-data');
-	$form->addHiddenValue('page', 'content');
-	$form->addHiddenValue('article_id', $this->article->getId());
-	$form->addHiddenValue('func', 'setArticleType');
-	$form->addHiddenValue('clang', $this->article->getClang());
+/////////////////////////////////////////////////////////////////
+// init form
 
-	/////////////////////////////////////////////////////////////////
-	// articletype
+$form->setEncType('multipart/form-data');
+$form->addHiddenValue('page', 'content');
+$form->addHiddenValue('article_id', $this->article->getId());
+$form->addHiddenValue('func', 'setArticleType');
+$form->addHiddenValue('clang', $this->article->getClang());
 
-	$type = new sly_Form_Select_DropDown('article_type', t('content_arttype'), $article->getType(), $articletypes, 'article_type');
-	$form->add($type);
+/////////////////////////////////////////////////////////////////
+// articletype
 
-	//additional form elements
-	$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM', $form, $params);
+$type = new sly_Form_Select_DropDown('article_type', t('content_arttype'), $article->getType(), $articletypes, 'article_type');
+$form->add($type);
 
-	//buttons
-	$button = new sly_Form_Input_Button('submit', 'save_article', t('article_save'));
-	$form->setSubmitButton($button);
+//additional form elements
+$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM', $form, $params);
 
-	print $form->render();
+//buttons
+$button = new sly_Form_Input_Button('submit', 'save_article', t('article_save'));
+$form->setSubmitButton($button);
 
-	$hasType     = $article->hasType();
-	$hasTemplate = $article->hasTemplate();
-	if (!$hasType || !$hasTemplate || $slot === null) {
-		if (!$hasType)
-			print sly_Helper_Message::warn(t('content_select_type'));
-		elseif (!$hasTemplate)
-			print sly_Helper_Message::warn(t('content_configure_article_type'));
-		else
-			print sly_Helper_Message::info(t('content_no_slots'));
-	}
-	else {
-		print '<div class="sly-content-editmode">';
+print $form->render();
 
-		$articleSlices = OOArticleSlice::getSliceIdsForSlot($this->article->getId(), $this->article->getClang(), $this->slot);
+$hasType     = $article->hasType();
+$hasTemplate = $article->hasTemplate();
+if (!$hasType || !$hasTemplate || $slot === null) {
+	if (!$hasType)
+		print sly_Helper_Message::warn(t('content_select_type'));
+	elseif (!$hasTemplate)
+		print sly_Helper_Message::warn(t('content_configure_article_type'));
+	else
+		print sly_Helper_Message::info(t('content_no_slots'));
+}
+else {
+	print '<div class="sly-content-editmode">';
 
-		for($i = 0; $i <= count($articleSlices); $i++) {
-			if ($prior == $i) {
-				if (!empty($this->localInfo))
-					print sly_Helper_Message::info($this->localInfo);
-				if (!empty($this->localWarning))
-					print sly_Helper_Message::warn($this->localWarning);
-			}
-			
-			if ($function == 'add' && $prior == $i) {
-				$module = sly_request('add_module', 'string');
-				sly_Helper_Content::printAddSliceForm($prior, $module, $article->getId(), $article->getClang(), $slot, isset($slicevalues) ? $slicevalues : array());
-			} else {
-				print $this->render('content/_add_slice_form.phtml', array('article' => $article, 'prior' => $i, 'slot' => $slot));
-			}
-			
-			if(isset($articleSlices[$i])) {
-				$artslice = OOArticleSlice::getArticleSliceById($articleSlices[$i]);
-				if ($function == 'edit' && $slice_id == $artslice->getId()) {
-					if(!isset($slicevalues)) {
-						$slicevalues = array();
-						foreach (sly_Core::getVarTypes() as $obj) {
-							$slicevalues = array_merge($slicevalues, $obj->getDatabaseValues($slice_id));
-						}
+	$articleSlices = OOArticleSlice::getSliceIdsForSlot($this->article->getId(), $this->article->getClang(), $this->slot);
+
+	for($i = 0; $i <= count($articleSlices); $i++) {
+		if ($prior == $i) {
+			if (!empty($this->localInfo))
+				print sly_Helper_Message::info($this->localInfo);
+			if (!empty($this->localWarning))
+				print sly_Helper_Message::warn($this->localWarning);
+		}
+
+		if ($function == 'add' && $prior == $i) {
+			$module = sly_request('add_module', 'string');
+			sly_Helper_Content::printAddSliceForm($prior, $module, $article->getId(), $article->getClang(), $slot, isset($slicevalues) ? $slicevalues : array());
+		} else {
+			print $this->render('content/_add_slice_form.phtml', array('article' => $article, 'prior' => $i, 'slot' => $slot));
+		}
+
+		if(isset($articleSlices[$i])) {
+			$artslice = OOArticleSlice::getArticleSliceById($articleSlices[$i]);
+			if ($function == 'edit' && $slice_id == $artslice->getId()) {
+				if(!isset($slicevalues)) {
+					$slicevalues = array();
+					foreach (sly_Core::getVarTypes() as $obj) {
+						$slicevalues = array_merge($slicevalues, $obj->getDatabaseValues($slice_id));
 					}
-					sly_Helper_Content::printEditSliceForm($artslice, $slicevalues);
-				} else {
-					print $this->render('content/_slice_toolbar.phtml', array('articleSlice' => $artslice));
-					print $this->render('content/_slice_content.phtml', array('articleSlice' => $artslice));
 				}
+				sly_Helper_Content::printEditSliceForm($artslice, $slicevalues);
+			} else {
+				print $this->render('content/_slice_toolbar.phtml', array('articleSlice' => $artslice));
+				print $this->render('content/_slice_content.phtml', array('articleSlice' => $artslice));
 			}
 		}
-		
-		print '</div>';
 	}
-	?>
-</div>
+
+	print '</div>';
+}
+?>

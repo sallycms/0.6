@@ -149,7 +149,7 @@ caption, legend {
 	}
 
 	&-linklist, &-medialist {
-		p.rex-widget-icons img { margin-bottom: 2px; }
+		.rex-widget-icons img { margin-bottom: 2px; }
 	}
 }
 
@@ -275,7 +275,7 @@ a.sly-action {
 	text-decoration: line-through;
 }
 
-#sly-clang {
+.sly-clang-toolbar {
 	a.rex-active {
 		color: $drk_grey;	
 	}

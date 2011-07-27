@@ -117,7 +117,5 @@ if ($this->canMoveCategory()) {
 	sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitmovecategory'), 'movecategory');
 }
 ?>
-<div class="sly-contentmeta-body">
-	<?= $this->render('content/_messages.phtml') ?>
-	<?= $form->render() ?>
-</div>
+<?= $this->render('content/_messages.phtml') ?>
+<?= $form->render() ?>

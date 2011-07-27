@@ -24,7 +24,7 @@ class sly_Helper_Content {
 			ob_start();
 			?>
 
-			<div class="sly-form" id="">
+			<div class="sly-form" id="addslice">
 				<form action="index.php#slice<?= $prior ?>" id="slice<?= $prior ?>" method="post" enctype="multipart/form-data">
 					<div>
 						<input type="hidden" name="page" value="content" />

@@ -87,35 +87,33 @@ a.sly-button {
 		}
 	}
 
-	p {
-		span.rex-form-read,
-		span.rex-form-notice {
-			display: block;
-			/* padding: 10px 0 10px 10px; */
-		}
+	span.rex-form-read,
+	span.rex-form-notice {
+		display: block;
+		/* padding: 10px 0 10px 10px; */
+	}
 
-		span.rex-form-read {
-			line-height: 21px;
-		}
+	span.rex-form-read {
+		line-height: 21px;
+	}
 
-		span.rex-form-notice {
-			clear: both;
-			margin-left: 145px;
-			margin-top: 5px;
-			color: #777777;
-			font-size: 11px;
-		}
+	span.rex-form-notice {
+		clear: both;
+		margin-left: 145px;
+		margin-top: 5px;
+		color: #777777;
+		font-size: 11px;
+	}
 
-		label span {
-			display: inline;
-			margin-left: 0;
-			padding: 0 0 0 5px;
-			font-weight: normal;
-		}
+	label span {
+		display: inline;
+		margin-left: 0;
+		padding: 0 0 0 5px;
+		font-weight: normal;
+	}
 
-		textarea {
-			padding: 2px;
-		}
+	textarea {
+		padding: 2px;
 	}
 
 	/*	Select */
@@ -187,7 +185,6 @@ a.sly-button {
 
 
 .rex-form {
-	+border-radius($brd_rad);
 
 	.rex-form-row {
 		p.rex-form-read span,
@@ -424,23 +421,5 @@ a.sly-button {
 		margin-top: 10px;
 		width: 205px;
 		line-height: 14px;
-	}
-}
-
-.sly-filter-results {
-	background: white;
-	border: 1px dotted #4D4646;
-
-	ul li {
-		list-style: none;
-		font-size: 11px;
-		color: #666;
-		padding: 3px;
-
-		&:hover {
-			background-color: #EEE;
-			color: black;
-			cursor: pointer;
-		}
 	}
 }

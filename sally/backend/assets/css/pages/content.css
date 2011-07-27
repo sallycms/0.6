@@ -33,17 +33,25 @@
 	}
 }
 
-/*	Editmode */
-.sly-content-body {
+
+#rex-page-content {
+	input[type=submit] {
+		margin-left: 10px;
+	}
+}
+
+.sly-contentpage {
 	&-slice-input,	&-slice-output {
 	    background-color: $lt_grey;
 		clear: both;
 		padding: 10px;
 		ol, ul { margin-left: 20px; }
 	}
-
 	&-slice-output {
+		background-color: #e8e8e8;
+		padding: 7px;
 		+border-bottom-radius(4px);
+		margin: 0 0 10px;
 		color: #999;
 
 		h1{ font-size: 2em;   }
@@ -53,22 +61,6 @@
 		h5 { font-size: 1.1em; }
 		h6 { font-size: 1em;   }
 	}
-}
-
-
-.sly-content-editmode {
-	input[type=submit] {
-		margin-left: 10px;
-	}
-}
-.sly-contentpage-slice-output {
-	margin: 0 0 10px;
-}
-
-.sly-contentpage-slice-output {
-	background-color: #e8e8e8;
-	padding: 7px;
-	+border-bottom-radius(4px);
 }
 
 #editslice,

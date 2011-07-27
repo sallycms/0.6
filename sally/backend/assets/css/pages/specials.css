@@ -77,8 +77,8 @@
 			border: 1px solid $md_grey;
 		}
 		th { background: $md_grey; }
-		.rex-form-submit { margin-left: 0; }
 	}
+	input[type=submit] { margin-left: 0; margin-right: 5px; }
 	.sly-col-c {
 		width: 120px;
 		input {
