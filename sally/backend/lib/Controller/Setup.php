@@ -150,9 +150,9 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		$dbInitFunction = sly_post('db_init_function', 'string', '');
 
 		if (isset($_POST['submit'])) {
-			$config         = sly_Core::config();
-			$prefix         = $config->get('DATABASE/TABLE_PREFIX');
-			$error          = '';
+			$config = sly_Core::config();
+			$prefix = $config->get('DATABASE/TABLE_PREFIX');
+			$error  = '';
 
 			// benötigte Tabellen prüfen
 
