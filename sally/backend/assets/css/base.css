@@ -79,6 +79,7 @@ img, iframe {
 		height: 40px;
 		line-height: 40px;
 		border-bottom: 1px dotted $md_grey;
+		overflow: hidden;
 
 		a.rex-active {
 			color: $drk_grey;

@@ -335,7 +335,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 	}
 
 	protected function isWritable($dir) {
-		return is_dir($dir) || (mkdir($dir) && chmod($dir, 0777));
+		return is_dir($dir) || (mkdir($dir) && chmod($dir, sly_Core::getDirPerm()));
 	}
 
 	protected function printHiddens($func, $form = null) {
