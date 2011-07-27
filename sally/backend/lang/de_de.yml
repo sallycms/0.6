@@ -431,3 +431,5 @@ errorlog_message: Fehlerdetails
 errorlog_line: Zeile
 errorlog_cleared: Das Protokoll wurde geleert.
 errorlog_not_cleared: Das Protokoll konnte nicht geleert werden.
+
+use_default_locale: '(Projektstandard)'

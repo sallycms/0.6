@@ -431,3 +431,5 @@ errorlog_message: Error details
 errorlog_line: line
 errorlog_cleared: The log has been cleared.
 errorlog_not_cleared: The log could not be cleared.
+
+use_default_locale: '(project default)'

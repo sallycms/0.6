@@ -172,7 +172,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 	protected function getBackendLocales() {
 		$langpath = SLY_SALLYFOLDER.'/backend/lang';
 		$locales  = sly_I18N::getLocales($langpath);
-		$result   = array('' => 'default');
+		$result   = array('' => t('use_default_locale'));
 
 		foreach ($locales as $locale) {
 			$i18n = new sly_I18N($locale, $langpath);
