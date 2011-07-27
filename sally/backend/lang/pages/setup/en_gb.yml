@@ -88,6 +88,6 @@ setup_finish_title: Setup: All Done!
 setup_finish_header: Congratulations to your SallyCMS installation!
 setup_finish_done: The installation of your CMS is now done.
 setup_finish_login: You can <a href="index.php">log in</a> and start using it right now.
-setup_finish_signature: 'Good luck and have fun,\nThe SallyCMS Team'
+setup_finish_signature: "Good luck and have fun,\nThe SallyCMS Team"
 
 setup_import_cant_find_exports: 'Can''t find export files.'
