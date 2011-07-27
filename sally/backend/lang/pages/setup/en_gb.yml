@@ -53,6 +53,8 @@ setup_dbconfig_password: Password
 setup_dbconfig_database: Database Name
 setup_dbconfig_create_db: create
 setup_dbconfig_continue: Continue with step 3
+setup_invalid_driver: The chosen database driver is not supported by your system.
+setup_no_drivers_available: No database driver is available.
 
 setup_initdb_title: Setup: Step 3 of 5
 setup_initdb_header: Create database

@@ -17,10 +17,28 @@ $this->printHiddens('dbconfig', $form);
 
 // database driver
 
-$drivers = array('mysql' => 'MySQL', 'pgsql' => 'PostgreSQL', 'oci' => 'Oracle', 'sqlite' => 'SQLite');
-$drivers = new sly_Form_Select_DropDown('driver', t('setup_dbconfig_driver'), null, $drivers);
-$drivers->setHelpText(t('setup_dbconfig_driver_notice'));
-$form->add($drivers);
+$all       = array('mysql' => 'MySQL', 'pgsql' => 'PostgreSQL', 'oci' => 'Oracle', 'sqlite' => 'SQLite');
+$available = array();
+
+foreach ($all as $driver => $title) {
+	if (in_array($driver, $drivers)) {
+		$available[$driver] = $title;
+	}
+}
+
+if (count($available) === 0) {
+	return;
+}
+
+if (count($available) === 1) {
+	$form->addHiddenValue('driver', key($available));
+	$form->add(new sly_Form_Text(t('setup_dbconfig_driver'), reset($available)));
+}
+else {
+	$drivers = new sly_Form_Select_DropDown('driver', t('setup_dbconfig_driver'), null, $available);
+	$drivers->setHelpText(t('setup_dbconfig_driver_notice'));
+	$form->add($drivers);
+}
 
 // database infos
 
@@ -32,13 +50,21 @@ $form->add(new sly_Form_Input_Text('user', t('setup_dbconfig_login'), $user));
 $form->add(new sly_Form_Input_Text('pass', t('setup_dbconfig_password'), $pass));
 
 // slightly more complex input for the target database
+// (only required when not using SQLite)
 
-$dbname = new sly_Form_Input_Text('dbname', '', $dbname);
-$create = new sly_Form_Input_Checkbox('create_db', '', '1', t('setup_dbconfig_create_db'));
-$name   = new sly_Form_Freeform('dbname', t('setup_dbconfig_database'), $dbname->render().' '.$create->render());
+if (count($available) > 1 || key($available) !== 'sqlite') {
+	$dbname = new sly_Form_Input_Text('dbname', '', $dbname);
+	$create = new sly_Form_Input_Checkbox('create_db', '', '1', t('setup_dbconfig_create_db'));
+	$name   = new sly_Form_Freeform('dbname', t('setup_dbconfig_database'), $dbname->render().' '.$create->render());
 
-$name->addFormRowClass('rex-form-text'); // so that the styles for the input box apply
-$form->add($name);
+	$name->addFormRowClass('rex-form-text'); // so that the styles for the input box apply
+	$form->add($name);
+}
+else {
+	$name = new sly_Form_Input_Text('dbname', t('setup_dbconfig_database'), $dbname);
+	$form->add($name);
+}
+
 $form->add($prefix);
 
 // button config

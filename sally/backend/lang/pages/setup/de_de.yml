@@ -53,6 +53,8 @@ setup_dbconfig_password: Passwort
 setup_dbconfig_database: Name der Datenbank
 setup_dbconfig_create_db: anlegen
 setup_dbconfig_continue: Weiter zu Schritt 3
+setup_invalid_driver: Der augewählte Datenbank-Treiber wird von Ihrem System nicht unterstützt.
+setup_no_drivers_available: Es steht kein Datenbank-Treiber (PDO) zur Verfügung.
 
 setup_initdb_title: Setup: Schritt 3 von 5
 setup_initdb_header: Datenbank anlegen

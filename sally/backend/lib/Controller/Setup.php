@@ -79,9 +79,15 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 	}
 
 	protected function dbconfig() {
-		$config = sly_Core::config();
-		$data   = $config->get('DATABASE');
-		$isSent = isset($_POST['submit']);
+		$config  = sly_Core::config();
+		$data    = $config->get('DATABASE');
+		$isSent  = isset($_POST['submit']);
+		$drivers = sly_DB_PDO_Driver::getAvailable();
+
+		if (empty($drivers)) {
+			$this->warning = t('setup_no_drivers_available');
+			$sent = false;
+		}
 
 		if ($isSent) {
 			$data['TABLE_PREFIX'] = sly_post('prefix', 'string');
@@ -93,6 +99,10 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 			$createDatabase       = sly_post('create_db', 'bool');
 
 			try {
+				if (!in_array($data['DRIVER'], $drivers)) {
+					throw new sly_Exception(t('setup_invalid_driver'));
+				}
+
 				if ($createDatabase && $data['DRIVER'] != 'sqlite') {
 					$db = new sly_DB_PDO_Persistence($data['DRIVER'], $data['HOST'], $data['LOGIN'], $data['PASSWORD']);
 					$db->query('CREATE DATABASE `'.$data['NAME'].'` DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci');
@@ -112,12 +122,13 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		}
 
 		print $this->render('setup/dbconfig.phtml', array(
-			'host'   => $data['HOST'],
-			'user'   => $data['LOGIN'],
-			'pass'   => $data['PASSWORD'],
-			'dbname' => $data['NAME'],
-			'prefix' => $data['TABLE_PREFIX'],
-			'driver' => $data['DRIVER']
+			'host'    => $data['HOST'],
+			'user'    => $data['LOGIN'],
+			'pass'    => $data['PASSWORD'],
+			'dbname'  => $data['NAME'],
+			'prefix'  => $data['TABLE_PREFIX'],
+			'driver'  => $data['DRIVER'],
+			'drivers' => $drivers
 		));
 	}
 
