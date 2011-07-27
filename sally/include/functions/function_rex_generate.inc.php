@@ -257,7 +257,7 @@ function rex_copyDir($srcdir, $dstdir) {
 					if ($isNewer) {
 						if (copy($srcfile, $dstfile)) {
 							touch($dstfile, filemtime($srcfile));
-							chmod($dstfile, 0777);
+							chmod($dstfile, sly_Core::getFilePerm());
 						}
 						else {
 							return false;

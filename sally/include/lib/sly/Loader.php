@@ -171,11 +171,12 @@ class sly_Loader {
 		static $dir = null;
 
 		if ($dir === null) {
-			$dir = SLY_DYNFOLDER.'/internal/sally/loader';
+			$dir  = SLY_DYNFOLDER.'/internal/sally/loader';
+			$perm = 0777; // hard-coded since sly_Core may not have been loaded yet
 
 			if (is_dir(dirname($dir)) && !is_dir($dir)) {
-				mkdir($dir, 0777);
-				chmod($dir, 0777); // hoster compatibility
+				mkdir($dir, $perm);
+				chmod($dir, $perm);
 			}
 		}
 
@@ -188,7 +189,7 @@ class sly_Loader {
 			$exists   = file_exists($filename);
 
 			file_put_contents($filename, '<?php $config = '.var_export(self::$pathCache, true).';', LOCK_EX);
-			if (!$exists) chmod($filename, 0777);
+			if (!$exists) chmod($filename, 0777); // hard-coded since sly_Core may not have been loaded yet
 		}
 	}
 

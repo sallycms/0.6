@@ -192,6 +192,14 @@ class sly_Core {
 		return $var;
 	}
 
+	public static function getFilePerm() {
+		return (int) self::config()->get('FILEPERM');
+	}
+
+	public static function getDirPerm() {
+		return (int) self::config()->get('DIRPERM');
+	}
+
 	public static function getI18N() {
 		global $I18N;
 		if (!isset($I18N)) $I18N = rex_create_lang();
