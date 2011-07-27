@@ -25,7 +25,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		self::$viewPath = 'structure/';
 
 		$this->categoryId = sly_request('category_id', 'rex-category-id');
-		$this->clangId    = sly_request('clang', 'rex-clang-id', sly_Core::config()->get('START_CLANG_ID'));
+		$this->clangId    = sly_request('clang', 'rex-clang-id', sly_Core::getDefaultLanguageId());
 
 		sly_Core::getLayout()->pageHeader(t('title_structure'), $this->getBreadcrumb());
 		print $this->render('toolbars/languages.phtml',
@@ -308,7 +308,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 
 		$clangOk = sly_Util_Language::hasPermissionOnLanguage($user, $clang);
 		if(is_null($user) || !$clangOk) return false;
-		
+
 		if (sly_Util_String::startsWith($this->action, 'editStatus')) {
 			return $this->canPublishCategory($categoryId);
 		}

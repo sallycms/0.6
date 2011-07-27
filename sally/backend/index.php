@@ -35,7 +35,7 @@ if (!SLY_IS_TESTING) sly_Util_Session::start();
 $isSetup = $config->get('SETUP');
 
 if (!SLY_IS_TESTING && $isSetup) {
-	$locale        = $config->get('LANG');
+	$locale        = sly_Core::getDefaultLocale();
 	$locales       = sly_I18N::getLocales(SLY_SALLYFOLDER.'/backend/lang');
 	$requestLocale = sly_request('lang', 'string');
 	$timezone      = @date_default_timezone_get();
@@ -60,8 +60,8 @@ else {
 	}
 
 	// re-set the values if the user profile has no value (meaining 'default')
-	if (empty($locale))   $locale   = $config->get('LANG');
-	if (empty($timezone)) $timezone = $config->get('TIMEZONE');
+	if (empty($locale))   $locale   = sly_Core::getDefaultLocale();
+	if (empty($timezone)) $timezone = sly_Core::getTimezone();
 }
 
 // set the i18n object
@@ -92,7 +92,7 @@ sly_Core::registerListeners();
 
 // synchronize develop
 
-if (!$isSetup && $config->get('DEVELOPER_MODE')) {
+if (!$isSetup && sly_Core::isDeveloperMode()) {
 	sly_Service_Factory::getTemplateService()->refresh();
 	sly_Service_Factory::getModuleService()->refresh();
 	sly_Service_Factory::getAssetService()->validateCache();

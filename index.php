@@ -27,7 +27,7 @@ if (!isset($_GET['sly_asset']) && $config->get('SETUP')) {
 }
 
 // init i18n (TODO: This makes no sense... but addOns require the i18n object to be present)
-sly_Core::setI18N(new sly_I18N($config->get('LANG'), SLY_SALLYFOLDER.'/backend/lang'));
+sly_Core::setI18N(new sly_I18N(sly_Core::getDefaultLocale(), SLY_SALLYFOLDER.'/backend/lang'));
 
 // instantiate asset service before addons are loaded to make sure the scaffold css processing is first
 $assetService = sly_Service_Factory::getAssetService();

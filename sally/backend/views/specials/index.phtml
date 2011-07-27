@@ -31,11 +31,11 @@ catch (Exception $e) {
 	// pass...
 }
 
-$backendLocale   = new sly_Form_Select_DropDown('backend_locale', t('specials_lang'), $config->get('LANG'), $locales, 'rex-form-lang');
-$defaultType     = new sly_Form_Select_DropDown('default_type', t('specials_default_type'), $config->get('DEFAULT_ARTICLE_TYPE'), $types, 'rex-form-default-article-type');
+$backendLocale   = new sly_Form_Select_DropDown('backend_locale', t('specials_lang'), sly_Core::getDefaultLocale(), $locales, 'rex-form-lang');
+$defaultType     = new sly_Form_Select_DropDown('default_type', t('specials_default_type'), sly_Core::getDefaultArticleType(), $types, 'rex-form-default-article-type');
 $cachingStrategy = new sly_Form_Select_DropDown('caching_strategy', t('specials_caching_strategy'), sly_Cache::getStrategy(), sly_Cache::getAvailableCacheImpls(), 'rex-form-caching-strategy');
-$frontendSync    = new sly_Form_Select_DropDown('developer_mode', t('specials_developer_mode'), $config->get('DEVELOPER_MODE') ? 'true' : 'false', $yesNo, 'rex-form-developer-mode');
-$defaultClang    = new sly_Form_Select_DropDown('start_clang', t('config_default_fe_language'), $config->get('START_CLANG_ID'), $languages);
+$frontendSync    = new sly_Form_Select_DropDown('developer_mode', t('specials_developer_mode'), sly_Core::isDeveloperMode() ? 'true' : 'false', $yesNo, 'rex-form-developer-mode');
+$defaultClang    = new sly_Form_Select_DropDown('start_clang', t('config_default_fe_language'), sly_Core::getDefaultLanguageId(), $languages);
 
 $buttonBar = new sly_Form_ButtonBar(array(
 	'submit' => new sly_Form_Input_Button('submit', 'sendit', t('specials_update'))
@@ -81,9 +81,9 @@ $buttonBar = new sly_Form_ButtonBar(array(
 
 					$fieldset = new sly_Form_Fieldset(t('general_info_header'));
 					$fields   = array(
-						new sly_Form_Input_Text('projectname', t('config_projectname'), $config->get('PROJECTNAME')),
-						new sly_Form_Widget_Link('start_article', t('specials_start_article'), $config->get('START_ARTICLE_ID')),
-						new sly_Form_Widget_Link('notfound_article', t('specials_not_found_article'), $config->get('NOTFOUND_ARTICLE_ID')),
+						new sly_Form_Input_Text('projectname', t('config_projectname'), sly_Core::getProjectName()),
+						new sly_Form_Widget_Link('start_article', t('specials_start_article'), sly_Core::getSiteStartArticleId()),
+						new sly_Form_Widget_Link('notfound_article', t('specials_not_found_article'), sly_Core::getNotFoundArticleId()),
 						$defaultClang,
 						$defaultType,
 						$frontendSync,
@@ -94,7 +94,7 @@ $buttonBar = new sly_Form_ButtonBar(array(
 					if (class_exists('DateTimeZone')) {
 						$timezoneList   = DateTimeZone::listIdentifiers();
 						$timezoneList   = array_combine($timezoneList, $timezoneList);
-						$timezoneSelect = new sly_Form_Select_DropDown('timezone', t('specials_timezone'), $config->get('TIMEZONE'), $timezoneList);
+						$timezoneSelect = new sly_Form_Select_DropDown('timezone', t('specials_timezone'), sly_Core::getTimezone(), $timezoneList);
 
 						$fields[] = $timezoneSelect;
 					}
