@@ -23,7 +23,7 @@ print $this->render('mediapool/notices.phtml');
 // if file types are restricted, inform the user
 
 if (!empty($args['types'])) {
-	print rex_info(t('pool_file_filter', $args['types']));
+	print sly_Helper_Message::info(t('pool_file_filter', $args['types']));
 }
 
 ////////////////////////////////////////////////////////

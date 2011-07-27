@@ -8,8 +8,8 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-if (!empty($info))    print rex_info($info);
-if (!empty($warning)) print rex_warning($warning);
+if (!empty($info))    print sly_Helper_Message::info($info);
+if (!empty($warning)) print sly_Helper_Message::warn($warning);
 
 ?>
 <table class="sly-table sly-addonlist">

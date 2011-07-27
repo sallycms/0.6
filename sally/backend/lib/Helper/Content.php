@@ -9,7 +9,7 @@
  */
 
 /**
- * @author zozi
+ * @author zozi@webvariants.de
  */
 class sly_Helper_Content {
 
@@ -24,7 +24,7 @@ class sly_Helper_Content {
 			ob_start();
 			?>
 
-			<div class="sly-form" id="addslice">
+			<div class="sly-form" id="">
 				<form action="index.php#slice<?= $prior ?>" id="slice<?= $prior ?>" method="post" enctype="multipart/form-data">
 					<div>
 						<input type="hidden" name="page" value="content" />
@@ -116,7 +116,7 @@ class sly_Helper_Content {
 
 	private static function focusFirstElement() {
 		$layout = sly_Core::getLayout();
-		$layout->addJavaScript('jQuery(function($) { $(":input:visible:enabled:not([readonly]):first", $("form#REX_FORM")).focus(); });');
+		$layout->addJavaScript('jQuery(function($) { $("#addslice, #editslice").find(":input:visible:enabled:not([readonly]):first").focus(); });');
 	}
 
 	public static function metaFormAddButtonBar($form, $label, $name) {

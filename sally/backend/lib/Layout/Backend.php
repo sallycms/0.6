@@ -72,7 +72,6 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 		print '<div id="sly-pagehead"><div class="pagehead-row"><h1>'.$head.'</h1></div>'.$subtitle.'</div>';
 
 		$dispatcher->notify('PAGE_TITLE_SHOWN', $subtitle, compact('page'));
-		print '<!-- *** OUTPUT OF CONTENT - START *** -->';
 	}
 
 	/**

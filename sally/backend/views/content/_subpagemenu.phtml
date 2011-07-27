@@ -13,7 +13,7 @@ $listElements = sly_Core::dispatcher()->filter('SLY_PAGE_CONTENT_ACTIONS_MENU', 
 			'clang' => $this->article->getClang()
 		));
 ?>
-<ul class="rex-navi-content">
+<ul class="sly-navi-content">
 <?php
 foreach ($listElements as $idx => $element) {
 	$class = $idx == 0 ? ' class="rex-navi-first"' : '';

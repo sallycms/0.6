@@ -1,17 +1,6 @@
 +global-reset;
 +html5-reset;
 
-/*=hardcore-hidden {
-	display: inline !important;
-	position: absolute !important;
-	left: -1000px !important;
-	top: -1000px !important;
-	width: 0px !important;
-	height: 0px !important;
-	overflow: hidden !important;
-	background-color: $background !important;
-}*/
-
 body {
 	font-family: Calibri, Verdana, Arial, sans-serif;
 	position: relative;
@@ -66,20 +55,20 @@ img, iframe {
 }
 
 /* PAGEHEAD -------------------------------------------------------- PAGEHEAD */
+.sly-navi-path{
+	display: inline;
+	li {
+		display: inline;
+
+		a.rex-active {
+			color: $drk_grey;
+		}
+	}	
+}
+
 #sly-pagehead {
 
 	margin: 0 0 10px 0;
-
-	.sly-navi-path{
-		li {
-			display: inline;
-
-			a.rex-active {
-				color: $drk_grey;
-			}
-		}
-
-	}
 
 	h1 {
 		font-size: 2em;
@@ -94,16 +83,6 @@ img, iframe {
 		a.rex-active {
 			color: $drk_grey;
 		}
-		.sly-navi-path {
-			float: left;
-
-		}
-		/* p = zweite Zeile der Pfadangabe */
-		p {
-			margin-left: 10px;
-			float: left;
-		}
-
 	}
 }
 
@@ -194,29 +173,17 @@ ul.rex-ul1 {
 	margin-bottom: 1em;
 }
 
-.rex-addon-content {
-	h4, p, ul, ol, dl { margin-bottom: 1em; }
-	h4 { padding-top: 20px; }
-}
-
 ul.rex-ul1 {
 	margin-left: 40px;
 	li { list-style-type: square; }
 }
 
-.rex-addon-content,
 .rex-area-content {
 	line-height: 1.6;
 }
 
 .rex-offline {
 	color: $link_color_offline;
-}
-
-.rex-info {
-	background-image: url(../excla_mark_green.png);
-	background-position: 0% 50%;
-	background-color: #209eb5;
 }
 
 .rex-ok, .rex-online {

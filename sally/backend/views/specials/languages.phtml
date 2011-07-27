@@ -8,8 +8,8 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-if (!empty($this->warning)) print rex_warning($this->warning);
-if (!empty($this->info))    print rex_info($this->info);
+if (!empty($this->warning)) print sly_Helper_Message::warn($this->warning);
+if (!empty($this->info))    print sly_Helper_Message::info($this->info);
 
 ?>
 

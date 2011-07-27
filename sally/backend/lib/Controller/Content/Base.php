@@ -55,11 +55,9 @@ abstract class sly_Controller_Content_Base extends sly_Controller_Backend {
 				}
 			}
 		}
-
-		$result .= '</ul><p>';
-		$result .= $art->isStartArticle() ? t('start_article') . ': ' : t('article') . ': ';
-		$result .= '<a href="index.php?page=' . $this->getPageName() . '&amp;article_id=' . $art->getId() . '&amp;clang=' . $art->getClang() . '">' . str_replace(' ', '&nbsp;', sly_html($art->getName())) . '</a>';
-		$result .= '</p>';
+		$result .= '<li> | '.($art->isStartArticle() ? t('start_article') : t('article')) . '</li>';
+		$result .= '<li> : <a href="index.php?page=' . $this->getPageName() . '&amp;article_id=' . $art->getId() . '&amp;clang=' . $art->getClang() . '">' . str_replace(' ', '&nbsp;', sly_html($art->getName())) . '</a></li>';
+		$result .= '</ul>';
 
 		return $result;
 	}

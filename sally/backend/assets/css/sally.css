@@ -44,19 +44,19 @@ a.sly-sprite, span.sly-sprite {
 /**********************************************************************/
 
 caption, legend {
-	&.rex-hidden { display: none; }
+	&.rex-hidden { +hide; }
 }
 
 /*	REX-MESSAGE -------------------------------------------------------------------------- REX-MESSAGE */
 
-.rex-message {
+.sly-message {
 	clear:both;
 	font-weight:700;
 	line-height:1em;
 	margin-bottom:10px;
 	width:100%;
 
-	.rex-info, .rex-warning {
+	&.rex-info, &.rex-warning, &.sly-info, &.sly-warn {
 		padding: 8px 0;
 		color: #fff;
 		background-color: $link_color;
@@ -65,33 +65,15 @@ caption, legend {
 		background-repeat: no-repeat;
 		+border-radius(4px);
 		border: 1px solid #efefef;
-		margin-bottom: 0;
 	}
 
-	.rex-warning {
+	&.rex-warning, &.sly-warn {
 		background-color: #b32430;
 	}
 
 	span {
 		display: block;
 		padding: 0 45px;
-	}
-
-	&-content {
-		margin-left: 40px;
-		padding: 10px 5px;
-		border-left-width: 1px;
-		border-left-style: solid;
-
-		ol {
-			margin: 0 0 0 20px;
-			li { list-style-type: decimal; }
-		}
-
-		ul {
-			margin: 0 0 0 18px;
-			li { list-style-type: square; }
-		}
 	}
 }
 
@@ -197,8 +179,7 @@ input, textarea, select {
 	font-family: Calibri, Arial, Verdana, sans-serif;
 }
 
-.rex-area-footer,
-.rex-addon-footer{
+.rex-area-footer {
 	background-color: $drk_grey;
 }
 
@@ -239,8 +220,7 @@ input, textarea, select {
 }
 
 /*	Rundungen */
-.rex-area,
-.rex-info-block {
+.rex-area {
 	+border-radius($brd_rad);
 }
 

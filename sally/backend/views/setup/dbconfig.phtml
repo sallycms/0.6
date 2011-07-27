@@ -10,7 +10,7 @@
 
 $this->title(t('setup_dbconfig_title'));
 
-if (!empty($this->warning)) print rex_warning($this->warning);
+if (!empty($this->warning)) print sly_Helper_Message::warn($this->warning);
 
 $form = new sly_Form('index.php', 'POST', t('setup_dbconfig_header'), '', 'sly-setup-dbsetup');
 $this->printHiddens('dbconfig', $form);

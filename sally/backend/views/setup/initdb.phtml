@@ -13,7 +13,7 @@ $this->title(t('setup_initdb_title'));
 // init page
 
 if (!empty($this->warning)) {
-	print rex_warning($this->warning.'<br /><br />'.t('setup_initdb_reinit'));
+	print sly_Helper_Message::warn($this->warning.'<br /><br />'.t('setup_initdb_reinit'));
 }
 
 if (!in_array($dbInitFunction, $dbInitFunctions)) {

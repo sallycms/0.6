@@ -53,11 +53,11 @@
 	$hasTemplate = $article->hasTemplate();
 	if (!$hasType || !$hasTemplate || $slot === null) {
 		if (!$hasType)
-			print rex_warning(t('content_select_type'));
+			print sly_Helper_Message::warn(t('content_select_type'));
 		elseif (!$hasTemplate)
-			print rex_warning(t('content_configure_article_type'));
+			print sly_Helper_Message::warn(t('content_configure_article_type'));
 		else
-			print rex_info(t('content_no_slots'));
+			print sly_Helper_Message::info(t('content_no_slots'));
 	}
 	else {
 		print '<div class="sly-content-editmode">';
@@ -67,9 +67,9 @@
 		for($i = 0; $i <= count($articleSlices); $i++) {
 			if ($prior == $i) {
 				if (!empty($this->localInfo))
-					print rex_info($this->localInfo);
+					print sly_Helper_Message::info($this->localInfo);
 				if (!empty($this->localWarning))
-					print rex_warning($this->localWarning);
+					print sly_Helper_Message::warn($this->localWarning);
 			}
 			
 			if ($function == 'add' && $prior == $i) {

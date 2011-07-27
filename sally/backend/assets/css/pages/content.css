@@ -4,33 +4,31 @@
 
 	ul {
 		padding: 5px 0; /*  Abstand oben und unten */
-		&.rex-navi-slots { float: left; }
-		&.rex-navi-content { float: right; }
 
 		li {
-			list-style: none;
 			display: inline;
 			margin: 0 0 0 5px; /* Abstand der Listenelemente zu einander, s. Buttons Editier-Modus etc. */
+		}
+	}
+	.sly-navi-slots { float: left; }
+	.sly-navi-content { float: right; }
+	
+	a {
+		background-color: #fff;
+		padding: 2px 8px;
+		color: #1f9eb5;
+		+border-radius(3px);
 
-			/* Buttons Editier Modus, Metadaten, Anzeigen */
-			a {
-				background-color: #fff;
-				padding: 2px 8px;
-				color: #1f9eb5;
-				+border-radius(3px);
+		&:hover {
+			background-color: #b3b3b3;
+			color: #fff;
+		}
 
-				&:hover {
-					background-color: #b3b3b3;
-					color: #fff;
-				}
+		&.rex-active {
+			background-color: $drk_grey;
+			color: #fff;
 
-				&.rex-active {
-					background-color: $drk_grey;
-					color: #fff;
-
-					&:hover { background-color: #b3b3b3; }
-				}
-			}
+			&:hover { background-color: #b3b3b3; }
 		}
 	}
 }
@@ -59,18 +57,11 @@
 
 
 .sly-content-editmode {
-	.rex-message, .sly-content-body {
-		+border-radius(0px);
-		border: 0;
-	}
-	
 	input[type=submit] {
 		margin-left: 10px;
 	}
-	
 }
-.sly-contentpage-slice-output,
-.sly-form-add-slice {
+.sly-contentpage-slice-output {
 	margin: 0 0 10px;
 }
 
@@ -99,22 +90,19 @@
 }
 
 .sly-form .sly-form-add-slice {
-	.rex-form-wrapper {
-		+border-top-radius(4px);
-	}
-
 	.rex-form-row {
 		border-top: 0;
 	}
 	.rex-form-wrapper {
-		margin: 2px 0;
+		+border-top-radius(4px);
 		background-color: #e8e8e8;
+		margin-bottom: 10px;
 	}
 	legend, label { +hide; }
 	select.sly-module-select {width: 100%}
 }
 /*	Editmode */
-.rex-content-editmode-module-name {
+.sly-slice-toolbar {
 	width: 100%;
 	line-height: 35px;
 	background-color: $drk_grey;

@@ -11,10 +11,10 @@
 global $rex_user_loginmessage;
 
 if (!empty($rex_user_loginmessage)) {
-	print rex_warning($rex_user_loginmessage);
+	print sly_Helper_Message::warn($rex_user_loginmessage);
 }
 elseif (!empty($this->message)) {
-	print rex_warning($this->message);
+	print sly_Helper_Message::warn($this->message);
 }
 
 $form = new sly_Form('index.php', 'POST', t('login_title'), '', 'loginformular');

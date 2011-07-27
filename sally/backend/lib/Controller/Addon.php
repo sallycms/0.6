@@ -20,7 +20,6 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 	public function init() {
 		$layout = sly_Core::getLayout();
 		$layout->pageHeader(t('addons'));
-		print '<div class="sly-content">';
 
 		$this->addons  = sly_Service_Factory::getAddOnService();
 		$this->plugins = sly_Service_Factory::getPluginService();
@@ -39,10 +38,6 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 		else {
 			unset($_REQUEST['func']);
 		}
-	}
-
-	public function teardown() {
-		print '</div>';
 	}
 
 	public function index() {
