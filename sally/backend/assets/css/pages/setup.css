@@ -63,7 +63,8 @@ ul.rex-setup-language {
 	.rex-form {
 		.rex-form-text input,
 		.rex-form-password input,
-		select#driver {
+		select#driver,
+		select#timezone {
 			width: 250px;
 		}
 
