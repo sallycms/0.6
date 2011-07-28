@@ -137,7 +137,7 @@ caption, legend {
 /*	Widget */
 
 .rex-widget {
-	float: left;
+	display: inline-block;
 	margin-bottom: 10px;
 	padding: 5px;
 	border-width: 1px;
