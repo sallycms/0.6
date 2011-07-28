@@ -13,11 +13,10 @@
  * @author zozi@webvariants.de
  */
 class sly_Helper_Message {
-
 	public static function message($message, $cssClass = '', $msgwrapper = 'p') {
-		$return = '<div class="sly-message ' . $cssClass . '"><' . $msgwrapper . '>';
-		$return .= '<span>' . $message . '</span>';
-		$return .= '</' . $msgwrapper . '></div>';
+		$return = '<div class="sly-message '.$cssClass.'"><'.$msgwrapper.'>';
+		$return .= '<span>'.$message.'</span>';
+		$return .= '</'.$msgwrapper.'></div>';
 		return $return;
 	}
 
@@ -28,7 +27,4 @@ class sly_Helper_Message {
 	public static function warn($message) {
 		return self::message($message, 'sly-warn');
 	}
-
 }
-
-?>
