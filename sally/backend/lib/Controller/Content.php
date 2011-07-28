@@ -19,10 +19,11 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 		parent::init();
 		$this->slot = sly_request('slot', 'string', sly_Util_Session::get('contentpage_slot', ''));
 		//validate slot
-		$templateName = $this->article->getTemplateName();
-		if ($this->article->hasTemplate()
-				&& !sly_Service_Factory::getTemplateService()->hasSlot($templateName, $this->slot)) {
-			$this->slot = sly_Service_Factory::getTemplateService()->getFirstSlot($templateName);
+		if ($this->article->hasTemplate()) {
+			$templateName = $this->article->getTemplateName();
+			if(!sly_Service_Factory::getTemplateService()->hasSlot($templateName, $this->slot)) {
+				$this->slot = sly_Service_Factory::getTemplateService()->getFirstSlot($templateName);
+			}
 		}
 		sly_Util_Session::set('contentpage_slot', $this->slot);
 	}
