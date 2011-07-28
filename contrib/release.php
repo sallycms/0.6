@@ -11,13 +11,12 @@
 // Configuration
 
 $variants = array(
-	'starterkit' => array('docs' => true, 'tests' => true, 'addons' => array('image_resize', 'import_export', 'be_search', 'metainfo', 'developer_utils', 'global_settings', 'error_handler', 'deployer', 'realurl2', 'wymeditor')),
-	'lite'       => array('docs' => true, 'tests' => true, 'addons' => array()),
-	'minimal'    => array('docs' => false, 'tests' => false, 'addons' => array())
+	'starterkit' => array('tests' => true, 'addons' => array('image_resize', 'import_export', 'be_search', 'metainfo', 'developer_utils', 'global_settings', 'deployer', 'realurl2', 'wymeditor')),
+	'lite'       => array('tests' => true, 'addons' => array()),
+	'minimal'    => array('tests' => false, 'addons' => array())
 );
 
 $addonDir = 'Q:\\AddOns\\';
-$cocoBin  = 'Q:\\docroot\\coco\\bin\\coco.php';
 
 // Check arguments
 
@@ -27,7 +26,7 @@ if (count($args) < 2) {
 	die('Usage: php '.$args[0].' tagname [nofetch]');
 }
 
-$repo = dirname(__FILE__);
+$repo = realpath(dirname(__FILE__).'/../');
 $tag  = $args[1];
 
 // Check tag
@@ -44,8 +43,8 @@ if (substr($output, 0, 6) == 'abort:') {
 
 // Create releases directory
 
-if (!is_dir('../../releases')) mkdir('../../releases');
-$releases = realpath('../../releases');
+if (!is_dir('../releases')) mkdir('../releases');
+$releases = realpath('../releases');
 
 // Create variants
 
@@ -63,15 +62,12 @@ foreach ($variants as $name => $settings) {
 		'-X .hg_archival.txt',
 		'-X .hgignore',
 		'-X .hgtags',
-		'-X contrib'
+		'-X contrib',
+		'-X sally/docs'
 	);
 
 	if (!$settings['tests']) {
 		$params[] = '-X sally/tests';
-	}
-
-	if (!$settings['docs']) {
-		$params[] = '-X sally/docs';
 	}
 
 	$params[] = '"'.$target.'"';
@@ -82,18 +78,9 @@ foreach ($variants as $name => $settings) {
 	// Create empty data dir
 
 	chdir($target);
-	mkdir('data');
-	mkdir('sally/addons');
-	file_put_contents('data/empty', 'This directory is intentionally left blank. Please make sure it\'s chmod to 0777.');
-
-	// Generate documentation
-
-	if ($settings['docs']) {
-		chdir('sally/docs');
-		print 'coco...';
-		exec('php '.$cocoBin.' . doconly 2>&0');
-		chdir($target);
-	}
+	@mkdir('sally/data');
+	@mkdir('sally/addons');
+	file_put_contents('sally/data/empty', 'This directory is intentionally left blank. Please make sure it\'s chmod to 0777.');
 
 	// Put addOns in the archive
 
