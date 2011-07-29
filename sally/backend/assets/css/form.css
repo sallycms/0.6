@@ -167,7 +167,7 @@ a.sly-button {
 	}
 
 	&.sly-media input { width: 372px; }
-	
+
 	&.sly-link input { width: 391px; }
 
 	.sly-icons {
@@ -261,6 +261,10 @@ a.sly-button {
 		width: 783px;
 		vertical-align: middle;
 		border-top: 1px dotted $md_grey;
+
+		&:first-child {
+			border-top: 0 none;
+		}
 	}
 
 	textarea { height: 250px; width: 605px; }

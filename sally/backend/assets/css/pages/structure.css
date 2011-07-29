@@ -15,7 +15,7 @@
 
 #rex-form-structure-category,
 #rex-form-structure-article {
-	.rex-form-submit {
+	table input[type=submit] {
 		margin-left: 0;
 	}
 }

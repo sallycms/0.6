@@ -12,7 +12,7 @@
 	}
 	.sly-navi-slots { float: left; }
 	.sly-navi-content { float: right; }
-	
+
 	a {
 		background-color: #fff;
 		padding: 2px 8px;
@@ -34,7 +34,7 @@
 }
 
 
-#rex-page-content {
+#rex-page-content .sly-content-editmode {
 	input[type=submit] {
 		margin-left: 10px;
 	}
@@ -77,7 +77,7 @@
 		width: 797px;
 	}
 	.rex-form-wrapper {
-		margin-bottom: 10px; 
+		margin-bottom: 10px;
 	}
 }
 
