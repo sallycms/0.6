@@ -25,7 +25,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		self::$viewPath = 'structure/';
 
 		$this->categoryId = sly_request('category_id', 'rex-category-id');
-		$this->clangId    = sly_request('clang', 'rex-clang-id', sly_Core::getDefaultLanguageId());
+		$this->clangId    = sly_request('clang', 'rex-clang-id', sly_Core::getDefaultClangId());
 
 		sly_Core::getLayout()->pageHeader(t('title_structure'), $this->getBreadcrumb());
 		print $this->render('toolbars/languages.phtml',

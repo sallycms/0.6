@@ -35,7 +35,7 @@ $backendLocale   = new sly_Form_Select_DropDown('backend_locale', t('specials_la
 $defaultType     = new sly_Form_Select_DropDown('default_type', t('specials_default_type'), sly_Core::getDefaultArticleType(), $types, 'rex-form-default-article-type');
 $cachingStrategy = new sly_Form_Select_DropDown('caching_strategy', t('specials_caching_strategy'), sly_Cache::getStrategy(), sly_Cache::getAvailableCacheImpls(), 'rex-form-caching-strategy');
 $frontendSync    = new sly_Form_Select_DropDown('developer_mode', t('specials_developer_mode'), sly_Core::isDeveloperMode() ? 'true' : 'false', $yesNo, 'rex-form-developer-mode');
-$defaultClang    = new sly_Form_Select_DropDown('default_clang', t('config_default_fe_language'), sly_Core::getDefaultLanguageId(), $languages);
+$defaultClang    = new sly_Form_Select_DropDown('default_clang', t('config_default_fe_language'), sly_Core::getDefaultClangId(), $languages);
 
 $buttonBar = new sly_Form_ButtonBar(array(
 	'submit' => new sly_Form_Input_Button('submit', 'sendit', t('specials_update'))
