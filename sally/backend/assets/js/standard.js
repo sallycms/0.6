@@ -510,11 +510,13 @@ var slyMediaWidgetCallback = null;
 
 		// allen vom Browser unterstützten Elementen die Klasse ua-supported geben
 
-		var types = Modernizr.inputtypes;
+		if (typeof Modernizr !== 'undefined') {
+			var types = Modernizr.inputtypes;
 
-		for (var type in types) {
-			if (types.hasOwnProperty(type) && types[type]) {
-				$('input[type='+type+']').addClass('ua-supported');
+			for (var type in types) {
+				if (types.hasOwnProperty(type) && types[type]) {
+					$('input[type='+type+']').addClass('ua-supported');
+				}
 			}
 		}
 
