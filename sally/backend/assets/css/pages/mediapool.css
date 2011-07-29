@@ -224,7 +224,7 @@
 	}
 }
 
-#rex-form-mediapool-detail, #rex-form-mediapool-other, #rex-form-mediapool-sync {
+#rex-form-mediapool-detail, #rex-form-mediapool-other, #rex-form-mediapool-sync, #rex-form-mediapool-selectcategory {
 	.rex-form-wrapper .rex-form-row {
 		width: 680px;
 		padding: 7px 5px;
