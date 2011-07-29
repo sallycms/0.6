@@ -433,3 +433,4 @@ errorlog_cleared: The log has been cleared.
 errorlog_not_cleared: The log could not be cleared.
 
 use_default_locale: '(project default)'
+mediacat_title_cannot_be_empty: The category's name may not be empty.
