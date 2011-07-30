@@ -33,25 +33,25 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 			}
 
 			// make article the startarticle
-			if (sly_post('article2startpage', 'boolean', false) && $this->canMorphToStartpage()) {
+			elseif (sly_post('article2startpage', 'boolean', false) && $this->canMorphToStartpage()) {
 				$this->morphToStartpage();
 			}
 
 			// copy content to another language
-			if (sly_post('copycontent', 'boolean', false)) {
+			elseif (sly_post('copycontent', 'boolean', false)) {
 				$this->copyContent();
 			}
 
 			// move article to other category
-			if (sly_post('movearticle', 'boolean', false)) {
+			elseif (sly_post('movearticle', 'boolean', false)) {
 				$this->moveArticle();
 			}
 
-			if (sly_post('copyarticle', 'boolean', false)) {
+			elseif (sly_post('copyarticle', 'boolean', false)) {
 				$this->copyArticle();
 			}
 
-			if (sly_post('movecategory', 'string')) {
+			elseif (sly_post('movecategory', 'string')) {
 				$this->moveCategory();
 			}
 		}
