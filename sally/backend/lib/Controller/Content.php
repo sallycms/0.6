@@ -83,12 +83,16 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 
 		// Modul und Rechte vorhanden?
 
+		require_once SLY_COREFOLDER.'/functions/function_rex_content.inc.php';
 		$module = rex_slice_module_exists($slice_id);
 
 		if (!$module) {
 			// MODUL IST NICHT VORHANDEN
 			$this->warning = t('module_not_found');
 		} else {
+			$user  = sly_Util_User::getCurrentUser();
+			$clang = sly_Core::getCurrentClang();
+
 			// RECHTE AM MODUL ?
 			if ($user->isAdmin() || $user->hasRight('module[' . $module . ']') || $user->hasRight('module[0]')) {
 				list($success, $message) = rex_moveSlice($slice_id, $clang, $direction);
@@ -102,6 +106,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 				$this->warning = t('no_rights_to_this_function');
 			}
 		}
+		$this->index();
 	}
 
 	protected function addArticleSlice() {
