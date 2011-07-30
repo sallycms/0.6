@@ -133,9 +133,6 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			// create the slice
 			$slice = $sliceService->create(array('module' => $module));
 			$this->setSliceValues($slicedata, $slice);
-			foreach (sly_Core::getVarTypes() as $obj) {
-				$obj->setSliceValues($slicedata, $slice->getId());
-			}
 
 			// create the articleslice
 			$values = array(
