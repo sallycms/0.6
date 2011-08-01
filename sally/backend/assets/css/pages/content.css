@@ -178,3 +178,42 @@
 
 	}
 }
+
+/* Styling for sly_Forms within modules */
+
+#addslice, #editslice {
+	.sly-contentpage-slice-input .sly-form {
+		margin: 1em -10px 1em -10px;
+		width: 779px;
+		float: none;
+
+		legend {
+			display: none;
+		}
+
+		.rex-form-wrapper {
+			margin-bottom: 0;
+		}
+
+		.rex-form-row {
+			padding: 7px 10px;
+			border: 0 none;
+			border-top: 1px dotted #ACA9A9;
+			width: 777px;
+			background: #D9D9D9;
+			+border-radius(0);
+
+			label {
+				margin: inherit;
+			}
+
+			input, select, textarea {
+				margin: 0;
+			}
+
+			&:last-child {
+				border-bottom: 1px dotted #ACA9A9;
+			}
+		}
+	}
+}
