@@ -38,8 +38,6 @@
 	.rex-table-row-activ td {
 		background-color: $link_color;
 		color: #fff;
-
-		input { padding: 0; border: 1px solid #fff; }
 	}
 
 	.rex-plugin td {

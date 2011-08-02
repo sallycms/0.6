@@ -136,29 +136,7 @@ caption, legend {
 
 /*	Widget */
 
-.rex-widget {
-	display: inline-block;
-	margin-bottom: 10px;
-	padding: 5px;
-	border-width: 1px;
-	border-style: solid;
-	+border-radius($brd_rad);
-
-	&-icons {
-		padding: 2px 0 0 10px;
-	}
-
-	&-linklist, &-medialist {
-		.rex-widget-icons img { margin-bottom: 2px; }
-	}
-}
-
 /*	Breite war von "div.rex-form div.rex-form-row p" */
-
-#rex-output .rex-widget p {
-	width: auto;
-	float: left;
-}
 
 /*	Icons */
 
@@ -174,10 +152,6 @@ caption, legend {
 .rex-tx2 { color: #AF112F; } /* Rot */
 
 /* Schriftarten */
-
-input, textarea, select {
-	font-family: Calibri, Arial, Verdana, sans-serif;
-}
 
 .rex-area-footer {
 	background-color: $drk_grey;

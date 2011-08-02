@@ -93,16 +93,11 @@
 }
 
 #rex-form-mediapool-detail {
-	.rex-form-row p select {
-		&.rex-form-select-date { width: 45px; }
-		&.rex-form-select-year { width: 65px; }
-	}
-
 	fieldset.num1 {
 		label,
-		.rex-form-read span,
-		.rex-form-text input,
-		.rex-form-password input,
+		span.rex-form-read,
+		input,
+		input,
 		select,
 		textarea {
 			width: 250px;
@@ -135,14 +130,6 @@
 		p textarea {
 			width: 244px;
 		}
-
-		p .rex-form-select-date {
-			width: 50px;
-		}
-
-		p .rex-form-select-year {
-			width: 70px;
-		}
 	}
 }
 
@@ -172,7 +159,7 @@
 	}
 
 	.rex-form-text input   { width: 400px; }
-	select.rex-form-select { width: 407px; }
+	select { width: 407px; }
 
 	.sly-mediapool-list {
 		width: 690px;
