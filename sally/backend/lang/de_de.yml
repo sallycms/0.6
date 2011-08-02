@@ -77,7 +77,6 @@ logged_in_as: Angemeldet als
 # sally/include/classes/class.article.inc.php
 add_block: Block hinzufügen
 edit: Editieren
-delete: Löschen
 no_editing_rights: Keine Editiererlaubnis
 no_article_available: Kein Artikel vorhanden
 module_doesnt_exist: Dieses Modul existiert nicht!
@@ -202,7 +201,7 @@ option_no_type: Kein Artikeltyp
 header_article_name: Artikelname
 header_date: Erstellt am
 header_article_type: Artikeltyp
-change: ändern
+change: Ändern
 article_add: Artikel hinzufügen
 article_edit: Artikel editieren
 article_save: Artikel speichern

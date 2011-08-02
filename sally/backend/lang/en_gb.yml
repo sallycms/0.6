@@ -77,7 +77,6 @@ logged_in_as: Logged in as
 # sally/include/classes/class.article.inc.php
 add_block: add slice
 edit: edit
-delete: delete
 no_editing_rights: permission denied
 no_article_available: no article available
 module_doesnt_exist: 'modul doesn''t exist'
@@ -202,7 +201,7 @@ option_no_type: No Articletype
 header_article_name: Article name
 header_date: Created
 header_article_type: Article type
-change: change
+change: Change
 article_add: Add article
 article_edit: Change article
 article_save: Save article
