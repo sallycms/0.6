@@ -8,6 +8,12 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+function hg($cmd) {
+	$output = array();
+	exec('hg --config progress.disable=True '.$cmd.' 2>&1', $output);
+	return implode("\n", $output);
+}
+
 // Configuration
 
 $variants = array(
@@ -26,16 +32,14 @@ if (count($args) < 2) {
 	die('Usage: php '.$args[0].' tagname [nofetch]');
 }
 
-$repo = realpath(dirname(__FILE__).'/../');
-$tag  = $args[1];
+$repo    = realpath(dirname(__FILE__).'/../');
+$tag     = $args[1];
+$nofetch = isset($args[2]) && $args[2] === 'nofetch';
 
 // Check tag
 
-$output = array();
-
 chdir($repo);
-exec('hg identify -r "'.$tag.'" 2>&1', $output);
-$output = implode("\n", $output);
+$output = hg('identify -r "'.$tag.'"');
 
 if (substr($output, 0, 6) == 'abort:') {
 	die('Tag "'.$tag.'" was not found.');
@@ -49,7 +53,7 @@ $releases = realpath('../releases');
 // Create variants
 
 foreach ($variants as $name => $settings) {
-	printf('[%-7s] ', $name); // 7 = strlen('minimal')
+	print strtoupper($name)."\n";
 
 	$target = sprintf('%s/sally-%s%s/sally', $releases, $tag, '-'.$name);
 
@@ -71,9 +75,10 @@ foreach ($variants as $name => $settings) {
 	}
 
 	$params[] = '"'.$target.'"';
-	print 'archiving...';
+	print ' -> archiving...';
 	chdir($repo);
-	exec('hg archive '.implode(' ', $params), $output);
+	hg('archive '.implode(' ', $params));
+	print "\n";
 
 	// Create empty data dir
 
@@ -88,16 +93,20 @@ foreach ($variants as $name => $settings) {
 		file_put_contents('sally/addons/empty', 'Put all your addOns in this directory. PHP does not need writing permissions in here.');
 	}
 	else {
-		print ' addons...';
+		print " -> addons...\n";
 
 		foreach ($settings['addons'] as $addon) {
-			print ' '.$addon.'...';
+			print '    -> '.str_pad($addon.'...', 20, ' ');
 
 			$dir = $addonDir.$addon;
 			chdir($dir);
 
 			// update the repo
-			if (!isset($args[2]) || $args[2] != 'nofetch') exec('hg fetch');
+			if (!$nofetch) {
+				print ' fetching...';
+				hg('fetch');
+				print ' archiving...';
+			}
 
 			// archive the repo into our sally archive
 
@@ -105,17 +114,21 @@ foreach ($variants as $name => $settings) {
 				'-X .hg_archival.txt',
 				'-X .hgignore',
 				'-X .hgtags',
+				'-X docs',
 				'-X make.bat',
 				'"'.$target.'/sally/addons/'.$addon.'"'
 			);
 
-			exec('hg archive '.implode(' ', $params));
+			hg('archive '.implode(' ', $params));
+			print "\n";
 		}
 	}
 
 	// Add starterkit contents (templates, modules, assets, ...)
 
 	if ($name === 'starterkit') {
+		print ' -> demo project...';
+
 		$params = array(
 			'-X .hg_archival.txt',
 			'-X .hgignore',
@@ -126,25 +139,32 @@ foreach ($variants as $name => $settings) {
 
 		chdir($releases);
 		chdir('../demo');
-		exec('hg fetch');
-		exec('hg archive '.implode(' ', $params));
+
+		if (!$nofetch) {
+			print ' fetching...';
+			hg('fetch');
+			print ' archiving...';
+		}
+
+		hg('archive '.implode(' ', $params));
+		print "\n";
 	}
 
 	// Create archives
 
 	chdir($target);
-	print ' compressing...';
+	print " -> compressing...\n";
 
 	chdir('..');
 	$suffix = '-'.$name;
 
-	print ' zip...';
+	print '    -> zip...';
 	exec('7z a -mx9 "../sally-'.$tag.$suffix.'.zip" "'.$target.'"');
+	print "\n";
 
-	print ' 7z...';
+	print '    -> 7z...';
 	exec('7z a -mx9 "../sally-'.$tag.$suffix.'.7z" "'.$target.'"');
-
-	print PHP_EOL;
+	print "\n";
 }
 
 print 'done.'."\n";
