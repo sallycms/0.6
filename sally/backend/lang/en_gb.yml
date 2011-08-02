@@ -300,7 +300,6 @@ specials_not_found_article: Not-Found Article
 
 setup: Setup
 setup_text: 'You can initiate the setup process here. This is only for emergency and not required on normal conditions.'
-setup_error1: 'Setup activated. Please click {0}>continue<{1} and execute the setup.'
 
 # sally\include\pages\addon.inc.php
 addon: AddOn

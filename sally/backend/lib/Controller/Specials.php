@@ -126,9 +126,7 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 
 	protected function setup() {
 		sly_Core::config()->setLocal('SETUP', true);
-
-		$this->info = t('setup_error1', '<a href="index.php">', '</a>');
-		$this->index();
+		sly_Util_HTTP::redirect('index.php', array(), '', 302);
 	}
 
 	protected function checkPermission() {

@@ -300,7 +300,6 @@ specials_not_found_article: Artikel bei fehlender Seite
 
 setup: Setup
 setup_text: Hier können Sie das Setup erneut starten. Dies sollten Sie nur im Notfall machen. Unter normalen Umständen ist es nicht nötig.
-setup_error1: 'Setup aktiviert. Bitte klicken Sie auf {0}>weiter<{1} und führen Sie das Setup aus.'
 
 # sally\include\pages\addon.inc.php
 addon: AddOn
