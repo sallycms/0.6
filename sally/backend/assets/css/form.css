@@ -77,9 +77,11 @@ a.sly-button {
 		display: inline;
 	}
 
-	.sly-form-checkbox, .sly-form-radio {
+	input.sly-form-checkbox, input.sly-form-radio {
 		border: 0;
 		vertical-align: middle;
+		padding: 0;
+		width: auto;
 	}
 
 	.sly-select-group {
@@ -110,14 +112,14 @@ a.sly-button {
 	input, select {
 		float: left;
 	}
-	
+
 	.sly-icons {
 		display: block;
 		float: left;
 		width: 16px;
 		margin-top: 3px;
 		margin-left: 5px;
-		
+
 		a {
 			display: block;
 			width: 16px;
@@ -127,7 +129,7 @@ a.sly-button {
 		}
 		img {
 			width: 16px;
-			height: 16px;			
+			height: 16px;
 		}
 	}
 
@@ -149,27 +151,27 @@ a.sly-button {
 			vertical-align: middle;
 		}
 	}
-	
+
 	span.rex-form-read,
 	input {
 		width: 456px;
 	}
-	
+
 	select {
 		width: 462px;
 	}
-	
+
 	input[type=text],
 	span.rex-form-read{
 		padding: 1px 2px;
 	}
-	
+
 	.rex-form-col-2 {
-		input, select, textarea {
+		input[type=text], input[type=password], select, textarea {
 			width: 200px;
 		}
 	}
-	
+
 	.rex-form-row {
 		+clearfix;
 		padding: 7px;
@@ -181,7 +183,7 @@ a.sly-button {
 			border-top: 0 none;
 		}
 	}
-	
+
 	.sly-radio-group {
 		display: block;
 		padding-left: 145px;
@@ -190,11 +192,11 @@ a.sly-button {
 		label { float:none; display:inline; }
 		input.rex-chckbx { margin-top: 3px; margin-right: 5px; float:left; }
 	}
-	
+
 	input.rex-form-submit-2 { margin-left: 20px; }
 	input.rex-form-submit,
 	input.sly-button-delete{ width: auto; }
-	
+
 
 	/*	Zweispaltig */
 
@@ -205,7 +207,7 @@ a.sly-button {
 		}
 	}
 
-	textarea { 
+	textarea {
 		height: 250px;
 		width: 605px;
 		padding: 2px;
@@ -229,7 +231,7 @@ a.sly-button {
 		padding: 0;
 		margin-bottom: 20px;
 	}
-	
+
 	input.rex-form-text[type="range"] {
 		width: 114px;
 
@@ -258,7 +260,7 @@ a.sly-button {
 		width: 228px;
 		top: 4px;
 	}
-	
+
 	.rex-form-row {
 		.sly-widget {
 			border: 0;

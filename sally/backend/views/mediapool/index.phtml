@@ -83,7 +83,7 @@ ob_start();
 		<tfoot><tr>
 			<td class="sly-icon">
 				<label class="rex-form-hidden-label" for="check_all"><?= t('pool_select_all') ?></label>
-				<input class="rex-form-checkbox sly-check-all" type="checkbox" id="check_all" data-target="selectedmedia[]" />
+				<input class="sly-form-checkbox sly-check-all" type="checkbox" id="check_all" data-target="selectedmedia[]" />
 			</td>
 			<td colspan="3"><?= $add_input ?></td>
 		</tr></tfoot>
@@ -152,7 +152,7 @@ ob_start();
 		$add_td = '<td>&nbsp;</td>';
 
 		if ($isAdmin) {
-			$add_td = '<td class="sly-icon"><input class="rex-form-checkbox" type="checkbox" name="selectedmedia[]" value="'.$id.'" /></td>';
+			$add_td = '<td class="sly-icon"><input class="sly-form-checkbox" type="checkbox" name="selectedmedia[]" value="'.$id.'" /></td>';
 		}
 
 		?>
