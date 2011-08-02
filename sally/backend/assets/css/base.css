@@ -19,22 +19,7 @@ body {
 
 
 input, textarea, select {
-	font-size: 100%;
-	margin: 0;
-	border: 1px solid $lt_grey;
-	padding: 0;
-	vertical-align: baseline;
-	color: $drk_grey;
-}
 
-p.rex-button a {
-	background-image: url(../button.png);
-	background-repeat: repeat-x;
-	padding: 1px 6px;
-	color: $drk_grey;
-	text-decoration: none;
-	border: 1px solid $lt_grey;
-	+border-radius($brd_rad);
 }
 
 a {
