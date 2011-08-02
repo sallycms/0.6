@@ -60,7 +60,7 @@ ul.rex-setup-language {
 		color: white;
 	}
 
-	.rex-form {
+	.sly-form {
 		.rex-form-text input,
 		.rex-form-password input,
 		select#driver,
@@ -69,9 +69,10 @@ ul.rex-setup-language {
 		}
 
 		legend { width: 640px; }
-		&-wrapper { width: 650px; }
-		&-row { width: 636px; }
+		.rex-form-wrapper { width: 650px; }
+		.rex-form-row { width: 636px; }
 	}
+	
 }
 
 .sly-setup-requirements {
