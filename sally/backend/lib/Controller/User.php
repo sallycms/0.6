@@ -191,11 +191,11 @@ class sly_Controller_User extends sly_Controller_Backend {
 		$startpages['profile']   = t('profile');
 
 		foreach ($addons as $addon) {
-			$perm = $service->getProperty($addon, 'perm', false);
-			$name = $service->getProperty($addon, 'name', false);
+			$page = $service->getProperty($addon, 'page', null);
+			$name = $service->getProperty($addon, 'name', $addon);
 
-			if ($perm && $name) {
-				$startpages[$addon] = $name;
+			if ($page) {
+				$startpages[$page] = rex_translate($name);
 			}
 		}
 
