@@ -11,7 +11,7 @@
 /**
  * @ingroup layout
  */
-class sly_Layout_Navigation_Sally {
+class sly_Layout_Navigation_Backend {
 	private $groups;
 	private $currentGroup;
 
