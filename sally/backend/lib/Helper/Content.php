@@ -23,7 +23,6 @@ class sly_Helper_Content {
 			$moduleContent = $moduleService->getContent($moduleService->getInputFilename($module));
 			ob_start();
 			?>
-
 			<div class="sly-form" id="addslice">
 				<form action="index.php#slice<?= $prior ?>" id="slice<?= $prior ?>" method="post" enctype="multipart/form-data">
 					<div>
@@ -43,7 +42,7 @@ class sly_Helper_Content {
 							</div>
 							<div class="rex-form-row">
 								<p class="rex-form-submit">
-									<input type="submit" name="btn_save" value="<?= t('add_block') ?>" />
+									<input class="rex-form-submit" type="submit" name="btn_save" value="<?= t('add_block') ?>" />
 								</p>
 							</div>
 						</div>
@@ -64,8 +63,6 @@ class sly_Helper_Content {
 		$moduleService = sly_Service_Factory::getModuleService();
 		ob_start();
 		?>
-		<a name="editslice"></a>
-
 		<div class="sly-form" id="editslice">
 			<form enctype="multipart/form-data" action="index.php#slice<?= $articleSlice->getPrior() ?>" method="post" id="REX_FORM">
 				<div>
