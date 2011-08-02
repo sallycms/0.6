@@ -23,7 +23,14 @@ $(function() {
 		var link     = 'data/mediapool/' + filename;
 		var callback = window.opener['<?= $callback ?>'];
 		var close    = true;
-		var fullName = <?= $advanced ? "title + ' (' + filename + ')'" : 'title' ?>;
+		var fullName = '';
+
+		if (title.length === 0) {
+			fullName = filename;
+		}
+		else {
+			fullName = <?= $advanced ? "title + ' (' + filename + ')'" : 'title' ?>;
+		}
 
 		// execute callback (media widget, WYMeditor, ...)
 		if (typeof callback === 'function') {

@@ -24,7 +24,7 @@ $(function() {
 		var link     = 'sally://' + id + '/';
 		var callback = window.opener['<?= $callback ?>'];
 		var close    = true;
-		var fullName = <?= $advanced ? "name + ' [' + id + ']'" : 'name' ?>;
+		var fullName = name.length === 0 ? '<?= t('unnamed_article') ?> [' + id + ']' : <?= $advanced ? "name + ' [' + id + ']'" : 'name' ?>;
 
 		// execute callback (link widget, WYMeditor, ...)
 		if (typeof callback === 'function') {
