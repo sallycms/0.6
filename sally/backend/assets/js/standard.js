@@ -9,8 +9,6 @@ var slyLinkWidgetCallback  = null;
 var slyMediaWidgetCallback = null;
 
 (function($, sly, undef) {
-	var imageExtensions = ['png', 'gif', 'jpg', 'jpeg', 'bmp'];
-
 	/////////////////////////////////////////////////////////////////////////////
 	// Popups
 
