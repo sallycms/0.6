@@ -8,7 +8,7 @@
 /* System: Einstellungen | unterer Abstand zu den gestrichelten Linien in der rechten Box*/
 
 #rex-page-specials {
-	p.rex-form-text, p.rex-form-select { padding-bottom: 5px; }
+	p { padding-bottom: 5px; }
 	#languages .sly-col-d { width: 130px; }
 }
 
