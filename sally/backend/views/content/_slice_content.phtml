@@ -1,3 +1,13 @@
+<?php
+$module  = $articleSlice->getSlice()->getModule();
+$service = sly_Service_Factory::getModuleService();
+
+if (!$service->exists($module)) {
+	print sly_Helper_Message::warn(t('module_not_found'));
+	return;
+}
+
+?>
 <div class="sly-contentpage-slice-output">
 	<?php $articleSlice->printContent() ?>
 </div>

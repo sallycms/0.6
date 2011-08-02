@@ -240,14 +240,16 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			$module = sly_post('module', 'string');
 		}
 
-		if (!sly_Service_Factory::getModuleService()->exists($module)) {
-			$this->warning = t('module_not_found');
-			return false;
-		}
+		if ($function !== 'delete') {
+			if (!sly_Service_Factory::getModuleService()->exists($module)) {
+				$this->warning = t('module_not_found');
+				return false;
+			}
 
-		if (!sly_Service_Factory::getTemplateService()->hasModule($this->article->getTemplateName(), $module, $this->slot)) {
-			$this->warning = t('no_rights_to_this_function');
-			return false;
+			if (!sly_Service_Factory::getTemplateService()->hasModule($this->article->getTemplateName(), $module, $this->slot)) {
+				$this->warning = t('no_rights_to_this_function');
+				return false;
+			}
 		}
 
 		// Daten einlesen
