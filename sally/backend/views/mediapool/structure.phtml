@@ -51,26 +51,23 @@ $editID = sly_request('edit_id', 'int');
 
 if ($this->action == 'add' || $this->action == 'edit') {
 	$addMode = $this->action == 'add';
-	$legend  = $addMode ? t('pool_kat_create_label') : t('pool_kat_edit');
 
-	$form = new sly_Form('index.php', 'POST', '');
-	$form->addHiddenValue('page', 'mediapool');
-	$form->addHiddenValue('subpage', 'structure');
-	$form->addHiddenValue('cat_id', $catID);
-	$form->addHiddenValue('func', $this->action);
+	?>
+	<form action="index.php" method="post">
+		<fieldset>
+			<input type="hidden" name="page" value="mediapool" />
+			<input type="hidden" name="subpage" value="structure" />
+			<input type="hidden" name="cat_id" value="<?= $catID ?>" />
+			<input type="hidden" name="func" value="<?= $this->action ?>" />
+			<?php	if ($this->action): ?>
+			<input type="hidden" name="edit_id" value="<?= $editID ?>" />
+			<?php endif ?>
 
-	if ($this->action) {
-		$form->addHiddenValue('edit_id', $editID);
-	}
-
-	// additional arguments
-
-	foreach ($this->args as $name => $value) {
-		$form->addHiddenValue('args['.$name.']', $value);
-	}
-
-	$form->beginFieldset($legend, 'sly-mediapool-structure-form');
-	ob_start();
+			<?php foreach ($this->args as $name => $value): ?>
+			<input type="hidden" name="args[<?= $name ?>]" value="<?= sly_html($value) ?>" />
+			<?php endforeach ?>
+		</fieldset>
+		<?php
 }
 
 ?>
@@ -149,11 +146,5 @@ if ($this->action == 'add' || $this->action == 'edit') {
 <?
 
 if ($this->action == 'add' || $this->action == 'edit') {
-	$container = new sly_Form_Container();
-	$container->setContent(ob_get_clean());
-
-	$form->add($container);
-	$form->setResetButton(null);
-	$form->setSubmitButton(null);
-	print $form->render();
+	print '</form>';
 }
