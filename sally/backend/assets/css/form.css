@@ -24,7 +24,7 @@ select {
 	width: auto;
 }
 
-.sly-button {
+a.sly-button {
 	display: inline-block;
 	height: 19px;
 	margin-left: inherit;
@@ -98,34 +98,44 @@ select {
 /* sly widgets */
 .sly-widget {
 	+clearfix;
-	display: inline-block;
+	display: block;
+	float: left;
 	&.sly-linklist,
 	&.sly-medialist {
-
 		select {
-			float: left;
-			width: 408px;
+			width: 420px;
 			background: #fff;
 		}
-
-		.sly-icons {
-			float: left;
-			width: 16px;
-		}
 	}
-
-	&.sly-media input { width: 381px; }
-
-	&.sly-link input { width: 401px; }
-
+	input, select {
+		float: left;
+	}
+	
 	.sly-icons {
+		display: block;
+		float: left;
+		width: 16px;
+		margin-top: 3px;
 		margin-left: 5px;
+		
+		a {
+			display: block;
+			width: 16px;
+			height: 16px;
+			line-height: 0;
+			margin-bottom: 2px;
+		}
 		img {
-			padding-bottom: 2px;
+			width: 16px;
+			height: 16px;			
 		}
 	}
-}
 
+	&.sly-media input { width: 393px; }
+
+	&.sly-link input { width: 413px; }
+}
+.rex-form,
 .sly-form {
 	label{
 		clear: both;
@@ -141,12 +151,16 @@ select {
 	}
 	
 	span.rex-form-read,
-	input,
-	select {
+	input {
 		width: 456px;
 	}
 	
-	input {
+	select {
+		width: 462px;
+	}
+	
+	input[type=text],
+	span.rex-form-read{
 		padding: 1px 2px;
 	}
 	
@@ -178,7 +192,8 @@ select {
 	}
 	
 	input.rex-form-submit-2 { margin-left: 20px; }
-	input.rex-form-submit { width: auto; }
+	input.rex-form-submit,
+	input.sly-button-delete{ width: auto; }
 	
 
 	/*	Zweispaltig */
