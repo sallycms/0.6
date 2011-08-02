@@ -67,54 +67,62 @@ class sly_Helper_Content {
 		}
 		else {
 			$moduleContent = $moduleService->getContent($moduleService->getInputFilename($module));
-			ob_start();
-			?>
-			<a name="addslice"></a>
 
-			<div class="rex-form rex-form-content-editmode-add-slice">
-				<form action="index.php#slice<?= $prior ?>" method="post" id="REX_FORM" enctype="multipart/form-data">
-					<fieldset class="rex-form-col-1">
-						<legend><span><?= t('add_block') ?></span></legend>
-						<div class="rex-content-editmode-module-name">
-							<input type="hidden" name="article_id" value="<?= $articleId ?>" />
-							<input type="hidden" name="page" value="content" />
-							<input type="hidden" name="mode" value="edit" />
-							<input type="hidden" name="prior" value="<?= $prior ?>" />
-							<input type="hidden" name="function" value="add" />
-							<input type="hidden" name="module" value="<?= sly_html($module) ?>" />
-							<input type="hidden" name="save" value="1" />
-							<input type="hidden" name="clang" value="<?= $clang ?>" />
-							<input type="hidden" name="slot" value="<?= $slot ?>" />
+			try {
+				ob_start();
+				?>
+				<a name="addslice"></a>
 
-							<h3><span><?= sly_html($moduleService->getTitle($module)) ?></span></h3>
-						</div>
+				<div class="rex-form rex-form-content-editmode-add-slice">
+					<form action="index.php#slice<?= $prior ?>" method="post" id="REX_FORM" enctype="multipart/form-data">
+						<fieldset class="rex-form-col-1">
+							<legend><span><?= t('add_block') ?></span></legend>
+							<div class="rex-content-editmode-module-name">
+								<input type="hidden" name="article_id" value="<?= $articleId ?>" />
+								<input type="hidden" name="page" value="content" />
+								<input type="hidden" name="mode" value="edit" />
+								<input type="hidden" name="prior" value="<?= $prior ?>" />
+								<input type="hidden" name="function" value="add" />
+								<input type="hidden" name="module" value="<?= sly_html($module) ?>" />
+								<input type="hidden" name="save" value="1" />
+								<input type="hidden" name="clang" value="<?= $clang ?>" />
+								<input type="hidden" name="slot" value="<?= $slot ?>" />
 
-						<div class="rex-form-row">
-							<div class="rex-content-editmode-slice-input">
-								<div class="rex-content-editmode-slice-input-2">
-								<? eval('?>'.self::replaceObjectVars(-1, $moduleContent)); ?>
+								<h3><span><?= sly_html($moduleService->getTitle($module)) ?></span></h3>
+							</div>
+
+							<div class="rex-form-row">
+								<div class="rex-content-editmode-slice-input">
+									<div class="rex-content-editmode-slice-input-2">
+									<? eval('?>'.self::replaceObjectVars(-1, $moduleContent)); ?>
+									</div>
 								</div>
 							</div>
-						</div>
-					</fieldset>
+						</fieldset>
 
-					<fieldset class="rex-form-col-1">
-						<div class="rex-form-wrapper">
-							<div class="rex-form-row">
-								<p class="rex-form-submit">
-									<input class="rex-form-submit" type="submit" name="btn_save" value="<?= t('add_block') ?>" />
-								</p>
+						<fieldset class="rex-form-col-1">
+							<div class="rex-form-wrapper">
+								<div class="rex-form-row">
+									<p class="rex-form-submit">
+										<input class="rex-form-submit" type="submit" name="btn_save" value="<?= t('add_block') ?>" />
+									</p>
+								</div>
 							</div>
-						</div>
-					</fieldset>
-				</form>
-			</div>
+						</fieldset>
+					</form>
+				</div>
 
-			<?
+				<?
 
-			self::focusFirstElement();
+				self::focusFirstElement();
 
-			$slice_content = ob_get_clean();
+				$slice_content = ob_get_clean();
+			}
+			catch (Exception $e) {
+				ob_end_clean();
+				throw $e;
+			}
+
 			$slice_content = self::replaceCommonVars($slice_content, $articleId, $clang);
 		}
 
@@ -125,100 +133,107 @@ class sly_Helper_Content {
 	public static function printEditSliceForm(OOArticleSlice $articleSlice) {
 		global $REX, $I18N;
 
-		ob_start();
-		?>
-		<a name="editslice"></a>
+		try {
+			ob_start();
+			?>
+			<a name="editslice"></a>
 
-		<div class="rex-form rex-form-content-editmode-edit-slice">
-			<form enctype="multipart/form-data" action="index.php#slice<?= $articleSlice->getId() ?>" method="post" id="REX_FORM">
-				<fieldset class="rex-form-col-1">
-					<legend><span><?= t('edit_block') ?></span></legend>
-					<div class="rex-form-row">
-						<input type="hidden" name="article_id" value="<?= $articleSlice->getArticleId() ?>" />
-						<input type="hidden" name="page" value="content" />
-						<input type="hidden" name="mode" value="edit" />
-						<input type="hidden" name="slice_id" value="<?= $articleSlice->getId() ?>" />
-						<input type="hidden" name="slot" value="<?= $articleSlice->getSlot() ?>" />
-						<input type="hidden" name="function" value="edit" />
-						<input type="hidden" name="save" value="1" />
-						<input type="hidden" name="update" value="0" />
-						<input type="hidden" name="clang" value="<?= $articleSlice->getClang() ?>" />
+			<div class="rex-form rex-form-content-editmode-edit-slice">
+				<form enctype="multipart/form-data" action="index.php#slice<?= $articleSlice->getId() ?>" method="post" id="REX_FORM">
+					<fieldset class="rex-form-col-1">
+						<legend><span><?= t('edit_block') ?></span></legend>
+						<div class="rex-form-row">
+							<input type="hidden" name="article_id" value="<?= $articleSlice->getArticleId() ?>" />
+							<input type="hidden" name="page" value="content" />
+							<input type="hidden" name="mode" value="edit" />
+							<input type="hidden" name="slice_id" value="<?= $articleSlice->getId() ?>" />
+							<input type="hidden" name="slot" value="<?= $articleSlice->getSlot() ?>" />
+							<input type="hidden" name="function" value="edit" />
+							<input type="hidden" name="save" value="1" />
+							<input type="hidden" name="update" value="0" />
+							<input type="hidden" name="clang" value="<?= $articleSlice->getClang() ?>" />
 
-						<div class="rex-content-editmode-slice-input">
-							<div class="rex-content-editmode-slice-input-2">
-							<? eval('?>'.$articleSlice->getInput()); ?>
+							<div class="rex-content-editmode-slice-input">
+								<div class="rex-content-editmode-slice-input-2">
+								<? eval('?>'.$articleSlice->getInput()); ?>
+								</div>
 							</div>
 						</div>
-					</div>
-				</fieldset>
+					</fieldset>
 
-				<fieldset class="rex-form-col-2">
-					<div class="rex-form-wrapper">
-						<div class="rex-form-row">
-							<p class="rex-form-submit">
-								<input class="rex-form-submit" type="submit" value="<?= t('save_block') ?>" name="btn_save" />
-								<input class="rex-form-submit rex-form-submit-2" type="submit" value="<?= t('update_block') ?>" name="btn_update" />
-							</p>
+					<fieldset class="rex-form-col-2">
+						<div class="rex-form-wrapper">
+							<div class="rex-form-row">
+								<p class="rex-form-submit">
+									<input class="rex-form-submit" type="submit" value="<?= t('save_block') ?>" name="btn_save" />
+									<input class="rex-form-submit rex-form-submit-2" type="submit" value="<?= t('update_block') ?>" name="btn_update" />
+								</p>
+							</div>
 						</div>
-					</div>
-				</fieldset>
-			</form>
-		</div>
-		<?
+					</fieldset>
+				</form>
+			</div>
+			<?
 
-		self::focusFirstElement();
+			self::focusFirstElement();
 
-		/*
-		  Das bleibt hier stehen bis actions wieder implementiert sind
-		  // ----- PRE VIEW ACTION [EDIT]
-		  $REX_ACTION = array();
+			/*
+			  Das bleibt hier stehen bis actions wieder implementiert sind
+			  // ----- PRE VIEW ACTION [EDIT]
+			  $REX_ACTION = array();
 
-		  // nach klick auf den Übernehmen button,
-		  // die POST werte übernehmen
+			  // nach klick auf den Übernehmen button,
+			  // die POST werte übernehmen
 
-		  if (rex_var::isEditEvent()) {
-		  foreach (sly_Core::getVarTypes() as $obj) {
-		  $REX_ACTION = $obj->getACRequestValues($REX_ACTION);
-		  }
-		  }
+			  if (rex_var::isEditEvent()) {
+			  foreach (sly_Core::getVarTypes() as $obj) {
+			  $REX_ACTION = $obj->getACRequestValues($REX_ACTION);
+			  }
+			  }
 
-		  // Sonst die Werte aus der DB holen
-		  // (1. Aufruf via Editieren Link)
-		  else {
-		  foreach (sly_Core::getVarTypes() as $obj) {
-		  $REX_ACTION = $obj->getACDatabaseValues($REX_ACTION, $articleSlice->getSliceId());
-		  }
-		  }
+			  // Sonst die Werte aus der DB holen
+			  // (1. Aufruf via Editieren Link)
+			  else {
+			  foreach (sly_Core::getVarTypes() as $obj) {
+			  $REX_ACTION = $obj->getACDatabaseValues($REX_ACTION, $articleSlice->getSliceId());
+			  }
+			  }
 
-		  $modebit = 2; // pre-action and edit
+			  $modebit = 2; // pre-action and edit
 
-		  $moduleService = sly_Service_Factory::getModuleService();
-		  $moduleService = sly_Service_Factory::getService('Module');
-		  $actionService = sly_Service_Factory::getService('Action');
-		  $actions = $moduleService->getActions($module);
-		  $actions = isset($actions['preview']) ? sly_makeArray($actions['preview']) : array();
+			  $moduleService = sly_Service_Factory::getModuleService();
+			  $moduleService = sly_Service_Factory::getService('Module');
+			  $actionService = sly_Service_Factory::getService('Action');
+			  $actions = $moduleService->getActions($module);
+			  $actions = isset($actions['preview']) ? sly_makeArray($actions['preview']) : array();
 
-		  foreach ($actions as $actionName) {
-		  $action = $actionService->getContent($actionName, 'preview');
+			  foreach ($actions as $actionName) {
+			  $action = $actionService->getContent($actionName, 'preview');
 
-		  // Variablen ersetzen
-		  foreach (sly_Core::getVarTypes() as $obj) {
-		  $iaction = $obj->getACOutput($REX_ACTION, $action);
-		  }
+			  // Variablen ersetzen
+			  foreach (sly_Core::getVarTypes() as $obj) {
+			  $iaction = $obj->getACOutput($REX_ACTION, $action);
+			  }
 
-		  eval('?>' . $action);
+			  eval('?>' . $action);
 
-		  // Speichern (falls nätig)
+			  // Speichern (falls nätig)
 
-		  foreach (sly_Core::getVarTypes() as $obj) {
-		  $obj->setACValues($articleSlice->getSliceId(), $REX_ACTION);
-		  }
-		  }
+			  foreach (sly_Core::getVarTypes() as $obj) {
+			  $obj->setACValues($articleSlice->getSliceId(), $REX_ACTION);
+			  }
+			  }
 
-		  // ----- / PRE VIEW ACTION
-		 */
+			  // ----- / PRE VIEW ACTION
+			 */
 
-		$slice_content = ob_get_clean();
+			$slice_content = ob_get_clean();
+		}
+		catch (Exception $e) {
+			ob_end_clean();
+			throw $e;
+		}
+
 		$slice_content = sly_Helper_Content::triggerSliceShowEP($slice_content, $articleSlice, 'edit');
 
 		print $slice_content;
@@ -238,6 +253,13 @@ class sly_Helper_Content {
 	}
 
 	public static function printSliceContent(OOArticleSlice $articleSlice) {
+		$module  = $articleSlice->getSlice()->getModule();
+		$service = sly_Service_Factory::getModuleService();
+
+		if (!$service->exists($module)) {
+			return;
+		}
+
 		// Modulinhalt ausgeben
 		?>
 		<!-- *** OUTPUT OF MODULE-OUTPUT - START *** -->
@@ -251,16 +273,23 @@ class sly_Helper_Content {
 	}
 
 	public static function printSliceToolbar(OOArticleSlice $articleSlice, $function = '') {
-		$user       = sly_Util_User::getCurrentUser();
-		$module     = $articleSlice->getSlice()->getModule();
-		$moduleName = sly_Service_Factory::getModuleService()->get($module, 'title', '');
-		$sliceUrl   = 'index.php?page=content&amp;article_id='.$articleSlice->getArticleId().'&amp;mode=edit&amp;slice_id='.$articleSlice->getId().'&amp;clang='.$articleSlice->getClang().'&amp;slot='.$articleSlice->getSlot().'%s#slice'.$articleSlice->getPrior();
+		$user         = sly_Util_User::getCurrentUser();
+		$module       = $articleSlice->getSlice()->getModule();
+		$service      = sly_Service_Factory::getModuleService();
+		$sliceUrl     = 'index.php?page=content&amp;article_id='.$articleSlice->getArticleId().'&amp;mode=edit&amp;slice_id='.$articleSlice->getId().'&amp;clang='.$articleSlice->getClang().'&amp;slot='.$articleSlice->getSlot().'%s#slice'.$articleSlice->getPrior();
+		$listElements = array();
 
-		$listElements   = array();
-		$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;function=edit').'" class="rex-tx3">'.t('edit').' <span>'.sly_html($moduleName).'</span></a>';
+		if (!$service->exists($module)) {
+			$moduleName = $module;
+		}
+		else {
+			$moduleName     = $service->get($module, 'title', '');
+			$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;function=edit').'" class="rex-tx3">'.t('edit').' <span>'.sly_html($moduleName).'</span></a>';
+		}
+
 		$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;function=delete&amp;save=1').'" class="rex-tx2 sly-delete">'.t('delete').' <span>'.sly_html($moduleName).'</span></a>';
 
-		if ($user->isAdmin() || $user->hasPerm('moveSlice[]')) {
+		if ($service->exists($module) && ($user->isAdmin() || $user->hasPerm('moveSlice[]'))) {
 			$moveUp   = t('move_slice_up');
 			$moveDown = t('move_slice_down');
 

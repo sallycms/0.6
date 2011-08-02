@@ -147,14 +147,17 @@ if ($hasTemplate && $slot !== null && sly_request('save', 'boolean') && in_array
 		$module = sly_post('module', 'string');
 	}
 
-	if (!$moduleService->exists($module)) {
+	$moduleExists = $moduleService->exists($module);
+
+	// only die away when not attempting to delete the (possibly faulty) slice
+	if (!$moduleExists && $function !== 'delete') {
 		$global_warning = t('module_not_found');
 		$slice_id       = '';
 		$function       = '';
 	}
 	else {
 		// Rechte am Modul
-		if (!$templateService->hasModule($templateName, $module, $slot)) {
+		if ($moduleExists && !$templateService->hasModule($templateName, $module, $slot)) {
 			$global_warning = t('no_rights_to_this_function');
 			$slice_id       = '';
 			$function       = '';
@@ -546,7 +549,6 @@ if ($mode == 'edit') {
 	// END: Slice move up/down
 
 	$params = array('id' => $article_id, 'clang' => $clang, 'article' => $article);
-
 	$form   = new sly_Form('index.php', 'POST', t('general'), '', 'content_article_form');
 
 	/////////////////////////////////////////////////////////////////
@@ -591,42 +593,52 @@ if ($mode == 'edit') {
 		foreach ($articleSlices as $articleSlice) {
 			$ooslice = OOArticleSlice::getArticleSliceById($articleSlice);
 
-			if ($function == 'add' && $prior == $ooslice->getPrior()) {
+			try {
+				if ($function == 'add' && $prior == $ooslice->getPrior()) {
+					$module = sly_request('module', 'string');
+					sly_Helper_Content::printAddSliceForm($prior, $module, $article_id, $clang, $slot);
+				}
+				else {
+					sly_Helper_Content::printAddModuleForm($article_id, $clang, $ooslice->getPrior(), $templateName, $slot);
+				}
+
+				if (empty($function) && $prior == $ooslice->getPrior()) {
+					if (!empty($info))    print rex_info($info);
+					if (!empty($warning)) print rex_warning($warning);
+				}
+
+				if (($function == 'edit' || $function == 'moveup' || $function == 'movedown') && $slice_id == $ooslice->getId()) {
+					if (!empty($info))    print rex_info($info);
+					if (!empty($warning)) print rex_warning($warning);
+				}
+
+				if ($function == 'edit' && $slice_id == $ooslice->getId()) {
+					sly_Helper_Content::printSliceToolbar($ooslice);
+					sly_Helper_Content::printEditSliceForm($ooslice);
+				}
+				else {
+					sly_Helper_Content::printSliceToolbar($ooslice);
+					sly_Helper_Content::printSliceContent($ooslice);
+				}
+			}
+			catch (Exception $e) {
+				print rex_warning('Error while rendering slice: '.$e->getMessage());
+			}
+		}
+
+		try {
+			if ($function == 'add' && $prior == count($articleSlices)) {
 				$module = sly_request('module', 'string');
+				if (!empty($info))    print rex_info($info);
+				if (!empty($warning)) print rex_warning($warning);
 				sly_Helper_Content::printAddSliceForm($prior, $module, $article_id, $clang, $slot);
 			}
 			else {
-				sly_Helper_Content::printAddModuleForm($article_id, $clang, $ooslice->getPrior(), $templateName, $slot);
-			}
-
-			if (empty($function) && $prior == $ooslice->getPrior()) {
-				if (!empty($info))    print rex_info($info);
-				if (!empty($warning)) print rex_warning ($warning);
-			}
-
-			if (($function == 'edit' || $function == 'moveup' || $function == 'movedown') && $slice_id == $ooslice->getId()) {
-				if (!empty($info))    print rex_info($info);
-				if (!empty($warning)) print rex_warning ($warning);
-			}
-
-			if ($function == 'edit' && $slice_id == $ooslice->getId()) {
-				sly_Helper_Content::printSliceToolbar($ooslice);
-				sly_Helper_Content::printEditSliceForm($ooslice);
-			}
-			else {
-				sly_Helper_Content::printSliceToolbar($ooslice);
-				sly_Helper_Content::printSliceContent($ooslice);
+				sly_Helper_Content::printAddModuleForm($article_id, $clang, count($articleSlices), $templateName, $slot);
 			}
 		}
-
-		if ($function == 'add' && $prior == count($articleSlices)) {
-			$module = sly_request('module', 'string');
-			if (!empty($info)) print rex_info($info);
-			if (!empty($warning)) print rex_warning ($warning);
-			sly_Helper_Content::printAddSliceForm($prior, $module, $article_id, $clang, $slot);
-		}
-		else {
-			sly_Helper_Content::printAddModuleForm($article_id, $clang, count($articleSlices), $templateName, $slot);
+		catch (Exception $e) {
+			print rex_warning('Error while rendering slice: '.$e->getMessage());
 		}
 
 		print '</div>';
