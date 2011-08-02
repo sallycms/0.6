@@ -51,6 +51,7 @@ if ($this->canAccessFile($medium)) {
 	$form->addHiddenValue('subpage', 'detail');
 	$form->addHiddenValue('func', 'save');
 	$form->addHiddenValue('file_id', $fileID);
+	$form->addHiddenValue('callback', sly_request('callback', 'string'));
 
 	// additional arguments
 
