@@ -35,15 +35,28 @@
 
 
 #rex-page-content .sly-content-editmode {
+	label, input, select, textarea, .sly-widget {
+		margin-bottom: 10px;
+	}
+	
 	input[type=submit] {
 		margin-left: 10px;
+	}
+	
+	.sly-widget {
+		border: 1px solid #999;
+		padding: 5px;
+		+border-radius($brd_rad);
+		float: left;
+		
+		input, select {
+			margin: 0;
+		}
 	}
 }
 
 .sly-contentpage {
 	&-slice-input,	&-slice-output {
-	    background-color: $lt_grey;
-		clear: both;
 		padding: 10px;
 		ol, ul { margin-left: 20px; }
 	}

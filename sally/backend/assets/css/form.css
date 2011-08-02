@@ -1,8 +1,220 @@
-input.rex-form-text {
-	padding: 1px 2px;
+input, textarea, select {
+	font-size: 100%;
+	margin: 0;
+	border: 1px solid $lt_grey;
+	padding: 0;
+	vertical-align: baseline;
+	color: $drk_grey;
+	font-family: Calibri, Arial, Verdana, sans-serif;
 }
 
-.sly-form .rex-form-row {
+select {
+	background-color: #fff;
+}
+
+.sly-button, input[type=submit], input[type=reset], input[type=button] {
+	background-image: url(../button.png);
+	background-repeat: repeat-x;
+	padding: 1px 6px;
+	color: $drk_grey;
+	text-decoration: none;
+	border: 1px solid $lt_grey;
+	+border-radius($brd_rad);
+	margin-left: 145px;
+	width: auto;
+}
+
+.sly-button {
+	display: inline-block;
+	height: 19px;
+	margin-left: inherit;
+}
+
+.rex-area-content {
+	p.rex-form-checkbox, p.rex-form-radio { line-height: 1em; }
+}
+
+.rex-form-hidden-label {
+	+hide;
+}
+
+/* REX-FORM -------------------------------------------------------------------------------------- REX-FORM */
+.sly-form,
+.rex-form {
+	span.rex-form-read,
+	span.rex-form-notice {
+		display: block;
+	}
+
+	span.rex-form-read {
+		line-height: 21px;
+	}
+
+	span.rex-form-notice {
+		clear: both;
+		margin-left: 145px;
+		margin-top: 5px;
+		color: #777777;
+		font-size: 11px;
+	}
+
+	label span {
+		display: inline;
+		margin-left: 0;
+		padding: 0 0 0 5px;
+		font-weight: normal;
+	}
+
+	/*	Select */
+
+	select:disabled {
+		background-color: #F9F9F9;
+		color: #7D7676;
+	}
+
+	label.sly-inline {
+		float: none;
+		display: inline;
+	}
+
+	.sly-form-checkbox, .sly-form-radio {
+		border: 0;
+		vertical-align: middle;
+	}
+
+	.sly-select-group {
+		display: block;
+		line-height: 18px;
+		padding-left: 145px;
+
+		input {
+			vertical-align: middle;
+			border: 0;
+			padding: 0;
+		}
+	}
+}
+
+/* sly widgets */
+.sly-widget {
+	+clearfix;
+	display: inline-block;
+	&.sly-linklist,
+	&.sly-medialist {
+
+		select {
+			float: left;
+			width: 408px;
+			background: #fff;
+		}
+
+		.sly-icons {
+			float: left;
+			width: 16px;
+		}
+	}
+
+	&.sly-media input { width: 381px; }
+
+	&.sly-link input { width: 401px; }
+
+	.sly-icons {
+		margin-left: 5px;
+		img {
+			padding-bottom: 2px;
+		}
+	}
+}
+
+.sly-form {
+	label{
+		clear: both;
+		display: block;
+		float: left;
+		width: 145px;
+		padding: 0;
+		line-height: 21px;
+
+		img {
+			vertical-align: middle;
+		}
+	}
+	
+	span.rex-form-read,
+	input,
+	select {
+		width: 456px;
+	}
+	
+	input {
+		padding: 1px 2px;
+	}
+	
+	.rex-form-col-2 {
+		input, select, textarea {
+			width: 200px;
+		}
+	}
+	
+	.rex-form-row {
+		+clearfix;
+		padding: 7px;
+		width: 783px;
+		vertical-align: middle;
+		border-top: 1px dotted $md_grey;
+
+		&:first-child {
+			border-top: 0 none;
+		}
+	}
+	
+	.sly-radio-group {
+		display: block;
+		padding-left: 145px;
+		line-height: 21px;
+
+		label { float:none; display:inline; }
+		input.rex-chckbx { margin-top: 3px; margin-right: 5px; float:left; }
+	}
+	
+	input.rex-form-submit-2 { margin-left: 20px; }
+	input.rex-form-submit { width: auto; }
+	
+
+	/*	Zweispaltig */
+
+	fieldset.rex-form-col-2 {
+		.rex-form-col-a, .rex-form-col-b {
+			width:49%;
+			float: left;
+		}
+	}
+
+	textarea { 
+		height: 250px;
+		width: 605px;
+		padding: 2px;
+	}
+
+	/* Überschrift | dunkelgrau hinterlegt mit runden Ecken*/
+	legend {
+		color: #fff;
+		background-color: $drk_grey;
+		font-size: 1.1em;
+		width: 787px; /* Breite des Loginbereichs abzüglich des padding links*/
+		padding: 8px 0 8px 10px;
+		+border-top-radius(4px);
+	}
+
+	.rex-form-wrapper {
+		background-color: #fff;
+		+border-bottom-radius(4px);
+		clear: both;
+		float: left;
+		padding: 0;
+		margin-bottom: 20px;
+	}
+	
 	input.rex-form-text[type="range"] {
 		width: 114px;
 
@@ -31,272 +243,12 @@ input.rex-form-text {
 		width: 228px;
 		top: 4px;
 	}
-}
-
-p.rex-button a, .sly-button, input[type=submit], input[type=reset] {
-	background-image: url(../button.png);
-	background-repeat: repeat-x;
-	padding: 1px 6px;
-	color: $drk_grey;
-	text-decoration: none;
-	border: 1px solid $lt_grey;
-	+border-radius($brd_rad);
-	margin-left: 145px;
-}
-
-a.sly-button {
-	margin-left: inherit;
-}
-
-.rex-area-content {
-	p.rex-form-checkbox, p.rex-form-radio { line-height: 1em; }
-}
-
-.sly-content .rex-form {
-	margin-bottom: 1em;
-}
-
-
-#sly-form-field-name {
-	width: 97%;
-}
-
-#sly-form-field-prior {
-	width: 87%;
-}
-
-.rex-form-hidden-legend span,
-.rex-form-hidden-label {
-	+hide;
-}
-
-/* REX-FORM -------------------------------------------------------------------------------------- REX-FORM */
-.sly-form .rex-form-row,
-.rex-form .rex-form-row {
-	label, p.rex-form-label {
-		clear: both;
-		display: block;
-		float: left;
-		width: 145px;
-		padding: 0;
-		line-height: 21px;
-
-		img {
-			vertical-align: middle;
-		}
-	}
-
-	span.rex-form-read,
-	span.rex-form-notice {
-		display: block;
-		/* padding: 10px 0 10px 10px; */
-	}
-
-	span.rex-form-read {
-		line-height: 21px;
-	}
-
-	span.rex-form-notice {
-		clear: both;
-		margin-left: 145px;
-		margin-top: 5px;
-		color: #777777;
-		font-size: 11px;
-	}
-
-	label span {
-		display: inline;
-		margin-left: 0;
-		padding: 0 0 0 5px;
-		font-weight: normal;
-	}
-
-	textarea {
-		padding: 2px;
-	}
-
-	/*	Select */
-
-	p select.rex-form-select:disabled {
-		background-color: #F9F9F9;
-		color: #7D7676;
-	}
-
-	p select.rex-form-select-date { width: 50px;  }
-	p select.rex-form-select-year { width: 70px;  }
-
-	label.sly-inline {
-		float: none;
-		display: inline;
-	}
-
-	.sly-form-checkbox, .sly-form-radio {
-		border: 0;
-		vertical-align: middle;
-	}
-
-	.sly-select-group {
-		display: block;
-		line-height: 18px;
-		padding-left: 145px;
-
-		input {
-			vertical-align: middle;
-			border: 0;
-		}
-	}
-}
-
-/* sly widgets */
-.sly-widget {
-	+clearfix;
-	&.sly-linklist,
-	&.sly-medialist {
-		display: block;
-
-		select {
-			float: left;
-			width: 398px;
-			background: #fff;
-		}
-
-		.sly-icons {
-			float: left;
-			width: 16px;
-		}
-	}
-
-	&.sly-media input { width: 372px; }
-
-	&.sly-link input { width: 391px; }
-
-	.sly-icons {
-		margin-left: 5px;
-		img {
-			padding-bottom: 2px;
-
-		}
-	}
-}
-
-
-
-.rex-form {
-
+	
 	.rex-form-row {
-		p.rex-form-read span,
-		p.rex-form-text input,
-		p.rex-form-password input,
-		p select,
-		p textarea {
-			width: 456px;
-		}
-
-		span.sly-radio-group {
-			display: block;
-			padding-left: 145px;
-			line-height: 21px;
-
-			label { float:none; display:inline; }
-			input.rex-chckbx { margin-top: 3px; margin-right: 5px; float:left; }
-		}
-	}
-
-	&,
-	.rex-form-row p {
-		input.rex-form-submit-2 { margin-left: 20px; }
-	}
-
-	.rex-form-row p,
-	fieldset.rex-form-col-2 .rex-form-row p.rex-form-text {
-		input.rex-form-submit { width: auto; }
-	}
-
-	/*	Zweispaltig */
-
-	fieldset.rex-form-col-2 .rex-form-row {
-		/* p.rex-form-col-a, */
-		.rex-form-col-a, .rex-form-col-b {
-			width:49%;
-			float: left;
-		}
-	}
-
-	.rex-area-col-b {
-		.rex-form-wrapper {
-			width: 100%;
+		.sly-widget {
+			border: 0;
 			padding: 0;
 		}
-
-		legend {
-			width: auto;
-			background: none;
-			color: $drk_grey;
-			font-size: 100%;
-			padding-bottom: 5px;
-		}
-	}
-}
-
-/*	Bspl.: div.rex-area-col-2 -> System : Einstellungen */
-
-.rex-area-col-2 fieldset.rex-form-col-1,
-.rex-form fieldset.rex-form-col-2 {
-	.rex-form-row {
-		p.rex-form-read span,
-		p.rex-form-text input,
-		p.rex-form-password input,
-		p select,
-		p textarea {
-			width: 200px;
-		}
-	}
-}
-
-.sly-form {
-	.rex-form-row {
-		padding: 7px;
-		clear: both;
-		float: left;
-		width: 783px;
-		vertical-align: middle;
-		border-top: 1px dotted $md_grey;
-
-		&:first-child {
-			border-top: 0 none;
-		}
-	}
-
-	textarea { height: 250px; width: 605px; }
-
-	input.rex-form-checkbox,
-	input.rex-form-radio {
-		clear: both;
-		margin: 0 0 0 21px;
-	}
-
-	/* Überschrift | dunkelgrau hinterlegt mit runden Ecken*/
-	legend {
-		color: #fff;
-		background-color: $drk_grey;
-		font-size: 1.1em;
-		width: 787px; /* Breite des Loginbereichs abzüglich des padding links*/
-		padding: 8px 0 8px 10px;
-		+border-top-radius(4px);
-	}
-
-	fieldset.num1 legend,
-	fieldset.sly-num0 legend {
-		background-color: $drk_grey;
-	}
-
-	.rex-form-wrapper {
-		background-color: #fff;
-		+border-bottom-radius(4px);
-		clear: both;
-		float: left;
-		padding: 0;
-		margin-bottom: 20px;
 	}
 }
 
@@ -392,35 +344,4 @@ a.sly-button {
 
 	input { width: 15px !important; }
 	img   { vertical-align: top; cursor: pointer; }
-}
-
-/* Linklist-Button */
-
-.sly-form .rex-form-row .sly-linklist {
-	select.sly-linklist { width: 305px; }
-
-	input.sly-link-filter {
-		width: 200px;
-		margin-left: 10px;
-		margin-right: 10px;
-	}
-
-	.sly-icons {
-		float: left;
-    	margin-left: 5px;
-    	width: 16px;
-
-		img { padding-bottom: 2px; }
-	}
-
-	input, select { float: left; }
-
-	span.rex-form-notice {
-		clear: none;
-		float: left;
-		margin-left: 10px;
-		margin-top: 10px;
-		width: 205px;
-		line-height: 14px;
-	}
 }
