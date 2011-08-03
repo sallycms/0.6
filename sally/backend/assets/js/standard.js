@@ -499,9 +499,9 @@ var slyMediaWidgetCallback = null;
 
 		// Formularframework
 
-		$('.rex-form .sly-select-checkbox-list a').live('click', function() {
+		$('.sly-form .sly-select-checkbox-list a').live('click', function() {
 			var rel   = $(this).attr('rel');
-			var boxes = $(this).parents('p').find('.rex-chckbx');
+			var boxes = $(this).parents('p').find('input');
 			boxes.prop('checked', rel === 'all');
 			return false;
 		});
