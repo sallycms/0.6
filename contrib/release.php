@@ -108,6 +108,13 @@ foreach ($variants as $name => $settings) {
 				print ' archiving...';
 			}
 
+			// find latest_sly05 tag
+			$output = array();
+			exec('hg identify -r latest_sly05 2>&1', $output);
+
+			$output    = implode("\n", $output);
+			$toArchive = substr($output, 0, 6) == 'abort:' ? 'tip' : 'latest_sly04';
+
 			// archive the repo into our sally archive
 
 			$params = array(
@@ -116,6 +123,7 @@ foreach ($variants as $name => $settings) {
 				'-X .hgtags',
 				'-X docs',
 				'-X make.bat',
+				'-r '.$toArchive,
 				'"'.$target.'/sally/addons/'.$addon.'"'
 			);
 
@@ -134,6 +142,7 @@ foreach ($variants as $name => $settings) {
 			'-X .hgignore',
 			'-X .hgtags',
 			'-X make.bat',
+			'-r tip',
 			'"'.$target.'"'
 		);
 
