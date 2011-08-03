@@ -114,6 +114,13 @@ foreach ($variants as $name => $settings) {
 			// update the repo
 			if (!isset($args[2]) || $args[2] != 'nofetch') exec('hg fetch');
 
+			// find latest_sly04 tag
+			$output = array();
+			exec('hg identify -r latest_sly04 2>&1', $output);
+
+			$output    = implode("\n", $output);
+			$toArchive = substr($output, 0, 6) == 'abort:' ? 'tip' : 'latest_sly04';
+
 			// archive the repo into our sally archive
 
 			$params = array(
@@ -121,6 +128,7 @@ foreach ($variants as $name => $settings) {
 				'-X .hgignore',
 				'-X .hgtags',
 				'-X make.bat',
+				'-r '.$toArchive,
 				'"'.$target.'/sally/include/addons/'.$addon.'"'
 			);
 
