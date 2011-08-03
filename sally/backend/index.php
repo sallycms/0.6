@@ -114,6 +114,7 @@ if ($user) {
 		$navigation->addPage('system', 'mediapool', null, true);
 		$navigation->addPage('system', 'linkmap', null, true);
 		$navigation->addPage('system', 'content');
+		$navigation->addPage('system', 'contentmeta');
 	}
 	elseif ($user->hasRight('mediapool[]')) {
 		$navigation->addPage('system', 'mediapool', null, true);
