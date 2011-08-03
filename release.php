@@ -144,6 +144,7 @@ foreach ($variants as $name => $settings) {
 			'-X .hgignore',
 			'-X .hgtags',
 			'-X make.bat',
+			'-r latest_sly04',
 			'"'.$target.'"'
 		);
 
