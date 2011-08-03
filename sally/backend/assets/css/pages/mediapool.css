@@ -95,7 +95,7 @@
 #rex-form-mediapool-detail {
 	fieldset.num1 {
 		label,
-		span.rex-form-read,
+		span.sly-form-read,
 		input,
 		input,
 		select,
@@ -123,7 +123,7 @@
 	.rex-form-submit { margin-left: 75px; }
 
 	.rex-form-row {
-		p.rex-form-read span,
+		p.sly-form-read span,
 		p.rex-form-text input,
 		p.rex-form-password input,
 		p select,
