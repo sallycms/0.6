@@ -20,13 +20,6 @@ $groups = $nav->getGroups();
 // give addons a way to alter the menu a last time
 $nav = sly_Core::dispatcher()->filter('SLY_LAYOUT_NAVI', $nav);
 
-// try to hide special core pages
-
-foreach (array('credits', 'profile', 'content', 'linkmap') as $page) {
-	$pageObj = $nav->find($page);
-	if ($pageObj) $pageObj->setHidden(true);
-}
-
 foreach ($groups as $group) {
 	$topic    = $group->getName();
 	$headline = $group->getTitle();
