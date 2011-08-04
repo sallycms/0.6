@@ -68,14 +68,6 @@ else {
 $i18n = new sly_I18N($locale, SLY_SALLYFOLDER.'/backend/lang');
 sly_Core::setI18N($i18n);
 
-// set navigation object (after i18n has been initialized!)
-$navigation = sly_Core::getNavigation();
-
-// add setup page to make the permission system work and allow access to the controller
-if (!SLY_IS_TESTING && $isSetup) {
-	$navigation->addPage('system', 'setup', false);
-}
-
 // set timezone
 date_default_timezone_set($timezone);
 
