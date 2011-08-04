@@ -76,12 +76,13 @@
 	/* Navi-Headline */
 	dt {
 		display: block;
-		padding: 9px 10px 6px;
+		padding: 10px 10px 6px;
 		font-size: 1.4em;
 		letter-spacing: -0.01em;
 		text-shadow: 1px 1px 0px rgba(255,255,255,1.0);
 		border-bottom: 1px dotted $md_grey;
 		margin-bottom: 5px; /* Abstand "Basis Naviagtion" zum ersten Menüpunkt 5px */
+		line-height: 24px;
 	}
 
 	dd {
