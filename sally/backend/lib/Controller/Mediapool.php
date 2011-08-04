@@ -51,6 +51,8 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 
 		$layout->showNavigation(false);
 		$layout->pageHeader($this->t('media'), $subline);
+		$layout->setBodyAttr('class', 'rex-popup');
+		$layout->setBodyAttr('onunload', 'sly.closeAllPopups()');
 
 		print $this->render('mediapool/javascript.phtml');
 	}

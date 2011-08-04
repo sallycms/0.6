@@ -32,20 +32,10 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 	}
 
 	public function pageChecked(array $params) {
-		$body_id = str_replace('_', '-', $params['subject']);
+		$page = $params['subject'];
+
+		$body_id = str_replace('_', '-', $page);
 		$this->setBodyAttr('id', 'rex-page-'.$body_id);
-
-		$popups_arr = array('linkmap', 'mediapool');
-
-		if (in_array($body_id, $popups_arr)) {
-			$this->setBodyAttr('class', 'rex-popup');
-		}
-
-		$active = sly_Core::getNavigation()->getActivePage();
-
-		if ($active && $active->isPopup()) {
-			$this->setBodyAttr('onunload', 'sly.closeAllPopups()');
-		}
 	}
 
 	public function printHeader() {
