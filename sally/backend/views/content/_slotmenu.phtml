@@ -1,16 +1,25 @@
 <?php
+/*
+ * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
 if (!$this->article->hasType())	return;
 
-$typeService = sly_Service_Factory::getArticleTypeService();
+$typeService     = sly_Service_Factory::getArticleTypeService();
 $templateService = sly_Service_Factory::getTemplateService();
-$templateName = $typeService->getTemplate($this->article->getType());
-$hasTemplate = !empty($templateName) && $templateService->exists($templateName);
+$templateName    = $typeService->getTemplate($this->article->getType());
+$hasTemplate     = !empty($templateName) && $templateService->exists($templateName);
 
 if (!$hasTemplate) return;
 
 $slots = $templateService->getSlots($templateName);
 
-if (count($slots) < 1) return;
+if (count($slots) < 2) return;
 
 ?>
 <ul class="sly-navi-slots">
@@ -20,18 +29,18 @@ if (count($slots) < 1) return;
 	$params['article_id'] = $this->article->getId();
 	$params['clang']      = $this->article->getClang();
 	$listElements = array();
+
 	foreach ($slots as $tmpSlot) {
 		$params['slot'] = $tmpSlot;
-		$class = (($this instanceof sly_Controller_Content) && $tmpSlot == $this->slot) ? ' class="rex-active"' : '';
-		$slotTitle = rex_translate($templateService->getSlotTitle($templateName, $tmpSlot));
-
+		$class          = (($this instanceof sly_Controller_Content) && $tmpSlot == $this->slot) ? ' class="rex-active"' : '';
+		$slotTitle      = rex_translate($templateService->getSlotTitle($templateName, $tmpSlot));
 		$listElements[] = '<a href="index.php?' . http_build_query($params) . '"' . $class . '>' . $slotTitle . '</a>';
 	}
 
 	$listElements = sly_Core::dispatcher()->filter('SLY_PAGE_CONTENT_SLOT_MENU', $listElements, array(
-				'article_id' => $this->article->getId(),
-				'clang' => $this->article->getClang()
-			));
+		'article_id' => $this->article->getId(),
+		'clang'      => $this->article->getClang()
+	));
 
 
 	foreach ($listElements as $idx => $listElement) {
