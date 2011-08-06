@@ -356,6 +356,8 @@ plugin_install_cant_copy_files: Fehler beim Kopieren der Assets!
 plugin_install_cant_delete_files: Fehler beim Löschen der Assets!
 plugin_requires_addon: 'Das AddOn {0} wird für das PlugIn {1} benötigt.'
 plugin_requires_plugin: 'Das PlugIn {0} wird für das PlugIn {1} benötigt.'
+plugin_sally_incompatible: 'Dieses PlugIn ist nicht mit ihrer Version von SallyCMS ({0}) kompatibel.'
+plugin_has_no_sally_version_info: Dieses PlugIn hat keine Kompatibilitätsinformationen. Es kann nicht installiert werden.
 
 # sally\include\pages\credits.inc.php
 credits: Credits
