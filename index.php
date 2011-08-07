@@ -63,5 +63,4 @@ else {
 	print t('no_startarticle', 'backend/index.php');
 }
 
-$content = ob_get_clean();
-rex_send_article($article, $content, 'frontend');
+rex_send_article($article, null, 'frontend');

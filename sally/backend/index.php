@@ -175,7 +175,7 @@ $controller = sly_Controller_Base::factory();
 
 try {
 	if ($controller !== null) {
-		$CONTENT = $controller->dispatch();
+		print $controller->dispatch();
 	}
 	else {
 		throw new sly_Controller_Exception(t('unknown_page'), 404);
@@ -203,7 +203,7 @@ catch (Exception $e) {
 
 	print rex_warning($e->getMessage());
 	$layout->closeBuffer();
-	$CONTENT = $layout->render();
+	print $layout->render();
 }
 
-rex_send_article(null, $CONTENT, 'backend');
+rex_send_article(null, null, 'backend');
