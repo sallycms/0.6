@@ -42,16 +42,16 @@ a.sly-button {
 .sly-form,
 .rex-form {
 	span.rex-form-read,
-	span.rex-form-notice {
+	.sly-form-helptext {
 		display: block;
 	}
 
-	span.rex-form-read {
+	.rex-form-read {
 		line-height: 21px;
 	}
 
-	span.rex-form-notice {
-		clear: both;
+	.sly-form-helptext {
+		float: left;
 		margin-left: 145px;
 		margin-top: 5px;
 		color: #777777;

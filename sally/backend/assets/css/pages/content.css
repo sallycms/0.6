@@ -163,6 +163,9 @@
 			margin: 0;
 		}
 	}
+	.sly-form-helptext {
+		margin-top: 0px;
+	}
 }
 
 /* styling for slice edit submit row */
@@ -192,6 +195,9 @@
 
 	.rex-form-wrapper {
 		margin-bottom: 0;
+	}
+	.sly-form-helptext {
+		margin-top: 5px;
 	}
 
 	.rex-form-row {
