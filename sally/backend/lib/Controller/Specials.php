@@ -20,7 +20,7 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 
 		// add subpages
 
-		$navigation = sly_Core::getNavigation();
+		$navigation = sly_Core::getLayout()->getNavigation();
 		$specials   = $navigation->get('specials', 'system');
 
 		$specials->addSubpage('', t('main_preferences'));

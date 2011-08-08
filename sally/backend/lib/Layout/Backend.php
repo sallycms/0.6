@@ -13,6 +13,7 @@
  */
 class sly_Layout_Backend extends sly_Layout_XHTML {
 	private $hasNavigation = true;
+	private $navigation;
 
 	public function __construct() {
 		$config = sly_Core::config();
@@ -160,6 +161,17 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 
 	public function hasNavigation() {
 		return $this->hasNavigation;
+	}
+	
+	/**
+	 * @return sly_Layout_Navigation_Backend
+	 */
+	public function getNavigation() {
+		if (!isset($this->navigation)) {
+			$this->navigation = new sly_Layout_Navigation_Backend();
+		}
+
+		return $this->navigation;
 	}
 
 	protected function getViewFile($file) {
