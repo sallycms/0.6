@@ -1,4 +1,4 @@
-input, textarea, select {
+input[type=text], textarea, select {
 	font-size: 100%;
 	margin: 0;
 	border: 1px solid $lt_grey;
@@ -78,10 +78,7 @@ a.sly-button {
 	}
 
 	input.sly-form-checkbox, input.sly-form-radio {
-		border: 0;
 		vertical-align: middle;
-		padding: 0;
-		width: auto;
 	}
 
 	.sly-select-group {

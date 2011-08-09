@@ -132,7 +132,7 @@
 
 .sly-contentpage-slice-input,
 .sly-contentpage-slice-output {
-	padding: 0 10px;
+	padding: 5px 10px 0;
 	ol, ul { margin-left: 20px; }
 }
 .sly-contentpage-slice-output {
