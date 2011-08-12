@@ -27,6 +27,7 @@ if (count($values) > 1) { // empty / 'no category' will hide the form
 
 	$form = new sly_Form('index.php', 'POST', t('pool_select_cat'), '', 'rex-form-mediapool-selectcategory');
 	$form->addHiddenValue('page', 'mediapool');
+	$form->addHiddenValue('callback', sly_request('callback', 'string'));
 
 	// additional arguments
 
