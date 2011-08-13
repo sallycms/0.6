@@ -232,7 +232,8 @@ caption, legend {
 	}
 
 	.sly-button {
-		margin: 0 0 15px 5px
+		margin: 0 0 15px 5px;
+		line-height: 19px;
 	}
 }
 
@@ -251,6 +252,6 @@ a.sly-action {
 
 .sly-clang-toolbar {
 	a.rex-active {
-		color: $drk_grey;	
+		color: $drk_grey;
 	}
 }
