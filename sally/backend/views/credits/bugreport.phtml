@@ -71,7 +71,7 @@ foreach ($addons->getRegisteredAddons() as $addon) {
 	}
 }
 
-$sysinfo[] = '<pre>';
+$sysinfo[] = '</pre>';
 $sysinfo   = sly_html(implode("\n", $sysinfo));
 $height    = substr_count($sysinfo, "\n") + 1;
 
