@@ -98,4 +98,16 @@ class sly_Layout_Navigation_Page {
 			}
 		}
 	}
+
+	public function removeSubpage($name) {
+		foreach ($this->subpages as $idx => $subpage) {
+			if ($subpage->getName() === $name) {
+				unset($this->subpages[$idx]);
+				$this->subpages = array_values($this->subpages);
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

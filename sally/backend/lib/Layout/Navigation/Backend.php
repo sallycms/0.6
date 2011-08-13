@@ -101,4 +101,32 @@ class sly_Layout_Navigation_Backend {
 
 		return null;
 	}
+
+	public function removeGroup($name) {
+		$hasIt = isset($this->groups[$name]);
+		unset($this->groups[$name]);
+		return $hasIt;
+	}
+
+	public function removePage($name) {
+		foreach ($this->groups as $gName => $group) {
+			if ($this->get($name, $gName)) {
+				return $group->removePage($name);
+			}
+		}
+
+		return false;
+	}
+
+	public function removeSubpage($page, $subpage) {
+		foreach (array_keys($this->groups) as $group) {
+			$pageObj = $this->get($page, $group);
+
+			if ($pageObj) {
+				return $pageObj->removeSubpage($subpage);
+			}
+		}
+
+		return false;
+	}
 }

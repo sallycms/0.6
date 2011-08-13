@@ -37,4 +37,16 @@ class sly_Layout_Navigation_Group {
 	public static function comparePages(sly_Layout_Navigation_Page $pageA, sly_Layout_Navigation_Page $pageB) {
 		return strnatcasecmp($pageA->getTitle(), $pageB->getTitle());
 	}
+
+	public function removePage($name) {
+		foreach ($this->pages as $idx => $page) {
+			if ($page->getName() === $name) {
+				unset($this->pages[$idx]);
+				$this->pages = array_values($this->pages);
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
