@@ -48,7 +48,7 @@ img, iframe {
 		a.rex-active {
 			color: $drk_grey;
 		}
-	}	
+	}
 }
 
 #sly-pagehead {
@@ -155,13 +155,18 @@ img, iframe {
 
 p.rex-tx1,
 p.rex-tx4,
-ul.rex-ul1 {
+ul.rex-ul1,
+ol.rex-ol1 {
 	margin-bottom: 1em;
 }
 
 ul.rex-ul1 {
 	margin-left: 40px;
 	li { list-style-type: square; }
+}
+
+ol.rex-ol1 {
+	margin-left: 40px;
 }
 
 .rex-area-content {

@@ -7,4 +7,12 @@
 	.sly-credits {
 		margin-bottom: 10px;
 	}
+
+	.sly-sysinfo {
+		font-family: monospace;
+		border: 1px solid $drk_grey;
+		padding: 10px;
+		margin: 10px;
+		width: 749px;
+	}
 }

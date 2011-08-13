@@ -1,0 +1,128 @@
+<?php
+/*
+ * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+$version  = $this->getMySQLVersion();
+$langs    = $this->getLanguages();
+$extlists = $this->getExtensions();
+
+// put it all together
+
+$sysinfo = array(
+	'<pre>',
+	'Versionen',
+	'---------',
+	'',
+	'Sally.............: '.sly_Core::getVersion('X.Y.Z'),
+	'PHP...............: '.PHP_VERSION.' ('.PHP_OS.')',
+	'MySQL.............: '.$version,
+	'Apache............: '.(empty($_SERVER['SERVER_SOFTWARE']) ? 'N/A' : $_SERVER['SERVER_SOFTWARE']),
+	'Browser...........: '.(empty($_SERVER['HTTP_USER_AGENT']) ? 'N/A' : $_SERVER['HTTP_USER_AGENT']),
+	'',
+	'Einstellungen',
+	'-------------',
+	'',
+	'Entwicklermodus...: '.(sly_Core::isDeveloperMode() ? 'ja' : 'nein'),
+	'Caching...........: '.get_class(sly_Core::cache()),
+	'Sprachen..........: '.implode("\n                    ", $langs),
+	'',
+	'PHP-Einstellungen',
+	'-----------------',
+	'',
+	'register_globals..: '.(sly_ini_get('register_globals') ? 'aktiviert' : 'deaktiviert'),
+	'magic_quotes_gpc..: '.(sly_ini_get('magic_quotes_gpc') ? 'aktiviert' : 'deaktiviert'),
+	'safe_mode.........: '.(sly_ini_get('safe_mode') ? 'aktiviert' : 'deaktiviert'),
+	'max_execution_time: '.sly_ini_get('max_execution_time').' Sekunden',
+	'memory_limit......: '.sly_Util_String::formatFilesize(sly_ini_get('memory_limit')),
+	'Extensions........: '.implode("\n                    ", $extlists),
+	'',
+	'AddOns & PlugIns',
+	'----------------',
+	'',
+);
+
+// add addOn details
+
+$addons  = sly_Service_Factory::getAddOnService();
+$plugins = sly_Service_Factory::getPluginService();
+
+foreach ($addons->getRegisteredAddons() as $addon) {
+	if (!$addons->isInstalled($addon)) continue;
+
+	$status    = $addons->isActivated($addon) ? 'aktiviert' : 'deaktiviert';
+	$version   = '('.$addons->getVersion($addon).')';
+	$sysinfo[] = sprintf('%-22s %-9s [%s]', $addon, $version, $status);
+
+	if ($addons->isAvailable($addon)) {
+		foreach ($plugins->getRegisteredPlugins($addon) as $plugin) {
+			$component = array($addon, $plugin);
+			if (!$plugins->isInstalled($component)) continue;
+
+			$status    = $plugins->isActivated($component) ? 'aktiviert' : 'deaktiviert';
+			$version   = '('.$plugins->getVersion($component).')';
+			$sysinfo[] = sprintf('  %-20s %-9s [%s]', $plugin, $version, $status);
+		}
+	}
+}
+
+$sysinfo[] = '<pre>';
+$sysinfo   = sly_html(implode("\n", $sysinfo));
+$height    = substr_count($sysinfo, "\n") + 1;
+
+?>
+<div class="rex-area sly-credits">
+	<h3 class="rex-hl2">Du hast einen Fehler in SallyCMS gefunden?</h3>
+
+	<div class="rex-area-content">
+		<p class="rex-tx1">
+			Bevor du einen Fehler meldest, versuche einige Tipps, die häufig kleine
+			Problemchen bereits bereinigen.
+		</p>
+
+		<ol class="rex-ol1">
+			<li>Hast du deinen <a href="index.php?specials">Sally-Cache</a> und ggf.
+			deinen Browser-Cache geleert?</li>
+			<li>Tritt der Fehler auch in anderen Browsern auf?</li>
+			<li>Tritt der Fehler auch auf, wenn du das Caching abschaltest (heißt,
+			den Blackhole-Cache benutzt)?</li>
+			<li>Stelle sicher, dass du die
+			<a href="https://projects.webvariants.de/projects/sallycms/files">aktuellste
+			Sally-Version</a> einsetzt.</li>
+			<li>Stelle sicher, dass die von dir eingesetzten AddOns aktuell sind.</li>
+		</ol>
+
+		<p class="rex-tx1">
+			Wenn die obigen Tipps nicht helfen, kannst du einen
+			<a href="https://projects.webvariants.de/projects/sallycms/issues/new">Bugreport
+			erstellen</a>. Um dem SallyCMS-Team zu ermöglichen, den Fehler schnell
+			zu identifizieren	und zu lösen, beachte bitte unbedingt die folgenden
+			Hinweise.
+		</p>
+
+		<ul class="rex-ul1">
+			<li>Gib uns so viele Informationen wie möglich. Welche
+			PHP/MySQL/Sally/Browser-Version setzt du ein?</li>
+			<li>Versuche, dein Problem <strong>präzise</strong> und <strong>klar</strong>
+			zu beschreiben. Reports wie "Kann keine Benutzer anlegen" helfen uns
+			nicht weiter.</li>
+			<li>Tritt das Problem im Frontend, Backend oder in beiden auf?</li>
+			<li>Handelt es sich wirklich um einen Sally-Fehler oder liegt das Problem
+			bei einem AddOn? Für AddOns gibt es eigene Bugtracker.</li>
+		</ul>
+
+		<p class="rex-tx1">
+			Wir empfehlen, die folgenden Informationen direkt in den Bugreport zu
+			kopieren. Projektspezifische Details können auf Wunsch natürlich
+			entfernt werden, wenn nötig. (Bitte kopiere ebenfalls das &lt;pre&gt;-Tag,
+			damit die Daten auch im Bugtracker richtig eingerückt werden.)
+		</p>
+
+		<textarea class="sly-sysinfo" rows="<?= $height ?>" cols="50"><?= $sysinfo ?></textarea>
+	</div>
+</div>
