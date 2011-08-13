@@ -79,6 +79,7 @@ a.sly-button {
 
 	input.sly-form-checkbox, input.sly-form-radio {
 		vertical-align: middle;
+		width: auto;
 	}
 
 	.sly-select-group {
