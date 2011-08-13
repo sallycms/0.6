@@ -138,8 +138,10 @@ img, iframe {
 	padding: 10px;
 }
 
-.rex-tx {
-	&2, &3, &4 { font-weight: bold; }
+.rex-tx2,
+.rex-tx3,
+.rex-tx4 {
+	font-weight: bold;
 }
 
 .rex-hl4,
@@ -147,6 +149,10 @@ img, iframe {
 .rex-tx3 {
 	font-size: 1.2em;
 	font-weight: normal;
+}
+
+.rex-hl2 {
+	line-height: 26px;
 }
 
 .rex-tx3 {
