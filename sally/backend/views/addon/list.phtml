@@ -72,7 +72,7 @@ if (!empty($warning)) print sly_Helper_Message::warn($warning);
 		}
 
 		if ($addons->isActivated($addon)) {
-			$status    = t('addon_yes').($isRequired ? ' - <del title="'.$required.'">'.t('addon_deactivate').'</del>' : ' - <a href="'.$base.'deactivate">'.t('addon_deactivate').'</a>');
+			$status    = !empty($availablePlugins) ? t('plugin_plugins_installed') : (t('addon_yes').($isRequired ? ' - <del title="'.$required.'">'.t('addon_deactivate').'</del>' : ' - <a href="'.$base.'deactivate">'.t('addon_deactivate').'</a>'));
 			$classes[] = 'sly-activated';
 			$assets    = '<a href="'.$base.'assets">'.t('addon_reinit_assets').'</a>';
 		}
