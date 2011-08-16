@@ -21,12 +21,14 @@ select {
 	border: 1px solid $lt_grey;
 	+border-radius($brd_rad);
 	margin-left: 145px;
+	font-size: 85%;
 	width: auto;
 }
 
 a.sly-button {
 	display: inline-block;
 	height: 19px;
+	font-size: 100%;
 	margin-left: inherit;
 }
 
