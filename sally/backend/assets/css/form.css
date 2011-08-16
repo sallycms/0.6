@@ -1,4 +1,4 @@
-input[type=text], textarea, select {
+input[type=text], input[type=password], textarea, select {
 	font-size: 100%;
 	margin: 0;
 	border: 1px solid $lt_grey;
@@ -160,6 +160,7 @@ a.sly-button {
 	}
 
 	input[type=text],
+	input[type=password],
 	span.rex-form-read{
 		padding: 1px 2px;
 	}
