@@ -210,9 +210,11 @@ class sly_Service_Asset {
 			// IE takes this a bit too serious and won't perform *any* redirects, when
 			// the redirect URL is the same as the original request URI. To make it work,
 			// we have to syntactically change the URL.
-			$reloadParam = '?sly-force-reload=1';
 
-			header('Location: '.$protocol.'://'.$host.$uri.$reloadParam);
+			$sep   = strpos($uri, '?') !== false ? '&' : '?';
+			$param = 'sly-force-reload';
+
+			header('Location: '.$protocol.'://'.$host.$uri.$sep.$param);
 		}
 		else {
 			header('Content-Type: text/plain; charset=UTF-8');
