@@ -82,6 +82,10 @@ class sly_Service_Asset {
 					$cacheFile = $this->getCacheFile($file, $access, $encoding);
 					$realfile  = SLY_BASE.'/'.$file;
 
+					if (!file_exists($cacheFile)) {
+						continue;
+					}
+
 					// if original file is missing, ask listeners
 					if (!file_exists($realfile)) {
 						$translated = $dispatcher->filter(self::EVENT_REVALIDATE_ASSETS, array($file));
