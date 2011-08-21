@@ -137,7 +137,7 @@
 }
 .sly-contentpage-slice-output {
 	background-color: #e8e8e8;
-	padding: 7px;
+	padding: 14px;
 	+border-bottom-radius(4px);
 	margin: 0 0 10px;
 	color: #999;
@@ -148,6 +148,8 @@
 	h4 { font-size: 1.2em; }
 	h5 { font-size: 1.1em; }
 	h6 { font-size: 1em;   }
+
+	h1, h2, h3, h4, h5, h6, p, ul, ol { margin : 0 0 10px 0; }
 }
 
 .sly-contentpage-slice-input {

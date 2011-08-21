@@ -15,13 +15,14 @@ select {
 .sly-button, input[type=submit], input[type=reset], input[type=button] {
 	background-image: url(../button.png);
 	background-repeat: repeat-x;
-	padding: 1px 6px;
+	padding: 0px 6px;
 	color: $drk_grey;
 	text-decoration: none;
 	border: 1px solid $lt_grey;
 	+border-radius($brd_rad);
 	margin-left: 145px;
-	font-size: 85%;
+	font-size: 100%;
+	font-family: inherit;
 	width: auto;
 }
 
