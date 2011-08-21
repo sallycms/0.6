@@ -149,7 +149,8 @@
 	h5 { font-size: 1.1em; }
 	h6 { font-size: 1em;   }
 
-	h1, h2, h3, h4, h5, h6, p, ul, ol { margin : 0 0 10px 0; }
+	h1, h2, h3, h4, h5, h6, p { margin : 0 0 10px 0; }
+	ul, ol { margin : 0 0 10px 20px; }
 }
 
 .sly-contentpage-slice-input {
