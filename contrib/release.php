@@ -8,6 +8,10 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
+if (PHP_SAPI !== 'cli') {
+	die('This script has to be run from command line.');
+}
+
 function hg($cmd) {
 	$output = array();
 	exec('hg --config progress.disable=True '.$cmd.' 2>&1', $output);
