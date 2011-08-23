@@ -236,6 +236,7 @@ class sly_Service_Asset {
 			$type         = isset($contentTypes[$ext]) ? $contentTypes[$ext] : 'application/octet-stream';
 			$enc          = $this->getPreferredClientEncoding();
 
+			header('HTTP/1.1 200 OK');
 			header('Last-Modified: '.date('r', time()));
 			header('Cache-Control: '.$cacheControl);
 			header('Content-Type: '.$type);
