@@ -240,6 +240,7 @@ class sly_Service_Asset {
 			header('Last-Modified: '.date('r', time()));
 			header('Cache-Control: '.$cacheControl);
 			header('Content-Type: '.$type);
+			header('Content-Length: '.filesize($file));
 
 			switch ($enc) {
 				case 'plain':
@@ -248,7 +249,6 @@ class sly_Service_Asset {
 				case 'deflate':
 				case 'gzip':
 					header('Content-Encoding: '.$enc);
-					header('Content-Length: '.filesize($file));
 					break;
 
 //				case 'mops': ?
