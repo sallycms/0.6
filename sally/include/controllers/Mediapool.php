@@ -307,25 +307,11 @@ class sly_Controller_Mediapool extends sly_Controller_Sally {
 		// mime_content_type: PHP >= 4.3 (deprecated)
 
 		if (empty($type)) {
-			// if it's an image, we know the type
 			if (isset($size['mime'])) {
 				$type = $size['mime'];
 			}
-
-			// or else try the new, recommended way
-			elseif (function_exists('finfo_file')) {
-				$finfo = finfo_open(FILEINFO_MIME_TYPE);
-				$type  = finfo_file($finfo, $filename);
-			}
-
-			// argh, let's see if this old one exists
-			elseif (function_exists('mime_content_type')) {
-				$type = mime_content_type($filename);
-			}
-
-			// fallback to a generic type
 			else {
-				$type = 'application/octet-stream';
+				$type = sly_Util_Mime::getType($filename);
 			}
 		}
 

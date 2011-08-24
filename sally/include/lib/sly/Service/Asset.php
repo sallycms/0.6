@@ -149,7 +149,7 @@ class sly_Service_Asset {
 			$this->generateCacheFile($tmpFile, $cacheFile);
 		}
 
-		$this->printCacheFile($cacheFile);
+		$this->printCacheFile($file, $cacheFile);
 	}
 
 	protected function getCacheDir($access = self::ACCESS_PUBLIC, $encoding = null) {
@@ -201,7 +201,7 @@ class sly_Service_Asset {
 		}
 	}
 
-	protected function printCacheFile($file) {
+	protected function printCacheFile($origFile, $file) {
 		$errors = ob_get_clean();
 		error_reporting(0);
 
@@ -214,26 +214,8 @@ class sly_Service_Asset {
 		}
 
 		if (empty($errors)) {
-			// has to match to whatever types we're accepting in .htaccess
-
-			$contentTypes = array(
-				'css'  => 'text/css; charset=UTF-8',
-				'js'   => 'text/javascript; charset=UTF-8',
-				'jpg'  => 'image/jpeg',
-				'png'  => 'image/png',
-				'gif'  => 'image/gif',
-				'webp' => 'image/webp',
-				'jpeg' => 'image/jpeg',
-				'swf'  => 'application/x-shockwave-flash',
-				'ico'  => 'image/x-icon',
-				'pdf'  => 'application/pdf'
-			);
-
-			// send headers
-
+			$type         = sly_Util_Mime::getType($origFile);
 			$cacheControl = sly_Core::config()->get('ASSETS_CACHE_CONTROL', 'max-age=29030401');
-			$ext          = strtolower(substr(strrchr($file, '.'), 1));
-			$type         = isset($contentTypes[$ext]) ? $contentTypes[$ext] : 'application/octet-stream';
 			$enc          = $this->getPreferredClientEncoding();
 
 			header('HTTP/1.1 200 OK');
