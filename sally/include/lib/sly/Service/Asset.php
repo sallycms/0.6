@@ -218,6 +218,9 @@ class sly_Service_Asset {
 			$cacheControl = sly_Core::config()->get('ASSETS_CACHE_CONTROL', 'max-age=29030401');
 			$enc          = $this->getPreferredClientEncoding();
 
+			list($main, $sub) = explode('/', $type);
+			if ($main === 'text') $type .= '; charset=UTF-8';
+
 			header('HTTP/1.1 200 OK');
 			header('Last-Modified: '.date('r', time()));
 			header('Cache-Control: '.$cacheControl);
