@@ -24,13 +24,18 @@ select {
 	font-size: 100%;
 	font-family: inherit;
 	width: auto;
+
+	&:active, &:focus {
+		border: 1px solid $md_grey;
+	}
 }
 
 a.sly-button {
 	display: inline-block;
-	height: 19px;
+	height: 20px;
 	font-size: 100%;
 	margin-left: inherit;
+	cursor: default;
 }
 
 .rex-area-content {
