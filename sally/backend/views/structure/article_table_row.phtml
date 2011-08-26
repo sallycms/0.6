@@ -12,6 +12,17 @@ $edit_url     = 'index.php?page=structure&amp;category_id='.$article->getCategor
 $status       = $statusTypes[$article->getStatus()][0];
 $status_class = $statusTypes[$article->getStatus()][1];
 
+$service  = sly_Service_Factory::getArticleTypeService();
+$type     = $article->getType();
+
+if ($type) {
+	if ($service->exists($type)) $type = $service->getTitle($type);
+	else $type = '('.$type.')';
+}
+else {
+	$type = t('option_no_type');
+}
+
 if ($this->canPublishCategory($this->categoryId) && $this->categoryId != $article->getId()) {
 	$status = '<a href="'.$edit_url.'&amp;func=editStatusArticle" class="'.$status_class.'">'.$status.'</a>';
 }
@@ -24,8 +35,8 @@ else {
 	<td class="sly-icon"><?= sly_Util_HTML::getSpriteLink($base_url, $article->getName(), $sprite) ?></td>
 	<?= $advancedMode ? '<td class="rex-small">'.sly_html($article->getId()).'</td>' : '' ?>
 	<td><a href="<?= sly_html($base_url) ?>"><?= sly_html($article->getName()) ?></a></td>
+	<td><?= sly_html($type) ?></td>
 	<td><?= sly_html($article->getPrior()) ?></td>
-	<td><?= sly_Util_String::formatDate($article->getCreateDate()) ?></td>
 	<td>
 		<a href="<?= $edit_url ?>&amp;func=editArticle"><?= t('change') ?></a>&nbsp;
 		<?php

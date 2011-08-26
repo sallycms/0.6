@@ -8,7 +8,7 @@ $base_url = 'index.php?page=structure&category_id=' . $category->getId() . '&cla
 		<?= sly_Util_HTML::getSpriteLink($base_url, $category->getCatName(), 'category') ?>
 	</td>
 	<?= $advancedMode ? '<td class="rex-small">' . $category->getId() . '</td>' : '' ?>
-	<td><input type="text" class="rex-form-text" id="sly-form-field-name" name="category_name" value="<?= sly_html($category->getCatName()) ?>" /></td>
+	<td><input type="text" class="rex-form-text" id="sly-form-field-name" name="category_name" autofocus="autofocus" value="<?= sly_html($category->getCatName()) ?>" /></td>
 	<td><input type="text" class="rex-form-text" id="sly-form-field-prior" name="category_position" value="<?= sly_html($category->getCatPrior()) ?>" /></td>
 	<td><input type="submit" name="do_edit_category" value="<?= t('save_category') ?>" /></td>
 </tr>
