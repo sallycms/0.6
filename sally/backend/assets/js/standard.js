@@ -372,6 +372,22 @@ var slyMediaWidgetCallback = null;
 			slider.slideDown('slow');
 	};
 
+	var updateStartpageSelect = function() {
+		var isAdmin   = $('#is_admin').is(':checked');
+		var hasPerms  = $('#userperm_sprachen').val() ? true : false;
+		var list      = $('#userperm_startpage');
+		var structure = list.find('option[value=structure]');
+		var isStruct  = structure.is(':selected');
+
+		if (isAdmin || hasPerms) {
+			structure.prop('disabled', false);
+		}
+		else {
+			structure.prop('disabled', true);
+			if (isStruct) list.find('option[value=profile]').prop('selected', true);
+		}
+	};
+
 	/////////////////////////////////////////////////////////////////////////////
 	// dom:loaded handler
 
@@ -495,6 +511,12 @@ var slyMediaWidgetCallback = null;
 			if ($('#userperm_cat_all').is(':checked') && $('#userperm_media_all').is(':checked')) {
 				wrapper.find('.sly-num7').hide();
 			}
+
+			// remove structure from list of possible startpages as long as the
+			// user neither is admin nor has any language permissions
+
+			updateStartpageSelect();
+			$('#is_admin, #userperm_sprachen').change(updateStartpageSelect);
 		}
 
 		// Formularframework
