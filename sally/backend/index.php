@@ -205,6 +205,7 @@ catch (Exception $e) {
 
 	print rex_warning($e->getMessage());
 	$layout->closeBuffer();
+	$layout->openBuffer();
 	print $layout->render();
 }
 
