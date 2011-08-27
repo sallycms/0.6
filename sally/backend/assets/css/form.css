@@ -1,7 +1,7 @@
 input[type=text], input[type=password], textarea, select {
 	font-size: 100%;
-	margin: 0;
 	border: 1px solid $lt_grey;
+	margin: 0;
 	padding: 0;
 	vertical-align: baseline;
 	color: $drk_grey;
@@ -14,12 +14,22 @@ select option[disabled] {
 
 select {
 	background-color: #fff;
+	height: 21px;
+	width: 462px;
+}
+
+input[type=text],
+span.sly-form-read {
+	height: 17px;
+	padding: 1px 2px;
+	width: 456px;
 }
 
 .sly-button, input[type=submit], input[type=reset], input[type=button] {
 	background-image: url(../button.png);
 	background-repeat: repeat-x;
 	padding: 1px 6px;
+	height: 24px;
 	color: $drk_grey;
 	text-decoration: none;
 	border: 1px solid $lt_grey;
@@ -53,12 +63,12 @@ a.sly-button {
 /* REX-FORM -------------------------------------------------------------------------------------- REX-FORM */
 .sly-form,
 .rex-form {
-	span.rex-form-read,
+	span.sly-form-read,
 	.sly-form-helptext {
 		display: block;
 	}
 
-	.rex-form-read {
+	.sly-form-read {
 		line-height: 21px;
 	}
 
@@ -71,10 +81,7 @@ a.sly-button {
 	}
 
 	label span {
-		display: inline;
-		margin-left: 0;
 		padding: 0 0 0 5px;
-		font-weight: normal;
 	}
 
 	/*	Select */
@@ -150,8 +157,7 @@ a.sly-button {
 .rex-form,
 .sly-form {
 	label{
-		clear: both;
-		display: block;
+		display: inline-block;
 		float: left;
 		width: 145px;
 		padding: 0;
@@ -160,21 +166,6 @@ a.sly-button {
 		img {
 			vertical-align: middle;
 		}
-	}
-
-	span.rex-form-read,
-	input {
-		width: 456px;
-	}
-
-	select {
-		width: 462px;
-	}
-
-	input[type=text],
-	input[type=password],
-	span.rex-form-read{
-		padding: 1px 2px;
 	}
 
 	.rex-form-col-2 {
@@ -270,13 +261,6 @@ a.sly-button {
 		margin-left: 145px;
 		width: 228px;
 		top: 4px;
-	}
-
-	.rex-form-row {
-		.sly-widget {
-			border: 0;
-			padding: 0;
-		}
 	}
 }
 
