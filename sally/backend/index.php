@@ -101,64 +101,7 @@ if (!$isSetup && sly_Core::isDeveloperMode()) {
 // Asset-Processing, sofern Assets benötigt werden
 sly_Service_Factory::getAssetService()->process();
 
-if ($user) {
-	$isAdmin = $user->isAdmin();
-
-	// Core-Seiten initialisieren
-
-	$navigation->addPage('system', 'profile');
-	$navigation->addPage('system', 'credits');
-
-	if ($isAdmin || $user->hasStructureRight()) {
-		$hasClangPerm = $isAdmin || count($user->getAllowedCLangs()) > 0;
-
-		if ($hasClangPerm) $navigation->addPage('system', 'structure');
-		$navigation->addPage('system', 'mediapool', null, true);
-		if ($hasClangPerm) $navigation->addPage('system', 'linkmap', null, true);
-		if ($hasClangPerm) $navigation->addPage('system', 'content');
-	}
-	elseif ($user->hasRight('mediapool[]')) {
-		$navigation->addPage('system', 'mediapool', null, true);
-	}
-
-	if ($isAdmin) {
-		$navigation->addPage('system', 'user');
-		$navigation->addPage('system', 'addon', 'translate:addons');
-		$navigation->addPage('system', 'specials');
-	}
-
-	// AddOn-Seiten initialisieren
-	$addonService  = sly_Service_Factory::getAddOnService();
-	$pluginService = sly_Service_Factory::getPluginService();
-
-	foreach ($addonService->getAvailableAddons() as $addon) {
-		$link = '';
-		$perm = $addonService->getProperty($addon, 'perm', '');
-		$page = $addonService->getProperty($addon, 'page', '');
-
-		if (!empty($page) && ($isAdmin || empty($perm) || $user->hasRight($perm))) {
-			$name  = $addonService->getProperty($addon, 'name', '');
-			$popup = $addonService->getProperty($addon, 'popup', false);
-
-			$navigation->addPage('addon', strtolower($addon), $name, $popup, $page);
-		}
-
-		foreach ($pluginService->getAvailablePlugins($addon) as $plugin) {
-			$pluginArray = array($addon, $plugin);
-			$link        = '';
-			$perm        = $pluginService->getProperty($pluginArray, 'perm', '');
-			$page        = $pluginService->getProperty($pluginArray, 'page', '');
-
-			if (!empty($page) && ($isAdmin || empty($perm) || $user->hasRight($perm))) {
-				$name  = $pluginService->getProperty($pluginArray, 'name', '');
-				$popup = $pluginService->getProperty($pluginArray, 'popup', false);
-
-				$navigation->addPage('addon', strtolower($plugin), $name, $popup, $page);
-			}
-		}
-	}
-}
-elseif (!$isSetup) {
+if (is_null($user) && !$isSetup) {
 	sly_Controller_Base::setCurrentPage('login');
 }
 
