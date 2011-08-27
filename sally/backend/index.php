@@ -93,12 +93,12 @@ if (!$isSetup && sly_Core::isDeveloperMode()) {
 // Asset-Processing, sofern Assets benötigt werden
 sly_Service_Factory::getAssetService()->process();
 
+// leave the index.php when only unit testing the API
+if (SLY_IS_TESTING) return;
+
 if (is_null($user) && !$isSetup) {
 	sly_Controller_Base::setCurrentPage('login');
 }
-
-// leave the index.php when only unit testing the API
-if (SLY_IS_TESTING) return;
 
 try {
 	// get contoller and dispatch
