@@ -19,6 +19,7 @@ select {
 }
 
 input[type=text],
+input[type=password],
 span.sly-form-read {
 	height: 17px;
 	padding: 1px 2px;
