@@ -157,31 +157,23 @@ if ($user) {
 			}
 		}
 	}
-
-	// find best starting page
-	sly_Controller_Base::getPage();
 }
 elseif (!$isSetup) {
 	sly_Controller_Base::setCurrentPage('login');
 }
 
-// notify addOns about the page to be rendered
-$page = sly_Controller_Base::getPage();
-sly_Core::dispatcher()->notify('PAGE_CHECKED', $page);
-
 // leave the index.php when only unit testing the API
 if (SLY_IS_TESTING) return;
 
-// Gewünschte Seite einbinden
-$controller = sly_Controller_Base::factory();
-
 try {
-	if ($controller !== null) {
-		print $controller->dispatch();
-	}
-	else {
+	// get contoller and dispatch
+	$controller = sly_Controller_Base::factory();
+
+	if ($controller === null) {
 		throw new sly_Controller_Exception(t('unknown_page'), 404);
 	}
+
+	print $controller->dispatch();
 }
 catch (Exception $e) {
 	$layout->closeAllBuffers();
@@ -203,7 +195,7 @@ catch (Exception $e) {
 		$layout->pageHeader(t('unexpected_exception'));
 	}
 
-	print rex_warning($e->getMessage());
+	print sly_Helper_Message::warn($e->getMessage());
 	$layout->closeBuffer();
 	$layout->openBuffer();
 	print $layout->render();
