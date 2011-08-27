@@ -62,7 +62,7 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 
 	public function checkPermission() {
 		$user = sly_Util_User::getCurrentUser();
-		return !empty($user);
+		return !empty($user) && $user->hasStructureRight();
 	}
 
 	protected function url($local = array()) {

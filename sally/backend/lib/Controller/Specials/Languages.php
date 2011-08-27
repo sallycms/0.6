@@ -88,8 +88,4 @@ class sly_Controller_Specials_Languages extends sly_Controller_Specials {
 
 		$this->index();
 	}
-
-	protected function checkPermission() {
-		return sly_Util_User::getCurrentUser() !== null;
-	}
 }

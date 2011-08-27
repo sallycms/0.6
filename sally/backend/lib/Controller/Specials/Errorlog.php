@@ -131,7 +131,4 @@ class sly_Controller_Specials_Errorlog extends sly_Controller_Specials {
 		return $lines;
 	}
 
-	protected function checkPermission() {
-		return sly_Util_User::getCurrentUser() !== null;
-	}
 }

@@ -288,7 +288,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	 */
 	protected function canEditCategory($categoryId) {
 		$user = sly_Util_User::getCurrentUser();
-		return sly_Util_Category::hasPermissionOnCategory($user, $categoryId);
+		return sly_Util_Category::hasPermissionOnCategory($user, $categoryId) && !$user->hasRight('editContentOnly[]');
 	}
 
 	protected function canPublishCategory($categoryId) {
@@ -306,9 +306,12 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		$clang      = sly_Core::getCurrentClang();
 		$user       = sly_Util_User::getCurrentUser();
 
-		if ($user === null || !sly_Util_Language::hasPermissionOnLanguage($user, $clang)) {
-			return false;
-		}
+		if (is_null($user)) return false;
+
+		$baseOk     = $user->hasStructureRight();
+		$clangOk    = sly_Util_Language::hasPermissionOnLanguage($user, $clang);
+		$categoryOk = sly_Util_Category::hasPermissionOnCategory($user, $categoryId);
+		if (!$baseOk || !$clangOk || !$categoryOk) return false;
 
 		if (sly_Util_String::startsWith($this->action, 'editStatus')) {
 			return $this->canPublishCategory($categoryId);

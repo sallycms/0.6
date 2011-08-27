@@ -89,15 +89,15 @@ abstract class sly_Controller_Content_Base extends sly_Controller_Backend {
 
 		$articleId = sly_request('article_id', 'int');
 		$article = sly_Util_Article::findById($articleId);
+		$clang   = sly_Core::getCurrentClang();
 
 		// all users are allowed to see the error message in init()
 		if (is_null($article)) return true;
-
+		
+		$baseOk     = $user->hasStructureRight();
 		$categoryOk = sly_Util_Category::hasPermissionOnCategory($user, $article->getCategoryId());
+		$clangOk    = sly_Util_Language::hasPermissionOnLanguage($user, $clang);
 
-		$clang   = sly_Core::getCurrentClang();
-		$clangOk = sly_Util_Language::hasPermissionOnLanguage($user, $clang);
-
-		return $categoryOk && $clangOk;
+		return $baseOk && $categoryOk && $clangOk;
 	}
 }
