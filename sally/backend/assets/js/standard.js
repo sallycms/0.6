@@ -619,5 +619,7 @@ var slyMediaWidgetCallback = null;
 		$('.sly-module-select').change(function() {
 			$(this).closest('form').submit();
 		});
+		
+		$('body.sly-popup').unload(sly.closeAllPopups);
 	});
 })(jQuery, sly);

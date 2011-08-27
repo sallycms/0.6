@@ -34,8 +34,7 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 
 		$naviPath .= '</ul>';
 		$layout    = sly_Core::getLayout();
-		$layout->setBodyAttr('class', 'rex-popup');
-		$layout->setBodyAttr('onunload', 'sly.closeAllPopups()');
+		$layout->setBodyAttr('class', 'sly-popup');
 		$layout->showNavigation(false);
 		$layout->pageHeader(t('linkmap'), $naviPath);
 	}
