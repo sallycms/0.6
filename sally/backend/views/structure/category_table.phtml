@@ -11,13 +11,13 @@
 	$add_category = sly_Util_HTML::getSpriteLink($add_url, t('add_category'), 'category-add');
 
 	$table = new sly_Table();
-	$table->addColumn(new sly_Table_Column($add_category, '40px', '', array('class' => 'sly-icon')));
+	$table->addColumn(new sly_Table_Column($add_category, '', '', array('class' => 'sly-icon')));
 	if ($advancedMode) {
-		$table->addColumn(new sly_Table_Column(t('header_id'), '40px'));
+		$table->addColumn(new sly_Table_Column(t('header_id'), '', '', array('class' => 'id')));
 	}
-	$table->addColumn(new sly_Table_Column(t('header_category')));
-	$table->addColumn(new sly_Table_Column(t('header_priority'), '40px'));
-	$table->addColumn(new sly_Table_Column(t('header_status'), '150px'));
+	$table->addColumn(new sly_Table_Column(t('header_category'), '', '', array('class' => 'name')));
+	$table->addColumn(new sly_Table_Column(t('header_priority'), '', '', array('class' => 'prior')));
+	$table->addColumn(new sly_Table_Column(t('header_status'), '', '', array('class' => 'status')));
 
 	$table->openBuffer();
 
@@ -25,12 +25,12 @@
 		echo '<tr>';
 		echo '<td class="sly-icon">&nbsp;</td>';
 		if ($advancedMode) {
-			echo '<td class="rex-small">-</td>';
+			echo '<td class="id">'.t('header_id').'</td>';
 		}
 
-		echo '<td><a href="index.php?page=structure&amp;category_id='.$currentCategory->getParentId().'&amp;clang='.$this->clangId.'">..</a></td>';
-		echo '<td>&nbsp;</td>';
-		echo '<td>&nbsp;</td>';
+		echo '<td class="name"><a href="index.php?page=structure&amp;category_id='.$currentCategory->getParentId().'&amp;clang='.$this->clangId.'">..</a></td>';
+		echo '<td class="prior">&nbsp;</td>';
+		echo '<td class="status">&nbsp;</td>';
 		echo '</tr>';
 	}
 

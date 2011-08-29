@@ -13,15 +13,13 @@
 	}
 }
 
+/* total width: 797px */
 #rex-form-structure-category,
 #rex-form-structure-article {
 	table input[type=submit] {
 		margin-left: 0;
 	}
-}
 
-/* total width: 797px */
-#rex-form-structure-article {
 	td.sly-icon, th.sly-icon { width: 40px;  }
 	td.id, th.id             { width: 40px;  }
 	td.name, th.name         { min-width: 287px; }
