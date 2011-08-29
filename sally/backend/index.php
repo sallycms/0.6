@@ -203,7 +203,7 @@ catch (Exception $e) {
 		$layout->pageHeader(t('unexpected_exception'));
 	}
 
-	print rex_warning($e->getMessage());
+	print sly_Helper_Message::warn($e->getMessage());
 	$layout->closeBuffer();
 	$layout->openBuffer();
 	print $layout->render();
