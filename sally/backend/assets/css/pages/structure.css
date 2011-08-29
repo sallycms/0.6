@@ -20,6 +20,16 @@
 	}
 }
 
+/* total width: 797px */
+#rex-form-structure-article {
+	td.sly-icon, th.sly-icon { width: 40px;  }
+	td.id, th.id             { width: 40px;  }
+	td.name, th.name         { min-width: 287px; }
+	td.arttype, th.arttype   { min-width: 180px; max-width: 240px; }
+	td.prior, th.prior       { width: 40px;  }
+	td.status, th.status     { width: 150px; }
+}
+
 #sly-form-field-name {
 	width: 97%;
 }

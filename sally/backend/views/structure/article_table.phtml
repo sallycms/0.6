@@ -11,14 +11,14 @@
 	$add_article = sly_Util_HTML::getSpriteLink($add_url, t('add_article'), 'article-add');
 
 	$table = new sly_Table();
-	$table->addColumn(new sly_Table_Column($add_article, '40px', '', array('class' => 'sly-icon')));
+	$table->addColumn(new sly_Table_Column($add_article, '', '', array('class' => 'sly-icon')));
 	if ($advancedMode) {
-		$table->addColumn(new sly_Table_Column(t('header_id'), '40px'));
+		$table->addColumn(new sly_Table_Column(t('header_id'), '', '', array('class' => 'id')));
 	}
-	$table->addColumn(new sly_Table_Column(t('header_article_name')));
-	$table->addColumn(new sly_Table_Column(t('content_arttype'), '200px'));
-	$table->addColumn(new sly_Table_Column(t('header_priority'), '40px'));
-	$table->addColumn(new sly_Table_Column(t('header_status'), '150px'));
+	$table->addColumn(new sly_Table_Column(t('header_article_name'), '', '', array('class' => 'name')));
+	$table->addColumn(new sly_Table_Column(t('content_arttype'), '', '', array('class' => 'arttype')));
+	$table->addColumn(new sly_Table_Column(t('header_priority'), '', '', array('class' => 'prior')));
+	$table->addColumn(new sly_Table_Column(t('header_status'), '', '', array('class' => 'status')));
 
 	$table->openBuffer();
 
