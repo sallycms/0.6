@@ -75,6 +75,7 @@ a.sly-button {
 		margin-top: 5px;
 		color: #777777;
 		font-size: 11px;
+		clear: left;
 	}
 
 	label span {
