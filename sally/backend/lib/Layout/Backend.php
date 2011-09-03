@@ -140,17 +140,16 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 
 			if (!empty($subtitle)) {
 				$items = array();
-				$i     = 1;
 
-				foreach ($subtitle as $part) {
-					if ($i == 1) {
-						$items[] = '<li class="rex-navi-first">'.$part.'</li>';
+				foreach ($subtitle as $idx => $part) {
+					$className = isset($subline[$idx][4]) ? $subline[$idx][4] : '';
+
+					if ($idx == 0) {
+						$items[] = '<li class="'.trim("rex-navi-first $className").'">'.$part.'</li>';
 					}
 					else {
-						$items[] = '<li>'.$part.'</li>';
+						$items[] = '<li'.($className ? ' class="'.$className.'"' : '').'>'.$part.'</li>';
 					}
-
-					++$i;
 				}
 
 				$subtitle_str = '<div id="rex-navi-page"><ul>'.implode("\n", $items).'</ul></div>';
