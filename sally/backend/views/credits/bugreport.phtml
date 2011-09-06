@@ -51,8 +51,9 @@ $sysinfo = array(
 
 $addons  = sly_Service_Factory::getAddOnService();
 $plugins = sly_Service_Factory::getPluginService();
+$list    = $addons->getRegisteredAddons();
 
-foreach ($addons->getRegisteredAddons() as $addon) {
+foreach ($list as $addon) {
 	if (!$addons->isInstalled($addon)) continue;
 
 	$status    = $addons->isActivated($addon) ? 'aktiviert' : 'deaktiviert';
@@ -69,6 +70,10 @@ foreach ($addons->getRegisteredAddons() as $addon) {
 			$sysinfo[] = sprintf('  %-20s %-9s [%s]', $plugin, $version, $status);
 		}
 	}
+}
+
+if (empty($list)) {
+	$sysinfo[] = '(keine)';
 }
 
 $sysinfo[] = '</pre>';

@@ -90,6 +90,10 @@ class sly_Service_Asset {
 					$cacheFile = $this->getCacheFile($file, $access, $encoding);
 					$realfile  = SLY_BASE.'/'.$file;
 
+					if (!file_exists($cacheFile)) {
+						continue;
+					}
+
 					// if original file is missing, ask listeners
 					if (!file_exists($realfile)) {
 						$translated = $dispatcher->filter(self::EVENT_REVALIDATE_ASSETS, array($file));
@@ -114,6 +118,24 @@ class sly_Service_Asset {
 		}
 	}
 
+	protected function normalizePath($path) {
+		$path = sly_Util_Directory::normalize($path);
+		$path = str_replace('..', '', $path);
+		$path = str_replace(DIRECTORY_SEPARATOR, '/', sly_Util_Directory::normalize($path));
+		$path = str_replace('./', '/', $path);
+		$path = str_replace(DIRECTORY_SEPARATOR, '/', sly_Util_Directory::normalize($path));
+
+		if (empty($path)) {
+			return '';
+		}
+
+		if ($path[0] === '/') {
+			$path = substr($path, 1);
+		}
+
+		return $path;
+	}
+
 	public function process() {
 		$file = sly_get('sly_asset', 'string');
 		if (empty($file)) {
@@ -127,11 +149,40 @@ class sly_Service_Asset {
 		while (ob_get_level()) ob_end_clean();
 		ob_start();
 
-		// only process allowed files
-		if (sly_Util_String::endsWith($file, '.php') || sly_Util_String::endsWith($file, 'htaccess')) {
+		// check if the file can be streamed
+
+		$blocked = sly_Core::config()->get('MEDIAPOOL/BLOCKED_EXTENSIONS');
+		$ok      = true;
+
+		foreach ($blocked as $ext) {
+			if (sly_Util_String::endsWith($file, $ext)) {
+				$ok = false;
+				break;
+			}
+		}
+
+		if ($ok) {
+			$normalized = $this->normalizePath($file);
+			$ok         = strpos($normalized, '/') === false; // allow files in root directory (favicon)
+
+			if (!$ok) {
+				$allowed = sly_Core::config()->get('ASSETS_DIRECTORIES');
+
+				foreach ($allowed as $path) {
+					if (sly_Util_String::startsWith($file, $path)) {
+						$ok = true;
+						break;
+					}
+				}
+			}
+		}
+
+		if (!$ok) {
 			header('HTTP/1.0 403 Forbidden');
 			die;
 		}
+
+		// do the work
 
 		$dispatcher  = sly_Core::dispatcher();
 		$isProtected = $dispatcher->filter(self::EVENT_IS_PROTECTED_ASSET, false, compact('file'));
@@ -141,19 +192,20 @@ class sly_Service_Asset {
 		$cacheFile = $this->getCacheFile($file, $access);
 
 		if (!file_exists($cacheFile) || $this->forceGen) {
-			// lete listeners process the file
+			// let listeners process the file
 			$tmpFile = $dispatcher->filter(self::EVENT_PROCESS_ASSET, $file);
 
 			// now we can check if a listener has generated a valid file
-			if (!file_exists($tmpFile)) {
+			if (!is_file($tmpFile)) {
 				header('HTTP/1.0 404 Not Found');
 				die;
 			}
 
 			$this->generateCacheFile($tmpFile, $cacheFile);
+			$file = $tmpFile;
 		}
 
-		$this->redirectToCacheFile($cacheFile);
+		$this->printCacheFile($file, $cacheFile);
 	}
 
 	/**
@@ -220,27 +272,52 @@ class sly_Service_Asset {
 		}
 	}
 
-	/**
-	 * @param string $file
-	 */
-	protected function redirectToCacheFile($file) {
+	protected function printCacheFile($origFile, $file) {
 		$errors = ob_get_clean();
+		error_reporting(0);
 
 		if (empty($errors)) {
-			// redirect so that Apache can set content-type and various other headers
-			$protocol = sly_Util_HTTP::isSecure() ? 'https' : 'http';
-			$host     = sly_Util_HTTP::getHost();
-			$uri      = $_SERVER['REQUEST_URI'];
+			$fp = fopen($file, 'rb');
 
-			// HTTP 1.0 states that clients should detect redirect loops. Unfortunately,
-			// IE takes this a bit too serious and won't perform *any* redirects, when
-			// the redirect URL is the same as the original request URI. To make it work,
-			// we have to syntactically change the URL.
+			if (!$fp) {
+				$errors = 'Cannot open file.';
+			}
+		}
 
-			$sep   = strpos($uri, '?') !== false ? '&' : '?';
-			$param = 'sly-force-reload';
+		if (empty($errors)) {
+			$type         = sly_Util_Mime::getType($origFile);
+			$cacheControl = sly_Core::config()->get('ASSETS_CACHE_CONTROL', 'max-age=29030401');
+			$enc          = $this->getPreferredClientEncoding();
 
-			header('Location: '.$protocol.'://'.$host.$uri.$sep.$param);
+			list($main, $sub) = explode('/', $type);
+			if ($main === 'text') $type .= '; charset=UTF-8';
+
+			header('HTTP/1.1 200 OK');
+			header('Last-Modified: '.date('r', time()));
+			header('Cache-Control: '.$cacheControl);
+			header('Content-Type: '.$type);
+			header('Content-Length: '.filesize($file));
+
+			switch ($enc) {
+				case 'plain':
+					break;
+
+				case 'deflate':
+				case 'gzip':
+					header('Content-Encoding: '.$enc);
+					break;
+
+//				case 'mops': ?
+			}
+
+			// stream the file
+
+			while (!feof($fp)) {
+				print fread($fp, 65536);
+				flush();
+			}
+
+			fclose($fp);
 		}
 		else {
 			header('Content-Type: text/plain; charset=UTF-8');
@@ -280,13 +357,6 @@ class sly_Service_Asset {
 
 		if (!file_exists($htaccess)) {
 			copy($install.'.htaccess', $htaccess);
-		}
-
-		$cache_php = sly_Util_Directory::join($dir, 'cache.php');
-
-		if (!file_exists($cache_php)) {
-			$jumper = self::getJumper($dir);
-			file_put_contents($cache_php, "<?php chdir('$jumper'); include 'index.php';");
 		}
 
 		$protect_php = sly_Util_Directory::join($dir, 'protect.php');

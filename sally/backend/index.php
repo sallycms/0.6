@@ -110,10 +110,12 @@ if ($user) {
 	$navigation->addPage('system', 'credits');
 
 	if ($isAdmin || $user->hasStructureRight()) {
-		$navigation->addPage('system', 'structure');
+		$hasClangPerm = $isAdmin || count($user->getAllowedCLangs()) > 0;
+
+		if ($hasClangPerm) $navigation->addPage('system', 'structure');
 		$navigation->addPage('system', 'mediapool', null, true);
-		$navigation->addPage('system', 'linkmap', null, true);
-		$navigation->addPage('system', 'content');
+		if ($hasClangPerm) $navigation->addPage('system', 'linkmap', null, true);
+		if ($hasClangPerm) $navigation->addPage('system', 'content');
 	}
 	elseif ($user->hasRight('mediapool[]')) {
 		$navigation->addPage('system', 'mediapool', null, true);
@@ -201,8 +203,9 @@ catch (Exception $e) {
 		$layout->pageHeader(t('unexpected_exception'));
 	}
 
-	print rex_warning($e->getMessage());
+	print sly_Helper_Message::warn($e->getMessage());
 	$layout->closeBuffer();
+	$layout->openBuffer();
 	print $layout->render();
 }
 

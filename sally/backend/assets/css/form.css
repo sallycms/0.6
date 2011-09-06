@@ -8,8 +8,19 @@ input[type=text], input[type=password], textarea, select {
 	font-family: Calibri, Arial, Verdana, sans-serif;
 }
 
+select option[disabled] {
+	color: $md_grey;
+}
+
 select {
 	background-color: #fff;
+}
+
+optgroup {
+	font-size: 100%;
+	font-style: normal;
+	font-weight: 600;
+	font-family: Calibri, Arial, Verdana, sans-serif;
 }
 
 .sly-button, input[type=submit], input[type=reset], input[type=button] {
@@ -21,15 +32,21 @@ select {
 	border: 1px solid $lt_grey;
 	+border-radius($brd_rad);
 	margin-left: 145px;
-	font-size: 85%;
+	font-size: 100%;
+	font-family: inherit;
 	width: auto;
+
+	&:active, &:focus {
+		border: 1px solid $md_grey;
+	}
 }
 
 a.sly-button {
 	display: inline-block;
-	height: 19px;
+	height: 20px;
 	font-size: 100%;
 	margin-left: inherit;
+	cursor: default;
 }
 
 .rex-area-content {

@@ -130,6 +130,7 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 	}
 
 	protected function checkPermission() {
-		return sly_Util_User::getCurrentUser() !== null;
+		$user = sly_Util_User::getCurrentUser();
+		return $user && $user->isAdmin();
 	}
 }
