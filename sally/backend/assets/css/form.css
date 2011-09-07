@@ -8,8 +8,20 @@ input[type=text], input[type=password], textarea, select {
 	font-family: Calibri, Arial, Verdana, sans-serif;
 }
 
-select option[disabled] {
-	color: $md_grey;
+input[type=text],
+input[type=password],
+input[type=submit],
+input[type=reset],
+input[type=button],
+textarea,
+select option {
+	&:disabled {
+		color: GrayText;
+
+		&:active {
+			border-color: $lt_grey;
+		}
+	}
 }
 
 select {
