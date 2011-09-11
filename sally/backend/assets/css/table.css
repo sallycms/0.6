@@ -16,13 +16,22 @@
 		height: 5px;
 	}
 
-
 	th {
 		text-align: left;
 		color: #fff;
 		padding: 4px 0 9px 0px;
 		vertical-align: middle;
 		background-color: $drk_grey;
+
+		a.sort {
+			color: white;
+			padding-right: 13px;
+			background: url() right center no-repeat;
+
+			&.asc    { background-image: url(../ascending.png); }
+			&.desc   { background-image: url(../descending.png); }
+			&.nosort { background-image: url(../nosort.png); }
+		}
 	}
 
 	td {
@@ -43,7 +52,6 @@
 	.rex-plugin td {
 		background-color: #FAF9F5;
 	}
-
 }
 
 .sly-table-extras {
