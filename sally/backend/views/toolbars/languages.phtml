@@ -48,7 +48,7 @@ if (count($languages) > 1) {
 
 		if (!sly_Util_Language::hasPermissionOnLanguage($user, $clangID)) {
 			print '<span class="rex-strike">'.$clangName.'</span>';
-			$stop = $clangID;
+			$stop = $clangID == $curClang;
 		}
 		else {
 			$class = '';

@@ -10,10 +10,10 @@ if ($this->canPublishCategory($category->getId())) {
 ?>
 <tr>
 	<td class="sly-icon"><?= sly_Util_HTML::getSpriteLink($base_url, $category->getCatName(), 'category') ?></td>
-	<?= $advancedMode ? '<td class="rex-small">'.sly_html($category->getId()).'</td>' : '' ?>
-	<td><a href="<?= sly_html($base_url) ?>"><?= sly_html($category->getCatName()) ?></a></td>
-	<td><?= sly_html($category->getCatPrior()) ?></td>
-	<td>
+	<?= $advancedMode ? '<td class="id">'.sly_html($category->getId()).'</td>' : '' ?>
+	<td class="name"><a href="<?= sly_html($base_url) ?>"><?= sly_html($category->getCatName()) ?></a></td>
+	<td class="prior"><?= sly_html($category->getCatPrior()) ?></td>
+	<td class="status">
 		<a href="<?= $edit_url ?>&amp;func=editCategory"><?= t('change') ?></a>&nbsp;
 		<?php
 		if ($this->canEditCategory($category->getId())) {

@@ -8,8 +8,20 @@ input[type=text], input[type=password], textarea, select {
 	font-family: Calibri, Arial, Verdana, sans-serif;
 }
 
-select option[disabled] {
-	color: $md_grey;
+input[type=text],
+input[type=password],
+input[type=submit],
+input[type=reset],
+input[type=button],
+textarea,
+select option {
+	&:disabled {
+		color: GrayText;
+
+		&:active {
+			border-color: $lt_grey;
+		}
+	}
 }
 
 select {
@@ -24,6 +36,13 @@ span.sly-form-read {
 	height: 17px;
 	padding: 1px 2px;
 	width: 456px;
+}
+
+optgroup {
+	font-size: 100%;
+	font-style: normal;
+	font-weight: 600;
+	font-family: Calibri, Arial, Verdana, sans-serif;
 }
 
 .sly-button, input[type=submit], input[type=reset], input[type=button] {
@@ -78,6 +97,7 @@ a.sly-button {
 		margin-top: 5px;
 		color: #777777;
 		font-size: 11px;
+		clear: left;
 	}
 
 	label span {

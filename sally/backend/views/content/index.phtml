@@ -87,7 +87,7 @@ else {
 					if (!isset($slicevalues)) {
 						$slicevalues = array();
 						foreach (sly_Core::getVarTypes() as $obj) {
-							$slicevalues = array_merge($slicevalues, $obj->getDatabaseValues($slice_id));
+							$slicevalues = array_merge($slicevalues, $obj->getDatabaseValues($artslice->getSliceId()));
 						}
 					}
 					sly_Helper_Content::printEditSliceForm($artslice, $slicevalues);

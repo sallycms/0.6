@@ -1,5 +1,5 @@
 <?php
-$base_url = 'index.php?page=structure&category_id=' . $category->getId() . '&clang=' . $this->clangId;
+$base_url = 'index.php?page=structure&category_id='.$category->getId().'&clang='.$this->clangId;
 ?>
 
 <tr class="rex-table-row-activ">
@@ -7,15 +7,13 @@ $base_url = 'index.php?page=structure&category_id=' . $category->getId() . '&cla
 		<input type="hidden" name="edit_id" value="<?= $category->getId() ?>" />
 		<?= sly_Util_HTML::getSpriteLink($base_url, $category->getCatName(), 'category') ?>
 	</td>
-	<?= $advancedMode ? '<td class="rex-small">' . $category->getId() . '</td>' : '' ?>
-	<td><input type="text" class="rex-form-text" id="sly-form-field-name" name="category_name" autofocus="autofocus" value="<?= sly_html($category->getCatName()) ?>" /></td>
-	<td><input type="text" class="rex-form-text" id="sly-form-field-prior" name="category_position" value="<?= sly_html($category->getCatPrior()) ?>" /></td>
-	<td><input type="submit" name="do_edit_category" value="<?= t('save_category') ?>" /></td>
+	<?= $advancedMode ? '<td class="id">'.$category->getId().'</td>' : '' ?>
+	<td class="name"><input type="text" class="rex-form-text" id="sly-form-field-name" name="category_name" autofocus="autofocus" value="<?= sly_html($category->getCatName()) ?>" /></td>
+	<td class="prior"><input type="text" class="rex-form-text" id="sly-form-field-prior" name="category_position" value="<?= sly_html($category->getCatPrior()) ?>" /></td>
+	<td class="status"><input type="submit" name="do_edit_category" value="<?= t('save_category') ?>" /></td>
 </tr>
 <?php
-// ----- EXTENSION POINT
-		echo sly_Core::dispatcher()->filter('CAT_FORM_EDIT', '', array(
-			'category' => $category,
-			'data_colspan' => $advancedMode ? 5 : 4,
-		));
-?>
+print sly_Core::dispatcher()->filter('CAT_FORM_EDIT', '', array(
+	'category'     => $category,
+	'data_colspan' => $advancedMode ? 5 : 4,
+));
