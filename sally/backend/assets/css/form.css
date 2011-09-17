@@ -1,4 +1,12 @@
-input[type=text], input[type=password], textarea, select {
+input[type=text],
+input[type=password],
+input[type=date],
+input[type=datetime],
+input[type=datetime-local],
+input[type=number],
+input[type=range],
+textarea,
+select {
 	font-size: 100%;
 	margin: 0;
 	border: 1px solid $lt_grey;
