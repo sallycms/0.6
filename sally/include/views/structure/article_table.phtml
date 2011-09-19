@@ -1,3 +1,6 @@
+<?php
+if($this->canEditCategory($this->categoryId)) {
+?>
 <form action="index.php" method="post" id="rex-form-structure-article">
 	<fieldset>
 		<input type="hidden" name="page" value="structure" />
@@ -7,10 +10,7 @@
 	</fieldset>
 
 	<?php
-	$add_url = '';
-	if($this->canEditCategory($this->categoryId)) {
-		$add_url = 'index.php?page=structure&category_id=' . $this->categoryId . '&clang=' . $this->clangId . '&func=addArticle';
-	}
+	$add_url     = 'index.php?page=structure&category_id=' . $this->categoryId . '&clang=' . $this->clangId . '&func=addArticle';
 	$add_article = sly_Util_HTML::getSpriteLink($add_url, t('add_article'), 'article-add');
 
 	$table = new sly_Table();
@@ -47,4 +47,6 @@
 	$table->renderFooter();
 	?>
 </form>
-
+<?php
+}
+?>
