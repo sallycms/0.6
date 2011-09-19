@@ -64,7 +64,9 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 			'articles'        => $articles,
 			'advancedMode'    => $advancedMode,
 			'statusTypes'     => $art_service->getStati(),
-			'canEdit'         => $this->canEditCategory($this->categoryId)
+			'canAdd'          => $this->canEditCategory($this->categoryId),
+			'canEdit'         => $this->canEditCategory($this->categoryId),
+			'canEditContent'  => $this->canEditContents($this->categoryId)
 		));
 
 		if ($this->renderAddArticle || $this->renderAddCategory || $this->renderEditArticle || $this->renderEditCategory) {
@@ -288,6 +290,41 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 	protected function canPublishCategory($categoryId) {
 		$user = sly_Util_User::getCurrentUser();
 		return $user->isAdmin() || ($user->hasRight('publishCategory[]') && $this->canEditCategory($categoryId));
+	}
+	
+	/**
+	 * checks if a user can view a category
+	 * @param int $categoryId
+	 * @return boolean 
+	 */
+	protected function canViewCategory($categoryId) {
+		if($this->canEditCategory($categoryId)) return true;
+		$user = sly_Util_User::getCurrentUser();
+		if($user->hasRight('csr['.$categoryId.']')) return true;
+		$cat = sly_Util_Category::findById($categoryId);
+		while($cat) {
+			if($user->hasRight('csw['.$cat->getId().']')) {
+				return true;
+			}
+			$cat = $cat->getParent();
+		}
+		return false;
+	}
+	
+	protected function canEditContents($categoryId) {
+		$user = sly_Util_User::getCurrentUser();
+		if(sly_Util_Category::hasPermissionOnCategory($user, $categoryId)) return true;
+		if ($user->hasRight('editContentOnly[]')) {
+			$cat = sly_Util_Category::findById($categoryId);
+			
+			while($cat) {
+				if($user->hasRight('csw['.$cat->getId().']')) {
+					return true;
+				}
+				$cat = $cat->getParent();
+			}
+		}
+		return false;
 	}
 
 	/**

@@ -49,10 +49,12 @@
 			);
 		}
 		else {
-			$this->render(
-				sly_Controller_Structure::$viewPath.'category_table_row.phtml',
-				array('category' => $category, 'advancedMode' => $advancedMode, 'statusTypes' => $statusTypes)
-			);
+			if($this->canViewCategory($category->getId())) {
+				$this->render(
+					sly_Controller_Structure::$viewPath.'category_table_row.phtml',
+					array('category' => $category, 'advancedMode' => $advancedMode, 'statusTypes' => $statusTypes)
+				);
+			}
 		}
 	}
 
