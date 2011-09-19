@@ -27,12 +27,13 @@ else {
 	<td><?= sly_html($article->getPrior()) ?></td>
 	<td><?= sly_Util_String::formatStrftime(t('dateformat'), $article->getCreateDate()) ?></td>
 	<td>
-		<a href="<?= $edit_url ?>&amp;func=editArticle"><?= t('change') ?></a>&nbsp;
 		<?php
 		if ($canEdit && $this->categoryId != $article->getId()) {
+			echo '<a href="<?= $edit_url ?>&amp;func=editArticle">'.t('change').'</a>&nbsp;';
 			echo '<a href="'.$edit_url.'&amp;func=deleteArticle" class="sly-delete">'.t('delete').'</a>';
 		}
 		else {
+			echo '<span class="rex-strike">'.t('change').'</span>&nbsp;';
 			echo '<span class="rex-strike">'.t('delete').'</span>';
 		}
 		?>

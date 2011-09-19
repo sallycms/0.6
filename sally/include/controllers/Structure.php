@@ -303,7 +303,12 @@ class sly_Controller_Structure extends sly_Controller_Sally {
 			return!is_null($user);
 		}
 		elseif (sly_Util_String::startsWith($this->action, 'editStatus')) {
-			return $this->canPublishCategory($categoryId);
+			if($this->action == 'editStatusCategory') {
+				$editId = sly_request('edit_id', 'rex-category-id');
+				return $this->canPublishCategory($editId);
+			}else {
+				return $this->canPublishCategory($categoryId);
+			}
 		}
 		elseif (sly_Util_String::startsWith($this->action, 'edit') || sly_Util_String::startsWith($this->action, 'add') || sly_Util_String::startsWith($this->action, 'delete')) {
 			return $this->canEditCategory($categoryId);
