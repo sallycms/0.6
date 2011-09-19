@@ -19,7 +19,7 @@ if ($this->canPublishCategory($category->getId())) {
 	<td>
 		<?php
 		if ($this->canEditCategory($category->getId())) {
-			echo '<a href="<?= $edit_url ?>&amp;func=editCategory">'.t('change').'</a>&nbsp;';
+			echo '<a href="'.$edit_url.'&amp;func=editCategory">'.t('change').'</a>&nbsp;';
 			echo '<a href="'.$edit_url.'&amp;func=deleteCategory" class="sly-delete">'.t('delete').'</a>';
 		}
 		else {
