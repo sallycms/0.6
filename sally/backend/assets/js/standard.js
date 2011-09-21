@@ -420,7 +420,7 @@ var slyMediaWidgetCallback = null;
 
 		// Lösch-Links in Tabellen
 
-		$('table.rex-table').delegate('a.sly-delete, input.sly-button-delete', 'click', function() {
+		$('table.sly-table').delegate('a.sly-delete, input.sly-button-delete', 'click', function() {
 			var table    = $(this).parents('table');
 			var question = table.attr('rel');
 

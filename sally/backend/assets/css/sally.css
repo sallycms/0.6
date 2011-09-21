@@ -81,7 +81,7 @@ caption, legend {
 
 /*	real width = border + padding + width */
 
-.rex-table, .sly-table {
+.sly-table {
 	th, td {
 		&.rex-small, &.sly-icon, &.sly-small {
 			width: 29px;
