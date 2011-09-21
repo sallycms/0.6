@@ -38,6 +38,9 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 			}
 		}
 
+		// allow addOns to extend the system page
+		$subline = sly_Core::dispatcher()->filter('SLY_SPECIALS_MENU', $subline, array('page' => $specials));
+
 		$layout = sly_Core::getLayout();
 		$layout->pageHeader(t('specials'), $subline);
 	}
