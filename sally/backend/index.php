@@ -103,11 +103,6 @@ if (is_null($user) && !$isSetup) {
 try {
 	// get contoller and dispatch
 	$controller = sly_Controller_Base::factory();
-
-	if ($controller === null) {
-		throw new sly_Controller_Exception(t('unknown_page'), 404);
-	}
-
 	print $controller->dispatch();
 }
 catch (Exception $e) {
