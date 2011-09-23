@@ -13,11 +13,6 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 	protected $info;
 
 	protected function init() {
-		$subline = array(
-			array('',          t('main_preferences')),
-			array('languages', t('languages'))
-		);
-
 		// add subpages
 
 		$navigation = sly_Core::getLayout()->getNavigation();
@@ -34,8 +29,12 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 
 			if (get_class($handler) === 'sly_ErrorHandler_Production') {
 				$specials->addSubpage('errorlog', t('errorlog'));
-				$subline[] = array('errorlog',  t('errorlog'));
 			}
+		}
+		
+		$subline = array();
+		foreach($specials->getSubpages() as $subpage) {
+			$subline[] = array($subpage->getPageParam(), $subpage->getTitle());
 		}
 
 		$layout = sly_Core::getLayout();
