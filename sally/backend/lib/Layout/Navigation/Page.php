@@ -32,7 +32,11 @@ class sly_Layout_Navigation_Page {
 
 	public function isActive() {
 		$forced = $this->forceStatus;
-		return $forced !== null ? $forced : (sly_Core::getCurrentPage() == $this->pageParam);
+		$isPage = sly_Core::getCurrentPage() == $this->pageParam;
+		foreach($this->subpages as $subpage) {
+			$isPage |= $subpage->isActive();
+		}
+		return $forced !== null ? $forced : $isPage;
 	}
 
 	public function getName()      { return $this->name;      }

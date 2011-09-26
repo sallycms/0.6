@@ -19,8 +19,7 @@ print $this->render('mediapool/notices.phtml');
 $form = new sly_Form('index.php', 'POST', t('pool_file_insert'), '', 'rex-form-mediapool-other');
 $form->setEncType('multipart/form-data');
 
-$form->addHiddenValue('page', 'mediapool');
-$form->addHiddenValue('subpage', 'upload');
+$form->addHiddenValue('page', 'mediapool_upload');
 $form->addHiddenValue('func', 'upload');
 $form->addHiddenValue('callback', sly_request('callback', 'string'));
 

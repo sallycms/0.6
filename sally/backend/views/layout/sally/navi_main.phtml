@@ -37,7 +37,6 @@ foreach ($groups as $group) {
 	print '<ul id="rex-navi-'.$topic.'">';
 
 	$first   = true;
-	$subpage = sly_request('subpage', 'string');
 
 	// Sort the addon group automatically, since we can't load the addOns in
 	// a translated sorted way.
@@ -73,7 +72,7 @@ foreach ($groups as $group) {
 		print '<li '.$liAttr.'><a '.$aAttr.'>'.$page->getTitle().'</a>';
 
 		// ***** Subnavi
-		if (!empty($subpages)) {
+		if ($page->isActive() && !empty($subpages)) {
 			print '<ul class="rex-navi-level-2">';
 			$first = true;
 
@@ -81,9 +80,8 @@ foreach ($groups as $group) {
 				$param = $sp->getPageParam();
 				$class = 'sly-navigation-level-2';
 				$id    = 'rex-navi-'.$p.'-subpage-'.$param;
-				$href  = 'index.php?page='.$page->getPageParam();
+				$href  = 'index.php?page='.$param;
 
-				if ($param)          $href  .= '&subpage='.$param;
 				if ($first)          $class .= ' rex-navi-first';
 				if ($sp->isActive()) $class .= ' rex-active';
 

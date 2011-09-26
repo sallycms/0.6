@@ -1,25 +1,3 @@
-#rex-page-linkmap {
-	#sly-page     { width: 100%;   }
-	#sly-navi-top { display: none; }
-	#sly-footer   { display: none; }
-
-	#sly-wrapper {
-		float: none;
-		margin: 0 auto;
-		padding-top: 20px;
-		width: 690px;
-	}
-
-	#sly-pagehead {
-		background-image: none;
-		height: auto;
-
-		&-row { width: 100%; }
-		p { display: none; }
-		.rex-area-content { line-height: 1em; }
-	}
-}
-
 #rex-linkmap {
 	background-color: #fff;
 	clear: both;

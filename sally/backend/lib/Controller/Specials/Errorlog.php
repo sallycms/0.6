@@ -54,13 +54,13 @@ class sly_Controller_Specials_Errorlog extends sly_Controller_Specials {
 
 		// render data
 
-		$regex = '#^\[(.*?)\] PHP (.+?) \((.+?)\): (.+?) in (/.*?) line (\d+) \[(GET|POST|HEAD) (.+?)\]#';
+		$regex = '#^\[(.*?)\] PHP (.+?) \((.+?)\): (.+?) in (.*?) line (\d+) \[(GET|POST|HEAD) (.+?)\]#';
 		$lines = array_reverse($lines); // put most recent line on the top
 		$data  = array();
 
 		foreach ($lines as $line) {
 			if (!preg_match($regex, $line, $matches)) continue;
-
+			
 			$data[] = array(
 				'date'    => strtotime($matches[1]),
 				'type'    => $matches[2],

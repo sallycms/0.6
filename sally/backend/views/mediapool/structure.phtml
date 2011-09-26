@@ -10,7 +10,7 @@
 ////////////////////////////////////////////////////////
 // print breadcrumb path
 
-$base     = 'index.php?page=mediapool&amp;subpage=structure&amp;cat_id=';
+$base     = 'index.php?page=mediapool_structure&amp;cat_id=';
 $textpath = '<li> : <a href="'.$base.'0">Start</a></li>';
 $catID    = sly_request('cat_id', 'int');
 $cat      = sly_Util_MediaCategory::findById($catID);
@@ -55,8 +55,7 @@ if ($this->action == 'add' || $this->action == 'edit') {
 	?>
 	<form action="index.php" method="post">
 		<fieldset>
-			<input type="hidden" name="page" value="mediapool" />
-			<input type="hidden" name="subpage" value="structure" />
+			<input type="hidden" name="page" value="mediapool_structure" />
 			<input type="hidden" name="cat_id" value="<?= $catID ?>" />
 			<input type="hidden" name="func" value="<?= $this->action ?>" />
 			<?php	if ($this->action): ?>
