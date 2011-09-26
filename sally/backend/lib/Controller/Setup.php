@@ -24,7 +24,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		// wenn nur eine Sprache -> direkte Weiterleitung
 
 		if (count($languages) === 1) {
-			$url = 'index.php?subpage=license&lang='.urlencode(reset($languages));
+			$url = 'index.php?page=setup&func=license&lang='.urlencode(reset($languages));
 			sly_Util_HTTP::redirect($url);
 		}
 
