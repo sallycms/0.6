@@ -74,7 +74,6 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 
 		$subtitle_str = $subline;
 		$subtitle     = $subline;
-		$cur_subpage  = sly_request('subpage', 'string');
 		$cur_page     = urlencode(sly_request('page', 'string'));
 		$user         = sly_Util_User::getCurrentUser();
 
@@ -88,44 +87,17 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 					continue;
 				}
 
-				$link   = $subpage[0];
-				$label  = $subpage[1];
-				$perm   = !empty($subpage[2]) ? $subpage[2] : '';
-				$params = !empty($subpage[3]) ? sly_Util_HTTP::queryString($subpage[3]) : '';
+				$page     = $subpage[0];
+				$label    = $subpage[1];
+				$params   = !empty($subpage[3]) ? sly_Util_HTTP::queryString($subpage[3]) : '';
+				$pageattr = $attr;
 
-				// Berechtigung prüfen
-				// Hat der User das Recht für die aktuelle Subpage?
-
-				if (!empty($perm) && !$isAdmin && !$user->hasRight($perm)) {
-					// Wenn der User kein Recht hat, und diese Seite öffnen will -> Fehler
-					if ($cur_subpage == $link) {
-						exit('You have no permission to this area!');
-					}
-					// Den Punkt aus der Navi entfernen
-					else {
-						continue;
-					}
+				
+				if($cur_page === $page) {
+					$pageattr = $attr.' class="rex-active"';
 				}
-
-				$link   = explode('&', $link, 2);
-				$link   = reset($link); // alles nach dem ersten & abschneiden
-				$active = (empty($cur_subpage) && empty($link)) || (!empty($cur_subpage) && $cur_subpage == $link);
-
-				// Auf der aktiven Seite den Link nicht anzeigen
-				if ($active) {
-					$link       = empty($link) ? '' : '&amp;subpage='.urlencode($link);
-					$format     = '<a href="?page='.$cur_page.'%s%s"%s class="rex-active">%s</a>';
-					$subtitle[] = sprintf($format, $link, $params, $attr, $label);
-				}
-				elseif (empty($link)) {
-					$format     = '<a href="?page='.$cur_page.'%s"%s>%s</a>';
-					$subtitle[] = sprintf($format, $params, $attr, $label);
-				}
-				else {
-					$link       = '&amp;subpage='.urlencode($link);
-					$format     = '<a href="?page='.$cur_page.'%s%s"%s>%s</a>';
-					$subtitle[] = sprintf($format, $link, $params, $attr, $label);
-				}
+				$format     = '<a href="?page=%s%s"%s>%s</a>';
+				$subtitle[] = sprintf($format, $page, $params, $pageattr, $label);
 			}
 
 			if (!empty($subtitle)) {

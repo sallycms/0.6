@@ -148,7 +148,7 @@ ob_start();
 		if ($title == '') $title = '['.t('pool_file_notitle').']';
 		if ($user->hasRight('advancedMode[]')) $title .= ' ['.$id.']';
 
-		$ilink  = 'index.php?page=mediapool&amp;subpage=detail&amp;file_id='.$id.'&amp;rex_file_category='.$selected.$argUrl;
+		$ilink  = 'index.php?page=mediapool_detail&amp;file_id='.$id.'&amp;rex_file_category='.$selected.$argUrl;
 		$add_td = '<td>&nbsp;</td>';
 
 		if ($isAdmin) {

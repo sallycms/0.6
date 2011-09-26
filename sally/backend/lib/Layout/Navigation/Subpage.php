@@ -65,10 +65,7 @@ class sly_Layout_Navigation_Subpage {
 
 	public function isActive() {
 		$forced    = $this->forceStatus;
-		$isPage    = $this->parent->isActive();
-		$isSubpage = sly_request('subpage', 'string') == $this->pageParam;
-
-		if (!$isPage) return false;
+		$isSubpage = sly_request('page', 'string') == $this->pageParam;
 		if ($forced !== null) return $forced;
 
 		return $isSubpage;

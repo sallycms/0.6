@@ -251,3 +251,20 @@ a.sly-action {
 		color: $drk_grey;
 	}
 }
+
+.sly-popup {
+	#sly-page  { width: 100%; }
+	#sly-wrapper {
+		float: none;
+		margin: 0 auto;
+		padding-top: 20px;
+		width: 690px;
+	}
+	#sly-navi-top { display: none; }
+	#sly-footer { display:none; }
+	#sly-pagehead { background-image: none; }
+	
+	.sly-form legend {
+		width: 680px;
+	}
+}

@@ -1,16 +1,4 @@
 #rex-page-mediapool {
-	#sly-navi-top { display: none; }
-	#sly-page  { width: 100%; }
-	#sly-pagehead { background-image: none; }
-	#rex-redaxo-link { display: none; }
-	#sly-footer { display:none; }
-
-	#sly-wrapper {
-		float: none;
-		margin: 0 auto;
-		padding-top: 20px;
-		width: 690px;
-	}
 
 	/*	Rundungen */
 	.sly-form, #rex-mediapool-detail-wrapper {
@@ -34,7 +22,7 @@
 	}
 }
 
-#sly-mediapool-structure {
+#rex-page-mediapool-structure {
 	.rex-form-text {
 		width: 400px;
 	}
@@ -144,7 +132,6 @@
 	}
 
 	caption { display: none; }
-	legend  { width: 680px;  }
 
 	.rex-form-wrapper {
 		width: 690px;

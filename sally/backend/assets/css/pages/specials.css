@@ -100,13 +100,12 @@
 			margin: 1em 0;
 		}
 	}
-
-	#sly-errorlog {
-		th { padding-left: 9px; }
-		td { padding: 4px; height: auto; }
-		td.date { text-align: right; width: 150px; }
-		td.location, td.request { padding-left: 34px; }
-		em { font-style: italic; }
-		tr.where td, tr.request td { border-top: 0 none; }
-	}
+}
+#sly-errorlog {
+	th { padding-left: 9px; }
+	td { padding: 4px; height: auto; }
+	td.date { text-align: right; width: 150px; }
+	td.location, td.request { padding-left: 34px; }
+	em { font-style: italic; }
+	tr.where td, tr.request td { border-top: 0 none; }
 }

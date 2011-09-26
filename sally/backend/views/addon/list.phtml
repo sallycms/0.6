@@ -88,7 +88,7 @@ if (!empty($warning)) print sly_Helper_Message::warn($warning);
 		?>
 		<tr class="<?= implode(' ', $classes) ?>">
 			<td class="sly-icon"><?= sly_Util_HTML::getSpriteLink('', $addon, 'addon') ?></td>
-			<td><a href="index.php?page=addon&amp;subpage=help&amp;addon=<?= urlencode($addon) ?>"><?= sly_html($addon) ?></a></td>
+			<td><a href="index.php?page=addon_help&amp;addon=<?= urlencode($addon) ?>"><?= sly_html($addon) ?></a></td>
 			<td><?= $install ?></td>
 			<td><?= $status ?></td>
 			<td><?= $assets ?></td>
@@ -138,7 +138,7 @@ if (!empty($warning)) print sly_Helper_Message::warn($warning);
 				?>
 				<tr class="<?= implode(' ', $classes) ?>">
 					<td class="sly-icon"><span class="rex-i-element rex-i-plugin"><span class="rex-i-element-text"><?= sly_html($plugin) ?></span></span></td>
-					<td><a href="index.php?page=addon&amp;subpage=help&amp;addon=<?= urlencode($addon) ?>&amp;plugin=<?= urlencode($plugin) ?>"><?= sly_html($plugin) ?></a></td>
+					<td><a href="index.php?page=addon_help&amp;addon=<?= urlencode($addon) ?>&amp;plugin=<?= urlencode($plugin) ?>"><?= sly_html($plugin) ?></a></td>
 					<td><?= $install ?></td>
 					<td><?= $status ?></td>
 					<td><?= $assets ?></td>

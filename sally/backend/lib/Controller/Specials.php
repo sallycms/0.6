@@ -18,19 +18,8 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 		$navigation = sly_Core::getLayout()->getNavigation();
 		$specials   = $navigation->get('specials', 'system');
 
-		$specials->addSubpage('', t('main_preferences'));
-		$specials->addSubpage('languages', t('languages'));
-
 		// show error log when using the original system error handler
 		// (that's the only case when we can ensure that we're able to parse the error log)
-
-		if (!sly_Core::isDeveloperMode()) {
-			$handler = sly_Core::getErrorHandler();
-
-			if (get_class($handler) === 'sly_ErrorHandler_Production') {
-				$specials->addSubpage('errorlog', t('errorlog'));
-			}
-		}
 		
 		$subline = array();
 		foreach($specials->getSubpages() as $subpage) {
