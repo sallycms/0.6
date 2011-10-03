@@ -167,6 +167,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		if (isset($_POST['submit'])) {
 			$config = sly_Core::config();
 			$prefix = $config->get('DATABASE/TABLE_PREFIX');
+			$driver = $config->get('DATABASE/DRIVER');
 			$error  = '';
 
 			// benötigte Tabellen prüfen
@@ -185,16 +186,17 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 
 			switch ($dbInitFunction) {
 				case 'drop': // alte DB löschen
-
 					$db = sly_DB_Persistence::getInstance();
 
-					foreach ($requiredTables as $table) {
-						$db->query('DROP TABLE IF EXISTS '.$table);
+					// 'DROP TABLE IF EXISTS' is MySQL-only...
+					foreach ($db->listTables() as $tblname) {
+						if (in_array($tblname, $requiredTables)) $db->query('DROP TABLE '.$tblname);
 					}
+
 					// kein break;
 
 				case 'setup': // leere Datenbank neu einrichten
-					$script = SLY_COREFOLDER.'/install/sally.sql';
+					$script = SLY_COREFOLDER.'/install/'.strtolower($driver).'.sql';
 					$error  = $this->setupImport($script);
 
 					break;
@@ -208,10 +210,10 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 
 			if (empty($error)) {
 				$existingTables = array();
-				$db = sly_DB_Persistence::getInstance();
+				$db             = sly_DB_Persistence::getInstance();
 
 				foreach ($db->listTables() as $tblname) {
-					if (substr($tblname, 0, strlen($prefix)) == $prefix) {
+					if (substr($tblname, 0, strlen($prefix)) === $prefix) {
 						$existingTables[] = $tblname;
 					}
 				}
