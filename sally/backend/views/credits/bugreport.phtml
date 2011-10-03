@@ -11,6 +11,7 @@
 $version  = $this->getDatabaseVersion();
 $langs    = $this->getLanguages();
 $extlists = $this->getExtensions();
+$uname    = php_uname('s').' '.php_uname('r').' '.php_uname('v').' '.php_uname('m'); // leave out the hostname ('n')
 
 // put it all together
 
@@ -20,7 +21,7 @@ $sysinfo = array(
 	'---------',
 	'',
 	'Sally.............: '.sly_Core::getVersion('X.Y.Z'),
-	'PHP...............: '.PHP_VERSION.' ('.PHP_OS.')',
+	'PHP...............: '.PHP_VERSION.' ('.$uname.')',
 	'Datenbank.........: '.$version['driver'].' v'.$version['version'],
 	'Apache............: '.(empty($_SERVER['SERVER_SOFTWARE']) ? 'N/A' : $_SERVER['SERVER_SOFTWARE']),
 	'Browser...........: '.(empty($_SERVER['HTTP_USER_AGENT']) ? 'N/A' : $_SERVER['HTTP_USER_AGENT']),
