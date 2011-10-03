@@ -16,8 +16,8 @@ class sly_Controller_Credits extends sly_Controller_Backend {
 
 		if (sly_Util_User::getCurrentUser()->isAdmin()) {
 			$subline = array(
-				array('', t('credits')),
-				array('bugreport', 'Fehler gefunden?')
+				array('credits', t('credits')),
+				array('credits_bugreport', 'Fehler gefunden?')
 			);
 		}
 

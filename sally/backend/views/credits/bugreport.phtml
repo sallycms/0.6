@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$version  = $this->getMySQLVersion();
+$version  = $this->getDatabaseVersion();
 $langs    = $this->getLanguages();
 $extlists = $this->getExtensions();
 
@@ -21,7 +21,7 @@ $sysinfo = array(
 	'',
 	'Sally.............: '.sly_Core::getVersion('X.Y.Z'),
 	'PHP...............: '.PHP_VERSION.' ('.PHP_OS.')',
-	'MySQL.............: '.$version,
+	'Datenbank.........: '.$version['driver'].' v'.$version['version'],
 	'Apache............: '.(empty($_SERVER['SERVER_SOFTWARE']) ? 'N/A' : $_SERVER['SERVER_SOFTWARE']),
 	'Browser...........: '.(empty($_SERVER['HTTP_USER_AGENT']) ? 'N/A' : $_SERVER['HTTP_USER_AGENT']),
 	'',
