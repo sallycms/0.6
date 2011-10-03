@@ -183,8 +183,8 @@ $table->setPrimaryKey(array('id'));
 $table = createTable($schema, 'sly_user');
 
 serialCol($table, 'id');
-stringCol($table, 'name');
-stringCol($table, 'description');
+customCol($table, 'name', 'VARCHAR(255) NULL');
+customCol($table, 'description', 'VARCHAR(255) NULL');
 stringCol($table, 'login', 50);
 charCol($table,   'psw', 40);
 boolCol($table,   'status');
