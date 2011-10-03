@@ -103,9 +103,13 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 					throw new sly_Exception(t('setup_invalid_driver'));
 				}
 
-				if ($createDatabase && $data['DRIVER'] != 'sqlite') {
-					$db = new sly_DB_PDO_Persistence($data['DRIVER'], $data['HOST'], $data['LOGIN'], $data['PASSWORD']);
-					$db->query('CREATE DATABASE `'.$data['NAME'].'` DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci');
+				if ($createDatabase && $data['DRIVER'] !== 'sqlite' && $data['DRIVER'] !== 'oci') {
+					$driverClass = 'sly_DB_PDO_Driver_'.strtoupper($data['DRIVER']);
+					$driver      = new $driverClass('', '', '', '');
+					$db          = new sly_DB_PDO_Persistence($data['DRIVER'], $data['HOST'], $data['LOGIN'], $data['PASSWORD']);
+					$createStmt  = $driver->getCreateDatabaseSQL($data['NAME']);
+
+					$db->query($createStmt);
 				}
 				else {
 					$db = new sly_DB_PDO_Persistence($data['DRIVER'], $data['HOST'], $data['LOGIN'], $data['PASSWORD'], $data['NAME']);
