@@ -7,7 +7,10 @@
 	</fieldset>
 
 	<?php
-	$add_url = 'index.php?page=structure&category_id=' . $this->categoryId . '&clang=' . $this->clangId . '&func=addArticle';
+	$add_url = '';
+	if($canAdd) {
+		$add_url = 'index.php?page=structure&category_id=' . $this->categoryId . '&clang=' . $this->clangId . '&func=addArticle';
+	}
 	$add_article = sly_Util_HTML::getSpriteLink($add_url, t('add_article'), 'article-add');
 
 	$table = new sly_Table();
@@ -34,10 +37,12 @@
 			);
 		}
 		else {
-			print $this->render(
-				sly_Controller_Structure::$viewPath . 'article_table_row.phtml',
-				array('article' => $article, 'advancedMode' => $advancedMode, 'statusTypes' => $statusTypes, 'canEdit' => $canEdit)
-			);
+			if($canEditContent) {
+				print $this->render(
+					sly_Controller_Structure::$viewPath . 'article_table_row.phtml',
+					array('article' => $article, 'advancedMode' => $advancedMode, 'statusTypes' => $statusTypes, 'canEdit' => $canEdit)
+				);
+			}
 		}
 	}
 
@@ -45,4 +50,3 @@
 	print $table->render();
 	?>
 </form>
-

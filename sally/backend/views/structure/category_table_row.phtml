@@ -6,6 +6,9 @@ $status_class = $statusTypes[$category->getStatus()][1];
 
 if ($this->canPublishCategory($category->getId())) {
 	$status = '<a href="'.$edit_url.'&amp;func=editStatusCategory" class="'.$status_class.'">'.$status.'</a>';
+}else {
+	$status_class .= ' rex-strike';
+	$status = '<span class="'.$status_class.'">'.$status.'</span>';
 }
 ?>
 <tr>
@@ -14,12 +17,13 @@ if ($this->canPublishCategory($category->getId())) {
 	<td class="name"><a href="<?= sly_html($base_url) ?>"><?= sly_html($category->getCatName()) ?></a></td>
 	<td class="prior"><?= sly_html($category->getCatPrior()) ?></td>
 	<td class="status">
-		<a href="<?= $edit_url ?>&amp;func=editCategory"><?= t('change') ?></a>&nbsp;
 		<?php
 		if ($this->canEditCategory($category->getId())) {
+			echo '<a href="'.$edit_url.'&amp;func=editCategory">'.t('change').'</a>&nbsp;';
 			echo '<a href="'.$edit_url.'&amp;func=deleteCategory" class="sly-delete">'.t('delete').'</a>';
 		}
 		else {
+			echo '<span class="rex-strike">'.t('change').'</span>&nbsp;';
 			echo '<span class="rex-strike">'.t('delete').'</span>';
 		}
 		?>

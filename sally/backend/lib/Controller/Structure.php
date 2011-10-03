@@ -70,7 +70,9 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			'articles'        => $articles,
 			'advancedMode'    => $advancedMode,
 			'statusTypes'     => $art_service->getStati(),
-			'canEdit'         => $this->canEditCategory($this->categoryId)
+			'canAdd'          => $this->canEditCategory($this->categoryId),
+			'canEdit'         => $this->canEditCategory($this->categoryId),
+			'canEditContent'  => $this->canEditContents($this->categoryId)
 		));
 
 		if ($this->renderAddArticle || $this->renderAddCategory || $this->renderEditArticle || $this->renderEditCategory) {
@@ -295,6 +297,41 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		$user = sly_Util_User::getCurrentUser();
 		return $user->isAdmin() || ($user->hasRight('publishCategory[]') && $this->canEditCategory($categoryId));
 	}
+	
+	/**
+	 * checks if a user can view a category
+	 * @param int $categoryId
+	 * @return boolean 
+	 */
+	protected function canViewCategory($categoryId) {
+		if($this->canEditCategory($categoryId)) return true;
+		$user = sly_Util_User::getCurrentUser();
+		if($user->hasRight('csr['.$categoryId.']')) return true;
+		$cat = sly_Util_Category::findById($categoryId);
+		while($cat) {
+			if($user->hasRight('csw['.$cat->getId().']')) {
+				return true;
+			}
+			$cat = $cat->getParent();
+		}
+		return false;
+	}
+	
+	protected function canEditContents($categoryId) {
+		$user = sly_Util_User::getCurrentUser();
+		if(sly_Util_Category::hasPermissionOnCategory($user, $categoryId)) return true;
+		if ($user->hasRight('editContentOnly[]')) {
+			$cat = sly_Util_Category::findById($categoryId);
+			
+			while($cat) {
+				if($user->hasRight('csw['.$cat->getId().']')) {
+					return true;
+				}
+				$cat = $cat->getParent();
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * checks action permissions for the current user
@@ -311,7 +348,12 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		}
 
 		if (sly_Util_String::startsWith($this->action, 'editStatus')) {
-			return $this->canPublishCategory($categoryId);
+			if($this->action == 'editStatusCategory') {
+				$editId = sly_request('edit_id', 'rex-category-id');
+				return $this->canPublishCategory($editId);
+			}else {
+				return $this->canPublishCategory($categoryId);
+			}
 		}
 		elseif (sly_Util_String::startsWith($this->action, 'edit') || sly_Util_String::startsWith($this->action, 'add') || sly_Util_String::startsWith($this->action, 'delete')) {
 			return $this->canEditCategory($categoryId);
