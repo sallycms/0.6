@@ -56,8 +56,8 @@ function blobCol(DBAL\Schema\Table $table, $name) {
 	customCol($table, $name, 'BLOB NOT NULL'); // TODO: This does not work in PostgreSQL...
 }
 
-function textCol(DBAL\Schema\Table $table, $name) {
-	customCol($table, $name, 'TEXT NOT NULL');
+function textCol(DBAL\Schema\Table $table, $name, $null = false) {
+	customCol($table, $name, 'TEXT '.($null ? 'NULL' : 'NOT NULL'));
 }
 
 function customCol(DBAL\Schema\Table $table, $name, $def) {
@@ -148,7 +148,7 @@ $table = createTable($schema, 'sly_file');
 serialCol($table, 'id');
 intCol($table,    're_file_id');
 intCol($table,    'category_id');
-textCol($table,   'attributes');
+textCol($table,   'attributes', true);
 stringCol($table, 'filetype');
 stringCol($table, 'filename');
 stringCol($table, 'originalname');
@@ -171,7 +171,7 @@ serialCol($table, 'id');
 stringCol($table, 'name');
 intCol($table,    're_id');
 stringCol($table, 'path');
-textCol($table,   'attributes');
+textCol($table,   'attributes', true);
 userCols($table);
 revisionCol($table);
 
