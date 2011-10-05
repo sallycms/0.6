@@ -26,7 +26,7 @@ class sly_Helper_Content {
 			try {
 				ob_start();
 				?>
-				<div class="sly-form" id="addslice">
+				<div class="sly-form sly-slice-form" id="addslice">
 					<form action="index.php#slice<?= $prior ?>" id="slice<?= $prior ?>" method="post" enctype="multipart/form-data">
 						<div>
 							<input type="hidden" name="page" value="content" />
@@ -56,6 +56,13 @@ class sly_Helper_Content {
 				<?
 				self::focusFirstElement();
 
+				sly_Core::dispatcher()->notify('SLY_SLICE_POSTVIEW_ADD', $values, array(
+					'module'     => $module,
+					'article_id' => $articleId,
+					'clang'      => $clang,
+					'slot'       => $slot
+				));
+
 				$slice_content = ob_get_clean();
 			}
 			catch (Exception $e) {
@@ -73,7 +80,7 @@ class sly_Helper_Content {
 		try {
 			ob_start();
 			?>
-			<div class="sly-form" id="editslice">
+			<div class="sly-form sly-slice-form" id="editslice">
 				<form enctype="multipart/form-data" action="index.php#slice<?= $articleSlice->getPrior() ?>" method="post" id="REX_FORM">
 					<div>
 						<input type="hidden" name="page" value="content" />
@@ -102,6 +109,14 @@ class sly_Helper_Content {
 			</div>
 			<?
 			self::focusFirstElement();
+
+			sly_Core::dispatcher()->notify('SLY_SLICE_POSTVIEW_EDIT', $values, array(
+				'module'     => $articleSlice->getModule(),
+				'article_id' => $articleSlice->getArticleId(),
+				'clang'      => $articleSlice->getClang(),
+				'slot'       => $articleSlice->getSlot(),
+				'slice'      => $articleSlice
+			));
 
 			$slice_content = ob_get_clean();
 		}
