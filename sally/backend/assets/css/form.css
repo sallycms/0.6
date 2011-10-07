@@ -38,6 +38,10 @@ select {
 	width: 462px;
 }
 
+select[multiple=multiple] {
+	height: auto;
+}
+
 input[type=text],
 input[type=password],
 span.sly-form-read {
