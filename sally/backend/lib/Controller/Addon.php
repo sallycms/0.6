@@ -90,7 +90,7 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 			}
 
 			foreach (array_diff($knownPlugins, $plugins[$addon]) as $plugin){
-				$this->addons->removeConfig(array($addon, $plugin));
+				$this->plugins->removeConfig(array($addon, $plugin));
 			}
 		}
 	}
