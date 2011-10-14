@@ -91,8 +91,19 @@ $form->addRow(array($clangSelect, $localeSelect));
 $startPage       = $user ? $user->getStartPage() : array();
 $startpageSelect = new sly_Form_Select_DropDown('userperm_startpage', t('startpage'), $startPage, $this->getPossibleStartpages());
 
+if (class_exists('DateTimeZone')) {
+	$timezoneList   = DateTimeZone::listIdentifiers();
+	$timezoneList   = array_combine($timezoneList, $timezoneList);
+	$timezoneList   = array_merge(array('' => t('use_default_locale')), $timezoneList);
+	$timezone       = $user ? $user->getTimezone() : array();
+	$timezoneSelect = new sly_Form_Select_DropDown('timezone', t('specials_timezone'), $timezone, $timezoneList);
+}
+else {
+	$timezoneSelect = null;
+}
+
 $startpageSelect->setMultiple(false);
-$form->addRow(array($startpageSelect));
+$form->addRow(array($startpageSelect, $timezoneSelect));
 
 //////////////////////////////////////////////////////////////////
 // sixth row: permissions

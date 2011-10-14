@@ -100,6 +100,11 @@ class sly_Controller_User extends sly_Controller_Backend {
 			$user->setUpdateDate(time());
 			$user->setUpdateUser($currentUser->getLogin());
 
+			if (class_exists('DateTimeZone')) {
+				$tz = sly_post('timezone', 'string', '');
+				$user->setTimezone($tz ? $tz : null);
+			}
+
 			// Passwort ändern?
 
 			$password = sly_post('userpsw', 'string');
