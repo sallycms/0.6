@@ -358,6 +358,65 @@ var slyMediaWidgetCallback = null;
 		}
 	};
 
+	sly.setModernizrCookie = function() {
+		if (typeof Modernizr === 'undefined') return false;
+
+		var contents = [];
+
+		for (var group in Modernizr) {
+			if (Modernizr.hasOwnProperty(group)) {
+				var val = Modernizr[group];
+				group = '"' + group + '"';
+
+				if (typeof val === 'object') {
+					var list = [];
+
+					for (var capability in val) {
+						list.push('"' + capability + '":1');
+					}
+
+					contents.push(group + ':{' + list.join(',') + '}');
+				}
+				else {
+					contents.push(group + ':"' + val + '"');
+				}
+			}
+		}
+
+		contents = '{' + contents.join(',') + '}';
+		document.cookie = 'sly_modernizr='+escape(contents);
+	};
+
+	sly.addDatepickerToggler = function(picker, value) {
+		var name     = picker.attr('name');
+		var input    = $('<input type="hidden" value="" />').attr('name', (value === 0 ? '' : '_')+name);
+		var span     = $('<span class="sly-date-disabled" style="cursor:pointer">(&hellip;)</span>');
+		var checkbox = $('<input type="checkbox" value="1" class="sly-form-checkbox" />');
+
+		span.click(function() {
+			$(this).prevAll().click();
+		});
+
+		checkbox.change(function() {
+			var on = this.checked;
+
+			picker.toggle(on).attr('name', (on?'':'_')+name);
+			span.toggle(!on);
+			input.attr('name', (on?'_':'')+name);
+		});
+
+		picker.before(checkbox).after(input).after(span);
+
+		if (value !== 0) {
+			checkbox.prop('checked', true);
+			span.hide();
+		}
+		else {
+			checkbox.prop('checked', false);
+			picker.hide();
+		}
+	};
+
 	var catsChecked = function() {
 		var c_checked = $('#userperm_cat_all').prop('checked');
 		var m_checked = $('#userperm_media_all').prop('checked');

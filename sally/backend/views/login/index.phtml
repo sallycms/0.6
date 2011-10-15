@@ -33,5 +33,8 @@ print $form->render();
 ?>
 
 <? if (!empty($rex_user_loginmessage)): ?>
-<script type="text/javascript">sly.startLoginTimer('<?= addslashes(t('login_welcome')) ?>');</script>
+<script type="text/javascript">
+sly.startLoginTimer('<?= addslashes(t('login_welcome')) ?>');
+sly.setModernizrCookie();
+</script>
 <? endif ?>
