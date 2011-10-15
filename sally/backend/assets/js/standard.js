@@ -372,7 +372,7 @@ var slyMediaWidgetCallback = null;
 					var list = [];
 
 					for (var capability in val) {
-						list.push('"' + capability + '":1');
+						list.push('"' + capability + '":' + (val[capability] ? 1 : 0));
 					}
 
 					contents.push(group + ':{' + list.join(',') + '}');
