@@ -22,6 +22,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 		if (sly_post('save', 'boolean', false)) {
 			$password = sly_post('userpsw', 'string');
 			$login    = sly_post('userlogin', 'string');
+			$timezone = sly_post('timezone', 'string');
 			$service  = sly_Service_Factory::getUserService();
 			$error    = false;
 
@@ -54,6 +55,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 				'description' => sly_post('userdesc', 'string'),
 				'status'      => sly_post('userstatus', 'boolean', false) ? 1 : 0,
 				'lasttrydate' => 0,
+				'timezone'    => $timezone ? $timezone : null,
 				'createdate'  => time(),
 				'updatedate'  => time(),
 				'createuser'  => $currentUser->getLogin(),
