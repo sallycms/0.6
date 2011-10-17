@@ -68,108 +68,109 @@ if ($user) {
 $form->addRow(array($userAdmin, $userStatus));
 
 //////////////////////////////////////////////////////////////////
-// fourth row: language access and backend locale
+// fourth row: backend startpage and backend locale
 
-$languages = sly_Util_Language::findAll();
-foreach ($languages as $id => $obj) $languages[$id] = $obj->getName();
 
-$allowedCLangs = $user ? $user->getAllowedCLangs() : array();
+
+$startPage     = $user ? $user->getStartPage() : array();
 $backendLocale = $user ? $user->getBackendLocale() : array();
-$clangSelect   = new sly_Form_Select_DropDown('userperm_sprachen', t('user_lang_xs'), $allowedCLangs, $languages);
-$localeSelect  = new sly_Form_Select_DropDown('userperm_mylang', t('backend_language'), $backendLocale, $this->getBackendLocales());
+
+$startpageSelect = new sly_Form_Select_DropDown('userperm_startpage', t('startpage'), $startPage, $this->getPossibleStartpages());
+$localeSelect    = new sly_Form_Select_DropDown('userperm_mylang', t('backend_language'), $backendLocale, $this->getBackendLocales());
 
 $localeSelect->setMultiple(false);
-$clangSelect->setMultiple(true);
-$clangSelect->setSize(3);
-$clangSelect->setHelpText(t('ctrl'));
-
-$form->addRow(array($clangSelect, $localeSelect));
-
-//////////////////////////////////////////////////////////////////
-// fifth row: backend startpage
-
-$startPage       = $user ? $user->getStartPage() : array();
-$startpageSelect = new sly_Form_Select_DropDown('userperm_startpage', t('startpage'), $startPage, $this->getPossibleStartpages());
-
-if (class_exists('DateTimeZone')) {
-	$timezoneList   = DateTimeZone::listIdentifiers();
-	$timezoneList   = array_combine($timezoneList, $timezoneList);
-	$timezoneList   = array_merge(array('' => t('use_default_locale')), $timezoneList);
-	$timezone       = $user ? $user->getTimezone() : array();
-	$timezoneSelect = new sly_Form_Select_DropDown('timezone', t('specials_timezone'), $timezone, $timezoneList);
-}
-else {
-	$timezoneSelect = null;
-}
-
 $startpageSelect->setMultiple(false);
-$form->addRow(array($startpageSelect, $timezoneSelect));
 
-//////////////////////////////////////////////////////////////////
-// sixth row: permissions
+$form->addRow(array($startpageSelect, $localeSelect));
 
-sort($PERM);
-sort($EXTPERM);
-sort($EXTRAPERM);
+if(!sly_Authorisation::hasProvider()) {
 
-$allPermSelect = new sly_Form_Select_DropDown('userperm_all', t('user_all'), $rights, array_combine($PERM, $PERM));
-$extPermSelect = new sly_Form_Select_DropDown('userperm_ext', t('user_options'), $rights, array_combine($EXTPERM, $EXTPERM));
+	//////////////////////////////////////////////////////////////////
+	// fifth row: language access
 
-$allPermSelect->setSize(10);
-$extPermSelect->setSize(10);
-$allPermSelect->setHelpText(t('ctrl'));
-$extPermSelect->setHelpText(t('ctrl'));
-$allPermSelect->setMultiple(true);
-$extPermSelect->setMultiple(true);
+	$languages = sly_Util_Language::findAll();
+	foreach ($languages as $id => $obj) $languages[$id] = $obj->getName();
 
-$form->addRow(array($allPermSelect, $extPermSelect));
+	$allowedCLangs = $user ? $user->getAllowedCLangs() : array();
+	$clangSelect   = new sly_Form_Select_DropDown('userperm_sprachen', t('user_lang_xs'), $allowedCLangs, $languages);
 
-//////////////////////////////////////////////////////////////////
-// seventh row: cats checkboxes
+	$clangSelect->setMultiple(true);
+	$clangSelect->setSize(3);
+	$clangSelect->setHelpText(t('ctrl'));
 
-$allCats      = new sly_Form_Input_Checkbox('userperm_cat_all', '', '1', t('all_categories'));
-$allMediaCats = new sly_Form_Input_Checkbox('userperm_media_all', '', '1', t('all_mediafolder'));
+	$form->addRow(array($clangSelect));
 
-if ($user) {
-	$allCats->setChecked($user->hasRight('csw[0]'));
-	$allMediaCats->setChecked($user->hasRight('media[0]'));
+	//////////////////////////////////////////////////////////////////
+	// sixth row: permissions
+
+	sort($PERM);
+	sort($EXTPERM);
+	sort($EXTRAPERM);
+
+	$allPermSelect = new sly_Form_Select_DropDown('userperm_all', t('user_all'), $rights, array_combine($PERM, $PERM));
+	$extPermSelect = new sly_Form_Select_DropDown('userperm_ext', t('user_options'), $rights, array_combine($EXTPERM, $EXTPERM));
+
+	$allPermSelect->setSize(10);
+	$extPermSelect->setSize(10);
+	$allPermSelect->setHelpText(t('ctrl'));
+	$extPermSelect->setHelpText(t('ctrl'));
+	$allPermSelect->setMultiple(true);
+	$extPermSelect->setMultiple(true);
+
+	$form->addRow(array($allPermSelect, $extPermSelect));
+
+	//////////////////////////////////////////////////////////////////
+	// seventh row: cats checkboxes
+
+	$allCats      = new sly_Form_Input_Checkbox('userperm_cat_all', '', '1', t('all_categories'));
+	$allMediaCats = new sly_Form_Input_Checkbox('userperm_media_all', '', '1', t('all_mediafolder'));
+
+	if ($user) {
+		$allCats->setChecked($user->hasRight('csw[0]'));
+		$allMediaCats->setChecked($user->hasRight('media[0]'));
+	}
+
+	$form->addRow(array($allCats, $allMediaCats));
+
+	//////////////////////////////////////////////////////////////////
+	// eigth row: category selects
+
+	$allowedCategories      = $user ? $user->getAllowedCategories() : array();
+	$allowedMediaCategories = $user ? $user->getAllowedMediaCategories() : array();
+
+	$categorySelect = new sly_Form_Select_DropDown('userperm_cat', t('categories'), $allowedCategories, $this->getStructure());
+	$mediaCatSelect = new sly_Form_Select_DropDown('userperm_media', t('mediafolder'), $allowedMediaCategories, $this->getMediaStructure());
+
+	$categorySelect->setSize(20);
+	$mediaCatSelect->setSize(20);
+	$categorySelect->setHelpText(t('ctrl'));
+	$mediaCatSelect->setHelpText(t('ctrl'));
+	$categorySelect->setMultiple(true);
+	$mediaCatSelect->setMultiple(true);
+
+	$form->addRow(array($categorySelect, $mediaCatSelect));
+
+	//////////////////////////////////////////////////////////////////
+	// nineth row: misc
+
+	$allowedModules  = $user ? $user->getAllowedModules() : array();
+	$moduleSelect    = new sly_Form_Select_DropDown('userperm_module', t('modules'), $allowedModules, $this->getModules());
+	$extraPermSelect = new sly_Form_Select_DropDown('userperm_extra', t('extras'), $rights, array_combine($EXTRAPERM, $EXTRAPERM));
+
+	$moduleSelect->setSize(10);
+	$extraPermSelect->setSize(10);
+	$moduleSelect->setHelpText(t('ctrl'));
+	$extraPermSelect->setHelpText(t('ctrl'));
+	$moduleSelect->setMultiple(true);
+	$extraPermSelect->setMultiple(true);
+
+	$form->addRow(array($moduleSelect, $extraPermSelect));
 }
 
-$form->addRow(array($allCats, $allMediaCats));
-
 //////////////////////////////////////////////////////////////////
-// eigth row: category selects
-
-$allowedCategories      = $user ? $user->getAllowedCategories() : array();
-$allowedMediaCategories = $user ? $user->getAllowedMediaCategories() : array();
-
-$categorySelect = new sly_Form_Select_DropDown('userperm_cat', t('categories'), $allowedCategories, $this->getStructure());
-$mediaCatSelect = new sly_Form_Select_DropDown('userperm_media', t('mediafolder'), $allowedMediaCategories, $this->getMediaStructure());
-
-$categorySelect->setSize(20);
-$mediaCatSelect->setSize(20);
-$categorySelect->setHelpText(t('ctrl'));
-$mediaCatSelect->setHelpText(t('ctrl'));
-$categorySelect->setMultiple(true);
-$mediaCatSelect->setMultiple(true);
-
-$form->addRow(array($categorySelect, $mediaCatSelect));
-
-//////////////////////////////////////////////////////////////////
-// nineth row: misc
-
-$allowedModules  = $user ? $user->getAllowedModules() : array();
-$moduleSelect    = new sly_Form_Select_DropDown('userperm_module', t('modules'), $allowedModules, $this->getModules());
-$extraPermSelect = new sly_Form_Select_DropDown('userperm_extra', t('extras'), $rights, array_combine($EXTRAPERM, $EXTRAPERM));
-
-$moduleSelect->setSize(10);
-$extraPermSelect->setSize(10);
-$moduleSelect->setHelpText(t('ctrl'));
-$extraPermSelect->setHelpText(t('ctrl'));
-$moduleSelect->setMultiple(true);
-$extraPermSelect->setMultiple(true);
-
-$form->addRow(array($moduleSelect, $extraPermSelect));
+// extend the form by addons
+$eventparams = array('user' => $user);
+$form = sly_Core::dispatcher()->filter('SLY_USER_FORM', $form, $eventparams);
 
 //////////////////////////////////////////////////////////////////
 // Finally, render it!
