@@ -19,6 +19,7 @@ $table->addColumn(new sly_Table_Column(t('login')));
 $table->addColumn(new sly_Table_Column(t('last_login'), '150px'));
 $table->addColumn(new sly_Table_Column(t('user_delete'), '150px'));
 
+$table->enableSearching();
 $table->setIsEmpty(false);
 $table->openBuffer();
 
@@ -57,4 +58,4 @@ foreach ($users as $user) {
 }
 
 $table->closeBuffer();
-print $table->render(count($users));
+print $table->render($total);

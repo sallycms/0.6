@@ -173,9 +173,23 @@ class sly_Controller_User extends sly_Controller_Backend {
 	}
 
 	protected function listUsers() {
+		sly_Table::setElementsPerPageStatic(20);
+
+		$search  = sly_Table::getSearchParameters('users');
+		$paging  = sly_Table::getPagingParameters('users', true, false);
 		$service = sly_Service_Factory::getUserService();
-		$users   = $service->find(null, null, 'name', null, null);
-		print $this->render('user/list.phtml', array('users' => $users));
+		$where   = null;
+
+		if (!empty($search)) {
+			$db    = sly_DB_Persistence::getInstance();
+			$where = '`login` LIKE ? OR `description` LIKE ? OR `name` LIKE ?';
+			$where = str_replace('?', $db->quote('%'.$search.'%'), $where);
+		}
+
+		$users = $service->find($where, null, 'name', $paging['start'], $paging['elements']);
+		$total = $service->count($where);
+
+		print $this->render('user/list.phtml', compact('users', 'total'));
 	}
 
 	protected function getUser() {
