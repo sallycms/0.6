@@ -67,11 +67,15 @@ class sly_Controller_User extends sly_Controller_Backend {
 
 			// Speichern, fertig.
 
-			$service->create($params);
-
-			print rex_info(t('user_added'));
-			$this->listUsers();
-			return true;
+			try {
+				$service->create($params);
+				print rex_info(t('user_added'));
+				$this->listUsers();
+				return true;
+			}
+			catch (Exception $e) {
+				print sly_Helper_Message::warn($e->getMessage());
+			}
 		}
 
 		$this->func = 'add';
@@ -119,10 +123,16 @@ class sly_Controller_User extends sly_Controller_Backend {
 
 			// Speichern, fertig.
 
-			$user = $service->save($user);
-			$goon = sly_post('apply', 'string');
+			try {
+				$user = $service->save($user);
+				$goon = sly_post('apply', 'string');
 
-			print rex_info(t('user_data_updated'));
+				print rex_info(t('user_data_updated'));
+			}
+			catch (Exception $e) {
+				print sly_Helper_Message::warn($e->getMessage());
+				$goon = true;
+			}
 
 			if (!$goon) {
 				$this->listUsers();
