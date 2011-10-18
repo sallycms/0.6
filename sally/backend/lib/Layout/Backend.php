@@ -63,6 +63,9 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 		if (!empty($subtitle)) {
 			$subtitle = '<div class="pagehead-row">'.$this->getSubtitle($subtitle).'</div>';
 		}
+		else {
+			$subtitle = '';
+		}
 
 		$this->appendToTitle($head);
 		$dispatcher = sly_Core::dispatcher();

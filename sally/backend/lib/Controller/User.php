@@ -10,8 +10,26 @@
 
 class sly_Controller_User extends sly_Controller_Backend {
 	public function init() {
-		$layout = sly_Core::getLayout();
-		$layout->pageHeader(t('title_user'));
+		$layout   = sly_Core::getLayout();
+		$subpages = sly_Core::dispatcher()->filter('SLY_PAGE_USER_SUBPAGES', array(
+			array('', t('title_user'))
+		));
+
+		// don't show the menu if there is only one entry
+		if (count($subpages) === 1) {
+			$subpages = array();
+		}
+		// add subpages
+		else {
+			$navigation = sly_Core::getNavigation();
+			$specials   = $navigation->get('user', 'system');
+
+			foreach ($subpages as $subpage) {
+				$specials->addSubpage($subpage[0], $subpage[1]);
+			}
+		}
+
+		$layout->pageHeader(t('title_user'), $subpages);
 	}
 
 	public function index() {
