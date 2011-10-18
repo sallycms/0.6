@@ -154,6 +154,7 @@ a.sly-button {
 	&.sly-linklist,
 	&.sly-medialist {
 		select {
+			height: 75px;
 			width: 420px;
 			background: #fff;
 		}
