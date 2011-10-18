@@ -75,7 +75,7 @@ $buttonBar = new sly_Form_ButtonBar(array(
 						print t('name').': '.sly_html($database['NAME']).'.sq3';
 					}
 					else {
-						print sly_html(sprintf('%s: %s<br />%s: %s', t('name'), $database['NAME'], t('host'), $database['HOST']));
+						printf('%s: %s<br />%s: %s', t('name'), sly_html($database['NAME']), t('host'), sly_html($database['HOST']));
 					}
 					?>
 				</div>
