@@ -12,9 +12,9 @@ $callback = sly_request('callback', '');
 $callback = preg_replace('#[^a-z0-9.]#i', '', $callback);
 $advanced = sly_Util_User::getCurrentUser()->hasRight('advancedMode[]');
 
-if ($callback):
+if ($callback) {
+	ob_start();
 ?>
-<script type="text/javascript">
 $(function() {
 	$('#sly-wrapper').delegate('a[href="#"]', 'click', function() {
 		var self     = $(this);
@@ -53,5 +53,8 @@ function openPage(src) {
 	window.opener.location.href = src;
 	self.close();
 }
-</script>
-<? endif ?>
+<?php
+	$javascript = ob_get_clean();
+	sly_Core::getLayout()->addJavaScript($javascript);
+}
+?>
