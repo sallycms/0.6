@@ -8,7 +8,6 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-define('IS_SALLY', true);
 define('IS_SALLY_BACKEND', true);
 define('SLY_START_TIME', microtime(true));
 
