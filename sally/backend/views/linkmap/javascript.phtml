@@ -12,10 +12,9 @@ $callback = sly_get('callback', '');
 $callback = preg_replace('#[^a-z0-9.]#i', '', $callback);
 $advanced = sly_Util_User::getCurrentUser()->hasRight('advancedMode[]');
 
-if ($callback):
+if ($callback) {
+	ob_start();
 ?>
-
-<script type="text/javascript">
 $(function() {
 	$('.articlelist').delegate('a', 'click', function() {
 		var self     = $(this);
@@ -42,5 +41,8 @@ $(function() {
 		links[i].href = links[i].href += '&callback=<?= $callback ?>';
 	}
 });
-</script>
-<? endif ?>
+<?php
+	$javascript = ob_get_clean();
+	sly_Core::getLayout()->addJavaScript($javascript);
+}
+?>
