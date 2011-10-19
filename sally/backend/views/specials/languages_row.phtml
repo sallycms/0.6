@@ -25,7 +25,7 @@ if ($this->func == 'edit' && $editID == $clangID) {
 	$name = sly_post('clang_name', 'string', $clangName);
 	$locale = sly_post('clang_locale', 'string', $clangLocale);
 	?>
-	<tr class="rex-table-row-activ">
+	<tr class="active">
 		<td class="sly-col-a sly-icon"><?= sly_Util_HTML::getSpriteLink('', $name, 'language') ?></td>
 		<td class="sly-col-b"><input class="rex-form-text" type="text" name="clang_name" value="<?= sly_html($name) ?>" /></td>
 		<td class="sly-col-c"><input class="rex-form-text" type="text" name="clang_locale" value="<?= sly_html($locale) ?>" /></td>

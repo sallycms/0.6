@@ -86,7 +86,7 @@ if ($this->action == 'add' || $this->action == 'edit') {
 
 	if ($this->action == 'add') {
 		?>
-		<tr class="rex-table-row-activ">
+		<tr class="active">
 			<td class="sly-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?= t('pool_kat_create') ?></span></span></td>
 			<td class="rex-small">-</td>
 			<td>
@@ -105,7 +105,7 @@ if ($this->action == 'add' || $this->action == 'edit') {
 
 		if ($this->action == 'edit' && $editID == $id) {
 			?>
-			<tr class="rex-table-row-activ">
+			<tr class="active">
 				<td class="sly-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?= sly_html($cat->getName())?></span></span></td>
 				<td class="rex-small"><?= $id ?></td>
 				<td>

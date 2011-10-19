@@ -10,7 +10,7 @@ else {
 $base_url = 'index.php?page=structure&category_id='.$article->getId().'&clang='.$this->clangId;
 ?>
 
-<tr class="rex-table-row-activ">
+<tr class="active">
 	<td class="sly-icon">
 		<input type="hidden" name="edit_id" value="<?= $article->getId() ?>" />
 		<?= sly_Util_HTML::getSpriteLink($base_url, $article->getName(), $sprite) ?>

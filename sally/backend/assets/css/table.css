@@ -43,14 +43,11 @@
 		}
 	}
 
-	.rex-table-row-activ td {
+	tr.active td {
 		background-color: $link_color;
 		color: #fff;
 	}
 
-	.rex-plugin td {
-		background-color: #FAF9F5;
-	}
 }
 
 .sly-table-extras {
