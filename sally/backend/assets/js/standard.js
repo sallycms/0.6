@@ -62,10 +62,10 @@ var slyMediaWidgetCallback = null;
 		var url = 'index.php?page=mediapool';
 
 		if (value) {
-			url += '&subpage=detail&file_name='+value;
+			url += '_detail&file_name='+value;
 		}
 		else if (subpage && (subpage != 'detail' || value)) {
-			url += '&subpage=' + subpage;
+			url += '_' + subpage;
 		}
 
 		if (callback) {
@@ -619,7 +619,7 @@ var slyMediaWidgetCallback = null;
 		$('.sly-module-select').change(function() {
 			$(this).closest('form').submit();
 		});
-		
+
 		$('body.sly-popup').unload(sly.closeAllPopups);
 	});
 })(jQuery, sly);
