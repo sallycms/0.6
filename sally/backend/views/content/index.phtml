@@ -74,7 +74,6 @@ else {
 			}
 
 			if ($function == 'add' && $prior == $i) {
-				$module = sly_request('add_module', 'string');
 				sly_Helper_Content::printAddSliceForm($prior, $module, $article->getId(), $article->getClang(), $slot, isset($slicevalues) ? $slicevalues : array());
 			}
 			else {

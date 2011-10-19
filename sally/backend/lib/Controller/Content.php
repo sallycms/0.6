@@ -42,7 +42,8 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			'slot'         => $this->slot,
 			'slice_id'     => sly_request('slice_id', 'rex-slice-id', ''),
 			'prior'        => sly_request('prior', 'int', 0),
-			'function'     => sly_request('function', 'string')
+			'function'     => sly_request('function', 'string'),
+			'module'       => sly_request('add_module', 'string')
 		);
 
 		$params = array_merge($params, $extraparams);
@@ -126,7 +127,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 		$extraparams = array();
 		$slicedata   = $this->preSliceEdit('add');
 
-		if ($slicedata !== false) {
+		if ($slicedata['SAVE'] === true) {
 			$sql          = sly_DB_Persistence::getInstance();
 			$sliceService = sly_Service_Factory::getSliceService();
 
@@ -164,6 +165,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 		}
 		else {
 			$extraparams['function']    = 'add';
+			$extraparams['module']      = $module;
 			$extraparams['slicevalues'] = $this->getRequestValues(array());
 		}
 
@@ -179,7 +181,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 
 		$slicedata = $this->preSliceEdit('edit');
 
-		if ($slicedata !== false) {
+		if ($slicedata['SAVE'] === true) {
 			$realslice->flushValues();
 			$this->setSliceValues($slicedata, $realslice);
 
@@ -196,12 +198,8 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 		}
 
 		$extraparams = array();
-
-		if (!$slicedata && $function == 'edit') {
-			$extraparams['slicevalues'] = $this->getRequestValues(array());
-		}
-
-		if (sly_post('btn_update', 'string')) {
+		if (sly_post('btn_update', 'string') || $slicedata['SAVE'] !== true) {
+			$extraparams['slicevalues'] = $slicedata;
 			$extraparams['function'] = 'edit';
 		}
 
@@ -275,7 +273,6 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 				$this->localWarning = t('slice_saved_error');
 			}
 
-			return false;
 		}
 
 		return $slicedata;
