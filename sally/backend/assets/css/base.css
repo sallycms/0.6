@@ -9,19 +9,6 @@ body {
 	background: #f2f2f2 url(../body.png) 0 0 repeat-x;;
 }
 
-#sly-page {
-	width: 1000px;
-	margin: 0 auto;
-	background-image: url(../website.png);
-	background-repeat: repeat-x;
-	+clearfix;
-}
-
-
-input, textarea, select {
-
-}
-
 a {
 	color: $link_color;
 	text-decoration: none;
@@ -37,6 +24,12 @@ del {
 
 img, iframe {
 	vertical-align:bottom;
+}
+
+#sly-page {
+	width: 1000px;
+	margin: 0 auto;
+	+clearfix;
 }
 
 /* PAGEHEAD -------------------------------------------------------- PAGEHEAD */
