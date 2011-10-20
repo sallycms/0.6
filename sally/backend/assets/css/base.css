@@ -6,7 +6,7 @@ body {
 	color: $drk_grey;
 	font-size: 14px;
 	line-height: 18px;
-	background: #f2f2f2 url(../body.png) 0 0 repeat-x;;
+	background: #f2f2f2 url(../body.png) 0 0 repeat-x;
 }
 
 a {
@@ -180,15 +180,12 @@ ol.rex-ol1 {
 	color: $link_color_online;
 }
 
-.rex-area-scroll,
-.rex-widget {
+.rex-area-scroll {
 	background-color: #FFF;
 }
 
 .rex-area,
-.rex-content-cols,
-.rex-widget .rex-widget-field input,
-.rex-widget .rex-widget-field select {
+.rex-content-cols {
 	background-color: #fff;
 }
 

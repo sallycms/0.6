@@ -154,9 +154,7 @@ caption, legend {
 }
 
 .rex-area,
-.rex-content-cols,
-.rex-widget .rex-widget-field input,
-.rex-widget .rex-widget-field select {
+.rex-content-cols {
 	background-color: #fff;
 	color: $drk_grey;
 }
@@ -263,7 +261,7 @@ a.sly-action {
 	#sly-navi-top { display: none; }
 	#sly-footer { display:none; }
 	#sly-pagehead { background-image: none; }
-	
+
 	.sly-form legend {
 		width: 680px;
 	}
