@@ -108,8 +108,7 @@ if ($user) {
 
 	$navigation->addPage('system', 'profile');
 	$navigation->addPage('system', 'credits');
-
-	if ($isAdmin || $user->hasStructureRight()) {
+	if ($user->hasStructureRight()) {
 		$hasClangPerm = $isAdmin || count($user->getAllowedCLangs()) > 0;
 
 		if ($hasClangPerm) $navigation->addPage('system', 'structure');

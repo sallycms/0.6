@@ -89,9 +89,18 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 	}
 
 	private function copyContent() {
-		if ($this->canCopyContent()) {
-			$clang_a    = sly_post('clang_a', 'rex-clang-id');
-			$clang_b    = sly_post('clang_b', 'rex-clang-id');
+		$clang_a    = sly_post('clang_a', 'rex-clang-id');
+		$clang_b    = sly_post('clang_b', 'rex-clang-id');
+		if(!sly_Util_Language::hasPermissionOnLanguage($user, $clang_a)) {
+			$lang = sly_Util_Language::findById($clang_a);
+			throw new sly_Authorisation_Exception(t('authorisation_exception_language_denied', rex_translate($lang->getName())));
+		}
+		if(!sly_Util_Language::hasPermissionOnLanguage($user, $clang_b)) {
+			$lang = sly_Util_Language::findById($clang_b);
+			throw new sly_Authorisation_Exception(t('authorisation_exception_language_denied', rex_translate($lang->getName())));
+		}
+
+		if ($this->canCopyContent($clang_a, $clang_b)) {
 			$article_id = $this->article->getId();
 
 			if (rex_copyContent($article_id, $article_id, $clang_a, $clang_b)) {
@@ -106,7 +115,7 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 	private function moveArticle() {
 		$target = sly_post('category_id_new', 'rex-category-id');
 
-		if (sly_Util_Category::hasPermissionOnCategory(sly_Util_User::getCurrentUser(), $target) && $this->canMoveArticle()) {
+		if ($this->canMoveArticle()) {
 			if (rex_moveArticle($this->article->getId(), $target)) {
 				$this->info    = t('content_articlemoved');
 				$this->article = sly_Util_Article::findById($this->article->getId());
@@ -142,7 +151,7 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 	private function moveCategory() {
 		$target = sly_post('category_id_new', 'rex-category-id');
 
-		if (sly_Util_Category::hasPermissionOnCategory(sly_Util_User::getCurrentUser(), $target) && $this->canMoveCategory()) {
+		if ($this->canMoveCategory()) {
 			if (rex_moveCategory($this->article->getCategoryId(), $target)) {
 				$this->info    = t('category_moved');
 				$this->article = sly_Util_Article::findById($this->article->getCategoryId());
@@ -161,27 +170,35 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 	 * @param int $destinationCategory id of destination category
 	 */
 	protected function canMoveArticle() {
+		if($this->article->isStartArticle()) return false;
 		$user = sly_Util_User::getCurrentUser();
-		return ($user->isAdmin() || $user->hasRight('moveArticle[]')) && !$this->article->isStartArticle();
+		if(!sly_Util_Article::canEditArticle($user, $this->article->getId())) return false;
+		return $user->isAdmin() || $user->hasRight('moveArticle[]');
 	}
 
 	protected function canMorphToStartpage() {
+		if($this->article->isStartArticle()) return false;
 		$user = sly_Util_User::getCurrentUser();
+		if(!sly_Util_Article::canEditArticle($user, $this->article->getId())) return false;
 		return $user->isAdmin() || $user->hasRight('article2startpage[]');
 	}
 
 	protected function canCopyContent() {
 		$user = sly_Util_User::getCurrentUser();
+		if(!sly_Util_Article::canEditArticle($user, $this->article->getId())) return false;
 		return $user->isAdmin() || $user->hasRight('copyContent[]') && sly_Util_Language::isMultilingual();
 	}
 
 	protected function canCopyArticle() {
 		$user = sly_Util_User::getCurrentUser();
+		if(!sly_Util_Article::canEditArticle($user, $this->article->getId())) return false;
 		return $user->isAdmin() || $user->hasRight('copyArticle[]');
 	}
 
 	protected function canMoveCategory() {
+		if(!$this->article->isStartArticle()) return false;
 		$user = sly_Util_User::getCurrentUser();
-		return $this->article->isStartArticle() && $user->isAdmin() || $user->hasRight('moveCategory[]');
+		if(!sly_Util_Article::canEditArticle($user, $this->article->getId())) return false;
+		return $user->isAdmin() || $user->hasRight('moveCategory[]');
 	}
 }

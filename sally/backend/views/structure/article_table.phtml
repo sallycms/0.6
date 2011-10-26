@@ -37,7 +37,7 @@
 			);
 		}
 		else {
-			if($canEditContent) {
+			if($this->canEditContent($article->getId())) {
 				print $this->render(
 					sly_Controller_Structure::$viewPath . 'article_table_row.phtml',
 					array('article' => $article, 'advancedMode' => $advancedMode, 'statusTypes' => $statusTypes, 'canEdit' => $canEdit)

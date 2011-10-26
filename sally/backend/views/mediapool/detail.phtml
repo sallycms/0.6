@@ -141,7 +141,7 @@ else {
 		$catname = $cat->getName();
 	}
 
-	if ($user->hasPerm('advancedMode[]')) {
+	if ($user->hasRight('advancedMode[]')) {
 		$title   .= ' ['.$file_id.']';
 		$catname .= ' ['.$categoryID.']';
 	}
