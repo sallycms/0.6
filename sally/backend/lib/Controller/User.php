@@ -301,7 +301,6 @@ class sly_Controller_User extends sly_Controller_Backend {
 			}
 
 			foreach ($allowedCategories as $id)   $permissions[] = 'csw['.$id.']';
-			foreach (array_keys($pathIDs) as $id) $permissions[] = 'csr['.$id.']';
 		}
 
 		// Backend-Sprache und -Startseite

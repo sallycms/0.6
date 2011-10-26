@@ -304,7 +304,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	 */
 	protected function canViewCategory($categoryId) {
 		$user = sly_Util_User::getCurrentUser();
-		return sly_Util_Article::canReadArticle($user, $categoryId) || sly_Util_Article::canEditArticle($user, $categoryId);
+		return sly_Util_Article::canEditArticle($user, $categoryId) || sly_Util_Article::canReadArticle($user, $categoryId);
 	}
 
 	protected function canEditContent($articleId) {
@@ -328,7 +328,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		}
 
 		if($this->action == 'index') {
-			return sly_Util_Article::canReadArticle($user, $categoryId) || sly_Util_Article::canEditArticle($user, $categoryId);
+			return $this->canViewCategory($categoryId);
 		}
 
 		if (sly_Util_String::startsWith($this->action, 'editStatus')) {
