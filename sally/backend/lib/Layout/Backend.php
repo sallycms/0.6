@@ -28,6 +28,7 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 		$config = sly_Core::config();
 		$this->setBodyAttr('class', 'sally sally'.sly_Core::getVersion('XY'));
 		$this->addMeta('robots', 'noindex,nofollow');
+		$this->setBase(sly_Util_HTTP::getBaseUrl(true).'/backend/');
 
 		sly_Core::dispatcher()->register('PAGE_CHECKED', array($this, 'pageChecked'));
 	}

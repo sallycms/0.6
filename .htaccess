@@ -12,7 +12,7 @@ RewriteEngine On
 # RewriteCond %{HTTP_HOST} ^example\.de$
 # RewriteRule ^(.*)$ http://www.example.de/$1 [R=301,L]
 
-RewriteRule ^backend/$         sally/backend/ [L,QSA]
+RewriteRule ^backend/?$        sally/backend/ [L,QSA]
 RewriteRule ^backend/(.*)$     sally/backend/$1 [L,QSA]
 
 # Image Resize >= 2.0
