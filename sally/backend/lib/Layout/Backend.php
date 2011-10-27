@@ -30,6 +30,13 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 		$this->addMeta('robots', 'noindex,nofollow');
 		$this->setBase(sly_Util_HTTP::getBaseUrl(true).'/backend/');
 
+		$locale = explode('_', sly_Core::getI18N()->getLocale(), 2);
+		$locale = reset($locale);
+
+		if (strlen($locale) === 2) {
+			$this->setLanguage(strtolower($locale));
+		}
+
 		sly_Core::dispatcher()->register('PAGE_CHECKED', array($this, 'pageChecked'));
 	}
 
