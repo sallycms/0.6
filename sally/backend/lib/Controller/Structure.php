@@ -70,7 +70,8 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			'articles'        => $articles,
 			'advancedMode'    => $advancedMode,
 			'statusTypes'     => $art_service->getStati(),
-			'canEdit'         => $this->canEditCategory($this->categoryId)
+			'canAdd'          => $this->canEditCategory($this->categoryId),
+			'canEdit'         => $this->canEditCategory($this->categoryId),
 		));
 
 		if ($this->renderAddArticle || $this->renderAddCategory || $this->renderEditArticle || $this->renderEditCategory) {
@@ -263,7 +264,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 
 		if ($cat) {
 			foreach ($cat->getParentTree() as $parent) {
-				if ($this->canEditCategory($parent->getId())) {
+				if ($this->canViewCategory($parent->getId())) {
 					$result .= '<li> : <a href="index.php?page=structure&amp;category_id='.$parent->getId().'&amp;clang='.$this->clangId.'">'.sly_html($parent->getName()).'</a></li>';
 				}
 			}
@@ -288,12 +289,27 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	 */
 	protected function canEditCategory($categoryId) {
 		$user = sly_Util_User::getCurrentUser();
-		return sly_Util_Category::hasPermissionOnCategory($user, $categoryId) && !$user->hasRight('editContentOnly[]');
+		return sly_Util_Article::canEditArticle($user, $categoryId);
 	}
 
 	protected function canPublishCategory($categoryId) {
 		$user = sly_Util_User::getCurrentUser();
 		return $user->isAdmin() || ($user->hasRight('publishCategory[]') && $this->canEditCategory($categoryId));
+	}
+
+	/**
+	 * checks if a user can view a category
+	 * @param int $categoryId
+	 * @return boolean
+	 */
+	protected function canViewCategory($categoryId) {
+		$user = sly_Util_User::getCurrentUser();
+		return sly_Util_Article::canEditArticle($user, $categoryId) || sly_Util_Article::canReadArticle($user, $categoryId);
+	}
+
+	protected function canEditContent($articleId) {
+		$user = sly_Util_User::getCurrentUser();
+		return sly_Util_Article::canEditContent($user, $articleId);
 	}
 
 	/**
@@ -303,20 +319,27 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	 */
 	protected function checkPermission() {
 		$categoryId = sly_request('category_id', 'rex-category-id');
+		$editId     = sly_request('edit_id', 'rex-article-id');
 		$clang      = sly_Core::getCurrentClang();
 		$user       = sly_Util_User::getCurrentUser();
 
-		if (is_null($user)) return false;
+		if ($user === null || !sly_Util_Language::hasPermissionOnLanguage($user, $clang)) {
+			return false;
+		}
 
-		$baseOk     = $user->hasStructureRight();
-		$clangOk    = sly_Util_Language::hasPermissionOnLanguage($user, $clang);
-		$categoryOk = sly_Util_Category::hasPermissionOnCategory($user, $categoryId);
-		if (!$baseOk || !$clangOk || !$categoryOk) return false;
+		if($this->action == 'index') {
+			return $this->canViewCategory($categoryId);
+		}
 
 		if (sly_Util_String::startsWith($this->action, 'editStatus')) {
-			return $this->canPublishCategory($categoryId);
-		}
-		elseif (sly_Util_String::startsWith($this->action, 'edit') || sly_Util_String::startsWith($this->action, 'add') || sly_Util_String::startsWith($this->action, 'delete')) {
+			if($this->action == 'editStatusCategory') {
+				return $this->canPublishCategory($editId);
+			} else {
+				return $this->canPublishCategory($categoryId);
+			}
+		} elseif (sly_Util_String::startsWith($this->action, 'edit') || sly_Util_String::startsWith($this->action, 'delete')) {
+			return $this->canEditCategory($editId);
+		} elseif (sly_Util_String::startsWith($this->action, 'add')) {
 			return $this->canEditCategory($categoryId);
 		}
 

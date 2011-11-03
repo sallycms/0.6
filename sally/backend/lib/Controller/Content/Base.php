@@ -48,7 +48,7 @@ abstract class sly_Controller_Content_Base extends sly_Controller_Backend {
 
 		if ($cat) {
 			foreach ($cat->getParentTree() as $parent) {
-				if (sly_Util_Category::hasPermissionOnCategory($user, $parent->getId())) {
+				if (sly_Util_Article::canReadArticle($user, $parent->getId())) {
 					$result .= '<li> : <a href="index.php?page=structure&amp;category_id='.$parent->getId().'&amp;clang='.$art->getClang().'">'.sly_html($parent->getName()).'</a></li>';
 				}
 			}
@@ -89,15 +89,15 @@ abstract class sly_Controller_Content_Base extends sly_Controller_Backend {
 
 		$articleId = sly_request('article_id', 'int');
 		$article = sly_Util_Article::findById($articleId);
-		$clang   = sly_Core::getCurrentClang();
 
 		// all users are allowed to see the error message in init()
 		if (is_null($article)) return true;
-		
-		$baseOk     = $user->hasStructureRight();
-		$categoryOk = sly_Util_Category::hasPermissionOnCategory($user, $article->getCategoryId());
-		$clangOk    = sly_Util_Language::hasPermissionOnLanguage($user, $clang);
 
-		return $baseOk && $categoryOk && $clangOk;
+		$categoryOk = sly_Util_Article::canEditContent($user, $article->getId());
+
+		$clang   = sly_Core::getCurrentClang();
+		$clangOk = sly_Util_Language::hasPermissionOnLanguage($user, $clang);
+
+		return $categoryOk && $clangOk;
 	}
 }

@@ -10,8 +10,26 @@
 
 class sly_Controller_User extends sly_Controller_Backend {
 	public function init() {
-		$layout = sly_Core::getLayout();
-		$layout->pageHeader(t('title_user'));
+		$layout   = sly_Core::getLayout();
+		$subpages = sly_Core::dispatcher()->filter('SLY_PAGE_USER_SUBPAGES', array(
+			array('', t('title_user'))
+		));
+
+		// don't show the menu if there is only one entry
+		if (count($subpages) === 1) {
+			$subpages = array();
+		}
+		// add subpages
+		else {
+			$navigation = sly_Core::getNavigation();
+			$specials   = $navigation->get('user', 'system');
+
+			foreach ($subpages as $subpage) {
+				$specials->addSubpage($subpage[0], $subpage[1]);
+			}
+		}
+
+		$layout->pageHeader(t('title_user'), $subpages);
 	}
 
 	public function index() {
@@ -22,6 +40,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 		if (sly_post('save', 'boolean', false)) {
 			$password = sly_post('userpsw', 'string');
 			$login    = sly_post('userlogin', 'string');
+			$timezone = sly_post('timezone', 'string');
 			$service  = sly_Service_Factory::getUserService();
 			$error    = false;
 
@@ -54,6 +73,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 				'description' => sly_post('userdesc', 'string'),
 				'status'      => sly_post('userstatus', 'boolean', false) ? 1 : 0,
 				'lasttrydate' => 0,
+				'timezone'    => $timezone ? $timezone : null,
 				'createdate'  => time(),
 				'updatedate'  => time(),
 				'createuser'  => $currentUser->getLogin(),
@@ -65,11 +85,15 @@ class sly_Controller_User extends sly_Controller_Backend {
 
 			// Speichern, fertig.
 
-			$service->create($params);
-
-			print rex_info(t('user_added'));
-			$this->listUsers();
-			return true;
+			try {
+				$service->create($params);
+				print rex_info(t('user_added'));
+				$this->listUsers();
+				return true;
+			}
+			catch (Exception $e) {
+				print sly_Helper_Message::warn($e->getMessage());
+			}
 		}
 
 		$this->func = 'add';
@@ -100,6 +124,11 @@ class sly_Controller_User extends sly_Controller_Backend {
 			$user->setUpdateDate(time());
 			$user->setUpdateUser($currentUser->getLogin());
 
+			if (class_exists('DateTimeZone')) {
+				$tz = sly_post('timezone', 'string', '');
+				$user->setTimezone($tz ? $tz : null);
+			}
+
 			// Passwort ändern?
 
 			$password = sly_post('userpsw', 'string');
@@ -112,10 +141,16 @@ class sly_Controller_User extends sly_Controller_Backend {
 
 			// Speichern, fertig.
 
-			$user = $service->save($user);
-			$goon = sly_post('apply', 'string');
+			try {
+				$user = $service->save($user);
+				$goon = sly_post('apply', 'string');
 
-			print rex_info(t('user_data_updated'));
+				print rex_info(t('user_data_updated'));
+			}
+			catch (Exception $e) {
+				print sly_Helper_Message::warn($e->getMessage());
+				$goon = true;
+			}
 
 			if (!$goon) {
 				$this->listUsers();
@@ -156,9 +191,23 @@ class sly_Controller_User extends sly_Controller_Backend {
 	}
 
 	protected function listUsers() {
+		sly_Table::setElementsPerPageStatic(20);
+
+		$search  = sly_Table::getSearchParameters('users');
+		$paging  = sly_Table::getPagingParameters('users', true, false);
 		$service = sly_Service_Factory::getUserService();
-		$users   = $service->find(null, null, 'name', null, null);
-		print $this->render('user/list.phtml', array('users' => $users));
+		$where   = null;
+
+		if (!empty($search)) {
+			$db    = sly_DB_Persistence::getInstance();
+			$where = '`login` LIKE ? OR `description` LIKE ? OR `name` LIKE ?';
+			$where = str_replace('?', $db->quote('%'.$search.'%'), $where);
+		}
+
+		$users = $service->find($where, null, 'name', $paging['start'], $paging['elements']);
+		$total = $service->count($where);
+
+		print $this->render('user/list.phtml', compact('users', 'total'));
 	}
 
 	protected function getUser() {
@@ -252,7 +301,6 @@ class sly_Controller_User extends sly_Controller_Backend {
 			}
 
 			foreach ($allowedCategories as $id)   $permissions[] = 'csw['.$id.']';
-			foreach (array_keys($pathIDs) as $id) $permissions[] = 'csr['.$id.']';
 		}
 
 		// Backend-Sprache und -Startseite

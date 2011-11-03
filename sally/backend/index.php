@@ -58,7 +58,7 @@ else {
 		$timezone = $user->getTimeZone();
 	}
 
-	// re-set the values if the user profile has no value (meaining 'default')
+	// re-set the values if the user profile has no value (meaning 'default')
 	if (empty($locale))   $locale   = sly_Core::getDefaultLocale();
 	if (empty($timezone)) $timezone = sly_Core::getTimezone();
 }

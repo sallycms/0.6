@@ -38,12 +38,15 @@ else {
 	<td class="arttype"><?= sly_html($type) ?></td>
 	<td class="prior"><?= sly_html($article->getPrior()) ?></td>
 	<td class="status">
-		<a href="<?= $edit_url ?>&amp;func=editArticle"><?= t('change') ?></a>&nbsp;
 		<?php
-		if ($canEdit && $this->categoryId != $article->getId()) {
-			echo '<a href="'.$edit_url.'&amp;func=deleteArticle" class="sly-delete">'.t('delete').'</a>';
+		if ($canEdit) {
+			echo '<a href="'.$edit_url.'&amp;func=editArticle">'.t('change').'</a>&nbsp;';
+		} else {
+			echo '<span class="rex-strike">'.t('change').'</span>&nbsp;';
 		}
-		else {
+		if ($canEdit && !$article->isStartArticle()) {
+			echo '<a href="'.$edit_url.'&amp;func=deleteArticle" class="sly-delete">'.t('delete').'</a>';
+		} else {
 			echo '<span class="rex-strike">'.t('delete').'</span>';
 		}
 		?>

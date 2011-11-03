@@ -13,7 +13,7 @@ RewriteEngine On
 # RewriteRule ^(.*)$ http://www.example.de/$1 [R=301,L]
 
 # Sally Backend
-RewriteRule ^backend/$         sally/backend/ [L,QSA]
+RewriteRule ^backend/?$        sally/backend/ [L,QSA]
 RewriteRule ^backend/(.*)$     sally/backend/$1 [L,QSA]
 
 # Assets Cache

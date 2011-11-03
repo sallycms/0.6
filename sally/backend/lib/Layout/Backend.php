@@ -28,6 +28,14 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 
 		$config = sly_Core::config();
 		$this->addMeta('robots', 'noindex,nofollow');
+		$this->setBase(sly_Util_HTTP::getBaseUrl(true).'/backend/');
+
+		$locale = explode('_', sly_Core::getI18N()->getLocale(), 2);
+		$locale = reset($locale);
+
+		if (strlen($locale) === 2) {
+			$this->setLanguage(strtolower($locale));
+		}
 
 		sly_Core::dispatcher()->register('PAGE_CHECKED', array($this, 'pageChecked'));
 	}
@@ -52,6 +60,9 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 	public function pageHeader($head, $subtitle = '') {
 		if (!empty($subtitle)) {
 			$subtitle = '<div class="pagehead-row">'.$this->getSubtitle($subtitle).'</div>';
+		}
+		else {
+			$subtitle = '';
 		}
 
 		$this->appendToTitle($head);

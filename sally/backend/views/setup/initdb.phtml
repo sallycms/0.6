@@ -35,7 +35,6 @@ foreach (array('setup', 'drop', 'nop') as $func) {
 $inputs['drop']->setHelpText(t('setup_initdb_func_drop_notice'));
 $inputs[$dbInitFunction]->setChecked(true);
 
-$inputs = sly_Core::dispatcher()->filter('SLY_SETUP_INIT_FUNCTIONS_FORM', $inputs);
 $form->addElements($inputs);
 
 // button config

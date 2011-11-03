@@ -50,9 +50,11 @@ if ($this->canMorphToStartpage()) {
 
 	if ($article->getStartpage() == 0 && $article->getParentId() == 0) {
 		$form->add(new sly_Form_Text('', t('content_nottostartarticle')));
-	} else if ($article->getStartpage() == 1) {
+	}
+	elseif ($article->getStartpage() == 1) {
 		$form->add(new sly_Form_Text('', t('content_isstartarticle')));
-	} else {
+	}
+	else {
 		sly_Helper_Content::metaFormAddButtonBar($form, t('content_tostartarticle'), 'article2startpage');
 	}
 }
@@ -116,6 +118,8 @@ if ($this->canMoveCategory()) {
 
 	sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitmovecategory'), 'movecategory');
 }
-?>
-<?= $this->render('content/_messages.phtml') ?>
-<?= $form->render() ?>
+
+$form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM_ADDITIONAL', $form, $params);
+
+print $this->render('content/_messages.phtml');
+if ($form instanceof sly_Viewable) print $form->render();

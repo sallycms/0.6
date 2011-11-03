@@ -38,7 +38,7 @@ class sly_Controller_Profile extends sly_Controller_Backend {
 
 		// timezone
 		$timezone  = sly_post('timezone', 'string');
-		$user->setTimeZone($timezone);
+		$user->setTimezone($timezone ? $timezone : null);
 
 		// Passwort ändern?
 
