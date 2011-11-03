@@ -102,6 +102,11 @@ if (is_null($user) && !$isSetup) {
 try {
 	// get contoller and dispatch
 	$controller = sly_Controller_Base::factory();
+
+	// not we can finally access the real backend page's name
+	$layout->setCurrentPage(sly_Core::getCurrentPage());
+
+	// run the controller
 	print $controller->dispatch();
 }
 catch (Exception $e) {

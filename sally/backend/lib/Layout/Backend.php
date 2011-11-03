@@ -36,17 +36,11 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 		if (strlen($locale) === 2) {
 			$this->setLanguage(strtolower($locale));
 		}
-
-		sly_Core::dispatcher()->register('ADDONS_INCLUDED', array($this, 'pageChecked'));
 	}
 
-	public function pageChecked(array $params) {
-		$page   = sly_Core::getCurrentPage();
+	public function setCurrentPage($page) {
 		$bodyID = str_replace('_', '-', $page);
-
 		$this->setBodyAttr('id', 'rex-page-'.$bodyID);
-
-		return $params['subject'];
 	}
 
 	public function printHeader() {
