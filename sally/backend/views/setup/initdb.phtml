@@ -32,7 +32,6 @@ foreach (array('setup', 'drop', 'nop') as $func) {
 	$inputs[$func] = new sly_Form_Input_Radio('db_init_function', '', $func, $label, 'func_'.$func);
 }
 
-$inputs['drop']->setHelpText(t('setup_initdb_func_drop_notice'));
 $inputs[$dbInitFunction]->setChecked(true);
 
 $form->addElements($inputs);

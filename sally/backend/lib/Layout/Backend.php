@@ -38,6 +38,7 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 		}
 
 		sly_Core::dispatcher()->register('PAGE_CHECKED', array($this, 'pageChecked'));
+		$this->pageChecked(array('subject' => sly_Controller_Base::getPage()));
 	}
 
 	public function pageChecked(array $params) {
@@ -103,7 +104,7 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 				$params   = !empty($subpage[3]) ? sly_Util_HTTP::queryString($subpage[3]) : '';
 				$pageattr = $attr;
 
-				
+
 				if($cur_page === $page) {
 					$pageattr = $attr.' class="rex-active"';
 				}
@@ -144,7 +145,7 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 	public function hasNavigation() {
 		return $this->hasNavigation;
 	}
-	
+
 	/**
 	 * @return sly_Layout_Navigation_Backend
 	 */
