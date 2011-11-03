@@ -20,7 +20,7 @@ $this->printHiddens('createuser', $form);
 $user = new sly_Form_Input_Text('admin_user', t('setup_createuser_login'), $adminUser);
 
 $form->add($user);
-$form->add(new sly_Form_Input_Password('admin_pass', t('setup_createuser_password')));
+$form->add(new sly_Form_Input_Text('admin_pass', t('setup_createuser_password')));
 
 if ($usersExist) {
 	$form->add(new sly_Form_Input_Checkbox('no_admin', '', '1', t('setup_createuser_no_admin')));
