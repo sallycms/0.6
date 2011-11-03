@@ -15,7 +15,7 @@ class sly_Controller_Specials_Errorlog extends sly_Controller_Specials {
 		$this->handler = sly_Core::getErrorHandler();
 
 		if (get_class($this->handler) !== 'sly_ErrorHandler_Production') {
-			print rex_warning(t('cant_work_with_foreign_errorhandler', get_class($this->handler)));
+			print sly_Helper_Message::warn(t('cant_work_with_foreign_errorhandler', get_class($this->handler)));
 			$this->handler = null;
 		}
 	}
@@ -29,7 +29,7 @@ class sly_Controller_Specials_Errorlog extends sly_Controller_Specials {
 		$logfile = $log->getFilename();
 
 		if (!file_exists($logfile) || filesize($logfile) === 0) {
-			print rex_info(t('errorlog_is_empty'));
+			print sly_Helper_Message::info(t('errorlog_is_empty'));
 			return;
 		}
 
@@ -48,7 +48,7 @@ class sly_Controller_Specials_Errorlog extends sly_Controller_Specials {
 		$lineCount = $this->getNumberOfLines($logfile);
 
 		if (empty($lines)) {
-			print rex_info(t('errorlog_is_empty'));
+			print sly_Helper_Message::info(t('errorlog_is_empty'));
 			return;
 		}
 
@@ -60,7 +60,7 @@ class sly_Controller_Specials_Errorlog extends sly_Controller_Specials {
 
 		foreach ($lines as $line) {
 			if (!preg_match($regex, $line, $matches)) continue;
-			
+
 			$data[] = array(
 				'date'    => strtotime($matches[1]),
 				'type'    => $matches[2],
@@ -80,10 +80,10 @@ class sly_Controller_Specials_Errorlog extends sly_Controller_Specials {
 		$logfile = $log->getFilename();
 
 		if (unlink($logfile)) {
-			print rex_info(t('errorlog_cleared'));
+			print sly_Helper_Message::info(t('errorlog_cleared'));
 		}
 		else {
-			print rex_warning(t('errorlog_not_cleared'));
+			print sly_Helper_Message::warn(t('errorlog_not_cleared'));
 		}
 
 		return $this->index();

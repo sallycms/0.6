@@ -18,7 +18,7 @@ class sly_Helper_Content {
 		$moduleService = sly_Service_Factory::getModuleService();
 
 		if (!$moduleService->exists($module)) {
-			$slice_content = rex_warning(t('module_doesnt_exist'));
+			$slice_content = sly_Helper_Message::warn(t('module_doesnt_exist'));
 		}
 		else {
 			$moduleContent = $moduleService->getContent($moduleService->getInputFilename($module));

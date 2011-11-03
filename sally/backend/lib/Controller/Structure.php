@@ -56,8 +56,8 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		$art_service = sly_Service_Factory::getArticleService();
 		$articles    = $art_service->findArticlesByCategory($this->categoryId, false, $this->clangId);
 
-		if (!empty($this->info))    print rex_info($this->info);
-		if (!empty($this->warning)) print rex_warning($this->warning);
+		if (!empty($this->info))    print sly_Helper_Message::info($this->info);
+		if (!empty($this->warning)) print sly_Helper_Message::warn($this->warning);
 
 		print $this->render(self::$viewPath.'category_table.phtml', array(
 			'categories'      => $categories,

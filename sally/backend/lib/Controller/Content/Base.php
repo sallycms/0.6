@@ -64,7 +64,7 @@ abstract class sly_Controller_Content_Base extends sly_Controller_Backend {
 	protected function header() {
 		if (is_null($this->article)) {
 			sly_Core::getLayout()->pageHeader(t('content'));
-			print rex_warning(t('no_article_available'));
+			print sly_Helper_Message::warn(t('no_article_available'));
 			return false;
 		}
 		else {

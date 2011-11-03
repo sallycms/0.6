@@ -52,7 +52,7 @@ class sly_Controller_Profile extends sly_Controller_Backend {
 		// Speichern, fertig.
 
 		$service->save($user);
-		print rex_info(t('user_data_updated'));
+		print sly_Helper_Message::info(t('user_data_updated'));
 		return $this->index();
 	}
 

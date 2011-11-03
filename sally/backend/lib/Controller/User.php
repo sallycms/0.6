@@ -45,17 +45,17 @@ class sly_Controller_User extends sly_Controller_Backend {
 			$error    = false;
 
 			if (empty($login)) {
-				print rex_warning('Es muss ein Loginname angegeben werden.');
+				print sly_Helper_Message::warn('Es muss ein Loginname angegeben werden.');
 				$error = true;
 			}
 
 			if (empty($password)) {
-				print rex_warning('Es muss ein Passwort angegeben werden.');
+				print sly_Helper_Message::warn('Es muss ein Passwort angegeben werden.');
 				$error = true;
 			}
 
 			if ($service->find(array('login' => $login))) {
-				print rex_warning(t('user_login_exists'));
+				print sly_Helper_Message::warn(t('user_login_exists'));
 				$error = true;
 			}
 
@@ -87,7 +87,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 
 			try {
 				$service->create($params);
-				print rex_info(t('user_added'));
+				print sly_Helper_Message::info(t('user_added'));
 				$this->listUsers();
 				return true;
 			}
@@ -145,7 +145,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 				$user = $service->save($user);
 				$goon = sly_post('apply', 'string');
 
-				print rex_info(t('user_data_updated'));
+				print sly_Helper_Message::info(t('user_data_updated'));
 			}
 			catch (Exception $e) {
 				print sly_Helper_Message::warn($e->getMessage());
@@ -175,12 +175,12 @@ class sly_Controller_User extends sly_Controller_Backend {
 		$current = sly_Util_User::getCurrentUser();
 
 		if ($current->getId() == $user->getId()) {
-			print rex_warning(t('user_notdeleteself'));
+			print sly_Helper_Message::warn(t('user_notdeleteself'));
 			return false;
 		}
 
 		$user->delete();
-		print rex_info(t('user_deleted'));
+		print sly_Helper_Message::info(t('user_deleted'));
 
 		$this->listUsers();
 	}

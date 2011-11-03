@@ -98,7 +98,7 @@ else {
 			}
 		}
 		catch (Exception $e) {
-			print rex_warning('Error while rendering slice: '.$e->getMessage());
+			print sly_Helper_Message::warn('Error while rendering slice: '.$e->getMessage());
 		}
 	}
 
