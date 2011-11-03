@@ -7,7 +7,7 @@
 
 /* System: Einstellungen | unterer Abstand zu den gestrichelten Linien in der rechten Box*/
 
-#rex-page-specials {
+#sly-page-specials {
 	#languages .sly-col-d { width: 130px; }
 }
 
@@ -92,7 +92,7 @@
 
 /* System: Fehlerprotokoll */
 
-#rex-page-specials {
+#sly-page-specials {
 	form.errorlog {
 		input.sly-button {
 			cursor: pointer;

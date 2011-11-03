@@ -40,7 +40,7 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 
 	public function setCurrentPage($page) {
 		$bodyID = str_replace('_', '-', $page);
-		$this->setBodyAttr('id', 'rex-page-'.$bodyID);
+		$this->setBodyAttr('id', 'sly-page-'.$bodyID);
 	}
 
 	public function printHeader() {

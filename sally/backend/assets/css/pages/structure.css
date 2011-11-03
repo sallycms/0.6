@@ -6,7 +6,7 @@
 	&-category-add      { background-position: -32px -16px; }
 }
 
-#rex-page-structure {
+#sly-page-structure {
 	.sly-table {
 		+border-radius(0px);
 		border: 0;

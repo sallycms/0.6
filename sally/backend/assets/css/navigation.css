@@ -8,14 +8,14 @@
 	width: 100%;
 	display: block;
 	color: $drk_grey;
-	
+
 	li {
 		list-style:none outside none;
 		margin-bottom:1px;
 		line-height:25px;
 		font-size:0.9em;
 	}
-	
+
 	a {
 		+border-radius(3px);
 		display: block;

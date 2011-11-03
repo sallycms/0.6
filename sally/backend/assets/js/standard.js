@@ -420,7 +420,7 @@ var slyMediaWidgetCallback = null;
 	var catsChecked = function() {
 		var c_checked = $('#userperm_cat_all').prop('checked');
 		var m_checked = $('#userperm_media_all').prop('checked');
-		var slider    = $('#rex-page-user .sly-form .rex-form-wrapper .sly-num7');
+		var slider    = $('#sly-page-user .sly-form .rex-form-wrapper .sly-num7');
 
 		$('#userperm_cat').prop('disabled', c_checked);
 		$('#userperm_media').prop('disabled', m_checked);
@@ -541,8 +541,8 @@ var slyMediaWidgetCallback = null;
 
 		// Benutzer-Formular
 
-		if ($('#rex-page-user .sly-form').length > 0) {
-			var wrapper = $('#rex-page-user .sly-form .rex-form-wrapper');
+		if ($('#sly-page-user .sly-form').length > 0) {
+			var wrapper = $('#sly-page-user .sly-form .rex-form-wrapper');
 			var sliders = wrapper.find('.sly-num6,.sly-num7');
 
 			$('#is_admin').change(function() {

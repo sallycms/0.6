@@ -1,4 +1,4 @@
-#rex-page-login {
+#sly-page-login {
 	#sly-wrapper,
 	#sly-footer {
 		float: none;
@@ -17,7 +17,7 @@
 
 		label { width: 145px; margin-left: 10px; }
 	}
-	
+
 	.rex-form-wrapper { width: 650px; }
 	.rex-form-col-a   { vertical-align: middle; }
 	.rex-form-submit  { margin: 2px 0 3px 77px; }

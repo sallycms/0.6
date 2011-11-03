@@ -1,4 +1,4 @@
-#rex-page-mediapool {
+#sly-page-mediapool {
 
 	/*	Rundungen */
 	.sly-form, #rex-mediapool-detail-wrapper {
@@ -22,7 +22,7 @@
 	}
 }
 
-#rex-page-mediapool-structure {
+#sly-page-mediapool-structure {
 	.rex-form-text {
 		width: 400px;
 	}
@@ -68,7 +68,7 @@
 	}
 }
 
-#rex-page-mediapool,
+#sly-page-mediapool,
 #rex-form-mediapool-other {
 	.rex-form-row:first-child { border-top: none; }
 
@@ -121,7 +121,7 @@
 	}
 }
 
-#rex-page-mediapool .sly-form {
+#sly-page-mediapool .sly-form {
 	width: 690px;
 
 	td { padding: 5px 0 }
