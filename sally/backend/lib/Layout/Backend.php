@@ -41,6 +41,15 @@ class sly_Layout_Backend extends sly_Layout_XHTML {
 	public function setCurrentPage($page) {
 		$bodyID = str_replace('_', '-', $page);
 		$this->setBodyAttr('id', 'sly-page-'.$bodyID);
+
+		// put some helpers on the body tag (now that we definitly know whether someone is logged in)
+		if (sly_Util_User::getCurrentUser() !== null) {
+			$this->setBodyAttr('class', implode(' ', array(
+				'sly-'.sly_Core::getVersion('X'),
+				'sly-'.sly_Core::getVersion('X_Y'),
+				'sly-'.sly_Core::getVersion('X_Y_Z')
+			)));
+		}
 	}
 
 	public function printHeader() {
