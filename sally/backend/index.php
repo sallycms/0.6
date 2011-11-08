@@ -113,6 +113,8 @@ catch (Exception $e) {
 	$layout->closeAllBuffers();
 	$layout->openBuffer();
 
+	$showTrace = false;
+
 	if ($e instanceof sly_Authorisation_Exception) {
 		header('HTTP/1.0 403 Forbidden');
 		$layout->pageHeader(t('security_violation'));
@@ -127,9 +129,15 @@ catch (Exception $e) {
 	else {
 		header('HTTP/1.0 500 Internal Server Error');
 		$layout->pageHeader(t('unexpected_exception'));
+		$showTrace = sly_Core::isDeveloperMode();
 	}
 
 	print sly_Helper_Message::warn($e->getMessage());
+
+	if ($showTrace) {
+		print '<pre class="sly-trace">'.sly_html($e->getTraceAsString()).'</pre>';
+	}
+
 	$layout->closeBuffer();
 	$layout->openBuffer();
 	print $layout->render();

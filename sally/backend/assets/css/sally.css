@@ -266,3 +266,13 @@ a.sly-action {
 		width: 680px;
 	}
 }
+
+.sly-trace {
+	font-family: monospace;
+	border: 1px solid $drk_grey;
+	padding: 10px;
+	margin: 0;
+	width: 777px;
+	background: white;
+	overflow: auto;
+}
