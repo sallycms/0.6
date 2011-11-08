@@ -190,6 +190,7 @@ header_edit_category: Kategorie editieren
 header_priority: Prio
 header_status: Status/Funktion
 header_id: ID
+add_article: Artikel hinzufügen
 add_category: Kategorie hinzufügen
 edit_category: Kategorie bearbeiten
 delete_category: Kategorie löschen
