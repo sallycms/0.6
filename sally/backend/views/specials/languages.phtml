@@ -14,16 +14,16 @@ if (!empty($this->info))    print sly_Helper_Message::info($this->info);
 ?>
 
 <div class="sly-form" id="sly-form-specials-languages">
-	<? if ($this->func == 'add' || $this->func == 'edit'): ?>
+	<?php if ($this->func == 'add' || $this->func == 'edit'): ?>
 	<form action="index.php" method="post">
 		<fieldset class="rex-form-col-1 sly-num0">
 			<legend><?= t('clang_'.$this->func) ?></legend>
 			<input type="hidden" name="page" value="specials_languages" />
 			<input type="hidden" name="clang_id" value="<?= (int) $this->id ?>" />
 			<input type="hidden" name="func" value="<?= $this->func ?>" />
-	<? endif ?>
+	<?php endif ?>
 
-	<?
+	<?php
 
 	$base = 'index.php?page=specials_languages&func=';
 	$link = sly_Util_HTML::getSpriteLink($base.'add', t('clang_add'), 'language-add');

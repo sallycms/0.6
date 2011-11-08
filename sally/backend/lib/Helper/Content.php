@@ -41,7 +41,7 @@ class sly_Helper_Content {
 							<legend><?= t('add_block') ?>: <?= sly_html($moduleService->getTitle($module)) ?></legend>
 							<div class="rex-form-wrapper">
 								<div class="sly-contentpage-slice-input">
-									<? eval('?>'.self::replaceObjectVars($values, $moduleContent)); ?>
+									<?php eval('?>'.self::replaceObjectVars($values, $moduleContent)); ?>
 								</div>
 								<div class="rex-form-row">
 									<p class="rex-form-submit">
@@ -95,7 +95,7 @@ class sly_Helper_Content {
 						<legend><?= t('edit_block') ?>: <?= sly_html($moduleService->getTitle($articleSlice->getModule())) ?></legend>
 						<div class="rex-form-wrapper">
 							<div class="sly-contentpage-slice-input">
-								<? eval('?>'.self::replaceObjectVars($values, $articleSlice->getInput())); ?>
+								<?php eval('?>'.self::replaceObjectVars($values, $articleSlice->getInput())); ?>
 							</div>
 							<div class="rex-form-row">
 								<p class="rex-form-submit">

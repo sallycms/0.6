@@ -26,11 +26,11 @@ if ($supportPage) $credits .= sprintf($format, t('credits_supportpage'), $suppor
 <div class="rex-area sly-addon-help">
 	<h3 class="rex-hl2"><?= t('addon_help', $name) ?></h3>
 	<div class="rex-area-content">
-		<? if (!is_file($helpfile)): ?>
+		<?php if (!is_file($helpfile)): ?>
 		<p class="rex-tx1"><?= t('addon_no_help_file') ?></p>
-		<? else: ?>
-		<? include $helpfile ?>
-		<? endif ?>
+		<?php else: ?>
+		<?php include $helpfile ?>
+		<?php endif ?>
 		<dl class="rex-dl"><?= $credits ?></dl>
 	</div>
 	<div class="rex-area-footer">

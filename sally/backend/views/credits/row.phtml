@@ -20,11 +20,11 @@ else $class = ' sly-not-installed';
 ?>
 
 <tr class="sly-<?= $type ?> sly-<?= $type ?> <?= $class ?>">
-	<? if ($type == 'addon'): ?>
+	<?php if ($type == 'addon'): ?>
 	<td class="sly-col-a sly-icon"><?= sly_Util_HTML::getSpriteLink('', $name, 'addon') ?></td>
-	<? else: ?>
+	<?php else: ?>
 	<td class="sly-col-a">&nbsp;</td>
-	<? endif ?>
+	<?php endif ?>
 	<td class="sly-col-b"><?= sly_html($name) ?> [<a href="index.php?page=addon_help&amp;addon=<?= urlencode($name) ?>">?</a>]</td>
 	<td class="sly-col-c"><?= $version ?></td>
 	<td class="sly-col-d"><?= $author ?></td>
