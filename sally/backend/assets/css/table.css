@@ -74,6 +74,6 @@
 	&-filter {
 		float: right;
 
-		input { width: 150px; padding: 1px; }
+		input[type="text"] { width: 150px; padding: 1px; }
 	}
 }
