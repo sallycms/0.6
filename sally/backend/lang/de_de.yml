@@ -436,3 +436,6 @@ errorlog_not_cleared: Das Protokoll konnte nicht geleert werden.
 use_default_locale: '(Projektstandard)'
 mediacat_title_cannot_be_empty: Der Name einer Medienkategorie darf nicht leer sein.
 unnamed_article: unbenannter Artikel
+
+no_categories_yet: Es wurden noch keine Kategorien angelegt.
+no_articles_yet: Es wurden noch keine Artikel angelegt.

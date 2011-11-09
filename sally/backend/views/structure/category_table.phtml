@@ -49,13 +49,21 @@
 			);
 		}
 		else {
-			if($this->canViewCategory($category->getId())) {
+			if ($this->canViewCategory($category->getId())) {
 				print $this->render(
 					sly_Controller_Structure::$viewPath.'category_table_row.phtml',
 					array('category' => $category, 'advancedMode' => $advancedMode, 'statusTypes' => $statusTypes)
 				);
 			}
 		}
+	}
+
+	if (!$this->renderAddCategory && !$currentCategory && empty($categories)) {
+		?>
+		<tr>
+			<td colspan="<?= $advancedMode ? 6 : 5 ?>" class="sly-icon"><?= t('no_categories_yet') ?></td>
+		</tr>
+		<?php
 	}
 
 	$table->closeBuffer();
