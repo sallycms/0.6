@@ -89,8 +89,10 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 	}
 
 	private function copyContent() {
-		$clang_a    = sly_post('clang_a', 'rex-clang-id');
-		$clang_b    = sly_post('clang_b', 'rex-clang-id');
+		$clang_a = sly_post('clang_a', 'rex-clang-id');
+		$clang_b = sly_post('clang_b', 'rex-clang-id');
+		$user    = sly_Util_User::getCurrentUser();
+
 		if(!sly_Util_Language::hasPermissionOnLanguage($user, $clang_a)) {
 			$lang = sly_Util_Language::findById($clang_a);
 			throw new sly_Authorisation_Exception(t('authorisation_exception_language_denied', rex_translate($lang->getName())));
