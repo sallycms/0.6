@@ -1,6 +1,6 @@
 <?php
 
-foreach (array('warning', 'info') as $type) {
+foreach (array('warn', 'info') as $type) {
 	if (empty($this->$type)) continue;
 
 	if (is_array($this->$type)) {
@@ -15,5 +15,5 @@ foreach (array('warning', 'info') as $type) {
 		$message = $this->$type;
 	}
 
-	print call_user_func_array('rex_'.$type, array($message));
+	print call_user_func_array(array('sly_Helper_Message', $type), array($message));
 }
