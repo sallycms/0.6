@@ -342,14 +342,14 @@ var slyMediaWidgetCallback = null;
 			setTimeout(sly.disableLogin, 1000, timerElement);
 		}
 		else {
-			$('div.rex-message p span').html($('#loginformular').data('message'));
+			$('div.sly-message p span').html($('#loginformular').data('message'));
 			$('#loginformular input:not(:hidden)').prop('disabled', false);
 			$('#rex_user_login').focus();
 		}
 	};
 
 	sly.startLoginTimer = function(message) {
-		var timerElement = $('div.rex-message p span strong');
+		var timerElement = $('div.sly-message p span strong');
 
 		if (timerElement.length == 1) {
 			$('#loginformular input:not(:hidden)').prop('disabled', true);
