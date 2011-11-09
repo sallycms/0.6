@@ -34,6 +34,7 @@ if ($user) {
 }
 else {
 	$login = new sly_Form_Input_Text('userlogin', t('login_name'), '');
+	$form->setFocus('userlogin');
 }
 
 $password = new sly_Form_Input_Text('userpsw', t('password'), '');
