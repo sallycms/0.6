@@ -47,7 +47,8 @@ print $this->render('mediapool/notices.phtml');
 ////////////////////////////////////////////////////////
 // start form if needed
 
-$editID = sly_request('edit_id', 'int');
+$editID      = sly_request('edit_id', 'int');
+$nativeFocus = sly_Helper_Modernizr::hasInput('autofocus');
 
 if ($this->action == 'add' || $this->action == 'edit') {
 	$addMode = $this->action == 'add';
@@ -91,7 +92,7 @@ if ($this->action == 'add' || $this->action == 'edit') {
 			<td class="rex-small">-</td>
 			<td>
 				<label class="rex-form-hidden-label" for="rex-form-field-name"><?= t('pool_kat_name') ?></label>
-				<input class="rex-form-text" type="text" size="10" id="rex-form-field-name" name="catname" value="" />
+				<input class="rex-form-text" type="text" size="10" id="rex-form-field-name" name="catname" value=""<?= $nativeFocus ? ' autofocus="autofocus"' : '' ?> />
 			</td>
 			<td class="sly-col-d" colspan="2">
 				<input type="submit" class="rex-form-submit" value="<?= t('pool_kat_create') ?>" />
@@ -110,7 +111,7 @@ if ($this->action == 'add' || $this->action == 'edit') {
 				<td class="rex-small"><?= $id ?></td>
 				<td>
 					<label class="rex-form-hidden-label" for="rex-form-field-name"><?= t('pool_kat_name') ?></label>
-					<input class="rex-form-text" type="text" id="rex-form-field-name" name="catname" value="<?= sly_html($cat->getName()) ?>" />
+					<input class="rex-form-text" type="text" id="rex-form-field-name" name="catname" value="<?= sly_html($cat->getName()) ?>"<?= $nativeFocus ? ' autofocus="autofocus"' : '' ?> />
 				</td>
 				<td class="sly-col-d" colspan="2">
 					<input type="submit" class="rex-form-submit" value="<?= t('pool_kat_update') ?>" />
@@ -146,4 +147,12 @@ if ($this->action == 'add' || $this->action == 'edit') {
 
 if ($this->action == 'add' || $this->action == 'edit') {
 	print '</form>';
+
+	if (!$nativeFocus) {
+		?>
+		<script type="text/javascript">
+		document.getElementById('rex-form-field-name').focus();
+		</script>
+		<?php
+	}
 }
