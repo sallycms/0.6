@@ -53,7 +53,7 @@ class sly_Helper_Content {
 					</form>
 				</div>
 
-				<?
+				<?php
 				self::focusFirstElement();
 
 				sly_Core::dispatcher()->notify('SLY_SLICE_POSTVIEW_ADD', $values, array(
@@ -107,7 +107,7 @@ class sly_Helper_Content {
 					</fieldset>
 				</form>
 			</div>
-			<?
+			<?php
 			self::focusFirstElement();
 
 			sly_Core::dispatcher()->notify('SLY_SLICE_POSTVIEW_EDIT', $values, array(

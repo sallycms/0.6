@@ -68,7 +68,7 @@ $buttonBar = new sly_Form_ButtonBar(array(
 					<p class="rex-tx1">SallyCMS <?= sly_Core::getVersion() ?> &ndash; PHP <?= PHP_VERSION ?></p>
 
 					<h4 class="rex-hl3"><?= t('database') ?></h4>
-					<p class="rex-tx1"><?
+					<p class="rex-tx1"><?php
 					$database = $config->get('DATABASE');
 
 					if (strtolower($database['DRIVER']) === 'sqlite') {

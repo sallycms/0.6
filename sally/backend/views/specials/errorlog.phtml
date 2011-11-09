@@ -17,7 +17,7 @@
 		<input type="submit" value="<?= t('clear_errorlog') ?>" class="rex-form-submit sly-button" />
 	</p>
 </form>
-<?
+<?php
 
 $prefix = 'index.php?page=specials_errorlog&amp;max=';
 $units  = array(10, 50, 100, 250, 500);
@@ -46,7 +46,7 @@ foreach ($units as $unit) {
 	<?= t('errorlog_recenterrors', implode(' | ', $links)) ?>
 	<?= t('errorlog_total', sly_Util_String::formatNumber($lineCount, 0)) ?>
 </p>
-<?
+<?php
 
 $table = new sly_Table('sly-errorlog');
 $table->addColumn(new sly_Table_Column(t('errorlog_message'), '', '', array('colspan' => 2)));
@@ -63,7 +63,7 @@ foreach ($data as $line) {
 	</tr><tr class="request">
 		<td class="request" colspan="2"><?= sly_html($request) ?></td>
 	</tr>
-	<?
+	<?php
 }
 
 $table->closeBuffer();

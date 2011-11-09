@@ -97,7 +97,7 @@ if ($this->action == 'add' || $this->action == 'edit') {
 				<input type="submit" class="rex-form-submit" value="<?= t('pool_kat_create') ?>" />
 			</td>
 		</tr>
-		<?
+		<?php
 	}
 
 	foreach ($categories as $cat) {
@@ -116,7 +116,7 @@ if ($this->action == 'add' || $this->action == 'edit') {
 					<input type="submit" class="rex-form-submit" value="<?= t('pool_kat_update') ?>" />
 				</td>
 			</tr>
-			<?
+			<?php
 		}
 		else {
 			?>
@@ -127,7 +127,7 @@ if ($this->action == 'add' || $this->action == 'edit') {
 				<td class="sly-col-e"><a href="<?= $base.$catID ?>&amp;func=edit&amp;edit_id=<?= $id ?>"><?= t('pool_kat_edit')?></a></td>
 				<td class="sly-col-f"><a href="<?= $base.$catID ?>&amp;func=delete&amp;edit_id=<?= $id ?>" class="sly-delete"><?= t('pool_kat_delete') ?></a></td>
 			</tr>
-			<?
+			<?php
 		}
 	}
 
@@ -136,13 +136,13 @@ if ($this->action == 'add' || $this->action == 'edit') {
 		<tr>
 			<td colspan="5" class="center"><?= t('pool_kat_empty') ?></td>
 		</tr>
-		<?
+		<?php
 	}
 
 	?></tbody>
 </table>
 
-<?
+<?php
 
 if ($this->action == 'add' || $this->action == 'edit') {
 	print '</form>';

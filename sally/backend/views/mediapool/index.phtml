@@ -87,7 +87,7 @@ ob_start();
 			</td>
 			<td colspan="3"><?= $add_input ?></td>
 		</tr></tfoot>
-		<?
+		<?php
 	}
 
 	print '<tbody>';
@@ -164,14 +164,14 @@ ob_start();
 				<p class="rex-tx4"><span class="rex-suffix"><?= sly_html($filename) ?> [<?= $file->getFormattedSize() ?>]</span></p>
 				<p class="rex-tx1"><?= $updatedate ?> | <?= sly_html($updateuser) ?></p>
 			</td>
-			<td><?
+			<td><?php
 
 			$opener_link = $this->getOpenerLink($file);
 			print sly_Core::dispatcher()->filter('SLY_MEDIA_LIST_FUNCTIONS', $opener_link, array('medium' => $file));
 
 			?></td>
 		</tr>
-		<?
+		<?php
 	}
 
 	if (empty($files)): ?>
@@ -182,7 +182,7 @@ ob_start();
 	<?php endif ?>
 	</tbody>
 </table>
-<?
+<?php
 
 $container = new sly_Form_Container();
 $container->setContent(ob_get_clean());

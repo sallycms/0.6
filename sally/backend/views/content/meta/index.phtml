@@ -15,7 +15,7 @@
 	print $this->render('content/_subpagemenu.phtml');
 	?>
 </div>
-<?
+<?php
 $category_id = $article->getCategoryId();
 
 $params = array('id' => $article->getId(), 'clang' => $article->getClang(), 'article' => $article);
