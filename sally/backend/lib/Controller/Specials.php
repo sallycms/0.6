@@ -20,7 +20,7 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 
 		// show error log when using the original system error handler
 		// (that's the only case when we can ensure that we're able to parse the error log)
-		
+
 		$subline = array();
 		foreach($specials->getSubpages() as $subpage) {
 			$subline[] = array($subpage->getPageParam(), $subpage->getTitle());
@@ -38,7 +38,7 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 	}
 
 	protected function clearcache() {
-		$this->info = rex_generateAll();
+		$this->info = sly_Core::clearCache();
 		$this->index();
 	}
 
