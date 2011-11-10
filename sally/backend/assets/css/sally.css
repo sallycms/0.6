@@ -1,3 +1,219 @@
++global-reset;
++html5-reset;
+
+body {
+	font-family: Calibri, Verdana, Arial, sans-serif;
+	color: $drk_grey;
+	font-size: 14px;
+	line-height: 18px;
+	background: #f2f2f2 url(../body.png) 0 0 repeat-x;
+}
+
+a {
+	color: $link_color;
+	text-decoration: none;
+	&:hover { text-decoration: none; }
+}
+
+ins {
+	text-decoration:none;
+}
+del {
+	text-decoration:line-through;
+}
+
+img, iframe {
+	vertical-align:bottom;
+}
+
+#sly-page {
+	width: 1000px;
+	margin: 0 auto;
+	+clearfix;
+}
+
+/* PAGEHEAD -------------------------------------------------------- PAGEHEAD */
+.sly-navi-path{
+	display: inline;
+	li {
+		display: inline;
+
+		a.rex-active {
+			color: $drk_grey;
+		}
+	}
+}
+
+#sly-pagehead {
+
+	margin: 0 0 10px 0;
+
+	h1 {
+		font-size: 2em;
+		text-shadow: 1px 1px 0px rgba(255,255,255,.8);
+	}
+	.pagehead-row {
+		+clearfix;
+		height: 40px;
+		line-height: 40px;
+		border-bottom: 1px dotted $md_grey;
+		overflow: hidden;
+
+		a.rex-active {
+			color: $drk_grey;
+		}
+	}
+}
+
+/* ----------------------------------------------------------------------------------------------------------- */
+
+
+
+.rex-toolbar {
+	background-color: #fff;
+	position: relative;
+	margin-bottom: 10px;
+	+border-radius($brd_rad);
+
+	&-content {
+		padding: 10px;
+	}
+	ul li {
+		list-style: none;
+		display: inline-block;
+		margin: 0 5px 0 0; /* Abstand der Listenelemente zu einander, s. Sprachen */
+	}
+}
+
+/* ----------------------------------------------------------------------------------------------------------- */
+
+.rex-nospace {
+	margin: 0;
+	padding: 0;
+}
+
+.rex-clearer {
+	clear: both;
+	display: block;
+	font-size: 0;
+	height: 1px;
+	line-height: 0;
+	visibility: hidden;
+}
+
+.rex-hidden {
+	display: inline !important;
+	position: absolute !important;
+	left: -1000px !important;
+	top: -1000px !important;
+	width: 0px !important;
+	height: 0px !important;
+	overflow: hidden !important;
+	background-color: $background !important;
+}
+
+.rex-rvrs {
+	unicode-bidi: bidi-override;
+	direction: rtl;
+}
+
+.rex-fl-lft    { float: left; }
+.rex-fl-rght   { float: right; }
+.rex-algn-lft  { text-align: left; }
+.rex-algn-rght { text-align: right; }
+.rex-strike    { text-decoration: line-through; }
+
+.rex-code {
+	font-size: 1.2em;
+	background-color: $drk_grey;
+	border: 1px solid #F2353A;
+	display: block;
+	padding: 10px;
+}
+
+.rex-tx2,
+.rex-tx3,
+.rex-tx4 {
+	font-weight: bold;
+}
+
+.rex-hl4,
+.rex-tx2,
+.rex-tx3 {
+	font-size: 1.2em;
+	font-weight: normal;
+}
+
+.rex-hl2 {
+	line-height: 26px;
+}
+
+.rex-tx3 {
+	color: #478C44;
+}
+
+p.rex-tx1,
+p.rex-tx4,
+ul.rex-ul1,
+ol.rex-ol1 {
+	margin-bottom: 1em;
+}
+
+ul.rex-ul1 {
+	margin-left: 40px;
+	li { list-style-type: square; }
+}
+
+ol.rex-ol1 {
+	margin-left: 40px;
+}
+
+.rex-area-content {
+	line-height: 1.6;
+}
+
+.rex-offline {
+	color: $link_color_offline;
+}
+
+.rex-ok, .rex-online {
+	color: $link_color_online;
+}
+
+.rex-area-scroll {
+	background-color: #FFF;
+}
+
+.rex-area,
+.rex-content-cols {
+	background-color: #fff;
+}
+
+.rex-area-footer,
+.rex-addon-footer {
+	background-color: #D7D6D3;
+}
+
+/*	Button - Arrows */
+.rex-area-scroll,
+.rex-widget {
+	border-color: #999;
+}
+
+/*	Elemente verstecken ********************************************************
+		Hinweis:
+			den Elementen nicht die Klasse "rex-hidden" einzeln zuweisen,
+			da diese von anderen Layouts eventuell dargestellt werden sollen
+*******************************************************************************/
+
+.center {
+	text-align: center;
+}
+
+.rex-me1 {
+	margin: 20px 0 20px 0;
+}
+
 h1, h2, h3, h4, h5, h6 {
 	font-weight: normal;
 }

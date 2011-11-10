@@ -1,8 +1,7 @@
 @include 'constants.css';
-@include 'base.css';
+@include 'sally.css';
 @include 'navigation.css';
 @include 'table.css';
-@include 'sally.css';
 @include 'form.css';
 
 @include 'pages/credits.css';
