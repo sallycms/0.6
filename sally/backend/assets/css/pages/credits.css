@@ -7,7 +7,9 @@
 	.sly-credits {
 		margin-bottom: 10px;
 	}
+}
 
+#sly-page-credits-bugreport {
 	.sly-sysinfo {
 		font-family: monospace;
 		border: 1px solid $drk_grey;
