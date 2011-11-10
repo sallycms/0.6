@@ -32,7 +32,6 @@ filter: Filter
 begin_sorting: Tabelle sortieren
 end_sorting: Sortiermodus beenden
 
-# sally/index.php
 start_article_not_selected: Kein Startartikel ausgewählt
 redirect_previous_page: 'Sie werden zu Ihrer <a href="{0}">vorherigen Seite</a> weitergeleitet.'
 redirect_startpage: 'Sie werden zu Ihrer <a href="{0}">Startseite</a> weitergeleitet.'
@@ -53,7 +52,6 @@ importer_entry_count: ({0} Datensätze)
 
 homepage: Homepage
 
-# sally/index.php
 specials: System
 user: Benutzer
 mediapool: Medienpool
@@ -65,16 +63,13 @@ logout: abmelden
 navigation_basis: Basis Navigation
 navigation_addons: AddOns
 
-# sally/include/classes/class.login.inc.php
 login_name: Benutzername
 password: Passwort
 new_password: Neues Passwort
 
-# sally/include/layout/top.php
 logged_out: nicht angemeldet
 logged_in_as: Angemeldet als
 
-# sally/include/classes/class.article.inc.php
 add_block: Block hinzufügen
 edit: Editieren
 no_editing_rights: Keine Editiererlaubnis
@@ -87,7 +82,6 @@ update_block: Block übernehmen
 save_block: Block speichern
 edit_block: Block bearbeiten
 
-# sally/include/functions/function_rex_generate.inc.php
 article_moved: Artikel wurde verschoben!
 article_deleted: Artikel wurde gelöscht!
 could_not_move_article: Artikel konnte nicht verschoben werden.
@@ -97,7 +91,6 @@ category_doesnt_exist: Kategorie existiert nicht!
 cant_delete_sitestartarticle: Der Webseiten-Startartikel kann nicht gelöscht werden!
 cant_delete_notfoundarticle: Der "Nicht gefunden"-Artikel kann nicht gelöscht werden!
 
-# sally\include\pages\content.inc.php
 move_slice_up: Nach oben verschieben
 move_slice_down: Nach unten verschieben
 block_updated: Block wurde aktualisiert!
@@ -174,7 +167,6 @@ output: Ausgabe
 action: Aktion
 actions: Aktionen
 
-# sally\include\pages\structure.inc.php
 title_structure: Strukturverwaltung
 no_such_category: Kategorie nicht vorhanden!
 category_updated: Kategorie wurde aktualisiert.
@@ -213,12 +205,10 @@ structure_categories_caption: 'Liste der Unterkategorien der Kategorie "{0}"'
 structure_articles_summary: 'Auflistung aller Artikel der Kategorie "{0}"'
 structure_articles_caption: 'Liste der Artikel der Kategorie "{0}"'
 
-# sally\include\functions\function_rex_category.inc.php
 article: Artikel
 start_article: Startartikel
 path: Pfad
 
-# sally\include\pages\user.inc.php
 title_user: Benutzer
 user_data_updated: Benutzerdaten wurden aktualisiert!
 user_deleted: Benutzer wurde gelöscht!
@@ -254,7 +244,6 @@ user_status: User ist aktiv
 backend_language: Backendsprache
 startpage: Startseite
 
-# sally\include\pages\special.inc.php
 info_updated: Informationen wurden aktualisiert!
 delete_cache: Cache löschen
 delete_cache_description: 'Templates und Sprachdateien werden erstellt, Artikelcache wird gelöscht. Sobald ein Artikel im Frontend aufgerufen wird, wird der Cache des/der entsprechenden Artikels/Kategorie wieder erstellt.'
@@ -303,7 +292,6 @@ specials_not_found_article: Artikel bei fehlender Seite
 setup: Setup
 setup_text: Hier können Sie das Setup erneut starten. Dies sollten Sie nur im Notfall machen. Unter normalen Umständen ist es nicht nötig.
 
-# sally\include\pages\addon.inc.php
 addon: AddOn
 addons: AddOns
 addon_help: "Hilfe für {0}"
@@ -361,7 +349,6 @@ plugin_requires_plugin: 'Das PlugIn {0} wird für das PlugIn {1} benötigt.'
 plugin_sally_incompatible: 'Dieses PlugIn ist nicht mit ihrer Version von SallyCMS ({0}) kompatibel.'
 plugin_has_no_sally_version_info: Dieses PlugIn hat keine Kompatibilitätsinformationen. Es kann nicht installiert werden.
 
-# sally\include\pages\credits.inc.php
 credits: Credits
 credits_name: AddOn
 credits_version: Version
@@ -370,19 +357,16 @@ credits_supportpage: Hilfe
 credits_addon_inactive: Addon inaktiv
 credits_caption: Liste der verwendeten AddOns/PlugIns
 
-# sally\include\pages\profile.inc.php
 profile_myprofile: Mein Benutzerprofil bearbeiten
 profile_title: Mein Profil
 profile_save: Profil speichern
 
-# sally\include\pages\linkmap.inc.php
 linkmap: Linkmap
 lmap_title: Linkmap
 lmap_categories: Kategorien
 lmap_articles: Artikel
 lmap_has_no_type: hat keinen Typ
 
-# sally\include\classes\variables\class.rex_var_media.inc.php
 var_media_open: Medium auswählen
 var_media_new: Neues Medium hinzufügen
 var_media_remove: Ausgewähltes Medium löschen
@@ -391,7 +375,6 @@ var_medialist_move_up: Ausgewähltes Medium nach oben verschieben
 var_medialist_move_down: Ausgewähltes Medium nach unten verschieben
 var_medialist_move_bottom: Ausgewähltes Medium an das Ende verschieben
 
-# sally\include\classes\variables\class.rex_var_link.inc.php
 var_link_open: Link auswählen
 var_link_new: Neuen Link hinzufügen
 var_link_remove: Ausgewählten Link löschen

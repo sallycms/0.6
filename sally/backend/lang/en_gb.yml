@@ -32,7 +32,6 @@ filter: Filter
 begin_sorting: Sort table
 end_sorting: End sorting mode
 
-# sally/index.php
 start_article_not_selected: start article not selected
 redirect_previous_page: 'You are being redirected to your <a href="{0}">previous page</a>.'
 redirect_startpage: 'You are being redirected to your <a href="{0}">homepage</a>.'
@@ -53,7 +52,6 @@ importer_entry_count: '({0} rows)'
 
 homepage: Homepage
 
-# sally/index.php
 specials: System
 user: Users
 mediapool: Mediapool
@@ -65,16 +63,13 @@ logout: Logout
 navigation_basis: Basic Navigation
 navigation_addons: AddOns
 
-# sally/include/classes/class.login.inc.php
 login_name: Username
 password: Password
 new_password: New password
 
-# sally/include/layout/top.php
 logged_out: not signed in
 logged_in_as: Logged in as
 
-# sally/include/classes/class.article.inc.php
 add_block: add slice
 edit: edit
 no_editing_rights: permission denied
@@ -87,7 +82,6 @@ update_block: update slice
 save_block: save slice
 edit_block: edit slice
 
-# sally/include/functions/function_rex_generate.inc.php
 article_moved: Article moved!
 article_deleted: Article deleted!
 could_not_move_article: Could not move article.
@@ -97,7 +91,6 @@ category_doesnt_exist: 'Category doesn''t exist!'
 cant_delete_sitestartarticle: The website start article can not be deleted.
 cant_delete_notfoundarticle: The "Not Found" article cannot be deleted.
 
-# sally\include\pages\content.inc.php
 move_slice_up: move up
 move_slice_down: move down
 block_updated: Block has been updated!
@@ -174,7 +167,6 @@ output: Output
 action: Action
 actions: Actions
 
-# sally\include\pages\structure.inc.php
 title_structure: Structure management
 no_such_category: Category not found!
 category_updated: Category has been updated.
@@ -213,12 +205,10 @@ structure_categories_caption: 'List of subcategories in "{0}"'
 structure_articles_summary: 'List of all articles in "{0}"'
 structure_articles_caption: 'List of articles in "{0}"'
 
-# sally\include\functions\function_rex_category.inc.php
 article: Article
 start_article: Start-article
 path: Path
 
-# sally\include\pages\user.inc.php
 title_user: User
 user_data_updated: User data updated!
 user_deleted: User deleted!
@@ -254,7 +244,6 @@ user_status: Status
 backend_language: Backend language
 startpage: Startpage
 
-# sally\include\pages\special.inc.php
 info_updated: Information updated!
 delete_cache: Delete cache
 delete_cache_description: 'Templates and languages files will be created, article case will be deleted. The cache of the respective article will be recreated on front-end call of the article.'
@@ -303,7 +292,6 @@ specials_not_found_article: Not-Found Article
 setup: Setup
 setup_text: 'You can initiate the setup process here. This is only for emergency and not required on normal conditions.'
 
-# sally\include\pages\addon.inc.php
 addon: AddOn
 addons: AddOns
 addon_help: 'Help for {0}'
@@ -361,7 +349,6 @@ plugin_requires_plugin: 'The plugIn {0} is required to install the plugIn {1}.'
 plugin_sally_incompatible: 'This plugIn is not marked as compatible with your SallyCMS version ({0}).'
 plugin_has_no_sally_version_info: This plugIn has no compatibility-information. It can not be installed.
 
-# sally\include\pages\credits.inc.php
 credits: Credits
 credits_name: AddOn
 credits_version: Version
@@ -370,19 +357,16 @@ credits_supportpage: Help
 credits_addon_inactive: Addon inactive
 credits_caption: List of used addOns/plugins
 
-# sally\include\pages\profile.inc.php
 profile_myprofile: Edit my profile
 profile_title: My profile
 profile_save: Save profile
 
-# sally\include\pages\linkmap.inc.php
 linkmap: Linkmap
 lmap_title: Linkmap
 lmap_categories: Categories
 lmap_articles: Articles
 lmap_has_no_type: has no type
 
-# sally\include\classes\variables\class.rex_var_media.inc.php
 var_media_open: Choose media
 var_media_new: Add media
 var_media_remove: Delete selected media
@@ -391,7 +375,6 @@ var_medialist_move_up: Move selected media up
 var_medialist_move_down: Move selected media down
 var_medialist_move_bottom: Move selected media to bottom
 
-# sally\include\classes\variables\class.rex_var_link.inc.php
 var_link_open: Choose link
 var_link_new: Add link
 var_link_remove: Delete selected link
