@@ -154,20 +154,54 @@
 }
 
 .sly-contentpage-slice-input {
-	
 	label, input, select, textarea, .sly-widget {
 		margin: 5px 0;
 	}
-	
+
 	.sly-widget {
 		float: left;
-		
+
 		input, select {
 			margin: 0;
 		}
 	}
+
 	.sly-form-helptext {
 		margin-top: 0px;
+	}
+
+	.sly-form {
+		margin-left: -10px;
+		width: 779px;
+
+		label, input, select, textarea, .sly-widget {
+			margin: 0px;
+		}
+
+		legend {
+			display: none;
+		}
+
+		.rex-form-wrapper {
+			margin-bottom: 0;
+		}
+
+		.sly-form-helptext {
+			margin-top: 5px;
+		}
+
+		.rex-form-row {
+			padding: 7px 10px;
+			width: 777px;
+
+			label {
+				margin: inherit;
+			}
+
+			input, select, textarea {
+				margin: 0;
+			}
+		}
 	}
 }
 
@@ -177,42 +211,8 @@
 	border: 0;
 	+border-bottom-radius(4px);
 	background-color: $md_grey;
-	
+
 	input {
 		margin-bottom: 0;
-	}
-}
-
-/* Styling for sly_Forms within modules */
-.sly-contentpage-slice-input .sly-form {
-	margin-left: -10px;
-	width: 779px;
-
-	label, input, select, textarea, .sly-widget {
-		margin: 0px;
-	}
-	
-	legend {
-		display: none;
-	}
-
-	.rex-form-wrapper {
-		margin-bottom: 0;
-	}
-	.sly-form-helptext {
-		margin-top: 5px;
-	}
-
-	.rex-form-row {
-		padding: 7px 10px;
-		width: 777px;
-
-		label {
-			margin: inherit;
-		}
-
-		input, select, textarea {
-			margin: 0;
-		}
 	}
 }

@@ -6,11 +6,26 @@
 	*border-collapse: collapse; /* hack for IE7 */
 	+border-bottom-radius(5px);
 
+	th, td {
+		&.sly-icon, &.sly-small {
+			width: 29px;
+			text-align: center;
+		}
+
+		&.sly-icon {
+			padding: 0;
+		}
+	}
+
+	tr:first-child td {
+		border-top: none;
+	}
+
 	caption {
 		+border-top-radius(4px);
 		text-align: left;
 		background-color: $drk_grey;
-		color: #4D4646; /* 'transparant' would be CSS3 and fail in IE */
+		color: #4D4646;
 		border: 1px solid $drk_grey;
 		height: 5px;
 	}
@@ -27,9 +42,9 @@
 			padding-right: 13px;
 			background: url() right center no-repeat;
 
-			&.asc    { background-image: url(../ascending.png); }
+			&.asc    { background-image: url(../ascending.png);  }
 			&.desc   { background-image: url(../descending.png); }
-			&.nosort { background-image: url(../nosort.png); }
+			&.nosort { background-image: url(../nosort.png);     }
 		}
 	}
 
@@ -37,43 +52,41 @@
 		height: 40px;
 		border-top: 1px dotted $md_grey;
 		*position: relative;
-
-		&.rex-colored {
-			background-color: $drk_grey;
-		}
 	}
 
 	tr.active td {
 		background-color: $link_color;
 		color: #fff;
 	}
-
 }
 
-.sly-table-extras {
-	&-pager, &-filter, &-sorting {
-		margin-bottom: 1em;
-		font-size: 13px;
-		line-height: 20px;
+.sly-table-extras-pager,
+.sly-table-extras-filter,
+.sly-table-extras-sorting {
+	margin-bottom: 1em;
+	font-size: 13px;
+	line-height: 20px;
+}
+
+.sly-table-extras-pager {
+	float: left;
+
+	span, a {
+		margin: 0 1px;
+		padding: 0 1px;
 	}
+}
 
-	&-pager {
-		float: left;
+.sly-table-extras-sorting {
+	float: right;
+	margin-left: 20px;
+}
 
-		span, a {
-			margin: 0 1px;
-			padding: 0 1px;
-		}
-	}
+.sly-table-extras-filter {
+	float: right;
 
-	&-sorting {
-		float: right;
-		margin-left: 20px;
-	}
-
-	&-filter {
-		float: right;
-
-		input[type="text"] { width: 150px; padding: 1px; }
+	input[type="text"] {
+		width: 150px;
+		padding: 1px;
 	}
 }

@@ -12,29 +12,37 @@ body {
 a {
 	color: $link_color;
 	text-decoration: none;
-	&:hover { text-decoration: none; }
+
+	&:hover {
+		text-decoration: none;
+	}
 }
 
 ins {
-	text-decoration:none;
+	text-decoration: none;
 }
-del {
-	text-decoration:line-through;
+
+del, .sly-strike {
+	text-decoration: line-through;
 }
 
 img, iframe {
-	vertical-align:bottom;
+	vertical-align: bottom;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: normal;
 }
 
 #sly-page {
+	+clearfix;
 	width: 1000px;
 	margin: 0 auto;
-	+clearfix;
 }
 
-/* PAGEHEAD -------------------------------------------------------- PAGEHEAD */
-.sly-navi-path{
+.sly-navi-path {
 	display: inline;
+
 	li {
 		display: inline;
 
@@ -45,13 +53,13 @@ img, iframe {
 }
 
 #sly-pagehead {
-
 	margin: 0 0 10px 0;
 
 	h1 {
 		font-size: 2em;
 		text-shadow: 1px 1px 0px rgba(255,255,255,.8);
 	}
+
 	.pagehead-row {
 		+clearfix;
 		height: 40px;
@@ -65,19 +73,12 @@ img, iframe {
 	}
 }
 
-/* ----------------------------------------------------------------------------------------------------------- */
-
-
-
 .rex-toolbar {
 	background-color: #fff;
 	position: relative;
 	margin-bottom: 10px;
 	+border-radius($brd_rad);
 
-	&-content {
-		padding: 10px;
-	}
 	ul li {
 		list-style: none;
 		display: inline-block;
@@ -85,20 +86,8 @@ img, iframe {
 	}
 }
 
-/* ----------------------------------------------------------------------------------------------------------- */
-
-.rex-nospace {
-	margin: 0;
-	padding: 0;
-}
-
-.rex-clearer {
-	clear: both;
-	display: block;
-	font-size: 0;
-	height: 1px;
-	line-height: 0;
-	visibility: hidden;
+.rex-toolbar-content {
+	padding: 10px;
 }
 
 .rex-hidden {
@@ -112,24 +101,9 @@ img, iframe {
 	background-color: $background !important;
 }
 
-.rex-rvrs {
-	unicode-bidi: bidi-override;
-	direction: rtl;
-}
-
-.rex-fl-lft    { float: left; }
-.rex-fl-rght   { float: right; }
 .rex-algn-lft  { text-align: left; }
 .rex-algn-rght { text-align: right; }
 .rex-strike    { text-decoration: line-through; }
-
-.rex-code {
-	font-size: 1.2em;
-	background-color: $drk_grey;
-	border: 1px solid #F2353A;
-	display: block;
-	padding: 10px;
-}
 
 .rex-tx2,
 .rex-tx3,
@@ -146,10 +120,12 @@ img, iframe {
 
 .rex-hl2 {
 	line-height: 26px;
-}
-
-.rex-tx3 {
-	color: #478C44;
+	font-size: 1.4em;
+	letter-spacing: -0.01em;
+	padding: 7px 10px;
+	background-color: #4D4646;
+	color: #FFFFFF;
+	+border-top-radius($brd_rad);
 }
 
 p.rex-tx1,
@@ -159,63 +135,31 @@ ol.rex-ol1 {
 	margin-bottom: 1em;
 }
 
+.rex-tx3 { color: #188D12; }
+.rex-tx2 { color: #AF112F; }
+
 ul.rex-ul1 {
 	margin-left: 40px;
-	li { list-style-type: square; }
+
+	li {
+		list-style-type: square;
+	}
 }
 
 ol.rex-ol1 {
 	margin-left: 40px;
 }
 
-.rex-area-content {
-	line-height: 1.6;
-}
-
 .rex-offline {
 	color: $link_color_offline;
 }
 
-.rex-ok, .rex-online {
+.rex-online {
 	color: $link_color_online;
 }
 
-.rex-area-scroll {
-	background-color: #FFF;
-}
-
-.rex-area,
-.rex-content-cols {
-	background-color: #fff;
-}
-
-.rex-area-footer,
-.rex-addon-footer {
-	background-color: #D7D6D3;
-}
-
-/*	Button - Arrows */
-.rex-area-scroll,
-.rex-widget {
-	border-color: #999;
-}
-
-/*	Elemente verstecken ********************************************************
-		Hinweis:
-			den Elementen nicht die Klasse "rex-hidden" einzeln zuweisen,
-			da diese von anderen Layouts eventuell dargestellt werden sollen
-*******************************************************************************/
-
 .center {
 	text-align: center;
-}
-
-.rex-me1 {
-	margin: 20px 0 20px 0;
-}
-
-h1, h2, h3, h4, h5, h6 {
-	font-weight: normal;
 }
 
 .sly-content {
@@ -226,8 +170,6 @@ h1, h2, h3, h4, h5, h6 {
 		line-height: 15px;
 	}
 }
-
-/* Sprites */
 
 .sly-sprite {
 	background-image: url(../sprites.png);
@@ -246,33 +188,18 @@ a.sly-sprite, span.sly-sprite {
 	margin: 0 auto;
 }
 
-/**********************************************************************/
-/* START CSS_form                                                     */
-/**********************************************************************/
-
-/*	Inputs in Table
-	- add, edit Category (Structure, Medienpool)
-	- add, edit Article (Structure)
-*******************************************************************************/
-
-/**********************************************************************/
-/* START CSS_component                                                */
-/**********************************************************************/
-
 caption, legend {
 	&.rex-hidden { +hide; }
 }
 
-/*	REX-MESSAGE -------------------------------------------------------------------------- REX-MESSAGE */
-
 .sly-message {
-	clear:both;
-	font-weight:700;
-	line-height:1em;
-	margin-bottom:10px;
-	width:100%;
+	clear: both;
+	font-weight: 700;
+	line-height: 1em;
+	margin-bottom: 10px;
+	width: 100%;
 
-	&.rex-info, &.rex-warning, &.sly-info, &.sly-warn {
+	&.sly-info, &.sly-warn {
 		padding: 8px 0;
 		color: #fff;
 		background-color: $link_color;
@@ -283,7 +210,7 @@ caption, legend {
 		border: 1px solid #efefef;
 	}
 
-	&.rex-warning, &.sly-warn {
+	&.sly-warn {
 		background-color: #b32430;
 	}
 
@@ -293,138 +220,27 @@ caption, legend {
 	}
 }
 
-/* --------------------------------------------------------------------------------------------------- */
-
-/*	real width = border + padding + width */
-
-.sly-table {
-	th, td {
-		&.rex-small, &.sly-icon, &.sly-small {
-			width: 29px;
-			text-align: center;
-		}
-
-		&.sly-icon {
-			padding: 0;
-		}
-	}
-
-	tr:first-child td { border-top: none; }
-}
-
-/*	Allgemeiner Block (Addon Hilfeseiten) / Addon Seiten */
-
 .rex-area {
 	float: left;
 	width: 100%;
-}
-
-.rex-area,
-.rex-addon {
-	&-footer {
-		padding: 7px 5px;
-		font-weight: bold;
-	}
-}
-
-/*	Spaltigkeit */                                                 /* *lol* :) */
-
-.rex-area-col {
-	&-2 {
-		+clearfix;
-		position: relative;
-		width: 100%;
-	}
-
-	&-a, &-b {
-		float: left;
-		width: 50%;
-	}
-
-	&-b {
-		float: right;
-
-		.rex-hl2, .rex-area-content {
-			float: right;
-		}
-	}
-}
-
-/*	Icons */
-
-.rex-i-element {
-	display: block;
-	width: 16px;
-	height: 16px;
-	margin: 0 auto;
-	text-indent: -1000em;
-}
-
-.rex-tx3 { color: #188D12; } /* Grün */
-.rex-tx2 { color: #AF112F; } /* Rot */
-
-/* Schriftarten */
-
-.rex-area-footer {
-	background-color: $drk_grey;
-}
-
-.rex-area,
-.rex-content-cols {
 	background-color: #fff;
 	color: $drk_grey;
-}
-
-/*	Back */
-
-.rex-back {
-	padding-left: 8px;
-	background-image: url(../back.png);
-	background-position: 0 4px;
-}
-
-/*	Allgemeines */
-
-#sly-wrapper {
-	float: right;
-	width: 797px;
-	padding-bottom: 36px;
-	+clearfix;
-
-	> p, .sly-table {
-		margin: 0 0 10px 0;
-	}
-}
-
-
-/*	Icons */
-
-.rex-i-element-text {
-	+hide;
-}
-
-/*	Rundungen */
-.rex-area {
 	+border-radius($brd_rad);
 }
 
-
-/* ----------------------------------------------------------------------------------------------------- */
-
-.rex-hl2 {
-	font-size: 1.4em;
-	letter-spacing: -0.01em;
-	padding: 7px 10px;
-	background-color: #4D4646;
-	color: #FFFFFF;
-	+border-top-radius($brd_rad);
+.rex-area-footer {
+	background-color: $drk_grey;
+	padding: 7px 5px;
+	font-weight: bold;
 }
 
-.rex-area-col-2 .rex-hl2 {
-	width: 94%;
+.rex-area-scroll {
+	background-color: #FFF;
+	border-color: #999;
 }
 
 .rex-area-content {
+	line-height: 1.6;
 	padding: 10px 0;
 	+border-bottom-radius($brd_rad);
 	background-color: #fff;
@@ -435,10 +251,12 @@ caption, legend {
 		font-weight: bold;
 	}
 
-	h4.rex-h13 { margin: 10px; }
+	h4.rex-h13 {
+		margin: 10px;
+	}
 
 	.rex-tx1, fieldset {
-		margin: 0 10px 5px 10px
+		margin: 0 10px 5px 10px;
 	}
 
 	.sly-button {
@@ -447,17 +265,63 @@ caption, legend {
 	}
 }
 
+.rex-area-col-2 {
+	+clearfix;
+	position: relative;
+	width: 100%;
+}
+
+.rex-area-col-2 .rex-hl2 {
+	width: 94%;
+}
+
+.rex-area-col-a {
+	float: left;
+	width: 50%;
+}
+
+.rex-area-col-b {
+	float: right;
+	width: 50%;
+
+	.rex-hl2, .rex-area-content {
+		float: right;
+	}
+}
+
+.rex-i-element {
+	display: block;
+	width: 16px;
+	height: 16px;
+	margin: 0 auto;
+	text-indent: -1000em;
+}
+
+.rex-i-element-text {
+	+hide;
+}
+
 a.sly-action {
 	background-image: url(../sprites.png);
 	background-position: left 50%;
 	background-repeat: no-repeat;
 	padding: 1px 0 1px 18px;
 
-	&.sly-delete { color: red; background-position: -48px -32px; }
+	&.sly-delete {
+		color: red;
+		background-position: -48px -32px;
+	}
 }
 
-.sly-strike {
-	text-decoration: line-through;
+#sly-wrapper {
+	+clearfix;
+	float: right;
+	width: 797px;
+	padding-bottom: 36px;
+
+	> p, .sly-table {
+		margin: 0 0 10px 0;
+	}
 }
 
 .sly-clang-toolbar {
@@ -467,15 +331,19 @@ a.sly-action {
 }
 
 .sly-popup {
-	#sly-page  { width: 100%; }
+	#sly-page {
+		width: 100%;
+	}
+
 	#sly-wrapper {
 		float: none;
 		margin: 0 auto;
 		padding-top: 20px;
 		width: 690px;
 	}
+
 	#sly-navi-top { display: none; }
-	#sly-footer { display:none; }
+	#sly-footer   { display: none; }
 	#sly-pagehead { background-image: none; }
 
 	.sly-form legend {

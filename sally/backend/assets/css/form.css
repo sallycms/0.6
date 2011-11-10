@@ -85,14 +85,15 @@ a.sly-button {
 }
 
 .rex-area-content {
-	p.rex-form-checkbox, p.rex-form-radio { line-height: 1em; }
+	p.rex-form-checkbox, p.rex-form-radio {
+		line-height: 1em;
+	}
 }
 
 .rex-form-hidden-label {
 	+hide;
 }
 
-/* REX-FORM -------------------------------------------------------------------------------------- REX-FORM */
 .sly-form {
 	span.sly-form-read,
 	.sly-form-helptext {
@@ -146,11 +147,11 @@ a.sly-button {
 	}
 }
 
-/* sly widgets */
 .sly-widget {
 	+clearfix;
 	display: block;
 	float: left;
+
 	&.sly-linklist,
 	&.sly-medialist {
 		select {
@@ -159,6 +160,7 @@ a.sly-button {
 			background: #fff;
 		}
 	}
+
 	input, select {
 		float: left;
 	}
@@ -177,28 +179,15 @@ a.sly-button {
 			line-height: 0;
 			margin-bottom: 2px;
 
-			&[rel=open] {
-				background: transparent url(../file_open.png) 0 0 no-repeat;
-			}
-			&[rel=add] {
-				background: transparent url(../file_add.png) 0 0 no-repeat;
-			}
-			&[rel=delete] {
-				background: transparent url(../file_del.png) 0 0 no-repeat;
-			}
-			&[rel=top] {
-				background: transparent url(../file_top.png) 0 0 no-repeat;
-			}
-			&[rel=up] {
-				background: transparent url(../file_up.png) 0 0 no-repeat;
-			}
-			&[rel=bottom] {
-				background: transparent url(../file_bottom.png) 0 0 no-repeat;
-			}
-			&[rel=down] {
-				background: transparent url(../file_down.png) 0 0 no-repeat;
-			}
+			&[rel=open]   { background: transparent url(../file_open.png) 0 0 no-repeat;   }
+			&[rel=add]    { background: transparent url(../file_add.png) 0 0 no-repeat;    }
+			&[rel=delete] { background: transparent url(../file_del.png) 0 0 no-repeat;    }
+			&[rel=top]    { background: transparent url(../file_top.png) 0 0 no-repeat;    }
+			&[rel=up]     { background: transparent url(../file_up.png) 0 0 no-repeat;     }
+			&[rel=bottom] { background: transparent url(../file_bottom.png) 0 0 no-repeat; }
+			&[rel=down]   { background: transparent url(../file_down.png) 0 0 no-repeat;   }
 		}
+
 		img {
 			width: 16px;
 			height: 16px;
@@ -206,8 +195,7 @@ a.sly-button {
 	}
 
 	&.sly-media input { width: 393px; }
-
-	&.sly-link input { width: 413px; }
+	&.sly-link input  { width: 413px; }
 }
 
 .sly-form {
@@ -246,20 +234,32 @@ a.sly-button {
 		padding-left: 145px;
 		line-height: 21px;
 
-		label { float:none; display:inline; }
-		input.rex-chckbx { margin-top: 3px; margin-right: 5px; float:left; }
+		label {
+			float: none;
+			display: inline;
+		}
+
+		input.rex-chckbx {
+			margin-top: 3px;
+			margin-right: 5px;
+			float: left;
+		}
 	}
 
-	input.rex-form-submit-2 { margin-left: 20px; }
-	input.rex-form-submit,
-	input.sly-button-delete{ width: auto; }
+	input.rex-form-submit-2 {
+		margin-left: 20px;
+	}
 
+	input.rex-form-submit,
+	input.sly-button-delete {
+		width: auto;
+	}
 
 	/*	Zweispaltig */
 
 	fieldset.rex-form-col-2 {
 		.rex-form-col-a, .rex-form-col-b {
-			width:49%;
+			width: 49%;
 			float: left;
 		}
 	}

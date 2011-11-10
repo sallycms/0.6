@@ -2,6 +2,11 @@
 	float: left;
 	width: 171px;
 	margin-left: 16px;
+
+	ul li a.rex-active {
+		color: #fff;
+		font-weight: bold;
+	}
 }
 
 .sly-navigation {
@@ -10,10 +15,10 @@
 	color: $drk_grey;
 
 	li {
-		list-style:none outside none;
-		margin-bottom:1px;
-		line-height:25px;
-		font-size:0.9em;
+		list-style: none outside none;
+		margin-bottom: 1px;
+		line-height: 25px;
+		font-size: 0.9em;
 	}
 
 	a {
@@ -50,7 +55,6 @@
 				background-position: center center;
 			}
 		}
-
 	}
 
 	.sly-navigation-level-2 {
@@ -88,18 +92,8 @@
 	dd {
 		margin: 0 0 16px 0;
 	}
-
 }
 
-/* Textfarbe des aktiven Menüpunkts */
-#sly-navi-main ul li a.rex-active {
-	color: #fff;
-	font-weight: bold;
-}
-
-/******************************************************************************\
-* Navi Logout                                                                  *
-\******************************************************************************/
 #sly-navi-top {
 	color: #b2b2b2;
 	height: 88px;
@@ -127,20 +121,28 @@
 	}
 }
 
-/******************************************************************************\
-* Navigation unter dem Seitentitel                                             *
-\******************************************************************************/
-
 #rex-navi-page ul li {
 	display: inline;
 	font-weight: normal;
+	background-image: url(../pipe_c2.png);
+	background-position: 0 4px;
+	background-repeat: no-repeat;
 
-	a { margin: 0 15px; }
-	&.rex-navi-first a { margin-left: 0; }
-}
+	a {
+		margin: 0 15px;
+	}
 
-#rex-navi-page ul li a.rex-active {
-	color: $drk_grey;
+	&.rex-navi-first {
+		background: none;
+
+		a {
+			margin-left: 0;
+		}
+	}
+
+	a.rex-active {
+		color: $drk_grey;
+	}
 }
 
 #sly-footer {
@@ -183,15 +185,5 @@
 				margin-left: 0;
 			}
 		}
-	}
-}
-
-#rex-navi-page {
-	ul li {
-		background-image: url(../pipe_c2.png);
-		background-position: 0 4px;
-		background-repeat: no-repeat;
-
-		&.rex-navi-first { background: none; }
 	}
 }

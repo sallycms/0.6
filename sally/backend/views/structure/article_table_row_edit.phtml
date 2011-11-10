@@ -15,7 +15,7 @@ $base_url = 'index.php?page=structure&category_id='.$article->getId().'&clang='.
 		<input type="hidden" name="edit_id" value="<?= $article->getId() ?>" />
 		<?= sly_Util_HTML::getSpriteLink($base_url, $article->getName(), $sprite) ?>
 	</td>
-	<?= $advancedMode ? '<td class="rex-small">'.$article->getId().'</td>' : '' ?>
+	<?= $advancedMode ? '<td class="sly-small">'.$article->getId().'</td>' : '' ?>
 	<td class="name" colspan="2"><input type="text" class="rex-form-text" id="sly-form-field-name" name="article_name" autofocus="autofocus" value="<?= sly_html($article->getName()) ?>" /></td>
 	<td class="prior"><input type="text" class="rex-form-text" id="sly-form-field-prior" name="article_position" value="<?= sly_html($article->getPrior()) ?>" /></td>
 	<td class="status"><input type="submit" name="do_edit_article" value="<?= t('article_save') ?>" /></td>
