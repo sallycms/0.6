@@ -161,6 +161,7 @@ content_tostartarticle_ok: Dieser Artikel wurde erfolgreich zum Startartikel umg
 content_select_type: Bitte wählen sie zuerst einen Artikeltypen!
 content_configure_article_type: Konfigurieren sie das Template für den Atikeltypen!
 content_no_slots: In diesem Artikel können keine Inhalte eingepflegt werden.
+content_no_modules: In diesem Slot können keine Inhalte eingepflegt werden.
 move_category: nach
 category_moved: Kategorie wurde verschoben
 content_types: Spalten

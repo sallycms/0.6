@@ -8,16 +8,15 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 ?>
-
 <div class="sly-content-header">
 	<?php
-	//navigation
+	// navigation
 	print $this->render('content/_slotmenu.phtml');
 	print $this->render('content/_subpagemenu.phtml');
 	?>
 </div>
 <?php
-//messages
+// messages
 print $this->render('content/_messages.phtml');
 
 $params = array('id' => $article->getId(), 'clang' => $article->getClang(), 'article' => $article);
@@ -49,13 +48,18 @@ print $form->render();
 
 $hasType     = $article->hasType();
 $hasTemplate = $article->hasTemplate();
-if (!$hasType || !$hasTemplate || $slot === null) {
-	if (!$hasType)
-		print sly_Helper_Message::warn(t('content_select_type'));
-	elseif (!$hasTemplate)
-		print sly_Helper_Message::warn(t('content_configure_article_type'));
-	else
-		print sly_Helper_Message::info(t('content_no_slots'));
+
+if (!$hasType) {
+	print sly_Helper_Message::warn(t('content_select_type'));
+}
+elseif (!$hasTemplate) {
+	print sly_Helper_Message::warn(t('content_configure_article_type'));
+}
+elseif ($slot === null) {
+	print sly_Helper_Message::info(t('content_no_slots'));
+}
+elseif (empty($modules)) {
+	print sly_Helper_Message::info(t('content_no_modules'));
 }
 else {
 	print '<div class="sly-content-editmode">';
@@ -77,7 +81,7 @@ else {
 				sly_Helper_Content::printAddSliceForm($prior, $module, $article->getId(), $article->getClang(), $slot, isset($slicevalues) ? $slicevalues : array());
 			}
 			else {
-				print $this->render('content/_add_slice_form.phtml', array('article' => $article, 'prior' => $i, 'slot' => $slot));
+				print $this->render('content/_add_slice_form.phtml', array('article' => $article, 'prior' => $i, 'slot' => $slot, 'modules' => $modules));
 			}
 
 			if (isset($articleSlices[$i])) {

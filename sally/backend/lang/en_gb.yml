@@ -161,6 +161,7 @@ content_tostartarticle_ok: Article was changed to start-article.
 content_select_type: Please select an article type!
 content_configure_article_type: Configure the tempalte for this article type!
 content_no_slots: This article cannot contain any content.
+content_no_modules: This slot cannot contain any content.
 move_category: to
 category_moved: Category has been moved
 content_types: Columns

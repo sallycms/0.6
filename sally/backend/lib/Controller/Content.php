@@ -33,12 +33,17 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 	protected function index($extraparams = array()) {
 		if ($this->header() !== true) return;
 
-		$articletypes = sly_Service_Factory::getArticleTypeService()->getArticleTypes();
+		$service      = sly_Service_Factory::getArticleTypeService();
+		$articletypes = $service->getArticleTypes();
+		$modules      = $service->getModules($this->article->getType(), $this->slot);
+
 		uasort($articletypes, 'strnatcasecmp');
+		uasort($modules, 'strnatcasecmp');
 
 		$params = array(
 			'article'      => $this->article,
 			'articletypes' => $articletypes,
+			'modules'      => $modules,
 			'slot'         => $this->slot,
 			'slice_id'     => sly_request('slice_id', 'rex-slice-id', ''),
 			'prior'        => sly_request('prior', 'int', 0),
@@ -244,7 +249,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 				return false;
 			}
 
-			if (!sly_Service_Factory::getTemplateService()->hasModule($this->article->getTemplateName(), $module, $this->slot)) {
+			if (!sly_Service_Factory::getArticleTypeService()->hasModule($this->article->getType(), $module, $this->slot)) {
 				$this->warning = t('no_rights_to_this_function');
 				return false;
 			}
