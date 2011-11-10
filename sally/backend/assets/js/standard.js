@@ -477,17 +477,10 @@ var slyMediaWidgetCallback = null;
 			$('input[name=\'' + target + '\']').prop('checked', this.checked);
 		});
 
-		// Lösch-Links in Tabellen
+		// Lösch-Links
 
-		$('table.sly-table').delegate('a.sly-delete, input.sly-button-delete', 'click', function() {
-			var table    = $(this).parents('table');
-			var question = table.attr('rel');
-
-			if (!question) {
-				question = 'Löschen?';
-			}
-
-			return confirm(question);
+		$('a.sly-delete, input.sly-button-delete').click(function() {
+			return confirm('Sind Sie sicher, dass das Element gelöscht werden soll?');
 		});
 
 		// Filter-Funktionen in sly_Table
