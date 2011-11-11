@@ -128,6 +128,8 @@ if ($this->canAccessFile($medium)) {
 	$submit->setAttribute('name', 'update');
 
 	$delete = new sly_Form_Input_Button('submit', 'delete', t('pool_file_delete'));
+	$delete->addClass('sly-button-delete');
+
 	$form->setApplyButton($delete);
 	$form->setResetButton(null);
 }

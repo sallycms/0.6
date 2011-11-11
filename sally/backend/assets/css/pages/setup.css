@@ -39,9 +39,8 @@ ul.rex-setup-language {
 }
 
 #sly-page-setup {
-
 	#sly-wrapper,
-	#sly-footer{
+	#sly-footer {
 		float: none;
 		width: 650px;
 		margin-right: auto;

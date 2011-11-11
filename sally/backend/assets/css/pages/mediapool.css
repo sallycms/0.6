@@ -1,11 +1,6 @@
-#sly-page-mediapool {
+/* general styles for all subpages */
 
-	/*	Rundungen */
-	.sly-form, #rex-mediapool-detail-wrapper {
-		+border-radius($brd_rad);
-	}
-
-	/* Pfadangabe im Medienpool */
+.sly-mediapool {
 	.sly-navi-path ul {
 		border: 0;
 		list-style: none;
@@ -20,14 +15,118 @@
 			a.rex-active { color: $drk_grey; }
 		}
 	}
+
+	.rex-form-file {
+		border: 0;
+	}
+
+	.sly-form {
+		width: 690px;
+
+		td { padding: 5px 0 }
+
+		.rex-tx4 {
+			line-height: 1.4em;
+			margin: 0;
+		}
+
+		caption { display: none; }
+
+		.rex-form-wrapper {
+			width: 690px;
+			padding: 0;
+			margin-bottom: 10px;
+		}
+
+		.rex-form-row {
+			width: 676px;
+		}
+
+		fieldset.sly-file-properties {
+			.rex-form-wrapper {
+				min-height: 90px;
+			}
+		}
+
+		input[type=text] { width: 400px; }
+		select           { width: 407px; }
+	}
+
+	.sly-mediapool-list {
+		width: 690px;
+		margin-bottom: 0 !important;
+
+		th, td      { vertical-align: middle; }
+		th.sly-icon { padding-bottom: 6px;    }
+
+		td {
+			height: auto;
+		}
+
+		th {
+			background-color: #fff;
+			color: $drk_grey;
+			font-weight: bold;
+			vertical-align: middle;
+			border-bottom: 1px dotted $md_grey;
+			padding: 6px 0;
+		}
+
+		/* reset the checkboxes (prevents ugly checkboxes in Opera) */
+		.sly-icon input {
+			margin: 0;
+			border: 0 none;
+			padding: 0;
+		}
+
+		select {
+			width: 230px;
+		}
+
+		label {
+			float: none;
+		}
+	}
+
+	.sly-mediapool-detail-image {
+		position: relative;
+		height: 0;
+		border: 0 none;
+		padding: 0 7px;
+
+		div {
+			position: absolute;
+			right: 0;
+			top: 0;
+			padding: 7px;
+			width: 113px;
+			text-align: right;
+
+			img {
+				max-height: 60px;
+				max-width: 113px;
+			}
+		}
+	}
+
+	.sly-mediapool-detail-title {
+		border-top: 0 none;
+	}
 }
+
+/* index page */
+
+#rex-form-mediapool-selectcategory {
+	input[type=submit] {
+		margin-left: 10px;
+	}
+}
+
+/* structure management */
 
 #sly-page-mediapool-structure {
 	.rex-form-text {
 		width: 400px;
-	}
-	.rex-form-submit {
-		margin: 0 10px 0 0;
 	}
 
 	.sly-icon  { width: 40px; }
@@ -38,176 +137,8 @@
 	.sly-col-f { width: 95px; }
 }
 
-#sly-mediapool-structure-form {
-	.rex-form-row {
-		padding: 0;
-		width: 690px;
-	}
-}
-
-/*	Button - Arrows */
-
-.rex-i- {
-	&mediapool-category     { background-position: -32px 0; }
-	&mediapool-category-add { background-position: -32px -16px; }
-}
-
-#rex-form-mediapool-selectcategory {
-	/*  Bspl. Searchbar */
-
-	.rex-form-row p {
-		input.rex-form-submit { margin-left: 10px; }
-	}
-
-	fieldset.rex-form-col-2 {
-		margin-bottom: 40px;
-	}
-
-	.rex-form-wrapper {
-		margin-bottom: 10px;
-	}
-}
-
-#sly-page-mediapool,
-#rex-form-mediapool-other {
-	.rex-form-row:first-child { border-top: none; }
-
-	fieldset.rex-form-col-1 .rex-form-row {
-		#file_new .rex-form-file {
-			border: 0;
-		}
-
-	}
-}
-
-#rex-form-mediapool-detail {
-	fieldset.num1 {
-		label,
-		span.sly-form-read,
-		input,
-		input,
-		select,
-		textarea {
-			width: 250px;
-		}
-
-		.rex-form-row {
-			line-height: 29px;
-		}
-
-		label {
-			margin-top: 4px;
-		}
-	}
-}
-
-#rex-mediapool-detail {
-	&-wrapper {
-		float: left;
-		width: 100%;
-		color: $drk_grey;
-	}
-
-	.rex-form-submit { margin-left: 75px; }
-
-	.rex-form-row {
-		p.sly-form-read span,
-		p.rex-form-text input,
-		p.rex-form-password input,
-		p select,
-		p textarea {
-			width: 244px;
-		}
-	}
-}
-
-#sly-page-mediapool .sly-form {
-	width: 690px;
-
-	td { padding: 5px 0 }
-
-	.rex-tx4 {
-		line-height: 1.4em;
-		margin: 0;
-	}
-
-	caption { display: none; }
-
-	.rex-form-wrapper {
-		width: 690px;
-		padding: 0;
-		margin-bottom: 10px;
-	}
-
-	fieldset.sly-file-properties {
-		.rex-form-wrapper {
-			min-height: 90px;
-		}
-	}
-
-	input[type=text]   { width: 400px; }
-	select { width: 407px; }
-
-	.sly-mediapool-list {
-		width: 690px;
-
-		th, td      { vertical-align: middle; }
-		th.sly-icon { padding-bottom: 6px;    }
-
-		tr th {
-			background-color: #fff;
-			color: $drk_grey;
-			font-weight: bold;
-			vertical-align: middle;
-			border-bottom: 1px dotted $md_grey;
-			padding: 6px 0;
-		}
-
-		/* reset the checkboxes (prevents ugly checkboxes in Opera) */
-		td.sly-icon input {
-			margin: 0;
-			border: 0 none;
-			padding: 0;
-		}
-
-		select {
-			width: 230px;
-		}
-	}
-
-	.rex-form-row.sly-mediapool-detail-image {
-		position: relative;
-		height: 0;
-		border: 0 none;
-		padding: 0;
-
-		div {
-			position: absolute;
-			right: -10px;
-			top: 0px;
-			padding: 7px 10px 0;
-			width: 113px;
-			text-align: right;
-			background-color: #fff;
-
-			img {
-				max-height: 60px;
-				max-width: 113px;
-			}
-		}
-	}
-
-	.rex-form-row.sly-mediapool-detail-title {
-		border-top: 0 none;
-	}
-}
-
-#rex-form-mediapool-detail, #rex-form-mediapool-other, #rex-form-mediapool-sync, #rex-form-mediapool-selectcategory {
-	.rex-form-wrapper .rex-form-row {
-		width: 680px;
-		padding: 7px 5px;
-	}
-}
+.rex-i-mediapool-category     { background-position: -32px 0; }
+.rex-i-mediapool-category-add { background-position: -32px -16px; }
 
 #rex-form-mediapool-media {
 	.rex-form-wrapper .rex-form-row.sly-num0 {
@@ -216,11 +147,5 @@
 
 	.rex-form-row {
 		width: 690px;
-	}
-}
-
-#rex-form-mediapool-categories {
-	input.rex-form-submit {
-		margin-left: 0;
 	}
 }

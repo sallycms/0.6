@@ -1,6 +1,2 @@
-/* Sprites */
-
-.sly-sprite {
-	&-sly-user     { background-position: 0 0; }
-	&-sly-user-add { background-position: 0 -16px; }
-}
+.sly-sprite-sly-user     { background-position: 0 0; }
+.sly-sprite-sly-user-add { background-position: 0 -16px; }
