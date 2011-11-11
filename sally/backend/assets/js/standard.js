@@ -480,7 +480,7 @@ var slyMediaWidgetCallback = null;
 		// Lösch-Links
 
 		$('a.sly-delete, input.sly-button-delete').click(function() {
-			return confirm('Sind Sie sicher, dass das Element gelöscht werden soll?');
+			return confirm('Sicher?');
 		});
 
 		// Filter-Funktionen in sly_Table
