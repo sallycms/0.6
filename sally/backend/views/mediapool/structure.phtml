@@ -126,7 +126,7 @@ if ($this->action == 'add' || $this->action == 'edit') {
 				<td class="sly-small"><?= $id ?></td>
 				<td><a href="<?= $base.$id ?>"><?= sly_html($cat->getName()) ?></a></td>
 				<td class="sly-col-e"><a href="<?= $base.$catID ?>&amp;func=edit&amp;edit_id=<?= $id ?>"><?= t('pool_kat_edit')?></a></td>
-				<td class="sly-col-f"><a href="<?= $base.$catID ?>&amp;func=delete&amp;edit_id=<?= $id ?>" class="sly-delete"><?= t('pool_kat_delete') ?></a></td>
+				<td class="sly-col-f"><a href="<?= $base.$catID ?>&amp;func=delete&amp;edit_id=<?= $id ?>" class="sly-action sly-delete"><?= t('pool_kat_delete') ?></a></td>
 			</tr>
 			<?php
 		}

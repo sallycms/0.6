@@ -301,16 +301,18 @@ caption, legend {
 	+hide;
 }
 
+.sly-delete {
+	color: red;
+	background-position: -48px -32px;
+}
+
 a.sly-action {
 	background-image: url(../sprites.png);
 	background-position: left 50%;
 	background-repeat: no-repeat;
 	padding: 1px 0 1px 18px;
 
-	&.sly-delete {
-		color: red;
-		background-position: -48px -32px;
-	}
+	&.sly-delete { background-position: -48px -32px; }
 }
 
 #sly-wrapper {

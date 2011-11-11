@@ -74,6 +74,10 @@ optgroup {
 	&:active, &:focus {
 		border: 1px solid $md_grey;
 	}
+
+	&.sly-button-delete {
+		color: red;
+	}
 }
 
 a.sly-button {
