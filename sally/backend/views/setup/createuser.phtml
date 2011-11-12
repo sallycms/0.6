@@ -25,6 +25,20 @@ $form->add(new sly_Form_Input_Text('admin_pass', t('setup_createuser_password'))
 if ($usersExist) {
 	$form->add(new sly_Form_Input_Checkbox('no_admin', '', '1', t('setup_createuser_no_admin')));
 	$user->setHelpText(t('setup_createuser_no_admin_notice'));
+	sly_Core::getLayout()->addJavaScript("
+	jQuery(function($) {
+		$('#no_admin').click(function() {
+			var stat = this.checked;
+			if(stat) {
+				$('#admin_user').attr('disabled', 'disabled');
+				$('#admin_pass').attr('disabled', 'disabled');
+			} else {
+				$('#admin_user').removeAttr('disabled');
+				$('#admin_pass').removeAttr('disabled');
+			}
+		});
+	});
+	");
 }
 
 // button config
@@ -36,16 +50,5 @@ $form->getSubmitButton()->setAttribute('value', t('setup_createuser_continue'));
 
 $form->setFocus('admin_user');
 print $form->render();
-
-if ($usersExist):
 ?>
-<script type="text/javascript">
-jQuery(function($) {
-	$('#no_admin').change(function() {
-		var stat = this.checked;
-		$('#admin_user').attr('disabled', stat ? 'disabled' : '');
-		$('#admin_pass').attr('disabled', stat ? 'disabled' : '');
-	});
-});
-</script>
-<?php endif ?>
+
