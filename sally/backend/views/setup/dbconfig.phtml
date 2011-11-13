@@ -76,3 +76,6 @@ $form->getSubmitButton()->setAttribute('value', t('setup_dbconfig_continue'));
 
 $form->setFocus('driver');
 print $form->render();
+
+// disable host,user,pass when selecting SQLite
+sly_Core::getLayout()->addJavaScript("jQuery(function($) { $('#driver').change(function() {	$('#host,#user,#pass,#create_db').prop('disabled', $(this).val() === 'sqlite'); }); });");
