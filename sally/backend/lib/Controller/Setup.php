@@ -74,6 +74,10 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 			$errors = true;
 		}
 
+		if (!$errors) {
+			return $this->dbconfig();
+		}
+
 		$params = compact('results', 'protects', 'errors', 'cantCreate', 'tester');
 		print $this->render('setup/fsperms.phtml', $params);
 	}
