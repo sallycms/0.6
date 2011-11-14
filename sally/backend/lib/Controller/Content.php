@@ -35,7 +35,16 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 
 		$service      = sly_Service_Factory::getArticleTypeService();
 		$articletypes = $service->getArticleTypes();
-		$modules      = $service->getModules($this->article->getType(), $this->slot);
+		$modules      = array();
+
+		if ($this->article->hasType()) {
+			try {
+				$modules = $service->getModules($this->article->getType(), $this->slot);
+			}
+			catch (Exception $e) {
+				$modules = array();
+			}
+		}
 
 		uasort($articletypes, 'strnatcasecmp');
 		uasort($modules, 'strnatcasecmp');
