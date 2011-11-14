@@ -27,15 +27,8 @@ if ($usersExist) {
 	$user->setHelpText(t('setup_createuser_no_admin_notice'));
 	sly_Core::getLayout()->addJavaScript("
 	jQuery(function($) {
-		$('#no_admin').click(function() {
-			var stat = this.checked;
-			if(stat) {
-				$('#admin_user').attr('disabled', 'disabled');
-				$('#admin_pass').attr('disabled', 'disabled');
-			} else {
-				$('#admin_user').removeAttr('disabled');
-				$('#admin_pass').removeAttr('disabled');
-			}
+		$('#no_admin').change(function() {
+			$('#admin_user,#admin_pass').prop('disabled', this.checked);
 		});
 	});
 	");
