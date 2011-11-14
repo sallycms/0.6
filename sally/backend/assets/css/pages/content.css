@@ -10,7 +10,8 @@
 			margin: 0 0 0 5px; /* Abstand der Listenelemente zu einander, s. Buttons Editier-Modus etc. */
 		}
 	}
-	.sly-navi-slots { float: left; }
+
+	.sly-navi-slots   { float: left;  }
 	.sly-navi-content { float: right; }
 
 	a {
@@ -40,9 +41,11 @@
 		background-color: #e8e8e8;
 		margin-bottom: 10px;
 	}
+
 	legend, label { +hide; }
-	select.sly-module-select {width: 100%}
+	select.sly-module-select { width: 100%; }
 }
+
 /*	Editmode */
 .sly-slice-toolbar {
 	width: 100%;
@@ -64,6 +67,7 @@
 		margin-right: 5px; /* Schiebt die Edit, Delete- und Pfeil-Buttons rein*/
 	}
 }
+
 /* slice toolbar */
 .sly-slice-actions li {
 	display: block;
@@ -93,7 +97,7 @@
 			}
 		}
 
-		/* L��schen-Button */
+		/* Löschen-Button */
 		&.rex-tx2 {
 			background-image: url(../background_btn_dlt.png);
 			background-position: 6px 0;
@@ -105,36 +109,34 @@
 		}
 
 		/*  Pfeil-Buttons */
-		&.rex-slice-{
-			&move-up, &move-down {
-				padding: 0px;
-				width: 22px;
+		&.rex-slice-move-up,
+		&.rex-slice-move-down {
+			padding: 0px;
+			width: 22px;
 
-				&:hover {
-					background-color: #4bcee4;
-				}
-			}
-
-			&move-down {
-				background-image: url(../background_btn_down.png);
-				background-position: 7px 0;
-			}
-
-			&move-up {
-				background-image: url(../background_btn_up.png);
-				background-position: 7px 0;
+			&:hover {
+				background-color: #4bcee4;
 			}
 		}
 
+		&.rex-slice-move-down {
+			background-image: url(../background_btn_down.png);
+			background-position: 7px 0;
+		}
+
+		&.rex-slice-move-up {
+			background-image: url(../background_btn_up.png);
+			background-position: 7px 0;
+		}
 	}
 }
-
 
 .sly-contentpage-slice-input,
 .sly-contentpage-slice-output {
 	padding: 5px 10px 0;
 	ol, ul { margin-left: 20px; }
 }
+
 .sly-contentpage-slice-output {
 	background-color: #e8e8e8;
 	padding: 14px;
@@ -142,7 +144,7 @@
 	margin: 0 0 10px;
 	color: #999;
 
-	h1{ font-size: 2em;   }
+	h1 { font-size: 2em;   }
 	h2 { font-size: 1.6em; }
 	h3 { font-size: 1.4em; }
 	h4 { font-size: 1.2em; }
