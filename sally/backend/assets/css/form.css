@@ -122,6 +122,10 @@ a.sly-button {
 		width: auto;
 	}
 
+	.sly-form-date, .sly-form-datetime, .sly-form-datetime-local {
+		width: auto;
+	}
+
 	.sly-select-group {
 		display: block;
 		line-height: 18px;
