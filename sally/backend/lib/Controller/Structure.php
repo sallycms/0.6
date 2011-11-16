@@ -104,8 +104,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		if ($editId) {
 			try {
 				$service = sly_Service_Factory::getArticleService();
-				$article = $service->findById($editId, $this->clangId);
-				$service->changeStatus($article);
+				$service->changeStatus($editId, $this->clangId);
 				$this->info = t('article_status_updated');
 			}
 			catch (sly_Exception $e) {
