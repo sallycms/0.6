@@ -53,7 +53,7 @@ if (!$hasType) {
 	print sly_Helper_Message::warn(t('content_select_type'));
 }
 elseif (!$hasTemplate) {
-	print sly_Helper_Message::warn(t('content_configure_article_type'));
+	print sly_Helper_Message::info(t('content_no_template'));
 }
 elseif ($slot === null) {
 	print sly_Helper_Message::info(t('content_no_slots'));
