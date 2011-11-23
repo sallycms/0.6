@@ -4,17 +4,16 @@
 
 var sly = {};
 
-// do not use dots inside callback names
-var slyLinkWidgetCallback  = null;
-var slyMediaWidgetCallback = null;
-
-(function($, sly, undef) {
+(function($, sly, win, undef) {
 	/////////////////////////////////////////////////////////////////////////////
 	// Popups
 
 	var openPopups = [];
 
 	sly.Popup = function(name, url, posx, posy, width, height, extra) {
+		// ensure names are somewhat unique
+		name += (new Date()).getTime();
+
 		this.name = name;
 		this.url  = url;
 		this.obj  = window.open(url, name, 'width='+width+',height='+height+extra);
@@ -98,6 +97,10 @@ var slyMediaWidgetCallback = null;
 		subClass.prototype = new tmpClass();
 	};
 
+	var getCallbackName = function(base) {
+		return base + (new Date()).getTime();
+	}
+
 	/////////////////////////////////////////////////////////////////////////////
 	// Abstract Widget
 
@@ -152,14 +155,16 @@ var slyMediaWidgetCallback = null;
 	inherit(sly.MediaWidget, sly.AbstractWidget);
 
 	sly.MediaWidget.prototype.onOpen = function() {
-		sly.openMediapool('detail', this.getValue(), 'slyMediaWidgetCallback');
-		slyMediaWidgetCallback = $.proxy(this.setValue, this);
+		var cb = getCallbackName('slymediawidget');
+		sly.openMediapool('detail', this.getValue(), cb);
+		win[cb] = $.proxy(this.setValue, this);
 		return false;
 	};
 
 	sly.MediaWidget.prototype.onAdd = function() {
-		sly.openMediapool('upload', '', 'slyMediaWidgetCallback');
-		slyMediaWidgetCallback = $.proxy(this.setValue, this);
+		var cb = getCallbackName('slymediawidget');
+		sly.openMediapool('upload', '', cb);
+		win[cb] = $.proxy(this.setValue, this);
 		return false;
 	};
 
@@ -173,10 +178,10 @@ var slyMediaWidgetCallback = null;
 	inherit(sly.LinkWidget, sly.AbstractWidget);
 
 	sly.LinkWidget.prototype.onOpen = function() {
-		var catID = this.element.data('catid');
+		var catID = this.element.data('catid'), cb = getCallbackName('slylinkwidget');
 
-		sly.openLinkmap(catID, 'slyLinkWidgetCallback');
-		slyLinkWidgetCallback = $.proxy(this.setValue, this);
+		sly.openLinkmap(catID, cb);
+		win[cb] = $.proxy(this.setValue, this);
 
 		return false;
 	};
@@ -301,14 +306,16 @@ var slyMediaWidgetCallback = null;
 	inherit(sly.MedialistWidget, sly.AbstractListWidget);
 
 	sly.MedialistWidget.prototype.onOpen = function() {
-		sly.openMediapool('detail', this.getSelected(), 'slyMediaWidgetCallback');
-		slyMediaWidgetCallback = $.proxy(this.addValue, this);
+		var cb = getCallbackName('slymedialistwidget');
+		sly.openMediapool('detail', this.getSelected(), cb);
+		win[cb] = $.proxy(this.addValue, this);
 		return false;
 	};
 
 	sly.MedialistWidget.prototype.onAdd = function() {
-		sly.openMediapool('upload', '', 'slyMediaWidgetCallback');
-		slyMediaWidgetCallback = $.proxy(this.addValue, this);
+		var cb = getCallbackName('slymedialistwidget');
+		sly.openMediapool('upload', '', cb);
+		win[cb] = $.proxy(this.addValue, this);
 		return false;
 	};
 
@@ -322,10 +329,10 @@ var slyMediaWidgetCallback = null;
 	inherit(sly.LinklistWidget, sly.AbstractListWidget);
 
 	sly.LinklistWidget.prototype.onOpen = function() {
-		var catID = this.element.data('catid');
+		var catID = this.element.data('catid'), cb = getCallbackName('slylinklistwidget');
 
-		sly.openLinkmap(catID, 'slyLinkWidgetCallback');
-		slyLinkWidgetCallback = $.proxy(this.addValue, this);
+		sly.openLinkmap(catID, cb);
+		win[cb] = $.proxy(this.addValue, this);
 
 		return false;
 	};
@@ -679,4 +686,4 @@ var slyMediaWidgetCallback = null;
 			$(this).closest('form').submit();
 		});
 	});
-})(jQuery, sly);
+})(jQuery, sly, window);
