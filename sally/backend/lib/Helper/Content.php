@@ -74,7 +74,7 @@ class sly_Helper_Content {
 		print $slice_content;
 	}
 
-	public static function printEditSliceForm(OOArticleSlice $articleSlice, $values = array()) {
+	public static function printEditSliceForm(sly_Model_ArticleSlice $articleSlice, $values = array()) {
 		$moduleService = sly_Service_Factory::getModuleService();
 
 		try {
