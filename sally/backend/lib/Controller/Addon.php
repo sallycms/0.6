@@ -148,6 +148,45 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 	public function deactivate() { $this->call('deactivate', 'deactivated');   return $this->sendResponse(); }
 	public function assets()     { $this->call('copyAssets', 'assets_copied'); return $this->sendResponse(); }
 
+	public function fullinstall() {
+		list($service, $component) = $this->prepareAction();
+
+		$todo = $this->getInstallList($component);
+
+		if (!empty($todo)) {
+			$now = reset($todo);
+
+			// pretend that we're about to work on $now
+			if (is_array($now)) {
+				$this->addon  = $now[0];
+				$this->plugin = $now[1];
+			}
+			else {
+				$this->addon  = $now;
+				$this->plugin = '';
+			}
+
+			list($service, $component) = $this->prepareAction();
+
+			// if not installed, install it
+			if (!$service->isInstalled($component)) {
+				$this->call('install', 'installed');
+			}
+
+			// if not activated and install went OK, activate it
+			if (!$service->isAvailable($component) && $this->warning === '') {
+				$this->call('activate', 'activated');
+			}
+
+			// if everything worked out fine, we can either redirect to the next component
+			if ($this->warning === '' && count($todo) > 1) {
+				sly_Util_HTTP::redirect($_SERVER['REQUEST_URI'], array(), '', 302);
+			}
+		}
+
+		return $this->sendResponse();
+	}
+
 	public function checkPermission() {
 		$user = sly_Util_User::getCurrentUser();
 		return $user && $user->isAdmin();
@@ -233,5 +272,39 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Determine what components to install
+	 *
+	 * This method will walk through all requirements and collect a list of
+	 * components that need to be installed to install the $component. The list
+	 * is ordered ($component is always the last element). Already activated
+	 * components will not be included (so the result can be empty if $component
+	 * is also already activated).
+	 *
+	 * @param  mixed $component  plugin or addOn
+	 * @param  array $list       current stack (used internally)
+	 * @return array             install list
+	 */
+	private function getInstallList($component, array $list = array()) {
+		$service      = is_string($component) ? $this->addons : $this->plugins;
+		$idx          = array_search($component, $list);
+		$requirements = $service->getRequirements($component);
+
+		if ($idx !== false) {
+			unset($list[$idx]);
+			$list = array_values($list);
+		}
+
+		if (!$service->isAvailable($component)) {
+			array_unshift($list, $component);
+		}
+
+		foreach ($requirements as $requirement) {
+			$list = $this->getInstallList($requirement, $list);
+		}
+
+		return $list;
 	}
 }
