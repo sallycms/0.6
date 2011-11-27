@@ -18,8 +18,10 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 	protected $warning = '';
 
 	public function init() {
-		$layout = sly_Core::getLayout();
-		$layout->pageHeader(t('addons'));
+		if (!sly_get('json', 'boolean')) {
+			$layout = sly_Core::getLayout();
+			$layout->pageHeader(t('addons'));
+		}
 
 		$this->addons  = sly_Service_Factory::getAddOnService();
 		$this->plugins = sly_Service_Factory::getPluginService();
@@ -43,9 +45,29 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 	public function index() {
 		$this->checkForNewComponents();
 
+		// prepare some data
+
+		$addons = array();
+
+		foreach ($this->addons->getRegisteredAddOns() as $addon) {
+			$pluginList = $this->plugins->getRegisteredPlugins($addon);
+			$plugins    = array();
+
+			foreach ($pluginList as $plugin) {
+				$comp             = array($addon, $plugin);
+				$plugins[$plugin] = $this->getComponentDetails($comp, 'plugin');
+			}
+
+			$info            = $this->getComponentDetails($addon, 'addon');
+			$info['plugins'] = $plugins;
+
+			$addons[$addon] = $info;
+		}
+
 		print $this->render('addon/list.phtml', array(
 			'addons'  => $this->addons,
 			'plugins' => $this->plugins,
+			'tree'    => $addons,
 			'info'    => $this->info,
 			'warning' => $this->warning
 		));
@@ -109,19 +131,44 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 			$this->info    = $this->t($i18n, $component);
 			$this->warning = '';
 		}
-
-		return $this->index();
 	}
 
-	public function install()    { return $this->call('install', 'installed');        }
-	public function uninstall()  { return $this->call('uninstall', 'uninstalled');    }
-	public function activate()   { return $this->call('activate', 'activated');       }
-	public function deactivate() { return $this->call('deactivate', 'deactivated');   }
-	public function assets()     { return $this->call('copyAssets', 'assets_copied'); }
+	public function install() {
+		$this->call('install', 'installed');
+
+		if ($this->warning === '') {
+			$this->call('activate', 'activated');
+		}
+
+		return $this->sendResponse();
+	}
+
+	public function uninstall()  { $this->call('uninstall', 'uninstalled');    return $this->sendResponse(); }
+	public function activate()   { $this->call('activate', 'activated');       return $this->sendResponse(); }
+	public function deactivate() { $this->call('deactivate', 'deactivated');   return $this->sendResponse(); }
+	public function assets()     { $this->call('copyAssets', 'assets_copied'); return $this->sendResponse(); }
 
 	public function checkPermission() {
 		$user = sly_Util_User::getCurrentUser();
-		return !is_null($user) && $user->isAdmin();
+		return $user && $user->isAdmin();
+	}
+
+	private function sendResponse() {
+		if (sly_get('json', 'boolean')) {
+			header('Content-Type: application/json; charset=UTF-8');
+			while (ob_get_level()) ob_end_clean();
+			ob_start('ob_gzhandler');
+
+			$response = array(
+				'status'  => !empty($this->info),
+				'message' => empty($this->info) ? $this->warning : $this->info
+			);
+
+			print json_encode($response);
+			die;
+		}
+
+		return $this->index();
 	}
 
 	private function readAddOns() {
@@ -137,5 +184,54 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 	private function readDir($dir) {
 		$dir = new sly_Util_Directory($dir);
 		return $dir->exists() ? $dir->listPlain(false, true) : array();
+	}
+
+	private function getComponentDetails($component, $type) {
+		$service      = $type === 'addon' ? $this->addons : $this->plugins;
+		$requirements = $service->getRequirements($component);
+		$dependencies = $service->getDependencies($component);
+		$missing      = array();
+		$required     = $service->isRequired($component) !== false;
+		$installed    = $service->isInstalled($component);
+		$activated    = $service->isActivated($component);
+		$compatible   = $service->isCompatible($component);
+		$version      = $service->getVersion($component);
+		$author       = $service->getAuthor($component);
+		$usable       = $this->canBeUsed($component);
+
+		foreach ($requirements as $req) {
+			if (is_array($req)) {
+				if (!$this->plugins->isAvailable($req)) $missing[] = $req;
+			}
+			else {
+				if (!$this->addons->isAvailable($req)) $missing[] = $req;
+			}
+		}
+
+		return compact('requirements', 'dependencies', 'missing', 'required', 'installed', 'activated', 'compatible', 'usable', 'version', 'author');
+	}
+
+	/**
+	 * Check whether a component can be used
+	 *
+	 * To make this method return true, all required components must be present,
+	 * compatible and themselves be usable.
+	 *
+	 * @param  mixed $component
+	 * @return boolean
+	 */
+	private function canBeUsed($component) {
+		$service = is_string($component) ? $this->addons : $this->plugins;
+
+		if (!$service->exists($component))       return false;
+		if (!$service->isCompatible($component)) return false;
+
+		$requirements = $service->getRequirements($component);
+
+		foreach ($requirements as $requirement) {
+			if (!$this->canBeUsed($requirement)) return false;
+		}
+
+		return true;
 	}
 }

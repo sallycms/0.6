@@ -386,6 +386,7 @@ var_linklist_move_bottom: Ausgewählten Link an das Ende verschieben
 available: verfügbar
 unavailable: nicht verfügbar
 required: benötigt
+requires: benötigt
 is_required: 'wird von {0} benötigt'
 activated: aktiviert
 optional: optional

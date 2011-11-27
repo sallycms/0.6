@@ -386,6 +386,7 @@ var_linklist_move_bottom: Move selected link to bottom
 available: available
 unavailable: unavailable
 required: required
+requires: requires
 is_required: 'is required by {0}'
 activated: activated
 optional: optional

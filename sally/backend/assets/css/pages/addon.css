@@ -6,17 +6,178 @@
 }
 
 .sly-addonlist {
+	list-style: none;
+
 	.sly-addon, .sly-plugin {
-		&.sly-not-installed td { background: #ddd; color: #8D8686; }
-		&.sly-installed td     { background: #eee; color: #6D6666; }
-		&.sly-activated td     { background: #fff; color: #4D4646; }
+		margin-top: 10px;
 	}
 
-	.sly-addon .is-help, del {
-		border-bottom: 1px dotted #777;
-		cursor: help;
+	.details {
+		+border-radius(4px);
+		padding: 6px;
+	}
+
+	.details, .plugins {
+		+clearfix;
+
+		li {
+			list-style: none;
+		}
+	}
+
+	.name h2 {
+		color: #4D4646;
+		line-height: 26px;
+		font-size: 1.4em;
+		letter-spacing: -.01em;
+		text-shadow: 1px 1px 0px rgba(255,255,255,.8);
+	}
+
+	.name span {
+		font-size: 11px;
+		display: block;
+		width: 350px;
+		overflow: hidden;
+		height: 18px;
+	}
+
+	.name { float: left; }
+
+	.plugins {
+		margin-left: 40px;
+
+		h2 {
+			margin-bottom: 0;
+			font-size: 1.2em;
+			line-height: 1.1em;
+		}
+
+		.buttons {
+			height: 18px;
+			line-height: 18px;
+		}
+	}
+
+	.sly-button {
+		margin-left: 10px;
+		display: inline;
+	}
+
+	del.sly-button {
+		color: inherit;
+		text-decoration: line-through;
+		cursor: default;
+		height: 20px;
+		opacity: 0.4;
+	}
+
+	.buttons {
+		float: right;
+		height: 26px;
+		line-height: 26px;
+	}
+
+	.depsinfo {
+		clear: right;
+		font-size: 11px;
+		height: 18px;
+		line-height: 18px;
+	}
+
+	/* status map */
+
+	/*
+	a   is activated
+	i   is installed
+	c   is compatible
+	p   has plugins
+	pa  has active plugins
+	d   has dependencies (is required)
+	r   has requirements
+	ro  requirements are OK (all required components are available)
+
+	Append '0' to the letters above to get the 'false' class and 1 for the 'true' class.
+	*/
+
+	/* reset */
+	.buttons > span {
+		display: none;
+	}
+
+	.u0.c1           > .details .unusable     { display: inline; }
+	.u0.c0           > .details .incompatible { display: inline; }
+	.u1.c1.i0.ro1    > .details .install      { display: inline; }
+	.u1.c1.i0.ro0    > .details .fullinstall  { display: inline; }
+	.u1.c1.i1.a0.ro0 > .details .fullactivate { display: inline; }
+	.i1.ro1.d0       > .details .uninstall    { display: inline; }
+	.i1.a0.ro1       > .details .activate     { display: inline; }
+	.i1.a1.d0        > .details .deactivate   { display: inline; }
+	.i1.a1.d1        > .details .hasdeps      { display: inline; }
+	.i1              > .details .reinit       { display: inline; }
+
+	/* hide all controls for plugins which have non-active parent addOns */
+	.sly-addon.a0 .sly-plugin .details {
+		.install, .fullinstall, .activate {
+			display: none !important;
+		}
+	}
+
+	.sly-addon.i0 .sly-plugin.i0 {
+		display: none !important;
+	}
+
+	/* color map */
+
+	.i0 > .details {
+		background-color: #DDD;
 		color: #8D8686;
-		font-size: 0.8em;
+
+		.sly-button {
+			border-color: #B7B7B7;
+
+			&:active {
+				border-color: #8A8A8A;
+			}
+		}
+	}
+
+	.i1.a1 > .details {
+		background-color: #FFF;
+		color: #4D4646;
+	}
+
+	.i1.a0 > .details {
+		background-color: #E6E6E6;
+		color: #8D8686;
+
+		h2 {
+			color: #8D8686;
+		}
+
+		.sly-button {
+			border-color: #C0C0C0;
+
+			&:active {
+				border-color: #939393;
+			}
+		}
+	}
+}
+
+.sly-addonlist {
+	.error {
+		display: none;
+
+		td {
+			background-color: #b32430;
+			background-image: url(../warning.png);
+			background-position: -5px 50%;
+			background-repeat: no-repeat;
+			color: #fff;
+			padding: 8px 0 8px 29px;
+			font-weight: bold;
+			height: auto;
+		}
 	}
 }
 

@@ -11,148 +11,106 @@
 if (!empty($info))    print sly_Helper_Message::info($info);
 if (!empty($warning)) print sly_Helper_Message::warn($warning);
 
+$sublist = dirname(__FILE__).'/sublist.phtml';
+
 ?>
-<table class="sly-table sly-addonlist">
-	<caption><?= t('addon_caption') ?></caption>
-	<colgroup>
-		<col width="40" />
-		<col width="*"/>
-		<col width="120" />
-		<col width="120" />
-		<col width="120" />
-		<col width="120" />
-	</colgroup>
-		<thead>
-			<tr>
-				<th class="sly-icon">&nbsp;</th>
-				<th><?= t('addon_hname') ?></th>
-				<th><?= t('addon_hinstall') ?></th>
-				<th><?= t('addon_hactive') ?></th>
-				<th><?= t('addon_hassets') ?></th>
-				<th><?= t('addon_hdelete') ?></th>
-			</tr>
-		</thead>
-	<tbody>
-
+<ul class="sly-addonlist">
 	<?php
+	foreach ($tree as $addon => $aInfo) {
+		$base    = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;func=';
+		$info    = $aInfo;
+		$name    = $addon;
+		$classes = array('sly-addon');
 
-	$addonList = $addons->getRegisteredAddOns();
+		// build class list for all relevant stati
 
-	foreach ($addonList as $addon) {
-		$base              = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;func=';
-		$registeredPlugins = $plugins->getRegisteredPlugins($addon);
-		$availablePlugins  = $plugins->getAvailablePlugins($addon);
-		$isRequired        = $addons->isActivated($addon) ? $addons->isRequired($addon) : false;
-		$required          = $isRequired ? sly_html(t('is_required', is_array($isRequired) ? reset($isRequired).'/'.end($isRequired) : $isRequired)) : '';
-		$classes           = array('sly-addon');
+		if (!empty($aInfo['plugins'])) {
+			$classes[] = 'p1';
 
-		if (!empty($registeredPlugins)) {
-			$classes[] = 'sly-has-plugins';
-		}
-
-		if ($addons->isInstalled($addon)) {
-			$install   = t('addon_yes').' - <a href="'.$base.'install">'.t('addon_reinstall').'</a>';
-			$classes[] = 'sly-installed';
-
-			if (!empty($availablePlugins)) {
-				$uninstall = t('plugin_plugins_installed');
-				$classes[] = 'sly-has-active-plugins';
-			}
-			elseif ($isRequired) {
-				$uninstall = '<del title="'.$required.'">'.t('addon_uninstall').'</del>';
-			}
-			else {
-				$uninstall = '<a href="'.$base.'uninstall" onclick="return confirm(\''.sly_html(t('addon_uninstall_question', $addon)).'\');">'.t('addon_uninstall').'</a>';
+			foreach ($aInfo['plugins'] as $pInfo) {
+				if ($pInfo['activated']) {
+					$classes[] = 'pa1';
+					$classes[] = 'd1';  // assume implicit dependency of plugins from their parent addOns
+					break;
+				}
 			}
 		}
 		else {
-			$install   = t('addon_no').' - <a href="'.$base.'install">'.t('addon_install').'</a>';
-			$uninstall = t('addon_notinstalled');
-			$classes[] = 'sly-not-installed';
+			$classes[] = 'p0';
 		}
 
-		if ($addons->isActivated($addon)) {
-			$status    = !empty($availablePlugins) ? t('plugin_plugins_installed') : (t('addon_yes').($isRequired ? ' - <del title="'.$required.'">'.t('addon_deactivate').'</del>' : ' - <a href="'.$base.'deactivate">'.t('addon_deactivate').'</a>'));
-			$classes[] = 'sly-activated';
-			$assets    = '<a href="'.$base.'assets">'.t('addon_reinit_assets').'</a>';
-		}
-		elseif ($addons->isInstalled($addon)) {
-			$status = t('addon_no').' - <a href="'.$base.'activate">'.t('addon_activate').'</a>';
-			$assets = '<a href="'.$base.'assets">'.t('addon_reinit_assets').'</a>';
+		if (!in_array('pa1', $classes)) {
+			$classes[] = 'd'.intval($info['required']);
 		}
 		else {
-			$status = t('addon_notinstalled');
-			$assets = $status;
+			$classes[] = 'pa0';
+
+			foreach (array_keys($aInfo['plugins']) as $plugin) {
+				$info['requirements'][] = $addon.'/'.$plugin;
+			}
 		}
+
+		$classes[] = 'i'.intval($info['installed']);
+		$classes[] = 'a'.intval($info['activated']);
+		$classes[] = 'c'.intval($info['compatible']);
+		$classes[] = 'r'.intval($info['requirements']);
+		$classes[] = 'ro'.(empty($info['missing']) ? 1 : 0);
+		$classes[] = 'u'.intval($info['usable']);
+
+		// display the row
 
 		?>
-		<tr class="<?= implode(' ', $classes) ?>">
-			<td class="sly-icon"><?= sly_Util_HTML::getSpriteLink('', $addon, 'addon') ?></td>
-			<td><a href="index.php?page=addon_help&amp;addon=<?= urlencode($addon) ?>"><?= sly_html($addon) ?></a></td>
-			<td><?= $install ?></td>
-			<td><?= $status ?></td>
-			<td><?= $assets ?></td>
-			<td><?= $uninstall ?></td>
-		</tr>
-		<?php
+		<li class="<?= implode(' ', $classes) ?>">
+			<ul class="details">
+				<? include $sublist; ?>
+			</ul>
+			<?
+			if (!empty($aInfo['plugins'])) print '<ul class="plugins">';
 
-		if ($addons->isAvailable($addon)) {
-			foreach ($registeredPlugins as $plugin) {
-				$comp       = array($addon, $plugin);
-				$isRequired = $plugins->isActivated($comp) ? $plugins->isRequired($comp) : false;
-				$required   = $isRequired ? sly_html(t('is_required', is_array($isRequired) ? reset($isRequired).'/'.end($isRequired) : $isRequired)) : '';
-				$base       = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;plugin='.urlencode($plugin).'&amp;func=';
-				$classes    = array('sly-plugin');
+			foreach ($aInfo['plugins'] as $plugin => $pInfo) {
+				$comp    = array($addon, $plugin);
+				$info    = $pInfo;
+				$name    = $plugin;
+				$classes = array('sly-plugin');
+				$base    = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;plugin='.urlencode($plugin).'&amp;func=';
 
-				if ($plugins->isInstalled($comp)) {
-					$install   = t('addon_yes').' - <a href="'.$base.'install">'.t('addon_reinstall').'</a>';
-					$classes[] = 'sly-installed';
+				$info['requirements'][] = $addon;
+				$info['requirements'] = array_unique($info['requirements']);
 
-					if ($isRequired) {
-						$uninstall = '<del title="'.$required.'">'.t('addon_uninstall').'</del>';
-					}
-					else {
-						$uninstall = '<a href="'. $base .'uninstall" onclick="return confirm(\''.sly_html(t('plugin_uninstall_question', $addon)).'\');">'.t('addon_uninstall').'</a>';
-					}
-				}
-				else {
-					$install   = t('addon_no').' - <a href="'.$base.'install">'.t('addon_install').'</a>';
-					$uninstall = t('addon_notinstalled');
-					$classes[] = 'sly-not-installed';
-				}
-
-				if ($plugins->isActivated($comp)) {
-					$status    = t('addon_yes').($isRequired ? ' - <del title="'.$required.'">'.t('addon_deactivate').'</del>' : ' - <a href="'.$base.'deactivate">'.t('addon_deactivate').'</a>');
-					$classes[] = 'sly-activated';
-					$assets    = '<a href="'.$base.'assets">'.t('addon_reinit_assets').'</a>';
-				}
-				elseif ($plugins->isInstalled($comp)) {
-					$status = t('addon_no').' - <a href="'.$base.'activate">'.t('addon_activate').'</a>';
-					$assets = '<a href="'.$base.'assets">'.t('addon_reinit_assets').'</a>';
-				}
-				else {
-					$status = t('addon_notinstalled');
-					$assets = $status;
-				}
+				$classes[] = 'i'.intval($info['installed']);
+				$classes[] = 'a'.intval($info['activated']);
+				$classes[] = 'd'.intval($info['required']);
+				$classes[] = 'c'.intval($info['compatible']);
+				$classes[] = 'r'.intval($info['requirements']);
+				$classes[] = 'ro'.(empty($info['missing']) ? 1 : 0);
+				$classes[] = 'u'.intval($info['usable']);
 
 				?>
-				<tr class="<?= implode(' ', $classes) ?>">
-					<td class="sly-icon"><span class="rex-i-element rex-i-plugin"><span class="rex-i-element-text"><?= sly_html($plugin) ?></span></span></td>
-					<td><a href="index.php?page=addon_help&amp;addon=<?= urlencode($addon) ?>&amp;plugin=<?= urlencode($plugin) ?>"><?= sly_html($plugin) ?></a></td>
-					<td><?= $install ?></td>
-					<td><?= $status ?></td>
-					<td><?= $assets ?></td>
-					<td><?= $uninstall ?></td>
-				</tr>
+				<li class="<?= implode(' ', $classes) ?>">
+					<ul class="details">
+						<? include $sublist; ?>
+					</ul>
+				</li>
 				<?php
 			}
-		}
+
+			if (!empty($aInfo['plugins'])) print '</ul>';
+			?>
+		</li>
+		<?
 	}
 
 	if (empty($addonList)) {
 		?>
 		<tr>
 			<td class="center" colspan="6"><?= t('addon_empty_list') ?></td>
+		</tr>
+		<?php
+	}
+	else {
+		?>
+		<tr class="error">
+			<td colspan="6">Ich bin eine Fehlermeldung.</td>
 		</tr>
 		<?php
 	}
