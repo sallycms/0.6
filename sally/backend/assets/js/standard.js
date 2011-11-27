@@ -679,6 +679,61 @@ var sly = {};
 			$(this).closest('form').submit();
 		});
 
+		// use ajax to install/activate addOns
+		var errorHider = null;
+
+		$('#sly-page-addon .sly-addonlist').delegate('a', 'click', function() {
+			var
+				link     = $(this),
+				list     = $('.sly-addonlist'),
+				rows     = $('.component', list),
+				row      = link.closest('.component'),
+				errorrow = $('.error', list);
+
+			// hide error row
+			errorrow.hide();
+
+			// clear timeout
+			if (errorHider) {
+				window.clearTimeout(errorHider);
+			}
+
+			// show extra div that will contain the loading animation
+			rows.prepend('<div class="blocker"></div>');
+			row.addClass('working');
+
+			var updateAddOnStatus = function(stati) {
+				console.log(stati);
+				for (var key in stati) {
+					if (!stati.hasOwnProperty(key)) continue;
+					var status = stati[key], comp = $('.component[data-key="' + key + '"]');
+					comp.attr('class', status['classes'] + ' component');
+					$('.depsinfo', comp).html(status.deps);
+				}
+			};
+
+			$.ajax({
+				url: link.attr('href')+'&json=1',
+				cache: false,
+				dataType: 'json',
+				type: 'POST',
+				success: function(xhr) {
+					updateAddOnStatus(xhr.stati);
+					row.removeClass('working');
+					$('.blocker').remove();
+
+					if (xhr.status !== true) {
+						row.after(errorrow);
+						$('span', errorrow).html(xhr.message);
+						errorrow.show();
+						errorHider = window.setTimeout(function() { errorrow.slideUp(); }, 10000);
+					}
+				}
+			});
+
+			return false;
+		});
+
 		$('body.sly-popup').unload(sly.closeAllPopups);
 	});
 })(jQuery, sly, window);

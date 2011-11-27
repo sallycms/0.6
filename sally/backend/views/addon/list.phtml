@@ -13,108 +13,63 @@ if (!empty($warning)) print sly_Helper_Message::warn($warning);
 
 $sublist = dirname(__FILE__).'/sublist.phtml';
 
-?>
-<ul class="sly-addonlist">
-	<?php
-	foreach ($tree as $addon => $aInfo) {
-		$base    = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;func=';
-		$info    = $aInfo;
-		$name    = $addon;
-		$classes = array('sly-addon');
+if (empty($tree)) {
+	print sly_Helper_Message::info(t('addon_empty_list'));
+}
+else {
+	?>
+	<ul class="sly-addonlist">
+		<?php
+		foreach ($tree as $addon => $aInfo) {
+			$base    = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;func=';
+			$info    = $aInfo;
+			$key     = $addon;
+			$name    = $addon;
+			$classes = $stati[$key]['classes'];
 
-		// build class list for all relevant stati
-
-		if (!empty($aInfo['plugins'])) {
-			$classes[] = 'p1';
-
-			foreach ($aInfo['plugins'] as $pInfo) {
-				if ($pInfo['activated']) {
-					$classes[] = 'pa1';
-					$classes[] = 'd1';  // assume implicit dependency of plugins from their parent addOns
-					break;
+			if (in_array('pa1', explode(' ', $classes))) {
+				foreach (array_keys($aInfo['plugins']) as $plugin) {
+					$info['requirements'][] = $addon.'/'.$plugin;
 				}
 			}
-		}
-		else {
-			$classes[] = 'p0';
-		}
 
-		if (!in_array('pa1', $classes)) {
-			$classes[] = 'd'.intval($info['required']);
-		}
-		else {
-			$classes[] = 'pa0';
-
-			foreach (array_keys($aInfo['plugins']) as $plugin) {
-				$info['requirements'][] = $addon.'/'.$plugin;
-			}
-		}
-
-		$classes[] = 'i'.intval($info['installed']);
-		$classes[] = 'a'.intval($info['activated']);
-		$classes[] = 'c'.intval($info['compatible']);
-		$classes[] = 'r'.intval($info['requirements']);
-		$classes[] = 'ro'.(empty($info['missing']) ? 1 : 0);
-		$classes[] = 'u'.intval($info['usable']);
-
-		// display the row
-
-		?>
-		<li class="<?= implode(' ', $classes) ?>">
-			<ul class="details">
-				<? include $sublist; ?>
-			</ul>
-			<?
-			if (!empty($aInfo['plugins'])) print '<ul class="plugins">';
-
-			foreach ($aInfo['plugins'] as $plugin => $pInfo) {
-				$comp    = array($addon, $plugin);
-				$info    = $pInfo;
-				$name    = $plugin;
-				$classes = array('sly-plugin');
-				$base    = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;plugin='.urlencode($plugin).'&amp;func=';
-
-				$info['requirements'][] = $addon;
-				$info['requirements'] = array_unique($info['requirements']);
-
-				$classes[] = 'i'.intval($info['installed']);
-				$classes[] = 'a'.intval($info['activated']);
-				$classes[] = 'd'.intval($info['required']);
-				$classes[] = 'c'.intval($info['compatible']);
-				$classes[] = 'r'.intval($info['requirements']);
-				$classes[] = 'ro'.(empty($info['missing']) ? 1 : 0);
-				$classes[] = 'u'.intval($info['usable']);
-
-				?>
-				<li class="<?= implode(' ', $classes) ?>">
-					<ul class="details">
-						<? include $sublist; ?>
-					</ul>
-				</li>
-				<?php
-			}
-
-			if (!empty($aInfo['plugins'])) print '</ul>';
 			?>
+			<li class="<?= $classes ?> component" data-key="<?= $key ?>">
+				<ul class="details">
+					<?php include $sublist; ?>
+				</ul>
+				<?php
+				if (!empty($aInfo['plugins'])) print '<ul class="plugins">';
+
+				foreach ($aInfo['plugins'] as $plugin => $pInfo) {
+					$base    = 'index.php?page=addon&amp;addon='.urlencode($addon).'&amp;plugin='.urlencode($plugin).'&amp;func=';
+					$info    = $pInfo;
+					$key     = $addon.'/'.$plugin;
+					$name    = $plugin;
+					$classes = $stati[$key]['classes'];
+
+					$info['requirements'][] = $addon;
+					$info['requirements'] = array_unique($info['requirements']);
+
+					?>
+					<li class="<?= $classes ?> component" data-key="<?= $key ?>">
+						<ul class="details">
+							<?php include $sublist; ?>
+						</ul>
+					</li>
+					<?php
+				}
+
+				if (!empty($aInfo['plugins'])) print '</ul>';
+				?>
+			</li>
+			<?php
+		}
+
+		?>
+		<li class="error">
+			<?= sly_Helper_Message::warn('Ich bin eine Fehlermeldung.') ?>
 		</li>
-		<?
-	}
-
-	if (empty($addonList)) {
-		?>
-		<tr>
-			<td class="center" colspan="6"><?= t('addon_empty_list') ?></td>
-		</tr>
-		<?php
-	}
-	else {
-		?>
-		<tr class="error">
-			<td colspan="6">Ich bin eine Fehlermeldung.</td>
-		</tr>
-		<?php
-	}
-
-	?>
-	</tbody>
-</table>
+	</ul>
+	<?php
+}

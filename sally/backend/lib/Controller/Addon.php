@@ -45,29 +45,13 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 	public function index() {
 		$this->checkForNewComponents();
 
-		// prepare some data
-
-		$addons = array();
-
-		foreach ($this->addons->getRegisteredAddOns() as $addon) {
-			$pluginList = $this->plugins->getRegisteredPlugins($addon);
-			$plugins    = array();
-
-			foreach ($pluginList as $plugin) {
-				$comp             = array($addon, $plugin);
-				$plugins[$plugin] = $this->getComponentDetails($comp, 'plugin');
-			}
-
-			$info            = $this->getComponentDetails($addon, 'addon');
-			$info['plugins'] = $plugins;
-
-			$addons[$addon] = $info;
-		}
+		$data = $this->buildDataList();
 
 		print $this->render('addon/list.phtml', array(
 			'addons'  => $this->addons,
 			'plugins' => $this->plugins,
-			'tree'    => $addons,
+			'tree'    => $data,
+			'stati'   => $this->buildStatusList($data),
 			'info'    => $this->info,
 			'warning' => $this->warning
 		));
@@ -198,9 +182,12 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 			while (ob_get_level()) ob_end_clean();
 			ob_start('ob_gzhandler');
 
+			$data = $this->buildDataList();
+
 			$response = array(
 				'status'  => !empty($this->info),
-				'message' => empty($this->info) ? $this->warning : $this->info
+				'message' => empty($this->info) ? $this->warning : $this->info,
+				'stati'   => $this->buildStatusList($data)
 			);
 
 			print json_encode($response);
@@ -306,5 +293,129 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 		}
 
 		return $list;
+	}
+
+	private function buildDataList() {
+		$addons = array();
+
+		foreach ($this->addons->getRegisteredAddOns() as $addon) {
+			$pluginList = $this->plugins->getRegisteredPlugins($addon);
+			$plugins    = array();
+
+			foreach ($pluginList as $plugin) {
+				$comp             = array($addon, $plugin);
+				$plugins[$plugin] = $this->getComponentDetails($comp, 'plugin');
+			}
+
+			$info            = $this->getComponentDetails($addon, 'addon');
+			$info['plugins'] = $plugins;
+
+			$addons[$addon] = $info;
+		}
+
+		return $addons;
+	}
+
+	private function buildStatusList(array $dataList) {
+		$result = array();
+
+		foreach ($dataList as $addon => $aInfo) {
+			$classes = array('sly-addon');
+
+			// build class list for all relevant stati
+
+			if (!empty($aInfo['plugins'])) {
+				$classes[] = 'p1';
+
+				foreach ($aInfo['plugins'] as $pInfo) {
+					if ($pInfo['activated']) {
+						$classes[] = 'pa1';
+						$classes[] = 'd1';  // assume implicit dependency of plugins from their parent addOns
+						break;
+					}
+				}
+			}
+			else {
+				$classes[] = 'p0';
+			}
+
+			if (!in_array('pa1', $classes)) {
+				$classes[] = 'd'.intval($aInfo['required']);
+			}
+			else {
+				$classes[] = 'pa0';
+
+				foreach (array_keys($aInfo['plugins']) as $plugin) {
+					$aInfo['requirements'][] = $addon.'/'.$plugin;
+				}
+			}
+
+			$classes[] = 'i'.intval($aInfo['installed']);
+			$classes[] = 'a'.intval($aInfo['activated']);
+			$classes[] = 'c'.intval($aInfo['compatible']);
+			$classes[] = 'r'.intval($aInfo['requirements']);
+			$classes[] = 'ro'.(empty($aInfo['missing']) ? 1 : 0);
+			$classes[] = 'u'.intval($aInfo['usable']);
+
+			$result[$addon] = array(
+				'classes' => implode(' ', $classes),
+				'deps'    => $this->buildDepsInfo($aInfo)
+			);
+
+			foreach ($aInfo['plugins'] as $plugin => $pInfo) {
+				$key     = $addon.'/'.$plugin;
+				$classes = array('sly-plugin');
+
+				$pInfo['requirements'][] = $addon;
+				$pInfo['requirements'] = array_unique($pInfo['requirements']);
+
+				$classes[] = 'i'.intval($pInfo['installed']);
+				$classes[] = 'a'.intval($pInfo['activated']);
+				$classes[] = 'd'.intval($pInfo['required']);
+				$classes[] = 'c'.intval($pInfo['compatible']);
+				$classes[] = 'r'.intval($pInfo['requirements']);
+				$classes[] = 'ro'.(empty($pInfo['missing']) ? 1 : 0);
+				$classes[] = 'u'.intval($pInfo['usable']);
+
+				$result[$key] = array(
+					'classes' => implode(' ', $classes),
+					'deps'    => $this->buildDepsInfo($pInfo)
+				);
+			}
+		}
+
+		return $result;
+	}
+
+	private function buildDepsInfo(array $info) {
+		if ($info['required']) {
+			$names = array();
+
+			foreach ($info['dependencies'] as $comp) {
+				$names[] = is_array($comp) ? reset($comp).' / '.end($comp) : $comp;
+			}
+
+			$isRequiredTitle = sly_html(t('is_required', sly_Util_String::humanImplode($names)));
+		}
+		else {
+			$isRequiredTitle = '';
+		}
+
+		if ($info['requirements']) {
+			$names = array();
+
+			foreach ($info['requirements'] as $comp) {
+				$names[] = is_array($comp) ? reset($comp).' / '.end($comp) : $comp;
+			}
+
+			$requiresTitle = t('requires').' '.sly_Util_String::humanImplode($names);
+		}
+		else {
+			$requiresTitle = '';
+		}
+
+		$texts = array_filter(array($requiresTitle, $isRequiredTitle));
+		if (empty($texts)) $texts[] = 'keine Abhängigkeiten';
+		return implode(' &amp; ', $texts);
 	}
 }

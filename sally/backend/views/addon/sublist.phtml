@@ -18,34 +18,8 @@ if (!empty($info['author'])) {
 	$subline[] = 'von '.sly_html($info['author']);
 }
 
-if ($info['required']) {
-	$names = array();
-
-	foreach ($info['dependencies'] as $comp) {
-		$names[] = is_array($comp) ? reset($comp).' / '.end($comp) : $comp;
-	}
-
-	$isRequiredTitle = sly_html(t('is_required', sly_Util_String::humanImplode($names)));
-}
-else {
-	$isRequiredTitle = '';
-}
-
-if ($info['requirements']) {
-	$names = array();
-
-	foreach ($info['requirements'] as $comp) {
-		$names[] = is_array($comp) ? reset($comp).' / '.end($comp) : $comp;
-	}
-
-	$requiresTitle = t('requires').' '.sly_Util_String::humanImplode($names);
-}
-else {
-	$requiresTitle = '';
-}
-
 ?>
-<li class="name"><?
+<li class="name"><?php
 	print '<h2>'.sly_html($name).'</h2>';
 	if (!empty($subline)) print '<span>('.implode(', ', $subline).')</span>';
 ?></li>
@@ -60,16 +34,12 @@ else {
 	<span class="install"><a class="sly-button" href="<?= $base ?>install">installieren</a></span>
 	<span class="incompatible">(nicht mit dieser Sally-Version kompatibel)</span>
 	<span class="unusable">(nicht alle Abhängigkeiten sind erfüllt)</span>
-	<? if ($info['requirements']): ?><span class="fullinstall"><a class="sly-button" href="<?= $base ?>fullinstall">inkl. Abhängigkeiten installieren</a></span><? endif ?>
+	<?php if ($info['requirements']): ?><span class="fullinstall"><a class="sly-button" href="<?= $base ?>fullinstall">inkl. Abhängigkeiten installieren</a></span><?php endif ?>
 </li>
 <li class="buttons enabler">
 	<span class="activate"><a class="sly-button" href="<?= $base ?>activate">aktivieren</a></span>
 	<span class="deactivate"><a class="sly-button" href="<?= $base ?>deactivate">deaktivieren</a></span>
 	<span class="hasdeps"><del class="sly-button">deaktivieren</del></span>
-	<? if ($info['requirements']): ?><span class="fullactivate"><a class="sly-button" href="<?= $base ?>fullinstall">inkl. Abhängigkeiten aktivieren</a></span><? endif ?>
+	<?php if ($info['requirements']): ?><span class="fullactivate"><a class="sly-button" href="<?= $base ?>fullinstall">inkl. Abhängigkeiten aktivieren</a></span><?php endif ?>
 </li>
-<li class="buttons depsinfo"><?
-	$texts = array_filter(array($requiresTitle, $isRequiredTitle));
-	if (empty($texts)) $texts[] = 'keine Abhängigkeiten';
-	print implode(' &amp; ', $texts);
-?></li>
+<li class="buttons depsinfo"><?= $stati[$key]['deps'] ?></li>

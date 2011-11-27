@@ -8,8 +8,10 @@
 .sly-addonlist {
 	list-style: none;
 
-	.sly-addon, .sly-plugin {
+	.sly-addon, .sly-plugin, .error {
 		margin-top: 10px;
+		position: relative;
+		z-index: 1;
 	}
 
 	.details {
@@ -36,7 +38,7 @@
 	.name span {
 		font-size: 11px;
 		display: block;
-		width: 350px;
+		width: 330px;
 		overflow: hidden;
 		height: 18px;
 	}
@@ -109,7 +111,7 @@
 	.u1.c1.i0.ro1    > .details .install      { display: inline; }
 	.u1.c1.i0.ro0    > .details .fullinstall  { display: inline; }
 	.u1.c1.i1.a0.ro0 > .details .fullactivate { display: inline; }
-	.i1.ro1.d0       > .details .uninstall    { display: inline; }
+	.i1.d0           > .details .uninstall    { display: inline; }
 	.i1.a0.ro1       > .details .activate     { display: inline; }
 	.i1.a1.d0        > .details .deactivate   { display: inline; }
 	.i1.a1.d1        > .details .hasdeps      { display: inline; }
@@ -162,21 +164,31 @@
 			}
 		}
 	}
-}
 
-.sly-addonlist {
+	/* loading indicator */
+
+	.blocker {
+		position: absolute;
+		left: 0;
+		right: -22px;
+		top: 0;
+		z-index: 2;
+	}
+
+	.sly-addon > .blocker  { height: 56px; }
+	.sly-plugin > .blocker { height: 48px; }
+
+	.working > .blocker {
+		background: url(../loading.gif) right center no-repeat;
+	}
+
+	/* error message */
+
 	.error {
 		display: none;
 
-		td {
-			background-color: #b32430;
-			background-image: url(../warning.png);
-			background-position: -5px 50%;
-			background-repeat: no-repeat;
-			color: #fff;
-			padding: 8px 0 8px 29px;
-			font-weight: bold;
-			height: auto;
+		.sly-message {
+			border: 0 none;
 		}
 	}
 }
