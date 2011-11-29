@@ -76,6 +76,7 @@ class sly_Helper_Content {
 
 	public static function printEditSliceForm(sly_Model_ArticleSlice $articleSlice, $values = array()) {
 		$moduleService = sly_Service_Factory::getModuleService();
+		$moduleTitle   = $moduleService->getTitle($articleSlice->getModule());
 
 		try {
 			ob_start();
@@ -92,7 +93,7 @@ class sly_Helper_Content {
 						<input type="hidden" name="prior" value="<?= $articleSlice->getPrior() ?>" />
 					</div>
 					<fieldset class="rex-form-col-1">
-						<legend><?= t('edit_block') ?>: <?= sly_html($moduleService->getTitle($articleSlice->getModule())) ?></legend>
+						<legend><?= t('edit_block') ?>: <?= sly_html($moduleTitle) ?></legend>
 						<div class="rex-form-wrapper">
 							<div class="sly-contentpage-slice-input">
 								<?php eval('?>'.self::replaceObjectVars($values, $articleSlice->getInput())); ?>
@@ -135,9 +136,9 @@ class sly_Helper_Content {
 	 * @param  string $content   current slice content
 	 * @return string            parsed content
 	 */
-	private static function replaceObjectVars($data, $content) {
+	private static function replaceObjectVars($values, $content) {
 		foreach (sly_Core::getVarTypes() as $idx => $var) {
-			$content = $var->getBEInput($data, $content);
+			$content = $var->getBEInput($values, $content);
 		}
 		return $content;
 	}
