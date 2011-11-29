@@ -120,11 +120,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .rex-hl2 {
 	line-height: 26px;
-	font-size: 1.4em;
-	letter-spacing: -0.01em;
+	font-size: 20px;
 	padding: 7px 10px;
-	background-color: #4D4646;
-	color: #FFFFFF;
+	background-color: $drk_grey;
+	color: #fff;
 	+border-top-radius($brd_rad);
 }
 
@@ -193,21 +192,17 @@ caption, legend {
 }
 
 .sly-message {
-	clear: both;
 	font-weight: 700;
-	line-height: 1em;
 	margin-bottom: 10px;
-	width: 100%;
+	padding: 6px 0;
+	+border-radius(4px);
+	background-image: url(../warning.png);
+	background-position: 0% 50%;
+	background-repeat: no-repeat;
+	color: #fff;
 
-	&.sly-info, &.sly-warn {
-		padding: 8px 0;
-		color: #fff;
+	&.sly-info {
 		background-color: $link_color;
-		background-image: url(../warning.png);
-		background-position: 0% 50%;
-		background-repeat: no-repeat;
-		+border-radius(4px);
-		border: 1px solid #efefef;
 	}
 
 	&.sly-warn {

@@ -43,79 +43,66 @@ $buttonBar = new sly_Form_ButtonBar(array(
 
 ?>
 
-<div class="sly-form" id="sly-form-system-setup">
-	<form action="index.php" method="post">
-		<div>
-			<input type="hidden" name="page" value="specials" />
-			<input type="hidden" name="func" value="update" />
+<div class="rex-area-col-2">
+	<div class="rex-area-col-a">
+
+		<h3 class="rex-hl2"><?= t('specials_features') ?></h3>
+
+		<div class="rex-area-content">
+			<h4 class="rex-hl3"><?= t('delete_cache') ?></h4>
+			<p class="rex-tx1"><?= t('delete_cache_description') ?></p>
+			<p class="rex-tx1 button"><a class="sly-button" href="index.php?page=specials&amp;func=clearcache"><?= t('delete_cache') ?></a></p>
+
+			<h4 class="rex-hl3"><?= t('setup') ?></h4>
+			<p class="rex-tx1"><?= t('setup_text') ?></p>
+			<p class="rex-tx1 button"><a class="sly-button" href="index.php?page=specials&amp;func=setup" onclick="return confirm('<?= t('setup') ?>?');"><?= t('setup') ?></a></p>
+
+			<h4 class="rex-hl3"><?= t('version') ?></h4>
+			<p class="rex-tx1">SallyCMS <?= sly_Core::getVersion() ?> &ndash; PHP <?= PHP_VERSION ?></p>
+
+			<h4 class="rex-hl3"><?= t('database') ?></h4>
+			<p class="rex-tx1"><?php
+			$database = $config->get('DATABASE');
+
+			if (strtolower($database['DRIVER']) === 'sqlite') {
+				print t('name').': '.sly_html($database['NAME']).'.sq3';
+			}
+			else {
+				printf('%s: %s<br />%s: %s', t('name'), sly_html($database['NAME']), t('host'), sly_html($database['HOST']));
+			}
+			?>
 		</div>
+	</div>
 
-		<div class="rex-area-col-2">
-			<div class="rex-area-col-a">
+	<div class="rex-area-col-b">
+		<?php
+		$form = new sly_Form('index.php', 'POST', t('specials_settings'), '', 'sly-form-system-setup');
+		$form->addHiddenValue('page', 'specials');
+		$form->addHiddenValue('func', 'update');
 
-				<h3 class="rex-hl2"><?= t('specials_features') ?></h3>
+		$form->addElement(new sly_Form_Input_Text('projectname', t('config_projectname'), sly_Core::getProjectName()));
+		$form->addElement(new sly_Form_Widget_Link('start_article', t('specials_start_article'), sly_Core::getSiteStartArticleId()));
+		$form->addElement(new sly_Form_Widget_Link('notfound_article', t('specials_not_found_article'), sly_Core::getNotFoundArticleId()));
+		$form->addElement($defaultClang);
+		$form->addElement($defaultType);
+		$form->addElement($frontendSync);
+		$form->addElement($backendLocale);
+		$form->addElement($cachingStrategy);
 
-				<div class="rex-area-content">
-					<h4 class="rex-hl3"><?= t('delete_cache') ?></h4>
-					<p class="rex-tx1"><?= t('delete_cache_description') ?></p>
-					<p class="rex-tx1 button"><a class="sly-button" href="index.php?page=specials&amp;func=clearcache"><?= t('delete_cache') ?></a></p>
 
-					<h4 class="rex-hl3"><?= t('setup') ?></h4>
-					<p class="rex-tx1"><?= t('setup_text') ?></p>
-					<p class="rex-tx1 button"><a class="sly-button" href="index.php?page=specials&amp;func=setup" onclick="return confirm('<?= t('setup') ?>?');"><?= t('setup') ?></a></p>
+		if (class_exists('DateTimeZone')) {
+			$timezoneList   = DateTimeZone::listIdentifiers();
+			$timezoneList   = array_combine($timezoneList, $timezoneList);
+			$timezoneSelect = new sly_Form_Select_DropDown('timezone', t('specials_timezone'), sly_Core::getTimezone(), $timezoneList);
 
-					<h4 class="rex-hl3"><?= t('version') ?></h4>
-					<p class="rex-tx1">SallyCMS <?= sly_Core::getVersion() ?> &ndash; PHP <?= PHP_VERSION ?></p>
+			$form->addElement($timezoneSelect);
+		}
 
-					<h4 class="rex-hl3"><?= t('database') ?></h4>
-					<p class="rex-tx1"><?php
-					$database = $config->get('DATABASE');
+		$form->setSubmitButton(new sly_Form_Input_Button('submit', 'sendit', t('specials_update')));
+		$form->setApplyButton();
+		$form->setResetButton();
+		print $form->render();
 
-					if (strtolower($database['DRIVER']) === 'sqlite') {
-						print t('name').': '.sly_html($database['NAME']).'.sq3';
-					}
-					else {
-						printf('%s: %s<br />%s: %s', t('name'), sly_html($database['NAME']), t('host'), sly_html($database['HOST']));
-					}
-					?>
-				</div>
-			</div>
-
-			<div class="rex-area-col-b">
-				<h3 class="rex-hl2"><?= t('specials_settings') ?></h3>
-
-				<div class="rex-area-content">
-
-					<?php
-
-					$fieldset = new sly_Form_Fieldset(t('general_info_header'));
-					$fields   = array(
-						new sly_Form_Input_Text('projectname', t('config_projectname'), sly_Core::getProjectName()),
-						new sly_Form_Widget_Link('start_article', t('specials_start_article'), sly_Core::getSiteStartArticleId()),
-						new sly_Form_Widget_Link('notfound_article', t('specials_not_found_article'), sly_Core::getNotFoundArticleId()),
-						$defaultClang,
-						$defaultType,
-						$frontendSync,
-						$backendLocale,
-						$cachingStrategy,
-					);
-
-					if (class_exists('DateTimeZone')) {
-						$timezoneList   = DateTimeZone::listIdentifiers();
-						$timezoneList   = array_combine($timezoneList, $timezoneList);
-						$timezoneSelect = new sly_Form_Select_DropDown('timezone', t('specials_timezone'), sly_Core::getTimezone(), $timezoneList);
-
-						$fields[] = $timezoneSelect;
-					}
-
-					$fields[] = $buttonBar;
-
-					$fieldset->addRows($fields);
-					print $fieldset->render();
-
-					?>
-				</div>
-			</div>
-		</div>
-	</form>
+		?>
+	</div>
 </div>

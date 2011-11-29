@@ -2,58 +2,38 @@
 .sly-sprite-language-add { background-position: 0 -64px; }
 
 /*	System: Einstellungen */
-
+#sly-page-specials .rex-area-col-b .sly-form {
+	float: right;
+}
 #sly-form-system-setup {
-	fieldset {
-		padding-bottom: 1em;
-	}
-
 	legend {
-		padding: 0;
-		background-color: transparent;
-		font-size: 100%;
-		color: $drk_grey;
-		width: auto;
+		line-height: 26px;
+		font-size: 20px;
+		padding: 7px 10px;
+		width: 375px;
 	}
 
 	.rex-form-row {
 		border-bottom-width: 0;
 		padding: 5px 0;
+		width: 375px;
 
-		label { width: 180px; }
 	}
 
-	fieldset.rex-form-col-1 .rex-form-row {
-		width: 371px;
+	label  { width: 180px; }
+	input  { width: 185px; }
+	select { width: 191px; }
 
-		p.rex-form-text input,
-		p select {
-			width: 180px;
-		}
-
-		.sly-widget.sly-link {
-			input { width: 140px; }
-		}
-
-		/*	Submit */
-
-		p input.rex-form-submit {
-			margin-left: 180px;
-		}
+	.sly-widget.sly-link {
+		input { width: 144px; }
 	}
 
-	.rex-area-col-b .rex-area-content {
-		padding-bottom: 0;
+	input.rex-form-submit {
+		margin-left: 180px;
+		width: auto;
 	}
 
-	.rex-form-col-1 {
-		padding-bottom: 0;
-		.rex-form-wrapper { margin-bottom: 10px; }
-	}
-
-	p.button {
-		margin: 0 0 15px 5px;
-	}
+	.rex-form-wrapper { padding: 10px 10px 15px; }
 }
 
 /*	System: Sprachen */

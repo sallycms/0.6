@@ -82,7 +82,7 @@ class sly_Helper_Content {
 			ob_start();
 			?>
 			<div class="sly-form sly-slice-form" id="editslice">
-				<form enctype="multipart/form-data" action="index.php#slice<?= $articleSlice->getPrior() ?>" method="post" id="REX_FORM">
+				<form action="index.php#slice<?= $articleSlice->getPrior() ?>" method="post" enctype="multipart/form-data">
 					<div>
 						<input type="hidden" name="page" value="content" />
 						<input type="hidden" name="func" value="editArticleSlice" />
@@ -130,7 +130,7 @@ class sly_Helper_Content {
 	}
 
 	/**
-	 * Perform REX_VAR replacements
+	 * Perform SLY_VAR replacements
 	 *
 	 * @param  int    $slice_id  the slice's ID
 	 * @param  string $content   current slice content

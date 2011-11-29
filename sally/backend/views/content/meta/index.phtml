@@ -19,7 +19,7 @@
 $category_id = $article->getCategoryId();
 
 $params = array('id' => $article->getId(), 'clang' => $article->getClang(), 'article' => $article);
-$form = new sly_Form('index.php', 'POST', t('general'), '', 'REX_FORM');
+$form = new sly_Form('index.php', 'POST', t('general'));
 $form->setEncType('multipart/form-data');
 $form->addHiddenValue('page', 'contentmeta');
 $form->addHiddenValue('func', 'processMetaForm');
