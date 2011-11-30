@@ -36,7 +36,7 @@ h1, h2, h3, h4, h5, h6 {
 
 #sly-page {
 	+clearfix;
-	width: 1000px;
+	width: 984px;
 	margin: 0 auto;
 }
 
@@ -314,7 +314,7 @@ a.sly-action {
 	+clearfix;
 	float: right;
 	width: 797px;
-	padding-bottom: 36px;
+	padding-bottom: 35px;
 
 	> p, .sly-table {
 		margin: 0 0 10px 0;
