@@ -7,23 +7,16 @@
 		margin-left: auto;
 	}
 
-	.sly-form {
-		.rex-form-text input,
-		.rex-form-password input {
-			width: 250px;
-		}
-
-		legend { width: 640px; }
-
-		label { width: 145px; margin-left: 10px; }
+	input[type=text],
+	input[type=password] {
+		width: 250px;
 	}
 
+	legend { width: 640px; }
+
 	.rex-form-wrapper { width: 650px; }
-	.rex-form-col-a   { vertical-align: middle; }
-	.rex-form-submit  { margin: 2px 0 3px 77px; }
 
 	.rex-form-row {
-		padding: 7px 0;
-		width: 650px;
+		width: 636px;
 	}
 }
