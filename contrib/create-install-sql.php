@@ -17,54 +17,57 @@
 */
 
 namespace Doctrine;
+use Doctrine\DBAL\Schema\Table as Table;
+use Doctrine\DBAL\Types\Type as Type;
+use Doctrine\DBAL\Schema\Schema as Schema;
 
 ////////////////////////////////////////////////////////////////////////////////
 // some helpers :)
 
-function serialCol(DBAL\Schema\Table $table, $name) {
+function serialCol(Table $table, $name) {
 	intCol($table, $name, true, 11, null, true);
 }
 
-function revisionCol(DBAL\Schema\Table $table) {
+function revisionCol(Table $table) {
 	intCol($table, 'revision', true, 11, 0);
 }
 
-function userCols(DBAL\Schema\Table $table) {
+function userCols(Table $table) {
 	intCol($table,    'createdate');
 	intCol($table,    'updatedate');
 	stringCol($table, 'createuser');
 	stringCol($table, 'updateuser');
 }
 
-function intCol(DBAL\Schema\Table $table, $name, $unsigned = true, $precision = 11, $default = null, $autoincrement = false) {
+function intCol(Table $table, $name, $unsigned = true, $precision = 11, $default = null, $autoincrement = false) {
 	$table->addColumn($name, 'integer', compact('unsigned', 'precision', 'default', 'autoincrement'));
 }
 
-function stringCol(DBAL\Schema\Table $table, $name, $length = 255) {
+function stringCol(Table $table, $name, $length = 255) {
 	$table->addColumn($name, 'string', compact('length'));
 }
 
-function charCol(DBAL\Schema\Table $table, $name, $length) {
+function charCol(Table $table, $name, $length) {
 	$table->addColumn($name, 'string', array('columndefinition' => "CHAR($length)"));
 }
 
-function boolCol(DBAL\Schema\Table $table, $name) {
+function boolCol(Table $table, $name) {
 	$table->addColumn($name, 'boolean');
 }
 
-function blobCol(DBAL\Schema\Table $table, $name) {
-	customCol($table, $name, 'BLOB NOT NULL'); // TODO: This does not work in PostgreSQL...
+function blobCol(Table $table, $name) {
+	return customCol($table, $name, 'BLOB NOT NULL');
 }
 
-function textCol(DBAL\Schema\Table $table, $name, $null = false) {
+function textCol(Table $table, $name, $null = false) {
 	customCol($table, $name, 'TEXT '.($null ? 'NULL' : 'NOT NULL'));
 }
 
-function customCol(DBAL\Schema\Table $table, $name, $def) {
-	$table->addColumn($name, 'string', array('columndefinition' => $def));
+function customCol(Table $table, $name, $def) {
+	return $table->addColumn($name, 'string', array('columndefinition' => $def));
 }
 
-function createTable(DBAL\Schema\Schema $schema, $name) {
+function createTable(Schema $schema, $name) {
 	$table = $schema->createTable($name);
 
 	$table->addOption('engine', 'MyISAM');
@@ -87,7 +90,7 @@ $classLoader->register();
 ////////////////////////////////////////////////////////////////////////////////
 // our schema
 
-$schema = new DBAL\Schema\Schema();
+$schema = new Schema();
 
 ////////////////////////////////////////////////////////////////////////////////
 // sly_article
@@ -152,7 +155,7 @@ textCol($table,   'attributes', true);
 stringCol($table, 'filetype');
 stringCol($table, 'filename');
 stringCol($table, 'originalname');
-stringCol($table, 'filesize'); // TODO: should be int?
+intCol($table,    'filesize');
 intCol($table,    'width');
 intCol($table,    'height');
 stringCol($table, 'title');
@@ -226,7 +229,7 @@ $table->addIndex(array('slice_id'), 'slice_id');
 $table = createTable($schema, 'sly_registry');
 
 stringCol($table, 'name');
-blobCol($table, 'value');
+$valueColumn = blobCol($table, 'value'); // we need this later on
 
 $table->setPrimaryKey(array('name'));
 
@@ -251,6 +254,13 @@ INSERT INTO sly_clang (name, locale) VALUES ('deutsch', 'de_DE');
 INSERT;
 
 foreach ($platforms as $name => $platform) {
+	if ($name === 'pgsql') {
+		$valueColumn->setColumnDefinition('BYTEA NOT NULL');
+	}
+	else {
+		$valueColumn->setColumnDefinition('BLOB NOT NULL');
+	}
+
 	$queries = $schema->toSql($platform);
 	$queries = array_map('Doctrine\\trimSemicolon', $queries);
 	$queries = implode(";\n", $queries);
