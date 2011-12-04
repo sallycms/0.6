@@ -213,17 +213,27 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 	}
 
 	private function getComponentDetails($component, $type) {
-		$service      = $type === 'addon' ? $this->addons : $this->plugins;
-		$requirements = $service->getRequirements($component);
-		$dependencies = $service->getDependencies($component);
+		static $reqCache = array();
+		static $depCache = array();
+
+		$service = $type === 'addon' ? $this->addons : $this->plugins;
+		$key     = is_array($component) ? $component[0].'/'.$component[1] : $component;
+
+		if (!isset($reqCache[$key])) {
+			$reqCache[$key] = $service->getRequirements($component);
+			$depCache[$key] = $service->getDependencies($component);
+		}
+
+		$requirements = $reqCache[$key];
+		$dependencies = $depCache[$key];
 		$missing      = array();
 		$required     = $service->isRequired($component) !== false;
 		$installed    = $service->isInstalled($component);
-		$activated    = $service->isActivated($component);
+		$activated    = $installed ? $service->isActivated($component) : false;
 		$compatible   = $service->isCompatible($component);
 		$version      = $service->getVersion($component);
 		$author       = $service->getAuthor($component);
-		$usable       = $this->canBeUsed($component);
+		$usable       = $compatible ? $this->canBeUsed($component) : false;
 
 		foreach ($requirements as $req) {
 			if (is_array($req)) {
