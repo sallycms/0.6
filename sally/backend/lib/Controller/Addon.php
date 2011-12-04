@@ -130,7 +130,7 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 	public function uninstall()  { $this->call('uninstall', 'uninstalled');    return $this->sendResponse(); }
 	public function activate()   { $this->call('activate', 'activated');       return $this->sendResponse(); }
 	public function deactivate() { $this->call('deactivate', 'deactivated');   return $this->sendResponse(); }
-	public function assets()     { $this->call('copyAssets', 'assets_copied'); return $this->sendResponse(); }
+	public function reinit()     { $this->call('copyAssets', 'assets_copied'); return $this->sendResponse(); }
 
 	public function fullinstall() {
 		list($service, $component) = $this->prepareAction();
