@@ -33,7 +33,6 @@ select option {
 }
 
 select {
-	background-color: #fff;
 	height: 21px;
 	width: 462px;
 }
@@ -48,13 +47,6 @@ span.sly-form-read {
 	height: 17px;
 	padding: 1px 2px;
 	width: 456px;
-}
-
-optgroup {
-	font-size: 100%;
-	font-style: normal;
-	font-weight: 600;
-	font-family: Calibri, Arial, Verdana, sans-serif;
 }
 
 .sly-button, input[type=submit], input[type=reset], input[type=button] {
@@ -83,8 +75,8 @@ optgroup {
 a.sly-button {
 	display: inline-block;
 	height: 20px;
-	font-size: 100%;
-	margin-left: inherit;
+	margin-left: 0;
+	line-height: 19px;
 	cursor: default;
 }
 
@@ -207,7 +199,7 @@ a.sly-button {
 }
 
 .sly-form {
-	label{
+	label {
 		display: inline-block;
 		float: left;
 		width: 145px;
@@ -291,9 +283,6 @@ a.sly-button {
 	.rex-form-wrapper {
 		background-color: #fff;
 		+border-bottom-radius(4px);
-		clear: both;
-		float: left;
-		padding: 0;
 		margin-bottom: 20px;
 	}
 

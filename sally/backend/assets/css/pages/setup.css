@@ -14,6 +14,7 @@
 ul.rex-setup-language {
 	font-weight: bold;
 	text-align: center;
+	margin-left: 0;
 
 	li {
 		display: block;
@@ -24,18 +25,10 @@ ul.rex-setup-language {
 /* License */
 
 .rex-area-scroll {
-	margin: 10px 0 10px 20px;
 	padding: 5px 0 5px 5px;
-	width: 598px;
 	height: 200px;
 	overflow: auto;
-	border-width: 1px;
-	border-style: solid;
-
-	p.rex-tx1 {
-		margin: 0;
-		line-height: 18px;
-	}
+	border: 1px solid $drk_grey;
 }
 
 #sly-page-setup {
@@ -45,10 +38,6 @@ ul.rex-setup-language {
 		width: 650px;
 		margin-right: auto;
 		margin-left: auto;
-	}
-
-	.rex-area-content {
-		width: 100%;
 	}
 
 	h2.sly-setup-fs-problems {
@@ -71,7 +60,6 @@ ul.rex-setup-language {
 		.rex-form-wrapper { width: 650px; }
 		.rex-form-row { width: 636px; }
 	}
-
 }
 
 .sly-setup-requirements {

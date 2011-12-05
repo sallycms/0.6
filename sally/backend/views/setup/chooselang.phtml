@@ -11,23 +11,25 @@
 $this->title('Setup: Sprachauswahl');
 
 ?>
-<h2 class="rex-hl2">Bitte wählen Sie eine Sprache aus.</h2>
-<div class="rex-area-content">
-	<ul class="rex-setup-language">
-	<?php
+<div class="rex-area">
+	<h2>Bitte wählen Sie eine Sprache aus.</h2>
+	<div class="rex-area-content">
+		<ul class="rex-setup-language">
+		<?php
 
-	$langpath = SLY_SALLYFOLDER.'/backend/lang';
-	$locales  = sly_I18N::getLocales($langpath);
+		$langpath = SLY_SALLYFOLDER.'/backend/lang';
+		$locales  = sly_I18N::getLocales($langpath);
 
-	foreach ($locales as $l) {
-		$i18n  = new sly_I18N($l, $langpath, false);
-		$label = $i18n->msg('lang');
+		foreach ($locales as $l) {
+			$i18n  = new sly_I18N($l, $langpath, false);
+			$label = $i18n->msg('lang');
 
-		print '<li><a href="index.php?func=license&amp;lang='.urlencode($l).'">'.sly_html($label).'</a></li>';
-	}
+			print '<li><a href="index.php?func=license&amp;lang='.urlencode($l).'">'.sly_html($label).'</a></li>';
+		}
 
-	unset($i18n);
+		unset($i18n);
 
-	?>
-	</ul>
+		?>
+		</ul>
+	</div>
 </div>

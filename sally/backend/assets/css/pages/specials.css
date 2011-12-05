@@ -2,15 +2,15 @@
 .sly-sprite-language-add { background-position: 0 -64px; }
 
 /*	System: Einstellungen */
-#sly-page-specials .rex-area-col-b .sly-form {
-	float: right;
+#sly-page-specials {
+	.button {
+		margin-bottom: 15px;
+	}
 }
+
 #sly-form-system-setup {
-	legend {
-		line-height: 26px;
-		font-size: 20px;
-		padding: 7px 10px;
-		width: 375px;
+	.rex-form-wrapper {
+		margin: 0;
 	}
 
 	.rex-form-row {
@@ -30,8 +30,6 @@
 		margin-left: 180px;
 		width: auto;
 	}
-
-	.rex-form-wrapper { padding: 10px 10px 15px; }
 }
 
 /*	System: Sprachen */

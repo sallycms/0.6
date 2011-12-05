@@ -101,65 +101,13 @@ h1, h2, h3, h4, h5, h6 {
 	background-color: $background !important;
 }
 
+.center        { text-align: center; }
 .rex-algn-lft  { text-align: left; }
 .rex-algn-rght { text-align: right; }
 .rex-strike    { text-decoration: line-through; }
 
-.rex-tx2,
-.rex-tx3,
-.rex-tx4 {
-	font-weight: bold;
-}
-
-.rex-hl4,
-.rex-tx2,
-.rex-tx3 {
-	font-size: 1.2em;
-	font-weight: normal;
-}
-
-.rex-hl2 {
-	line-height: 26px;
-	font-size: 20px;
-	padding: 7px 10px;
-	background-color: $drk_grey;
-	color: #fff;
-	+border-top-radius($brd_rad);
-}
-
-p.rex-tx1,
-p.rex-tx4,
-ul.rex-ul1,
-ol.rex-ol1 {
-	margin-bottom: 1em;
-}
-
-.rex-tx3 { color: #188D12; }
-.rex-tx2 { color: #AF112F; }
-
-ul.rex-ul1 {
-	margin-left: 40px;
-
-	li {
-		list-style-type: square;
-	}
-}
-
-ol.rex-ol1 {
-	margin-left: 40px;
-}
-
-.rex-offline {
-	color: $link_color_offline;
-}
-
-.rex-online {
-	color: $link_color_online;
-}
-
-.center {
-	text-align: center;
-}
+.rex-offline { color: $link_color_offline; }
+.rex-online  { color: $link_color_online;  }
 
 .sly-content {
 	clear: left;
@@ -215,73 +163,90 @@ caption, legend {
 	}
 }
 
+
+
+
+/* AREAS */
+
 .rex-area {
-	float: left;
-	width: 100%;
-	background-color: #fff;
-	color: $drk_grey;
-	+border-radius($brd_rad);
+	margin-bottom: 10px;
+
+	> h2 {
+		background-color: $drk_grey;
+		color: white;
+		line-height: 26px;
+		font-size: 20px;
+		padding: 7px 10px;
+		+border-top-radius($brd_rad);
+	}
 }
 
 .rex-area-footer {
 	background-color: $drk_grey;
+	color: white;
 	padding: 7px 5px;
-	font-weight: bold;
-}
+	+border-bottom-radius($brd_rad);
 
-.rex-area-scroll {
-	background-color: #FFF;
-	border-color: #999;
+	a {
+		font-weight: bold;
+	}
 }
 
 .rex-area-content {
 	line-height: 1.6;
-	padding: 10px 0;
+	padding: 10px;
 	+border-bottom-radius($brd_rad);
 	background-color: #fff;
-	width: 99%;
 
-	h3.rex-hl3, h4.rex-hl3, legend {
-		margin: 0 10px 0 10px;
-		font-weight: bold;
+	.sly-has-footer & {
+		+border-bottom-radius(0);
 	}
 
-	h4.rex-h13 {
-		margin: 10px;
+	p, ul, ol, h3, h4, h5, h6, dl, dd {
+		margin-bottom: 5px;
+
+		&:last-child { margin-bottom: 0; }
 	}
 
-	.rex-tx1, fieldset {
-		margin: 0 10px 5px 10px;
+	h3, h4, h5, h6 {
+		line-height: 1.3;
 	}
 
-	.sly-button {
-		margin: 0 0 15px 5px;
-		line-height: 19px;
+	em { font-style: italic; }
+	dt { font-weight: bold; }
+	dd { margin-left: 22px; }
+
+	h3 { font-size: 18px; }
+	h4 { font-size: 16px; }
+	h5 { text-decoration: underline; }
+	h6 { font-weight: bold; }
+
+	ul, ol {
+		margin-left: 22px;
+	}
+
+	li {
+		line-height: 1.4;
+
+		p {
+			line-height: 1.6;
+		}
+	}
+
+	ul > li {
+		list-style-type: square;
 	}
 }
 
 .rex-area-col-2 {
 	+clearfix;
-	position: relative;
-	width: 100%;
-}
 
-.rex-area-col-2 .rex-hl2 {
-	width: 94%;
-}
-
-.rex-area-col-a {
-	float: left;
-	width: 50%;
-}
-
-.rex-area-col-b {
-	float: right;
-	width: 50%;
-
-	.rex-hl2, .rex-area-content {
-		float: right;
+	> div {
+		width: 394px;
 	}
+
+	.rex-area.col-a { float: left;  }
+	.rex-area.col-b { float: right; }
 }
 
 .rex-i-element {
@@ -314,7 +279,7 @@ a.sly-action {
 	+clearfix;
 	float: right;
 	width: 797px;
-	padding-bottom: 35px;
+	padding-bottom: 25px;
 
 	> p, .sly-table {
 		margin: 0 0 10px 0;

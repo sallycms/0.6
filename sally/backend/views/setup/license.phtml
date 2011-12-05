@@ -14,20 +14,23 @@ $license = SLY_BASE.'/_lizenz.txt';
 $license = file_exists($license) ? file_get_contents($license) : t('setup_license_not_found');
 
 ?>
-<h2 class="rex-hl2"><?php print t('setup_license_header') ?></h2>
-<div class="rex-area-content">
-	<h3 class="rex-hl3"><?php print t('setup_license_whats_next') ?></h3>
-	<ul class="rex-ul1">
-		<li><?php print t('setup_license_whats_next_1') ?></li>
-		<li><?php print t('setup_license_whats_next_2') ?></li>
-		<li><?php print t('setup_license_whats_next_3') ?></li>
-		<li><?php print t('setup_license_whats_next_4') ?></li>
-	</ul>
-	<div class="rex-area-scroll">
-		<p class="rex-tx1"><?php print nl2br($license) ?></p>
-	</div>
-</div>
+<div class="rex-area">
+	<h2><?php print t('setup_license_header') ?></h2>
 
-<div class="rex-area-footer">
-	<p class="rex-algn-rght"><a href="index.php?page=setup&amp;func=fsperms&amp;lang=<?php print urlencode($this->lang) ?>">&raquo; <?php print t('setup_license_accept') ?></a></p>
+	<div class="rex-area-content">
+		<h3><?php print t('setup_license_whats_next') ?></h3>
+		<ul>
+			<li><?php print t('setup_license_whats_next_1') ?></li>
+			<li><?php print t('setup_license_whats_next_2') ?></li>
+			<li><?php print t('setup_license_whats_next_3') ?></li>
+			<li><?php print t('setup_license_whats_next_4') ?></li>
+		</ul>
+		<div class="rex-area-scroll">
+			<p><?php print nl2br($license) ?></p>
+		</div>
+	</div>
+
+	<div class="rex-area-footer">
+		<p class="rex-algn-rght"><a href="index.php?page=setup&amp;func=fsperms&amp;lang=<?php print urlencode($this->lang) ?>">&raquo; <?php print t('setup_license_accept') ?></a></p>
+	</div>
 </div>

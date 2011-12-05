@@ -194,6 +194,8 @@
 }
 
 .sly-addon-help {
-	dl { margin:0 10px 5px; }
-	dt { width: 100px; float: left; }
+	dt {
+		width: 100px;
+		float: left;
+	}
 }
