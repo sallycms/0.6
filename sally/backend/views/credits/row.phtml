@@ -19,14 +19,14 @@ else $class = ' sly-not-installed';
 
 ?>
 
-<tr class="sly-<?= $type ?> sly-<?= $type ?> <?= $class ?>">
+<tr class="sly-<?php echo $type ?> sly-<?php echo $type ?> <?php echo $class ?>">
 	<?php if ($type == 'addon'): ?>
-	<td class="sly-col-a sly-icon"><?= sly_Util_HTML::getSpriteLink('', $name, 'addon') ?></td>
+	<td class="sly-col-a sly-icon"><?php echo sly_Util_HTML::getSpriteLink('', $name, 'addon') ?></td>
 	<?php else: ?>
 	<td class="sly-col-a">&nbsp;</td>
 	<?php endif ?>
-	<td class="sly-col-b"><?= sly_html($name) ?> [<a href="index.php?page=addon_help&amp;addon=<?= urlencode($name) ?>">?</a>]</td>
-	<td class="sly-col-c"><?= $version ?></td>
-	<td class="sly-col-d"><?= $author ?></td>
-	<td class="sly-col-e"><?= $supportPage ?></td>
+	<td class="sly-col-b"><?php echo sly_html($name) ?> [<a href="index.php?page=addon_help&amp;addon=<?php echo urlencode($name) ?>">?</a>]</td>
+	<td class="sly-col-c"><?php echo $version ?></td>
+	<td class="sly-col-d"><?php echo $author ?></td>
+	<td class="sly-col-e"><?php echo $supportPage ?></td>
 </tr>

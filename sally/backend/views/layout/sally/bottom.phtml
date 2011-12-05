@@ -21,11 +21,11 @@ $usage   = t('used_ressources', $memory, $classes);
 			<li><a href="http://www.webvariants.de/" class="sly-blank">webvariants.de</a></li>
 			<li><a href="http://www.sallycms.de/" class="sly-blank">sallycms.de</a></li>
 			<?php if (sly_Util_User::getCurrentUser() !== null): ?>
-			<li><a href="index.php?page=credits"><?= t('credits') ?></a></li>
+			<li><a href="index.php?page=credits"><?php echo t('credits') ?></a></li>
 			<?php endif ?>
 		</ul>
 		<p>
-		<span title="<?= sly_html($usage) ?>"><?php print round(microtime(true) - SLY_START_TIME, 3) ?> Sek</span> |
+		<span title="<?php echo sly_html($usage) ?>"><?php print round(microtime(true) - SLY_START_TIME, 3) ?> Sek</span> |
 		<?php print sly_Util_String::formatDatetime() ?>
 		</p>
 	</div>

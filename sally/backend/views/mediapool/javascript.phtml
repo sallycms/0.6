@@ -21,7 +21,7 @@ $(function() {
 		var filename = self.data('filename');
 		var title    = self.data('title');
 		var link     = 'sally/data/mediapool/' + filename;
-		var callback = window.opener['<?= $callback ?>'];
+		var callback = window.opener['<?php echo $callback ?>'];
 		var close    = true;
 		var fullName = '';
 
@@ -29,7 +29,7 @@ $(function() {
 			fullName = filename;
 		}
 		else {
-			fullName = <?= $advanced ? "title + ' (' + filename + ')'" : 'title' ?>;
+			fullName = <?php echo $advanced ? "title + ' (' + filename + ')'" : 'title' ?>;
 		}
 
 		// execute callback (media widget, WYMeditor, ...)
@@ -45,7 +45,7 @@ $(function() {
 	var links = $('a[href!="#"]:visible'), len = links.length, i = 0;
 
 	for (; i < len; ++i) {
-		links[i].href = links[i].href += '&callback=<?= $callback ?>';
+		links[i].href = links[i].href += '&callback=<?php echo $callback ?>';
 	}
 });
 

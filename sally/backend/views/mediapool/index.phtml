@@ -46,7 +46,7 @@ ob_start();
 
 ?>
 <table class="sly-table sly-mediapool-list" summary="">
-	<caption><?= t('pool_selectedmedia') ?></caption>
+	<caption><?php echo t('pool_selectedmedia') ?></caption>
 	<colgroup>
 		<col width="40" />
 		<col width="110" />
@@ -55,9 +55,9 @@ ob_start();
 	</colgroup>
 	<thead><tr>
 		<th class="sly-icon">&nbsp;</th>
-		<th><?= t('pool_file_thumbnail') ?></th>
-		<th><?= t('pool_file_info') ?> / <?= t('pool_file_description') ?></th>
-		<th><?= t('pool_file_functions') ?></th>
+		<th><?php echo t('pool_file_thumbnail') ?></th>
+		<th><?php echo t('pool_file_info') ?> / <?php echo t('pool_file_description') ?></th>
+		<th><?php echo t('pool_file_functions') ?></th>
 	</tr></thead>
 	<?php
 
@@ -82,10 +82,10 @@ ob_start();
 		?>
 		<tfoot><tr>
 			<td class="sly-icon">
-				<label class="rex-form-hidden-label" for="check_all"><?= t('pool_select_all') ?></label>
+				<label class="rex-form-hidden-label" for="check_all"><?php echo t('pool_select_all') ?></label>
 				<input class="sly-form-checkbox sly-check-all" type="checkbox" id="check_all" data-target="selectedmedia[]" />
 			</td>
-			<td colspan="3"><?= $add_input ?></td>
+			<td colspan="3"><?php echo $add_input ?></td>
 		</tr></tfoot>
 		<?php
 	}
@@ -157,12 +157,12 @@ ob_start();
 
 		?>
 		<tr>
-			<?= $add_td ?>
-			<td class="rex-thumbnail"><a href="<?= $ilink ?>"><?= $thumbnail ?></a></td>
+			<?php echo $add_td ?>
+			<td class="rex-thumbnail"><a href="<?php echo $ilink ?>"><?php echo $thumbnail ?></a></td>
 			<td>
-				<p class="rex-tx4"><a href="<?= $ilink ?>"><?= sly_html($title) ?></a></p>
-				<p class="rex-tx4"><span class="rex-suffix"><?= sly_html($filename) ?> [<?= $file->getFormattedSize() ?>]</span></p>
-				<p class="rex-tx1"><?= $updatedate ?> | <?= sly_html($updateuser) ?></p>
+				<p class="rex-tx4"><a href="<?php echo $ilink ?>"><?php echo sly_html($title) ?></a></p>
+				<p class="rex-tx4"><span class="rex-suffix"><?php echo sly_html($filename) ?> [<?php echo $file->getFormattedSize() ?>]</span></p>
+				<p class="rex-tx1"><?php echo $updatedate ?> | <?php echo sly_html($updateuser) ?></p>
 			</td>
 			<td><?php
 
@@ -177,7 +177,7 @@ ob_start();
 	if (empty($files)): ?>
 		<tr>
 			<td></td>
-			<td colspan="3"><?= t('pool_nomediafound') ?></td>
+			<td colspan="3"><?php echo t('pool_nomediafound') ?></td>
 		</tr>
 	<?php endif ?>
 	</tbody>

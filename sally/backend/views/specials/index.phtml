@@ -46,21 +46,21 @@ $buttonBar = new sly_Form_ButtonBar(array(
 <div class="rex-area-col-2">
 	<div class="rex-area-col-a">
 
-		<h3 class="rex-hl2"><?= t('specials_features') ?></h3>
+		<h3 class="rex-hl2"><?php echo t('specials_features') ?></h3>
 
 		<div class="rex-area-content">
-			<h4 class="rex-hl3"><?= t('delete_cache') ?></h4>
-			<p class="rex-tx1"><?= t('delete_cache_description') ?></p>
-			<p class="rex-tx1 button"><a class="sly-button" href="index.php?page=specials&amp;func=clearcache"><?= t('delete_cache') ?></a></p>
+			<h4 class="rex-hl3"><?php echo t('delete_cache') ?></h4>
+			<p class="rex-tx1"><?php echo t('delete_cache_description') ?></p>
+			<p class="rex-tx1 button"><a class="sly-button" href="index.php?page=specials&amp;func=clearcache"><?php echo t('delete_cache') ?></a></p>
 
-			<h4 class="rex-hl3"><?= t('setup') ?></h4>
-			<p class="rex-tx1"><?= t('setup_text') ?></p>
-			<p class="rex-tx1 button"><a class="sly-button" href="index.php?page=specials&amp;func=setup" onclick="return confirm('<?= t('setup') ?>?');"><?= t('setup') ?></a></p>
+			<h4 class="rex-hl3"><?php echo t('setup') ?></h4>
+			<p class="rex-tx1"><?php echo t('setup_text') ?></p>
+			<p class="rex-tx1 button"><a class="sly-button" href="index.php?page=specials&amp;func=setup" onclick="return confirm('<?php echo t('setup') ?>?');"><?php echo t('setup') ?></a></p>
 
-			<h4 class="rex-hl3"><?= t('version') ?></h4>
-			<p class="rex-tx1">SallyCMS <?= sly_Core::getVersion() ?> &ndash; PHP <?= PHP_VERSION ?></p>
+			<h4 class="rex-hl3"><?php echo t('version') ?></h4>
+			<p class="rex-tx1">SallyCMS <?php echo sly_Core::getVersion() ?> &ndash; PHP <?php echo PHP_VERSION ?></p>
 
-			<h4 class="rex-hl3"><?= t('database') ?></h4>
+			<h4 class="rex-hl3"><?php echo t('database') ?></h4>
 			<p class="rex-tx1"><?php
 			$database = $config->get('DATABASE');
 

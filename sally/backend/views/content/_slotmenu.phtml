@@ -23,7 +23,7 @@ if (count($slots) < 2) return;
 
 ?>
 <ul class="sly-navi-slots">
-	<li><?= t('content_types') ?></li>
+	<li><?php echo t('content_types') ?></li>
 	<?php
 	$params['page']       = 'content';
 	$params['article_id'] = $this->article->getId();
@@ -45,7 +45,7 @@ if (count($slots) < 2) return;
 
 	foreach ($listElements as $idx => $listElement) {
 		?>
-		<li><?= $listElement ?></li>
+		<li><?php echo $listElement ?></li>
 		<?php
 	}
 	?>

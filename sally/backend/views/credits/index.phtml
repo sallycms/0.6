@@ -9,7 +9,7 @@
  */
 ?>
 <div class="rex-area sly-credits">
-	<h3 class="rex-hl2">SallyCMS <?= sly_Core::getVersion() ?></h3>
+	<h3 class="rex-hl2">SallyCMS <?php echo sly_Core::getVersion() ?></h3>
 
 	<div class="rex-area-content">
 		<p class="rex-tx1">
@@ -20,14 +20,14 @@
 	</div>
 </div>
 
-<table class="sly-table sly-addonlist" summary="<?= t('credits_caption') ?>">
-	<caption><?= t('credits_caption') ?></caption>
+<table class="sly-table sly-addonlist" summary="<?php echo t('credits_caption') ?>">
+	<caption><?php echo t('credits_caption') ?></caption>
 	<thead><tr>
 		<th class="sly-col-a sly-icon">&nbsp;</th>
-		<th class="sly-col-b"><?= t('credits_name') ?></th>
-		<th class="sly-col-c"><?= t('credits_version') ?></th>
-		<th class="sly-col-d"><?= t('credits_author') ?></th>
-		<th class="sly-col-e"><?= t('credits_supportpage') ?></th>
+		<th class="sly-col-b"><?php echo t('credits_name') ?></th>
+		<th class="sly-col-c"><?php echo t('credits_version') ?></th>
+		<th class="sly-col-d"><?php echo t('credits_author') ?></th>
+		<th class="sly-col-e"><?php echo t('credits_supportpage') ?></th>
 	</tr></thead>
 	<tbody>
 
@@ -67,7 +67,7 @@
 	if (count($addons->getRegisteredAddons()) == 0) {
 		?>
 		<tr>
-			<td class="rex-col-a center" colspan="5"><?= t('addon_empty_list') ?></td>
+			<td class="rex-col-a center" colspan="5"><?php echo t('addon_empty_list') ?></td>
 		</tr>
 		<?php
 	}

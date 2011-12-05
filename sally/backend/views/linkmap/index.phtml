@@ -11,7 +11,7 @@
 <div id="rex-linkmap">
 	<div class="rex-area-col-2">
 		<div class="rex-area-col-a">
-			<h3 class="rex-hl2"><?= t('lmap_categories') ?></h3>
+			<h3 class="rex-hl2"><?php echo t('lmap_categories') ?></h3>
 			<div class="rex-area-content">
 			<?php
 			$roots = sly_Util_Category::getRootCategories();
@@ -21,7 +21,7 @@
 		</div>
 
 		<div class="rex-area-col-b">
-			<h3 class="rex-hl2"><?= t('lmap_articles') ?></h3>
+			<h3 class="rex-hl2"><?php echo t('lmap_articles') ?></h3>
 			<div class="rex-area-content articlelist">
 				<ul>
 				<?php

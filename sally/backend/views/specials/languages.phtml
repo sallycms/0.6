@@ -17,10 +17,10 @@ if (!empty($this->info))    print sly_Helper_Message::info($this->info);
 	<?php if ($this->func == 'add' || $this->func == 'edit'): ?>
 	<form action="index.php" method="post">
 		<fieldset class="rex-form-col-1 sly-num0">
-			<legend><?= t('clang_'.$this->func) ?></legend>
+			<legend><?php echo t('clang_'.$this->func) ?></legend>
 			<input type="hidden" name="page" value="specials_languages" />
-			<input type="hidden" name="clang_id" value="<?= (int) $this->id ?>" />
-			<input type="hidden" name="func" value="<?= $this->func ?>" />
+			<input type="hidden" name="clang_id" value="<?php echo (int) $this->id ?>" />
+			<input type="hidden" name="func" value="<?php echo $this->func ?>" />
 	<?php endif ?>
 
 	<?php
@@ -44,10 +44,10 @@ if (!empty($this->info))    print sly_Helper_Message::info($this->info);
 
 		?>
 		<tr class="active">
-			<td class="sly-icon sly-col-a"><?= sly_Util_HTML::getSpriteLink('', $name, 'language') ?></td>
-			<td class="sly-col-b"><input class="rex-form-text" type="text" name="clang_name" value="<?= sly_html($name) ?>" /></td>
-			<td class="sly-col-c"><input class="rex-form-text" type="text" name="clang_locale" value="<?= sly_html($locale) ?>" /></td>
-			<td class="sly-col-d"><input type="submit" name="sly-submit" class="rex-form-submit" value="<?= t('clang_add') ?>" /></td>
+			<td class="sly-icon sly-col-a"><?php echo sly_Util_HTML::getSpriteLink('', $name, 'language') ?></td>
+			<td class="sly-col-b"><input class="rex-form-text" type="text" name="clang_name" value="<?php echo sly_html($name) ?>" /></td>
+			<td class="sly-col-c"><input class="rex-form-text" type="text" name="clang_locale" value="<?php echo sly_html($locale) ?>" /></td>
+			<td class="sly-col-d"><input type="submit" name="sly-submit" class="rex-form-submit" value="<?php echo t('clang_add') ?>" /></td>
 		</tr>
 		<?php
 	}

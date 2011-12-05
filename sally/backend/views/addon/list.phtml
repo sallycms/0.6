@@ -34,7 +34,7 @@ else {
 			}
 
 			?>
-			<li class="<?= $classes ?> component" data-key="<?= $key ?>">
+			<li class="<?php echo $classes ?> component" data-key="<?php echo $key ?>">
 				<ul class="details">
 					<?php include $sublist; ?>
 				</ul>
@@ -52,7 +52,7 @@ else {
 					$info['requirements'] = array_unique($info['requirements']);
 
 					?>
-					<li class="<?= $classes ?> component" data-key="<?= $key ?>">
+					<li class="<?php echo $classes ?> component" data-key="<?php echo $key ?>">
 						<ul class="details">
 							<?php include $sublist; ?>
 						</ul>
@@ -68,7 +68,7 @@ else {
 
 		?>
 		<li class="error">
-			<?= sly_Helper_Message::warn('Ich bin eine Fehlermeldung.') ?>
+			<?php echo sly_Helper_Message::warn('Ich bin eine Fehlermeldung.') ?>
 		</li>
 	</ul>
 	<?php
