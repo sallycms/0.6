@@ -1,9 +1,9 @@
 <form action="index.php" method="post" id="rex-form-structure-category">
 	<fieldset>
 		<input type="hidden" name="page" value="structure" />
-		<input type="hidden" name="category_id" value="<?= $this->categoryId ?>" />
-		<input type="hidden" name="clang" value="<?= $this->clangId ?>" />
-		<input type="hidden" name="func" value="<?= $this->action ?>" />
+		<input type="hidden" name="category_id" value="<?php echo $this->categoryId ?>" />
+		<input type="hidden" name="clang" value="<?php echo $this->clangId ?>" />
+		<input type="hidden" name="func" value="<?php echo $this->action ?>" />
 	</fieldset>
 
 	<?php
@@ -61,7 +61,7 @@
 	if (!$this->renderAddCategory && !$currentCategory && empty($categories)) {
 		?>
 		<tr>
-			<td colspan="<?= $advancedMode ? 6 : 5 ?>" class="sly-icon"><?= t('no_categories_yet') ?></td>
+			<td colspan="<?php echo $advancedMode ? 6 : 5 ?>" class="sly-icon"><?php echo t('no_categories_yet') ?></td>
 		</tr>
 		<?php
 	}

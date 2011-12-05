@@ -39,19 +39,19 @@ foreach ($users as $user) {
 	?>
 	<tr>
 		<td class="sly-col-a sly-icon">
-			<a href="<?= $base ?>edit&amp;id=<?= $id ?>">
-				<img src="assets/empty.png" class="sly-icon sly-sprite sly-sprite-sly-user" alt="" title="<?= sly_html($login) ?>" />
+			<a href="<?php echo $base ?>edit&amp;id=<?php echo $id ?>">
+				<img src="assets/empty.png" class="sly-icon sly-sprite sly-sprite-sly-user" alt="" title="<?php echo sly_html($login) ?>" />
 			</a>
 		</td>
-		<td class="sly-col-b sly-center"><?= $id ?></td>
-		<td class="sly-col-c"><a href="<?= $base ?>edit&amp;id=<?= $id ?>"><?= sly_html($name) ?></a></td>
-		<td class="sly-col-d"><?= sly_html($user->getLogin()) ?></td>
-		<td class="sly-col-e"><?= sly_Util_String::formatDatetime($user->getLastTryDate()) ?></td>
+		<td class="sly-col-b sly-center"><?php echo $id ?></td>
+		<td class="sly-col-c"><a href="<?php echo $base ?>edit&amp;id=<?php echo $id ?>"><?php echo sly_html($name) ?></a></td>
+		<td class="sly-col-d"><?php echo sly_html($user->getLogin()) ?></td>
+		<td class="sly-col-e"><?php echo sly_Util_String::formatDatetime($user->getLastTryDate()) ?></td>
 
 		<?php if ($id == $currentID): ?>
-		<td class="sly-col-f"><span class="rex-strike"><?= t('user_delete') ?></span></td>
+		<td class="sly-col-f"><span class="rex-strike"><?php echo t('user_delete') ?></span></td>
 		<?php else: ?>
-		<td class="sly-col-f"><a class="sly-action sly-delete" href="<?= $base ?>delete&amp;id=<?= $id ?>"><?= t('user_delete') ?></a></td>
+		<td class="sly-col-f"><a class="sly-action sly-delete" href="<?php echo $base ?>delete&amp;id=<?php echo $id ?>"><?php echo t('user_delete') ?></a></td>
 		<?php endif ?>
 	</tr>
 	<?php

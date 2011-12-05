@@ -21,9 +21,9 @@ $(function() {
 		var id       = self.data('id');
 		var name     = self.data('name');
 		var link     = 'sally://' + id + '/';
-		var callback = window.opener['<?= $callback ?>'];
+		var callback = window.opener['<?php echo $callback ?>'];
 		var close    = true;
-		var fullName = name.length === 0 ? '<?= t('unnamed_article') ?> [' + id + ']' : <?= $advanced ? "name + ' [' + id + ']'" : 'name' ?>;
+		var fullName = name.length === 0 ? '<?php echo t('unnamed_article') ?> [' + id + ']' : <?php echo $advanced ? "name + ' [' + id + ']'" : 'name' ?>;
 
 		// execute callback (link widget, WYMeditor, ...)
 		if (typeof callback === 'function') {
@@ -38,7 +38,7 @@ $(function() {
 	var links = $('a[href!="#"]:visible'), len = links.length, i = 0;
 
 	for (; i < len; ++i) {
-		links[i].href = links[i].href += '&callback=<?= $callback ?>';
+		links[i].href = links[i].href += '&callback=<?php echo $callback ?>';
 	}
 });
 <?php

@@ -15,17 +15,17 @@ $advanced = sly_Util_User::getCurrentUser()->hasRight('advancedMode[]');
 
 ?>
 <script type="text/javascript">
-var filename = '<?= $filename ?>';
-var title    = '<?= $title ?>';
-var link     = 'data/mediapool/<?= $filename ?>';
-var callback = window.opener['<?= $callback ?>'];
+var filename = '<?php echo $filename ?>';
+var title    = '<?php echo $title ?>';
+var link     = 'data/mediapool/<?php echo $filename ?>';
+var callback = window.opener['<?php echo $callback ?>'];
 var fullName = '';
 
 if (title.length === 0) {
 	fullName = filename;
 }
 else {
-	fullName = <?= $advanced ? "title + ' (' + filename + ')'" : 'title' ?>;
+	fullName = <?php echo $advanced ? "title + ' (' + filename + ')'" : 'title' ?>;
 }
 
 // execute callback (media widget, WYMeditor, ...)

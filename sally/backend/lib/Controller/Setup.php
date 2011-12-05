@@ -348,19 +348,10 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		return is_dir($dir) || (mkdir($dir) && chmod($dir, sly_Core::getDirPerm()));
 	}
 
-	protected function printHiddens($func, $form = null) {
-		if ($form instanceof sly_Form) {
-			$form->addHiddenValue('page', 'setup');
-			$form->addHiddenValue('func', $func);
-			$form->addHiddenValue('lang', $this->lang);
-		}
-		else {
-			?>
-			<input type="hidden" name="page" value="setup" />
-			<input type="hidden" name="func" value="<?= sly_html($func) ?>" />
-			<input type="hidden" name="lang" value="<?= sly_html($this->lang) ?>" />
-			<?php
-		}
+	protected function printHiddens($func, $form) {
+		$form->addHiddenValue('page', 'setup');
+		$form->addHiddenValue('func', $func);
+		$form->addHiddenValue('lang', $this->lang);
 	}
 
 	protected function setupImport($sqlScript) {
