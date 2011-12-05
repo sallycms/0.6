@@ -88,32 +88,70 @@ class sly_Layout_Navigation_Backend {
 		}
 	}
 
+	/**
+	 * Creates a new navigation group and returns it.
+	 *
+	 * @param string $name
+	 * @param string $title
+	 * @return sly_Layout_Navigation_Group
+	 */
 	public function addGroup($name, $title) {
 		$group = new sly_Layout_Navigation_Group($name, $title);
 		$this->addGroupObj($group);
 		return $group;
 	}
 
+	/**
+	 * Creates a new Page and returns it.
+	 *
+	 * @param string $group
+	 * @param string $name
+	 * @param string $title
+	 * @param boolean $popup
+	 * @param string $pageParam
+	 * @return sly_Layout_Navigation_Page
+	 */
 	public function addPage($group, $name, $title = null, $popup = false, $pageParam = null) {
 		$page  = new sly_Layout_Navigation_Page($name, $title, $popup, $pageParam);
 		$this->addPageObj($group, $page);
 		return $page;
 	}
 
+	/**
+	 * Adds a navigation group object to the navigation.
+	 *
+	 * @param sly_Layout_Navigation_Group $group
+	 */
 	public function addGroupObj(sly_Layout_Navigation_Group $group) {
 		$this->groups[$group->getName()] = $group;
 		$this->currentGroup = $group;
 	}
 
+	/**
+	 * Adds a navigation page object to the navigation/group.
+	 *
+	 * @param sly_Layout_Navigation_Group $group
+	 * @param sly_Layout_Navigation_Page $page
+	 */
 	public function addPageObj($group, sly_Layout_Navigation_Page $page) {
 		$group = $group === null ? $this->currentGroup : $this->groups[$group];
 		$group->addPage($page);
 	}
 
+	/**
+	 * Return last insertet group.
+	 *
+	 * @return sly_Layout_Navigation_Group
+	 */
 	public function getCurrentGroup() {
 		return $this->currentGroup;
 	}
 
+	/**
+	 * Returns the navigation groups.
+	 *
+	 * @return array
+	 */
 	public function getGroups() {
 		return $this->groups;
 	}
@@ -121,13 +159,14 @@ class sly_Layout_Navigation_Backend {
 	/**
 	 *
 	 * @param string $name
-	 * @return sly_Layout_Navigation_Group 
+	 * @return sly_Layout_Navigation_Group
 	 */
 	public function getGroup($name) {
 		return isset($this->groups[$name]) ? $this->groups[$name] : null;
 	}
 
 	/**
+	 * Gets a Page from the Navigation.
 	 *
 	 * @param string $name
 	 * @param string $group
@@ -138,8 +177,9 @@ class sly_Layout_Navigation_Backend {
 		foreach ($pages as $p) if ($p->getName() === $name || $p->getPageParam() === $name) return $p;
 		return null;
 	}
-	
+
 	/**
+	 * Returns a Page found by its name or null.
 	 *
 	 * @param string $name
 	 * @return sly_Layout_Navigation_Page
@@ -154,6 +194,7 @@ class sly_Layout_Navigation_Backend {
 	}
 
 	/**
+	 * Checks if a Page exists
 	 *
 	 * @param string $name
 	 * @return boolean
@@ -166,6 +207,11 @@ class sly_Layout_Navigation_Backend {
 		return false;
 	}
 
+	/**
+	 * Returns the active backend page.
+ 	 *
+	 * @return sly_Layout_Navigation_Page
+	 */
 	public function getActivePage() {
 		foreach ($this->groups as $group) {
 			foreach ($group->getPages() as $p) if ($p->isActive()) return $p;
@@ -174,6 +220,11 @@ class sly_Layout_Navigation_Backend {
 		return null;
 	}
 
+	/**
+	 * Return the group of the active backend page.
+	 *
+	 * @return sly_Layout_Navigation_Group
+	 */
 	public function getActiveGroup() {
 		foreach ($this->groups as $group) {
 			foreach ($group->getPages() as $p) if ($p->isActive()) return $group;
@@ -182,12 +233,26 @@ class sly_Layout_Navigation_Backend {
 		return null;
 	}
 
+	/**
+	 * Removes a Group, found by its name, from the Navigation. Returns true on success, false
+	 * on error.
+	 *
+	 * @param string $name
+	 * @return boolean
+	 */
 	public function removeGroup($name) {
 		$hasIt = isset($this->groups[$name]);
 		unset($this->groups[$name]);
 		return $hasIt;
 	}
 
+	/**
+	 * Removes a Page from the Navigation. Returns true on success, false
+	 * on error.
+	 *
+	 * @param sly_Layout_Navigation_Page $name
+	 * @return boolean
+	 */
 	public function removePage($name) {
 		foreach ($this->groups as $gName => $group) {
 			if ($this->get($name, $gName)) {
@@ -198,6 +263,14 @@ class sly_Layout_Navigation_Backend {
 		return false;
 	}
 
+	/**
+	 * Removes a Subpage from a Navigation Page. Returns true on success, false
+	 * on error.
+	 *
+	 * @param sly_Layout_Navigation_Page $page
+	 * @param sly_Layout_Navigation_Subpage $subpage
+	 * @return boolean
+	 */
 	public function removeSubpage($page, $subpage) {
 		foreach (array_keys($this->groups) as $group) {
 			$pageObj = $this->get($page, $group);
