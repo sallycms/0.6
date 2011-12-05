@@ -682,7 +682,7 @@ var sly = {};
 		// use ajax to install/activate addOns
 		var errorHider = null;
 
-		$('#sly-page-addon .sly-addonlist').delegate('a', 'click', function() {
+		$('#sly-page-addon .sly-addonlist').delegate('a:not(.sly-blank)', 'click', function() {
 			var
 				link     = $(this),
 				list     = $('.sly-addonlist'),
@@ -703,7 +703,6 @@ var sly = {};
 			row.addClass('working');
 
 			var updateAddOnStatus = function(stati) {
-				console.log(stati);
 				for (var key in stati) {
 					if (!stati.hasOwnProperty(key)) continue;
 					var status = stati[key], comp = $('.component[data-key="' + key + '"]');

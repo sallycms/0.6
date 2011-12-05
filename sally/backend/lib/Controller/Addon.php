@@ -232,7 +232,7 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 		$activated    = $installed ? $service->isActivated($component) : false;
 		$compatible   = $service->isCompatible($component);
 		$version      = $service->getVersion($component);
-		$author       = $service->getAuthor($component);
+		$author       = $service->getSupportPageEx($component);
 		$usable       = $compatible ? $this->canBeUsed($component) : false;
 
 		foreach ($requirements as $req) {
