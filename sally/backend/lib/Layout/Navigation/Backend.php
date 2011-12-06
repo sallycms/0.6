@@ -12,14 +12,13 @@
  * @ingroup layout
  */
 class sly_Layout_Navigation_Backend {
-	private $groups;
-	private $currentGroup;
+	private $groups       = array();
+	private $currentGroup = null;
 
 	public function __construct() {
 		$user = sly_Util_User::getCurrentUser();
 
 		if (!is_null($user)) {
-			$this->groups = array();
 			$this->addGroup('system', 'translate:navigation_basis');
 			$this->addGroup('addon', 'translate:navigation_addons');
 
