@@ -18,7 +18,7 @@ $advanced = sly_Util_User::getCurrentUser()->hasRight('advancedMode[]');
 var filename = '<?php echo $filename ?>';
 var title    = '<?php echo $title ?>';
 var link     = 'data/mediapool/<?php echo $filename ?>';
-var callback = window.opener['<?php echo $callback ?>'];
+var callback = '<?php echo $callback ?>' in window.opener ? window.opener['<?php echo $callback ?>'] : null;
 var fullName = '';
 
 if (title.length === 0) {
@@ -29,7 +29,7 @@ else {
 }
 
 // execute callback (media widget, WYMeditor, ...)
-if (typeof callback === 'function') {
+if (callback !== null) {
 	callback(filename, fullName, title, link);
 }
 

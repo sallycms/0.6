@@ -14,19 +14,19 @@ $advanced = sly_Util_User::getCurrentUser()->hasRight('advancedMode[]');
 
 if ($callback) {
 	ob_start();
-?>
+	?>
 $(function() {
 	$('.articlelist').delegate('a', 'click', function() {
 		var self     = $(this);
 		var id       = self.data('id');
 		var name     = self.data('name');
 		var link     = 'sally://' + id + '/';
-		var callback = window.opener['<?php echo $callback ?>'];
+		var callback = '<?php echo $callback ?>' in window.opener ? window.opener['<?php echo $callback ?>'] : null;
 		var close    = true;
 		var fullName = name.length === 0 ? '<?php echo t('unnamed_article') ?> [' + id + ']' : <?php echo $advanced ? "name + ' [' + id + ']'" : 'name' ?>;
 
 		// execute callback (link widget, WYMeditor, ...)
-		if (typeof callback === 'function') {
+		if (callback !== null) {
 			close = callback(id, fullName, name, link);
 		}
 
@@ -41,8 +41,7 @@ $(function() {
 		links[i].href = links[i].href += '&callback=<?php echo $callback ?>';
 	}
 });
-<?php
+	<?php
 	$javascript = ob_get_clean();
 	sly_Core::getLayout()->addJavaScript($javascript);
 }
-?>
