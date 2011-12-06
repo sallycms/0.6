@@ -30,6 +30,7 @@ sly_Loader::addLoadPath(SLY_SALLYFOLDER.'/backend/lib/', 'sly_');
 // only start session if not running unit tests
 if (!SLY_IS_TESTING) sly_Util_Session::start();
 
+$config->loadStatic(SLY_SALLYFOLDER.DIRECTORY_SEPARATOR.'backend'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'static.yml');
 // prepare setup
 $isSetup = $config->get('SETUP');
 
