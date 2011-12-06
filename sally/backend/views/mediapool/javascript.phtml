@@ -21,7 +21,7 @@ $(function() {
 		var filename = self.data('filename');
 		var title    = self.data('title');
 		var link     = 'sally/data/mediapool/' + filename;
-		var callback = window.opener['<?= $callback ?>'];
+		var callback = '<?= $callback ?>' in window.opener ? window.opener['<?= $callback ?>'] : null;
 		var close    = true;
 		var fullName = '';
 
@@ -33,7 +33,7 @@ $(function() {
 		}
 
 		// execute callback (media widget, WYMeditor, ...)
-		if (typeof callback === 'function') {
+		if (callback !== null) {
 			close = callback(filename, fullName, title, link);
 		}
 
