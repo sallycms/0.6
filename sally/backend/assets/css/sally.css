@@ -184,7 +184,7 @@ caption, legend {
 .rex-area-footer {
 	background-color: $drk_grey;
 	color: white;
-	padding: 7px 5px;
+	padding: 7px 10px;
 	+border-bottom-radius($brd_rad);
 
 	a {

@@ -10,8 +10,8 @@
 ?>
 <div id="rex-linkmap">
 	<div class="rex-area-col-2">
-		<div class="rex-area-col-a">
-			<h3 class="rex-hl2"><?php echo t('lmap_categories') ?></h3>
+		<div class="rex-area col-a">
+			<h2><?php echo t('lmap_categories') ?></h2>
 			<div class="rex-area-content">
 			<?php
 			$roots = sly_Util_Category::getRootCategories();
@@ -20,8 +20,8 @@
 			</div>
 		</div>
 
-		<div class="rex-area-col-b">
-			<h3 class="rex-hl2"><?php echo t('lmap_articles') ?></h3>
+		<div class="rex-area col-b">
+			<h2><?php echo t('lmap_articles') ?></h2>
 			<div class="rex-area-content articlelist">
 				<ul>
 				<?php
@@ -41,11 +41,15 @@
 
 					$label    = $this->formatLabel($article);
 					$selected = $article->getId() == $this->getGlobals('category_id', 0);
-					$liAttr   = $selected ? ' id="rex-linkmap-active"' : '';
-					$class    = $article->isOnline() ? 'rex-online' : 'rex-offine';
+					$class    = $article->isOnline() ? 'rex-online' : 'rex-offline';
+
+					if ($selected) {
+						$class .= ' startarticle';
+					}
+
 					$linkAttr = 'class="'.$class.'" data-id="'.$article->getId().'" data-name="'.sly_html($article->getName()).'"';
 
-					print '<li '.$liAttr.'><a href="#" '.$linkAttr.'>'.sly_html($label).'</a></li>';
+					print '<li><a href="#" '.$linkAttr.'>'.sly_html($label).'</a></li>';
 				}
 				?>
 				</ul>
