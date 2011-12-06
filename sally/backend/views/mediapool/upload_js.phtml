@@ -11,7 +11,6 @@
 $callback = preg_replace('#[^a-z0-9.]#i', '', $callback);
 $filename = addslashes($file->getFilename());
 $title    = addslashes($file->getTitle());
-$advanced = sly_Util_User::getCurrentUser()->hasRight('advancedMode[]');
 
 ?>
 <script type="text/javascript">
@@ -25,7 +24,7 @@ if (title.length === 0) {
 	fullName = filename;
 }
 else {
-	fullName = <?php echo $advanced ? "title + ' (' + filename + ')'" : 'title' ?>;
+	fullName = title;
 }
 
 // execute callback (media widget, WYMeditor, ...)

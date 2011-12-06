@@ -142,11 +142,6 @@ else {
 		$catname = $cat->getName();
 	}
 
-	if ($user->hasRight('advancedMode[]')) {
-		$title   .= ' ['.$file_id.']';
-		$catname .= ' ['.$categoryID.']';
-	}
-
 	// title & cat
 
 	$title = new sly_Form_Text(t('pool_file_title'), $title);

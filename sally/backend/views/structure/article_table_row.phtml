@@ -33,7 +33,6 @@ else {
 ?>
 <tr>
 	<td class="sly-icon"><?php echo sly_Util_HTML::getSpriteLink($base_url, $article->getName(), $sprite) ?></td>
-	<?php echo $advancedMode ? '<td class="id">'.sly_html($article->getId()).'</td>' : '' ?>
 	<td class="name"><a href="<?php echo sly_html($base_url) ?>"><?php echo sly_html($article->getName()) ?></a></td>
 	<td class="arttype"><?php echo sly_html($type) ?></td>
 	<td class="prior"><?php echo sly_html($article->getPrior()) ?></td>

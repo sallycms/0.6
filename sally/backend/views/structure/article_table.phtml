@@ -15,9 +15,6 @@
 
 	$table = new sly_Table();
 	$table->addColumn(new sly_Table_Column($add_article, '', '', array('class' => 'sly-icon')));
-	if ($advancedMode) {
-		$table->addColumn(new sly_Table_Column(t('header_id'), '', '', array('class' => 'id')));
-	}
 	$table->addColumn(new sly_Table_Column(t('header_article_name'), '', '', array('class' => 'name')));
 	$table->addColumn(new sly_Table_Column(t('content_arttype'), '', '', array('class' => 'arttype')));
 	$table->addColumn(new sly_Table_Column(t('header_priority'), '', '', array('class' => 'prior')));
@@ -26,21 +23,21 @@
 	$table->openBuffer();
 
 	if ($this->renderAddArticle) {
-		print $this->render(sly_Controller_Structure::$viewPath . 'article_table_row_add.phtml', array('advancedMode' => $advancedMode));
+		print $this->render(sly_Controller_Structure::$viewPath.'article_table_row_add.phtml');
 	}
 
 	foreach ($articles as $article) {
 		if ($this->renderEditArticle && $this->renderEditArticle == $article->getId()) {
 			print $this->render(
-				sly_Controller_Structure::$viewPath . 'article_table_row_edit.phtml',
-				array('article' => $article, 'advancedMode' => $advancedMode)
+				sly_Controller_Structure::$viewPath.'article_table_row_edit.phtml',
+				array('article' => $article)
 			);
 		}
 		else {
 			if ($this->canEditContent($article->getId())) {
 				print $this->render(
-					sly_Controller_Structure::$viewPath . 'article_table_row.phtml',
-					array('article' => $article, 'advancedMode' => $advancedMode, 'statusTypes' => $statusTypes, 'canEdit' => $canEdit)
+					sly_Controller_Structure::$viewPath.'article_table_row.phtml',
+					array('article' => $article, 'statusTypes' => $statusTypes, 'canEdit' => $canEdit)
 				);
 			}
 		}
@@ -49,7 +46,7 @@
 	if (!$this->renderAddArticle && empty($articles)) {
 		?>
 		<tr>
-			<td colspan="<?php echo $advancedMode ? 6 : 5 ?>" class="sly-icon"><?php echo t('no_articles_yet') ?></td>
+			<td colspan="5" class="sly-icon"><?php echo t('no_articles_yet') ?></td>
 		</tr>
 		<?php
 	}

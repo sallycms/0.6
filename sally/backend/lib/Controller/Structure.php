@@ -45,8 +45,6 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	}
 
 	protected function view() {
-		$advancedMode = sly_Util_User::getCurrentUser()->hasRight('advancedMode[]');
-
 		$cat_service     = sly_Service_Factory::getCategoryService();
 		$currentCategory = $cat_service->findById($this->categoryId, $this->clangId);
 		$categories      = $cat_service->find(array('re_id' => $this->categoryId, 'clang' => $this->clangId), null, 'catprior ASC');
@@ -60,13 +58,11 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		print $this->render(self::$viewPath.'category_table.phtml', array(
 			'categories'      => $categories,
 			'currentCategory' => $currentCategory,
-			'advancedMode'    => $advancedMode,
 			'statusTypes'     => $cat_service->getStati()
 		));
 
 		print $this->render(self::$viewPath.'article_table.phtml', array(
 			'articles'     => $articles,
-			'advancedMode' => $advancedMode,
 			'statusTypes'  => $art_service->getStati(),
 			'canAdd'       => $this->canEditCategory($this->categoryId),
 			'canEdit'      => $this->canEditCategory($this->categoryId),

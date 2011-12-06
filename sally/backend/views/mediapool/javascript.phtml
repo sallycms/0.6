@@ -10,7 +10,6 @@
 
 $callback = sly_request('callback', '');
 $callback = preg_replace('#[^a-z0-9.]#i', '', $callback);
-$advanced = sly_Util_User::getCurrentUser()->hasRight('advancedMode[]');
 
 if ($callback) {
 	ob_start();
@@ -29,7 +28,7 @@ $(function() {
 			fullName = filename;
 		}
 		else {
-			fullName = <?php echo $advanced ? "title + ' (' + filename + ')'" : 'title' ?>;
+			fullName = title;
 		}
 
 		// execute callback (media widget, WYMeditor, ...)

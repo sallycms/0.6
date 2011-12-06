@@ -75,10 +75,6 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 
 		if (empty($label)) $label = '&nbsp;';
 
-		if ($user->hasRight('advancedMode[]')) {
-			$label .= ' ['.$object->getId().']';
-		}
-
 		if (sly_Util_Article::isValid($object) && !$object->hasType()) {
 			$label .= ' ['.t('lmap_has_no_type').']';
 		}

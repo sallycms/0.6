@@ -6,14 +6,14 @@ $status_class = $statusTypes[$category->getStatus()][1];
 
 if ($this->canPublishCategory($category->getId())) {
 	$status = '<a href="'.$edit_url.'&amp;func=editStatusCategory" class="'.$status_class.'">'.$status.'</a>';
-}else {
+}
+else {
 	$status_class .= ' rex-strike';
 	$status = '<span class="'.$status_class.'">'.$status.'</span>';
 }
 ?>
 <tr>
 	<td class="sly-icon"><?php echo sly_Util_HTML::getSpriteLink($base_url, $category->getCatName(), 'category') ?></td>
-	<?php echo $advancedMode ? '<td class="id">'.sly_html($category->getId()).'</td>' : '' ?>
 	<td class="name"><a href="<?php echo sly_html($base_url) ?>"><?php echo sly_html($category->getCatName()) ?></a></td>
 	<td class="prior"><?php echo sly_html($category->getCatPrior()) ?></td>
 	<td class="status">
