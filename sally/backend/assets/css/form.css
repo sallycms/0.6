@@ -179,13 +179,13 @@ a.sly-button {
 			line-height: 0;
 			margin-bottom: 2px;
 
-			&[rel=open]   { background: transparent url(../file_open.png) 0 0 no-repeat;   }
-			&[rel=add]    { background: transparent url(../file_add.png) 0 0 no-repeat;    }
-			&[rel=delete] { background: transparent url(../file_del.png) 0 0 no-repeat;    }
-			&[rel=top]    { background: transparent url(../file_top.png) 0 0 no-repeat;    }
-			&[rel=up]     { background: transparent url(../file_up.png) 0 0 no-repeat;     }
-			&[rel=bottom] { background: transparent url(../file_bottom.png) 0 0 no-repeat; }
-			&[rel=down]   { background: transparent url(../file_down.png) 0 0 no-repeat;   }
+			&.fct-open   { background: transparent url(../file_open.png) 0 0 no-repeat;   }
+			&.fct-add    { background: transparent url(../file_add.png) 0 0 no-repeat;    }
+			&.fct-delete { background: transparent url(../file_del.png) 0 0 no-repeat;    }
+			&.fct-top    { background: transparent url(../file_top.png) 0 0 no-repeat;    }
+			&.fct-up     { background: transparent url(../file_up.png) 0 0 no-repeat;     }
+			&.fct-bottom { background: transparent url(../file_bottom.png) 0 0 no-repeat; }
+			&.fct-down   { background: transparent url(../file_down.png) 0 0 no-repeat;   }
 		}
 
 		img {

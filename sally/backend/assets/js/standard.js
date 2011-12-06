@@ -106,14 +106,14 @@ var sly = {};
 
 	sly.AbstractWidget = function(elem) {
 		this.element    = $(elem);
-		this.valueInput = this.element.find('input[rel=value]');
-		this.nameInput  = this.element.find('input[rel=name]');
+		this.valueInput = this.element.find('input.value');
+		this.nameInput  = this.element.find('input.name');
 
 		// register events
 		var icons = this.element.find('.sly-icons');
-		icons.delegate('a[rel=open]',   'click', $.proxy(this.onOpen,   this));
-		icons.delegate('a[rel=add]',    'click', $.proxy(this.onAdd,    this));
-		icons.delegate('a[rel=delete]', 'click', $.proxy(this.onDelete, this));
+		icons.delegate('a.fct-open',   'click', $.proxy(this.onOpen,   this));
+		icons.delegate('a.fct-add',    'click', $.proxy(this.onAdd,    this));
+		icons.delegate('a.fct-delete', 'click', $.proxy(this.onDelete, this));
 	};
 
 	sly.AbstractWidget.prototype = {
@@ -199,9 +199,9 @@ var sly = {};
 		icons.delegate('a', 'click', $.proxy(this.onMove, this));
 
 		icons = this.element.find('.sly-icons.edit');
-		icons.delegate('a[rel=open]',   'click', $.proxy(this.onOpen,   this));
-		icons.delegate('a[rel=add]',    'click', $.proxy(this.onAdd,    this));
-		icons.delegate('a[rel=delete]', 'click', $.proxy(this.onDelete, this));
+		icons.delegate('a.fct-open',   'click', $.proxy(this.onOpen,   this));
+		icons.delegate('a.fct-add',    'click', $.proxy(this.onAdd,    this));
+		icons.delegate('a.fct-delete', 'click', $.proxy(this.onDelete, this));
 	};
 
 	sly.AbstractListWidget.prototype = {
@@ -258,7 +258,7 @@ var sly = {};
 		},
 
 		onMove: function(event) {
-			var direction = $(event.target).closest('a').attr('rel');
+			var direction = $(event.target).closest('a')[0].className.replace('fct-');
 			var list      = this.list;
 			var selected  = list.find('option:selected');
 
