@@ -138,7 +138,7 @@ ob_start();
 					$attrs['src'] = '../imageresize/'.$width.'w__'.$height.'h__'.$encoded.'?t='.$timestamp;
 				}
 				else {
-					$attrs['src'] = '../sally/data/mediapool/'.$encoded.'?t='.$timestamp;
+					$attrs['src'] = '../data/mediapool/'.$encoded.'?t='.$timestamp;
 				}
 
 				$thumbnail = '<img '.sly_Util_HTML::buildAttributeString($attrs, array('alt')).' />';

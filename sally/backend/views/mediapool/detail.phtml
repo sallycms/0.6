@@ -68,7 +68,7 @@ else {
 $isImage = $this->isImage($medium);
 
 if ($isImage) {
-	$imgn    = '../sally/data/mediapool/'.$encoded.'?t='.$updatedate;
+	$imgn    = '../data/mediapool/'.$encoded.'?t='.$updatedate;
 	$resize  = sly_Service_Factory::getAddOnService()->isAvailable('image_resize');
 	$fwidth  = $medium->getWidth();
 	$fheight = $medium->getHeight();
@@ -172,7 +172,7 @@ if ($isImage) {
 
 // display filename
 
-$filename = '<a href="../sally/data/mediapool/'.$encoded.'">'.sly_html($filename).'</a> ['.$filesize.']';
+$filename = '<a href="../data/mediapool/'.$encoded.'">'.sly_html($filename).'</a> ['.$filesize.']';
 $filename = new sly_Form_Text(t('pool_filename'), $filename);
 $filename->setIsHTML(true);
 $form->add($filename);
