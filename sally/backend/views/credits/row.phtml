@@ -8,25 +8,19 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$author  = is_array($author) ? sly_Util_String::humanImplode($author) : $author;
-$author  = !empty($author) ? sly_html($author) : 'N/A';
 $version = !empty($version) ? sly_html($version) : 'N/A';
-
-if ($isActive) $class = ' sly-activated';
-elseif ($isInstalled) $class = ' sly-installed';
-else $class = ' sly-not-installed';
-
 
 ?>
 
-<tr class="sly-<?php echo $type ?> sly-<?php echo $type ?> <?php echo $class ?>">
-	<?php if ($type == 'addon'): ?>
-	<td class="sly-col-a sly-icon"><?php echo sly_Util_HTML::getSpriteLink('', $name, 'addon') ?></td>
+<tr class="sly-<?php echo $type ?>">
+	<?php if ($type === 'addon'): ?>
+	<td class="sly-icon"><?php echo sly_Util_HTML::getSpriteLink('', $name, 'addon') ?></td>
+	<td class="sly-col-b" colspan="2"><a href="index.php?page=addon_help&amp;addon=<?php echo urlencode($name) ?>"><?php echo sly_html($name) ?></a></td>
 	<?php else: ?>
-	<td class="sly-col-a">&nbsp;</td>
+	<td>&nbsp;</td>
+	<td class="sly-icon"><?php echo sly_Util_HTML::getSpriteLink('', $name, 'plugin') ?></td>
+	<td class="sly-col-b"><a href="index.php?page=addon_help&amp;addon=<?php echo urlencode($name) ?>"><?php echo sly_html($name) ?></a></td>
 	<?php endif ?>
-	<td class="sly-col-b"><?php echo sly_html($name) ?> [<a href="index.php?page=addon_help&amp;addon=<?php echo urlencode($name) ?>">?</a>]</td>
 	<td class="sly-col-c"><?php echo $version ?></td>
-	<td class="sly-col-d"><?php echo $author ?></td>
-	<td class="sly-col-e"><?php echo $supportPage ?></td>
+	<td><?php echo $supportPage ?></td>
 </tr>

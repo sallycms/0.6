@@ -1,11 +1,16 @@
 #sly-page-credits {
-	.sly-addonlist {
-		.sly-col-b { white-space: pre; padding-right: 5px; }
-		.sly-col-c { padding-right: 5px; }
+	th.sly-col-b, th.sly-col-c {
+		white-space: pre;
+		padding-right: 5px;
+		width: 50px;
 	}
 
-	.sly-credits {
-		margin-bottom: 10px;
+	.sly-plugin .sly-icon {
+		width: 22px;
+	}
+
+	.sly-sprite-plugin {
+		margin: 0 6px 0 0;
 	}
 }
 

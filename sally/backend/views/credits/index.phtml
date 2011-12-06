@@ -23,11 +23,10 @@
 <table class="sly-table sly-addonlist" summary="<?php echo t('credits_caption') ?>">
 	<caption><?php echo t('credits_caption') ?></caption>
 	<thead><tr>
-		<th class="sly-col-a sly-icon">&nbsp;</th>
-		<th class="sly-col-b"><?php echo t('credits_name') ?></th>
+		<th class="sly-icon">&nbsp;</th>
+		<th class="sly-col-b" colspan="2"><?php echo t('credits_name') ?></th>
 		<th class="sly-col-c"><?php echo t('credits_version') ?></th>
-		<th class="sly-col-d"><?php echo t('credits_author') ?></th>
-		<th class="sly-col-e"><?php echo t('credits_supportpage') ?></th>
+		<th><?php echo t('credits_author') ?></th>
 	</tr></thead>
 	<tbody>
 
@@ -39,10 +38,7 @@
 	foreach ($addons->getRegisteredAddons() as $addon) {
 		$params['type']        = 'addon';
 		$params['name']        = $addon;
-		$params['isActive']    = $addons->isActivated($addon);
-		$params['isInstalled'] = $addons->isInstalled($addon);
 		$params['version']     = $addons->getVersion($addon);
-		$params['author']      = $addons->getAuthor($addon);
 		$params['supportPage'] = $addons->getSupportPageEx($addon);
 
 		print $this->render('credits/row.phtml', $params);
@@ -53,10 +49,7 @@
 			foreach ($plugins->getRegisteredPlugins($addon) as $plugin) {
 				$params['type']        = 'plugin';
 				$params['name']        = $plugin;
-				$params['isActive']    = $plugins->isActivated(array($addon, $plugin));
-				$params['isInstalled'] = $plugins->isInstalled(array($addon, $plugin));
 				$params['version']     = $plugins->getVersion(array($addon, $plugin));
-				$params['author']      = $plugins->getAuthor(array($addon, $plugin));
 				$params['supportPage'] = $plugins->getSupportPageEx(array($addon, $plugin));
 
 				print $this->render('credits/row.phtml', $params);
