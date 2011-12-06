@@ -1,4 +1,13 @@
 <?php
+/*
+ * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
 $base_url     = 'index.php?page=structure&category_id='.$category->getId().'&clang='.$this->clangId;
 $edit_url     = 'index.php?page=structure&amp;category_id='.$category->getParentId().'&amp;clang='.$this->clangId.'&amp;edit_id='.$category->getId();
 $status       = $statusTypes[$category->getStatus()][0];

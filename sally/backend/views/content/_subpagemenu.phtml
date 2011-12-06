@@ -1,25 +1,33 @@
 <?php
-$baseURL = 'index.php?article_id='.$this->article->getId().'&clang='.$this->article->getClang();
+/*
+ * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
 
-$menu = '';
+$baseURL = 'index.php?article_id='.$this->article->getId().'&clang='.$this->article->getClang();
+$menu    = '';
 
 $listElements = array();
 $listElements[] = '<a href="'.$baseURL.'&amp;page=content"'.(get_class($this) == 'sly_Controller_Content' ? ' class="rex-active"' : '').'>'.t('edit_mode').'</a>';
 $listElements[] = '<a href="'.$baseURL.'&amp;page=contentmeta"'.(get_class($this) == 'sly_Controller_Contentmeta' ? ' class="rex-active"' : '').'>'.t('metadata').'</a>';
-$listElements[] = '<a href="../'.$this->article->getUrl().'" onclick="window.open(this.href); return false;">'.t('show').'</a>';
+$listElements[] = '<a href="../'.$this->article->getUrl().'" class="sly-blank">'.t('show').'</a>';
 
 $listElements = sly_Core::dispatcher()->filter('SLY_PAGE_CONTENT_ACTIONS_MENU', $listElements, array(
-			'article_id' => $this->article->getId(),
-			'clang' => $this->article->getClang()
-		));
+	'article_id' => $this->article->getId(),
+	'clang'      => $this->article->getClang()
+));
 ?>
 <ul class="sly-navi-content">
-<?php
-foreach ($listElements as $idx => $element) {
-	$class = $idx == 0 ? ' class="rex-navi-first"' : '';
-	$menu .= '<li'.$class.'>'.$element.'</li>';
-}
+	<?php
+	foreach ($listElements as $idx => $element) {
+		$class = $idx == 0 ? ' class="rex-navi-first"' : '';
+		$menu .= '<li'.$class.'>'.$element.'</li>';
+	}
 
-print $menu;
-?>
+	print $menu;
+	?>
 </ul>

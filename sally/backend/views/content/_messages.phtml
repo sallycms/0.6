@@ -1,4 +1,14 @@
 <?php
-if (!empty($this->warning))	print sly_Helper_Message::warn($this->warning);
-if (!empty($this->info))	print sly_Helper_Message::info($this->info);
+/*
+ * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+if (!empty($this->warning)) print sly_Helper_Message::warn($this->warning);
+if (!empty($this->info))    print sly_Helper_Message::info($this->info);
+
 sly_Core::dispatcher()->notify('SLY_ART_MESSAGES', $this->article);
