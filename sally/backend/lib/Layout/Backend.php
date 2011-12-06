@@ -11,7 +11,7 @@
 /**
  * @ingroup layout
  */
-class sly_Layout_Backend extends sly_Layout_XHTML {
+class sly_Layout_Backend extends sly_Layout_XHTML5 {
 	private $hasNavigation = true;
 	private $navigation;
 
