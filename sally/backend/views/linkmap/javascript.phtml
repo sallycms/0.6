@@ -22,12 +22,12 @@ $(function() {
 		var id       = self.data('id');
 		var name     = self.data('name');
 		var link     = 'sally://' + id + '/';
-		var callback = window.opener['<?= $callback ?>'];
+		var callback = '<?= $callback ?>' in window.opener ? window.opener['<?= $callback ?>'] : null;
 		var close    = true;
 		var fullName = name.length === 0 ? '<?= t('unnamed_article') ?> [' + id + ']' : <?= $advanced ? "name + ' [' + id + ']'" : 'name' ?>;
 
 		// execute callback (link widget, WYMeditor, ...)
-		if (typeof callback === 'function') {
+		if (callback !== null) {
 			close = callback(id, fullName, name, link);
 		}
 
