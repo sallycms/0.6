@@ -3,6 +3,6 @@ START_PAGE: structure
 MEDIAPOOL:
   BLOCKED_EXTENSIONS: [.php, .php3, .php4, .php5, .php6, .phtml, .pl, .asp, .aspx, .cfm, .jsp, .htaccess]
 PERM: ["mediapool"]
-EXTPERM: ["advancedMode", "moveSlice", "copyContent", "moveArticle", "copyArticle", "moveCategory", "publishArticle", "publishCategory", "article2startpage", "changearttype"]
+EXTPERM: ["moveSlice", "copyContent", "moveArticle", "copyArticle", "moveCategory", "publishArticle", "publishCategory", "article2startpage", "changearttype"]
 EXTRAPERM: ["editContentOnly"]
 OBJECTPERM: ["clang", "csw", "media", "module"]
