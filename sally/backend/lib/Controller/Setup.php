@@ -324,10 +324,9 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		);
 
 		$level = error_reporting(0);
-		$perm  = sly_Core::getDirPerm();
 
 		foreach ($writables as $dir) {
-			if (!sly_Util_Directory::create($dir, $perm)) {
+			if (!sly_Util_Directory::create($dir)) {
 				$errors[] = $dir;
 			}
 		}
