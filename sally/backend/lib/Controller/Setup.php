@@ -318,34 +318,22 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		$s         = DIRECTORY_SEPARATOR;
 		$errors    = array();
 		$writables = array(
-			SLY_DATAFOLDER,
 			SLY_MEDIAFOLDER,
-			SLY_DEVELOPFOLDER,
 			SLY_DEVELOPFOLDER.$s.'templates',
-			SLY_DEVELOPFOLDER.$s.'modules',
-			SLY_DYNFOLDER,
-			SLY_DYNFOLDER.$s.'public',
-			SLY_DYNFOLDER.$s.'internal',
-			SLY_DYNFOLDER.$s.'internal'.$s.'sally',
-			SLY_DYNFOLDER.$s.'internal'.$s.'sally'.$s.'css-cache',
-			SLY_DYNFOLDER.$s.'internal'.$s.'sally'.$s.'yaml-cache',
-			SLY_DYNFOLDER.$s.'internal'.$s.'sally'.$s.'templates',
+			SLY_DEVELOPFOLDER.$s.'modules'
 		);
 
 		$level = error_reporting(0);
+		$perm  = sly_Core::getDirPerm();
 
 		foreach ($writables as $dir) {
-			if (!$this->isWritable($dir)) {
+			if (!sly_Util_Directory::create($dir, $perm)) {
 				$errors[] = $dir;
 			}
 		}
 
 		error_reporting($level);
 		return $errors;
-	}
-
-	protected function isWritable($dir) {
-		return is_dir($dir) || (mkdir($dir) && chmod($dir, sly_Core::getDirPerm()));
 	}
 
 	protected function printHiddens($func, $form) {
