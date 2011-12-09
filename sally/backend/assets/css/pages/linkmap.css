@@ -11,53 +11,57 @@
 		list-style: none;
 		background-repeat: no-repeat;
 		line-height: 1;
+		margin-left: -6px;
 	}
 
 	/* Category tree */
 
+	ul {
+		border-left: 1px dotted $md_grey;
+		padding-left: 1px;
+	}
+
 	.lvl-1 ul {
-		padding-left: 15px;
+		padding-left: 1px;
+		margin-left: 19px;
 	}
 
 	a {
-		background: url(../nodesprite.png) 0 -120px no-repeat;
+		background: url(../nodesprite.png) 0 -126px no-repeat;
 		display: block;
 		padding: 0 0 0 28px;
-		line-height: 20px;
+		line-height: 21px;
+		height: 21px;
 	}
 
 	/* basic styles */
 
-	.active          { background-position: 0 -140px; }
-	.children        { background-position: 0 -280px; }
-	.children.active { background-position: 0 -300px; }
+	.active          { background-position: 0 -147px; }
+	.children        { background-position: 0 -294px; }
+	.children.active { background-position: 0 -315px; }
 
 	/* some edge cases */
 
-	.lvl-1.first.empty        { background-position: 0 -80px;  }
-	.lvl-1.first.empty.active { background-position: 0 -100px; }
+	.lvl-1.first.empty        { background-position: 0 -84px;  }
+	.lvl-1.first.empty.active { background-position: 0 -105px; }
 
-	.lvl-1.first.children        { background-position: 0 -240px; }
-	.lvl-1.first.children.active { background-position: 0 -260px; }
+	.lvl-1.first.children        { background-position: 0 -252px; }
+	.lvl-1.first.children.active { background-position: 0 -273px; }
 
-	.last.empty        { background-position: 0 -40px; }
-	.last.empty.active { background-position: 0 -60px; }
+	.last.empty        { background-position: 0 -42px; }
+	.last.empty.active { background-position: 0 -63px; }
 
-	.last.children        { background-position: 0 -200px; }
-	.last.children.active { background-position: 0 -220px; }
+	.last.children        { background-position: 0 -210px; }
+	.last.children.active { background-position: 0 -231px; }
 
 	.lvl-1.first.last.empty        { background-position: 0 0; }
-	.lvl-1.first.last.empty.active { background-position: 0 -20px; }
+	.lvl-1.first.last.empty.active { background-position: 0 -21px; }
 
-	.lvl-1.first.last.children        { background-position: 0 -160px; }
-	.lvl-1.first.last.children.active { background-position: 0 -180px; }
+	.lvl-1.first.last.children        { background-position: 0 -168px; }
+	.lvl-1.first.last.children.active { background-position: 0 -189px; }
 
-	ul ul {
-		background: url(../dotted.png) left top repeat-y;
-	}
-
-	li:last-child > ul {
-		background: none;
+	li:last-child {
+		background: white;
 	}
 
 	.leaf {
@@ -66,12 +70,18 @@
 
 	/* Articles */
 
-	.articlelist a {
-		background-position: 0 -320px;
-		padding-left: 17px;
+	.articlelist {
+		ul {
+			border-left: 0 none;
+		}
 
-		&.startarticle {
-			background-position: 0 -340px;
+		a {
+			background-position: 0 -336px;
+			padding-left: 17px;
+
+			&.startarticle {
+				background-position: 0 -357px;
+			}
 		}
 	}
 }
