@@ -57,7 +57,7 @@ var sly = {};
 	/////////////////////////////////////////////////////////////////////////////
 	// Mediapool
 
-	sly.openMediapool = function(subpage, value, callback) {
+	sly.openMediapool = function(subpage, value, callback, filetypes, categories) {
 		var url = 'index.php?page=mediapool';
 
 		if (value) {
@@ -69,6 +69,14 @@ var sly = {};
 
 		if (callback) {
 			url += '&callback='+callback;
+		}
+
+		if ($.isArray(filetypes) && filetypes.length > 0) {
+			url += '&args[types]='+filetypes.join('|');
+		}
+
+		if ($.isArray(categories) && categories.length > 0) {
+			url += '&args[categories]='+categories.join('|');
 		}
 
 		return sly.openCenteredPopup('slymediapool', url, 760, 600);
@@ -100,6 +108,18 @@ var sly = {};
 	var getCallbackName = function(base) {
 		return base + (new Date()).getTime();
 	}
+
+	var readLists = function(el, name) {
+		var values = (el.data(name) || '').split('|'), len = values.length, i = 0, res = [];
+
+		for (; i < len; ++i) {
+			if (values[i].length > 0) {
+				res.push(values[i]);
+			}
+		}
+
+		return res;
+	};
 
 	/////////////////////////////////////////////////////////////////////////////
 	// Abstract Widget
@@ -150,20 +170,23 @@ var sly = {};
 
 	sly.MediaWidget = function(elem) {
 		sly.AbstractWidget.call(this, elem);
+
+		this.filetypes  = readLists(this.element, 'filetypes');
+		this.categories = readLists(this.element, 'categories');
 	};
 
 	inherit(sly.MediaWidget, sly.AbstractWidget);
 
 	sly.MediaWidget.prototype.onOpen = function() {
 		var cb = getCallbackName('slymediawidget');
-		sly.openMediapool('detail', this.getValue(), cb);
+		sly.openMediapool('detail', this.getValue(), cb, this.filetypes, this.categories);
 		win[cb] = $.proxy(this.setValue, this);
 		return false;
 	};
 
 	sly.MediaWidget.prototype.onAdd = function() {
 		var cb = getCallbackName('slymediawidget');
-		sly.openMediapool('upload', '', cb);
+		sly.openMediapool('upload', '', cb, this.filetypes, this.categories);
 		win[cb] = $.proxy(this.setValue, this);
 		return false;
 	};
@@ -301,20 +324,23 @@ var sly = {};
 
 	sly.MedialistWidget = function(elem) {
 		sly.AbstractListWidget.call(this, elem);
+
+		this.filetypes  = readLists(this.element, 'filetypes');
+		this.categories = readLists(this.element, 'categories');
 	};
 
 	inherit(sly.MedialistWidget, sly.AbstractListWidget);
 
 	sly.MedialistWidget.prototype.onOpen = function() {
 		var cb = getCallbackName('slymedialistwidget');
-		sly.openMediapool('detail', this.getSelected(), cb);
+		sly.openMediapool('detail', this.getSelected(), cb, this.filetypes, this.categories);
 		win[cb] = $.proxy(this.addValue, this);
 		return false;
 	};
 
 	sly.MedialistWidget.prototype.onAdd = function() {
 		var cb = getCallbackName('slymedialistwidget');
-		sly.openMediapool('upload', '', cb);
+		sly.openMediapool('upload', '', cb, this.filetypes, this.categories);
 		win[cb] = $.proxy(this.addValue, this);
 		return false;
 	};

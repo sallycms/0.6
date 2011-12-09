@@ -13,21 +13,29 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 	protected $info;
 	protected $category;
 	protected $selectBox;
+	protected $categories;
 
 	protected function init() {
 		// load our i18n stuff
 		sly_Core::getI18N()->appendFile(SLY_SALLYFOLDER.'/backend/lang/pages/mediapool/');
 
-		$this->info    = sly_request('info', 'string');
-		$this->warning = sly_request('warning', 'string');
-		$this->args    = sly_requestArray('args', 'string');
+		$this->info       = sly_request('info', 'string');
+		$this->warning    = sly_request('warning', 'string');
+		$this->args       = sly_requestArray('args', 'string');
+		$this->categories = array();
+
+		// init category filter
+		if (isset($this->args['categories'])) {
+			$cats             = array_map('intval', explode('|', $this->args['categories']));
+			$this->categories = array_unique($cats);
+		}
 
 		$this->getCurrentCategory();
 
 		// Header
 
 		$subline = array(
-			array('mediapool',       $this->t('file_list')),
+			array('mediapool',        $this->t('file_list')),
 			array('mediapool_upload', $this->t('file_insert'))
 		);
 
@@ -81,6 +89,11 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 				$category = sly_Util_Session::get('media[rex_file_category]', 'int');
 			}
 
+			// respect category filter
+			if (!empty($this->categories) && !in_array($category, $this->categories)) {
+				$category = reset($this->categories);
+			}
+
 			$category = $service->findById($category);
 			$category = $category ? $category->getId() : 0;
 
@@ -111,13 +124,11 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		$where = '('.$where.')';
 
 		if (isset($this->args['types'])) {
-			$types = explode(',', preg_replace('#[^a-z0-9,]#i', '', $this->args['types']));
+			$types = explode('|', preg_replace('#[^a-z0-9/+.-|]#i', '', $this->args['types']));
 
-			foreach ($types as $i => $type) {
-				$types[$i] = 'f.filename LIKE "%.'.$type.'"';
+			if (!empty($types)) {
+				$where .= ' AND filetype IN ("'.implode('","', $types).'")';
 			}
-
-			$where .= ' AND ('.implode(' OR ', $types).')';
 		}
 
 		$db     = sly_DB_Persistence::getInstance();
@@ -275,6 +286,20 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 			$this->selectBox->setLabel($this->t('kats'));
 			$this->selectBox->setMultiple(false);
 			$this->selectBox->setAttribute('value', $this->getCurrentCategory());
+
+			// filter categories if args[categories] is set
+			if (isset($this->args['categories'])) {
+				$cats = array_map('intval', explode('|', $this->args['categories']));
+				$cats = array_unique($cats);
+
+				if (!empty($cats)) {
+					$values = array_keys($this->selectBox->getValues());
+
+					foreach ($values as $catID) {
+						if (!in_array($catID, $cats)) $this->selectBox->removeValue($catID);
+					}
+				}
+			}
 		}
 
 		return $this->selectBox;
