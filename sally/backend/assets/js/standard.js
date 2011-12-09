@@ -82,7 +82,7 @@ var sly = {};
 		return sly.openCenteredPopup('slymediapool', url, 760, 600);
 	};
 
-	sly.openLinkmap = function(value, callback) {
+	sly.openLinkmap = function(value, callback, articletypes, categories) {
 		var url = 'index.php?page=linkmap';
 
 		if (value) {
@@ -91,6 +91,14 @@ var sly = {};
 
 		if (callback) {
 			url += '&callback='+callback;
+		}
+
+		if ($.isArray(articletypes) && articletypes.length > 0) {
+			url += '&args[types]='+articletypes.join('|');
+		}
+
+		if ($.isArray(categories) && categories.length > 0) {
+			url += '&args[categories]='+categories.join('|');
 		}
 
 		return sly.openCenteredPopup('slylinkmap', url, 760, 600);
@@ -110,7 +118,7 @@ var sly = {};
 	}
 
 	var readLists = function(el, name) {
-		var values = (el.data(name) || '').split('|'), len = values.length, i = 0, res = [];
+		var values = ((el.data(name) || '')+'').split('|'), len = values.length, i = 0, res = [];
 
 		for (; i < len; ++i) {
 			if (values[i].length > 0) {
@@ -196,6 +204,9 @@ var sly = {};
 
 	sly.LinkWidget = function(elem) {
 		sly.AbstractWidget.call(this, elem);
+
+		this.articletypes = readLists(this.element, 'articletypes');
+		this.categories   = readLists(this.element, 'categories');
 	};
 
 	inherit(sly.LinkWidget, sly.AbstractWidget);
@@ -203,7 +214,7 @@ var sly = {};
 	sly.LinkWidget.prototype.onOpen = function() {
 		var catID = this.element.data('catid'), cb = getCallbackName('slylinkwidget');
 
-		sly.openLinkmap(catID, cb);
+		sly.openLinkmap(catID, cb, this.articletypes, this.categories);
 		win[cb] = $.proxy(this.setValue, this);
 
 		return false;
@@ -350,6 +361,9 @@ var sly = {};
 
 	sly.LinklistWidget = function(elem) {
 		sly.AbstractListWidget.call(this, elem);
+
+		this.articletypes = readLists(this.element, 'articletypes');
+		this.categories   = readLists(this.element, 'categories');
 	};
 
 	inherit(sly.LinklistWidget, sly.AbstractListWidget);
@@ -357,7 +371,7 @@ var sly = {};
 	sly.LinklistWidget.prototype.onOpen = function() {
 		var catID = this.element.data('catid'), cb = getCallbackName('slylinklistwidget');
 
-		sly.openLinkmap(catID, cb);
+		sly.openLinkmap(catID, cb, this.articletypes, this.categories);
 		win[cb] = $.proxy(this.addValue, this);
 
 		return false;

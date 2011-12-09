@@ -9,31 +9,110 @@
  */
 
 class sly_Controller_Linkmap extends sly_Controller_Backend {
-	protected $globals;
-	protected $tree;
+	protected $globals    = null;
+	protected $tree       = array();
+	protected $categories = array();
+	protected $types      = array();
+	protected $roots      = array();
+	protected $forced     = array();
+	protected $args       = array();
+	protected $category   = null;
 
 	public function init() {
-		$catID     = $this->getGlobals('category_id', 0);
-		$naviPath  = '<ul class="sly-navi-path">';
-		$isRoot    = $catID === 0;
-		$category  = sly_Util_Category::findById($catID);
-		$link      = $this->url(array('category_id' => 0));
+		$this->args = sly_requestArray('args', 'string');
 
-		$naviPath .= '<li>'.t('path').' </li>';
-		$naviPath .= '<li>: <a href="'.$link.'">'.t('homepage').'</a> </li>';
+		// init category filter
+		if (isset($this->args['categories'])) {
+			$cats = array_map('intval', explode('|', $this->args['categories']));
 
-		$this->tree = array();
-
-		if ($category) {
-			foreach ($category->getParentTree() as $cat) {
-				$this->tree[] = $cat->getId();
-				$link         = $this->url(array('category_id' => $cat->getId()));
-				$naviPath    .= '<li> : <a href="'.$link.'">'.sly_html($cat->getName()).'</a></li>';
+			foreach (array_unique($cats) as $catID) {
+				$cat = sly_Util_Category::findById($catID);
+				if ($cat) $this->categories[] = $catID;
 			}
 		}
 
+		// init article type filter
+		if (isset($this->args['types'])) {
+			$types       = explode('|', $this->args['types']);
+			$this->types = array_unique($types);
+		}
+
+		// generate list of categories that have to be opened (in case we have
+		// a deeply nested allow category that would otherwise be unreachable)
+
+		foreach ($this->categories as $catID) {
+			if (in_array($catID, $this->forced)) continue;
+
+			$category = sly_Util_Category::findById($catID);
+			if (!$category) continue;
+
+			$root = null;
+
+			foreach ($category->getParentTree() as $cat) {
+				if ($root === null) $root = $cat->getId();
+				$this->forced[] = $cat->getId();
+			}
+
+			$this->roots[] = $root;
+			$this->forced  = array_unique($this->forced);
+			$this->roots   = array_unique($this->roots);
+		}
+
+		$catID     = $this->getGlobals('category_id', 0);
+		$naviPath  = '<ul class="sly-navi-path">';
+		$isRoot    = $catID === 0;
+		$category  = $isRoot ? null : sly_Util_Category::findById($catID);
+
+		// respect category filter
+		if ($category === null || (!empty($this->categories) && !in_array($category->getId(), $this->forced))) {
+			$category = reset($this->categories);
+			$category = sly_Util_Category::findById($category);
+		}
+
+		$naviPath .= '<li>'.t('path').'</li>';
+
+		if (empty($this->categories) || in_array(0, $this->categories)) {
+			$link      = $this->url(array('category_id' => 0));
+			$naviPath .= '<li> : <a href="'.$link.'">'.t('homepage').'</a></li>';
+		}
+		else {
+			$naviPath .= '<li> : <span>'.t('homepage').'</span></li>';
+		}
+
+		if ($category) {
+			$root = null;
+
+			foreach ($category->getParentTree() as $cat) {
+				$id = $cat->getId();
+
+				$this->tree[]   = $id;
+				$this->forced[] = $id;
+
+				if (empty($this->categories) || in_array($id, $this->categories)) {
+					$link      = $this->url(array('category_id' => $id));
+					$naviPath .= '<li> : <a href="'.$link.'">'.sly_html($cat->getName()).'</a></li>';
+				}
+				else {
+					$naviPath .= '<li> : <span>'.sly_html($cat->getName()).'</span></li>';
+				}
+
+				if ($root === null) $root = $id;
+			}
+
+			$this->roots[] = $root;
+			$this->forced  = array_unique($this->forced);
+			$this->roots   = array_unique($this->roots);
+		}
+
+		if (empty($this->categories)) {
+			$this->roots = sly_Util_Category::getRootCategories();
+		}
+
+		$this->category = $category;
+
 		$naviPath .= '</ul>';
 		$layout    = sly_Core::getLayout();
+
 		$layout->setBodyAttr('class', 'sly-popup');
 		$layout->showNavigation(false);
 		$layout->pageHeader(t('linkmap'), $naviPath);
@@ -44,7 +123,8 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 			$this->globals = array(
 				'page'        => 'linkmap',
 				'category_id' => sly_request('category_id', 'rex-category-id'),
-				'clang'       => sly_request('clang', 'rex-clang-id')
+				'clang'       => sly_request('clang', 'rex-clang-id'),
+				'args'        => $this->args
 			);
 		}
 
@@ -90,10 +170,18 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 			$len = count($children);
 
 			foreach ($children as $idx => $cat) {
+				if (!($cat instanceof sly_Model_Category)) {
+					$cat = sly_Util_Category::findById($cat);
+				}
+
 				$cat_children = $cat->getChildren();
 				$cat_id       = $cat->getId();
 				$classes      = array('lvl-'.$level);
 				$sub_li       = '';
+
+				if (!empty($this->categories) && !in_array($cat_id, $this->forced)) {
+					continue;
+				}
 
 				$classes[] = empty($cat_children) ? 'empty' : 'children';
 
@@ -105,7 +193,17 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 					$classes[] = 'last';
 				}
 
-				if (in_array($cat_id, $this->tree)) {
+				$hasForcedChildren = false;
+				$isVisitable       = empty($this->categories) || in_array($cat_id, $this->categories);
+
+				foreach ($cat_children as $child) {
+					if (in_array($child->getId(), $this->forced)) {
+						$hasForcedChildren = true;
+						break;
+					}
+				}
+
+				if (in_array($cat_id, $this->tree) || ($hasForcedChildren && !$isVisitable)) {
 					$sub_li    = $this->tree($cat_children, $level + 1);
 					$classes[] = 'active';
 
@@ -121,7 +219,14 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 				else $classes = '';
 
 				$li .= '<li class="lvl-'.$level.'">';
-				$li .= '<a'.$classes.' href="'.$this->url(array('category_id' => $cat_id)).'">'.sly_html($label).'</a>';
+
+				if ($isVisitable) {
+					$li .= '<a'.$classes.' href="'.$this->url(array('category_id' => $cat_id)).'">'.sly_html($label).'</a>';
+				}
+				else {
+					$li .= '<span'.$classes.'>'.sly_html($label).'</span>';
+				}
+
 				$li .= $sub_li;
 				$li .= '</li>';
 			}

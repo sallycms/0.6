@@ -3,6 +3,11 @@
 		width: 340px;
 	}
 
+	.col-b {
+		/* in case we have no rex-area, but a info box */
+		float: right;
+	}
+
 	ul {
 		margin: 0;
 	}
@@ -16,52 +21,58 @@
 
 	/* Category tree */
 
-	ul {
-		border-left: 1px dotted $md_grey;
-		padding-left: 1px;
-	}
+	.rex-area {
+		ul {
+			border-left: 1px dotted $md_grey;
+			padding-left: 1px;
+		}
 
-	.lvl-1 ul {
-		padding-left: 1px;
-		margin-left: 19px;
-	}
+		.lvl-1 ul {
+			padding-left: 1px;
+			margin-left: 19px;
+		}
 
-	a {
-		background: url(../nodesprite.png) 0 -126px no-repeat;
-		display: block;
-		padding: 0 0 0 28px;
-		line-height: 21px;
-		height: 21px;
-	}
+		a, span {
+			background: url(../nodesprite.png) 0 -126px no-repeat;
+			display: block;
+			padding: 0 0 0 28px;
+			line-height: 21px;
+			height: 21px;
+		}
 
-	/* basic styles */
+		span {
+			color: inherit !important;
+		}
 
-	.active          { background-position: 0 -147px; }
-	.children        { background-position: 0 -294px; }
-	.children.active { background-position: 0 -315px; }
+		/* basic styles */
 
-	/* some edge cases */
+		.active          { background-position: 0 -147px; }
+		.children        { background-position: 0 -294px; }
+		.children.active { background-position: 0 -315px; }
 
-	.lvl-1.first.empty        { background-position: 0 -84px;  }
-	.lvl-1.first.empty.active { background-position: 0 -105px; }
+		/* some edge cases */
 
-	.lvl-1.first.children        { background-position: 0 -252px; }
-	.lvl-1.first.children.active { background-position: 0 -273px; }
+		.lvl-1.first.empty        { background-position: 0 -84px;  }
+		.lvl-1.first.empty.active { background-position: 0 -105px; }
 
-	.last.empty        { background-position: 0 -42px; }
-	.last.empty.active { background-position: 0 -63px; }
+		.lvl-1.first.children        { background-position: 0 -252px; }
+		.lvl-1.first.children.active { background-position: 0 -273px; }
 
-	.last.children        { background-position: 0 -210px; }
-	.last.children.active { background-position: 0 -231px; }
+		.last.empty        { background-position: 0 -42px; }
+		.last.empty.active { background-position: 0 -63px; }
 
-	.lvl-1.first.last.empty        { background-position: 0 0; }
-	.lvl-1.first.last.empty.active { background-position: 0 -21px; }
+		.last.children        { background-position: 0 -210px; }
+		.last.children.active { background-position: 0 -231px; }
 
-	.lvl-1.first.last.children        { background-position: 0 -168px; }
-	.lvl-1.first.last.children.active { background-position: 0 -189px; }
+		.lvl-1.first.last.empty        { background-position: 0 0; }
+		.lvl-1.first.last.empty.active { background-position: 0 -21px; }
 
-	li:last-child {
-		background: white;
+		.lvl-1.first.last.children        { background-position: 0 -168px; }
+		.lvl-1.first.last.children.active { background-position: 0 -189px; }
+
+		li:last-child {
+			background: white;
+		}
 	}
 
 	.leaf {

@@ -7,6 +7,16 @@
  * Free Software Foundation.
  */
 
+$category = $this->category ? $this->category : null;
+$articles = $category ? $category->getArticles() : sly_Util_Article::getRootArticles();
+$catID    = $category ? $category->getId() : 0;
+
+foreach ($articles as $idx => $article) {
+	if (!empty($this->types) && !in_array($article->getType(), $this->types)) {
+		unset($articles[$idx]);
+	}
+}
+
 ?>
 <div id="rex-linkmap">
 	<div class="rex-area-col-2">
@@ -14,46 +24,42 @@
 			<h2><?php echo t('lmap_categories') ?></h2>
 			<div class="rex-area-content">
 			<?php
-			$roots = sly_Util_Category::getRootCategories();
-			print $this->tree($roots);
+			print $this->tree($this->roots);
 			?>
 			</div>
 		</div>
+		<?php
+		if (empty($articles)) {
+			print '<div class="col-b">';
+			print sly_Helper_Message::info(t('no_article_available'));
+			print '</div>';
+		}
+		else {
+			?>
+			<div class="rex-area col-b">
+				<h2><?php echo t('lmap_articles') ?></h2>
+				<div class="rex-area-content articlelist">
+					<ul>
+						<?php
+						foreach ($articles as $article) {
+							$label    = $this->formatLabel($article);
+							$selected = $article->getId() == $catID;
+							$class    = $article->isOnline() ? 'rex-online' : 'rex-offline';
 
-		<div class="rex-area col-b">
-			<h2><?php echo t('lmap_articles') ?></h2>
-			<div class="rex-area-content articlelist">
-				<ul>
-				<?php
+							if ($selected) {
+								$class .= ' startarticle';
+							}
 
-				$category_id = $this->getGlobals('category_id', 0);
-				$isRoot      = $category_id == 0;
-				$category    = sly_Util_Category::findById($category_id);
+							$linkAttr = 'class="'.$class.'" data-id="'.$article->getId().'" data-name="'.sly_html($article->getName()).'"';
 
-				if ($isRoot) $articles = sly_Util_Article::getRootArticles();
-				elseif ($category) $articles = $category->getArticles();
-				else $articles = array();
-
-				foreach ($articles as $article) {
-					if ($article->isStartArticle() && $article->getId() != $category_id) {
-						continue;
-					}
-
-					$label    = $this->formatLabel($article);
-					$selected = $article->getId() == $this->getGlobals('category_id', 0);
-					$class    = $article->isOnline() ? 'rex-online' : 'rex-offline';
-
-					if ($selected) {
-						$class .= ' startarticle';
-					}
-
-					$linkAttr = 'class="'.$class.'" data-id="'.$article->getId().'" data-name="'.sly_html($article->getName()).'"';
-
-					print '<li><a href="#" '.$linkAttr.'>'.sly_html($label).'</a></li>';
-				}
-				?>
-				</ul>
+							print '<li><a href="#" '.$linkAttr.'>'.sly_html($label).'</a></li>';
+						}
+						?>
+					</ul>
+				</div>
 			</div>
-		</div>
+			<?php
+		}
+		?>
 	</div>
 </div>
