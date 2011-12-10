@@ -79,12 +79,14 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 	}
 
 	private function morphToStartpage() {
-		if (rex_article2startpage($this->article->getId())) {
-			$this->info = t('content_tostartarticle_ok');
+		try {
+			sly_Service_Factory::getArticleService()->convertToStartArticle($this->article->getId());
+
+			$this->info    = t('content_tostartarticle_ok');
 			$this->article = sly_Util_Article::findById($this->article->getId());
 		}
-		else {
-			$this->warning = t('content_tostartarticle_failed');
+		catch (sly_Exception $e) {
+			$this->warning = t('content_tostartarticle_failed').': '.$e->getMessage();
 		}
 	}
 
