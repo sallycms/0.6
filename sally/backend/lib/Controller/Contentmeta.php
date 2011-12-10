@@ -135,14 +135,13 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 		$target = sly_post('category_copy_id_new', 'rex-category-id');
 
 		if ($this->canCopyArticle()) {
-			$new_id = rex_copyArticle($this->article->getId(), $target);
-
-			if ($new_id !== false) {
+			try {
+				$newID         = sly_Service_Factory::getArticleService()->copy($this->article->getId(), $target);
 				$this->info    = t('content_articlecopied');
-				$this->article = sly_Util_Article::findById($new_id);
+				$this->article = sly_Util_Article::findById($newID);
 			}
-			else {
-				$this->warning = t('content_errorcopyarticle');
+			catch (sly_Exception $e) {
+				$this->warning = t('content_errorcopyarticle').': '.$e->getMessage();
 			}
 		}
 		else {
