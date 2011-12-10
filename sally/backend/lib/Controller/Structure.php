@@ -58,12 +58,12 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		print $this->render(self::$viewPath.'category_table.phtml', array(
 			'categories'      => $categories,
 			'currentCategory' => $currentCategory,
-			'statusTypes'     => $cat_service->getStati()
+			'statusTypes'     => $cat_service->getStates()
 		));
 
 		print $this->render(self::$viewPath.'article_table.phtml', array(
 			'articles'     => $articles,
-			'statusTypes'  => $art_service->getStati(),
+			'statusTypes'  => $art_service->getStates(),
 			'canAdd'       => $this->canEditCategory($this->categoryId),
 			'canEdit'      => $this->canEditCategory($this->categoryId),
 		));
