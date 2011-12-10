@@ -118,12 +118,14 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 		$target = sly_post('category_id_new', 'rex-category-id');
 
 		if ($this->canMoveArticle()) {
-			if (rex_moveArticle($this->article->getId(), $target)) {
+			try {
+				sly_Service_Factory::getArticleService()->move($this->article->getId(), $target);
+
 				$this->info    = t('content_articlemoved');
 				$this->article = sly_Util_Article::findById($this->article->getId());
 			}
-			else {
-				$this->warning = t('content_errormovearticle');
+			catch (sly_Exception $e) {
+				$this->warning = t('content_errormovearticle').': '.$e->getMessage();
 			}
 		}
 		else {
