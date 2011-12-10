@@ -45,12 +45,11 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	}
 
 	protected function view() {
+		$art_service     = sly_Service_Factory::getArticleService();
 		$cat_service     = sly_Service_Factory::getCategoryService();
 		$currentCategory = $cat_service->findById($this->categoryId, $this->clangId);
-		$categories      = $cat_service->find(array('re_id' => $this->categoryId, 'clang' => $this->clangId), null, 'catprior ASC');
-
-		$art_service = sly_Service_Factory::getArticleService();
-		$articles    = $art_service->findArticlesByCategory($this->categoryId, false, $this->clangId);
+		$categories      = $cat_service->findByParentId($this->categoryId, false, $this->clangId);
+		$articles        = $art_service->findArticlesByCategory($this->categoryId, false, $this->clangId);
 
 		if (!empty($this->info))    print sly_Helper_Message::info($this->info);
 		if (!empty($this->warning)) print sly_Helper_Message::warn($this->warning);
