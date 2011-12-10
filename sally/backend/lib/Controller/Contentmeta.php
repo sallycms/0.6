@@ -107,11 +107,12 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 		if ($this->canCopyContent($clang_a, $clang_b)) {
 			$article_id = $this->article->getId();
 
-			if (rex_copyContent($article_id, $article_id, $clang_a, $clang_b)) {
+			try {
+				sly_Service_Factory::getArticleService()->copyContent($article_id, $article_id, $clang_a, $clang_b);
 				$this->info = t('content_contentcopy');
 			}
-			else {
-				$this->warning = t('content_errorcopy');
+			catch (sly_Exception $e) {
+				$this->warning = t('content_errorcopy').': '.$e->getMessage();
 			}
 		}
 	}
