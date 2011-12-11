@@ -24,8 +24,6 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 	}
 
 	protected function processMetaForm() {
-		require_once SLY_COREFOLDER.'/functions/function_rex_content.inc.php';
-
 		try {
 			// save metadata
 			if (sly_post('savemeta', 'boolean', false)) {
@@ -158,12 +156,14 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 		$target = sly_post('category_id_new', 'rex-category-id');
 
 		if ($this->canMoveCategory()) {
-			if (rex_moveCategory($this->article->getCategoryId(), $target)) {
+			try {
+				sly_Service_Factory::getCategoryService()->move($this->article->getCategoryId(), $target);
+
 				$this->info    = t('category_moved');
 				$this->article = sly_Util_Article::findById($this->article->getCategoryId());
 			}
-			else {
-				$this->warning = t('content_error_movecategory');
+			catch (sly_Exception $e) {
+				$this->warning = t('content_error_movecategory').': '.$e->getMessage();
 			}
 		}
 		else {
