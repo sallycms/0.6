@@ -81,7 +81,7 @@ a.sly-button {
 }
 
 .rex-area-content {
-	p.rex-form-checkbox, p.rex-form-radio {
+	.rex-form-checkbox, .rex-form-radio {
 		line-height: 1em;
 	}
 }

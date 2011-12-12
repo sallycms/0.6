@@ -1,11 +1,19 @@
 RELOGINDELAY: 2
 START_PAGE: structure
 PERM: ["mediapool"]
-EXTPERM: ["moveSlice", "copyContent", "moveArticle", "copyArticle", "moveCategory", "publishArticle", "publishCategory", "article2startpage", "changearttype"]
-EXTRAPERM: ["editContentOnly"]
-OBJECTPERM: ["clang", "csw", "media", "module"]
+EXTPERM: ["moveSlice", "copyContent", "copyArticle", "moveCategory", "publishCategory", "article2startpage"]
+OBJECTPERM: ["clang", "media", "module"]
 authorisation:
   mediapool:
     title: 'translate:mediapool'
     token:
       mediapool : 'translate:mediapool'
+  article:
+    token:
+      edit: 'translate:edit'
+      move: 'translate:move'
+      publish: 'translate:publish'
+      editcontent: 'translate:editcontent'
+    supers:
+      read: ['edit', 'move', 'publish', 'edittype', 'editcontent']
+      editcontent: ['edit']
