@@ -35,13 +35,17 @@ class sly_Layout_Navigation_Backend {
 
 				$this->addPage('system', 'mediapool', null, true);
 			}
-			elseif ($user->hasRight('mediapool[]')) {
+			elseif ($user->hasRight('pages', 'mediapool')) {
 				$this->addPage('system', 'mediapool', null, true);
 			}
-
 			if ($isAdmin) {
 				$this->addPage('system', 'user');
+			}
+
+			if($user->isAdmin() || $user->hasRight('pages', 'addons')){
 				$this->addPage('system', 'addon', 'translate:addons');
+			}
+			if ($isAdmin) {
 				$specials = $this->addPage('system', 'specials');
 				$specials->addSubpage('specials', t('main_preferences'));
 				$specials->addSubpage('specials_languages', t('languages'));

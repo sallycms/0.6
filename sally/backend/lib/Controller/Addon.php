@@ -173,7 +173,7 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 
 	public function checkPermission() {
 		$user = sly_Util_User::getCurrentUser();
-		return $user && $user->isAdmin();
+		return $user && ($user->isAdmin() || $user->hasRight('pages', 'addons'));
 	}
 
 	private function sendResponse() {

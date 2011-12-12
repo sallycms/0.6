@@ -1,13 +1,13 @@
 RELOGINDELAY: 2
 START_PAGE: structure
-PERM: ["mediapool"]
 EXTPERM: ["moveSlice", "copyContent", "copyArticle", "moveCategory", "publishCategory", "article2startpage"]
 OBJECTPERM: ["clang", "media", "module"]
 authorisation:
-  mediapool:
-    title: 'translate:mediapool'
+  pages:
+    title: 'translate:pages'
     token:
-      mediapool : 'translate:mediapool'
+      mediapool: 'translate:mediapool'
+      addons: 'translate:addons'
   article:
     token:
       edit: 'translate:edit'

@@ -48,7 +48,7 @@ abstract class sly_Controller_Content_Base extends sly_Controller_Backend {
 
 		if ($cat) {
 			foreach ($cat->getParentTree() as $parent) {
-				if (sly_Util_Article::canReadArticle($user, $parent->getId())) {
+				if (sly_Util_Category::canReadCategory($user, $parent->getId())) {
 					$result .= '<li> : <a href="index.php?page=structure&amp;category_id='.$parent->getId().'&amp;clang='.$art->getClang().'">'.sly_html($parent->getName()).'</a></li>';
 				}
 			}

@@ -296,7 +296,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	 */
 	protected function canViewCategory($categoryId) {
 		$user = sly_Util_User::getCurrentUser();
-		return sly_Util_Article::canEditArticle($user, $categoryId) || sly_Util_Article::canReadArticle($user, $categoryId);
+		return sly_Util_Category::canReadCategory($user, $categoryId);
 	}
 
 	protected function canEditContent($articleId) {

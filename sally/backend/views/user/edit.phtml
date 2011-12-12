@@ -12,10 +12,6 @@
 
 $label     = t($this->func == 'edit' ? 'edit_user' : 'create_user');
 $currentID = sly_Util_User::getCurrentUser()->getId();
-$PERM      = sly_Authorisation::getRights();
-$EXTPERM   = sly_Authorisation::getExtendedRights();
-$EXTRAPERM = sly_Authorisation::getExtraRights();
-$rights    = $user ? $user->getRightsAsArray() : array();
 
 //////////////////////////////////////////////////////////////////
 // start the form
