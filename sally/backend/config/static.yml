@@ -13,7 +13,8 @@ authorisation:
       edit: 'translate:edit'
       move: 'translate:move'
       publish: 'translate:publish'
+      edittype: 'translate:edittype'
       editcontent: 'translate:editcontent'
     supers:
-      read: ['edit', 'move', 'publish', 'edittype', 'editcontent']
       editcontent: ['edit']
+      edittype: ['edit']
