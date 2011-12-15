@@ -73,7 +73,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			$user = sly_Util_User::getCurrentUser();
 
 			if ($this->action == 'moveSlice') {
-				return ($user->isAdmin() || $user->hasRight('moveSlice[]'));
+				return ($user->isAdmin() || $user->hasRight('transitional', 'moveSlice'));
 			}
 
 			if ($this->action == 'addArticleSlice') {
