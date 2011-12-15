@@ -1,6 +1,5 @@
 RELOGINDELAY: 2
 START_PAGE: structure
-EXTPERM: ["moveSlice", "copyContent", "copyArticle", "moveCategory", "publishCategory", "article2startpage"]
 OBJECTPERM: ["clang", "media", "module"]
 authorisation:
   pages:
@@ -18,3 +17,19 @@ authorisation:
     supers:
       editcontent: ['edit']
       edittype: ['edit']
+  module:
+    title: 'translate:modules'
+    list: 'sly_Authorisation_ModuleListProvider'
+    token:
+      add: 'translate:add'
+      edit: 'translate:edit'
+    supers:
+      add: ['edit']
+  transitional:
+    token:
+      moveSlice: moveSlice
+      copyContent: copyContent
+      copyArticle: copyArticle
+      moveCategory: moveCategory
+      publishCategory: publishCategory
+      article2startpage: article2startpage

@@ -19,12 +19,14 @@ if (!$service->exists($module)) {
 }
 else {
 	$moduleName     = $service->get($module, 'title', '');
-	$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;function=edit').'" class="rex-tx3">'.t('edit').'</a>';
+	if($user->isAdmin() || $user->hasRight('module', 'edit', $module)) {
+		$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;function=edit').'" class="rex-tx3">'.t('edit').'</a>';
+	}
 }
 
 $listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;prior='.$articleSlice->getPrior().'&amp;func=deleteArticleSlice').'" class="rex-tx2 sly-delete">'.t('delete').'</a>';
 
-if ($service->exists($module) && ($user->isAdmin() || $user->hasRight('moveSlice[]'))) {
+if ($service->exists($module) && ($user->isAdmin() || $user->hasRight('transitional', 'moveSlice'))) {
 	$moveUp   = t('move_slice_up');
 	$moveDown = t('move_slice_down');
 
