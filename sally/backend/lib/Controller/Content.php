@@ -78,7 +78,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 
 			if ($this->action == 'addArticleSlice') {
 				$module = sly_post('module', 'string');
-				return ($user->isAdmin() || $user->hasRight('module['.$module.']') || $user->hasRight('module[0]'));
+				return ($user->isAdmin() || $user->hasRight('module', 'add', $module));
 			}
 
 			return true;
@@ -115,7 +115,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			$clang = sly_Core::getCurrentClang();
 
 			// check permission
-			if ($user->isAdmin() || $user->hasRight('module['.$module.']') || $user->hasRight('module[0]')) {
+			if ($user->isAdmin() || ($user->hasRight('transitional', 'moveSlice') && $user->hasRight('module', 'edit', $module))) {
 				$success = sly_Service_Factory::getArticleSliceService()->move($slice_id, $clang, $direction);
 
 				if ($success) {

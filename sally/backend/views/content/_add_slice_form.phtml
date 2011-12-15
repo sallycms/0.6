@@ -15,7 +15,7 @@ $moduleSelect->addClass('sly-module-select');
 $moduleSelect->addValue('', '---------------------------- '.t('add_block'));
 
 foreach ($modules as $module => $moduleTitle) {
-	if ($user->isAdmin() || $user->hasRight('module['.$module.']')) {
+	if ($user->isAdmin() || $user->hasRight('module', 'add', $module)) {
 		$moduleSelect->addValue($module, rex_translate($moduleTitle, null, false));
 	}
 }
