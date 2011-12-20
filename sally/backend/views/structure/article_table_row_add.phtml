@@ -10,7 +10,7 @@
 ?>
 <tr class="active">
 	<td class="sly-icon"><?php echo sly_Util_HTML::getSpriteLink('', t('article_add'), 'article') ?></td>
-	<td class="name" colspan="2"><input class="rex-form-text" type="text" id="sly-form-field-name" name="article_name" autofocus="autofocus" /></td>
-	<td class="pos"><input class="rex-form-text" type="number" id="sly-form-field-pos" name="article_position" min="1" max="<?php echo $maxPosition+1 ?>" value="<?php echo $maxPosition+1 ?>" /></td>
-	<td class="status"><input type="submit" name="do_add_article" value="<?php echo t('article_add') ?>" /></td>
+	<td class="name sly-has-input" colspan="2"><input class="rex-form-text" type="text" name="article_name" autofocus="autofocus" /></td>
+	<td class="pos sly-has-input"><input class="rex-form-text" type="number" name="article_position" min="1" max="<?php echo $maxPosition+1 ?>" value="<?php echo $maxPosition+1 ?>" /></td>
+	<td class="status sly-has-input"><input type="submit" name="do_add_article" value="<?php echo t('article_add') ?>" /></td>
 </tr>

@@ -42,6 +42,7 @@ select[multiple=multiple] {
 }
 
 input[type=text],
+input[type=number],
 input[type=password],
 span.sly-form-read {
 	height: 17px;

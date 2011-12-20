@@ -80,7 +80,7 @@ if ($this->action == 'add' || $this->action == 'edit') {
 			</a>
 		</th>
 		<th class="sly-small sly-col-b">ID</th>
-		<th class="sly-col-c"><?php echo t('pool_kat_name') ?></th>
+		<th class="name"><?php echo t('pool_kat_name') ?></th>
 		<th class="sly-col-d" colspan="2"><?php echo t('pool_kat_function') ?></th>
 	</tr></thead>
 	<tbody><?php
@@ -89,12 +89,12 @@ if ($this->action == 'add' || $this->action == 'edit') {
 		?>
 		<tr class="active">
 			<td class="sly-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?php echo t('pool_kat_create') ?></span></span></td>
-			<td class="sly-small">-</td>
-			<td>
+			<td class="sly-small sly-col-b">-</td>
+			<td class="name sly-has-input">
 				<label class="rex-form-hidden-label" for="rex-form-field-name"><?php echo t('pool_kat_name') ?></label>
-				<input class="rex-form-text" type="text" size="10" id="rex-form-field-name" name="catname" value=""<?php echo $nativeFocus ? ' autofocus="autofocus"' : '' ?> />
+				<input class="rex-form-text" type="text" size="10" id="rex-form-field-name" name="catname" value="" autofocus="autofocus" required="required" placeholder="<?php echo ht('pool_kat_name') ?>" />
 			</td>
-			<td class="sly-col-d" colspan="2">
+			<td class="sly-col-d sly-has-input" colspan="2">
 				<input type="submit" class="rex-form-submit" value="<?php echo t('pool_kat_create') ?>" />
 			</td>
 		</tr>
@@ -108,12 +108,12 @@ if ($this->action == 'add' || $this->action == 'edit') {
 			?>
 			<tr class="active">
 				<td class="sly-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?php echo sly_html($cat->getName())?></span></span></td>
-				<td class="sly-small"><?php echo $id ?></td>
-				<td>
+				<td class="sly-small sly-col-b"><?php echo $id ?></td>
+				<td class="name sly-has-input">
 					<label class="rex-form-hidden-label" for="rex-form-field-name"><?php echo t('pool_kat_name') ?></label>
 					<input class="rex-form-text" type="text" id="rex-form-field-name" name="catname" value="<?php echo sly_html($cat->getName()) ?>"<?php echo $nativeFocus ? ' autofocus="autofocus"' : '' ?> />
 				</td>
-				<td class="sly-col-d" colspan="2">
+				<td class="sly-col-d sly-has-input" colspan="2">
 					<input type="submit" class="rex-form-submit" value="<?php echo t('pool_kat_update') ?>" />
 				</td>
 			</tr>
@@ -124,7 +124,7 @@ if ($this->action == 'add' || $this->action == 'edit') {
 			<tr>
 				<td class="sly-icon"><a class="rex-i-element rex-i-mediapool-category sly-sprite" href="<?php echo $base.$id ?>"><span class="rex-i-element-text"><?php echo sly_html($cat->getName())?></span></a></td>
 				<td class="sly-small"><?php echo $id ?></td>
-				<td><a href="<?php echo $base.$id ?>"><?php echo sly_html($cat->getName()) ?></a></td>
+				<td class="name"><a href="<?php echo $base.$id ?>"><?php echo sly_html($cat->getName()) ?></a></td>
 				<td class="sly-col-e"><a href="<?php echo $base.$catID ?>&amp;func=edit&amp;edit_id=<?php echo $id ?>"><?php echo t('pool_kat_edit')?></a></td>
 				<td class="sly-col-f"><a href="<?php echo $base.$catID ?>&amp;func=delete&amp;edit_id=<?php echo $id ?>" class="sly-action sly-delete"><?php echo t('pool_kat_delete') ?></a></td>
 			</tr>

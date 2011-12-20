@@ -74,7 +74,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		));
 
 		if ($this->renderAddArticle || $this->renderAddCategory || $this->renderEditArticle || $this->renderEditCategory) {
-			$javascript = 'jQuery(function($){$("#rex-form-field-name").focus();});';
+			$javascript = 'jQuery(function($){$("td.name input").focus();});';
 			sly_Core::getLayout()->addJavaScript($javascript);
 		}
 	}

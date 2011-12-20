@@ -120,16 +120,12 @@
 /* structure management */
 
 #sly-page-mediapool-structure {
-	.rex-form-text {
-		width: 400px;
-	}
-
-	.sly-icon  { width: 40px; }
-	.sly-col-b { width: 40px; }
-	.sly-col-c { width: auto; }
+	.sly-icon  { width: 40px;  }
+	.sly-col-b { width: 40px;  }
+	.name      { width: 400px; }
 	.sly-col-d { width: 190px; }
-	.sly-col-e { width: 95px; }
-	.sly-col-f { width: 95px; }
+	.sly-col-e { width: 95px;  }
+	.sly-col-f { width: 95px;  }
 }
 
 .rex-i-mediapool-category     { background-position: -32px 0; }

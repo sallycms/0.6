@@ -62,6 +62,18 @@
 	input[type=submit] {
 		margin-left: 0;
 	}
+
+	.sly-has-input {
+		position: relative;
+
+		input[type=text], input[type=number] {
+			left: 0;
+			right: 10px;
+			top: 9px;
+			position: absolute;
+			width: auto;
+		}
+	}
 }
 
 .sly-table-extras-pager,

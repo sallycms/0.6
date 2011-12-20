@@ -21,11 +21,3 @@
 	.pos      { width: 55px;  }
 	.status   { width: 150px; }
 }
-
-#sly-form-field-name {
-	width: 97%;
-}
-
-#sly-form-field-pos {
-	width: 43px;
-}

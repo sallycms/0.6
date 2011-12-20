@@ -47,22 +47,10 @@
 
 	.sly-col-c {
 		width: 120px;
-
-		input {
-			width: 100px;
-		}
-	}
-
-	.sly-col-b {
-		padding-right: 20px;
-
-		.rex-form-text {
-			width: 100%;
-		}
 	}
 
 	.sly-col-d {
-		width: 130px;
+		width: 140px;
 	}
 }
 

@@ -10,7 +10,7 @@
 ?>
 <tr class="active">
 	<td class="sly-icon"><?php echo sly_Util_HTML::getSpriteLink('', t('add_category'), 'category-add') ?></td>
-	<td class="name"><input class="rex-form-text" type="text" id="sly-form-field-name" name="category_name" autofocus="autofocus" /></td>
-	<td class="pos"><input class="rex-form-text" type="number" id="sly-form-field-pos" name="category_position" min="1" max="<?php echo $maxCatPosition+1 ?>" value="<?php echo $maxCatPosition+1 ?>" /></td>
-	<td class="status"><input type="submit" name="do_add_category" value="<?php echo t('add_category') ?>" /></td>
+	<td class="name sly-has-input"><input class="rex-form-text" type="text" name="category_name" autofocus="autofocus" required="required" placeholder="<?php echo ht('header_category') ?>" /></td>
+	<td class="pos sly-has-input"><input class="rex-form-text" type="number" name="category_position" min="1" max="<?php echo $maxCatPosition+1 ?>" required="required" value="<?php echo $maxCatPosition+1 ?>" /></td>
+	<td class="status sly-has-input"><input type="submit" name="do_add_category" value="<?php echo t('add_category') ?>" /></td>
 </tr>

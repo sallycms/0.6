@@ -15,9 +15,9 @@ $base_url = 'index.php?page=structure&category_id='.$category->getId().'&clang='
 		<input type="hidden" name="edit_id" value="<?php echo $category->getId() ?>" />
 		<?php echo sly_Util_HTML::getSpriteLink($base_url, $category->getCatName(), 'category') ?>
 	</td>
-	<td class="name"><input type="text" class="rex-form-text" id="sly-form-field-name" name="category_name" autofocus="autofocus" value="<?php echo sly_html($category->getCatName()) ?>" /></td>
-	<td class="pos"><input type="number" class="rex-form-text" id="sly-form-field-pos" name="category_position" value="<?php echo sly_html($category->getCatPosition()) ?>" min="1" max="<?php echo $maxCatPosition ?>" /></td>
-	<td class="status"><input type="submit" name="do_edit_category" value="<?php echo t('save_category') ?>" /></td>
+	<td class="name sly-has-input"><input type="text" class="rex-form-text" name="category_name" autofocus="autofocus" required="required" placeholder="<?php echo ht('header_category') ?>" value="<?php echo sly_html($category->getCatName()) ?>" /></td>
+	<td class="pos sly-has-input"><input type="number" class="rex-form-text" name="category_position" value="<?php echo sly_html($category->getCatPosition()) ?>" required="required" min="1" max="<?php echo $maxCatPosition ?>" /></td>
+	<td class="status sly-has-input"><input type="submit" name="do_edit_category" value="<?php echo t('save_category') ?>" /></td>
 </tr>
 <?php
 print sly_Core::dispatcher()->filter('CAT_FORM_EDIT', '', array(
