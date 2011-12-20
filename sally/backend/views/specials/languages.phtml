@@ -45,9 +45,9 @@ if (!empty($this->info))    print sly_Helper_Message::info($this->info);
 		?>
 		<tr class="active">
 			<td class="sly-icon sly-col-a"><?php echo sly_Util_HTML::getSpriteLink('', $name, 'language') ?></td>
-			<td class="sly-col-b sly-has-input"><input class="rex-form-text" type="text" name="clang_name" value="<?php echo sly_html($name) ?>" autofocus="autofocus" required="required" placeholder="<?php echo ht('clang_name') ?>" /></td>
-			<td class="sly-col-c sly-has-input"><input class="rex-form-text" type="text" name="clang_locale" value="<?php echo sly_html($locale) ?>" required="required" placeholder="<?php echo ht('clang_locale') ?>" /></td>
-			<td class="sly-col-d sly-has-input"><input type="submit" name="sly-submit" class="rex-form-submit" value="<?php echo t('clang_add') ?>" /></td>
+			<td class="sly-col-b sly-has-input"><div><input class="rex-form-text" type="text" name="clang_name" value="<?php echo sly_html($name) ?>" autofocus="autofocus" required="required" placeholder="<?php echo ht('clang_name') ?>" /></div></td>
+			<td class="sly-col-c sly-has-input"><div><input class="rex-form-text" type="text" name="clang_locale" value="<?php echo sly_html($locale) ?>" required="required" placeholder="<?php echo ht('clang_locale') ?>" /></div></td>
+			<td class="sly-col-d sly-has-input"><div><input type="submit" name="sly-submit" class="rex-form-submit" value="<?php echo t('clang_add') ?>" /></div></td>
 		</tr>
 		<?php
 	}
