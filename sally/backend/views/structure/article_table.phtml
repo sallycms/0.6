@@ -33,23 +33,24 @@
 	$table->openBuffer();
 
 	if ($this->renderAddArticle) {
-		print $this->render(sly_Controller_Structure::$viewPath.'article_table_row_add.phtml');
+		print $this->render(
+			sly_Controller_Structure::$viewPath.'article_table_row_add.phtml',
+			array('maxPosition' => $maxPosition)
+		);
 	}
 
 	foreach ($articles as $article) {
 		if ($this->renderEditArticle && $this->renderEditArticle == $article->getId()) {
 			print $this->render(
 				sly_Controller_Structure::$viewPath.'article_table_row_edit.phtml',
-				array('article' => $article)
+				array('article' => $article, 'maxPosition' => $maxPosition)
 			);
 		}
-		else {
-			if ($this->canEditContent($article->getId())) {
-				print $this->render(
-					sly_Controller_Structure::$viewPath.'article_table_row.phtml',
-					array('article' => $article, 'statusTypes' => $statusTypes, 'canEdit' => $canEdit)
-				);
-			}
+		elseif ($this->canEditContent($article->getId())) {
+			print $this->render(
+				sly_Controller_Structure::$viewPath.'article_table_row.phtml',
+				array('article' => $article, 'statusTypes' => $statusTypes, 'canEdit' => $canEdit)
+			);
 		}
 	}
 

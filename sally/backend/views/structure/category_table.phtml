@@ -41,23 +41,24 @@
 	}
 
 	if ($this->renderAddCategory) {
-		print $this->render(sly_Controller_Structure::$viewPath.'category_table_row_add.phtml');
+		print $this->render(
+			sly_Controller_Structure::$viewPath.'category_table_row_add.phtml',
+			array('maxCatPosition' => $maxCatPosition)
+		);
 	}
 
 	foreach ($categories as $category) {
 		if ($this->renderEditCategory && $this->renderEditCategory == $category->getId()) {
 			print $this->render(
 				sly_Controller_Structure::$viewPath.'category_table_row_edit.phtml',
-				array('category' => $category)
+				array('category' => $category, 'maxCatPosition' => $maxCatPosition)
 			);
 		}
-		else {
-			if ($this->canViewCategory($category->getId())) {
-				print $this->render(
-					sly_Controller_Structure::$viewPath.'category_table_row.phtml',
-					array('category' => $category, 'statusTypes' => $statusTypes)
-				);
-			}
+		elseif ($this->canViewCategory($category->getId())) {
+			print $this->render(
+				sly_Controller_Structure::$viewPath.'category_table_row.phtml',
+				array('category' => $category, 'statusTypes' => $statusTypes)
+			);
 		}
 	}
 

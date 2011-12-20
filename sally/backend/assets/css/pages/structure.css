@@ -18,7 +18,7 @@
 	.id       { width: 40px;  }
 	.name     { min-width: 287px; }
 	.arttype  { min-width: 180px; max-width: 240px; }
-	.pos      { width: 40px;  }
+	.pos      { width: 55px;  }
 	.status   { width: 150px; }
 }
 
@@ -27,5 +27,5 @@
 }
 
 #sly-form-field-pos {
-	width: 28px;
+	width: 43px;
 }

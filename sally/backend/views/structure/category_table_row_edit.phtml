@@ -16,7 +16,7 @@ $base_url = 'index.php?page=structure&category_id='.$category->getId().'&clang='
 		<?php echo sly_Util_HTML::getSpriteLink($base_url, $category->getCatName(), 'category') ?>
 	</td>
 	<td class="name"><input type="text" class="rex-form-text" id="sly-form-field-name" name="category_name" autofocus="autofocus" value="<?php echo sly_html($category->getCatName()) ?>" /></td>
-	<td class="pos"><input type="text" class="rex-form-text" id="sly-form-field-pos" name="category_position" value="<?php echo sly_html($category->getCatPosition()) ?>" /></td>
+	<td class="pos"><input type="number" class="rex-form-text" id="sly-form-field-pos" name="category_position" value="<?php echo sly_html($category->getCatPosition()) ?>" min="1" max="<?php echo $maxCatPosition ?>" /></td>
 	<td class="status"><input type="submit" name="do_edit_category" value="<?php echo t('save_category') ?>" /></td>
 </tr>
 <?php

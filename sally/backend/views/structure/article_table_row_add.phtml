@@ -11,6 +11,6 @@
 <tr class="active">
 	<td class="sly-icon"><?php echo sly_Util_HTML::getSpriteLink('', t('article_add'), 'article') ?></td>
 	<td class="name" colspan="2"><input class="rex-form-text" type="text" id="sly-form-field-name" name="article_name" autofocus="autofocus" /></td>
-	<td class="pos"><input class="rex-form-text" type="text" id="sly-form-field-pos" name="article_position" value="100" /></td>
+	<td class="pos"><input class="rex-form-text" type="number" id="sly-form-field-pos" name="article_position" min="1" max="<?php echo $maxPosition+1 ?>" value="<?php echo $maxPosition+1 ?>" /></td>
 	<td class="status"><input type="submit" name="do_add_article" value="<?php echo t('article_add') ?>" /></td>
 </tr>

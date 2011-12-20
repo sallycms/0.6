@@ -50,6 +50,8 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		$currentCategory = $cat_service->findById($this->categoryId, $this->clangId);
 		$categories      = $cat_service->findByParentId($this->categoryId, false, $this->clangId);
 		$articles        = $art_service->findArticlesByCategory($this->categoryId, false, $this->clangId);
+		$maxPosition     = $art_service->getMaxPosition($this->categoryId);
+		$maxCatPosition  = $cat_service->getMaxPosition($this->categoryId);
 
 		if (!empty($this->info))    print sly_Helper_Message::info($this->info);
 		if (!empty($this->warning)) print sly_Helper_Message::warn($this->warning);
@@ -57,14 +59,18 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		print $this->render(self::$viewPath.'category_table.phtml', array(
 			'categories'      => $categories,
 			'currentCategory' => $currentCategory,
-			'statusTypes'     => $cat_service->getStates()
+			'statusTypes'     => $cat_service->getStates(),
+			'maxPosition'     => $maxPosition,
+			'maxCatPosition'  => $maxCatPosition
 		));
 
 		print $this->render(self::$viewPath.'article_table.phtml', array(
-			'articles'     => $articles,
-			'statusTypes'  => $art_service->getStates(),
-			'canAdd'       => $this->canEditCategory($this->categoryId),
-			'canEdit'      => $this->canEditCategory($this->categoryId),
+			'articles'       => $articles,
+			'statusTypes'    => $art_service->getStates(),
+			'canAdd'         => $this->canEditCategory($this->categoryId),
+			'canEdit'        => $this->canEditCategory($this->categoryId),
+			'maxPosition'    => $maxPosition,
+			'maxCatPosition' => $maxCatPosition
 		));
 
 		if ($this->renderAddArticle || $this->renderAddCategory || $this->renderEditArticle || $this->renderEditCategory) {
