@@ -18,7 +18,7 @@
 	.id       { width: 40px;  }
 	.name     { min-width: 287px; }
 	.arttype  { min-width: 180px; max-width: 240px; }
-	.prior    { width: 40px;  }
+	.pos      { width: 40px;  }
 	.status   { width: 150px; }
 }
 
@@ -26,6 +26,6 @@
 	width: 97%;
 }
 
-#sly-form-field-prior {
+#sly-form-field-pos {
 	width: 28px;
 }

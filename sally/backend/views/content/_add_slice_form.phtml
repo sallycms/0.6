@@ -10,7 +10,7 @@
 
 $user = sly_Util_User::getCurrentUser();
 
-$moduleSelect = new sly_Form_Select_DropDown('add_module', '', '', array(), 'module'.$prior);
+$moduleSelect = new sly_Form_Select_DropDown('add_module', '', '', array(), 'module'.$pos);
 $moduleSelect->addClass('sly-module-select');
 $moduleSelect->addValue('', '---------------------------- '.t('add_block'));
 
@@ -20,14 +20,14 @@ foreach ($modules as $module => $moduleTitle) {
 	}
 }
 
-$formID = 'slice'.$prior;
+$formID = 'slice'.$pos;
 
-$form = new sly_Form('index.php#slice'.$prior, 'GET', t('add_block'), $formID, $formID);
+$form = new sly_Form('index.php#slice'.$pos, 'GET', t('add_block'), $formID, $formID);
 $form->addClass('sly-form-add-slice');
 $form->addHiddenValue('page', 'content');
 $form->addHiddenValue('article_id', $article->getId());
 $form->addHiddenValue('clang', $article->getClang());
-$form->addHiddenValue('prior', $prior);
+$form->addHiddenValue('pos', $pos);
 $form->addHiddenValue('function', 'add');
 $form->addHiddenValue('slot', $slot);
 

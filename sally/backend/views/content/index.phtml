@@ -71,12 +71,12 @@ else {
 			'slot'       => $this->slot
 		),
 		null,
-		'prior ASC'
+		'pos ASC'
 	);
 
 	for ($i = 0; $i <= count($articleSlices); $i++) {
 		try {
-			if ($prior == $i) {
+			if ($pos == $i) {
 				if (!empty($this->localInfo)) {
 					print sly_Helper_Message::info($this->localInfo);
 				}
@@ -85,11 +85,11 @@ else {
 				}
 			}
 
-			if ($function == 'add' && $prior == $i) {
-				sly_Helper_Content::printAddSliceForm($prior, $module, $article->getId(), $article->getClang(), $slot, isset($slicevalues) ? $slicevalues : array());
+			if ($function == 'add' && $pos == $i) {
+				sly_Helper_Content::printAddSliceForm($pos, $module, $article->getId(), $article->getClang(), $slot, isset($slicevalues) ? $slicevalues : array());
 			}
 			else {
-				print $this->render('content/_add_slice_form.phtml', array('article' => $article, 'prior' => $i, 'slot' => $slot, 'modules' => $modules));
+				print $this->render('content/_add_slice_form.phtml', array('article' => $article, 'pos' => $i, 'slot' => $slot, 'modules' => $modules));
 			}
 
 			if (isset($articleSlices[$i])) {

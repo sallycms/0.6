@@ -55,7 +55,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			'modules'      => $modules,
 			'slot'         => $this->slot,
 			'slice_id'     => sly_request('slice_id', 'rex-slice-id', ''),
-			'prior'        => sly_request('prior', 'int', 0),
+			'pos'          => sly_request('pos', 'int', 0),
 			'function'     => sly_request('function', 'string'),
 			'module'       => sly_request('add_module', 'string')
 		);
@@ -145,7 +145,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			// create the slice
 			$slice = $sliceService->create(
 				array(
-					'prior'      => sly_post('prior', 'int'),
+					'pos'        => sly_post('pos', 'int'),
 					'article_id' => $this->article->getId(),
 					'clang'      => $this->article->getClang(),
 					'slot'       => $this->slot,

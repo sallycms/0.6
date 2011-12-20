@@ -14,7 +14,7 @@
 class sly_Helper_Content {
 
 	// ----- ADD Slice
-	public static function printAddSliceForm($prior, $module, $articleId, $clang, $slot, $values = array()) {
+	public static function printAddSliceForm($position, $module, $articleId, $clang, $slot, $values = array()) {
 		$moduleService = sly_Service_Factory::getModuleService();
 
 		if (!$moduleService->exists($module)) {
@@ -27,7 +27,7 @@ class sly_Helper_Content {
 				ob_start();
 				?>
 				<div class="sly-form sly-slice-form" id="addslice">
-					<form action="index.php#slice<?php echo $prior ?>" id="slice<?php echo $prior ?>" method="post" enctype="multipart/form-data">
+					<form action="index.php#slice<?php echo $position ?>" id="slice<?php echo $position ?>" method="post" enctype="multipart/form-data">
 						<div>
 							<input type="hidden" name="page" value="content" />
 							<input type="hidden" name="func" value="addArticleSlice" />
@@ -35,7 +35,7 @@ class sly_Helper_Content {
 							<input type="hidden" name="clang" value="<?php echo $clang ?>" />
 							<input type="hidden" name="slot" value="<?php echo $slot ?>" />
 							<input type="hidden" name="module" value="<?php echo sly_html($module) ?>" />
-							<input type="hidden" name="prior" value="<?php echo $prior ?>" />
+							<input type="hidden" name="pos" value="<?php echo $position ?>" />
 						</div>
 						<fieldset class="rex-form-col-1">
 							<legend><?php echo t('add_block') ?>: <?php echo sly_html($moduleService->getTitle($module)) ?></legend>
@@ -82,7 +82,7 @@ class sly_Helper_Content {
 			ob_start();
 			?>
 			<div class="sly-form sly-slice-form" id="editslice">
-				<form action="index.php#slice<?php echo $articleSlice->getPrior() ?>" method="post" enctype="multipart/form-data">
+				<form action="index.php#slice<?php echo $articleSlice->getPosition() ?>" method="post" enctype="multipart/form-data">
 					<div>
 						<input type="hidden" name="page" value="content" />
 						<input type="hidden" name="func" value="editArticleSlice" />
@@ -90,7 +90,7 @@ class sly_Helper_Content {
 						<input type="hidden" name="clang" value="<?php echo $articleSlice->getClang() ?>" />
 						<input type="hidden" name="slice_id" value="<?php echo $articleSlice->getId() ?>" />
 						<input type="hidden" name="slot" value="<?php echo $articleSlice->getSlot() ?>" />
-						<input type="hidden" name="prior" value="<?php echo $articleSlice->getPrior() ?>" />
+						<input type="hidden" name="pos" value="<?php echo $articleSlice->getPosition() ?>" />
 					</div>
 					<fieldset class="rex-form-col-1">
 						<legend><?php echo t('edit_block') ?>: <?php echo sly_html($moduleTitle) ?></legend>
