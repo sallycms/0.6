@@ -251,56 +251,12 @@ class sly_Controller_User extends sly_Controller_Backend {
 		return $startpages;
 	}
 
-	protected function getModules() {
-		$service = sly_Service_Factory::getModuleService();
-		return $service->getModules();
-	}
-
 	protected function getRightsFromForm($user) {
 		$permissions = array();
 		$current     = sly_Util_User::getCurrentUser()->getId();
-		$config      = sly_Core::config();
 
 		if (sly_post('is_admin', 'boolean', false) || ($user && $current == $user->getId())) {
 			$permissions[] = 'admin[]';
-		}
-
-		// Rechte, die nur der Optik wegen in diesen Gruppen angeordnet wurden.
-
-		if (sly_post('userperm_cat_all',   'boolean', false)) $permissions[] = 'csw[0]';
-		if (sly_post('userperm_media_all', 'boolean', false)) $permissions[] = 'media[0]';
-
-		foreach (sly_postArray('userperm_all',   'string') as $perm) $permissions[] = $perm;
-		foreach (sly_postArray('userperm_ext',   'string') as $perm) $permissions[] = $perm;
-		foreach (sly_postArray('userperm_extra', 'string') as $perm) $permissions[] = $perm;
-
-		foreach (sly_postArray('userperm_media',    'int') as $perm)    $permissions[] = 'media['.$perm.']';
-		foreach (sly_postArray('userperm_sprachen', 'int') as $perm)    $permissions[] = 'clang['.$perm.']';
-		foreach (sly_postArray('userperm_module',   'string') as $perm) $permissions[] = 'module['.$perm.']';
-
-		// Schreib- und Leserechte für die Kategoriestruktur
-
-		$allowedCategories = sly_postArray('userperm_cat', 'int');
-
-		if (!empty($allowedCategories)) {
-			$persistence = sly_DB_Persistence::getInstance();
-
-			$persistence->query(
-				'SELECT DISTINCT path FROM '.$config->get('DATABASE/TABLE_PREFIX').'article '.
-				'WHERE id IN ('.implode(',', $allowedCategories).') AND clang = 1'
-			);
-
-			$pathIDs = array();
-
-			foreach ($persistence as $row) {
-				// aufsplitten und leere Elemente entfernen
-				$elements = array_filter(explode('|', $row['path']));
-
-				// Ist vermutlich schneller als array_unique(array_merge(a,b)).
-				foreach ($elements as $id) $pathIDs[$id] = true;
-			}
-
-			foreach ($allowedCategories as $id)   $permissions[] = 'csw['.$id.']';
 		}
 
 		// Backend-Sprache und -Startseite
@@ -321,45 +277,5 @@ class sly_Controller_User extends sly_Controller_Backend {
 		// Rechte zurückgeben
 
 		return '#'.implode('#', $permissions).'#';
-	}
-
-	protected function getStructure() {
-		$rootCats        = sly_Util_Category::getRootCategories();
-		$this->structure = array();
-
-		if ($rootCats) {
-			foreach ($rootCats as $rootCat) {
-				$this->walkTree($rootCat, 0, $this->structure);
-			}
-		}
-
-		return $this->structure;
-	}
-
-	protected function getMediaStructure() {
-		$rootCats          = sly_Util_MediaCategory::getRootCategories();
-		$this->mediaStruct = array();
-
-		if ($rootCats) {
-			foreach ($rootCats as $rootCat) {
-				$this->walkTree($rootCat, 0, $this->mediaStruct);
-			}
-		}
-
-		return $this->mediaStruct;
-	}
-
-	protected function walkTree($category, $depth, &$target) {
-		if (empty($category)) return;
-
-		$target[$category->getId()] = str_repeat(' ', $depth*2).$category->getName();
-
-		$children = $category->getChildren();
-
-		if (is_array($children)) {
-			foreach ($children as $child) {
-				$this->walkTree($child, $depth + 1, $target);
-			}
-		}
 	}
 }

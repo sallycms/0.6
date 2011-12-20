@@ -178,8 +178,7 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 	protected function canMoveArticle() {
 		if($this->article->isStartArticle()) return false;
 		$user = sly_Util_User::getCurrentUser();
-		if(!sly_Util_Article::canEditArticle($user, $this->article->getId())) return false;
-		return $user->isAdmin() || $user->hasRight('moveArticle[]');
+		return $user->isAdmin() || $user->hasRight('article', 'move', $this->article->getId());
 	}
 
 	protected function canMorphToStartpage() {

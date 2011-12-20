@@ -1,6 +1,6 @@
 RELOGINDELAY: 2
 START_PAGE: structure
-OBJECTPERM: ["clang", "media", "module"]
+OBJECTPERM: ["media"]
 authorisation:
   pages:
     title: 'translate:pages'
@@ -25,7 +25,13 @@ authorisation:
       edit: 'translate:edit'
     supers:
       add: ['edit']
+  language:
+    title: 'translate:languages'
+    list: 'sly_Authorisation_LanguageListProvider'
+    token:
+      access: 'translate:access'
   transitional:
+    title: 'translate:transitional'
     token:
       moveSlice: moveSlice
       copyContent: copyContent
