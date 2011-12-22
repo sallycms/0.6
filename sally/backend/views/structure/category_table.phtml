@@ -18,7 +18,7 @@
 
 	<?php
 	$add_url = '';
-	if($this->canEditCategory($this->categoryId)) {
+	if ($this->canEditCategory($this->categoryId)) {
 		$add_url = 'index.php?page=structure&category_id='.$this->categoryId.'&clang='.$this->clangId.'&func=addCategory';
 	}
 	$add_category = sly_Util_HTML::getSpriteLink($add_url, t('add_category'), 'category-add');
@@ -26,18 +26,26 @@
 	$table = new sly_Table();
 	$table->addColumn(new sly_Table_Column($add_category, '', '', array('class' => 'sly-icon')));
 	$table->addColumn(new sly_Table_Column(t('header_category'), '', '', array('class' => 'name')));
-	$table->addColumn(new sly_Table_Column(t('header_position'), '', '', array('class' => 'pos')));
-	$table->addColumn(new sly_Table_Column(t('header_status'), '', '', array('class' => 'status')));
 
+	$isActive = $this->renderAddCategory || $this->renderEditCategory;
+
+	if ($isActive) {
+		$table->addClass('active');
+		$table->addColumn(new sly_Table_Column(t('header_position'), '', '', array('class' => 'pos')));
+	}
+
+	$table->addColumn(new sly_Table_Column(t('header_status'), '', '', array('class' => 'status')));
 	$table->openBuffer();
 
 	if ($this->categoryId != 0 && $currentCategory) {
-		echo '<tr>';
-		echo '<td class="sly-icon">&nbsp;</td>';
-		echo '<td class="name"><a href="index.php?page=structure&amp;category_id='.$currentCategory->getParentId().'&amp;clang='.$this->clangId.'">..</a></td>';
-		echo '<td class="pos">&nbsp;</td>';
-		echo '<td class="status">&nbsp;</td>';
-		echo '</tr>';
+		?>
+		<tr>
+			<td class="sly-icon">&nbsp;</td>
+			<td class="name"><a href="index.php?page=structure&amp;category_id=<?php echo $currentCategory->getParentId().'&amp;clang='.$this->clangId ?>">..</a></td>
+			<?php if ($isActive): ?><td class="pos">&nbsp;</td><?php endif ?>
+			<td class="status">&nbsp;</td>
+		</tr>
+		<?php
 	}
 
 	if ($this->renderAddCategory) {
@@ -57,7 +65,7 @@
 		elseif ($this->canViewCategory($category->getId())) {
 			print $this->render(
 				sly_Controller_Structure::$viewPath.'category_table_row.phtml',
-				array('category' => $category, 'statusTypes' => $statusTypes)
+				array('category' => $category, 'statusTypes' => $statusTypes, 'isActive' => $isActive)
 			);
 		}
 	}
@@ -65,7 +73,7 @@
 	if (!$this->renderAddCategory && !$currentCategory && empty($categories)) {
 		?>
 		<tr>
-			<td colspan="5" class="sly-icon"><?php echo t('no_categories_yet') ?></td>
+			<td colspan="<?php $isActive ? 5 : 4 ?>" class="sly-icon"><?php echo t('no_categories_yet') ?></td>
 		</tr>
 		<?php
 	}

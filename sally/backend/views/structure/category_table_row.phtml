@@ -24,7 +24,9 @@ else {
 <tr>
 	<td class="sly-icon"><?php echo sly_Util_HTML::getSpriteLink($base_url, $category->getCatName(), 'category') ?></td>
 	<td class="name"><a href="<?php echo sly_html($base_url) ?>"><?php echo sly_html($category->getCatName()) ?></a></td>
+	<?php if ($isActive): ?>
 	<td class="pos"><?php echo sly_html($category->getCatPosition()) ?></td>
+	<?php endif ?>
 	<td class="status">
 		<?php
 		if ($this->canEditCategory($category->getId())) {
