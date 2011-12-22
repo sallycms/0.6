@@ -1,6 +1,5 @@
 RELOGINDELAY: 2
 START_PAGE: structure
-OBJECTPERM: ["media"]
 authorisation:
   pages:
     title: 'translate:pages'
@@ -28,6 +27,11 @@ authorisation:
   language:
     title: 'translate:languages'
     list: 'sly_Authorisation_LanguageListProvider'
+    token:
+      access: 'translate:access'
+  mediacategory:
+    title: 'translate:mediacategory'
+    list: 'sly_Authorisation_MediaCategoryListProvider'
     token:
       access: 'translate:access'
   transitional:

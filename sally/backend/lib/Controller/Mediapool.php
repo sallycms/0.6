@@ -219,7 +219,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 
 		// TODO: Is $this->isMediaAdmin() redundant? The user rights are already checked in delete()...
 
-		if ($this->isMediaAdmin() || $user->hasRight('media['.$medium->getCategoryId().']')) {
+		if ($this->isMediaAdmin() || $user->hasRight('mediacategory', 'access', $medium->getCategoryId())) {
 			$usages = $this->isInUse($medium);
 
 			if ($usages === false) {
@@ -266,7 +266,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 
 	protected function isMediaAdmin() {
 		$user = sly_Util_User::getCurrentUser();
-		return $user->isAdmin() || $user->hasRight('media[0]');
+		return $user->isAdmin() || $user->hasRight('mediacategory', 'access', sly_Authorisation_ListProvider::ALL);
 	}
 
 	protected function canAccessFile(sly_Model_Medium $medium) {
@@ -275,7 +275,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 
 	protected function canAccessCategory($cat) {
 		$user = sly_Util_User::getCurrentUser();
-		return $this->isMediaAdmin() || $user->hasRight('media['.intval($cat).']');
+		return $this->isMediaAdmin() || $user->hasRight('mediacategory', 'access', intval($cat));
 	}
 
 	protected function getCategorySelect() {

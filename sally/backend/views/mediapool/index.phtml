@@ -40,7 +40,7 @@ foreach ($this->args as $name => $value) {
 }
 
 $user    = sly_Util_User::getCurrentUser();
-$isAdmin = $user->isAdmin() || $user->hasRight('media[0]');
+$isAdmin = $this->isMediaAdmin();
 
 ob_start();
 
