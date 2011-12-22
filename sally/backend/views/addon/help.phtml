@@ -16,19 +16,19 @@ $author      = $service->getAuthor($component);
 $supportPage = $service->getSupportPageEx($component);
 $name        = $plugin ? $addon.' / '.$plugin : $addon;
 $format      = '<dt>%s:</dt><dd>%s</dd>';
-$credits     = sprintf($format, t('credits_name'), sly_html($name));
+$credits     = sprintf($format, t('name'), sly_html($name));
 
-if ($version)     $credits .= sprintf($format, t('credits_version'), sly_html($version));
-if ($author)      $credits .= sprintf($format, t('credits_author'), sly_html($author));
-if ($supportPage) $credits .= sprintf($format, t('credits_supportpage'), $supportPage);
+if ($version)     $credits .= sprintf($format, t('version'), sly_html($version));
+if ($author)      $credits .= sprintf($format, t('author'), sly_html($author));
+if ($supportPage) $credits .= sprintf($format, t('supportpage'), $supportPage);
 
 ?>
 <div class="rex-area sly-addon-help">
-	<h2><?php echo t('addon_help', $name) ?></h2>
+	<h2><?php echo t('component_help', $name) ?></h2>
 
 	<div class="rex-area-content">
 		<?php if (!is_file($helpfile)): ?>
-		<p><?php echo t('addon_no_help_file') ?></p>
+		<p><?php echo t('component_help_file_not_found') ?></p>
 		<?php else: ?>
 		<?php include $helpfile ?>
 		<?php endif ?>
@@ -36,6 +36,6 @@ if ($supportPage) $credits .= sprintf($format, t('credits_supportpage'), $suppor
 	</div>
 
 	<div class="rex-area-footer">
-		<p><a href="#" onclick="history.go(-1); return false"><?php echo t('addon_back') ?></a></p>
+		<p><a href="#" onclick="history.go(-1); return false"><?php echo t('back') ?></a></p>
 	</div>
 </div>
