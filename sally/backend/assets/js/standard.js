@@ -622,7 +622,7 @@ var sly = {};
 
 		$('.sly-form .sly-select-checkbox-list a').live('click', function() {
 			var rel   = $(this).attr('rel');
-			var boxes = $(this).parents('p').find('input');
+			var boxes = $(this).parents('div').find('input');
 			boxes.prop('checked', rel === 'all');
 			return false;
 		});
