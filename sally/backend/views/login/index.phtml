@@ -17,14 +17,14 @@ elseif (!empty($this->message)) {
 	print sly_Helper_Message::warn($this->message);
 }
 
-$form = new sly_Form('index.php', 'POST', t('login_title'), '', 'loginformular');
+$form = new sly_Form('index.php', 'POST', t('login'), '', 'loginformular');
 $form->addHiddenValue('page', 'login');
 $form->addHiddenValue('func', 'login');
 $form->addHiddenValue('javascript', 0, 'javascript');
 $form->addHiddenValue('referer', isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '');
 
-$form->add(new sly_Form_Input_Text('rex_user_login', t('login_name'), ''));
-$form->add(new sly_Form_Input_Password('rex_user_psw', t('login_password'), ''));
+$form->add(new sly_Form_Input_Text('rex_user_login', t('username'), ''));
+$form->add(new sly_Form_Input_Password('rex_user_psw', t('password'), ''));
 
 $form->setResetButton(null);
 $form->getSubmitButton()->setAttribute('value', t('login'));

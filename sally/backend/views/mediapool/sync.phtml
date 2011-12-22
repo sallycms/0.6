@@ -16,7 +16,7 @@ $this->render('mediapool/notices.phtml');
 ////////////////////////////////////////////////////////
 // init form
 
-$form = new sly_Form('index.php', 'POST', t('pool_sync_title'), '', 'rex-form-mediapool-sync');
+$form = new sly_Form('index.php', 'POST', t('sync_files'), '', 'rex-form-mediapool-sync');
 
 $form->addHiddenValue('page', 'mediapool_sync');
 $form->addHiddenValue('func', 'sync');
@@ -24,14 +24,14 @@ $form->addHiddenValue('func', 'sync');
 ////////////////////////////////////////////////////////
 // files title
 
-$title = new sly_Form_Input_Text('ftitle', t('pool_file_title'));
+$title = new sly_Form_Input_Text('ftitle', t('title'));
 $form->add($title);
 
 ////////////////////////////////////////////////////////
 // category select box
 
 $select = $this->getCategorySelect();
-$select->setLabel(t('pool_file_category'));
+$select->setLabel(t('category'));
 $select->setAttribute('value', $this->getCurrentCategory());
 
 $form->add($select);
@@ -39,10 +39,9 @@ $form->add($select);
 ////////////////////////////////////////////////////////
 // setup buttons
 
-
 $submit = $form->getSubmitButton();
 $submit->setAttribute('name', 'save');
-$submit->setAttribute('value', t('pool_sync_button'));
+$submit->setAttribute('value', t('synchronize'));
 
 $form->setResetButton(null);
 $form->setSubmitButton(null);
@@ -54,23 +53,16 @@ $form->add(new sly_Form_ButtonBar($buttons));
 // start list of dangling files
 
 $diffCount = count($diffFiles);
-$label     = t('pool_sync_affected_files');
-$title     = $label;
+$label     = t('affected_files');
+$title     = $label.' ('.$diffCount.')';
 
-if ($diffCount) $title .= ' ('.$diffCount.')';
+foreach($diffFiles as $key => $filename) {
+	unset($diffFiles[$key]);
+	$diffFiles[sly_Util_Medium::correctEncoding($key)] = $filename;
+}
 
 $form->beginFieldset($title);
-
-if ($diffCount) {
-	foreach($diffFiles as $key => $filename) {
-		unset($diffFiles[$key]);
-		$diffFiles[sly_Util_Medium::correctEncoding($key)] = $filename;
-	}
-	$form->add(new sly_Form_Select_Checkbox('sync_files', $label, array(), $diffFiles));
-}
-else {
-	$form->add(new sly_Form_Text($label, t('pool_sync_no_diffs')));
-}
+$form->add(new sly_Form_Select_Checkbox('sync_files', $label, array(), $diffFiles));
 
 ////////////////////////////////////////////////////////
 // and here we go!

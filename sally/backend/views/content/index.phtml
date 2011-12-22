@@ -34,14 +34,14 @@ $form->addHiddenValue('clang', $this->article->getClang());
 /////////////////////////////////////////////////////////////////
 // articletype
 
-$type = new sly_Form_Select_DropDown('article_type', t('content_arttype'), $article->getType(), $articletypes, 'article_type');
+$type = new sly_Form_Select_DropDown('article_type', t('articletype'), $article->getType(), $articletypes, 'article_type');
 $form->add($type);
 
 //additional form elements
 $form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM', $form, $params);
 
 //buttons
-$button = new sly_Form_Input_Button('submit', 'save_article', t('article_save'));
+$button = new sly_Form_Input_Button('submit', 'save_article', t('submit'));
 $form->setSubmitButton($button);
 
 print $form->render();
@@ -50,16 +50,16 @@ $hasType     = $article->hasType();
 $hasTemplate = $article->hasTemplate();
 
 if (!$hasType) {
-	print sly_Helper_Message::warn(t('content_select_type'));
+	print sly_Helper_Message::warn(t('select_type_first'));
 }
 elseif (!$hasTemplate) {
-	print sly_Helper_Message::info(t('content_no_template'));
+	print sly_Helper_Message::info(t('no_template_selected'));
 }
 elseif ($slot === null) {
-	print sly_Helper_Message::info(t('content_no_slots'));
+	print sly_Helper_Message::info(t('template_has_no_slots'));
 }
 elseif (empty($modules)) {
-	print sly_Helper_Message::info(t('content_no_modules'));
+	print sly_Helper_Message::info(t('no_modules_allowed'));
 }
 else {
 	print '<div class="sly-content-editmode">';
@@ -110,7 +110,7 @@ else {
 			}
 		}
 		catch (Exception $e) {
-			print sly_Helper_Message::warn('Error while rendering slice: '.$e->getMessage());
+			print sly_Helper_Message::warn(t('error_rendering_slice', $e->getMessage()));
 		}
 	}
 

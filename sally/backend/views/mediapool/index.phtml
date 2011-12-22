@@ -20,16 +20,9 @@ $selected = $this->getCurrentCategory();
 print $this->render('mediapool/notices.phtml');
 
 ////////////////////////////////////////////////////////
-// if file types are restricted, inform the user
-
-if (!empty($args['types'])) {
-	print sly_Helper_Message::info(t('pool_file_filter', $args['types']));
-}
-
-////////////////////////////////////////////////////////
 // list all files in the current category
 
-$form = new sly_Form('index.php', 'POST', t('pool_selectedmedia'), '', 'rex-form-mediapool-media');
+$form = new sly_Form('index.php', 'POST', t('selected_category'), '', 'rex-form-mediapool-media');
 $form->addHiddenValue('page', 'mediapool');
 $form->addHiddenValue('func', 'batch');
 
@@ -55,9 +48,9 @@ ob_start();
 	</colgroup>
 	<thead><tr>
 		<th class="sly-icon">&nbsp;</th>
-		<th><?php echo t('pool_file_thumbnail') ?></th>
-		<th><?php echo t('pool_file_info') ?> / <?php echo t('pool_file_description') ?></th>
-		<th><?php echo t('pool_file_functions') ?></th>
+		<th><?php echo t('thumbnail') ?></th>
+		<th><?php echo t('file_info') ?> / <?php echo t('description') ?></th>
+		<th><?php echo t('functions') ?></th>
 	</tr></thead>
 	<?php
 
@@ -72,17 +65,17 @@ ob_start();
 			$select->setAttribute('onchange', '');
 
 			$add_input =
-				'<label for="rex_move_file_dest_category">'.t('pool_selectedmedia').'</label>'.
+				'<label for="rex_move_file_dest_category">'.t('selected_media').'</label>'.
 				$select->render().
-				'<input class="rex-form-submit-2 sly-button-changecat rex-form-submit" type="submit" name="move" value="'.t('pool_changecat_selectedmedia').'" />';
+				'<input class="rex-form-submit-2 sly-button-changecat rex-form-submit" type="submit" name="move" value="'.t('move_to_category').'" />';
 		}
 
-		$add_input .= '<input class="rex-form-submit-2 sly-button-delete rex-form-submit" type="submit" name="delete" value="'.t('pool_delete_selectedmedia').'" />';
+		$add_input .= '<input class="rex-form-submit-2 sly-button-delete rex-form-submit" type="submit" name="delete" value="'.t('delete').'" />';
 
 		?>
 		<tfoot><tr>
 			<td class="sly-icon">
-				<label class="rex-form-hidden-label" for="check_all"><?php echo t('pool_select_all') ?></label>
+				<label class="rex-form-hidden-label" for="check_all"><?php echo t('select_all') ?></label>
 				<input class="sly-form-checkbox sly-check-all" type="checkbox" id="check_all" data-target="selectedmedia[]" />
 			</td>
 			<td colspan="3"><?php echo $add_input ?></td>
@@ -105,7 +98,7 @@ ob_start();
 		// missing file?
 
 		if (!$file->exists()) {
-			$thumbnail = '<img src="assets/mime-error.png" width="44" height="38" alt="'.t('pool_file_not_found').'" />';
+			$thumbnail = '<img src="assets/mime-error.png" width="44" height="38" alt="'.ht('file_not_found').'" />';
 		}
 		else {
 			$file_ext = $file->getExtension();
@@ -145,7 +138,7 @@ ob_start();
 			}
 		}
 
-		if ($title == '') $title = '['.t('pool_file_notitle').']';
+		if ($title == '') $title = '['.t('no_title').']';
 
 		$ilink  = 'index.php?page=mediapool_detail&amp;file_id='.$id.'&amp;rex_file_category='.$selected.$argUrl;
 		$add_td = '<td>&nbsp;</td>';
@@ -176,7 +169,7 @@ ob_start();
 	if (empty($files)): ?>
 		<tr>
 			<td></td>
-			<td colspan="3"><?php echo t('pool_nomediafound') ?></td>
+			<td colspan="3"><?php echo t('no_media_found') ?></td>
 		</tr>
 	<?php endif ?>
 	</tbody>

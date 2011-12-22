@@ -4,6 +4,16 @@ yes: ja
 no: nein
 month: Monat
 year: Jahr
+days: Tage
+hours: Stunden
+minutes: Minuten
+seconds: Sekunden
+milliseconds: Millisekunden
+days_short: t
+hours_short: s
+minutes_short: m
+seconds_short: s
+milliseconds_short: ms
 general: Allgemein
 dateformat: %d. %b. %Y
 timeformat: %H:%Mh
@@ -351,6 +361,12 @@ credits_author: Autor
 credits_supportpage: Hilfe
 credits_addon_inactive: Addon inaktiv
 credits_caption: Liste der verwendeten AddOns/PlugIns
+credits_text: |
+  <strong>Das webvariants-Team</strong>, <a href="mailto:info@webvariants.de">info@webvariants</a><br />
+  Kernentwicklung<br />
+  webvariants GbR, <a href="http://www.webvariants.de/" class="sly-blank">www.webvariants.de</a>
+credits_thankyou: |
+  Wir danken allen externen Entwicklern und Nutzern, die zur Entwicklung beigetragen haben.
 
 profile_myprofile: Mein Benutzerprofil bearbeiten
 profile_title: Mein Profil

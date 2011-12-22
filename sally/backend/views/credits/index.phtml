@@ -12,11 +12,8 @@
 	<h2>SallyCMS <?php echo sly_Core::getVersion() ?></h2>
 
 	<div class="rex-area-content">
-		<p>
-			<strong>Das webvariants-Team</strong>, <a href="mailto:info@webvariants.de">info@webvariants</a><br />
-			Kernentwicklung<br />
-			webvariants GbR, <a href="http://www.webvariants.de/" class="sly-blank">www.webvariants.de</a>
-		</p>
+		<p><?php echo t('credits_text') ?></p>
+		<p><?php echo t('credits_thankyou') ?></p>
 	</div>
 </div>
 
@@ -24,9 +21,9 @@
 	<caption><?php echo t('credits_caption') ?></caption>
 	<thead><tr>
 		<th class="sly-icon">&nbsp;</th>
-		<th class="sly-col-b" colspan="2"><?php echo t('credits_name') ?></th>
-		<th class="sly-col-c"><?php echo t('credits_version') ?></th>
-		<th><?php echo t('credits_author') ?></th>
+		<th class="sly-col-b" colspan="2"><?php echo t('addon') ?></th>
+		<th class="sly-col-c"><?php echo t('version') ?></th>
+		<th><?php echo t('author') ?></th>
 	</tr></thead>
 	<tbody>
 
@@ -60,7 +57,7 @@
 	if (count($addons->getRegisteredAddons()) == 0) {
 		?>
 		<tr>
-			<td class="rex-col-a center" colspan="5"><?php echo t('addon_empty_list') ?></td>
+			<td class="rex-col-a center" colspan="5"><?php echo t('no_addons_found') ?></td>
 		</tr>
 		<?php
 	}

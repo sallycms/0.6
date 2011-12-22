@@ -32,19 +32,10 @@ print $this->render('mediapool/javascript.phtml');
 print $this->render('mediapool/notices.phtml');
 
 ////////////////////////////////////////////////////////
-// wysi-whatever integration
-
-// disabled until we find a nice way to include this link in our form
-// (legends do not allow HTML)
-
-// $opener_link = $this->getOpenerLink($medium);
-// if (!empty($opener_link)) $opener_link = ' | '.$opener_link;
-
-////////////////////////////////////////////////////////
 // start forms
 
 if ($this->canAccessFile($medium)) {
-	$form = new sly_Form('index.php', 'POST', t('pool_file_edit'), '', 'rex-form-mediapool-detail');
+	$form = new sly_Form('index.php', 'POST', t('edit_medium'), '', 'rex-form-mediapool-detail');
 	$form->setEncType('multipart/form-data');
 
 	$form->addHiddenValue('page', 'mediapool_detail');
@@ -59,7 +50,7 @@ if ($this->canAccessFile($medium)) {
 	}
 }
 else {
-	$form = new sly_Form('index.php', 'POST', t('pool_file_details'), '', 'rex-form-mediapool-detail');
+	$form = new sly_Form('index.php', 'POST', t('edit_medium'), '', 'rex-form-mediapool-detail');
 }
 
 ////////////////////////////////////////////////////////
@@ -104,14 +95,14 @@ if ($isImage) {
 if ($this->canAccessFile($medium)) {
 	// title
 
-	$title = new sly_Form_Input_Text('title', t('pool_file_title'), $title);
+	$title = new sly_Form_Input_Text('title', t('title'), $title);
 	$title->addFormRowClass('sly-mediapool-detail-title');
 	$form->add($title);
 
 	// category
 
 	$select = $this->getCategorySelect();
-	$select->setLabel(t('pool_file_category'));
+	$select->setLabel(t('category'));
 	$select->setAttribute('id', 'rex_file_new_category');
 	$select->setAttribute('onchange', '');
 	$select->setAttribute('value', $categoryID);
@@ -124,17 +115,17 @@ if ($this->canAccessFile($medium)) {
 	// setup buttons
 
 	$submit = $form->getSubmitButton();
-	$submit->setAttribute('value', t('pool_file_update'));
+	$submit->setAttribute('value', t('update'));
 	$submit->setAttribute('name', 'update');
 
-	$delete = new sly_Form_Input_Button('submit', 'delete', t('pool_file_delete'));
+	$delete = new sly_Form_Input_Button('submit', 'delete', t('delete'));
 	$delete->addClass('sly-button-delete');
 
 	$form->setApplyButton($delete);
 	$form->setResetButton(null);
 }
 else {
-	$catname = t('pool_kats_no');
+	$catname = t('no_category');
 	$cat     = $categoryID != 0 ? sly_Util_MediaCategory::findById($categoryID) : null;
 	$user    = sly_Util_User::getCurrentUser();
 
@@ -144,11 +135,11 @@ else {
 
 	// title & cat
 
-	$title = new sly_Form_Text(t('pool_file_title'), $title);
+	$title = new sly_Form_Text(t('title'), $title);
 	$title->addFormRowClass('sly-mediapool-detail-title');
 
 	$form->add($title);
-	$form->add(new sly_Form_Text(t('pool_file_category'), $catname));
+	$form->add(new sly_Form_Text(t('category'), $catname));
 
 	// setup buttons
 
@@ -168,24 +159,24 @@ if ($isImage) {
 // display filename
 
 $filename = '<a href="../data/mediapool/'.$encoded.'">'.sly_html($filename).'</a> ['.$filesize.']';
-$filename = new sly_Form_Text(t('pool_filename'), $filename);
+$filename = new sly_Form_Text(t('filename'), $filename);
 $filename->setIsHTML(true);
 $form->add($filename);
 
 // display update date
 
 $updated = sly_Util_String::formatDatetime($medium->getUpdateDate()).' ['.$medium->getUpdateUser().']';
-$updated = new sly_Form_Text(t('pool_last_update'), $updated);
+$updated = new sly_Form_Text(t('updated_at'), $updated);
 $form->add($updated);
 
 // display creation date
 
 $created = sly_Util_String::formatDatetime($medium->getCreateDate()).' ['.$medium->getCreateUser().']';
-$created = new sly_Form_Text(t('pool_created'), $created);
+$created = new sly_Form_Text(t('created_at'), $created);
 $form->add($created);
 
 if ($this->canAccessFile($medium)) {
-	$file = new sly_Form_Input_File('file_new', t('pool_file_exchange'));
+	$file = new sly_Form_Input_File('file_new', t('replacement_file'));
 	$form->add($file);
 }
 

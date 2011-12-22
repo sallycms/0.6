@@ -4,6 +4,16 @@ yes: yes
 no: no
 month: month
 year: year
+days: days
+hours: hours
+minutes: minutes
+seconds: seconds
+milliseconds: milliseconds
+days_short: d
+hours_short: h
+minutes_short: m
+seconds_short: s
+milliseconds_short: ms
 general: general
 dateformat: '%Y-%b-%d'
 timeformat: '%H:%M'
@@ -351,6 +361,12 @@ credits_author: Author
 credits_supportpage: Help
 credits_addon_inactive: Addon inactive
 credits_caption: List of used addOns/plugins
+credits_text: |
+  <strong>The webvariants team</strong>, <a href="mailto:info@webvariants.de">info@webvariants</a><br />
+  Core Development<br />
+  webvariants GbR, <a href="http://www.webvariants.de/" class="sly-blank">www.webvariants.de</a>
+credits_thankyou: |
+  We thank all external developers and users that have contributed to the Sally development.
 
 profile_myprofile: Edit my profile
 profile_title: My profile

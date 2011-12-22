@@ -25,7 +25,7 @@ $usage   = t('used_ressources', $memory, $classes);
 			<?php endif ?>
 		</ul>
 		<p>
-		<span title="<?php echo sly_html($usage) ?>"><?php print round(microtime(true) - SLY_START_TIME, 3) ?> Sek</span> |
+		<span title="<?php echo sly_html($usage) ?>"><?php print sly_Util_String::formatTimespan(microtime(true) - SLY_START_TIME) ?></span> |
 		<?php print sly_Util_String::formatDatetime() ?>
 		</p>
 	</div>
