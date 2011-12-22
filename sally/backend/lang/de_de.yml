@@ -98,7 +98,6 @@ block_added: Block wurde hinzugefügt
 no_rights_to_this_function: Sie haben keine Rechte für diese Funktion!
 module_not_found: Fehler! Modul wurde nicht gefunden!
 block_deleted: Block wurde gelöscht!
-block_not_deleted: Block konnte nicht gelöscht werden.
 no_rights_to_this_module: Sie haben keine Rechte für dieses Modul!
 error: Ein Fehler ist aufgetreten!
 preview: Voransicht
@@ -133,14 +132,10 @@ content_copy: kopieren
 content_contentoflang: von Sprache
 content_to: nach Sprache
 content_submitcopycontent: Inhalte kopieren
-content_movearticle: Artikel verschieben
-content_submitmovearticle: Artikel verschieben
-content_errormovearticle: Artikel konnte nicht verschoben werden.
 content_articlemoved: Artikel wurde verschoben
 content_choose_new_category: Neue Kategorie wählen
 content_movearticle_no_startpage: Ein Verschieben von Startartikeln ist nicht möglich
 content_copyarticle: Artikel kopieren
-content_submitcopyarticle: Artikel kopieren
 content_articlecopied: Artikel wurde kopiert
 content_errorcopyarticle: Artikel konnte nicht kopiert werden.
 content_error_movecategory: Kategorie konnte nicht verschoben werden

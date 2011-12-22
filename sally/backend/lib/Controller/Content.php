@@ -213,7 +213,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			$this->localInfo = t('block_deleted');
 		}
 		else {
-			$this->localWarning = t('block_not_deleted');
+			$this->localWarning = t('slice_deleted_error');
 		}
 
 		$this->postSliceEdit('delete', $slice_id);

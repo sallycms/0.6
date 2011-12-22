@@ -126,7 +126,7 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 				$this->article = sly_Util_Article::findById($this->article->getId());
 			}
 			catch (sly_Exception $e) {
-				$this->warning = t('content_errormovearticle').': '.$e->getMessage();
+				$this->warning = t('could_not_move_article').': '.$e->getMessage();
 			}
 		}
 		else {

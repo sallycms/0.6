@@ -31,7 +31,7 @@ $form->setResetButton(null);
 /////////////////////////////////////////////////////////////////
 // article name / metadata
 
-$name = new sly_Form_Input_Text('meta_article_name', t('name_description'), $article->getName(), 'rex-form-meta-article-name');
+$name = new sly_Form_Input_Text('meta_article_name', t('article_name'), $article->getName(), 'rex-form-meta-article-name');
 $form->add($name);
 
 $form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM', $form, $params);
@@ -46,16 +46,16 @@ $form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM_FIELDSET', $form, $par
 // ZUM STARTARTIKEL MACHEN
 
 if ($this->canMorphToStartpage()) {
-	$form->beginFieldset(t('content_startarticle'));
+	$form->beginFieldset(t('startarticle'));
 
 	if ($article->getStartpage() == 0 && $article->getParentId() == 0) {
-		$form->add(new sly_Form_Text('', t('content_nottostartarticle')));
+		$form->add(new sly_Form_Text('', t('root_articles_cannot_be_startarticles')));
 	}
 	elseif ($article->getStartpage() == 1) {
-		$form->add(new sly_Form_Text('', t('content_isstartarticle')));
+		$form->add(new sly_Form_Text('', t('article_is_startarticle')));
 	}
 	else {
-		sly_Helper_Content::metaFormAddButtonBar($form, t('content_tostartarticle'), 'article2startpage');
+		sly_Helper_Content::metaFormAddButtonBar($form, t('convert_to_startarticle'), 'article2startpage');
 	}
 }
 
@@ -68,16 +68,16 @@ if ($this->canCopyContent()) {
 		$languages[$id] = $lang->getName();
 	}
 
-	$lang_a = new sly_Form_Select_DropDown('clang_a', t('content_contentoflang'), sly_request('clang_a', 'rex-clang-id', null), $languages, 'clang_a');
+	$lang_a = new sly_Form_Select_DropDown('clang_a', t('from_language'), sly_request('clang_a', 'int', null), $languages, 'clang_a');
 	$lang_a->setSize(1);
 
-	$lang_b = new sly_Form_Select_DropDown('clang_b', t('content_to'), sly_request('clang_b', 'rex-clang-id', null), $languages, 'clang_b');
+	$lang_b = new sly_Form_Select_DropDown('clang_b', t('to_language'), sly_request('clang_b', 'int', null), $languages, 'clang_b');
 	$lang_b->setSize(1);
 
-	$form->beginFieldset(t('content_submitcopycontent'), null, 2);
+	$form->beginFieldset(t('copy_content'), null, 2);
 	$form->addRow(array($lang_a, $lang_b));
 
-	sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitcopycontent'), 'copycontent');
+	sly_Helper_Content::metaFormAddButtonBar($form, t('copy_content'), 'copycontent');
 }
 
 // ARTIKEL VERSCHIEBEN
@@ -85,12 +85,12 @@ if ($this->canCopyContent()) {
 if ($this->canMoveArticle()) {
 	$select = sly_Form_Helper::getCategorySelect('category_id_new', false, null, null, $user);
 	$select->setAttribute('value', $category_id);
-	$select->setLabel(t('move_article'));
+	$select->setLabel(t('target_category'));
 
-	$form->beginFieldset(t('content_submitmovearticle'));
+	$form->beginFieldset(t('move_article'));
 	$form->add($select);
 
-	sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitmovearticle'), 'movearticle');
+	sly_Helper_Content::metaFormAddButtonBar($form, t('move_article'), 'movearticle');
 }
 
 // ARTIKEL KOPIEREN
@@ -98,12 +98,12 @@ if ($this->canMoveArticle()) {
 if ($this->canCopyArticle()) {
 	$select = sly_Form_Helper::getCategorySelect('category_copy_id_new', false, null, null, $user);
 	$select->setAttribute('value', $category_id);
-	$select->setLabel(t('copy_article'));
+	$select->setLabel(t('target_category'));
 
-	$form->beginFieldset(t('content_submitcopyarticle'));
+	$form->beginFieldset(t('copy_article'));
 	$form->add($select);
 
-	sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitcopyarticle'), 'copyarticle');
+	sly_Helper_Content::metaFormAddButtonBar($form, t('copy_article'), 'copyarticle');
 }
 
 // KATEGORIE/STARTARTIKEL VERSCHIEBEN
@@ -111,12 +111,12 @@ if ($this->canCopyArticle()) {
 if ($this->canMoveCategory()) {
 	$select = sly_Form_Helper::getCategorySelect('category_id_new', false, null, null, $user);
 	$select->setAttribute('value', $category_id);
-	$select->setLabel(t('move_category'));
+	$select->setLabel(t('target_category'));
 
-	$form->beginFieldset(t('content_submitmovecategory'));
+	$form->beginFieldset(t('move_category'));
 	$form->add($select);
 
-	sly_Helper_Content::metaFormAddButtonBar($form, t('content_submitmovecategory'), 'movecategory');
+	sly_Helper_Content::metaFormAddButtonBar($form, t('move_category'), 'movecategory');
 }
 
 $form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM_ADDITIONAL', $form, $params);
