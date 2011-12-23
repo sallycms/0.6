@@ -639,6 +639,12 @@ var sly = {};
 			}
 		}
 
+		// Fallback-Implementierung für autofocus
+
+		if (!Modernizr.input.autofocus) {
+			$('*[autofocus]').focus();
+		}
+
 		// Fallback-Implementierung für type=range via jQuery UI Slider
 
 		$('input[type=range]:not(.ua-supported)').each(function() {

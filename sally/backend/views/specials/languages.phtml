@@ -17,7 +17,7 @@ if (!empty($this->info))    print sly_Helper_Message::info($this->info);
 	<?php if ($this->func == 'add' || $this->func == 'edit'): ?>
 	<form action="index.php" method="post">
 		<fieldset class="rex-form-col-1 sly-num0">
-			<legend><?php echo t('clang_'.$this->func) ?></legend>
+			<legend><?php echo t($this->func.'_language') ?></legend>
 			<input type="hidden" name="page" value="specials_languages" />
 			<input type="hidden" name="clang_id" value="<?php echo (int) $this->id ?>" />
 			<input type="hidden" name="func" value="<?php echo $this->func ?>" />
@@ -26,13 +26,13 @@ if (!empty($this->info))    print sly_Helper_Message::info($this->info);
 	<?php
 
 	$base = 'index.php?page=specials_languages&func=';
-	$link = sly_Util_HTML::getSpriteLink($base.'add', t('clang_add'), 'language-add');
+	$link = sly_Util_HTML::getSpriteLink($base.'add', t('add_language'), 'language-add');
 
 	$table = new sly_Table('languages');
 	$table->addColumn(new sly_Table_Column($link, '', '', array('class' => 'sly-icon')));
-	$table->addColumn(new sly_Table_Column(t('clang_name')));
-	$table->addColumn(new sly_Table_Column(t('clang_locale')));
-	$table->addColumn(new sly_Table_Column(t('clang_function')));
+	$table->addColumn(new sly_Table_Column(t('name')));
+	$table->addColumn(new sly_Table_Column(t('locale')));
+	$table->addColumn(new sly_Table_Column(t('function')));
 
 	$table->openBuffer();
 
@@ -45,9 +45,9 @@ if (!empty($this->info))    print sly_Helper_Message::info($this->info);
 		?>
 		<tr class="active">
 			<td class="sly-icon sly-col-a"><?php echo sly_Util_HTML::getSpriteLink('', $name, 'language') ?></td>
-			<td class="sly-col-b sly-has-input"><div><input class="rex-form-text" type="text" name="clang_name" value="<?php echo sly_html($name) ?>" autofocus="autofocus" required="required" placeholder="<?php echo ht('clang_name') ?>" /></div></td>
-			<td class="sly-col-c sly-has-input"><div><input class="rex-form-text" type="text" name="clang_locale" value="<?php echo sly_html($locale) ?>" required="required" placeholder="<?php echo ht('clang_locale') ?>" /></div></td>
-			<td class="sly-col-d sly-has-input"><div><input type="submit" name="sly-submit" class="rex-form-submit" value="<?php echo t('clang_add') ?>" /></div></td>
+			<td class="sly-col-b sly-has-input"><div><input class="rex-form-text" type="text" name="clang_name" value="<?php echo sly_html($name) ?>" autofocus="autofocus" required="required" placeholder="<?php echo ht('name') ?>" /></div></td>
+			<td class="sly-col-c sly-has-input"><div><input class="rex-form-text" type="text" name="clang_locale" value="<?php echo sly_html($locale) ?>" required="required" placeholder="<?php echo ht('locale') ?>" /></div></td>
+			<td class="sly-col-d sly-has-input"><div><input type="submit" name="sly-submit" class="rex-form-submit" value="<?php echo t('add_language') ?>" /></div></td>
 		</tr>
 		<?php
 	}
@@ -64,11 +64,6 @@ if (!empty($this->info))    print sly_Helper_Message::info($this->info);
 	print $table->render();
 
 	if ($this->func === 'add' || $this->func === 'edit'): ?>
-			<script type="text/javascript">
-			<!--
-			jQuery('input[name=clang_name]').focus();
-			//-->
-			</script>
 		</fieldset>
 	</form>
 	<?php endif ?>

@@ -72,11 +72,6 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			'maxPosition'    => $maxPosition,
 			'maxCatPosition' => $maxCatPosition
 		));
-
-		if ($this->renderAddArticle || $this->renderAddCategory || $this->renderEditArticle || $this->renderEditCategory) {
-			$javascript = 'jQuery(function($){$("td.name input").focus();});';
-			sly_Core::getLayout()->addJavaScript($javascript);
-		}
 	}
 
 	protected function editStatusCategory() {
