@@ -9,8 +9,8 @@
  */
 ?>
 <tr class="active">
-	<td class="sly-icon"><?php echo sly_Util_HTML::getSpriteLink('', t('article_add'), 'article') ?></td>
-	<td class="name sly-has-input" colspan="2"><div><input class="rex-form-text" type="text" name="article_name" autofocus="autofocus" required="required" placeholder="<?php echo ht('header_article_name') ?>" /></div></td>
+	<td class="sly-icon"><?php echo sly_Util_HTML::getSpriteLink('', t('add_article'), 'article') ?></td>
+	<td class="name sly-has-input" colspan="2"><div><input class="rex-form-text" type="text" name="article_name" autofocus="autofocus" required="required" placeholder="<?php echo ht('article_name') ?>" /></div></td>
 	<td class="pos sly-has-input"><div><input class="rex-form-text" type="number" name="article_position" min="1" max="<?php echo $maxPosition+1 ?>" value="<?php echo $maxPosition+1 ?>" /></div></td>
-	<td class="status sly-has-input"><div><input type="submit" name="do_add_article" value="<?php echo t('article_add') ?>" /></div></td>
+	<td class="status sly-has-input"><div><input type="submit" name="do_add_article" value="<?php echo t('add_article') ?>" /></div></td>
 </tr>

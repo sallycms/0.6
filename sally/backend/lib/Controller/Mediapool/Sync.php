@@ -13,7 +13,7 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 		$diff = $this->getFileDiff();
 
 		if (empty($diff)) {
-			$this->info = $this->t('sync_no_diffs');
+			$this->info = t('no_file_diffs_found');
 			print $this->render('mediapool/notices.phtml');
 		}
 		else {
@@ -33,7 +33,7 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 
 			if ($this->syncMedium($idx, $cat, $title)) {
 				unset($diff[$idx]);
-				$this->info = $this->t('sync_files_synced');
+				$this->info = t('files_synced');
 			}
 		}
 

@@ -28,7 +28,7 @@ if ($type) {
 	else $type = '('.$type.')';
 }
 else {
-	$type = t('option_no_type');
+	$type = t('no_articletype');
 }
 
 if ($this->canPublishCategory($this->categoryId) && $this->categoryId != $article->getId()) {

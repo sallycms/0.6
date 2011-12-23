@@ -1,6 +1,6 @@
 setup_license_title: Setup: License
 setup_license_header: Welcome to SallyCMS setup.
-setup_license_whats_next: What''s next:
+setup_license_whats_next: What's next:
 setup_license_whats_next_1: File permissions are checked.
 setup_license_whats_next_2: Database access is configured.
 setup_license_whats_next_3: The database will be (re-)initialized.

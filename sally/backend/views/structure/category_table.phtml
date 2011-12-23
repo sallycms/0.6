@@ -25,16 +25,16 @@
 
 	$table = new sly_Table();
 	$table->addColumn(new sly_Table_Column($add_category, '', '', array('class' => 'sly-icon')));
-	$table->addColumn(new sly_Table_Column(t('header_category'), '', '', array('class' => 'name')));
+	$table->addColumn(new sly_Table_Column(t('category'), '', '', array('class' => 'name')));
 
 	$isActive = $this->renderAddCategory || $this->renderEditCategory;
 
 	if ($isActive) {
 		$table->addClass('active');
-		$table->addColumn(new sly_Table_Column(t('header_position'), '', '', array('class' => 'pos')));
+		$table->addColumn(new sly_Table_Column(t('position_status'), '', '', array('class' => 'pos')));
 	}
 
-	$table->addColumn(new sly_Table_Column(t('header_status'), '', '', array('class' => 'status')));
+	$table->addColumn(new sly_Table_Column(t('status'), '', '', array('class' => 'status')));
 	$table->openBuffer();
 
 	if ($this->categoryId != 0 && $currentCategory) {

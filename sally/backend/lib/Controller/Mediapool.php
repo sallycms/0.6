@@ -35,12 +35,12 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		// Header
 
 		$subline = array(
-			array('mediapool',        $this->t('file_list')),
-			array('mediapool_upload', $this->t('file_insert'))
+			array('mediapool',        t('media_list')),
+			array('mediapool_upload', t('upload_file'))
 		);
 
 		if ($this->isMediaAdmin()) {
-			$subline[] = array('mediapool_structure', $this->t('cat_list'));
+			$subline[] = array('mediapool_structure', $this->t('categories'));
 			$subline[] = array('mediapool_sync',      $this->t('sync_files'));
 		}
 
@@ -58,16 +58,10 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		$layout  = sly_Core::getLayout();
 
 		$layout->showNavigation(false);
-		$layout->pageHeader($this->t('media'), $subline);
+		$layout->pageHeader(t('media_list'), $subline);
 		$layout->setBodyAttr('class', 'sly-popup sly-mediapool');
 
 		print $this->render('mediapool/javascript.phtml');
-	}
-
-	protected function t($args) {
-		$args    = func_get_args();
-		$args[0] = 'pool_'.$args[0];
-		return call_user_func_array('t', $args);
 	}
 
 	protected function getArgumentString($separator = '&amp;') {
@@ -111,7 +105,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		if (!empty($callback)) {
 			$filename = $file->getFilename();
 			$title    = $file->getTitle();
-			$link     = '<a href="#" data-filename="'.sly_html($filename).'" data-title="'.sly_html($title).'">'.$this->t('file_get').'</a>';
+			$link     = '<a href="#" data-filename="'.sly_html($filename).'" data-title="'.sly_html($title).'">'.t('apply_file').'</a>';
 		}
 
 		return $link;
@@ -166,7 +160,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		$media = sly_postArray('selectedmedia', 'int', array());
 
 		if (empty($media)) {
-			$this->warning = $this->t('selectedmedia_error');
+			$this->warning = t('no_files_selected');
 			return $this->index();
 		}
 
@@ -183,7 +177,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		// refresh asset cache in case permissions have changed
 		$this->revalidate();
 
-		$this->info = $this->t('selectedmedia_moved');
+		$this->info = t('selected_files_moved');
 		$this->index();
 	}
 
@@ -195,7 +189,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		$files = sly_postArray('selectedmedia', 'int', array());
 
 		if (empty($files)) {
-			$this->warning = $this->t('selectedmedia_error');
+			$this->warning = t('no_files_selected');
 			return $this->index();
 		}
 
@@ -206,7 +200,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 				$retval = $this->deleteMedia($media);
 			}
 			else {
-				$this->warning[] = $this->t('file_not_found');
+				$this->warning[] = t('file_not_found', $fileID);
 			}
 		}
 
@@ -228,15 +222,15 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 				try {
 					$service->delete($medium->getId());
 					$this->revalidate();
-					$this->info[] = $this->t('file_deleted');
+					$this->info[] = t('file_deleted');
 				}
 				catch (sly_Exception $e) {
-					$this->warning[] = $this->t('file_delete_error_1', $filename);
+					$this->warning[] = $e->getMessage();
 				}
 			}
 			else {
 				$tmp   = array();
-				$tmp[] = $this->t('file_delete_error_1', $filename).'. '.$this->t('file_delete_error_2').':<br />';
+				$tmp[] = t('file_delete_error_1', $filename).'. '.t('file_delete_error_2').':<br />';
 				$tmp[] = '<ul>';
 
 				foreach ($usages as $usage) {
@@ -259,7 +253,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 
 	protected function checkPermission() {
 		$user = sly_Util_User::getCurrentUser();
-		if(is_null($user)) return false;
+		if (is_null($user)) return false;
 
 		return $user->hasStructureRight() || $user->hasRight('mediapool[]');
 	}

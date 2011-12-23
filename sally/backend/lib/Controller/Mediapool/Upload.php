@@ -39,7 +39,7 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 			}
 		}
 		else {
-			$this->warning = $this->t('file_not_found_maybe_too_big');
+			$this->warning = t('file_not_found_maybe_too_big');
 		}
 
 		$this->index();
@@ -49,11 +49,11 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 		$file = null;
 
 		try {
-			$file = sly_Util_Medium::upload($fileData, $category, $title);
-			$this->info = $this->t('file_added');
+			$file       = sly_Util_Medium::upload($fileData, $category, $title);
+			$this->info = t('file_added');
 		}
 		catch (sly_Exception $e) {
-			$this->warning = $this->t('file_movefailed');
+			$this->warning = $e->getMessage();
 		}
 
 		return $file;

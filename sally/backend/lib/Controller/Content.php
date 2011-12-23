@@ -54,7 +54,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			'articletypes' => $articletypes,
 			'modules'      => $modules,
 			'slot'         => $this->slot,
-			'slice_id'     => sly_request('slice_id', 'rex-slice-id', ''),
+			'slice_id'     => sly_request('slice_id', 'int', 0),
 			'pos'          => sly_request('pos', 'int', 0),
 			'function'     => sly_request('function', 'string'),
 			'module'       => sly_request('add_module', 'string')
@@ -122,7 +122,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 					$this->localInfo = t('slice_moved');
 				}
 				else {
-					$this->localWarning = t('slice_moved_error');
+					$this->localWarning = t('slice_cannot_be_moved');
 				}
 			}
 			else {
@@ -160,7 +160,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 
 			$this->setSliceValues($slicedata, $slice);
 
-			$this->localInfo = t('block_added');
+			$this->localInfo = t('slice_added');
 
 			$this->postSliceEdit('add', $slice->getId());
 		}
@@ -175,7 +175,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 
 	protected function editArticleSlice() {
 		$sliceservice = sly_Service_Factory::getArticleSliceService();
-		$slice_id     = sly_request('slice_id', 'rex-slice-id', 0);
+		$slice_id     = sly_request('slice_id', 'int', 0);
 		$slice        = $sliceservice->findById($slice_id);
 
 		$slicedata = $this->preSliceEdit('edit');
@@ -188,14 +188,14 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			$sliceservice->save($slice);
 			sly_Util_Slice::clearSliceCache($slice->getSliceId());
 
-			$this->localInfo .= t('block_updated');
+			$this->localInfo .= t('slice_updated');
 			$this->postSliceEdit('edit', $slice_id);
 		}
 
 		$extraparams = array();
 		if (sly_post('btn_update', 'string') || $slicedata['SAVE'] !== true) {
 			$extraparams['slicevalues'] = $slicedata;
-			$extraparams['function'] = 'edit';
+			$extraparams['function']    = 'edit';
 		}
 
 		$this->index($extraparams);
@@ -205,15 +205,15 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 		$ok = false;
 
 		if ($this->preSliceEdit('delete') !== false) {
-			$slice_id = sly_request('slice_id', 'rex-slice-id', '');
+			$slice_id = sly_request('slice_id', 'int', 0);
 			$ok       = sly_Util_ArticleSlice::deleteById($slice_id);
 		}
 
 		if ($ok) {
-			$this->localInfo = t('block_deleted');
+			$this->localInfo = t('slice_deleted');
 		}
 		else {
-			$this->localWarning = t('slice_deleted_error');
+			$this->localWarning = t('slice_cannot_be_deleted');
 		}
 
 		$this->postSliceEdit('delete', $slice_id);
@@ -225,7 +225,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 		$user = sly_Util_User::getCurrentUser();
 
 		if ($function == 'delete' || $function == 'edit') {
-			$slice_id = sly_request('slice_id', 'rex-slice-id', '');
+			$slice_id = sly_request('slice_id', 'int', 0);
 			if (!sly_Util_ArticleSlice::exists($slice_id)) return false;
 			$module = sly_Util_ArticleSlice::getModuleNameForSlice($slice_id );
 		}
@@ -262,10 +262,10 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 				$this->localWarning = implode('<br />', $slicedata['MESSAGES']);
 			}
 			elseif ($this->action == 'deleteArticleSlice') {
-				$this->localWarning = t('slice_deleted_error');
+				$this->localWarning = t('slice_cannot_be_deleted');
 			}
 			else {
-				$this->localWarning = t('slice_saved_error');
+				$this->localWarning = t('slice_cannot_be_updated');
 			}
 
 		}

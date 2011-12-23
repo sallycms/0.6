@@ -17,7 +17,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 		print $this->render('mediapool/toolbar.phtml');
 
 		if ($fileID == -1) {
-			$this->warning = $this->t('file_not_found');
+			$this->warning = t('file_not_found');
 			print $this->render('mediapool/index.phtml');
 			return;
 		}
@@ -77,7 +77,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 		// update our file
 
 		$title = sly_request('title', 'string');
-		$msg   = $this->t('file_infos_updated');
+		$msg   = t('file_infos_updated');
 		$ok    = true;
 
 		// upload new file or just change file properties?
@@ -85,12 +85,12 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 		if (!empty($_FILES['file_new']['name']) && $_FILES['file_new']['name'] != 'none') {
 			try {
 				sly_Util_Medium::upload($_FILES['file_new'], $target, $title, $medium);
-				$msg = $this->t('file_changed');
+				$msg = t('file_changed');
 			}
 			catch (Exception $e) {
 				$ok   = false;
 				$code = $e->getCode();
-				$msg  = $this->t($code === sly_Util_Medium::ERR_TYPE_MISMATCH ? 'file_upload_errortype' : 'file_upload_error');
+				$msg  = t($code === sly_Util_Medium::ERR_TYPE_MISMATCH ? 'file_types_do_not_match' : 'an_error_happened_during_upload');
 			}
 		}
 		else {

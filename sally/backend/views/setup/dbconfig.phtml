@@ -32,36 +32,36 @@ if (count($available) === 0) {
 
 if (count($available) === 1) {
 	$form->addHiddenValue('driver', key($available));
-	$form->add(new sly_Form_Text(t('setup_dbconfig_driver'), reset($available)));
+	$form->add(new sly_Form_Text(t('db_driver'), reset($available)));
 }
 else {
-	$drivers = new sly_Form_Select_DropDown('driver', t('setup_dbconfig_driver'), null, $available);
+	$drivers = new sly_Form_Select_DropDown('driver', t('db_driver'), null, $available);
 	$drivers->setHelpText(t('setup_dbconfig_driver_notice'));
 	$form->add($drivers);
 }
 
 // database infos
 
-$prefix = new sly_Form_Input_Text('prefix', t('setup_dbconfig_prefix'), $prefix);
+$prefix = new sly_Form_Input_Text('prefix', t('db_prefix'), $prefix);
 $prefix->setHelpText(t('setup_dbconfig_prefix_notice'));
 
-$form->add(new sly_Form_Input_Text('host', t('setup_dbconfig_host'), $host));
-$form->add(new sly_Form_Input_Text('user', t('setup_dbconfig_login'), $user));
-$form->add(new sly_Form_Input_Text('pass', t('setup_dbconfig_password'), $pass));
+$form->add(new sly_Form_Input_Text('host', t('host'), $host));
+$form->add(new sly_Form_Input_Text('user', t('login'), $user));
+$form->add(new sly_Form_Input_Text('pass', t('password'), $pass));
 
 // slightly more complex input for the target database
 // (only required when not using SQLite)
 
 if (count($available) > 1 || key($available) !== 'sqlite') {
 	$dbname = new sly_Form_Input_Text('dbname', '', $dbname);
-	$create = new sly_Form_Input_Checkbox('create_db', '', '1', t('setup_dbconfig_create_db'));
-	$name   = new sly_Form_Freeform('dbname', t('setup_dbconfig_database'), $dbname->render().' '.$create->render());
+	$create = new sly_Form_Input_Checkbox('create_db', '', '1', t('create'));
+	$name   = new sly_Form_Freeform('dbname', t('database'), $dbname->render().' '.$create->render());
 
 	$name->addFormRowClass('rex-form-text'); // so that the styles for the input box apply
 	$form->add($name);
 }
 else {
-	$name = new sly_Form_Input_Text('dbname', t('setup_dbconfig_database'), $dbname);
+	$name = new sly_Form_Input_Text('dbname', t('database'), $dbname);
 	$form->add($name);
 }
 

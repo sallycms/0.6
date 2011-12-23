@@ -73,6 +73,6 @@ if (count($languages) > 1) {
 
 	if ($stop !== false) {
 		$lang = sly_Service_Factory::getLanguageService()->findById($stop);
-		throw new sly_Authorisation_Exception(t('authorisation_exception_language_denied', rex_translate($lang->getName())));
+		throw new sly_Authorisation_Exception(t('you_have_no_access_to_this_language', rex_translate($lang->getName())));
 	}
 }

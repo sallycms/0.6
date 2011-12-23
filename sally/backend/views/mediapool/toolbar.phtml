@@ -34,7 +34,7 @@ if (count($values) > 1 || $dispatcher->hasListeners('SLY_MEDIA_LIST_TOOLBAR')) {
 		$form->addHiddenValue('args['.$name.']', $value);
 	}
 
-	if(count($values) > 1) {
+	if (count($values) > 1) {
 		$select->setAttribute('onchange', 'this.form.submit()');
 		$form->add($select);
 	}

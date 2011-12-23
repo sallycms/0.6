@@ -162,7 +162,7 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 				$this->call('activate', 'activated');
 			}
 
-			// if everything worked out fine, we can either redirect to the next component
+			// if everything worked out fine, we can redirect to the next component
 			if ($this->warning === '' && count($todo) > 1) {
 				sly_Util_HTTP::redirect($_SERVER['REQUEST_URI'], array(), '', 302);
 			}
@@ -425,7 +425,7 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 		}
 
 		$texts = array_filter(array($requiresTitle, $isRequiredTitle));
-		if (empty($texts)) $texts[] = 'keine Abhängigkeiten';
+		if (empty($texts)) $texts[] = t('no_dependencies');
 		return implode(' &amp; ', $texts);
 	}
 }

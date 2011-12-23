@@ -16,7 +16,7 @@ print $this->render('mediapool/notices.phtml');
 ////////////////////////////////////////////////////////
 // init form
 
-$form = new sly_Form('index.php', 'POST', t('pool_file_insert'), '', 'rex-form-mediapool-other');
+$form = new sly_Form('index.php', 'POST', t('upload_medium'), '', 'rex-form-mediapool-other');
 $form->setEncType('multipart/form-data');
 
 $form->addHiddenValue('page', 'mediapool_upload');
@@ -26,7 +26,7 @@ $form->addHiddenValue('callback', sly_request('callback', 'string'));
 ////////////////////////////////////////////////////////
 // file title
 
-$title = new sly_Form_Input_Text('ftitle', t('pool_file_title'));
+$title = new sly_Form_Input_Text('ftitle', t('title'));
 $form->add($title);
 $form->setFocus('ftitle');
 
@@ -34,7 +34,7 @@ $form->setFocus('ftitle');
 // category select box
 
 $select = $this->getCategorySelect();
-$select->setLabel(t('pool_file_category'));
+$select->setLabel(t('category'));
 $select->setAttribute('value', $this->getCurrentCategory());
 
 $form->add($select);
@@ -42,7 +42,7 @@ $form->add($select);
 ////////////////////////////////////////////////////////
 // init upload box
 
-$upload    = new sly_Form_Input_File('file_new', t('pool_file_file'));
+$upload    = new sly_Form_Input_File('file_new', t('file'));
 $maxPOST   = sly_ini_get('post_max_size');
 $maxUpload = sly_ini_get('upload_max_filesize');
 $maxSize   = min(array($maxPOST, $maxUpload));
@@ -56,12 +56,12 @@ $form->add($upload);
 
 $submit = $form->getSubmitButton();
 $submit->setAttribute('name', 'save');
-$submit->setAttribute('value', t('pool_file_upload'));
+$submit->setAttribute('value', t('upload'));
 
 $form->setResetButton(null);
 
 if (sly_request('callback', 'string') != '') {
-	$apply = new sly_Form_Input_Button('submit', 'saveandexit', t('pool_file_upload_get'));
+	$apply = new sly_Form_Input_Button('submit', 'saveandexit', t('upload_and_use'));
 	$form->setApplyButton($apply);
 }
 

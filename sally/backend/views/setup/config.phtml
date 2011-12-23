@@ -12,17 +12,17 @@ $this->title(t('setup_config_title'));
 
 if (!empty($this->warning)) print sly_Helper_Message::warn($this->warning);
 
-$form = new sly_Form('index.php', 'POST', t('setup_config_header'), '', 'rex-form-setup-step-4');
+$form = new sly_Form('index.php', 'POST', t('configuration'), '', 'rex-form-setup-step-4');
 $this->printHiddens('config', $form);
 
 // fields
 
-$form->add(new sly_Form_Input_Text('projectname', t('setup_config_projectname'), $projectName));
+$form->add(new sly_Form_Input_Text('projectname', t('project_name'), $projectName));
 
 if (class_exists('DateTimeZone')) {
 	$timezoneList   = DateTimeZone::listIdentifiers();
 	$timezoneList   = array_combine($timezoneList, $timezoneList);
-	$timezoneSelect = new sly_Form_Select_DropDown('timezone', t('setup_config_timezone'), $timezone, $timezoneList);
+	$timezoneSelect = new sly_Form_Select_DropDown('timezone', t('timezone'), $timezone, $timezoneList);
 
 	$form->add($timezoneSelect);
 }

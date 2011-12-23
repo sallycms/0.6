@@ -21,7 +21,7 @@ class sly_Controller_Addon_Help extends sly_Controller_Backend {
 
 		if ($this->addon) {
 			$layout = sly_Core::getLayout();
-			$layout->pageHeader(t('addon'));
+			$layout->pageHeader(t('addons'));
 			print '<div class="sly-content">';
 
 			$plugins      = sly_Service_Factory::getPluginService()->getRegisteredPlugins($this->addon);

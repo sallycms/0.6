@@ -26,10 +26,10 @@ $form->addHiddenValue('id', $user ? $user->getId() : 0);
 // first row: login and password
 
 if ($user) {
-	$login = new sly_Form_Text(t('login_name'), $user->getLogin());
+	$login = new sly_Form_Text(t('username'), $user->getLogin());
 }
 else {
-	$login = new sly_Form_Input_Text('userlogin', t('login_name'), '');
+	$login = new sly_Form_Input_Text('userlogin', t('username'), '');
 	$form->setFocus('userlogin');
 }
 
@@ -49,8 +49,8 @@ $form->addRow(array($name, $description));
 //////////////////////////////////////////////////////////////////
 // third row: admin and status
 
-$userAdmin  = new sly_Form_Input_Checkbox('is_admin', '', '1', t('user_admin'));
-$userStatus = new sly_Form_Input_Checkbox('userstatus', '', '1', t('user_status'));
+$userAdmin  = new sly_Form_Input_Checkbox('is_admin', '', '1', t('admin'));
+$userStatus = new sly_Form_Input_Checkbox('userstatus', '', '1', t('activated'));
 
 if ($user) {
 	$userAdmin->setChecked($user->isAdmin());
@@ -67,13 +67,11 @@ $form->addRow(array($userAdmin, $userStatus));
 //////////////////////////////////////////////////////////////////
 // fourth row: backend startpage and backend locale
 
-
-
 $startPage     = $user ? $user->getStartPage() : array();
 $backendLocale = $user ? $user->getBackendLocale() : array();
 
 $startpageSelect = new sly_Form_Select_DropDown('userperm_startpage', t('startpage'), $startPage, $this->getPossibleStartpages());
-$localeSelect    = new sly_Form_Select_DropDown('userperm_mylang', t('backend_language'), $backendLocale, $this->getBackendLocales());
+$localeSelect    = new sly_Form_Select_DropDown('userperm_mylang', t('backend_locale'), $backendLocale, $this->getBackendLocales());
 
 $form->addRow(array($startpageSelect, $localeSelect));
 
@@ -90,8 +88,8 @@ $form->setResetButton(null);
 
 if ($user) {
 	$form->addRow(array(
-		new sly_Form_ButtonBar(array('submit' => new sly_Form_Input_Button('submit', 'submit', t('user_save')))),
-		new sly_Form_ButtonBar(array('apply' => new sly_Form_Input_Button('submit', 'apply', t('user_apply'))))
+		new sly_Form_ButtonBar(array('submit' => new sly_Form_Input_Button('submit', 'submit', t('update_user')))),
+		new sly_Form_ButtonBar(array('apply' => new sly_Form_Input_Button('submit', 'apply', t('apply'))))
 	));
 }
 else {

@@ -266,7 +266,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		$result = '
 			<ul class="sly-navi-path">
 				<li>'.t('path').'</li>
-				<li> : <a href="index.php?page=structure&amp;category_id=0&amp;clang='.$this->clangId.'">Homepage</a></li>
+				<li> : <a href="index.php?page=structure&amp;category_id=0&amp;clang='.$this->clangId.'">'.t('home').'</a></li>
 				'.$result.'
 			</ul>
 			';

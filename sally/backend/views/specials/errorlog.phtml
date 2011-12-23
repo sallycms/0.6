@@ -49,7 +49,7 @@ foreach ($units as $unit) {
 <?php
 
 $table = new sly_Table('sly-errorlog');
-$table->addColumn(new sly_Table_Column(t('errorlog_message'), '', '', array('colspan' => 2)));
+$table->addColumn(new sly_Table_Column(t('error_details'), '', '', array('colspan' => 2)));
 $table->openBuffer();
 
 foreach ($data as $line) {
@@ -58,8 +58,8 @@ foreach ($data as $line) {
 	<tr>
 		<td class="error" colspan="2"><strong><em><?php echo $type ?></em>: <?php echo sly_html($message) ?></strong></td>
 	</tr><tr class="where">
-		<td class="location">in <?php echo sly_html($file) ?>, <?php echo t('errorlog_line') ?> <?php echo sly_html($line) ?></td>
-		<td class="date"><?php echo sly_html(strftime(t('datetimeformat'), $date)) ?></td>
+		<td class="location"><?php sly_html(sprintf('%s %s, %s %d', t('in_line'), $file, t('in_line'), $line)) ?></td>
+		<td class="date"><?php echo sly_html(sly_Util_String::formatDatetime($date)) ?></td>
 	</tr><tr class="request">
 		<td class="request" colspan="2"><?php echo sly_html($request) ?></td>
 	</tr>

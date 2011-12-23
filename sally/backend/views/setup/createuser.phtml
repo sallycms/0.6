@@ -17,10 +17,10 @@ $this->printHiddens('createuser', $form);
 
 // fields
 
-$user = new sly_Form_Input_Text('admin_user', t('setup_createuser_login'), $adminUser);
+$user = new sly_Form_Input_Text('admin_user', t('username'), $adminUser);
 
 $form->add($user);
-$form->add(new sly_Form_Input_Text('admin_pass', t('setup_createuser_password')));
+$form->add(new sly_Form_Input_Text('admin_pass', t('password')));
 
 if ($usersExist) {
 	$form->add(new sly_Form_Input_Checkbox('no_admin', '', '1', t('setup_createuser_no_admin')));

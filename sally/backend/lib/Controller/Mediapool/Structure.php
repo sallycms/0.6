@@ -23,7 +23,7 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 				$parent = $service->findById($parentID); // may be null
 				$service->add($name, $parent);
 
-				$this->info   = $this->t('kat_saved', $name);
+				$this->info   = t('category_added', $name);
 				$this->action = '';
 			}
 			catch (Exception $e) {
@@ -47,7 +47,7 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 					$category->setName($name);
 					$service->update($category);
 
-					$this->info   = $this->t('kat_updated', $name);
+					$this->info   = t('category_updated', $name);
 					$this->action = '';
 				}
 				catch (Exception $e) {
@@ -67,13 +67,10 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 		if ($category) {
 			try {
 				$service->delete($editID);
-				$this->info = $this->t('kat_deleted');
+				$this->info = t('category_deleted');
 			}
 			catch (Exception $e) {
-				$code  = $e->getCode();
-				$media = $code == sly_Service_MediaCategory::ERR_CAT_HAS_MEDIA;
-
-				$this->warning = $this->t($media ? 'kat_not_deleted_media' : 'kat_not_deleted_subcats');
+				$this->warning = $e->getMessage();
 			}
 		}
 

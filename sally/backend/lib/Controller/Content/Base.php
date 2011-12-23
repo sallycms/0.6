@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
@@ -17,7 +16,7 @@ abstract class sly_Controller_Content_Base extends sly_Controller_Backend {
 
 	protected function init() {
 		$clang = sly_Core::getCurrentClang();
-		$this->article = sly_Util_Article::findById(sly_request('article_id', 'rex-article-id'), $clang);
+		$this->article = sly_Util_Article::findById(sly_request('article_id', 'int'), $clang);
 
 		if (is_null($this->article)) {
 			sly_Core::getLayout()->pageHeader(t('content'));
@@ -43,7 +42,7 @@ abstract class sly_Controller_Content_Base extends sly_Controller_Backend {
 		$cat    = $art->getCategory();
 		$result = '<ul class="sly-navi-path">
 			<li>'.t('path').'</li>
-			<li> : <a href="index.php?page=structure&amp;category_id=0&amp;clang='.$art->getClang().'">Homepage</a></li>';
+			<li> : <a href="index.php?page=structure&amp;category_id=0&amp;clang='.$art->getClang().'">'.t('home').'</a></li>';
 
 
 		if ($cat) {
@@ -54,7 +53,7 @@ abstract class sly_Controller_Content_Base extends sly_Controller_Backend {
 			}
 		}
 
-		$result .= '<li> | '.($art->isStartArticle() ? t('start_article') : t('article')).'</li>';
+		$result .= '<li> | '.($art->isStartArticle() ? t('startarticle') : t('article')).'</li>';
 		$result .= '<li> : <a href="index.php?page='.$this->getPageName().'&amp;article_id='.$art->getId().'&amp;clang='.$art->getClang().'">'.str_replace(' ', '&nbsp;', sly_html($art->getName())).'</a></li>';
 		$result .= '</ul>';
 
@@ -73,12 +72,14 @@ abstract class sly_Controller_Content_Base extends sly_Controller_Backend {
 			$art = $this->article;
 
 			$this->renderLanguageBar();
+
 			// extend menu
 			print sly_Core::dispatcher()->filter('PAGE_CONTENT_HEADER', '', array(
-				'article_id' => $art->getId(),
-				'clang' => $art->getClang(),
+				'article_id'  => $art->getId(),
+				'clang'       => $art->getClang(),
 				'category_id' => $art->getCategoryId()
 			));
+
 			return true;
 		}
 	}
@@ -88,16 +89,15 @@ abstract class sly_Controller_Content_Base extends sly_Controller_Backend {
 		if (is_null($user)) return false;
 
 		$articleId = sly_request('article_id', 'int');
-		$article = sly_Util_Article::findById($articleId);
+		$article   = sly_Util_Article::findById($articleId);
 
 		// all users are allowed to see the error message in init()
 		if (is_null($article)) return true;
 
-		$categoryOk = sly_Util_Article::canEditContent($user, $article->getId());
-
 		$clang   = sly_Core::getCurrentClang();
 		$clangOk = sly_Util_Language::hasPermissionOnLanguage($user, $clang);
+		if (!$clangOk) return false;
 
-		return $categoryOk && $clangOk;
+		return sly_Util_Article::canEditContent($user, $article->getId());
 	}
 }
