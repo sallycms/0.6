@@ -17,7 +17,7 @@ elseif (!empty($this->message)) {
 	print sly_Helper_Message::warn($this->message);
 }
 
-$form = new sly_Form('index.php', 'POST', t('login'), '', 'loginformular');
+$form = new sly_Form('index.php', 'POST', t('login_title'), '', 'loginformular');
 $form->addHiddenValue('page', 'login');
 $form->addHiddenValue('func', 'login');
 $form->addHiddenValue('javascript', 0, 'javascript');

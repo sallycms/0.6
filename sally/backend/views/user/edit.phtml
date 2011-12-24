@@ -88,13 +88,13 @@ $form->setResetButton(null);
 
 if ($user) {
 	$form->addRow(array(
-		new sly_Form_ButtonBar(array('submit' => new sly_Form_Input_Button('submit', 'submit', t('update_user')))),
+		new sly_Form_ButtonBar(array('submit' => new sly_Form_Input_Button('submit', 'submit', t('update')))),
 		new sly_Form_ButtonBar(array('apply' => new sly_Form_Input_Button('submit', 'apply', t('apply'))))
 	));
 }
 else {
 	$form->addRow(array(
-		new sly_Form_ButtonBar(array('submit' => new sly_Form_Input_Button('submit', 'submit', t('add_user'))))
+		new sly_Form_ButtonBar(array('submit' => new sly_Form_Input_Button('submit', 'submit', t('add'))))
 	));
 }
 

@@ -14,7 +14,7 @@ if (!empty($warning)) print sly_Helper_Message::warn($warning);
 $sublist = dirname(__FILE__).'/sublist.phtml';
 
 if (empty($tree)) {
-	print sly_Helper_Message::info(t('addon_empty_list'));
+	print sly_Helper_Message::info(t('no_addons_found'));
 }
 else {
 	?>

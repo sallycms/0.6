@@ -20,379 +20,24 @@ timeformat: %H:%Mh
 datetimeformat: %d. %b. %Y - %H:%Mh
 setlocale: 'de_DE,de_DE@euro,deu_deu,german_germany,de,ge'
 
-ctrl: Mehrfachauswahl mit STRG
-
-save: Speichern
-apply: Übernehmen
-reset: Zurücksetzen
-delete: Löschen
-
-select_all: alle auswählen
-select_none: nichts auswählen
-
-open_linkmap: Öffne Strukturansicht
-remove_link: Link entfernen
-press_del: 'Drücken Sie [Entf], um den ausgewählten Eintrag zu entfernen.'
-
-sort_asc: Aufsteigend sortieren
-sort_desc: Absteigend sortieren
-sort_none: Keine Sortierung
-pages: Seiten
-filter: Filter
-begin_sorting: Tabelle sortieren
-end_sorting: Sortiermodus beenden
-
-start_article_not_selected: Kein Startartikel ausgewählt
-redirect_previous_page: 'Sie werden zu Ihrer <a href="{0}">vorherigen Seite</a> weitergeleitet.'
-redirect_startpage: 'Sie werden zu Ihrer <a href="{0}">Startseite</a> weitergeleitet.'
-unknown_page: Unbekannte Seite
-unknown_action: 'Methode {0} in {1} nicht gefunden!'
-page_not_allowed: 'Zugriff auf {0} in {1} nicht gestattet!'
-security_violation: Sicherheitsverletzung
-controller_error: Controller-Fehler
-unexpected_exception: Unerwartete Ausnahme
-
-importer_bad_version: In der Importdatei konnte keine gültige Version gefunden werden.
-importer_no_valid_charset: In der Importdatei konnte keine Angabe über die Kodierung gefunden werden.
-importer_charset_mismatch: Die in der Importdatei angegebene Kodierung weicht von der dieses Projekts ab.
-importer_no_valid_import_file_version: "Die Importdatei ist ungültig: Versionsstempel von Version {0} gefunden, aber {1} erwartet."
-importer_no_valid_import_file_prefix: Die Importdatei ist ungültig: Es wurde kein Tabellenpräfix angegeben.
-importer_database_imported: Datenbankimport erfolgreich importiert
-importer_entry_count: ({0} Datensätze)
-
+home: Home
 homepage: Homepage
-
-specials: System
-user: Benutzer
-mediapool: Medienpool
-import: Im-/Export
-content: Artikel
-structure: Struktur
-profile: Mein Profil
-logout: abmelden
-navigation_basis: Basis Navigation
-navigation_addons: AddOns
-
-login_name: Benutzername
-password: Passwort
-new_password: Neues Passwort
-
-logged_out: nicht angemeldet
-logged_in_as: Angemeldet als
-
-add_block: Block hinzufügen
-edit: Editieren
-no_editing_rights: Keine Editiererlaubnis
-no_article_available: Kein Artikel vorhanden
-module_doesnt_exist: Dieses Modul existiert nicht!
-dont_delete_block: Block nicht löschen
-delete_block: Block sicher löschen
-submit: abschicken
-update_block: Block übernehmen
-save_block: Block speichern
-edit_block: Block bearbeiten
-
-article_moved: Artikel wurde verschoben!
-article_deleted: Artikel wurde gelöscht!
-could_not_move_article: Artikel konnte nicht verschoben werden.
-check_rights_in_directory: Bitte überprüfen Sie die Rechte im Ordner
-category_deleted: Kategorie wurde gelöscht!
-category_doesnt_exist: Kategorie existiert nicht!
-cant_delete_sitestartarticle: Der Webseiten-Startartikel kann nicht gelöscht werden!
-cant_delete_notfoundarticle: Der "Nicht gefunden"-Artikel kann nicht gelöscht werden!
-
-move_slice_up: Nach oben verschieben
-move_slice_down: Nach unten verschieben
-block_updated: Block wurde aktualisiert!
-block_added: Block wurde hinzugefügt
-no_rights_to_this_function: Sie haben keine Rechte für diese Funktion!
-module_not_found: Fehler! Modul wurde nicht gefunden!
-block_deleted: Block wurde gelöscht!
-no_rights_to_this_module: Sie haben keine Rechte für dieses Modul!
-error: Ein Fehler ist aufgetreten!
-preview: Voransicht
-edit_mode: Editier Modus
-metadata: Metadaten/Sonstiges
-article_cannot_be_moved: Dieser Artikel kann nicht verschoben werden.
-start_article_has_to_stay_in_category: Startartikel müssen in ihrer Kategorie bleiben!
-article_copied: Artikel wurde kopiert!
-file: 'Datei {0} konnte nicht gefunden werden.'
-moving_file_error: 'Verschieben von Datei {0} ist fehlgeschlagen.'
-metadata_updated: Metadaten wurden aktualisiert
-online_from: Online vom
-online_to: bis zum
-name_description: Name/Bezeichnung
-description: Beschreibung
-delete_file: File löschen
-teaser: Teaser
-update_metadata: Metadaten aktualisieren
-other_functions: Sonstige Funktionen
-category: Kategorie
-move_article: Artikel verschieben
-copy_article: in Kategorie
-no_rights_to_edit: Sie haben keine Editiererlaubnis!
-show: Anzeigen
-slice_moved: Block wurde verschoben.
-slice_moved_error: Block konnte nicht verschoben werden.
-slice_deleted_error: Block konnte nicht gelöscht werden.
-slice_saved_error: Eingaben wurden nicht übernommen.
-content_contentcopy: Inhalt wurde kopiert.
-content_errorcopy: Sie können Inhalte nicht in die gleiche Sprache kopieren.
-content_copy: kopieren
-content_contentoflang: von Sprache
-content_to: nach Sprache
-content_submitcopycontent: Inhalte kopieren
-content_articlemoved: Artikel wurde verschoben
-content_choose_new_category: Neue Kategorie wählen
-content_movearticle_no_startpage: Ein Verschieben von Startartikeln ist nicht möglich
-content_copyarticle: Artikel kopieren
-content_articlecopied: Artikel wurde kopiert
-content_errorcopyarticle: Artikel konnte nicht kopiert werden.
-content_error_movecategory: Kategorie konnte nicht verschoben werden
-content_submitmovecategory: Kategorie verschieben
-content_startarticle: Startartikel
-content_isstartarticle: Dieser Artikel ist ein Startartikel
-content_tostartarticle: Diesen Artikel zum Startartikel umwandeln
-content_nottostartarticle: Dieser Artikel kann nicht zum Startartikel gemacht werden
-content_tostartarticle_failed: Dieser Artikel konnte nicht zum Startartikel umgewandelt werden
-content_tostartarticle_ok: Dieser Artikel wurde erfolgreich zum Startartikel umgewandelt
-content_select_type: Bitte wählen sie zuerst einen Artikeltypen!
-content_no_template: Dieser Artikel hat kein Template. Es können keine Inhalte eingepflegt werden.
-content_no_slots: In diesem Artikel können keine Inhalte eingepflegt werden.
-content_no_modules: In diesem Slot können keine Inhalte eingepflegt werden.
-move_category: nach
-category_moved: Kategorie wurde verschoben
-content_types: Spalten
-content_type: Spalte
-option: optional
-content_arttype: Artikeltyp
-
 input: Eingabe
 output: Ausgabe
-action: Aktion
-actions: Aktionen
 
-title_structure: Strukturverwaltung
-no_such_category: Kategorie nicht vorhanden!
-category_updated: Kategorie wurde aktualisiert.
-category_still_contains_articles: Die Kategorie enthält noch Artikel.
-category_still_contains_subcategories: Die Kategorie enthält noch Unterkategorien.
-category_status_updated: Kategoriestatus wurde aktualisiert!
-category_added_and_startarticle_created: Kategorie hinzugefügt und Startartikel erstellt!
-category_edit_delete: Kategorie editieren/löschen
-article_status_updated: Artikelstatus wurde aktualisiert.
-article_updated: Artikel wurde aktualisiert.
-article_added: Artikel wurde hinzugefügt.
-header_category: Kategorie
-header_edit_category: Kategorie editieren
-header_position: Pos
-header_status: Status/Funktion
-header_id: ID
-add_article: Artikel hinzufügen
-add_category: Kategorie hinzufügen
-edit_category: Kategorie bearbeiten
-delete_category: Kategorie löschen
-save_category: Kategorie speichern
-status_online: online
-status_offline: offline
-no_permission_to_edit: Keine Editiererlaubnis
-option_no_type: Kein Artikeltyp
-header_article_name: Artikelname
-header_date: Erstellt am
-header_article_type: Artikeltyp
-change: Ändern
-article_add: Artikel hinzufügen
-article_edit: Artikel editieren
-article_save: Artikel speichern
-article: Artikel
-structure_categories_summary: 'Auflistung aller Unterkategorien der Kategorie "{0}"'
-structure_categories_caption: 'Liste der Unterkategorien der Kategorie "{0}"'
-structure_articles_summary: 'Auflistung aller Artikel der Kategorie "{0}"'
-structure_articles_caption: 'Liste der Artikel der Kategorie "{0}"'
-
-article: Artikel
-start_article: Startartikel
-path: Pfad
-
-title_user: Benutzer
-user_data_updated: Benutzerdaten wurden aktualisiert!
-user_deleted: Benutzer wurde gelöscht!
-user_added: Benutzer wurde hinzugefügt!
-create_user: Neuen Benutzer anlegen
-add_user: Benutzer hinzufügen
-edit_user: Benutzer bearbeiten
-user_login_exists: Der gewählte Benutzerlogin existiert schon!
-user_admin: Admin (alle Rechte / alles sichtbar)
-user_notdeleteself: Sie können sich nicht selbst löschen!
-user_lang_xs: Sprachenzugriff
-user_all: Allgemein
-user_save: Benutzer speichern
-user_apply: Benutzer übernehmen
-user_delete: Benutzer löschen
-user_functions: Funktionen
-user_options: Optionen
-all_categories: Alle Kategorien
-all_mediafolder: Alle Medienordner
-categories: Kategorien
-mediafolder: Medienordner
-modules: Module
-extras: Extras
-last_login: Letzter Login
-login: Login
-name: Name
-permissions: Rechte
+save: speichern
+apply: übernehmen
+reset: zurücksetzen
+delete: löschen
+edit: bearbeiten
+submit: absenden
 add: hinzufügen
+remove: entfernen
+show: anzeigen
+login: anmelden
+logout: abmelden
+change: ändern
 update: aktualisieren
-user_caption: Liste der angelegten Benutzer
-user_summary: Auflistung aller angelegten Benutzer
-user_status: User ist aktiv
-backend_language: Backendsprache
-startpage: Startseite
-
-info_updated: Informationen wurden aktualisiert!
-delete_cache: Cache löschen
-delete_cache_description: 'Templates und Sprachdateien werden erstellt, Artikelcache wird gelöscht. Sobald ein Artikel im Frontend aufgerufen wird, wird der Cache des/der entsprechenden Artikels/Kategorie wieder erstellt.'
-delete_cache_message: Der Cache wurde gelöscht.
-specials_features: Features
-specials_settings: Einstellungen
-settings_invalid_sitestart_article: Ungültige Startartikel ID!
-settings_invalid_notfound_article: Ungültige Not-Found-Artikel ID!
-settings_invalid_sitestart_clang: Ungültige ID für Standardsprache!
-settings_invalid_default_type: Ungültiger Default-Artikeltyp!
-general_info_header: Allgemeine Informationen:
-specials_others: Sonstiges
-specials_update: ändern
-update_button: ändern
-delete_button: löschen
-main_preferences: Einstellungen
-languages: Sprachen
-types: Typen
-enter_name: Bitte einen Namen eingeben.
-clang_id: Sprach-ID
-clang_add: Sprache hinzufügen
-clang_edit: Sprache bearbeiten
-clang_update: Sprache übernehmen
-clang_created: Sprache wurde angelegt.
-clang_edited: Sprache wurde editiert.
-clang_deleted: Sprache wurde gelöscht.
-clang_delete_error: Sprache konnte nicht gelöscht werden.
-clang_name: Name
-clang_delete: Sprache löschen
-clang_caption: Liste der verfügbaren Sprachen
-clang_summary: Auflistung aller Sprachen
-clang_function: Funktionen
-clang_locale: Locale
-version: Version
-host: Host
-database: Datenbank
-specials_caching_strategy: Cache-Strategie
-specials_developer_mode: Entwicklermodus aktivieren
-specials_servername: Projektname
-specials_start_article: Startseite
-specials_default_type: Standard Artikeltyp
-specials_lang: Standard BE-Locale
-specials_timezone: Zeitzone
-specials_not_found_article: Artikel bei fehlender Seite
-
-setup: Setup
-setup_text: Hier können Sie das Setup erneut starten. Dies sollten Sie nur im Notfall machen. Unter normalen Umständen ist es nicht nötig.
-
-addon: AddOn
-addons: AddOns
-addon_help: "Hilfe für {0}"
-addon_no_help_file: Keine Hilfedatei (help.inc.php) gefunden
-addon_back: zurück
-addon_config_not_found: Konfigurationsdatei wurde nicht gefunden (config.inc.php)!
-addon_no_install: "AddOn {0} konnte aus folgendem Grund nicht installiert werden:<br /> {1}"
-addon_no_uninstall: "AddOn {0} konnte aus folgendem Grund nicht deinstalliert werden:<br /> {1}"
-addon_no_reason: Es wurde kein Grund angegeben.
-addon_no_activation: "AddOn {0} konnte nicht aktiviert werden, da es noch nicht installiert wurde!"
-addon_installed: "AddOn {0} wurde installiert"
-addon_activated: "AddOn {0} wurde aktiviert"
-addon_deactivated: "AddOn {0} wurde deaktiviert"
-addon_uninstalled: "AddOn {0} wurde deinstalliert"
-addon_uninstall_question: "AddOn {0} de-installieren?"
-addon_hname: Name
-addon_hinstall: Installiert
-addon_hactive: Aktiviert
-addon_hassets: Assets
-addon_hdelete: Deinstallieren
-addon_reinit_assets: re-initialisieren
-addon_assets_copied: Die Assets wurden kopiert.
-plugin_assets_copied: Die Assets wurden kopiert.
-addon_requires_addon: 'Das AddOn {0} wird für das AddOn {1} benötigt.'
-addon_requires_plugin: 'Das PlugIn {0} wird für das AddOn {1} benötigt.'
-addon_sally_incompatible: 'Dieses AddOn ist nicht mit ihrer Version von SallyCMS ({0}) kompatibel.'
-addon_has_no_sally_version_info: Dieses AddOn hat keine Kompatibilitätsinformationen. Es kann nicht installiert werden.
-addon_reinstall: re-installieren
-addon_install: installieren
-addon_notinstalled: nicht installiert
-addon_uninstall: de-installieren
-addon_deactivate: deaktivieren
-addon_activate: aktivieren
-addon_yes: ja
-addon_no: nein
-addon_caption: Liste der verfügbaren AddOns
-addon_install_cant_copy_files: Fehler beim Kopieren des assets-Verzeichnisses!
-addon_install_cant_delete_files: Fehler beim Löschen des assets-Verzeichnisses!
-addon_empty_list: Keine AddOns gefunden. Laden Sie neue AddOns in das Verzeichnis sally/addons.
-plugin_plugins_installed: PlugIns installiert
-plugin_config_not_found: Konfigurationsdatei wurde nicht gefunden (config.inc.php)!
-plugin_no_install: 'PlugIn {0} konnte aus folgendem Grund nicht installiert werden:<br />{1}'
-plugin_no_uninstall: 'PlugIn {0} konnte aus folgendem Grund nicht deinstalliert werden:<br />{1}'
-plugin_no_reason: Es wurde kein Grund angegeben.
-plugin_no_activation: "PlugIn {0} konnte nicht aktiviert werden, da es noch nicht installiert wurde!"
-plugin_installed: 'PlugIn {0} wurde installiert.'
-plugin_activated: 'PlugIn {0} wurde aktiviert.'
-plugin_deactivated: 'PlugIn {0} wurde deaktiviert.'
-plugin_uninstalled: 'PlugIn {0} wurde deinstalliert.'
-plugin_uninstall_question: 'PlugIn {0} de-installieren?'
-plugin_install_cant_copy_files: Fehler beim Kopieren der Assets!
-plugin_install_cant_delete_files: Fehler beim Löschen der Assets!
-plugin_requires_addon: 'Das AddOn {0} wird für das PlugIn {1} benötigt.'
-plugin_requires_plugin: 'Das PlugIn {0} wird für das PlugIn {1} benötigt.'
-plugin_sally_incompatible: 'Dieses PlugIn ist nicht mit ihrer Version von SallyCMS ({0}) kompatibel.'
-plugin_has_no_sally_version_info: Dieses PlugIn hat keine Kompatibilitätsinformationen. Es kann nicht installiert werden.
-
-credits: Credits
-credits_name: AddOn
-credits_version: Version
-credits_author: Autor
-credits_supportpage: Hilfe
-credits_addon_inactive: Addon inaktiv
-credits_caption: Liste der verwendeten AddOns/PlugIns
-credits_text: |
-  <strong>Das webvariants-Team</strong>, <a href="mailto:info@webvariants.de">info@webvariants</a><br />
-  Kernentwicklung<br />
-  webvariants GbR, <a href="http://www.webvariants.de/" class="sly-blank">www.webvariants.de</a>
-credits_thankyou: |
-  Wir danken allen externen Entwicklern und Nutzern, die zur Entwicklung beigetragen haben.
-
-profile_myprofile: Mein Benutzerprofil bearbeiten
-profile_title: Mein Profil
-profile_save: Profil speichern
-
-linkmap: Linkmap
-lmap_title: Linkmap
-lmap_categories: Kategorien
-lmap_articles: Artikel
-lmap_has_no_type: hat keinen Typ
-
-var_media_open: Medium auswählen
-var_media_new: Neues Medium hinzufügen
-var_media_remove: Ausgewähltes Medium löschen
-var_medialist_move_top: Ausgewähltes Medium an den Anfang verschieben
-var_medialist_move_up: Ausgewähltes Medium nach oben verschieben
-var_medialist_move_down: Ausgewähltes Medium nach unten verschieben
-var_medialist_move_bottom: Ausgewähltes Medium an das Ende verschieben
-
-var_link_open: Link auswählen
-var_link_new: Neuen Link hinzufügen
-var_link_remove: Ausgewählten Link löschen
-var_linklist_move_top: Ausgewählten Link an den Anfang verschieben
-var_linklist_move_up: Ausgewählten Link nach oben verschieben
-var_linklist_move_down: Ausgewählten Link nach unten verschieben
-var_linklist_move_bottom: Ausgewählten Link an das Ende verschieben
 
 available: verfügbar
 unavailable: nicht verfügbar
@@ -408,12 +53,245 @@ any: beliebig
 none: nichts
 recommended: empfohlen
 
-authorisation_exception_language_denied: 'Zugriff auf Sprache {0} verweigert!'
-exception_articletype_not_exists: 'Der Artikeltyp {0} existiert nicht!'
+from: von
+to: nach
+by: von
 
-config_projectname: Projektname
-config_default_fe_language: Standard Frontendsprache
+select_all: alle auswählen
+select_none: nichts auswählen
 
+open_linkmap: Öffne Strukturansicht
+remove_link: Link entfernen
+
+sort_asc: Aufsteigend sortieren
+sort_desc: Absteigend sortieren
+sort_none: Keine Sortierung
+pages: Seiten
+filter: Filter
+begin_sorting: Tabelle sortieren
+end_sorting: Sortiermodus beenden
+
+redirect_previous_page: 'Sie werden zu Ihrer <a href="{0}">vorherigen Seite</a> weitergeleitet.'
+redirect_startpage: 'Sie werden zu Ihrer <a href="{0}">Startseite</a> weitergeleitet.'
+unknown_page: Unbekannte Seite
+unknown_action: 'Methode {0} in {1} nicht gefunden!'
+page_not_allowed: 'Zugriff auf {0} in {1} nicht gestattet!'
+security_violation: Sicherheitsverletzung
+controller_error: Controller-Fehler
+unexpected_exception: Unerwartete Ausnahme
+system: System
+user: Benutzer
+users: Benutzer
+mediapool: Medienpool
+content: Inhalt
+structure: Struktur
+addons: AddOns
+profile: Profil
+my_profile: Mein Profil
+login_title: Login
+base_navigation: Basis-Navigation
+
+username: Benutzername
+password: Passwort
+new_password: Neues Passwort
+
+logged_out: nicht angemeldet
+logged_in_as: Angemeldet als
+
+add_slice: Block hinzufügen
+no_article_available: Keine Artikel vorhanden.
+module_not_found: 'Das Modul {0} wurde nicht gefunden!'
+edit_slice: Block bearbeiten
+
+article_moved: Artikel wurde verschoben.
+article_deleted: Artikel wurde gelöscht.
+cannot_move_article: Der Artikel konnte nicht verschoben werden.
+check_rights_in_directory: 'Bitte überprüfen Sie die Rechte im Verzeichnis {0}.'
+category_deleted: Kategorie wurde gelöscht.
+category_not_found: 'Die Kategorie {0} existiert nicht!'
+cannot_delete_start_article: Der Webseiten-Startartikel kann nicht gelöscht werden!
+cannot_delete_not_found_article: Der "Nicht gefunden"-Artikel kann nicht gelöscht werden!
+
+slice_updated: Block wurde aktualisiert.
+slice_added: Block wurde hinzugefügt.
+no_rights_to_this_function: Sie haben keine Rechte für diese Funktion!
+slice_deleted: Block wurde gelöscht.
+no_rights_to_this_module: Sie haben keine Rechte für dieses Modul!
+preview: Vorschau
+edit_mode: Editier Modus
+metadata: Metadaten/Sonstiges
+article_copied: Artikel wurde kopiert.
+file_not_found: 'Die Datei {0} wurde nicht gefunden!'
+error_moving_uploaded_file: 'Beim Verschieben der Datei {0} ist ein Fehler aufgetreten.'
+metadata_updated: Metadaten wurden aktualisiert.
+description: Beschreibung
+move_article: Artikel verschieben
+copy_article: Artikel kopieren
+slice_moved: Block wurde verschoben.
+content_copied: Die Inhalte des Artikels wurden kopiert.
+cannot_move_slice: Beim Verschieben des Blocks ist ein Fehler aufgetreten!
+cannot_delete_slice: Beim Löschen des Blocks ist ein Fehler aufgetreten!
+cannot_update_slice: Beim Speichern des Blocks ist ein Fehler aufgetreten!
+cannot_copy_article_content: Sie können Inhalte nicht in die gleiche Sprache kopieren.
+
+copy_content: Inhalte kopieren
+copy_article: Artikel kopieren
+cannot_copy_article: Der Artikel konnte nicht kopiert werden!
+cannot_move_category: Die Kategorie konnte nicht verschoben werden!
+move_category: Kategorie verschieben
+startarticle: Startartikel
+article_is_startarticle: Dieser Artikel ist ein Startartikel.
+convert_to_startarticle: Diesen Artikel zum Startartikel der Kategorie umwandeln.
+root_articles_cannot_be_startarticles: Artikel auf der obersten Ebene können nicht in Startartikel umgewandelt werden.
+cannot_convert_to_startarticle: Beim Umwandeln in einen Startartikel ist ein Fehler aufgetreten!
+article_converted_to_startarticle: Dieser Artikel wurde erfolgreich zum Startartikel umgewandelt.
+select_type_first: Bitte wählen sie zuerst einen Artikeltypen!
+no_template_defined: Dieser Artikel hat kein Template. Es können keine Inhalte eingepflegt werden.
+template_has_no_slots: In diesem Artikel können keine Inhalte eingepflegt werden.
+no_modules_allowed: In diesem Slot können keine Inhalte eingepflegt werden.
+category_moved: Kategorie wurde verschoben.
+articletype: Artikeltyp
+
+category_updated: Kategorie wurde aktualisiert.
+category_is_not_empty: Kategorie enthält noch Inhalte.
+category_status_updated: Kategoriestatus wurde aktualisiert.
+category_added: Kategorie wurde erstellt.
+article_status_updated: Artikelstatus wurde aktualisiert.
+article_updated: Artikel wurde aktualisiert.
+article_added: Artikel wurde erstellt.
+category: Kategorie
+position: Position
+position_short: Pos
+status: Status
+id: ID
+add_article: Artikel hinzufügen
+add_category: Kategorie hinzufügen
+edit_category: Kategorie bearbeiten
+delete_category: Kategorie löschen
+save_category: Kategorie speichern
+status_online: online
+status_offline: offline
+no_articletype: Kein Artikeltyp
+article_name: Artikelname
+created_at: Erstellt am
+article: Artikel
+
+start_article: Startseite
+path: Pfad
+function: Funktion
+functions: Funktionen
+
+user_updated: Benutzer wurde aktualisiert.
+user_deleted: Benutzer wurde gelöscht.
+user_added: Benutzer wurde hinzugefügt.
+create_user: Neuen Benutzer anlegen
+add_user: Benutzer hinzufügen
+edit_user: Benutzer bearbeiten
+user_login_already_exists: Der gewählte Benutzerlogin existiert schon!
+admin: Administrator
+you_cannot_delete_yourself: Sie können sich nicht selbst löschen!
+categories: Kategorien
+modules: Module
+last_login: Letzter Login
+name: Name
+permissions: Rechte
+backend_locale: Backendsprache
+startpage: Startseite
+
+plase_enter_a_name: Bitte geben Sie einen Namen an!
+configuration_updated: Systemkonfiguration wurde aktualisiert.
+delete_cache: Cache löschen
+delete_cache_description: 'Templates und Sprachdateien werden erstellt, Artikelcache wird gelöscht. Sobald ein Artikel im Frontend aufgerufen wird, wird der Cache des/der entsprechenden Artikels/Kategorie wieder erstellt.'
+delete_cache_message: Der Cache wurde gelöscht.
+features: Features
+settings: Einstellungen
+invalid_start_article_selected: Es wurde eine ungültige Homepage ausgewählt.
+invalid_not_found_article_selected: Es wurde eine ungültige Fehlerseite ausgewählt.
+invalid_default_language_selected: Es wurde eine ungültige Standardsprache ausgewählt.
+invalid_default_articletype_selected: Es wurde ein ungültiger Standard-Artikeltyp ausgewählt.
+languages: Sprachen
+add_language: Sprache hinzufügen
+edit_language: Sprache bearbeiten
+delete_language: Sprache löschen
+language_added: Sprache wurde hinzugefügt.
+language_updated: Sprache wurde aktualisiert.
+language_deleted: Sprache wurde gelöscht.
+cannot_delete_language: Die Sprache konnte nicht gelöscht werden!
+locale: Locale
+version: Version
+host: Host
+database: Datenbank
+caching_strategy: Cache-Strategie
+developer_mode: Entwicklermodus
+project_name: Projektname
+default_articletype: Standard-Artikeltyp
+default_locale: Standard BE-Locale
+timezone: Zeitzone
+not_found_article: Artikel bei fehlender Seite
+default_language: Standard-Frontendsprache
+
+setup: Setup
+setup_text: Hier können Sie das Setup erneut starten. Dies sollten Sie nur im Notfall machen. Unter normalen Umständen ist es nicht nötig.
+
+back: zurück
+addon: AddOn
+reinstall: re-installieren
+install: installieren
+install_including_requirements: inkl. Abhängigkeiten installieren
+notinstalled: nicht installiert
+uninstall: de-installieren
+deactivate: deaktivieren
+activate: aktivieren
+reinit_assets: Assets re-initialisieren
+component_help: 'Hilfe für {0}'
+component_help_file_not_found: Die Hilfedatei (help.inc.php) wurde nicht gefunden!
+component_config_not_found: Die Konfigurationsdatei (config.inc.php) wurde nicht gefunden!
+component_install_failed: '{0} konnte aus folgendem Grund nicht installiert werden:<br /> {1}'
+component_install_sql_failed: '{0} konnte wegen Fehlern in der install.sql nicht installiert werden:<br /> {1}'
+component_uninstall_failed: '{0} konnte aus folgendem Grund nicht deinstalliert werden:<br /> {1}'
+component_uninstall_sql_failed: '{0} konnte wegen Fehlern in der unstall.sql nicht deinstalliert werden:<br /> {1}'
+component_activate_failed: '{0} konnte nicht aktiviert werden, da es noch nicht installiert wurde!'
+component_installed: '{0} wurde installiert.'
+component_activated: '{0} wurde aktiviert.'
+component_deactivated: '{0} wurde deaktiviert.'
+component_uninstalled: '{0} wurde deinstalliert.'
+component_assets_copied: Die Assets wurden re-initialisiert.
+component_requires_addon: '{1} benötigt das AddOn {0}.'
+component_requires_plugin: '{1} benötigt das Plugin {0}.'
+component_incompatible: '{0} ist nicht mit dieser Version von SallyCMS ({1}) kompatibel.'
+component_incompatible_with_this_version: 'nicht mit dieser Version von SallyCMS kompatibel'
+component_has_no_sally_version_info: '{0} hat keine Kompatibilitätsinformationen und kann daher nicht installiert werden.'
+component_assets_failed: Fehler beim Kopieren des assets-Verzeichnisses!
+no_dependencies: keine Abhängigkeiten
+
+component_cleanup_failed: 'Fehler beim Löschen des assets-Verzeichnisses ({0})!'
+no_addons_found: Keine AddOns gefunden. Laden Sie neue AddOns in das Verzeichnis sally/addons.
+
+credits: Credits
+author: Autor
+supportpage: Website
+credits_addon_inactive: Addon inaktiv
+credits_caption: Liste der verwendeten AddOns/PlugIns
+credits_text: |
+  <strong>Das webvariants-Team</strong>, <a href="mailto:info@webvariants.de">info@webvariants</a><br />
+  Kernentwicklung<br />
+  webvariants GbR, <a href="http://www.webvariants.de/" class="sly-blank">www.webvariants.de</a>
+credits_thankyou: |
+  Wir danken allen externen Entwicklern und Nutzern, die zur Entwicklung beigetragen haben.
+
+linkmap: Linkmap
+
+select_medum: Medium auswählen
+upload_medium: Neues Medium hochladen
+remove_medium: Ausgewähltes Medium löschen
+
+select_link: Artikel auswählen
+remove_link: Ausgewählten Artikel entfernen
+
+you_have_no_access_to_this_language: 'Sie haben keinen Zugriff auf Sprache {0}!'
+articletype_not_found: 'Der Artikeltyp {0} wurde nicht gefunden!'
+
+no_articletype_set: Der Typ dieses Artikels wurde nicht gesetzt.
 no_startarticle: 'Kein Startartikel selektiert. Bitte setze ihn im <a href="{0}">Backend</a>.'
 used_ressources: '{0} in {1} Klassen'
 to_website: zur Website
@@ -424,14 +302,17 @@ errorlog_is_empty: Das Fehlerprotokoll ist leer.
 errorlog_recenterrors: 'Hier sehen Sie die letzten {0} aufgetretenen Fehler.'
 errorlog_total: 'Im Fehlerlog sind <strong>{0}</strong> Fehler vorhanden.'
 clear_errorlog: Protokoll leeren
-errorlog_message: Fehlerdetails
-errorlog_line: Zeile
+error_details: Fehlerdetails
+in_file: in Datei
+in_line: in Zeile
 errorlog_cleared: Das Protokoll wurde geleert.
-errorlog_not_cleared: Das Protokoll konnte nicht geleert werden.
+errorlog_not_cleared: Das Protokoll konnte nicht geleert werden!
 
 use_default_locale: '(Projektstandard)'
-mediacat_title_cannot_be_empty: Der Name einer Medienkategorie darf nicht leer sein.
 unnamed_article: unbenannter Artikel
 
 no_categories_yet: Es wurden noch keine Kategorien angelegt.
 no_articles_yet: Es wurden noch keine Artikel angelegt.
+
+login_error: 'Fehler bei der Anmeldung. Bitte vor dem nächsten Versuch {0} Sekunden warten.'
+you_have_been_logged_out: Sie wurden vom System abgemeldet.

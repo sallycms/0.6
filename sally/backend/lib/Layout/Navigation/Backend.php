@@ -19,8 +19,8 @@ class sly_Layout_Navigation_Backend {
 		$user = sly_Util_User::getCurrentUser();
 
 		if (!is_null($user)) {
-			$this->addGroup('system', 'translate:navigation_basis');
-			$this->addGroup('addon', 'translate:navigation_addons');
+			$this->addGroup('system', t('base_navigation'));
+			$this->addGroup('addon', t('addons'));
 
 			$isAdmin = $user->isAdmin();
 
@@ -38,17 +38,20 @@ class sly_Layout_Navigation_Backend {
 			elseif ($user->hasRight('pages', 'mediapool')) {
 				$this->addPage('system', 'mediapool', null, true);
 			}
+
 			if ($isAdmin) {
 				$this->addPage('system', 'user');
 			}
 
-			if($user->isAdmin() || $user->hasRight('pages', 'addons')){
-				$this->addPage('system', 'addon', 'translate:addons');
+			if ($isAdmin || $user->hasRight('pages', 'addons')) {
+				$this->addPage('system', 'addon', t('addons'));
 			}
+
 			if ($isAdmin) {
-				$specials = $this->addPage('system', 'specials');
-				$specials->addSubpage('specials', t('main_preferences'));
+				$specials = $this->addPage('system', 'specials', t('system'));
+				$specials->addSubpage('specials', t('settings'));
 				$specials->addSubpage('specials_languages', t('languages'));
+
 				if (!sly_Core::isDeveloperMode()) {
 					$handler = sly_Core::getErrorHandler();
 

@@ -41,7 +41,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Specials {
 				}
 			}
 			else {
-				$this->warning = t('enter_name');
+				$this->warning = t('plase_enter_a_name');
 				$this->func    = 'add';
 			}
 		}
@@ -66,7 +66,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Specials {
 				$clang->setLocale($clangLocale);
 				$languageService->save($clang);
 
-				$this->info = t('clang_edited');
+				$this->info = t('language_updated');
 			}
 		}
 		else {
@@ -83,7 +83,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Specials {
 		if (isset($languages[$clangID])) {
 			$ok = sly_Service_Factory::getLanguageService()->delete(array('id' =>$clangID));
 			if ($ok > 0) $this->info = t('clang_deleted');
-			else $this->warning = t('clang_delete_error');
+			else $this->warning = t('cannot_delete_clang');
 		}
 
 		$this->index();

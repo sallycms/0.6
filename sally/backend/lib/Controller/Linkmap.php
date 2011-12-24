@@ -73,10 +73,10 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 
 		if (empty($this->categories) || in_array(0, $this->categories)) {
 			$link      = $this->url(array('category_id' => 0));
-			$naviPath .= '<li> : <a href="'.$link.'">'.t('homepage').'</a></li>';
+			$naviPath .= '<li> : <a href="'.$link.'">'.t('home').'</a></li>';
 		}
 		else {
-			$naviPath .= '<li> : <span>'.t('homepage').'</span></li>';
+			$naviPath .= '<li> : <span>'.t('home').'</span></li>';
 		}
 
 		if ($category) {
@@ -122,8 +122,8 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 		if ($this->globals === null) {
 			$this->globals = array(
 				'page'        => 'linkmap',
-				'category_id' => sly_request('category_id', 'rex-category-id'),
-				'clang'       => sly_request('clang', 'rex-clang-id'),
+				'category_id' => sly_request('category_id', 'int'),
+				'clang'       => sly_request('clang', 'int'),
 				'args'        => $this->args
 			);
 		}
@@ -156,7 +156,7 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 		if (empty($label)) $label = '&nbsp;';
 
 		if (sly_Util_Article::isValid($object) && !$object->hasType()) {
-			$label .= ' ['.t('lmap_has_no_type').']';
+			$label .= ' ['.t('no_articletype').']';
 		}
 
 		return $label;

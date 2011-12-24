@@ -12,7 +12,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 	public function init() {
 		$layout   = sly_Core::getLayout();
 		$subpages = sly_Core::dispatcher()->filter('SLY_PAGE_USER_SUBPAGES', array(
-			array('', t('title_user'))
+			array('', t('users'))
 		));
 
 		// don't show the menu if there is only one entry
@@ -29,7 +29,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 			}
 		}
 
-		$layout->pageHeader(t('title_user'), $subpages);
+		$layout->pageHeader(t('users'), $subpages);
 	}
 
 	public function index() {
@@ -45,17 +45,17 @@ class sly_Controller_User extends sly_Controller_Backend {
 			$error    = false;
 
 			if (empty($login)) {
-				print sly_Helper_Message::warn('Es muss ein Loginname angegeben werden.');
+				print sly_Helper_Message::warn(t('no_username_given'));
 				$error = true;
 			}
 
 			if (empty($password)) {
-				print sly_Helper_Message::warn('Es muss ein Passwort angegeben werden.');
+				print sly_Helper_Message::warn(t('no_password_given'));
 				$error = true;
 			}
 
 			if ($service->find(array('login' => $login))) {
-				print sly_Helper_Message::warn(t('user_login_exists'));
+				print sly_Helper_Message::warn(t('user_login_already_exists'));
 				$error = true;
 			}
 
@@ -113,6 +113,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 
 		if ($save) {
 			$status = sly_post('userstatus', 'boolean', false) ? 1 : 0;
+			$tz     = sly_post('timezone', 'string', '');
 
 			if ($currentUser->getId() == $user->getId()) {
 				$status = $user->getStatus();
@@ -121,15 +122,10 @@ class sly_Controller_User extends sly_Controller_Backend {
 			$user->setName(sly_post('username', 'string'));
 			$user->setDescription(sly_post('userdesc', 'string'));
 			$user->setStatus($status);
-			$user->setUpdateDate(time());
-			$user->setUpdateUser($currentUser->getLogin());
+			$user->setUpdateColumns();
+			$user->setTimezone($tz ? $tz : null);
 
-			if (class_exists('DateTimeZone')) {
-				$tz = sly_post('timezone', 'string', '');
-				$user->setTimezone($tz ? $tz : null);
-			}
-
-			// Passwort ändern?
+			// change password
 
 			$password = sly_post('userpsw', 'string');
 
@@ -139,13 +135,13 @@ class sly_Controller_User extends sly_Controller_Backend {
 
 			$user->setRights($this->getRightsFromForm($user));
 
-			// Speichern, fertig.
+			// save it
 
 			try {
 				$user = $service->save($user);
 				$goon = sly_post('apply', 'string');
 
-				print sly_Helper_Message::info(t('user_data_updated'));
+				print sly_Helper_Message::info(t('user_updated'));
 			}
 			catch (Exception $e) {
 				print sly_Helper_Message::warn($e->getMessage());
@@ -175,7 +171,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 		$current = sly_Util_User::getCurrentUser();
 
 		if ($current->getId() == $user->getId()) {
-			print sly_Helper_Message::warn(t('user_notdeleteself'));
+			print sly_Helper_Message::warn(t('you_cannot_delete_yourself'));
 			return false;
 		}
 
@@ -200,7 +196,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 
 		if (!empty($search)) {
 			$db    = sly_DB_Persistence::getInstance();
-			$where = '`login` LIKE ? OR `description` LIKE ? OR `name` LIKE ?';
+			$where = 'login LIKE ? OR description LIKE ? OR name LIKE ?';
 			$where = str_replace('?', $db->quote('%'.$search.'%'), $where);
 		}
 
@@ -259,7 +255,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 			$permissions[] = 'admin[]';
 		}
 
-		// Backend-Sprache und -Startseite
+		// backend locale and startpage
 
 		$backendLocale  = sly_post('userperm_mylang', 'string');
 		$backendLocales = $this->getBackendLocales();
@@ -274,7 +270,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 			$permissions[] = 'startpage['.$startpage.']';
 		}
 
-		// Rechte zurückgeben
+		// and build the permission string
 
 		return '#'.implode('#', $permissions).'#';
 	}

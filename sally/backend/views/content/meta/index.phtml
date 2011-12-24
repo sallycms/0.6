@@ -36,7 +36,7 @@ $form->add($name);
 
 $form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM', $form, $params);
 
-$button = new sly_Form_Input_Button('submit', 'savemeta', t('update_metadata'));
+$button = new sly_Form_Input_Button('submit', 'savemeta', t('save'));
 $form->add(new sly_Form_ButtonBar(array('submit' => $button)));
 
 $form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM_FIELDSET', $form, $params);

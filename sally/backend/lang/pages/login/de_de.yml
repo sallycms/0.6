@@ -1,7 +1,0 @@
-login_title: Login
-login_welcome: Bitte anmelden.
-login_name: Benutzername
-login_password: Passwort
-new_password: Neues Passwort
-login_error: 'Fehler bei der Anmeldung. Bitte vor dem nächsten Versuch {0} Sekunden warten.'
-login_logged_out: Abgemeldet.

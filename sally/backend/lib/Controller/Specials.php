@@ -27,7 +27,7 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 		}
 
 		$layout = sly_Core::getLayout();
-		$layout->pageHeader(t('specials'), $subline);
+		$layout->pageHeader(t('system'), $subline);
 	}
 
 	protected function index() {
@@ -59,21 +59,21 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 			$conf->set('START_ARTICLE_ID', $startArticle);
 		}
 		else {
-			$this->warning[] = t('settings_invalid_sitestart_article');
+			$this->warning[] = t('invalid_start_article_selected');
 		}
 
 		if (sly_Util_Article::exists($notFoundArticle)) {
 			$conf->set('NOTFOUND_ARTICLE_ID', $notFoundArticle);
 		}
 		else {
-			$this->warning[] = t('settings_invalid_notfound_article').'<br />';
+			$this->warning[] = t('invalid_not_found_article_selected').'<br />';
 		}
 
 		if (sly_Util_Language::exists($defaultClang)) {
 			$conf->set('DEFAULT_CLANG_ID', $defaultClang);
 		}
 		else {
-			$this->warning[] = t('settings_invalid_sitestart_clang').'<br />';
+			$this->warning[] = t('invalid_default_language_selected').'<br />';
 		}
 
 		// Standard-Artikeltyp
@@ -82,7 +82,7 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 			$service = sly_Service_Factory::getArticleTypeService();
 
 			if (!empty($defaultType) && !$service->exists($defaultType)) {
-				$this->warning[] = t('settings_invalid_default_type').'<br />';
+				$this->warning[] = t('invalid_default_articletype_selected').'<br />';
 			}
 			else {
 				$conf->set('DEFAULT_ARTICLE_TYPE', $defaultType);
@@ -98,12 +98,9 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 		$conf->set('DEFAULT_LOCALE', $backendLocale);
 		$conf->set('PROJECTNAME', $projectName);
 		$conf->setLocal('CACHING_STRATEGY', $cachingStrategy);
+		$conf->set('TIMEZONE', $timezone);
 
-		if (class_exists('DateTimeZone')) {
-			$conf->set('TIMEZONE', $timezone);
-		}
-
-		$this->info    = t('info_updated');
+		$this->info    = t('configuration_updated');
 		$this->warning = implode("<br />\n", $this->warning);
 
 		// notify system

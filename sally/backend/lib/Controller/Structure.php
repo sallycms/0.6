@@ -13,6 +13,8 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	protected $clangId;
 	protected $info;
 	protected $warning;
+	protected $artService;
+	protected $catService;
 	protected $renderAddCategory  = false;
 	protected $renderEditCategory = false;
 	protected $renderAddArticle   = false;
@@ -24,10 +26,12 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		parent::init();
 		self::$viewPath = 'structure/';
 
-		$this->categoryId = sly_request('category_id', 'rex-category-id');
-		$this->clangId    = sly_request('clang', 'rex-clang-id', sly_Core::getDefaultClangId());
+		$this->categoryId = sly_request('category_id', 'int');
+		$this->clangId    = sly_Core::getCurrentClang();
+		$this->artService = sly_Service_Factory::getArticleService();
+		$this->catService = sly_Service_Factory::getCategoryService();
 
-		sly_Core::getLayout()->pageHeader(t('title_structure'), $this->getBreadcrumb());
+		sly_Core::getLayout()->pageHeader(t('structure'), $this->getBreadcrumb());
 
 		print $this->render('toolbars/languages.phtml', array(
 			'curClang' => $this->clangId,
@@ -45,13 +49,11 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	}
 
 	protected function view() {
-		$art_service     = sly_Service_Factory::getArticleService();
-		$cat_service     = sly_Service_Factory::getCategoryService();
-		$currentCategory = $cat_service->findById($this->categoryId, $this->clangId);
-		$categories      = $cat_service->findByParentId($this->categoryId, false, $this->clangId);
-		$articles        = $art_service->findArticlesByCategory($this->categoryId, false, $this->clangId);
-		$maxPosition     = $art_service->getMaxPosition($this->categoryId);
-		$maxCatPosition  = $cat_service->getMaxPosition($this->categoryId);
+		$currentCategory = $this->catService->findById($this->categoryId, $this->clangId);
+		$categories      = $this->catService->findByParentId($this->categoryId, false, $this->clangId);
+		$articles        = $this->artService->findArticlesByCategory($this->categoryId, false, $this->clangId);
+		$maxPosition     = $this->artService->getMaxPosition($this->categoryId);
+		$maxCatPosition  = $this->catService->getMaxPosition($this->categoryId);
 
 		if (!empty($this->info))    print sly_Helper_Message::info($this->info);
 		if (!empty($this->warning)) print sly_Helper_Message::warn($this->warning);
@@ -59,14 +61,14 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		print $this->render(self::$viewPath.'category_table.phtml', array(
 			'categories'      => $categories,
 			'currentCategory' => $currentCategory,
-			'statusTypes'     => $cat_service->getStates(),
+			'statusTypes'     => $this->catService->getStates(),
 			'maxPosition'     => $maxPosition,
 			'maxCatPosition'  => $maxCatPosition
 		));
 
 		print $this->render(self::$viewPath.'article_table.phtml', array(
 			'articles'       => $articles,
-			'statusTypes'    => $art_service->getStates(),
+			'statusTypes'    => $this->artService->getStates(),
 			'canAdd'         => $this->canEditCategory($this->categoryId),
 			'canEdit'        => $this->canEditCategory($this->categoryId),
 			'maxPosition'    => $maxPosition,
@@ -75,12 +77,11 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	}
 
 	protected function editStatusCategory() {
-		$editId = sly_get('edit_id', 'rex-category-id');
+		$editId = sly_get('edit_id', 'int');
 
 		if ($editId) {
 			try {
-				$service = sly_Service_Factory::getCategoryService();
-				$service->changeStatus($editId, $this->clangId);
+				$this->catService->changeStatus($editId, $this->clangId);
 				$this->info = t('category_status_updated');
 			}
 			catch (sly_Exception $e) {
@@ -88,19 +89,18 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			}
 		}
 		else {
-			$this->warning = t('no_such_category');
+			$this->warning = t('category_not_found');
 		}
 
  		$this->view();
 	}
 
 	protected function editStatusArticle() {
-		$editId = sly_get('edit_id', 'rex-article-id');
+		$editId = sly_get('edit_id', 'int');
 
 		if ($editId) {
 			try {
-				$service = sly_Service_Factory::getArticleService();
-				$service->changeStatus($editId, $this->clangId);
+				$this->artService->changeStatus($editId, $this->clangId);
 				$this->info = t('article_status_updated');
 			}
 			catch (sly_Exception $e) {
@@ -108,19 +108,18 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			}
 		}
 		else {
-			$this->warning = t('no_such_article');
+			$this->warning = t('article_not_found');
 		}
 
  		$this->view();
 	}
 
 	protected function deleteCategory() {
-		$editId = sly_get('edit_id', 'rex-category-id');
+		$editId = sly_get('edit_id', 'int');
 
 		if ($editId) {
 			try {
-				$service = sly_Service_Factory::getCategoryService();
-				$service->delete($editId);
+				$this->catService->delete($editId);
 				$this->info = t('category_deleted');
 			}
 			catch (sly_Exception $e) {
@@ -128,19 +127,18 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			}
 		}
 		else {
-			$this->warning = t('no_such_category');
+			$this->warning = t('category_not_found');
 		}
 
  		$this->view();
 	}
 
 	protected function deleteArticle() {
-		$editId = sly_get('edit_id', 'rex-article-id');
+		$editId = sly_get('edit_id', 'int');
 
 		if ($editId) {
 			try {
-				$service = sly_Service_Factory::getArticleService();
-				$service->delete($editId);
+				$this->artService->delete($editId);
 				$this->info = t('article_deleted');
 			}
 			catch (sly_Exception $e) {
@@ -148,7 +146,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			}
 		}
 		else {
-			$this->warning = t('no_such_article');
+			$this->warning = t('article_not_found');
 		}
 
  		$this->view();
@@ -157,15 +155,14 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	protected function addCategory() {
 		if (sly_post('do_add_category', 'boolean')) {
 			$name     = sly_post('category_name',     'string');
-			$position = sly_post('category_position', 'integer');
+			$position = sly_post('category_position', 'int');
 
 			try {
-				$service = sly_Service_Factory::getCategoryService();
-				$service->add($this->categoryId, $name, 0, $position);
-				$this->info = t('category_added_and_startarticle_created');
+				$this->catService->add($this->categoryId, $name, 0, $position);
+				$this->info = t('category_added');
 			}
 			catch (sly_Exception $e) {
-				$this->warning = $e->getMessage();
+				$this->warning           = $e->getMessage();
 				$this->renderAddCategory = true;
 			}
 		}
@@ -182,12 +179,11 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			$position = sly_post('article_position', 'integer');
 
 			try {
-				$service = sly_Service_Factory::getArticleService();
-				$service->add($this->categoryId, $name, 0, $position);
+				$this->artService->add($this->categoryId, $name, 0, $position);
 				$this->info = t('article_added');
 			}
 			catch (sly_Exception $e) {
-				$this->warning = $e->getMessage();
+				$this->warning          = $e->getMessage();
 				$this->renderAddArticle = true;
 			}
 		}
@@ -199,19 +195,18 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	}
 
 	protected function editCategory() {
-		$editId = sly_request('edit_id', 'rex-category-id');
+		$editId = sly_request('edit_id', 'int');
 
 		if (sly_post('do_edit_category', 'boolean')) {
 			$name     = sly_post('category_name',     'string');
-			$position = sly_post('category_position', 'integer');
+			$position = sly_post('category_position', 'int');
 
 			try {
-				$service = sly_Service_Factory::getCategoryService();
-				$service->edit($editId, $this->clangId, $name, $position);
+				$this->catService->edit($editId, $this->clangId, $name, $position);
 				$this->info = t('category_updated');
 			}
 			catch (sly_Exception $e) {
-				$this->warning = $e->getMessage();
+				$this->warning            = $e->getMessage();
 				$this->renderEditCategory = $editId;
 			}
 		}
@@ -230,12 +225,11 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			$position = sly_post('article_position', 'integer');
 
 			try {
-				$service = sly_Service_Factory::getArticleService();
-				$service->edit($editId, $this->clangId, $name, $position);
+				$this->artService->edit($editId, $this->clangId, $name, $position);
 				$this->info = t('article_updated');
 			}
 			catch (sly_Exception $e) {
-				$this->warning = $e->getMessage();
+				$this->warning           = $e->getMessage();
 				$this->renderEditArticle = $editId;
 			}
 		}
@@ -253,7 +247,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	 */
 	protected function getBreadcrumb() {
 		$result = '';
-		$cat    = sly_Util_Category::findById($this->categoryId);
+		$cat    = $this->catService->findById($this->categoryId);
 
 		if ($cat) {
 			foreach ($cat->getParentTree() as $parent) {
@@ -277,7 +271,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	/**
 	 * checks if a user can edit a category
 	 *
-	 * @param int $categoryId
+	 * @param  int $categoryId
 	 * @return boolean
 	 */
 	protected function canEditCategory($categoryId) {
@@ -285,14 +279,21 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		return sly_Util_Article::canEditArticle($user, $categoryId);
 	}
 
+	/**
+	 * checks if a user can change a category's status
+	 *
+	 * @param  int $categoryId
+	 * @return boolean
+	 */
 	protected function canPublishCategory($categoryId) {
 		$user = sly_Util_User::getCurrentUser();
-		return $user->isAdmin() || ($user->hasRight('article', 'publish', $categoryId));
+		return $user->isAdmin() || $user->hasRight('article', 'publish', $categoryId);
 	}
 
 	/**
 	 * checks if a user can view a category
-	 * @param int $categoryId
+	 *
+	 * @param  int $categoryId
 	 * @return boolean
 	 */
 	protected function canViewCategory($categoryId) {
@@ -300,6 +301,12 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		return sly_Util_Category::canReadCategory($user, $categoryId);
 	}
 
+	/**
+	 * checks if a user can edit an article
+	 *
+	 * @param  int $articleId
+	 * @return boolean
+	 */
 	protected function canEditContent($articleId) {
 		$user = sly_Util_User::getCurrentUser();
 		return sly_Util_Article::canEditContent($user, $articleId);
@@ -311,8 +318,8 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	 * @return boolean
 	 */
 	protected function checkPermission() {
-		$categoryId = sly_request('category_id', 'rex-category-id');
-		$editId     = sly_request('edit_id', 'rex-article-id');
+		$categoryId = sly_request('category_id', 'int');
+		$editId     = sly_request('edit_id', 'int');
 		$clang      = sly_Core::getCurrentClang();
 		$user       = sly_Util_User::getCurrentUser();
 
@@ -320,19 +327,22 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			return false;
 		}
 
-		if($this->action == 'index') {
+		if ($this->action == 'index') {
 			return $this->canViewCategory($categoryId);
 		}
 
 		if (sly_Util_String::startsWith($this->action, 'editStatus')) {
-			if($this->action == 'editStatusCategory') {
+			if ($this->action == 'editStatusCategory') {
 				return $this->canPublishCategory($editId);
-			} else {
+			}
+			else {
 				return $this->canPublishCategory($categoryId);
 			}
-		} elseif (sly_Util_String::startsWith($this->action, 'edit') || sly_Util_String::startsWith($this->action, 'delete')) {
+		}
+		elseif (sly_Util_String::startsWith($this->action, 'edit') || sly_Util_String::startsWith($this->action, 'delete')) {
 			return $this->canEditCategory($editId);
-		} elseif (sly_Util_String::startsWith($this->action, 'add')) {
+		}
+		elseif (sly_Util_String::startsWith($this->action, 'add')) {
 			return $this->canEditCategory($categoryId);
 		}
 

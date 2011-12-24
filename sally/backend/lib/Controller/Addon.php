@@ -101,18 +101,12 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 		}
 	}
 
-	protected function t($key, $param = null) {
-		$prefix = $this->plugin ? 'plugin_' : 'addon_';
-		if ($this->plugin && is_array($param)) $param = $param[1];
-		return t($prefix.$key, $param);
-	}
-
 	protected function call($method, $i18n) {
 		list($service, $component) = $this->prepareAction();
 		$this->warning = $service->$method($component);
 
 		if ($this->warning === true || $this->warning === 1) {
-			$this->info    = $this->t($i18n, $component);
+			$this->info    = t('component_'.$i18n);
 			$this->warning = '';
 		}
 	}

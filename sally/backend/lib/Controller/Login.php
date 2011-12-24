@@ -26,7 +26,6 @@ class sly_Controller_Login extends sly_Controller_Backend {
 	}
 
 	public function index() {
-		if (empty($this->message)) $this->message = t('login_welcome');
 		print $this->render('login/index.phtml');
 	}
 
@@ -59,7 +58,7 @@ class sly_Controller_Login extends sly_Controller_Backend {
 
 	public function logout() {
 		sly_Service_Factory::getUserService()->logout();
-		$this->message = t('login_logged_out');
+		$this->message = t('you_have_been_logged_out');
 		$this->index();
 	}
 

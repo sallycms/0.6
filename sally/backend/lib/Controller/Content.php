@@ -122,7 +122,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 					$this->localInfo = t('slice_moved');
 				}
 				else {
-					$this->localWarning = t('slice_cannot_be_moved');
+					$this->localWarning = t('cannot_move_slice');
 				}
 			}
 			else {
@@ -213,7 +213,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			$this->localInfo = t('slice_deleted');
 		}
 		else {
-			$this->localWarning = t('slice_cannot_be_deleted');
+			$this->localWarning = t('cannot_delete_slice');
 		}
 
 		$this->postSliceEdit('delete', $slice_id);
@@ -262,10 +262,10 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 				$this->localWarning = implode('<br />', $slicedata['MESSAGES']);
 			}
 			elseif ($this->action == 'deleteArticleSlice') {
-				$this->localWarning = t('slice_cannot_be_deleted');
+				$this->localWarning = t('cannot_delet_slice');
 			}
 			else {
-				$this->localWarning = t('slice_cannot_be_updated');
+				$this->localWarning = t('cannot_update_slice');
 			}
 
 		}

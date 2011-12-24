@@ -11,7 +11,7 @@
 class sly_Controller_Profile extends sly_Controller_Backend {
 	public function init() {
 		$layout = sly_Core::getLayout();
-		$layout->pageHeader(t('profile_title'));
+		$layout->pageHeader(t('my_profile'));
 	}
 
 	public function index() {
@@ -23,8 +23,7 @@ class sly_Controller_Profile extends sly_Controller_Backend {
 
 		$user->setName(sly_post('username', 'string'));
 		$user->setDescription(sly_post('description', 'string'));
-		$user->setUpdateDate(time());
-		$user->setUpdateUser($user->getLogin());
+		$user->setUpdateColumns();
 
 		// Backend-Sprache
 

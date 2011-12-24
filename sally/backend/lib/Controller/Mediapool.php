@@ -40,8 +40,8 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		);
 
 		if ($this->isMediaAdmin()) {
-			$subline[] = array('mediapool_structure', $this->t('categories'));
-			$subline[] = array('mediapool_sync',      $this->t('sync_files'));
+			$subline[] = array('mediapool_structure', t('categories'));
+			$subline[] = array('mediapool_sync',      t('sync_files'));
 		}
 
 		// ArgUrl an Menü anhängen
@@ -277,7 +277,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 
 		if ($this->selectBox === null) {
 			$this->selectBox = sly_Form_Helper::getMediaCategorySelect('rex_file_category', null, $user);
-			$this->selectBox->setLabel($this->t('kats'));
+			$this->selectBox->setLabel(t('categories'));
 			$this->selectBox->setMultiple(false);
 			$this->selectBox->setAttribute('value', $this->getCurrentCategory());
 

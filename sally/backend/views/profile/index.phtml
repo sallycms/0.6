@@ -17,31 +17,25 @@ $form = new sly_Form('index.php', 'POST', '');
 $form->addHiddenValue('page', 'profile');
 $form->addHiddenValue('func', 'update');
 
-$login        = new sly_Form_Text(t('login_name'), $user->getLogin());
+$login        = new sly_Form_Text(t('username'), $user->getLogin());
 $password     = new sly_Form_Input_Text('password', t('new_password'), '');
 $username     = new sly_Form_Input_Text('username', t('name'), $user->getName());
 $userdesc     = new sly_Form_Input_Text('description', t('description'), $user->getDescription());
 $localeSelect = new sly_Form_Select_DropDown('locale', t('backend_locale'), $user->getBackendLocale(), $this->getBackendLocales());
+
+$timezone       = $user->getTimeZone();
+$timezone       = $timezone ? $timezone : array();
+$timezoneList   = DateTimeZone::listIdentifiers();
+$timezoneList   = array_combine($timezoneList, $timezoneList);
+$timezoneList   = array_merge(array('' => t('use_default_locale')), $timezoneList);
+$timezoneSelect = new sly_Form_Select_DropDown('timezone', t('timezone'), $timezone, $timezoneList);
 
 $localeSelect->setMultiple(false);
 
 $form->beginFieldset(t('my_profile'), '', 2);
 $form->addRow(array($login, $password));
 $form->addRow(array($username, $userdesc));
-$fields = array($localeSelect);
-
-if (class_exists('DateTimeZone')) {
-	$timezone       = $user->getTimeZone();
-	$timezone       = $timezone ? $timezone : array();
-	$timezoneList   = DateTimeZone::listIdentifiers();
-	$timezoneList   = array_combine($timezoneList, $timezoneList);
-	$timezoneList   = array_merge(array('' => t('use_default_locale')), $timezoneList);
-	$timezoneSelect = new sly_Form_Select_DropDown('timezone', t('timezone'), $timezone, $timezoneList);
-
-	$fields[] = $timezoneSelect;
-}
-
-$form->addRow($fields);
+$form->addRow(array($localeSelect, $timezoneSelect));
 
 $form->getSubmitButton()->setAttribute('value', t('save'));
 $form->setResetButton(null);
