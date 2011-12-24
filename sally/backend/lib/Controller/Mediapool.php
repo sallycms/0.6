@@ -230,7 +230,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 				try {
 					$service->delete($medium->getId());
 					$this->revalidate();
-					$this->info[] = t('file_deleted');
+					$this->info[] = t('medium_deleted');
 				}
 				catch (sly_Exception $e) {
 					$this->warning[] = $e->getMessage();

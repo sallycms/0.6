@@ -1,7 +1,6 @@
 affected_files: Betroffene Dateien
 apply_file: Medium übernehmen
 category_has_children: 'Die Kategorie kann nicht gelöscht werden, da sie noch Unterkategorien enthält!'
-category_is_not_empty: 'Die Kategorie kann nicht gelöscht werden, da sie noch Inhalte enthält!'
 category_name: Kategoriename
 edit_medium: Medium bearbeiten
 file: Datei
@@ -10,14 +9,12 @@ file_changed: Die Datei wurde ausgetauscht.
 file_delete_error_1: 'Die Datei {0} kann nicht gelöscht werden.'
 file_delete_error_2: Sie wird derzeit von folgenden Artikeln verwendet:
 file_info: Dateiinfo
-file_not_found: 'Datei {0} wurde nicht gefunden!'
 file_not_found_maybe_too_big: Datei wurde nicht gefunden. Vielleicht war sie zu groß?
 filename: Dateiname
 files_synced: Dateien wurden synchronisiert.
 height: Höhe
 invalid_file_data: Es trat ein Fehler beim Upload der Datei auf!
 max_uploadsize: Maximale Uploadgröße
-media_category: Medienkategorie
 media_list: Medien
 medium_deleted: Datei wurde gelöscht.
 medium_updated: Medium wurde aktualisiert.

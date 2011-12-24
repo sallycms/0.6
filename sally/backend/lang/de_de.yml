@@ -61,9 +61,6 @@ by: von
 select_all: alle auswählen
 select_none: nichts auswählen
 
-open_linkmap: Öffne Strukturansicht
-remove_link: Link entfernen
-
 sort_asc: Aufsteigend sortieren
 sort_desc: Absteigend sortieren
 sort_none: Keine Sortierung
@@ -109,7 +106,7 @@ article_deleted: Artikel wurde gelöscht.
 cannot_move_article: Der Artikel konnte nicht verschoben werden.
 check_rights_in_directory: 'Bitte überprüfen Sie die Rechte im Verzeichnis {0}.'
 category_deleted: Kategorie wurde gelöscht.
-category_not_found: 'Die Kategorie {0} existiert nicht!'
+category_not_found: 'Die Kategorie {0} wurde nicht gefunden!'
 cannot_delete_start_article: Der Webseiten-Startartikel kann nicht gelöscht werden!
 cannot_delete_not_found_article: Der "Nicht gefunden"-Artikel kann nicht gelöscht werden!
 
@@ -127,9 +124,8 @@ error_moving_uploaded_file: 'Beim Verschieben der Datei {0} ist ein Fehler aufge
 metadata_updated: Metadaten wurden aktualisiert.
 description: Beschreibung
 move_article: Artikel verschieben
-copy_article: Artikel kopieren
 slice_moved: Block wurde verschoben.
-content_copied: Die Inhalte des Artikels wurden kopiert.
+article_content_copied: Die Inhalte des Artikels wurden kopiert.
 cannot_move_slice: Beim Verschieben des Blocks ist ein Fehler aufgetreten!
 cannot_delete_slice: Beim Löschen des Blocks ist ein Fehler aufgetreten!
 cannot_update_slice: Beim Speichern des Blocks ist ein Fehler aufgetreten!
@@ -167,8 +163,6 @@ status: Status
 id: ID
 add_article: Artikel hinzufügen
 add_category: Kategorie hinzufügen
-edit_category: Kategorie bearbeiten
-delete_category: Kategorie löschen
 save_category: Kategorie speichern
 status_online: online
 status_offline: offline
@@ -186,9 +180,7 @@ functions: Funktionen
 user_updated: Benutzer wurde aktualisiert.
 user_deleted: Benutzer wurde gelöscht.
 user_added: Benutzer wurde hinzugefügt.
-create_user: Neuen Benutzer anlegen
 add_user: Benutzer hinzufügen
-edit_user: Benutzer bearbeiten
 user_login_already_exists: Der gewählte Benutzerlogin existiert schon!
 admin: Administrator
 you_cannot_delete_yourself: Sie können sich nicht selbst löschen!
@@ -213,8 +205,6 @@ invalid_default_language_selected: Es wurde eine ungültige Standardsprache ausg
 invalid_default_articletype_selected: Es wurde ein ungültiger Standard-Artikeltyp ausgewählt.
 languages: Sprachen
 add_language: Sprache hinzufügen
-edit_language: Sprache bearbeiten
-delete_language: Sprache löschen
 language_added: Sprache wurde hinzugefügt.
 language_updated: Sprache wurde aktualisiert.
 language_deleted: Sprache wurde gelöscht.
@@ -227,7 +217,6 @@ caching_strategy: Cache-Strategie
 developer_mode: Entwicklermodus
 project_name: Projektname
 default_articletype: Standard-Artikeltyp
-default_locale: Standard BE-Locale
 timezone: Zeitzone
 not_found_article: Artikel bei fehlender Seite
 default_language: Standard-Frontendsprache
@@ -237,11 +226,10 @@ setup_text: Hier können Sie das Setup erneut starten. Dies sollten Sie nur im N
 
 back: zurück
 addon: AddOn
-reinstall: re-installieren
 install: installieren
 install_including_requirements: inkl. Abhängigkeiten installieren
-notinstalled: nicht installiert
-uninstall: de-installieren
+activate_including_requirements: inkl. Abhängigkeiten aktivieren
+uninstall: deinstallieren
 deactivate: deaktivieren
 activate: aktivieren
 reinit_assets: Assets re-initialisieren
@@ -272,7 +260,6 @@ no_addons_found: Keine AddOns gefunden. Laden Sie neue AddOns in das Verzeichnis
 credits: Credits
 author: Autor
 supportpage: Website
-credits_addon_inactive: Addon inaktiv
 credits_caption: Liste der verwendeten AddOns/PlugIns
 credits_text: |
   <strong>Das webvariants-Team</strong>, <a href="mailto:info@webvariants.de">info@webvariants</a><br />
@@ -283,7 +270,7 @@ credits_thankyou: |
 
 linkmap: Linkmap
 
-select_medum: Medium auswählen
+select_medium: Medium auswählen
 upload_medium: Neues Medium hochladen
 remove_medium: Ausgewähltes Medium löschen
 
@@ -319,3 +306,69 @@ no_articles_yet: Es wurden noch keine Artikel angelegt.
 
 login_error: 'Fehler bei der Anmeldung. Bitte vor dem nächsten Versuch {0} Sekunden warten.'
 you_have_been_logged_out: Sie wurden vom System abgemeldet.
+
+articles: Artikel
+articleslice_must_contain_slice_id_or_module: Artikelslices müssen eine Slice-ID oder Modul enthalten.
+article_not_found: 'Artikel {0} wurde nicht gefunden!'
+cannot_insert_multilingual_element_in_multicolumn_fieldset: In mehrspaltige Fieldsets können keine mehrsprachigen Elemente eingefügt werden.
+cannot_move_category_into_child: Eine Kategorie kann nicht in eine Kindkategorie verschoben werden.
+cannot_render_slices: Slices können nicht gerendert werden.
+slots: Slots
+could_not_find_log_dir: Konnte Log-Verzeichnis nicht finden!
+create: anlegen
+db_driver: Datenbank-Typ
+db_prefix: Tabellen-Präfix
+develop_file_not_found: 'Die Development-Ressource {0} wurde nicht gefunden!'
+does_not_implement: 'Die Klasse {0} implementiert nicht das Interface {1}!'
+email_is_invalid: 'Die eMail-Adresse ist ungültig.'
+error_rendering_slice: 'Es trat ein Fehler beim Rendern des Slices auf.'
+error_sending_mail: 'Es trat ein Fehler beim Versenden der eMail auf.'
+exec_time: 'Scriptlaufzeit'
+fieldset_contains_multilingual_elements_has_to_be_singlecolumn: 'Das Fieldset kann nicht mehrspaltig sein, da es bereits mehrsprachige Elemente enthält.'
+file_has_no_internal_name: 'Die Datei {0} hat keinen internen Namen.'
+from_language: 'von Sprache'
+to_language: 'nach Sprache'
+importer_database_imported: 'Der Datenbank-Dump wurde erfolgreich importiert.'
+importer_entry_count: '({0} Queries)'
+importer_no_import_file_chosen_or_wrong_version: 'Die Importdatei ist fehlerhaft oder inkompatibel.'
+importer_no_valid_import_file_prefix: 'Die Importdatei ist fehlerhaft (enthält kein Tabellenpräfix).'
+importer_no_valid_import_file_version: 'Die Importdatei ist fehlerhaft (enthält kein Versionsstempel).'
+invalid_develop_param: 'Ungültigen Parameter {0} gefunden.'
+language_not_found: 'Sprache {0} wurde nicht gefunden.'
+login_welcome: Bitte melden Sie sich an.
+medium_not_found: 'Das Medium {0} wurde nicht gefunden.'
+move_bottom: an das Ende bewegen
+move_down: nach unten bewegen
+move_top: an den Anfang bewegen
+move_up: nach oben bewegen
+multiple_condition_handlers_found: Es wurden mehrere mögliche Condition-Handler gefunden. Verwende den erstbesten.
+name_contains_invalid_characters: Der interne Name enthält ungültige Zeichen.
+not_all_requirements_met: Es sind nicht alle Abhängigkeiten erfüllt.
+no_condition_handler_found: Es wurde kein Condition-Handler gefunden.
+no_password_given: Kein Passwort angegeben.
+no_permission: Keine Berechtigung.
+no_recipients_given: Es wurden keine Empfänger angegeben.
+no_username_given: Kein Benutzername angegeben.
+parent_category_not_found: Die Elternkategorie wurde nicht gefunden.
+password_needs_valid_createdate: Zum Hashen ist ein gültiges createdate erforderlich.
+# pool_kat_summary
+# redirect_to
+# requires_addon
+# requires_plugin
+# save_article
+# service_not_found
+# slice_could_not_be_generated
+# sort_function_not_found
+# source_and_target_are_equal
+# table_is_empty
+# target_category
+# target_category_not_found
+# template_not_found
+# title_cannot_be_empty
+# unknown_log_level
+# unsupported_direction
+# update_language
+# user_data_updated
+# use_category_service_to_copy_categories
+# use_category_service_to_move_categories
+# view_not_found

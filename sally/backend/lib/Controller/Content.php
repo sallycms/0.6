@@ -262,7 +262,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 				$this->localWarning = implode('<br />', $slicedata['MESSAGES']);
 			}
 			elseif ($this->action == 'deleteArticleSlice') {
-				$this->localWarning = t('cannot_delet_slice');
+				$this->localWarning = t('cannot_delete_slice');
 			}
 			else {
 				$this->localWarning = t('cannot_update_slice');

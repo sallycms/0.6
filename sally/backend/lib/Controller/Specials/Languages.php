@@ -34,7 +34,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Specials {
 					$languageService = sly_Service_Factory::getLanguageService();
 					$languageService->create(array('name' => $clangName, 'locale' => $clangLocale));
 
-					$this->info = t('clang_edited');
+					$this->info = t('language_added');
 				}
 				catch (Exception $e) {
 					$this->warning = $e->getMessage();
@@ -82,8 +82,8 @@ class sly_Controller_Specials_Languages extends sly_Controller_Specials {
 
 		if (isset($languages[$clangID])) {
 			$ok = sly_Service_Factory::getLanguageService()->delete(array('id' =>$clangID));
-			if ($ok > 0) $this->info = t('clang_deleted');
-			else $this->warning = t('cannot_delete_clang');
+			if ($ok > 0) $this->info = t('language_deleted');
+			else $this->warning = t('cannot_delete_language');
 		}
 
 		$this->index();
