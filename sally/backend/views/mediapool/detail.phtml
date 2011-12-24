@@ -150,7 +150,7 @@ else {
 // file dimensions, if image
 
 if ($isImage) {
-	$label      = t('pool_img_width').' / '.t('pool_img_height');
+	$label      = t('width').' / '.t('height');
 	$dimensions = $fwidth.' px / '.$fheight.' px';
 	$dimensions = new sly_Form_Text($label, $dimensions);
 	$form->add($dimensions);

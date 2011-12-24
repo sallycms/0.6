@@ -39,7 +39,7 @@ ob_start();
 
 ?>
 <table class="sly-table sly-mediapool-list" summary="">
-	<caption><?php echo t('pool_selectedmedia') ?></caption>
+	<caption><?php echo t('selected_media') ?></caption>
 	<colgroup>
 		<col width="40" />
 		<col width="110" />
@@ -85,7 +85,6 @@ ob_start();
 
 	print '<tbody>';
 
-	$files  = $this->getFiles();
 	$argUrl = $this->getArgumentString();
 
 	foreach ($files as $file) {

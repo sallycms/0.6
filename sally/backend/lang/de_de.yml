@@ -24,6 +24,7 @@ home: Home
 homepage: Homepage
 input: Eingabe
 output: Ausgabe
+title: Titel
 
 save: speichern
 apply: übernehmen
@@ -174,6 +175,7 @@ status_offline: offline
 no_articletype: Kein Artikeltyp
 article_name: Artikelname
 created_at: Erstellt am
+updated_at: Aktualisiert am
 article: Artikel
 
 start_article: Startseite
@@ -289,6 +291,7 @@ select_link: Artikel auswählen
 remove_link: Ausgewählten Artikel entfernen
 
 you_have_no_access_to_this_language: 'Sie haben keinen Zugriff auf Sprache {0}!'
+you_have_no_access_to_this_medium: 'Sie haben keinen Zugriff auf dieses Medium!'
 articletype_not_found: 'Der Artikeltyp {0} wurde nicht gefunden!'
 
 no_articletype_set: Der Typ dieses Artikels wurde nicht gesetzt.

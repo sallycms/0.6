@@ -140,8 +140,16 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 	}
 
 	protected function index() {
+		$files = $this->getFiles();
+
 		print $this->render('mediapool/toolbar.phtml');
-		print $this->render('mediapool/index.phtml');
+
+		if (empty($files)) {
+			print sly_Helper_Message::info(t('no_media_found'));
+		}
+		else {
+			print $this->render('mediapool/index.phtml', compact('files'));
+		}
 	}
 
 	protected function batch() {
@@ -230,7 +238,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 			}
 			else {
 				$tmp   = array();
-				$tmp[] = t('file_delete_error_1', $filename).'. '.t('file_delete_error_2').':<br />';
+				$tmp[] = t('file_delete_error_1', $filename).'. '.t('file_delete_error_2').'<br />';
 				$tmp[] = '<ul>';
 
 				foreach ($usages as $usage) {

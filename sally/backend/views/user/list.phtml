@@ -17,7 +17,7 @@ $table->addColumn(new sly_Table_Column('ID', '25px'));
 $table->addColumn(new sly_Table_Column(t('name')));
 $table->addColumn(new sly_Table_Column(t('username')));
 $table->addColumn(new sly_Table_Column(t('last_login'), '150px'));
-$table->addColumn(new sly_Table_Column(t('delete_user'), '150px'));
+$table->addColumn(new sly_Table_Column(t('function'), '100px'));
 
 $table->enableSearching();
 $table->setIsEmpty(false);
@@ -49,9 +49,9 @@ foreach ($users as $user) {
 		<td class="sly-col-e"><?php echo sly_Util_String::formatDatetime($user->getLastTryDate()) ?></td>
 
 		<?php if ($id == $currentID): ?>
-		<td class="sly-col-f"><span class="rex-strike"><?php echo t('delete_user') ?></span></td>
+		<td class="sly-col-f"><span class="rex-strike"><?php echo t('delete') ?></span></td>
 		<?php else: ?>
-		<td class="sly-col-f"><a class="sly-action sly-delete" href="<?php echo $base ?>delete&amp;id=<?php echo $id ?>"><?php echo t('delete_user') ?></a></td>
+		<td class="sly-col-f"><a class="sly-action sly-delete" href="<?php echo $base ?>delete&amp;id=<?php echo $id ?>"><?php echo t('delete') ?></a></td>
 		<?php endif ?>
 	</tr>
 	<?php

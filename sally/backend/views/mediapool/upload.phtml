@@ -46,7 +46,7 @@ $upload    = new sly_Form_Input_File('file_new', t('file'));
 $maxPOST   = sly_ini_get('post_max_size');
 $maxUpload = sly_ini_get('upload_max_filesize');
 $maxSize   = min(array($maxPOST, $maxUpload));
-$helptext  = t('pool_max_uploadsize').': '.sly_Util_String::formatFilesize($maxSize);
+$helptext  = t('max_uploadsize').': '.sly_Util_String::formatFilesize($maxSize);
 
 $upload->setHelpText($helptext);
 $form->add($upload);

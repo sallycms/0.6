@@ -70,14 +70,14 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 		// to the target category
 
 		if (!$medium || !$this->canAccessFile($medium) || !$this->canAccessCategory($target)) {
-			$this->warning = t('no_permission');
+			$this->warning = t('you_have_no_access_to_this_medium');
 			return $this->index();
 		}
 
 		// update our file
 
 		$title = sly_request('title', 'string');
-		$msg   = t('file_infos_updated');
+		$msg   = t('medium_updated');
 		$ok    = true;
 
 		// upload new file or just change file properties?

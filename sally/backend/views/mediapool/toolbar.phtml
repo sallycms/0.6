@@ -23,7 +23,7 @@ $select = $this->getCategorySelect();
 $values = $select->getValues();
 
 if (count($values) > 1 || $dispatcher->hasListeners('SLY_MEDIA_LIST_TOOLBAR')) {
-	$form = new sly_Form('index.php', 'POST', t('pool_select_cat'), '', 'rex-form-mediapool-selectcategory');
+	$form = new sly_Form('index.php', 'POST', t('select_category'), '', 'rex-form-mediapool-selectcategory');
 	$form->addHiddenValue('page', 'mediapool');
 	$form->addHiddenValue('callback', sly_request('callback', 'string'));
 	$form->setResetButton(null);
