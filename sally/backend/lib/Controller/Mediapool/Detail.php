@@ -90,7 +90,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 			catch (Exception $e) {
 				$ok   = false;
 				$code = $e->getCode();
-				$msg  = t($code === sly_Util_Medium::ERR_TYPE_MISMATCH ? 'file_types_do_not_match' : 'an_error_happened_during_upload');
+				$msg  = t($code === sly_Util_Medium::ERR_TYPE_MISMATCH ? 'types_of_old_and_new_do_not_match' : 'an_error_happened_during_upload');
 			}
 		}
 		else {

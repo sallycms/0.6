@@ -177,6 +177,7 @@ path: Pfad
 function: Funktion
 functions: Funktionen
 
+profile_updated: Ihr Profil wurde aktualisiert.
 user_updated: Benutzer wurde aktualisiert.
 user_deleted: Benutzer wurde gelöscht.
 user_added: Benutzer wurde hinzugefügt.
@@ -205,6 +206,7 @@ invalid_default_language_selected: Es wurde eine ungültige Standardsprache ausg
 invalid_default_articletype_selected: Es wurde ein ungültiger Standard-Artikeltyp ausgewählt.
 languages: Sprachen
 add_language: Sprache hinzufügen
+edit_language: Sprache bearbeiten
 language_added: Sprache wurde hinzugefügt.
 language_updated: Sprache wurde aktualisiert.
 language_deleted: Sprache wurde gelöscht.
@@ -351,24 +353,18 @@ no_recipients_given: Es wurden keine Empfänger angegeben.
 no_username_given: Kein Benutzername angegeben.
 parent_category_not_found: Die Elternkategorie wurde nicht gefunden.
 password_needs_valid_createdate: Zum Hashen ist ein gültiges createdate erforderlich.
-# pool_kat_summary
-# redirect_to
-# requires_addon
-# requires_plugin
-# save_article
-# service_not_found
-# slice_could_not_be_generated
-# sort_function_not_found
-# source_and_target_are_equal
-# table_is_empty
-# target_category
-# target_category_not_found
-# template_not_found
-# title_cannot_be_empty
-# unknown_log_level
-# unsupported_direction
-# update_language
-# user_data_updated
-# use_category_service_to_copy_categories
-# use_category_service_to_move_categories
-# view_not_found
+redirect_to: 'Sie werden <a href="{0}">weitergeleitet</a>.'
+service_not_found: 'Der {0}-Service wurde nicht gefunden!'
+slice_could_not_be_generated: Der Slicecache konnte nicht generiert werden.
+sort_function_not_found: 'Die Sortierfunktion {0} wurde nicht gefunden!'
+source_and_target_are_equal: Quelle und Ziel sind identisch!
+table_is_empty: Diese Tabelle enthält noch keine Inhalte.
+target_category: Ziel-Kategorie
+target_category_not_found: Die Ziel-Kategorie wurde nicht gefunden!
+template_not_found: Das Template wurde nicht gefunden!
+title_cannot_be_empty: Der Titel kann nicht leer sein!
+unknown_log_level: 'Unbekanntes Log-Level {0} angegeben.'
+unsupported_direction: 'Fehlerhafte Richtung {0} angegeben.'
+use_category_service_to_copy_categories: 'Benutzen Sie den Kategorie-Service, um Kategorien zu kopieren.'
+use_category_service_to_move_categories: 'Benutzen Sie den Kategorie-Service, um Kategorien zu verschieben.'
+view_not_found: 'Der View {0} wurde nicht gefunden!'

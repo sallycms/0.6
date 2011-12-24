@@ -36,6 +36,7 @@ sync_files: Dateien synchronisieren
 synchronize: synchronisieren
 thumbnail: Thumbnail
 types_of_old_and_new_do_not_match: 'Diese Datei kann nicht zum Austausch benutzt werden, da sie von einem anderen Dateityp ist!'
+an_error_happened_during_upload: Es trat ein Fehler beim Hochladen auf!
 upload: hochladen
 upload_and_use: hochladen und übernehmen
 upload_file: Medium hochladen
