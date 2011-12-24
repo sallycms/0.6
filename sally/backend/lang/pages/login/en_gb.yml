@@ -1,7 +1,0 @@
-login_title: Login
-login_welcome: Please login.
-login_name: Username
-login_password: Password
-new_password: New password
-login_error: 'Error logging in. Please try again in {0} seconds.'
-login_logged_out: Signed out.

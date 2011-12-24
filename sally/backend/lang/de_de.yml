@@ -10,7 +10,7 @@ minutes: Minuten
 seconds: Sekunden
 milliseconds: Millisekunden
 days_short: t
-hours_short: s
+hours_short: h
 minutes_short: m
 seconds_short: s
 milliseconds_short: ms

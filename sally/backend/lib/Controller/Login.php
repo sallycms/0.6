@@ -15,8 +15,6 @@ class sly_Controller_Login extends sly_Controller_Backend {
 		if (!method_exists($this, $this->action)) {
 			$this->action = 'index';
 		}
-
-		sly_Core::getI18N()->appendFile(SLY_SALLYFOLDER.'/backend/lang/pages/login/');
 	}
 
 	public function init() {
