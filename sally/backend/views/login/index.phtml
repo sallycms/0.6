@@ -8,27 +8,22 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-global $rex_user_loginmessage;
-
-if (!empty($rex_user_loginmessage)) {
-	print sly_Helper_Message::warn($rex_user_loginmessage);
-}
-elseif (!empty($this->message)) {
+if (!empty($this->message)) {
 	print sly_Helper_Message::warn($this->message);
 }
 
-$form = new sly_Form('index.php', 'POST', t('login_title'), '', 'loginformular');
+$form = new sly_Form('index.php', 'POST', t('login_title'), '', 'sly_login_form');
 $form->addHiddenValue('page', 'login');
 $form->addHiddenValue('func', 'login');
 $form->addHiddenValue('javascript', 0, 'javascript');
 $form->addHiddenValue('referer', isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '');
 
-$form->add(new sly_Form_Input_Text('rex_user_login', t('username'), ''));
-$form->add(new sly_Form_Input_Password('rex_user_psw', t('password'), ''));
+$form->add(new sly_Form_Input_Text('username', t('username')));
+$form->add(new sly_Form_Input_Password('password', t('password')));
 
 $form->setResetButton(null);
 $form->getSubmitButton()->setAttribute('value', t('login'));
-$form->setFocus('rex_user_login');
+$form->setFocus('username');
 
 print $form->render();
 

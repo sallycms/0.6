@@ -389,9 +389,8 @@ var sly = {};
 			setTimeout(sly.disableLogin, 1000, timerElement);
 		}
 		else {
-			$('div.sly-message p span').html($('#loginformular').data('message'));
-			$('#loginformular input:not(:hidden)').prop('disabled', false);
-			$('#rex_user_login').focus();
+			$('div.sly-message p span').html($('#sly_login_form').data('message'));
+			$('#sly_login_form input:not(:hidden)').prop('disabled', false);
 		}
 	};
 
@@ -399,8 +398,8 @@ var sly = {};
 		var timerElement = $('div.sly-message p span strong');
 
 		if (timerElement.length == 1) {
-			$('#loginformular input:not(:hidden)').prop('disabled', true);
-			$('#loginformular').data('message', message);
+			$('#sly_login_form input:not(:hidden)').prop('disabled', true);
+			$('#sly_login_form').data('message', message);
 			setTimeout(sly.disableLogin, 1000, timerElement);
 		}
 	};

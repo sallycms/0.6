@@ -28,11 +28,11 @@ class sly_Controller_Login extends sly_Controller_Backend {
 	}
 
 	protected function login() {
-		$user_login = sly_post('rex_user_login', 'string');
-		$user_psw   = sly_post('rex_user_psw', 'string');
-		$loginCheck = sly_Service_Factory::getUserService()->login($user_login, $user_psw);
+		$username = sly_post('username', 'string');
+		$password = sly_post('password', 'string');
+		$loginOK  = sly_Service_Factory::getUserService()->login($username, $password);
 
-		if ($loginCheck !== true) {
+		if ($loginOK !== true) {
 			$this->message = t('login_error', '<strong>'.sly_Core::config()->get('RELOGINDELAY').'</strong>');
 			$this->index();
 		}
