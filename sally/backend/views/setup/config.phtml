@@ -8,29 +8,26 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$this->title(t('setup_config_title'));
+$this->title(t('setup_step_n', 4, 5));
 
 if (!empty($this->warning)) print sly_Helper_Message::warn($this->warning);
 
-$form = new sly_Form('index.php', 'POST', t('configuration'), '', 'rex-form-setup-step-4');
+$form = new sly_Form('index.php', 'POST', t('settings'));
 $this->printHiddens('config', $form);
 
 // fields
 
+$timezoneList   = DateTimeZone::listIdentifiers();
+$timezoneList   = array_combine($timezoneList, $timezoneList);
+$timezoneSelect = new sly_Form_Select_DropDown('timezone', t('timezone'), $timezone, $timezoneList);
+
 $form->add(new sly_Form_Input_Text('projectname', t('project_name'), $projectName));
-
-if (class_exists('DateTimeZone')) {
-	$timezoneList   = DateTimeZone::listIdentifiers();
-	$timezoneList   = array_combine($timezoneList, $timezoneList);
-	$timezoneSelect = new sly_Form_Select_DropDown('timezone', t('timezone'), $timezone, $timezoneList);
-
-	$form->add($timezoneSelect);
-}
+$form->add($timezoneSelect);
 
 // button config
 
 $form->setResetButton(null);
-$form->getSubmitButton()->setAttribute('value', t('setup_config_continue'));
+$form->getSubmitButton()->setAttribute('value', t('setup_continue_to_n', 5));
 
 // render it!
 

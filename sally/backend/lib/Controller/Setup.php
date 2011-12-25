@@ -36,26 +36,27 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 	}
 
 	protected function fsperms() {
-		$errors  = false;
-		$results = array();
-		$tester  = new sly_Util_Requirements();
-		$level   = error_reporting(0);
+		$errors    = false;
+		$sysErrors = false;
+		$warnings  = false;
+		$results   = array();
+		$tester    = new sly_Util_Requirements();
+		$level     = error_reporting(0);
 
 		$results['php_version']    = array('5.2', '5.3', $tester->phpVersion());
 		$results['mysql_version']  = array('5.0', '5.0', $tester->mySQLVersion());
 		$results['php_time_limit'] = array('20s', '60s', $tester->execTime());
-		$results['php_mem_limit']  = array('16MB / 64MB', '32MB / 64MB', $tester->memoryLimit());
+		$results['php_mem_limit']  = array('16MB', '32MB', $tester->memoryLimit());
 		$results['php_pseudo']     = array('translate:none', 'translate:none', $tester->nonsenseSecurity());
-		$results['php_short']      = array('translate:activated', 'translate:activated', $tester->shortOpenTags());
 
 		error_reporting($level);
 
 		foreach ($results as $result) {
-			if ($result[2]['status'] == sly_Util_Requirements::FAILED) {
-				$errors = true;
-				break;
-			}
+			$errors   |= $result[2]['status'] === sly_Util_Requirements::FAILED;
+			$warnings |= $result[2]['status'] === sly_Util_Requirements::WARNING;
 		}
+
+		$sysErrors = $errors;
 
 		// init directories
 
@@ -65,7 +66,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 
 		foreach ($protected as $i => $directory) {
 			if (!sly_Util_Directory::createHttpProtected($directory)) {
-				$protects['htaccess_'.$i] = realpath($directory);
+				$protects[] = realpath($directory);
 				$errors = true;
 			}
 		}
@@ -74,11 +75,11 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 			$errors = true;
 		}
 
-		if (!$errors) {
-			return $this->dbconfig();
+		if (!$errors && !$warnings) {
+			#return $this->dbconfig();
 		}
 
-		$params = compact('results', 'protects', 'errors', 'cantCreate', 'tester');
+		$params = compact('sysErrors', 'results', 'protects', 'errors', 'cantCreate', 'tester');
 		print $this->render('setup/fsperms.phtml', $params);
 	}
 
@@ -353,7 +354,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 			}
 		}
 		else {
-			$err_msg = t('setup_import_cant_find_exports').'<br />';
+			$err_msg = t('setup_import_dump_not_found').'<br />';
 		}
 
 		return $err_msg;

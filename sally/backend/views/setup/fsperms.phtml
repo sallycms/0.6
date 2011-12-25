@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$this->title(t('setup_fsperms_title'));
+$this->title(t('setup_step_n', 1, 5));
 
 ?>
 
@@ -16,60 +16,70 @@ $this->title(t('setup_fsperms_title'));
 	<p class="sly-warn"><span><?php print t('setup_fsperms_security_msg') ?></span></p>
 </div>
 
-<h2 class="rex-hl2"><?php print t('setup_fsperms_header') ?></h2>
+<div class="rex-area">
+	<h2><?php print t('setup_system_requirements') ?></h2>
 
-<div class="rex-area-content sly-setup-requirements">
-	<table summary="">
-		<thead><tr>
-			<th class="sly-testcase"><?php print t('setup_fsperms_property') ?></th>
-			<th class="sly-required"><?php print t('setup_fsperms_required') ?></th>
-			<th class="sly-recommended"><?php print t('setup_fsperms_recommended') ?></th>
-			<th class="sly-status"><?php print t('setup_fsperms_status') ?></th>
-		</tr></thead>
-		<tbody><?php foreach ($results as $type => $result): ?><tr class="<?php print $tester->getClassName($result[2]) ?>">
-			<td class="sly-testcase"><?php print rex_translate('translate:setup_fsperms_'.$type) ?></td>
-			<?php if ($result[0] == $result[1]): ?>
-			<td class="sly-required center" colspan="2"><?php print rex_translate($result[0]) ?></td>
-			<?php else: ?>
-			<td class="sly-required"><?php print rex_translate($result[0]) ?></td>
-			<td class="sly-recommended"><?php print rex_translate($result[1]) ?></td>
-			<?php endif ?>
-			<td class="sly-status"><?php print sly_html($result[2]['text']) ?></td>
-		</tr><?php endforeach ?></tbody>
-	</table>
-</div>
+	<div class="rex-area-content sly-setup-requirements">
+		<table summary="">
+			<thead><tr>
+				<th class="sly-testcase"><?php print t('setup_property') ?></th>
+				<th class="sly-required"><?php print t('required') ?></th>
+				<th class="sly-recommended"><?php print t('recommended') ?></th>
+				<th class="sly-status"><?php print t('status') ?></th>
+			</tr></thead>
+			<tbody><?php foreach ($results as $type => $result): ?><tr class="<?php print $tester->getClassName($result[2]) ?>">
+				<td class="sly-testcase"><?php print t('setup_'.$type) ?></td>
+				<?php if ($result[0] == $result[1]): ?>
+				<td class="sly-required center" colspan="2"><?php print rex_translate($result[0]) ?></td>
+				<?php else: ?>
+				<td class="sly-required"><?php print rex_translate($result[0]) ?></td>
+				<td class="sly-recommended"><?php print rex_translate($result[1]) ?></td>
+				<?php endif ?>
+				<td class="sly-status"><?php print sly_html($result[2]['text']) ?></td>
+			</tr><?php endforeach ?></tbody>
+		</table>
+	</div>
 
-<?php if ($errors): ?>
-<div class="rex-area-footer sly-fs-errors">
-	<p class="rex-algn-rght"><?php print t('setup_fsperms_please_fix') ?></p>
-</div>
-<?php endif ?>
-
-<?php if (!empty($cantCreate) || !empty($protects)): ?>
-<h2 class="rex-hl2 sly-setup-fs-problems"><?php print t('setup_fsperms_fsproblems') ?></h2>
-<div class="rex-area-content sly-setup-fs-problems">
-	<?php if (!empty($cantCreate)): ?>
-	<p class="rex-tx1"><?php print t('setup_fsperms_cant_access') ?></p>
-
-	<ul class="rex-ul1">
-		<li><?php print implode('</li><li>', $cantCreate) ?></li>
-	</ul>
+	<?php if ($sysErrors): ?>
+	<div class="rex-area-footer sly-fs-errors">
+		<p class="rex-algn-rght"><?php print t('setup_please_fix_problems') ?></p>
+	</div>
 	<?php endif ?>
 
-	<?php if (!empty($protects)): ?>
-	<p class="rex-tx1"><?php print t('setup_fsperms_cant_protect') ?></p>
+	<?php if (!empty($cantCreate) || !empty($protects)): ?>
+	<h2 class="sly-setup-fs-problems"><?php print t('setup_filesystem_problems') ?></h2>
+	<div class="rex-area-content sly-setup-fs-problems">
+		<?php if (!empty($cantCreate)): ?>
+		<p><?php print t('setup_cannot_create_dirs') ?></p>
 
-	<ul class="rex-ul1">
-		<li><?php print implode('</li><li>', $protects) ?></li>
-	</ul>
+		<ul>
+			<?php foreach ($cantCreate as $dir): ?>
+			<li><?php print sly_html($dir) ?></li>
+			<?php endforeach ?>
+		</ul>
+		<?php endif ?>
+
+		<?php if (!empty($protects)): ?>
+		<p><?php print t('setup_cannot_protect_dirs') ?></p>
+
+		<ul>
+			<?php foreach ($protects as $dir): ?>
+			<li><?php print sly_html($dir) ?></li>
+			<?php endforeach ?>
+		</ul>
+		<?php endif ?>
+
+		<iframe src="views/setup/direct.phtml?lang=<?php print urlencode($this->lang) ?>" style="display:none"></iframe>
+	</div>
+
+	<div class="rex-area-footer sly-fs-errors">
+		<p class="rex-algn-rght"><?php print t('setup_please_fix_problems') ?></p>
+	</div>
+	<?php elseif (!$errors): ?>
+	<div class="rex-area-footer">
+		<p id="nextstep" class="rex-algn-rght">
+			<a href="index.php?page=setup&amp;func=dbconfig&amp;lang=<?php print urlencode($this->lang) ?>">&raquo; <?php print t('setup_continue_to_n', 2) ?></a>
+		</p>
+	</div>
 	<?php endif ?>
-
-	<iframe src="include/views/setup/direct.phtml?lang=<?php print urlencode($this->lang) ?>" style="display:none"></iframe>
 </div>
-<?php elseif (!$errors): ?>
-<div class="rex-area-footer">
-	<p id="nextstep" class="rex-algn-rght">
-		<a href="index.php?page=setup&amp;func=dbconfig&amp;lang=<?php print urlencode($this->lang) ?>">&raquo; <?php print t('setup_fsperms_continue') ?></a>
-	</p>
-</div>
-<?php endif ?>

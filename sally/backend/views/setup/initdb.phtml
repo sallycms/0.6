@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$this->title(t('setup_initdb_title'));
+$this->title(t('setup_step_n', 3, 5));
 
 // init page
 
@@ -39,7 +39,7 @@ $form->addElements($inputs);
 // button config
 
 $form->setResetButton(null);
-$form->getSubmitButton()->setAttribute('value', t('setup_initdb_continue'));
+$form->getSubmitButton()->setAttribute('value', t('setup_continue_to_n', 4));
 
 // render it!
 

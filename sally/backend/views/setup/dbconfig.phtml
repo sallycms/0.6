@@ -8,11 +8,11 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-$this->title(t('setup_dbconfig_title'));
+$this->title(t('setup_step_n', 2, 5));
 
 if (!empty($this->warning)) print sly_Helper_Message::warn($this->warning);
 
-$form = new sly_Form('index.php', 'POST', t('setup_dbconfig_header'), '', 'sly-setup-dbsetup');
+$form = new sly_Form('index.php', 'POST', t('setup_database_config'), '', 'sly-setup-dbsetup');
 $this->printHiddens('dbconfig', $form);
 
 // database driver
@@ -46,7 +46,7 @@ $prefix = new sly_Form_Input_Text('prefix', t('db_prefix'), $prefix);
 $prefix->setHelpText(t('setup_dbconfig_prefix_notice'));
 
 $form->add(new sly_Form_Input_Text('host', t('host'), $host));
-$form->add(new sly_Form_Input_Text('user', t('login'), $user));
+$form->add(new sly_Form_Input_Text('user', t('username'), $user));
 $form->add(new sly_Form_Input_Text('pass', t('password'), $pass));
 
 // slightly more complex input for the target database
@@ -70,7 +70,7 @@ $form->add($prefix);
 // button config
 
 $form->setResetButton(null);
-$form->getSubmitButton()->setAttribute('value', t('setup_dbconfig_continue'));
+$form->getSubmitButton()->setAttribute('value', t('setup_continue_to_n', 3));
 
 // render it!
 
@@ -78,4 +78,4 @@ $form->setFocus('driver');
 print $form->render();
 
 // disable host,user,pass when selecting SQLite
-sly_Core::getLayout()->addJavaScript("jQuery(function($) { $('#driver').change(function() {	$('#host,#user,#pass,#create_db').prop('disabled', $(this).val() === 'sqlite'); }); });");
+sly_Core::getLayout()->addJavaScript("jQuery(function($) { $('#driver').change(function() { $('#host,#user,#pass,#create_db').prop('disabled', $(this).val() === 'sqlite'); }); });");

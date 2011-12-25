@@ -53,6 +53,7 @@ disallowed: verboten
 any: beliebig
 none: nichts
 recommended: empfohlen
+unknown: unbekannt
 
 from: von
 to: nach
@@ -369,3 +370,4 @@ unsupported_direction: 'Fehlerhafte Richtung {0} angegeben.'
 use_category_service_to_copy_categories: 'Benutzen Sie den Kategorie-Service, um Kategorien zu kopieren.'
 use_category_service_to_move_categories: 'Benutzen Sie den Kategorie-Service, um Kategorien zu verschieben.'
 view_not_found: 'Der View {0} wurde nicht gefunden!'
+setup_safemode_openbasedir: safe_mode und open_basedir
