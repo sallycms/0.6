@@ -35,23 +35,8 @@
 /*	System: Sprachen */
 
 #sly-form-specials-languages {
-	fieldset table {
-		caption {
-			+border-radius(0);
-			background: $md_grey;
-			border: 1px solid $md_grey;
-		}
-
-		th { background: $md_grey; }
-	}
-
-	.sly-col-c {
-		width: 120px;
-	}
-
-	.sly-col-d {
-		width: 155px;
-	}
+	.sly-col-c { width: 120px; }
+	.sly-col-d { width: 110px; }
 }
 
 /* System: Fehlerprotokoll */
