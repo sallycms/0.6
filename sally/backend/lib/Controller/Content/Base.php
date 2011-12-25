@@ -20,7 +20,7 @@ abstract class sly_Controller_Content_Base extends sly_Controller_Backend {
 
 		if (is_null($this->article)) {
 			sly_Core::getLayout()->pageHeader(t('content'));
-			throw new sly_Exception(t('no_article_available'));
+			throw new sly_Exception(t('no_articles_available'));
 		}
 	}
 
@@ -61,9 +61,9 @@ abstract class sly_Controller_Content_Base extends sly_Controller_Backend {
 	}
 
 	protected function header() {
-		if (is_null($this->article)) {
+		if ($this->article === null) {
 			sly_Core::getLayout()->pageHeader(t('content'));
-			print sly_Helper_Message::warn(t('no_article_available'));
+			print sly_Helper_Message::warn(t('no_articles_available'));
 			return false;
 		}
 		else {

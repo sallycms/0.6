@@ -73,7 +73,7 @@
 	if (!$this->renderAddCategory && !$currentCategory && empty($categories)) {
 		?>
 		<tr>
-			<td colspan="<?php $isActive ? 5 : 4 ?>" class="sly-icon"><?php echo t('no_categories_yet') ?></td>
+			<td colspan="<?php echo $isActive ? 5 : 4 ?>" class="sly-icon"><?php echo t('no_categories_yet') ?></td>
 		</tr>
 		<?php
 	}

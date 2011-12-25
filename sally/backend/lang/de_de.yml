@@ -97,7 +97,8 @@ logged_out: nicht angemeldet
 logged_in_as: Angemeldet als
 
 add_slice: Block hinzufügen
-no_article_available: Keine Artikel vorhanden.
+no_articles_available: Keine Artikel vorhanden.
+no_categories_available: Keine Kategorien vorhanden.
 module_not_found: 'Das Modul {0} wurde nicht gefunden!'
 edit_slice: Block bearbeiten
 
