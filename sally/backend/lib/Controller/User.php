@@ -22,10 +22,10 @@ class sly_Controller_User extends sly_Controller_Backend {
 		// add subpages
 		else {
 			$navigation = sly_Core::getNavigation();
-			$specials   = $navigation->get('user', 'system');
+			$page       = $navigation->get('user', 'system');
 
 			foreach ($subpages as $subpage) {
-				$specials->addSubpage($subpage[0], $subpage[1]);
+				$page->addSubpage($subpage[0], $subpage[1]);
 			}
 		}
 

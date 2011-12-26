@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Specials extends sly_Controller_Backend {
+class sly_Controller_System extends sly_Controller_Backend {
 	protected $warning;
 	protected $info;
 
@@ -16,13 +16,13 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 		// add subpages
 
 		$navigation = sly_Core::getLayout()->getNavigation();
-		$specials   = $navigation->get('specials', 'system');
+		$system     = $navigation->get('system', 'system');
 
 		// show error log when using the original system error handler
 		// (that's the only case when we can ensure that we're able to parse the error log)
 
 		$subline = array();
-		foreach($specials->getSubpages() as $subpage) {
+		foreach ($system->getSubpages() as $subpage) {
 			$subline[] = array($subpage->getPageParam(), $subpage->getTitle());
 		}
 
@@ -31,7 +31,7 @@ class sly_Controller_Specials extends sly_Controller_Backend {
 	}
 
 	protected function index() {
-		print $this->render('specials/index.phtml');
+		print $this->render('system/index.phtml');
 	}
 
 	protected function clearcache() {

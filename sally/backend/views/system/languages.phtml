@@ -11,19 +11,17 @@
 if (!empty($this->warning)) print sly_Helper_Message::warn($this->warning);
 if (!empty($this->info))    print sly_Helper_Message::info($this->info);
 
-?>
-
-<div class="sly-form" id="sly-form-specials-languages">
-	<?php if ($this->func == 'add' || $this->func == 'edit'): ?>
+if ($this->func == 'add' || $this->func == 'edit'): ?>
+<div class="sly-form">
 	<form action="index.php" method="post">
-		<input type="hidden" name="page" value="specials_languages" />
+		<input type="hidden" name="page" value="system_languages" />
 		<input type="hidden" name="clang_id" value="<?php echo (int) $this->id ?>" />
 		<input type="hidden" name="func" value="<?php echo $this->func ?>" />
 	<?php endif ?>
 
 	<?php
 
-	$base = 'index.php?page=specials_languages&func=';
+	$base = 'index.php?page=system_languages&func=';
 	$link = sly_Util_HTML::getSpriteLink($base.'add', t('add_language'), 'language-add');
 
 	$table = new sly_Table('languages');
@@ -51,7 +49,7 @@ if (!empty($this->info))    print sly_Helper_Message::info($this->info);
 	}
 
 	foreach ($this->languages as $language) {
-		print $this->render('specials/languages_row.phtml', array(
+		print $this->render('system/languages_row.phtml', array(
 			'clangID'     => $language->getId(),
 			'clangName'   => $language->getName(),
 			'clangLocale' => $language->getLocale()
@@ -63,5 +61,5 @@ if (!empty($this->info))    print sly_Helper_Message::info($this->info);
 
 	if ($this->func === 'add' || $this->func === 'edit'): ?>
 	</form>
-	<?php endif ?>
 </div>
+<?php endif ?>

@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Specials_Errorlog extends sly_Controller_Specials {
+class sly_Controller_System_Errorlog extends sly_Controller_System {
 	protected function init() {
 		parent::init();
 
@@ -72,7 +72,7 @@ class sly_Controller_Specials_Errorlog extends sly_Controller_Specials {
 			);
 		}
 
-		print $this->render('specials/errorlog.phtml', compact('data', 'lineCount', 'max'));
+		print $this->render('system/errorlog.phtml', compact('data', 'lineCount', 'max'));
 	}
 
 	protected function clear() {
@@ -130,5 +130,4 @@ class sly_Controller_Specials_Errorlog extends sly_Controller_Specials {
 		fclose($fp);
 		return $lines;
 	}
-
 }

@@ -2,7 +2,7 @@
 .sly-sprite-language-add { background-position: 0 -64px; }
 
 /*	System: Einstellungen */
-#sly-page-specials {
+#sly-page-system {
 	.button {
 		margin-bottom: 15px;
 	}
@@ -34,14 +34,14 @@
 
 /*	System: Sprachen */
 
-#sly-form-specials-languages {
+#sly-page-system-languages {
 	.sly-col-locale { width: 120px; }
 	.sly-col-func   { width: 110px; }
 }
 
 /* System: Fehlerprotokoll */
 
-#sly-page-specials-errorlog {
+#sly-page-system-errorlog {
 	.sly-button {
 		cursor: pointer;
 		margin-left: 0;
@@ -51,9 +51,9 @@
 	.sly-table {
 		th { padding-left: 9px; }
 		td { padding: 4px; height: auto; }
-		.date { text-align: right; width: 150px; }
-		.location, .request { padding-left: 34px; }
+		.sly-col-date { text-align: right; width: 150px; }
+		.sly-col-location, .sly-col-request { padding-left: 34px; }
 		em { font-style: italic; }
-		.where td, .request td { border-top: 0 none; }
+		.sly-col-where td, .sly-col-request td { border-top: 0 none; }
 	}
 }

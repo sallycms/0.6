@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Specials_Languages extends sly_Controller_Specials {
+class sly_Controller_System_Languages extends sly_Controller_System {
 	// for now just copy those two fields and the init() method, until
 	// I find a nice way to generalize it into. --xrstf
 
@@ -19,7 +19,7 @@ class sly_Controller_Specials_Languages extends sly_Controller_Specials {
 	protected function index() {
 		$languageService = sly_Service_Factory::getLanguageService();
 		$this->languages = $languageService->find(null, null, 'id');
-		print $this->render('specials/languages.phtml');
+		print $this->render('system/languages.phtml');
 	}
 
 	protected function add() {

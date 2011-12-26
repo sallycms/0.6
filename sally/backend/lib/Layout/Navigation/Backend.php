@@ -48,15 +48,15 @@ class sly_Layout_Navigation_Backend {
 			}
 
 			if ($isAdmin) {
-				$specials = $this->addPage('system', 'specials', t('system'));
-				$specials->addSubpage('specials', t('settings'));
-				$specials->addSubpage('specials_languages', t('languages'));
+				$system = $this->addPage('system', 'system');
+				$system->addSubpage('system', t('settings'));
+				$system->addSubpage('system_languages', t('languages'));
 
 				if (!sly_Core::isDeveloperMode()) {
 					$handler = sly_Core::getErrorHandler();
 
 					if (get_class($handler) === 'sly_ErrorHandler_Production') {
-						$specials->addSubpage('specials_errorlog', t('errorlog'));
+						$system->addSubpage('system_errorlog', t('errorlog'));
 					}
 				}
 			}

@@ -17,7 +17,7 @@ if ($clangID == 0) {
 	$delLink = '<span class="sly-na">'.$delLink.'</span>';
 }
 else {
-	$delLink = '<a href="index.php?page=specials_languages&amp;func=delete&amp;clang_id='.$clangID.'" class="sly-action sly-delete">'.$delLink.'</a>';
+	$delLink = '<a href="index.php?page=system_languages&amp;func=delete&amp;clang_id='.$clangID.'" class="sly-action sly-delete">'.$delLink.'</a>';
 }
 
 // Edit form
@@ -34,7 +34,7 @@ if ($this->func == 'edit' && $editID == $clangID) {
 	<?php
 }
 else {
-	$editLink = 'index.php?page=specials_languages&func=edit&clang_id='.$clangID.'#languages';
+	$editLink = 'index.php?page=system_languages&func=edit&clang_id='.$clangID.'#languages';
 
 	?>
 	<tr>
