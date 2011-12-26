@@ -78,9 +78,8 @@ if ($this->action == 'add' || $this->action == 'edit') {
 				<span class="rex-i-element-text"><?php echo t('add_category') ?></span>
 			</a>
 		</th>
-		<th class="sly-col-id">ID</th>
 		<th class="sly-col-name"><?php echo t('category_name') ?></th>
-		<th class="sly-col-func" colspan="2"><?php echo t('function') ?></th>
+		<th class="sly-col-func"><?php echo t('function') ?></th>
 	</tr></thead>
 	<tbody><?php
 
@@ -88,9 +87,8 @@ if ($this->action == 'add' || $this->action == 'edit') {
 		?>
 		<tr class="sly-active">
 			<td class="sly-col-icon sly-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?php echo t('add_category') ?></span></span></td>
-			<td class="sly-col-id">-</td>
 			<td class="sly-col-name sly-has-input"><div><input class="sly-form-text" type="text" size="10" id="sly-form-field-name" name="catname" value="" autofocus="autofocus" required="required" placeholder="<?php echo ht('category_name') ?>" /></div></td>
-			<td class="sly-col-func sly-has-input" colspan="2"><div><input type="submit" class="sly-form-submit" value="<?php echo t('add_category') ?>" /></div></td>
+			<td class="sly-col-func sly-has-input"><div><input type="submit" class="sly-form-submit" value="<?php echo t('add_category') ?>" /></div></td>
 		</tr>
 		<?php
 	}
@@ -102,7 +100,6 @@ if ($this->action == 'add' || $this->action == 'edit') {
 			?>
 			<tr class="sly-active">
 				<td class="sly-col-icon sly-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?php echo sly_html($cat->getName())?></span></span></td>
-				<td class="sly-col-id"><?php echo $id ?></td>
 				<td class="sly-col-name sly-has-input"><div><input class="sly-form-text" type="text" id="sly-form-field-name" name="catname" value="<?php echo sly_html($cat->getName()) ?>" autofocus="autofocus" required="required" placeholder="<?php echo ht('category_name') ?>" /></div></td>
 				<td class="sly-col-func sly-has-input" colspan="2"><div><input type="submit" class="sly-form-submit" value="<?php echo t('save') ?>" /></div></td>
 			</tr>
@@ -112,7 +109,6 @@ if ($this->action == 'add' || $this->action == 'edit') {
 			?>
 			<tr>
 				<td class="sly-col-icon sly-icon"><a class="rex-i-element rex-i-mediapool-category sly-sprite" href="<?php echo $base.$id ?>"><span class="rex-i-element-text"><?php echo sly_html($cat->getName())?></span></a></td>
-				<td class="sly-col-id"><?php echo $id ?></td>
 				<td class="sly-col-name"><a href="<?php echo $base.$id ?>"><?php echo sly_html($cat->getName()) ?></a></td>
 				<td class="sly-col-func">
 					<a href="<?php echo $base.$catID ?>&amp;func=edit&amp;edit_id=<?php echo $id ?>"><?php echo t('change')?></a>
@@ -126,7 +122,7 @@ if ($this->action == 'add' || $this->action == 'edit') {
 	if (empty($categories) && $this->action !== 'add' && $this->action !== 'edit') {
 		?>
 		<tr>
-			<td colspan="5" class="center"><?php echo t('no_categories_yet') ?></td>
+			<td colspan="3" class="center"><?php echo t('no_categories_yet') ?></td>
 		</tr>
 		<?php
 	}

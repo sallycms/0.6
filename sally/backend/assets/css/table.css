@@ -7,12 +7,10 @@
 	+border-bottom-radius(5px);
 
 	th, td {
-		&.sly-icon, &.sly-small {
-			width: 29px;
-			text-align: center;
-		}
-
+		/* 'sly-col-icon' is only for identification, not for styling! */
 		&.sly-icon {
+			width: 40px;
+			text-align: center;
 			padding: 0;
 		}
 	}
@@ -57,6 +55,13 @@
 	tr.sly-active td {
 		background-color: $link_color;
 		color: #fff;
+	}
+
+	/* make sure the active row doesn't kill the border-bottom with its background color */
+
+	tr:last-child.sly-active td {
+		&:first-child { +border-bottom-left-radius(4px); }
+		&:last-child { +border-bottom-right-radius(4px); }
 	}
 
 	input[type=submit] {

@@ -120,9 +120,6 @@
 /* structure management */
 
 #sly-page-mediapool-structure {
-	.sly-col-icon { width: 40px;  }
-	.sly-col-id   { width: 40px;  }
-	.sly-col-name { width: 460px; }
 	.sly-col-func { width: 150px; }
 }
 

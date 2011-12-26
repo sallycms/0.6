@@ -25,10 +25,10 @@ if ($this->func == 'add' || $this->func == 'edit'): ?>
 	$link = sly_Util_HTML::getSpriteLink($base.'add', t('add_language'), 'language-add');
 
 	$table = new sly_Table('languages');
-	$table->addColumn(new sly_Table_Column($link, '', '', array('class' => 'sly-icon')));
-	$table->addColumn(new sly_Table_Column(t('name')));
-	$table->addColumn(new sly_Table_Column(t('locale')));
-	$table->addColumn(new sly_Table_Column(t('function')));
+	$table->addColumn(new sly_Table_Column($link, '', '', array('class' => 'sly-col-icon sly-icon')));
+	$table->addColumn(new sly_Table_Column(t('name'), '', '', array('class' => 'sly-col-name')));
+	$table->addColumn(new sly_Table_Column(t('locale'), '', '', array('class' => 'sly-col-locale')));
+	$table->addColumn(new sly_Table_Column(t('function'), '', '', array('class' => 'sly-col-func')));
 
 	$table->openBuffer();
 
@@ -54,6 +54,14 @@ if ($this->func == 'add' || $this->func == 'edit'): ?>
 			'clangName'   => $language->getName(),
 			'clangLocale' => $language->getLocale()
 		));
+	}
+
+	if ($this->func !== 'add' && $this->func !== 'edit' && empty($articles)) {
+		?>
+		<tr>
+			<td colspan="4" class="sly-col-empty center"><?php echo t('no_languages_yet') ?></td>
+		</tr>
+		<?php
 	}
 
 	$table->closeBuffer();
