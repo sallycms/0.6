@@ -27,6 +27,7 @@ $form->addHiddenValue('callback', sly_request('callback', 'string'));
 // file title
 
 $title = new sly_Form_Input_Text('ftitle', t('title'));
+$title->setRequired();
 $form->add($title);
 $form->setFocus('ftitle');
 

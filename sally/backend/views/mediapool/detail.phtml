@@ -97,6 +97,7 @@ if ($this->canAccessFile($medium)) {
 
 	$title = new sly_Form_Input_Text('title', t('title'), $title);
 	$title->addFormRowClass('sly-mediapool-detail-title');
+	$title->setRequired();
 	$form->add($title);
 
 	// category
