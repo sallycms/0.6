@@ -239,12 +239,6 @@ a.sly-button {
 			float: none;
 			display: inline;
 		}
-
-		input.rex-chckbx {
-			margin-top: 3px;
-			margin-right: 5px;
-			float: left;
-		}
 	}
 
 	input.sly-form-submit-2 {
