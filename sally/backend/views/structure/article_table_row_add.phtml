@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 ?>
-<tr class="active">
+<tr class="sly-active">
 	<td class="sly-col-icon sly-icon"><?php echo sly_Util_HTML::getSpriteLink('', t('add_article'), 'article') ?></td>
 	<td class="sly-col-name sly-has-input" colspan="2"><div><input class="sly-form-text" type="text" name="article_name" autofocus="autofocus" required="required" placeholder="<?php echo ht('article_name') ?>" /></div></td>
 	<td class="sly-col-pos sly-has-input"><div><input class="sly-form-text" type="number" name="article_position" min="1" max="<?php echo $maxPosition+1 ?>" value="<?php echo $maxPosition+1 ?>" /></div></td>

@@ -10,7 +10,7 @@
 
 $base_url = 'index.php?page=structure&category_id='.$category->getId().'&clang='.$this->clangId;
 ?>
-<tr class="active">
+<tr class="sly-active">
 	<td class="sly-col-icon sly-icon">
 		<input type="hidden" name="edit_id" value="<?php echo $category->getId() ?>" />
 		<?php echo sly_Util_HTML::getSpriteLink($base_url, $category->getCatName(), 'category') ?>

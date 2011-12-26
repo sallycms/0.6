@@ -86,7 +86,7 @@ if ($this->action == 'add' || $this->action == 'edit') {
 
 	if ($this->action == 'add') {
 		?>
-		<tr class="active">
+		<tr class="sly-active">
 			<td class="sly-col-icon sly-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?php echo t('add_category') ?></span></span></td>
 			<td class="sly-col-id">-</td>
 			<td class="sly-col-name sly-has-input"><div><input class="sly-form-text" type="text" size="10" id="sly-form-field-name" name="catname" value="" autofocus="autofocus" required="required" placeholder="<?php echo ht('category_name') ?>" /></div></td>
@@ -100,7 +100,7 @@ if ($this->action == 'add' || $this->action == 'edit') {
 
 		if ($this->action == 'edit' && $editID == $id) {
 			?>
-			<tr class="active">
+			<tr class="sly-active">
 				<td class="sly-col-icon sly-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?php echo sly_html($cat->getName())?></span></span></td>
 				<td class="sly-col-id"><?php echo $id ?></td>
 				<td class="sly-col-name sly-has-input"><div><input class="sly-form-text" type="text" id="sly-form-field-name" name="catname" value="<?php echo sly_html($cat->getName()) ?>" autofocus="autofocus" required="required" placeholder="<?php echo ht('category_name') ?>" /></div></td>

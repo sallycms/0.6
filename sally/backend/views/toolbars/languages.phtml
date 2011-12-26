@@ -47,7 +47,7 @@ if (count($languages) > 1) {
 		$clangName = sly_translate($language->getName(), true); // contains sly_html()
 
 		if (!sly_Util_Language::hasPermissionOnLanguage($user, $clangID)) {
-			print '<span class="sly-strike">'.$clangName.'</span>';
+			print '<span class="sly-na">'.$clangName.'</span>';
 			$stop = $clangID == $curClang;
 		}
 		else {

@@ -14,7 +14,7 @@ $add_td  = '';
 $delLink = t('delete');
 
 if ($clangID == 0) {
-	$delLink = '<span class="sly-strike">'.$delLink.'</span>';
+	$delLink = '<span class="sly-na">'.$delLink.'</span>';
 }
 else {
 	$delLink = '<a href="index.php?page=specials_languages&amp;func=delete&amp;clang_id='.$clangID.'" class="sly-action sly-delete">'.$delLink.'</a>';
@@ -25,7 +25,7 @@ if ($this->func == 'edit' && $editID == $clangID) {
 	$name   = sly_post('clang_name', 'string', $clangName);
 	$locale = sly_post('clang_locale', 'string', $clangLocale);
 	?>
-	<tr class="active">
+	<tr class="sly-active">
 		<td class="sly-col-icon sly-icon"><?php echo sly_Util_HTML::getSpriteLink('', $name, 'language') ?></td>
 		<td class="sly-col-name sly-has-input"><div><input class="sly-form-text" type="text" name="clang_name" value="<?php echo sly_html($name) ?>" autofocus="autofocus" /></div></td>
 		<td class="sly-col-locale sly-has-input"><div><input class="sly-form-text" type="text" name="clang_locale" value="<?php echo sly_html($locale) ?>" /></div></td>

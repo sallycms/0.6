@@ -54,7 +54,7 @@
 		*position: relative;
 	}
 
-	tr.active td {
+	tr.sly-active td {
 		background-color: $link_color;
 		color: #fff;
 	}

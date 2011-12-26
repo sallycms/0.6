@@ -41,7 +41,7 @@ if (!empty($this->info))    print sly_Helper_Message::info($this->info);
 		$locale = sly_post('clang_locale', 'string');
 
 		?>
-		<tr class="active">
+		<tr class="sly-active">
 			<td class="sly-col-icon sly-icon"><?php echo sly_Util_HTML::getSpriteLink('', $name, 'language') ?></td>
 			<td class="sly-col-name sly-has-input"><div><input class="sly-form-text" type="text" name="clang_name" value="<?php echo sly_html($name) ?>" autofocus="autofocus" required="required" placeholder="<?php echo ht('name') ?>" /></div></td>
 			<td class="sly-col-locale sly-has-input"><div><input class="sly-form-text" type="text" name="clang_locale" value="<?php echo sly_html($locale) ?>" required="required" placeholder="<?php echo ht('locale') ?>" /></div></td>

@@ -19,23 +19,23 @@
 	<?php
 	$add_url = '';
 	if ($canAdd) {
-		$add_url = 'index.php?page=structure&category_id=' . $this->categoryId . '&clang=' . $this->clangId . '&func=addArticle';
+		$add_url = 'index.php?page=structure&category_id='.$this->categoryId.'&clang='.$this->clangId.'&func=addArticle';
 	}
 	$add_article = sly_Util_HTML::getSpriteLink($add_url, t('add_article'), 'article-add');
 
 	$table = new sly_Table();
-	$table->addColumn(new sly_Table_Column($add_article, '', '', array('class' => 'sly-icon')));
-	$table->addColumn(new sly_Table_Column(t('article_name'), '', '', array('class' => 'name')));
-	$table->addColumn(new sly_Table_Column(t('articletype'), '', '', array('class' => 'arttype')));
+	$table->addColumn(new sly_Table_Column($add_article, '', '', array('class' => 'sly-col-icon sly-icon')));
+	$table->addColumn(new sly_Table_Column(t('article_name'), '', '', array('class' => 'sly-col-name')));
+	$table->addColumn(new sly_Table_Column(t('articletype'), '', '', array('class' => 'sly-col-arttype')));
 
 	$isActive = $this->renderAddArticle || $this->renderEditArticle;
 
 	if ($isActive) {
-		$table->addClass('active');
-		$table->addColumn(new sly_Table_Column(t('position_short'), '', '', array('class' => 'pos')));
+		$table->addClass('sly-active');
+		$table->addColumn(new sly_Table_Column(t('position_short'), '', '', array('class' => 'sly-col-pos')));
 	}
 
-	$table->addColumn(new sly_Table_Column(t('status'), '', '', array('class' => 'status')));
+	$table->addColumn(new sly_Table_Column(t('status'), '', '', array('class' => 'sly-col-status')));
 	$table->openBuffer();
 
 	if ($this->renderAddArticle) {
