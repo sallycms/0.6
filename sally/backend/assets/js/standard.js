@@ -571,13 +571,6 @@ var sly = {};
 			return false;
 		});
 
-		// Login-Formular
-
-		if ($('#rex-form-login').length > 0) {
-			$('#rex-form-login').focus();
-			$('#javascript').val('1');
-		}
-
 		// Benutzer-Formular
 
 		if ($('#sly-page-user .sly-form').length > 0) {
