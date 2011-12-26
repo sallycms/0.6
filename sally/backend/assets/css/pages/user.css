@@ -1,2 +1,8 @@
 .sly-sprite-sly-user     { background-position: 0 0; }
 .sly-sprite-sly-user-add { background-position: 0 -16px; }
+
+#sly-page-user {
+	.sly-col-username   { width: 200px; }
+	.sly-col-last-login { width: 150px; }
+	.sly-col-func       { width: 110px; }
+}

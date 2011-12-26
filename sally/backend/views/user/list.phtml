@@ -13,7 +13,6 @@ $thIcon = '<a href="'.$base.'add"><img class="sly-icon sly-sprite sly-sprite-sly
 $table  = new sly_Table('users');
 
 $table->addColumn(new sly_Table_Column($thIcon, '', '', array('class' => 'sly-col-icon sly-icon')));
-$table->addColumn(new sly_Table_Column('ID', '', '', array('class' => 'sly-col-id')));
 $table->addColumn(new sly_Table_Column(t('name'), '', '', array('class' => 'sly-col-name')));
 $table->addColumn(new sly_Table_Column(t('username'), '', '', array('class' => 'sly-col-username')));
 $table->addColumn(new sly_Table_Column(t('last_login'), '', '', array('class' => 'sly-col-last-login')));
@@ -43,7 +42,6 @@ foreach ($users as $user) {
 				<img src="assets/empty.png" class="sly-icon sly-sprite sly-sprite-sly-user" alt="" title="<?php echo sly_html($login) ?>" />
 			</a>
 		</td>
-		<td class="sly-col-id sly-center"><?php echo $id ?></td>
 		<td class="sly-col-name"><a href="<?php echo $base ?>edit&amp;id=<?php echo $id ?>"><?php echo sly_html($name) ?></a></td>
 		<td class="sly-col-username"><?php echo sly_html($user->getLogin()) ?></td>
 		<td class="sly-col-last-login"><?php echo sly_Util_String::formatDatetime($user->getLastTryDate()) ?></td>

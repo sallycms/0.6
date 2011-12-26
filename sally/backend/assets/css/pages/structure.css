@@ -6,13 +6,7 @@
 
 #sly-page-structure {
 	/* total width: 797px */
-	.sly-table {
-		+border-radius(0px);
-		border: 0;
-	}
-
 	.sly-col-icon     { width: 40px;  }
-	.sly-col-id       { width: 40px;  }
 	.sly-col-name     { min-width: 287px; }
 	.sly-col-arttype  { min-width: 180px; max-width: 240px; }
 	.sly-col-pos      { width: 55px;  }

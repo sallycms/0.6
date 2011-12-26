@@ -22,7 +22,7 @@ ins {
 	text-decoration: none;
 }
 
-del, .sly-strike /* <- deprecated as of 0.6 */, .sly-na {
+del, .sly-strike, .sly-na {
 	text-decoration: line-through;
 }
 
