@@ -4,7 +4,7 @@
 	}
 
 	.col-b {
-		/* in case we have no rex-area, but a info box */
+		/* in case we have no sly-area, but a info box */
 		float: right;
 	}
 
@@ -21,7 +21,7 @@
 
 	/* Category tree */
 
-	.rex-area {
+	.sly-area {
 		ul {
 			border-left: 1px dotted $md_grey;
 			padding-left: 1px;

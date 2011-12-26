@@ -14,10 +14,10 @@ $license = SLY_BASE.'/_lizenz.txt';
 $license = file_exists($license) ? file_get_contents($license) : t('setup_license_not_found');
 
 ?>
-<div class="rex-area">
+<div class="sly-area">
 	<h2><?php print t('setup_license_header') ?></h2>
 
-	<div class="rex-area-content">
+	<div class="sly-area-content">
 		<h3><?php print t('setup_license_steps') ?></h3>
 		<ul>
 			<li><?php print t('setup_license_step_1') ?></li>
@@ -25,12 +25,12 @@ $license = file_exists($license) ? file_get_contents($license) : t('setup_licens
 			<li><?php print t('setup_license_step_3') ?></li>
 			<li><?php print t('setup_license_step_4') ?></li>
 		</ul>
-		<div class="rex-area-scroll">
+		<div class="sly-area-scroll">
 			<p><?php print nl2br($license) ?></p>
 		</div>
 	</div>
 
-	<div class="rex-area-footer">
+	<div class="sly-area-footer">
 		<p class="rex-algn-rght"><a href="index.php?page=setup&amp;func=fsperms&amp;lang=<?php print urlencode($this->lang) ?>">&raquo; <?php print t('setup_license_accept') ?></a></p>
 	</div>
 </div>

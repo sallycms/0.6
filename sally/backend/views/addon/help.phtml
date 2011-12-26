@@ -23,10 +23,10 @@ if ($author)      $credits .= sprintf($format, t('author'), sly_html($author));
 if ($supportPage) $credits .= sprintf($format, t('supportpage'), $supportPage);
 
 ?>
-<div class="rex-area sly-addon-help">
+<div class="sly-area sly-addon-help">
 	<h2><?php echo t('component_help', $name) ?></h2>
 
-	<div class="rex-area-content">
+	<div class="sly-area-content">
 		<?php if (!is_file($helpfile)): ?>
 		<p><?php echo t('component_help_file_not_found') ?></p>
 		<?php else: ?>
@@ -35,7 +35,7 @@ if ($supportPage) $credits .= sprintf($format, t('supportpage'), $supportPage);
 		<dl><?php echo $credits ?></dl>
 	</div>
 
-	<div class="rex-area-footer">
+	<div class="sly-area-footer">
 		<p><a href="#" onclick="history.go(-1); return false"><?php echo t('back') ?></a></p>
 	</div>
 </div>

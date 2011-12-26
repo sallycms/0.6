@@ -168,7 +168,7 @@ caption, legend {
 
 /* AREAS */
 
-.rex-area {
+.sly-area {
 	margin-bottom: 10px;
 
 	> h2 {
@@ -181,7 +181,7 @@ caption, legend {
 	}
 }
 
-.rex-area-footer {
+.sly-area-footer {
 	background-color: $drk_grey;
 	color: white;
 	padding: 7px 10px;
@@ -192,7 +192,7 @@ caption, legend {
 	}
 }
 
-.rex-area-content {
+.sly-area-content {
 	line-height: 1.6;
 	padding: 10px;
 	+border-bottom-radius($brd_rad);
@@ -238,15 +238,15 @@ caption, legend {
 	}
 }
 
-.rex-area-col-2 {
+.sly-area-col-2 {
 	+clearfix;
 
 	> div {
 		width: 394px;
 	}
 
-	.rex-area.col-a { float: left;  }
-	.rex-area.col-b { float: right; }
+	.sly-area.col-a { float: left;  }
+	.sly-area.col-b { float: right; }
 }
 
 .rex-i-element {

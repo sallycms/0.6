@@ -20,7 +20,7 @@ foreach ($articles as $idx => $article) {
 
 ?>
 <div id="rex-linkmap">
-	<div class="rex-area-col-2">
+	<div class="sly-area-col-2">
 		<?php
 		if ($cats === 0) {
 			print '<div class="col-a" style="float:left">';
@@ -29,9 +29,9 @@ foreach ($articles as $idx => $article) {
 		}
 		else {
 			?>
-			<div class="rex-area col-a">
+			<div class="sly-area col-a">
 				<h2><?php echo t('categories') ?></h2>
-				<div class="rex-area-content">
+				<div class="sly-area-content">
 				<?php
 				print $this->tree($this->roots);
 				?>
@@ -47,9 +47,9 @@ foreach ($articles as $idx => $article) {
 		}
 		else {
 			?>
-			<div class="rex-area col-b">
+			<div class="sly-area col-b">
 				<h2><?php echo t('articles') ?></h2>
-				<div class="rex-area-content articlelist">
+				<div class="sly-area-content articlelist">
 					<ul>
 						<?php
 						foreach ($articles as $article) {

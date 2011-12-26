@@ -81,7 +81,7 @@ a.sly-button {
 	cursor: default;
 }
 
-.rex-area-content {
+.sly-area-content {
 	.rex-form-checkbox, .rex-form-radio {
 		line-height: 1em;
 	}

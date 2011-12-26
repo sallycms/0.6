@@ -16,10 +16,10 @@ $this->title(t('setup_step_n', 1, 5));
 	<p class="sly-warn"><span><?php print t('setup_security_msg') ?></span></p>
 </div>
 
-<div class="rex-area">
+<div class="sly-area">
 	<h2><?php print t('setup_system_requirements') ?></h2>
 
-	<div class="rex-area-content sly-setup-requirements">
+	<div class="sly-area-content sly-setup-requirements">
 		<table summary="">
 			<thead><tr>
 				<th class="sly-testcase"><?php print t('setup_property') ?></th>
@@ -41,14 +41,14 @@ $this->title(t('setup_step_n', 1, 5));
 	</div>
 
 	<?php if ($sysErrors): ?>
-	<div class="rex-area-footer sly-fs-errors">
+	<div class="sly-area-footer sly-fs-errors">
 		<p class="rex-algn-rght"><?php print t('setup_please_fix_problems') ?></p>
 	</div>
 	<?php endif ?>
 
 	<?php if (!empty($cantCreate) || !empty($protects)): ?>
 	<h2 class="sly-setup-fs-problems"><?php print t('setup_filesystem_problems') ?></h2>
-	<div class="rex-area-content sly-setup-fs-problems">
+	<div class="sly-area-content sly-setup-fs-problems">
 		<?php if (!empty($cantCreate)): ?>
 		<p><?php print t('setup_cannot_create_dirs') ?></p>
 
@@ -72,11 +72,11 @@ $this->title(t('setup_step_n', 1, 5));
 		<iframe src="views/setup/direct.phtml?lang=<?php print urlencode($this->lang) ?>" style="display:none"></iframe>
 	</div>
 
-	<div class="rex-area-footer sly-fs-errors">
+	<div class="sly-area-footer sly-fs-errors">
 		<p class="rex-algn-rght"><?php print t('setup_please_fix_problems') ?></p>
 	</div>
 	<?php elseif (!$errors): ?>
-	<div class="rex-area-footer">
+	<div class="sly-area-footer">
 		<p id="nextstep" class="rex-algn-rght">
 			<a href="index.php?page=setup&amp;func=dbconfig&amp;lang=<?php print urlencode($this->lang) ?>">&raquo; <?php print t('setup_continue_to_n', 2) ?></a>
 		</p>
