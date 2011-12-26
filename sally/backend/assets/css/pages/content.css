@@ -36,7 +36,7 @@
 
 /* add block widget */
 .sly-form-add-slice {
-	.rex-form-wrapper {
+	.sly-form-wrapper {
 		+border-top-radius(4px);
 		background-color: #e8e8e8;
 		margin-bottom: 10px;
@@ -184,7 +184,7 @@
 			display: none;
 		}
 
-		.rex-form-wrapper {
+		.sly-form-wrapper {
 			margin-bottom: 0;
 		}
 
@@ -192,7 +192,7 @@
 			margin-top: 5px;
 		}
 
-		.rex-form-row {
+		.sly-form-row {
 			padding: 7px 10px;
 			width: 777px;
 
@@ -208,7 +208,7 @@
 }
 
 /* styling for slice edit submit row */
-.sly-contentpage-slice-input + .rex-form-row {
+.sly-contentpage-slice-input + .sly-form-row {
 	clear: both;
 	border: 0;
 	+border-bottom-radius(4px);

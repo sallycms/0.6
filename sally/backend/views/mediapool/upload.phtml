@@ -16,7 +16,7 @@ print $this->render('mediapool/notices.phtml');
 ////////////////////////////////////////////////////////
 // init form
 
-$form = new sly_Form('index.php', 'POST', t('upload_medium'), '', 'rex-form-mediapool-other');
+$form = new sly_Form('index.php', 'POST', t('upload_medium'), '', 'sly-form-mediapool-other');
 $form->setEncType('multipart/form-data');
 
 $form->addHiddenValue('page', 'mediapool_upload');

@@ -89,8 +89,8 @@ if ($this->action == 'add' || $this->action == 'edit') {
 		<tr class="active">
 			<td class="sly-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?php echo t('add_category') ?></span></span></td>
 			<td class="sly-small sly-col-b">-</td>
-			<td class="name sly-has-input"><div><input class="rex-form-text" type="text" size="10" id="rex-form-field-name" name="catname" value="" autofocus="autofocus" required="required" placeholder="<?php echo ht('category_name') ?>" /></div></td>
-			<td class="sly-col-d sly-has-input" colspan="2"><div><input type="submit" class="rex-form-submit" value="<?php echo t('add_category') ?>" /></div></td>
+			<td class="name sly-has-input"><div><input class="sly-form-text" type="text" size="10" id="sly-form-field-name" name="catname" value="" autofocus="autofocus" required="required" placeholder="<?php echo ht('category_name') ?>" /></div></td>
+			<td class="sly-col-d sly-has-input" colspan="2"><div><input type="submit" class="sly-form-submit" value="<?php echo t('add_category') ?>" /></div></td>
 		</tr>
 		<?php
 	}
@@ -103,8 +103,8 @@ if ($this->action == 'add' || $this->action == 'edit') {
 			<tr class="active">
 				<td class="sly-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?php echo sly_html($cat->getName())?></span></span></td>
 				<td class="sly-small sly-col-b"><?php echo $id ?></td>
-				<td class="name sly-has-input"><div><input class="rex-form-text" type="text" id="rex-form-field-name" name="catname" value="<?php echo sly_html($cat->getName()) ?>" autofocus="autofocus" required="required" placeholder="<?php echo ht('category_name') ?>" /></div></td>
-				<td class="sly-col-d sly-has-input" colspan="2"><div><input type="submit" class="rex-form-submit" value="<?php echo t('save') ?>" /></div></td>
+				<td class="name sly-has-input"><div><input class="sly-form-text" type="text" id="sly-form-field-name" name="catname" value="<?php echo sly_html($cat->getName()) ?>" autofocus="autofocus" required="required" placeholder="<?php echo ht('category_name') ?>" /></div></td>
+				<td class="sly-col-d sly-has-input" colspan="2"><div><input type="submit" class="sly-form-submit" value="<?php echo t('save') ?>" /></div></td>
 			</tr>
 			<?php
 		}

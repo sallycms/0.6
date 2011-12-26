@@ -16,7 +16,7 @@ $this->render('mediapool/notices.phtml');
 ////////////////////////////////////////////////////////
 // init form
 
-$form = new sly_Form('index.php', 'POST', t('sync_files'), '', 'rex-form-mediapool-sync');
+$form = new sly_Form('index.php', 'POST', t('sync_files'), '', 'sly-form-mediapool-sync');
 
 $form->addHiddenValue('page', 'mediapool_sync');
 $form->addHiddenValue('func', 'sync');

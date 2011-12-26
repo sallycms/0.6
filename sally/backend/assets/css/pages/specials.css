@@ -9,11 +9,11 @@
 }
 
 #sly-form-system-setup {
-	.rex-form-wrapper {
+	.sly-form-wrapper {
 		margin: 0;
 	}
 
-	.rex-form-row {
+	.sly-form-row {
 		padding: 5px 0;
 		width: 375px;
 	}
@@ -26,7 +26,7 @@
 		input { width: 144px; }
 	}
 
-	input.rex-form-submit {
+	input.sly-form-submit {
 		margin-left: 180px;
 		width: auto;
 	}

@@ -1,11 +1,11 @@
-.rex-form-setup-step-database .rex-form-row {
-	p input.rex-form-radio,
-	p input.rex-form-submit {
+.sly-form-setup-step-database .sly-form-row {
+	p input.sly-form-radio,
+	p input.sly-form-submit {
 		margin-left: 5px;
 	}
 }
 
-.rex-form-setup-admin .rex-form-row p.rex-form-text input {
+.sly-form-setup-admin .sly-form-row p.sly-form-text input {
 	width: 200px;
 }
 
@@ -49,16 +49,16 @@ ul.rex-setup-language {
 	}
 
 	.sly-form {
-		.rex-form-text input,
-		.rex-form-password input,
+		.sly-form-text input,
+		.sly-form-password input,
 		select#driver,
 		select#timezone {
 			width: 250px;
 		}
 
 		legend { width: 640px; }
-		.rex-form-wrapper { width: 650px; }
-		.rex-form-row { width: 636px; }
+		.sly-form-wrapper { width: 650px; }
+		.sly-form-row { width: 636px; }
 	}
 }
 
@@ -92,7 +92,7 @@ ul.rex-setup-language {
 /*	Formulare */
 
 #sly-setup-dbsetup {
-	.rex-form-wrapper {
+	.sly-form-wrapper {
 		margin-bottom: 0;
 	}
 
@@ -100,8 +100,8 @@ ul.rex-setup-language {
 	#create_db { width: auto; }
 }
 
-#rex-form-setup-step-2 {
-	.rex-form-checkbox {
+#sly-form-setup-step-2 {
+	.sly-form-checkbox {
 		margin-left: 0;
 	}
 }

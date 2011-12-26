@@ -57,7 +57,7 @@ if (count($available) > 1 || key($available) !== 'sqlite') {
 	$create = new sly_Form_Input_Checkbox('create_db', '', '1', t('create'));
 	$name   = new sly_Form_Freeform('dbname', t('database'), $dbname->render().' '.$create->render());
 
-	$name->addFormRowClass('rex-form-text'); // so that the styles for the input box apply
+	$name->addFormRowClass('sly-form-text'); // so that the styles for the input box apply
 	$form->add($name);
 }
 else {

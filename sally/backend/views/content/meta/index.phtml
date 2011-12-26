@@ -31,7 +31,7 @@ $form->setResetButton(null);
 /////////////////////////////////////////////////////////////////
 // article name / metadata
 
-$name = new sly_Form_Input_Text('meta_article_name', t('article_name'), $article->getName(), 'rex-form-meta-article-name');
+$name = new sly_Form_Input_Text('meta_article_name', t('article_name'), $article->getName());
 $form->add($name);
 
 $form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM', $form, $params);

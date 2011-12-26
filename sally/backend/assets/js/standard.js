@@ -466,7 +466,7 @@ var sly = {};
 	var catsChecked = function() {
 		var c_checked = $('#userperm_cat_all').prop('checked');
 		var m_checked = $('#userperm_media_all').prop('checked');
-		var slider    = $('#sly-page-user .sly-form .rex-form-wrapper .sly-num7');
+		var slider    = $('#sly-page-user .sly-form .sly-form-wrapper .sly-num7');
 
 		$('#userperm_cat').prop('disabled', c_checked);
 		$('#userperm_media').prop('disabled', m_checked);
@@ -574,7 +574,7 @@ var sly = {};
 		// Benutzer-Formular
 
 		if ($('#sly-page-user .sly-form').length > 0) {
-			var wrapper = $('#sly-page-user .sly-form .rex-form-wrapper');
+			var wrapper = $('#sly-page-user .sly-form .sly-form-wrapper');
 			var sliders = wrapper.find('.sly-num6,.sly-num7');
 
 			$('#is_admin').change(function() {
@@ -667,7 +667,7 @@ var sly = {};
 
 		// Checkboxen erzeugen
 
-		$('.rex-form-row.sly-form-multilingual').each(function() {
+		$('.sly-form-row.sly-form-multilingual').each(function() {
 			var
 				$this   = $(this),
 				equal   = $this.is(':visible'),

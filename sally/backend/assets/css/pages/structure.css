@@ -12,8 +12,8 @@
 }
 
 /* total width: 797px */
-#rex-form-structure-category,
-#rex-form-structure-article {
+#sly-form-structure-category,
+#sly-form-structure-article {
 	.sly-icon { width: 40px;  }
 	.id       { width: 40px;  }
 	.name     { min-width: 287px; }

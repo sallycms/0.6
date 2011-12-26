@@ -37,15 +37,15 @@ class sly_Helper_Content {
 							<input type="hidden" name="module" value="<?php echo sly_html($module) ?>" />
 							<input type="hidden" name="pos" value="<?php echo $position ?>" />
 						</div>
-						<fieldset class="rex-form-col-1">
+						<fieldset class="sly-form-col-1">
 							<legend><?php echo t('add_slice') ?>: <?php echo sly_html($moduleService->getTitle($module)) ?></legend>
-							<div class="rex-form-wrapper">
+							<div class="sly-form-wrapper">
 								<div class="sly-contentpage-slice-input">
 									<?php eval('?>'.self::replaceObjectVars($values, $moduleContent)); ?>
 								</div>
-								<div class="rex-form-row">
-									<p class="rex-form-submit">
-										<input class="rex-form-submit" type="submit" name="btn_save" value="<?php echo t('add_slice') ?>" />
+								<div class="sly-form-row">
+									<p class="sly-form-submit">
+										<input class="sly-form-submit" type="submit" name="btn_save" value="<?php echo t('add_slice') ?>" />
 									</p>
 								</div>
 							</div>
@@ -92,16 +92,16 @@ class sly_Helper_Content {
 						<input type="hidden" name="slot" value="<?php echo $articleSlice->getSlot() ?>" />
 						<input type="hidden" name="pos" value="<?php echo $articleSlice->getPosition() ?>" />
 					</div>
-					<fieldset class="rex-form-col-1">
+					<fieldset class="sly-form-col-1">
 						<legend><?php echo t('edit_slice') ?>: <?php echo sly_html($moduleTitle) ?></legend>
-						<div class="rex-form-wrapper">
+						<div class="sly-form-wrapper">
 							<div class="sly-contentpage-slice-input">
 								<?php eval('?>'.self::replaceObjectVars($values, $articleSlice->getInput())); ?>
 							</div>
-							<div class="rex-form-row">
-								<p class="rex-form-submit">
-									<input class="rex-form-submit" type="submit" value="<?php echo t('save') ?>" name="btn_save" />
-									<input class="rex-form-submit rex-form-submit-2" type="submit" value="<?php echo t('apply') ?>" name="btn_update" />
+							<div class="sly-form-row">
+								<p class="sly-form-submit">
+									<input class="sly-form-submit" type="submit" value="<?php echo t('save') ?>" name="btn_save" />
+									<input class="sly-form-submit sly-form-submit-2" type="submit" value="<?php echo t('apply') ?>" name="btn_update" />
 								</p>
 							</div>
 						</div>

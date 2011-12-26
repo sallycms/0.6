@@ -22,7 +22,7 @@ print $this->render('mediapool/notices.phtml');
 ////////////////////////////////////////////////////////
 // list all files in the current category
 
-$form = new sly_Form('index.php', 'POST', t('selected_category'), '', 'rex-form-mediapool-media');
+$form = new sly_Form('index.php', 'POST', t('selected_category'), '', 'sly-form-mediapool-media');
 $form->addHiddenValue('page', 'mediapool');
 $form->addHiddenValue('func', 'batch');
 
@@ -67,15 +67,15 @@ ob_start();
 			$add_input =
 				'<label for="rex_move_file_dest_category">'.t('selected_media').'</label>'.
 				$select->render().
-				'<input class="rex-form-submit-2 sly-button-changecat rex-form-submit" type="submit" name="move" value="'.t('move_to_category').'" />';
+				'<input class="sly-form-submit-2 sly-button-changecat sly-form-submit" type="submit" name="move" value="'.t('move_to_category').'" />';
 		}
 
-		$add_input .= '<input class="rex-form-submit-2 sly-button-delete rex-form-submit" type="submit" name="delete" value="'.t('delete').'" />';
+		$add_input .= '<input class="sly-form-submit-2 sly-button-delete sly-form-submit" type="submit" name="delete" value="'.t('delete').'" />';
 
 		?>
 		<tfoot><tr>
 			<td class="sly-icon">
-				<label class="rex-form-hidden-label" for="check_all"><?php echo t('select_all') ?></label>
+				<label class="sly-form-hidden-label" for="check_all"><?php echo t('select_all') ?></label>
 				<input class="sly-form-checkbox sly-check-all" type="checkbox" id="check_all" data-target="selectedmedia[]" />
 			</td>
 			<td colspan="3"><?php echo $add_input ?></td>

@@ -82,12 +82,12 @@ a.sly-button {
 }
 
 .sly-area-content {
-	.rex-form-checkbox, .rex-form-radio {
+	.sly-form-checkbox, .sly-form-radio {
 		line-height: 1em;
 	}
 }
 
-.rex-form-hidden-label {
+.sly-form-hidden-label {
 	+hide;
 }
 
@@ -212,13 +212,13 @@ a.sly-button {
 		}
 	}
 
-	.rex-form-col-2 {
+	.sly-form-col-2 {
 		input[type=text], input[type=password], select, textarea {
 			width: 200px;
 		}
 	}
 
-	.rex-form-row {
+	.sly-form-row {
 		+clearfix;
 		padding: 7px;
 		width: 783px;
@@ -247,19 +247,19 @@ a.sly-button {
 		}
 	}
 
-	input.rex-form-submit-2 {
+	input.sly-form-submit-2 {
 		margin-left: 20px;
 	}
 
-	input.rex-form-submit,
+	input.sly-form-submit,
 	input.sly-button-delete {
 		width: auto;
 	}
 
 	/*	Zweispaltig */
 
-	fieldset.rex-form-col-2 {
-		.rex-form-col-a, .rex-form-col-b {
+	fieldset.sly-form-col-2 {
+		.sly-form-col-a, .sly-form-col-b {
 			width: 49%;
 			float: left;
 		}
@@ -281,13 +281,13 @@ a.sly-button {
 		+border-top-radius(4px);
 	}
 
-	.rex-form-wrapper {
+	.sly-form-wrapper {
 		background-color: #fff;
 		+border-bottom-radius(4px);
 		margin-bottom: 20px;
 	}
 
-	input.rex-form-text[type="range"] {
+	input.sly-form-text[type="range"] {
 		width: 114px;
 
 		&.ua-supported {
@@ -296,13 +296,13 @@ a.sly-button {
 		}
 	}
 
-	input.rex-form-text[type="number"] {
+	input.sly-form-text[type="number"] {
 		width: 114px;
 	}
 
-	input.rex-form-text[type="date"],
-	input.rex-form-text[type="datetime"],
-	input.rex-form-text[type="datetime-local"] {
+	input.sly-form-text[type="date"],
+	input.sly-form-text[type="datetime"],
+	input.sly-form-text[type="datetime-local"] {
 		width: 114px;
 
 		&.ua-supported {
