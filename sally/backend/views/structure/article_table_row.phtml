@@ -40,13 +40,13 @@ else {
 }
 ?>
 <tr>
-	<td class="sly-icon"><?php echo sly_Util_HTML::getSpriteLink($base_url, $article->getName(), $sprite) ?></td>
-	<td class="name"><a href="<?php echo sly_html($base_url) ?>"><?php echo sly_html($article->getName()) ?></a></td>
-	<td class="arttype"><?php echo sly_html($type) ?></td>
+	<td class="sly-col-icon sly-icon"><?php echo sly_Util_HTML::getSpriteLink($base_url, $article->getName(), $sprite) ?></td>
+	<td class="sly-col-name"><a href="<?php echo sly_html($base_url) ?>"><?php echo sly_html($article->getName()) ?></a></td>
+	<td class="sly-col-arttype"><?php echo sly_html($type) ?></td>
 	<?php if ($isActive): ?>
-	<td class="pos"><?php echo sly_html($article->getPosition()) ?></td>
+	<td class="sly-col-pos"><?php echo sly_html($article->getPosition()) ?></td>
 	<?php endif ?>
-	<td class="status">
+	<td class="sly-col-status">
 		<?php
 		if ($canEdit) {
 			echo '<a href="'.$edit_url.'&amp;func=editArticle">'.t('change').'</a>&nbsp;';

@@ -20,10 +20,10 @@
 <table class="sly-table sly-addonlist" summary="<?php echo t('credits_caption') ?>">
 	<caption><?php echo t('credits_caption') ?></caption>
 	<thead><tr>
-		<th class="sly-icon">&nbsp;</th>
-		<th class="sly-col-b" colspan="2"><?php echo t('addon') ?></th>
-		<th class="sly-col-c"><?php echo t('version') ?></th>
-		<th><?php echo t('author') ?></th>
+		<th class="sly-col-icon sly-icon">&nbsp;</th>
+		<th class="sly-col-name" colspan="2"><?php echo t('addon') ?></th>
+		<th class="sly-col-version"><?php echo t('version') ?></th>
+		<th class="sly-col-author"><?php echo t('author') ?></th>
 	</tr></thead>
 	<tbody>
 
@@ -57,7 +57,7 @@
 	if (count($addons->getRegisteredAddons()) == 0) {
 		?>
 		<tr>
-			<td class="rex-col-a center" colspan="5"><?php echo t('no_addons_found') ?></td>
+			<td class="sly-col-empty center" colspan="5"><?php echo t('no_addons_found') ?></td>
 		</tr>
 		<?php
 	}

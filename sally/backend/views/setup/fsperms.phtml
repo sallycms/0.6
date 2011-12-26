@@ -22,20 +22,20 @@ $this->title(t('setup_step_n', 1, 5));
 	<div class="sly-area-content sly-setup-requirements">
 		<table summary="">
 			<thead><tr>
-				<th class="sly-testcase"><?php print t('setup_property') ?></th>
-				<th class="sly-required"><?php print t('required') ?></th>
-				<th class="sly-recommended"><?php print t('recommended') ?></th>
-				<th class="sly-status"><?php print t('status') ?></th>
+				<th class="sly-col-testcase"><?php print t('setup_property') ?></th>
+				<th class="sly-col-required"><?php print t('required') ?></th>
+				<th class="sly-col-recommended"><?php print t('recommended') ?></th>
+				<th class="sly-col-status"><?php print t('status') ?></th>
 			</tr></thead>
 			<tbody><?php foreach ($results as $type => $result): ?><tr class="<?php print $tester->getClassName($result[2]) ?>">
-				<td class="sly-testcase"><?php print t('setup_'.$type) ?></td>
+				<td class="sly-col-testcase"><?php print t('setup_'.$type) ?></td>
 				<?php if ($result[0] == $result[1]): ?>
-				<td class="sly-required center" colspan="2"><?php print sly_translate($result[0], true) ?></td>
+				<td class="sly-col-required center" colspan="2"><?php print sly_translate($result[0], true) ?></td>
 				<?php else: ?>
-				<td class="sly-required"><?php print sly_translate($result[0], true) ?></td>
-				<td class="sly-recommended"><?php print sly_translate($result[1], true) ?></td>
+				<td class="sly-col-required"><?php print sly_translate($result[0], true) ?></td>
+				<td class="sly-col-recommended"><?php print sly_translate($result[1], true) ?></td>
 				<?php endif ?>
-				<td class="sly-status"><?php print sly_html($result[2]['text']) ?></td>
+				<td class="sly-col-status"><?php print sly_html($result[2]['text']) ?></td>
 			</tr><?php endforeach ?></tbody>
 		</table>
 	</div>

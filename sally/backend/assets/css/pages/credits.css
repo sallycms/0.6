@@ -1,5 +1,6 @@
 #sly-page-credits {
-	th.sly-col-b, th.sly-col-c {
+	th.sly-col-version,
+	th.sly-col-name {
 		white-space: pre;
 		padding-right: 5px;
 		width: 50px;

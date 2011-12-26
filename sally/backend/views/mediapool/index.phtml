@@ -40,17 +40,11 @@ ob_start();
 ?>
 <table class="sly-table sly-mediapool-list" summary="">
 	<caption><?php echo t('selected_media') ?></caption>
-	<colgroup>
-		<col width="40" />
-		<col width="110" />
-		<col width="*" />
-		<col width="153" />
-	</colgroup>
 	<thead><tr>
-		<th class="sly-icon">&nbsp;</th>
-		<th><?php echo t('thumbnail') ?></th>
-		<th><?php echo t('file_info') ?> / <?php echo t('description') ?></th>
-		<th><?php echo t('functions') ?></th>
+		<th class="sly-col-icon sly-icon">&nbsp;</th>
+		<th class="sly-col-thumbnail"><?php echo t('thumbnail') ?></th>
+		<th class="sly-col-info"><?php echo t('file_info') ?> / <?php echo t('description') ?></th>
+		<th class="sly-col-func"><?php echo t('functions') ?></th>
 	</tr></thead>
 	<?php
 
@@ -74,11 +68,11 @@ ob_start();
 
 		?>
 		<tfoot><tr>
-			<td class="sly-icon">
+			<td class="sly-col-sly-icon">
 				<label class="sly-form-hidden-label" for="check_all"><?php echo t('select_all') ?></label>
 				<input class="sly-form-checkbox sly-check-all" type="checkbox" id="check_all" data-target="selectedmedia[]" />
 			</td>
-			<td colspan="3"><?php echo $add_input ?></td>
+			<td colspan="3" class="sly-col-footer"><?php echo $add_input ?></td>
 		</tr></tfoot>
 		<?php
 	}
@@ -143,19 +137,19 @@ ob_start();
 		$add_td = '<td>&nbsp;</td>';
 
 		if ($isAdmin) {
-			$add_td = '<td class="sly-icon"><input class="sly-form-checkbox" type="checkbox" name="selectedmedia[]" value="'.$id.'" /></td>';
+			$add_td = '<td class="sly-col-icon sly-icon"><input class="sly-form-checkbox" type="checkbox" name="selectedmedia[]" value="'.$id.'" /></td>';
 		}
 
 		?>
 		<tr>
 			<?php echo $add_td ?>
-			<td class="rex-thumbnail"><a href="<?php echo $ilink ?>"><?php echo $thumbnail ?></a></td>
-			<td>
-				<p class="rex-tx4"><a href="<?php echo $ilink ?>"><?php echo sly_html($title) ?></a></p>
-				<p class="rex-tx4"><span class="rex-suffix"><?php echo sly_html($filename) ?> [<?php echo $file->getFormattedSize() ?>]</span></p>
-				<p class="rex-tx1"><?php echo $updatedate ?> | <?php echo sly_html($updateuser) ?></p>
+			<td class="sly-col-thumbnail"><a href="<?php echo $ilink ?>"><?php echo $thumbnail ?></a></td>
+			<td class="sly-col-info">
+				<span><a href="<?php echo $ilink ?>"><?php echo sly_html($title) ?></a></span><br />
+				<span><span class="rex-suffix"><?php echo sly_html($filename) ?> [<?php echo $file->getFormattedSize() ?>]</span></span><br />
+				<span><?php echo $updatedate ?> | <?php echo sly_html($updateuser) ?></span>
 			</td>
-			<td><?php
+			<td class="sly-col-func"><?php
 
 			$opener_link = $this->getOpenerLink($file);
 			print sly_Core::dispatcher()->filter('SLY_MEDIA_LIST_FUNCTIONS', $opener_link, array('medium' => $file));
@@ -167,8 +161,7 @@ ob_start();
 
 	if (empty($files)): ?>
 		<tr>
-			<td></td>
-			<td colspan="3"><?php echo t('no_media_found') ?></td>
+			<td colspan="4" class="sly-col-empty"><?php echo t('no_media_found') ?></td>
 		</tr>
 	<?php endif ?>
 	</tbody>

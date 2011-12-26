@@ -73,24 +73,24 @@ if ($this->action == 'add' || $this->action == 'edit') {
 <table class="sly-table" id="sly-mediapool-structure">
 	<caption class="rex-hide"><?php echo sly_html(t('structure_caption')) ?></caption>
 	<thead><tr>
-		<th class="sly-icon">
+		<th class="sly-col-icon sly-icon">
 			<a class="rex-i-element rex-i-mediapool-category-add sly-sprite" href="<?php echo $base.$catID ?>&amp;func=add">
 				<span class="rex-i-element-text"><?php echo t('add_category') ?></span>
 			</a>
 		</th>
-		<th class="sly-small sly-col-b">ID</th>
-		<th class="name"><?php echo t('category_name') ?></th>
-		<th class="sly-col-d" colspan="2"><?php echo t('function') ?></th>
+		<th class="sly-col-id">ID</th>
+		<th class="sly-col-name"><?php echo t('category_name') ?></th>
+		<th class="sly-col-func" colspan="2"><?php echo t('function') ?></th>
 	</tr></thead>
 	<tbody><?php
 
 	if ($this->action == 'add') {
 		?>
 		<tr class="active">
-			<td class="sly-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?php echo t('add_category') ?></span></span></td>
-			<td class="sly-small sly-col-b">-</td>
-			<td class="name sly-has-input"><div><input class="sly-form-text" type="text" size="10" id="sly-form-field-name" name="catname" value="" autofocus="autofocus" required="required" placeholder="<?php echo ht('category_name') ?>" /></div></td>
-			<td class="sly-col-d sly-has-input" colspan="2"><div><input type="submit" class="sly-form-submit" value="<?php echo t('add_category') ?>" /></div></td>
+			<td class="sly-col-icon sly-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?php echo t('add_category') ?></span></span></td>
+			<td class="sly-col-id">-</td>
+			<td class="sly-col-name sly-has-input"><div><input class="sly-form-text" type="text" size="10" id="sly-form-field-name" name="catname" value="" autofocus="autofocus" required="required" placeholder="<?php echo ht('category_name') ?>" /></div></td>
+			<td class="sly-col-func sly-has-input" colspan="2"><div><input type="submit" class="sly-form-submit" value="<?php echo t('add_category') ?>" /></div></td>
 		</tr>
 		<?php
 	}
@@ -101,21 +101,23 @@ if ($this->action == 'add' || $this->action == 'edit') {
 		if ($this->action == 'edit' && $editID == $id) {
 			?>
 			<tr class="active">
-				<td class="sly-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?php echo sly_html($cat->getName())?></span></span></td>
-				<td class="sly-small sly-col-b"><?php echo $id ?></td>
-				<td class="name sly-has-input"><div><input class="sly-form-text" type="text" id="sly-form-field-name" name="catname" value="<?php echo sly_html($cat->getName()) ?>" autofocus="autofocus" required="required" placeholder="<?php echo ht('category_name') ?>" /></div></td>
-				<td class="sly-col-d sly-has-input" colspan="2"><div><input type="submit" class="sly-form-submit" value="<?php echo t('save') ?>" /></div></td>
+				<td class="sly-col-icon sly-icon"><span class="rex-i-element rex-i-mediapool-category sly-sprite"><span class="rex-i-element-text"><?php echo sly_html($cat->getName())?></span></span></td>
+				<td class="sly-col-id"><?php echo $id ?></td>
+				<td class="sly-col-name sly-has-input"><div><input class="sly-form-text" type="text" id="sly-form-field-name" name="catname" value="<?php echo sly_html($cat->getName()) ?>" autofocus="autofocus" required="required" placeholder="<?php echo ht('category_name') ?>" /></div></td>
+				<td class="sly-col-func sly-has-input" colspan="2"><div><input type="submit" class="sly-form-submit" value="<?php echo t('save') ?>" /></div></td>
 			</tr>
 			<?php
 		}
 		else {
 			?>
 			<tr>
-				<td class="sly-icon"><a class="rex-i-element rex-i-mediapool-category sly-sprite" href="<?php echo $base.$id ?>"><span class="rex-i-element-text"><?php echo sly_html($cat->getName())?></span></a></td>
-				<td class="sly-small"><?php echo $id ?></td>
-				<td class="name"><a href="<?php echo $base.$id ?>"><?php echo sly_html($cat->getName()) ?></a></td>
-				<td class="sly-col-e"><a href="<?php echo $base.$catID ?>&amp;func=edit&amp;edit_id=<?php echo $id ?>"><?php echo t('change')?></a></td>
-				<td class="sly-col-f"><a href="<?php echo $base.$catID ?>&amp;func=delete&amp;edit_id=<?php echo $id ?>" class="sly-action sly-delete"><?php echo t('delete') ?></a></td>
+				<td class="sly-col-icon sly-icon"><a class="rex-i-element rex-i-mediapool-category sly-sprite" href="<?php echo $base.$id ?>"><span class="rex-i-element-text"><?php echo sly_html($cat->getName())?></span></a></td>
+				<td class="sly-col-id"><?php echo $id ?></td>
+				<td class="sly-col-name"><a href="<?php echo $base.$id ?>"><?php echo sly_html($cat->getName()) ?></a></td>
+				<td class="sly-col-func">
+					<a href="<?php echo $base.$catID ?>&amp;func=edit&amp;edit_id=<?php echo $id ?>"><?php echo t('change')?></a>
+					<a href="<?php echo $base.$catID ?>&amp;func=delete&amp;edit_id=<?php echo $id ?>" class="sly-action sly-delete"><?php echo t('delete') ?></a>
+				</td>
 			</tr>
 			<?php
 		}

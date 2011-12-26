@@ -40,10 +40,10 @@
 	if ($this->categoryId != 0 && $currentCategory) {
 		?>
 		<tr>
-			<td class="sly-icon">&nbsp;</td>
-			<td class="name"><a href="index.php?page=structure&amp;category_id=<?php echo $currentCategory->getParentId().'&amp;clang='.$this->clangId ?>">..</a></td>
-			<?php if ($isActive): ?><td class="pos">&nbsp;</td><?php endif ?>
-			<td class="status">&nbsp;</td>
+			<td class="sly-col-icon sly-icon">&nbsp;</td>
+			<td class="sly-col-name"><a href="index.php?page=structure&amp;category_id=<?php echo $currentCategory->getParentId().'&amp;clang='.$this->clangId ?>">..</a></td>
+			<?php if ($isActive): ?><td class="sly-col-pos">&nbsp;</td><?php endif ?>
+			<td class="sly-col-status">&nbsp;</td>
 		</tr>
 		<?php
 	}
@@ -73,7 +73,7 @@
 	if (!$this->renderAddCategory && !$currentCategory && empty($categories)) {
 		?>
 		<tr>
-			<td colspan="<?php echo $isActive ? 5 : 4 ?>" class="sly-icon"><?php echo t('no_categories_yet') ?></td>
+			<td colspan="<?php echo $isActive ? 5 : 4 ?>" class="sly-col-empty center"><?php echo t('no_categories_yet') ?></td>
 		</tr>
 		<?php
 	}

@@ -35,8 +35,8 @@
 /*	System: Sprachen */
 
 #sly-form-specials-languages {
-	.sly-col-c { width: 120px; }
-	.sly-col-d { width: 110px; }
+	.sly-col-locale { width: 120px; }
+	.sly-col-func   { width: 110px; }
 }
 
 /* System: Fehlerprotokoll */

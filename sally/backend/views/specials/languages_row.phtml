@@ -26,10 +26,10 @@ if ($this->func == 'edit' && $editID == $clangID) {
 	$locale = sly_post('clang_locale', 'string', $clangLocale);
 	?>
 	<tr class="active">
-		<td class="sly-col-a sly-icon"><?php echo sly_Util_HTML::getSpriteLink('', $name, 'language') ?></td>
-		<td class="sly-col-b sly-has-input"><div><input class="sly-form-text" type="text" name="clang_name" value="<?php echo sly_html($name) ?>" autofocus="autofocus" /></div></td>
-		<td class="sly-col-c sly-has-input"><div><input class="sly-form-text" type="text" name="clang_locale" value="<?php echo sly_html($locale) ?>" /></div></td>
-		<td class="sly-col-d sly-has-input"><div><input type="submit" class="sly-form-submit" name="sly-submit" value="<?php echo t('save') ?>" /></div></td>
+		<td class="sly-col-icon sly-icon"><?php echo sly_Util_HTML::getSpriteLink('', $name, 'language') ?></td>
+		<td class="sly-col-name sly-has-input"><div><input class="sly-form-text" type="text" name="clang_name" value="<?php echo sly_html($name) ?>" autofocus="autofocus" /></div></td>
+		<td class="sly-col-locale sly-has-input"><div><input class="sly-form-text" type="text" name="clang_locale" value="<?php echo sly_html($locale) ?>" /></div></td>
+		<td class="sly-col-func sly-has-input"><div><input type="submit" class="sly-form-submit" name="sly-submit" value="<?php echo t('save') ?>" /></div></td>
 	</tr>
 	<?php
 }
@@ -38,10 +38,10 @@ else {
 
 	?>
 	<tr>
-		<td class="sly-col-a sly-icon"><?php echo sly_Util_HTML::getSpriteLink($editLink, $clangName, 'language') ?></td>
-		<td class="sly-col-b"><a href="<?php echo sly_html($editLink) ?>"><?php echo sly_html($clangName) ?></a></td>
-		<td class="sly-col-c"><?php echo sly_html($clangLocale) ?></td>
-		<td class="sly-col-d"><?php echo $delLink ?></td>
+		<td class="sly-col-icon sly-icon"><?php echo sly_Util_HTML::getSpriteLink($editLink, $clangName, 'language') ?></td>
+		<td class="sly-col-name"><a href="<?php echo sly_html($editLink) ?>"><?php echo sly_html($clangName) ?></a></td>
+		<td class="sly-col-locale"><?php echo sly_html($clangLocale) ?></td>
+		<td class="sly-col-func"><?php echo $delLink ?></td>
 	</tr>
 	<?php
 }

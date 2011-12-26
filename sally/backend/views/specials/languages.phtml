@@ -42,10 +42,10 @@ if (!empty($this->info))    print sly_Helper_Message::info($this->info);
 
 		?>
 		<tr class="active">
-			<td class="sly-icon sly-col-a"><?php echo sly_Util_HTML::getSpriteLink('', $name, 'language') ?></td>
-			<td class="sly-col-b sly-has-input"><div><input class="sly-form-text" type="text" name="clang_name" value="<?php echo sly_html($name) ?>" autofocus="autofocus" required="required" placeholder="<?php echo ht('name') ?>" /></div></td>
-			<td class="sly-col-c sly-has-input"><div><input class="sly-form-text" type="text" name="clang_locale" value="<?php echo sly_html($locale) ?>" required="required" placeholder="<?php echo ht('locale') ?>" /></div></td>
-			<td class="sly-col-d sly-has-input"><div><input type="submit" name="sly-submit" class="sly-form-submit" value="<?php echo t('add') ?>" /></div></td>
+			<td class="sly-col-icon sly-icon"><?php echo sly_Util_HTML::getSpriteLink('', $name, 'language') ?></td>
+			<td class="sly-col-name sly-has-input"><div><input class="sly-form-text" type="text" name="clang_name" value="<?php echo sly_html($name) ?>" autofocus="autofocus" required="required" placeholder="<?php echo ht('name') ?>" /></div></td>
+			<td class="sly-col-locale sly-has-input"><div><input class="sly-form-text" type="text" name="clang_locale" value="<?php echo sly_html($locale) ?>" required="required" placeholder="<?php echo ht('locale') ?>" /></div></td>
+			<td class="sly-col-func sly-has-input"><div><input type="submit" name="sly-submit" class="sly-form-submit" value="<?php echo t('add') ?>" /></div></td>
 		</tr>
 		<?php
 	}
