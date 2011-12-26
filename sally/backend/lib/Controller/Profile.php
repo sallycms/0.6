@@ -30,9 +30,12 @@ class sly_Controller_Profile extends sly_Controller_Backend {
 		$backendLocale  = sly_post('locale', 'string');
 		$backendLocales = $this->getBackendLocales();
 
-		if (isset($backendLocales[$backendLocale])) {
-			$user->toggleRight('#be_lang['.$user->getBackendLocale().']', false);
-			$user->toggleRight('#be_lang['.$backendLocale.']');
+		if (isset($backendLocales[$backendLocale]) || strlen($backendLocale) === 0) {
+			$rights  = $user->getRights();
+			$rights  = str_replace('#be_lang['.$user->getBackendLocale().']#', '#', $rights);
+			$rights .= 'be_lang['.$backendLocale.']#';
+
+			$user->setRights($rights);
 		}
 
 		// timezone
