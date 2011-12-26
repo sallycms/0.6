@@ -21,7 +21,6 @@ datetimeformat: %d. %b. %Y - %H:%Mh
 setlocale: 'de_DE,de_DE@euro,deu_deu,german_germany,de,ge'
 
 home: Home
-homepage: Homepage
 input: Eingabe
 output: Ausgabe
 title: Titel
@@ -203,7 +202,7 @@ delete_cache_description: 'Templates und Sprachdateien werden erstellt, Artikelc
 delete_cache_message: Der Cache wurde gelöscht.
 features: Features
 settings: Einstellungen
-invalid_start_article_selected: Es wurde eine ungültige Homepage ausgewählt.
+invalid_start_article_selected: Es wurde eine ungültige Startseite ausgewählt.
 invalid_not_found_article_selected: Es wurde eine ungültige Fehlerseite ausgewählt.
 invalid_default_language_selected: Es wurde eine ungültige Standardsprache ausgewählt.
 invalid_default_articletype_selected: Es wurde ein ungültiger Standard-Artikeltyp ausgewählt.
