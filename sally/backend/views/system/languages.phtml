@@ -56,7 +56,7 @@ if ($this->func == 'add' || $this->func == 'edit'): ?>
 		));
 	}
 
-	if ($this->func !== 'add' && $this->func !== 'edit' && empty($articles)) {
+	if ($this->func !== 'add' && $this->func !== 'edit' && empty($this->languages)) {
 		?>
 		<tr>
 			<td colspan="4" class="sly-col-empty center"><?php echo t('no_languages_yet') ?></td>

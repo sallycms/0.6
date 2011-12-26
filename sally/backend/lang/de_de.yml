@@ -307,6 +307,7 @@ unnamed_article: unbenannter Artikel
 
 no_categories_yet: Es wurden noch keine Kategorien angelegt.
 no_articles_yet: Es wurden noch keine Artikel angelegt.
+no_languages_yet: Es wurden noch keine Sprachen angelegt.
 
 login_error: 'Fehler bei der Anmeldung. Bitte vor dem nächsten Versuch {0} Sekunden warten.'
 you_have_been_logged_out: Sie wurden vom System abgemeldet.
