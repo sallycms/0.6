@@ -33,6 +33,12 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 
 		sly_Core::getLayout()->pageHeader(t('structure'), $this->getBreadcrumb());
 
+		if (count(sly_Util_Language::findAll()) === 0) {
+			print sly_Helper_Message::info(t('no_languages_yet'));
+			$this->action = 'nop';
+			return;
+		}
+
 		print $this->render('toolbars/languages.phtml', array(
 			'curClang' => $this->clangId,
 			'params'   => array('page' => 'structure', 'category_id' => $this->categoryId)
@@ -42,6 +48,10 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			'category_id' => $this->categoryId,
 			'clang'       => $this->clangId
 		));
+	}
+
+	protected function nop() {
+		/* nop */
 	}
 
 	protected function index() {
