@@ -58,7 +58,7 @@ foreach ($data as $line) {
 	<tr>
 		<td class="sly-col-error" colspan="2"><strong><em><?php echo $type ?></em>: <?php echo sly_html($message) ?></strong></td>
 	</tr><tr class="where">
-		<td class="sly-col-location"><?php sly_html(sprintf('%s %s, %s %d', t('in_file'), $file, t('in_line'), $line)) ?></td>
+		<td class="sly-col-location"><?php echo sly_html(sprintf('%s %s, %s %d', t('in_file'), $file, t('in_line'), $line)) ?></td>
 		<td class="sly-col-date"><?php echo sly_html(sly_Util_String::formatDatetime($date)) ?></td>
 	</tr><tr class="request">
 		<td class="sly-col-request" colspan="2"><?php echo sly_html($request) ?></td>

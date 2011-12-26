@@ -54,7 +54,7 @@ class sly_Controller_System_Errorlog extends sly_Controller_System {
 
 		// render data
 
-		$regex = '#^\[(.*?)\] PHP (.+?) \((.+?)\): (.+?) in (.*?) line (\d+) \[(GET|POST|HEAD) (.+?)\]#';
+		$regex = '#^\[(.*?)\] PHP (.+?) \((.+?)\): (.+) in (.+?) line (\d+) \[(((?:GET|POST|HEAD) (?:.+?))|(?:php:(.+?)))\]$#';
 		$lines = array_reverse($lines); // put most recent line on the top
 		$data  = array();
 
@@ -68,7 +68,7 @@ class sly_Controller_System_Errorlog extends sly_Controller_System {
 				'message' => $matches[4],
 				'file'    => $matches[5],
 				'line'    => (int) $matches[6],
-				'request' => $matches[7].' '.$matches[8]
+				'request' => $matches[7]
 			);
 		}
 
