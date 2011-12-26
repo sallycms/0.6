@@ -45,7 +45,7 @@ $form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM_FIELDSET', $form, $par
 // misc
 // ZUM STARTARTIKEL MACHEN
 
-if ($this->canMorphToStartpage()) {
+if ($this->canConvertToStartarticle()) {
 	$form->beginFieldset(t('startarticle'));
 
 	if ($article->getStartpage() == 0 && $article->getParentId() == 0) {
