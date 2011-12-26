@@ -183,6 +183,7 @@ profile_updated: Ihr Profil wurde aktualisiert.
 user_updated: Benutzer wurde aktualisiert.
 user_deleted: Benutzer wurde gelöscht.
 user_added: Benutzer wurde hinzugefügt.
+edit_user: Benutzer bearbeiten
 add_user: Benutzer hinzufügen
 user_login_already_exists: Der gewählte Benutzerlogin existiert schon!
 admin: Administrator
