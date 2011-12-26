@@ -95,12 +95,12 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 
 		if (!sly_Util_Language::hasPermissionOnLanguage($user, $clang_a)) {
 			$lang = sly_Util_Language::findById($clang_a);
-			throw new sly_Authorisation_Exception(t('you_have_no_access_to_this_language', rex_translate($lang->getName())));
+			throw new sly_Authorisation_Exception(t('you_have_no_access_to_this_language', sly_translate($lang->getName())));
 		}
 
 		if (!sly_Util_Language::hasPermissionOnLanguage($user, $clang_b)) {
 			$lang = sly_Util_Language::findById($clang_b);
-			throw new sly_Authorisation_Exception(t('you_have_no_access_to_this_language', rex_translate($lang->getName())));
+			throw new sly_Authorisation_Exception(t('you_have_no_access_to_this_language', sly_translate($lang->getName())));
 		}
 
 		if ($this->canCopyContent($clang_a, $clang_b)) {

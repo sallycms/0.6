@@ -45,7 +45,7 @@ class sly_Layout_Navigation_Subpage {
 	}
 
 	public function setTitle($title = null) {
-		$this->title = rex_translate($title === null ? 'translate:'.$this->name : $title);
+		$this->title = $title === null ? t($this->name) : sly_translate($title);
 		return $this->title;
 	}
 

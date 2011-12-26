@@ -18,7 +18,7 @@ class sly_Layout_Navigation_Group {
 
 	public function __construct($name, $title) {
 		$this->name  = trim($name);
-		$this->title = rex_translate(trim($title));
+		$this->title = sly_translate(trim($title));
 		$this->pages = array();
 	}
 

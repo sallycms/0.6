@@ -44,7 +44,7 @@ if (count($languages) > 1) {
 			print '<li class="rex-navi-clang-'.$clangID.'">';
 		}
 
-		$clangName = rex_translate($language->getName()); // enthält htmlspecialchars()
+		$clangName = sly_translate($language->getName(), true); // contains sly_html()
 
 		if (!sly_Util_Language::hasPermissionOnLanguage($user, $clangID)) {
 			print '<span class="rex-strike">'.$clangName.'</span>';
@@ -73,6 +73,6 @@ if (count($languages) > 1) {
 
 	if ($stop !== false) {
 		$lang = sly_Service_Factory::getLanguageService()->findById($stop);
-		throw new sly_Authorisation_Exception(t('you_have_no_access_to_this_language', rex_translate($lang->getName())));
+		throw new sly_Authorisation_Exception(t('you_have_no_access_to_this_language', sly_translate($lang->getName())));
 	}
 }

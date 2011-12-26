@@ -16,7 +16,7 @@ $moduleSelect->addValue('', '---------------------------- '.t('add_slice'));
 
 foreach ($modules as $module => $moduleTitle) {
 	if ($user->isAdmin() || $user->hasRight('module', 'add', $module)) {
-		$moduleSelect->addValue($module, rex_translate($moduleTitle, null, false));
+		$moduleSelect->addValue($module, sly_translate($moduleTitle));
 	}
 }
 

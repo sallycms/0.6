@@ -30,10 +30,10 @@ $this->title(t('setup_step_n', 1, 5));
 			<tbody><?php foreach ($results as $type => $result): ?><tr class="<?php print $tester->getClassName($result[2]) ?>">
 				<td class="sly-testcase"><?php print t('setup_'.$type) ?></td>
 				<?php if ($result[0] == $result[1]): ?>
-				<td class="sly-required center" colspan="2"><?php print rex_translate($result[0]) ?></td>
+				<td class="sly-required center" colspan="2"><?php print sly_translate($result[0], true) ?></td>
 				<?php else: ?>
-				<td class="sly-required"><?php print rex_translate($result[0]) ?></td>
-				<td class="sly-recommended"><?php print rex_translate($result[1]) ?></td>
+				<td class="sly-required"><?php print sly_translate($result[0], true) ?></td>
+				<td class="sly-recommended"><?php print sly_translate($result[1], true) ?></td>
 				<?php endif ?>
 				<td class="sly-status"><?php print sly_html($result[2]['text']) ?></td>
 			</tr><?php endforeach ?></tbody>

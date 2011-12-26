@@ -240,7 +240,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 			$name = $service->getProperty($addon, 'name', $addon);
 
 			if ($page) {
-				$startpages[$page] = rex_translate($name);
+				$startpages[$page] = sly_translate($name);
 			}
 		}
 
