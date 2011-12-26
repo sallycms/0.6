@@ -360,7 +360,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 
 			$usages[] = array(
 				'title' => $article->getName(),
-				'type'  => 'rex-article',
+				'type'  => 'sly-article',
 				'id'    => (int) $row['article_id'],
 				'clang' => (int) $row['clang'],
 				'link'  => 'index.php?page=content&article_id='.$row['article_id'].'&mode=edit&clang='.$row['clang']

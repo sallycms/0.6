@@ -12,7 +12,7 @@
 ?>
 
 <dl class="sly-navigation">
-	
+
 <?php
 $nav    = sly_Core::getLayout()->getNavigation();
 $groups = $nav->getGroups();
@@ -34,7 +34,7 @@ foreach ($groups as $group) {
 	if ($count == 0) continue;
 
 	print '<dt>'.$headline.'</dt><dd>';
-	print '<ul id="rex-navi-'.$topic.'">';
+	print '<ul id="sly-navi-'.$topic.'">';
 
 	$first   = true;
 
@@ -49,17 +49,17 @@ foreach ($groups as $group) {
 	foreach ($pages as $page) {
 		if ($page->isHidden()) continue;
 		$liclass = 'sly-navigation-level-1';
-		$liclass .= $page->isActive() ? ' rex-active' : '';
+		$liclass .= $page->isActive() ? ' sly-active' : '';
 		$liclass .= $page->isPopup()  ? ' popup'      : '';
 		$li = array(
 			'class' => $liclass,
-			'id'    => 'rex-navi-page-'.$page->getPageParam()
+			'id'    => 'sly-navi-page-'.$page->getPageParam()
 		);
 
 		$a = array('href' => 'index.php?page='.$page->getPageParam());
 
 		if ($first) {
-			$li['class'] .= ' rex-navi-first';
+			$li['class'] .= ' sly-first';
 		}
 
 		$a['class'] = $li['class'];
@@ -73,17 +73,17 @@ foreach ($groups as $group) {
 
 		// ***** Subnavi
 		if ($page->isActive() && !empty($subpages)) {
-			print '<ul class="rex-navi-level-2">';
+			print '<ul>';
 			$first = true;
 
 			foreach ($subpages as $sp) {
 				$param = $sp->getPageParam();
 				$class = 'sly-navigation-level-2';
-				$id    = 'rex-navi-'.$p.'-subpage-'.$param;
+				$id    = 'sly-navi-'.$p.'-subpage-'.$param;
 				$href  = 'index.php?page='.$param;
 
-				if ($first)          $class .= ' rex-navi-first';
-				if ($sp->isActive()) $class .= ' rex-active';
+				if ($first)          $class .= ' sly-first';
+				if ($sp->isActive()) $class .= ' sly-active';
 
 				$liAttr = sly_Util_HTML::buildAttributeString(array('class' => $class, 'id' => $id));
 				$aAttr  = sly_Util_HTML::buildAttributeString(array('class' => $class, 'href' => $href));

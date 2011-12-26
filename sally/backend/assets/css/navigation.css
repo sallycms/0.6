@@ -2,7 +2,7 @@
 	float: left;
 	width: 171px;
 
-	ul li a.rex-active {
+	ul li a.sly-active {
 		color: #fff;
 		font-weight: bold;
 	}
@@ -37,7 +37,7 @@
 			background-position: 10px -24px;
 		}
 
-		&.rex-active {
+		&.sly-active {
 			background-color: $drk_grey;
 			color: #fff;
 			font-weight: bold;
@@ -62,7 +62,7 @@
 			background-image: url(../background_sub-menu_arrow.sld.png);
 			background-position: 25px 0;
 
-			&.rex-active {
+			&.sly-active {
 				color: $drk_grey;
 				background-color: $lt_grey;
 				background-position: 25px -49px;
@@ -112,13 +112,13 @@
 		font-weight: bold;
 		border-left: 1px solid #CCC;
 
-		&.rex-navi-first {
+		&.sly-first {
 			border: 0 none;
 		}
 	}
 }
 
-#rex-navi-page ul li {
+#sly-navi-page ul li {
 	display: inline;
 	font-weight: normal;
 	border-left: 1px solid #CCC;
@@ -127,7 +127,7 @@
 		margin: 0 15px;
 	}
 
-	&.rex-navi-first {
+	&.sly-first {
 		border: 0 none;
 
 		a {
@@ -135,7 +135,7 @@
 		}
 	}
 
-	a.rex-active {
+	a.sly-active {
 		color: $drk_grey;
 	}
 }
@@ -165,7 +165,7 @@
 			display: inline;
 			border-left: 1px solid #CCC;
 
-			&.rex-navi-first {
+			&.sly-first {
 				border: 0 none;
 			}
 
@@ -173,7 +173,7 @@
 				margin: 0 8px;
 			}
 
-			&.rex-navi-first a {
+			&.sly-first a {
 				margin-left: 0;
 			}
 		}

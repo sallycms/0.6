@@ -212,7 +212,7 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 					}
 				}
 
-				$classes[] = $cat->isOnline() ? 'rex-online' : 'rex-offline';
+				$classes[] = $cat->isOnline() ? 'sly-online' : 'sly-offline';
 				$label     = $this->formatLabel($cat);
 
 				if (!empty($classes)) $classes = ' class="'.implode(' ', $classes).'"';

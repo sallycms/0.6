@@ -110,7 +110,7 @@ class sly_Layout_Backend extends sly_Layout_XHTML5 {
 
 
 				if($cur_page === $page) {
-					$pageattr = $attr.' class="rex-active"';
+					$pageattr = $attr.' class="sly-active"';
 				}
 				$format     = '<a href="?page=%s%s"%s>%s</a>';
 				$subtitle[] = sprintf($format, $page, $params, $pageattr, $label);
@@ -123,14 +123,14 @@ class sly_Layout_Backend extends sly_Layout_XHTML5 {
 					$className = isset($subline[$idx][4]) ? $subline[$idx][4] : '';
 
 					if ($idx == 0) {
-						$items[] = '<li class="'.trim("rex-navi-first $className").'">'.$part.'</li>';
+						$items[] = '<li class="'.rtrim("sly-first $className").'">'.$part.'</li>';
 					}
 					else {
 						$items[] = '<li'.($className ? ' class="'.$className.'"' : '').'>'.$part.'</li>';
 					}
 				}
 
-				$subtitle_str = '<div id="rex-navi-page"><ul>'.implode("\n", $items).'</ul></div>';
+				$subtitle_str = '<div id="sly-navi-page"><ul>'.implode("\n", $items).'</ul></div>';
 			}
 		}
 

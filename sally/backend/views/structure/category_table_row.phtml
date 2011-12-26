@@ -17,7 +17,7 @@ if ($this->canPublishCategory($category->getId())) {
 	$status = '<a href="'.$edit_url.'&amp;func=editStatusCategory" class="'.$status_class.'">'.$status.'</a>';
 }
 else {
-	$status_class .= ' rex-strike';
+	$status_class .= ' sly-strike';
 	$status = '<span class="'.$status_class.'">'.$status.'</span>';
 }
 ?>
@@ -34,8 +34,8 @@ else {
 			echo '<a href="'.$edit_url.'&amp;func=deleteCategory" class="sly-delete">'.t('delete').'</a>';
 		}
 		else {
-			echo '<span class="rex-strike">'.t('change').'</span>&nbsp;';
-			echo '<span class="rex-strike">'.t('delete').'</span>';
+			echo '<span class="sly-strike">'.t('change').'</span>&nbsp;';
+			echo '<span class="sly-strike">'.t('delete').'</span>';
 		}
 		?>
 		&nbsp;<?php echo $status ?>

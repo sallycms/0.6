@@ -19,7 +19,7 @@ foreach ($articles as $idx => $article) {
 }
 
 ?>
-<div id="rex-linkmap">
+<div id="sly-linkmap">
 	<div class="sly-area-col-2">
 		<?php
 		if ($cats === 0) {
@@ -55,7 +55,7 @@ foreach ($articles as $idx => $article) {
 						foreach ($articles as $article) {
 							$label    = $this->formatLabel($article);
 							$selected = $article->getId() == $catID;
-							$class    = $article->isOnline() ? 'rex-online' : 'rex-offline';
+							$class    = $article->isOnline() ? 'sly-online' : 'sly-offline';
 
 							if ($selected) {
 								$class .= ' startarticle';

@@ -32,7 +32,7 @@ if (count($slots) < 2) return;
 
 	foreach ($slots as $tmpSlot) {
 		$params['slot'] = $tmpSlot;
-		$class          = (($this instanceof sly_Controller_Content) && $tmpSlot == $this->slot) ? ' class="rex-active"' : '';
+		$class          = (($this instanceof sly_Controller_Content) && $tmpSlot == $this->slot) ? ' class="sly-active"' : '';
 		$slotTitle      = sly_translate($templateService->getSlotTitle($templateName, $tmpSlot), true);
 		$listElements[] = '<a href="index.php?'.http_build_query($params).'"'.$class.'>'.$slotTitle.'</a>';
 	}

@@ -25,7 +25,7 @@
 			color: #fff;
 		}
 
-		&.rex-active {
+		&.sly-active {
 			background-color: $drk_grey;
 			color: #fff;
 
@@ -87,7 +87,7 @@
 		+border-radius(3px);
 
 		/* Editbutton auf Artikelseite */
-		&.rex-tx3 {
+		&.sly-edit {
 			background-image: url(../background_btn_edit.png);
 			background-position: 6px 0;
 			width: 60px;
@@ -98,7 +98,7 @@
 		}
 
 		/* Löschen-Button */
-		&.rex-tx2 {
+		&.sly-delete {
 			background-image: url(../background_btn_dlt.png);
 			background-position: 6px 0;
 			width: 55px;
@@ -109,8 +109,8 @@
 		}
 
 		/*  Pfeil-Buttons */
-		&.rex-slice-move-up,
-		&.rex-slice-move-down {
+		&.sly-up,
+		&.sly-down {
 			padding: 0px;
 			width: 22px;
 
@@ -119,12 +119,12 @@
 			}
 		}
 
-		&.rex-slice-move-down {
+		&.sly-down {
 			background-image: url(../background_btn_down.png);
 			background-position: 7px 0;
 		}
 
-		&.rex-slice-move-up {
+		&.sly-up {
 			background-image: url(../background_btn_up.png);
 			background-position: 7px 0;
 		}

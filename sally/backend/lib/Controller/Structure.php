@@ -218,7 +218,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	}
 
 	protected function editArticle() {
-		$editId = sly_request('edit_id', 'rex-article-id');
+		$editId = sly_request('edit_id', 'int');
 
 		if (sly_post('do_edit_article', 'boolean')) {
 			$name     = sly_post('article_name',     'string');

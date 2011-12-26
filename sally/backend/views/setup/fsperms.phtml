@@ -12,7 +12,7 @@ $this->title(t('setup_step_n', 1, 5));
 
 ?>
 
-<div class="rex-message" id="security_warning" style="display:none">
+<div class="sly-message" id="security_warning" style="display:none">
 	<p class="sly-warn"><span><?php print t('setup_security_msg') ?></span></p>
 </div>
 
@@ -42,7 +42,7 @@ $this->title(t('setup_step_n', 1, 5));
 
 	<?php if ($sysErrors): ?>
 	<div class="sly-area-footer sly-fs-errors">
-		<p class="rex-algn-rght"><?php print t('setup_please_fix_problems') ?></p>
+		<p class="right"><?php print t('setup_please_fix_problems') ?></p>
 	</div>
 	<?php endif ?>
 
@@ -73,11 +73,11 @@ $this->title(t('setup_step_n', 1, 5));
 	</div>
 
 	<div class="sly-area-footer sly-fs-errors">
-		<p class="rex-algn-rght"><?php print t('setup_please_fix_problems') ?></p>
+		<p class="right"><?php print t('setup_please_fix_problems') ?></p>
 	</div>
 	<?php elseif (!$errors): ?>
 	<div class="sly-area-footer">
-		<p id="nextstep" class="rex-algn-rght">
+		<p id="nextstep" class="right">
 			<a href="index.php?page=setup&amp;func=dbconfig&amp;lang=<?php print urlencode($this->lang) ?>">&raquo; <?php print t('setup_continue_to_n', 2) ?></a>
 		</p>
 	</div>

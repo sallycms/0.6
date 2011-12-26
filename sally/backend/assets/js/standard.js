@@ -566,7 +566,7 @@ var sly = {};
 
 	   // open mediapool in popup
 
-		$('#rex-navi-page-mediapool a').click(function() {
+		$('#sly-navi-page-mediapool a').click(function() {
 			sly.openMediapool();
 			return false;
 		});

@@ -21,11 +21,11 @@ else {
 	$moduleName = $service->get($module, 'title', '');
 
 	if ($user->isAdmin() || $user->hasRight('module', 'edit', $module)) {
-		$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;function=edit').'" class="rex-tx3">'.t('edit').'</a>';
+		$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;function=edit').'" class="sly-edit">'.t('edit').'</a>';
 	}
 }
 
-$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;pos='.$articleSlice->getPosition().'&amp;func=deleteArticleSlice').'" class="rex-tx2 sly-delete">'.t('delete').'</a>';
+$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;pos='.$articleSlice->getPosition().'&amp;func=deleteArticleSlice').'" class="sly-delete">'.t('delete').'</a>';
 
 if ($service->exists($module) && ($user->isAdmin() || $user->hasRight('transitional', 'moveSlice'))) {
 	$moveUp   = t('move_up');
@@ -34,8 +34,8 @@ if ($service->exists($module) && ($user->isAdmin() || $user->hasRight('transitio
 	// upd stamp übergeben, da sonst ein block nicht mehrfach hintereindander verschoben werden kann
 	// (Links wären sonst gleich und der Browser lässt das klicken auf den gleichen Link nicht zu)
 
-	$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;upd='.time().'&amp;func=moveSlice&amp;direction=up').'" title="'.$moveUp.'" class="rex-slice-move-up"></a>';
-	$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;upd='.time().'&amp;func=moveSlice&amp;direction=down').'" title="'.$moveDown.'" class="rex-slice-move-down"></a>';
+	$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;upd='.time().'&amp;func=moveSlice&amp;direction=up').'" title="'.$moveUp.'" class="sly-up"></a>';
+	$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;upd='.time().'&amp;func=moveSlice&amp;direction=down').'" title="'.$moveDown.'" class="sly-down"></a>';
 }
 
 $dispatcher   = sly_Core::dispatcher();

@@ -13,8 +13,8 @@ $menu    = '';
 $isMeta  = $this instanceof sly_Controller_Contentmeta;
 
 $listElements = array();
-$listElements[] = '<a href="'.$baseURL.'&amp;page=content"'.($isMeta ? '' : ' class="rex-active"').'>'.t('edit_mode').'</a>';
-$listElements[] = '<a href="'.$baseURL.'&amp;page=contentmeta"'.($isMeta ? ' class="rex-active"' : '').'>'.t('metadata').'</a>';
+$listElements[] = '<a href="'.$baseURL.'&amp;page=content"'.($isMeta ? '' : ' class="sly-active"').'>'.t('edit_mode').'</a>';
+$listElements[] = '<a href="'.$baseURL.'&amp;page=contentmeta"'.($isMeta ? ' class="sly-active"' : '').'>'.t('metadata').'</a>';
 $listElements[] = '<a href="../'.$this->article->getUrl().'" class="sly-blank">'.t('show').'</a>';
 
 $listElements = sly_Core::dispatcher()->filter('SLY_PAGE_CONTENT_ACTIONS_MENU', $listElements, array(
@@ -25,7 +25,7 @@ $listElements = sly_Core::dispatcher()->filter('SLY_PAGE_CONTENT_ACTIONS_MENU', 
 <ul class="sly-navi-content">
 	<?php
 	foreach ($listElements as $idx => $element) {
-		$class = $idx == 0 ? ' class="rex-navi-first"' : '';
+		$class = $idx == 0 ? ' class="sly-first"' : '';
 		$menu .= '<li'.$class.'>'.$element.'</li>';
 	}
 

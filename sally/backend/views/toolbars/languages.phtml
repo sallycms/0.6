@@ -26,8 +26,8 @@ if (!isset($params)) {
 
 if (count($languages) > 1) {
 	print '
-	<div class="sly-clang-toolbar rex-toolbar">
-		<div class="rex-toolbar-content">
+	<div class="sly-clang-toolbar sly-toolbar">
+		<div class="sly-toolbar-content">
 			<ul>
 				<li>'.t('languages').' : </li>';
 
@@ -38,23 +38,23 @@ if (count($languages) > 1) {
 		$clangID = $language->getId();
 
 		if ($i == 1) {
-			print '<li class="rex-navi-first rex-navi-clang-'.$clangID.'">';
+			print '<li class="sly-first sly-navi-language-'.$clangID.'">';
 		}
 		else {
-			print '<li class="rex-navi-clang-'.$clangID.'">';
+			print '<li class="sly-navi-language-'.$clangID.'">';
 		}
 
 		$clangName = sly_translate($language->getName(), true); // contains sly_html()
 
 		if (!sly_Util_Language::hasPermissionOnLanguage($user, $clangID)) {
-			print '<span class="rex-strike">'.$clangName.'</span>';
+			print '<span class="sly-strike">'.$clangName.'</span>';
 			$stop = $clangID == $curClang;
 		}
 		else {
 			$class = '';
 
 			if ($clangID == $curClang) {
-				$class = ' class="rex-active"';
+				$class = ' class="sly-active"';
 			}
 
 			$params['clang'] = $clangID;

@@ -12,7 +12,7 @@
 			display: inline;
 			font-weight: normal;
 
-			a.rex-active { color: $drk_grey; }
+			a.sly-active { color: $drk_grey; }
 		}
 	}
 
