@@ -30,10 +30,13 @@ foreach ($users as $user) {
 	$id    = (int) $user->getId();
 	$name  = $user->getName();
 	$login = $user->getLogin();
+	$try   = $user->getLastTryDate();
 
 	if (empty($name)) {
 		$name = $login;
 	}
+
+	$try = $try === 0 ? t('never') : sly_Util_String::formatDatetime($try);
 
 	?>
 	<tr>
@@ -44,7 +47,7 @@ foreach ($users as $user) {
 		</td>
 		<td class="sly-col-name"><a href="<?php echo $base ?>edit&amp;id=<?php echo $id ?>"><?php echo sly_html($name) ?></a></td>
 		<td class="sly-col-username"><?php echo sly_html($user->getLogin()) ?></td>
-		<td class="sly-col-last-login"><?php echo sly_Util_String::formatDatetime($user->getLastTryDate()) ?></td>
+		<td class="sly-col-last-login"><?php echo $try ?></td>
 
 		<?php if ($id == $currentID): ?>
 		<td class="sly-col-func"><span class="sly-na"><?php echo t('delete') ?></span></td>

@@ -14,6 +14,7 @@ hours_short: h
 minutes_short: m
 seconds_short: s
 milliseconds_short: ms
+never: nie
 general: Allgemein
 dateformat: %d. %b. %Y
 timeformat: %H:%Mh
