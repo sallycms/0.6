@@ -5,15 +5,12 @@
 .sly-sprite-category-add      { background-position: -32px -16px; }
 
 #sly-page-structure {
+	/* total width: 797px */
 	.sly-table {
 		+border-radius(0px);
 		border: 0;
 	}
-}
 
-/* total width: 797px */
-#sly-form-structure-category,
-#sly-form-structure-article {
 	.sly-icon { width: 40px;  }
 	.id       { width: 40px;  }
 	.name     { min-width: 287px; }
