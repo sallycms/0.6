@@ -12,7 +12,7 @@ class sly_Controller_System extends sly_Controller_Backend {
 	protected $warning;
 	protected $info;
 
-	protected function init() {
+	public function init() {
 		// add subpages
 
 		$navigation = sly_Core::getLayout()->getNavigation();
@@ -30,16 +30,16 @@ class sly_Controller_System extends sly_Controller_Backend {
 		$layout->pageHeader(t('system'), $subline);
 	}
 
-	protected function index() {
+	public function index() {
 		print $this->render('system/index.phtml');
 	}
 
-	protected function clearcache() {
+	public function clearcache() {
 		$this->info = sly_Core::clearCache();
 		$this->index();
 	}
 
-	protected function update() {
+	public function update() {
 		$startArticle    = sly_post('start_article',    'int');
 		$notFoundArticle = sly_post('notfound_article', 'int');
 		$defaultClang    = sly_post('default_clang',    'int');
@@ -109,12 +109,12 @@ class sly_Controller_System extends sly_Controller_Backend {
 		$this->index();
 	}
 
-	protected function setup() {
+	public function setup() {
 		sly_Core::config()->setLocal('SETUP', true);
 		sly_Util_HTTP::redirect('index.php', array(), '', 302);
 	}
 
-	protected function checkPermission() {
+	public function checkPermission() {
 		$user = sly_Util_User::getCurrentUser();
 		return $user && $user->isAdmin();
 	}

@@ -22,7 +22,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 
 	protected static $viewPath;
 
-	protected function init() {
+	public function init() {
 		parent::init();
 		self::$viewPath = 'structure/';
 
@@ -50,15 +50,15 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		));
 	}
 
-	protected function nop() {
+	public function nop() {
 		/* nop */
 	}
 
-	protected function index() {
+	public function index() {
 		$this->view();
 	}
 
-	protected function view() {
+	public function view() {
 		$currentCategory = $this->catService->findById($this->categoryId, $this->clangId);
 		$categories      = $this->catService->findByParentId($this->categoryId, false, $this->clangId);
 		$articles        = $this->artService->findArticlesByCategory($this->categoryId, false, $this->clangId);

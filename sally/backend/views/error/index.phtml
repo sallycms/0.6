@@ -1,0 +1,33 @@
+<?php
+/*
+ * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+$showTrace = false;
+$response  = sly_Core::getResponse();
+$layout    = sly_Core::getLayout();
+
+if ($e instanceof sly_Authorisation_Exception) {
+	$response->setStatusCode(403);
+	$layout->pageHeader(t('security_violation'));
+}
+elseif ($e instanceof sly_Controller_Exception) {
+	if ($e->getCode() === 404) $response->setStatusCode(404);
+	$layout->pageHeader(t('controller_error'));
+}
+else {
+	$response->setStatusCode(500);
+	$layout->pageHeader(t('unexpected_exception'));
+	$showTrace = sly_Core::isDeveloperMode();
+}
+
+print sly_Helper_Message::warn($e->getMessage());
+
+if ($showTrace) {
+	print '<pre class="sly-trace">'.sly_html($e->getTraceAsString()).'</pre>';
+}

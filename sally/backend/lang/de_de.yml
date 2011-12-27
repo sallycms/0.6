@@ -373,3 +373,4 @@ use_category_service_to_copy_categories: 'Benutzen Sie den Kategorie-Service, um
 use_category_service_to_move_categories: 'Benutzen Sie den Kategorie-Service, um Kategorien zu verschieben.'
 view_not_found: 'Der View {0} wurde nicht gefunden!'
 safemode_openbasedir: safe_mode und open_basedir
+layout_has_not_been_set: Das Layout wurde noch nicht über ::setLayout() gesetzt.
