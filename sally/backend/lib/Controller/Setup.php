@@ -122,7 +122,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 
 				$config->setLocal('DATABASE', $data);
 				unset($_POST['submit']);
-				$this->initdb();
+				$this->initdbAction();
 				return;
 			}
 			catch (sly_DB_PDO_Exception $e) {
@@ -156,7 +156,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 			$config->set('DEFAULT_LOCALE', $this->lang);
 
 			unset($_POST['submit']);
-			$this->createUser();
+			$this->createuserAction();
 			return;
 		}
 
@@ -230,7 +230,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 
 			if (empty($error)) {
 				unset($_POST['submit']);
-				$this->config();
+				$this->configAction();
 				return;
 			}
 			else {
@@ -293,7 +293,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 
 			if (empty($error)) {
 				unset($_POST['submit']);
-				$this->finish();
+				$this->finishAction();
 				return;
 			}
 		}
