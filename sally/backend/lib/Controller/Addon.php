@@ -179,9 +179,8 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 			$data = $this->buildDataList();
 
 			$response = array(
-				'status'  => !empty($this->info),
-				'message' => empty($this->info) ? $this->warning : $this->info,
-				'stati'   => $this->buildStatusList($data)
+				'status' => !empty($this->info),
+				'stati'  => $this->buildStatusList($data)
 			);
 
 			print json_encode($response);
