@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright (c) 2011, webvariants GbR, http://www.webvariants.de
  *
@@ -10,7 +9,7 @@
  */
 
 class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
-	protected function index() {
+	public function indexAction() {
 		if ($this->header() !== true) return;
 
 		print $this->render('content/meta/index.phtml', array(
@@ -23,7 +22,7 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 		return 'contentmeta';
 	}
 
-	protected function processMetaForm() {
+	public function processmetaformAction() {
 		try {
 			// save metadata
 			if (sly_post('save_meta', 'boolean', false)) {
@@ -57,7 +56,7 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 			$this->warning = $e->getMessage();
 		}
 
-		$this->index();
+		$this->indexAction();
 	}
 
 	private function saveMeta() {

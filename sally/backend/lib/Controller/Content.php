@@ -9,12 +9,11 @@
  */
 
 class sly_Controller_Content extends sly_Controller_Content_Base {
-
 	protected $slot;
 	protected $localInfo;
 	protected $localWarning;
 
-	protected function init() {
+	public function init() {
 		parent::init();
 		$this->slot = sly_request('slot', 'string', sly_Util_Session::get('contentpage_slot', ''));
 
@@ -30,7 +29,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 		sly_Util_Session::set('contentpage_slot', $this->slot);
 	}
 
-	protected function index($extraparams = array()) {
+	public function indexAction($extraparams = array()) {
 		if ($this->header() !== true) return;
 
 		$service      = sly_Service_Factory::getArticleTypeService();
@@ -87,7 +86,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 		return false;
 	}
 
-	protected function setArticleType() {
+	public function setarticletypeAction() {
 		$type    = sly_post('article_type', 'string');
 		$service = sly_Service_Factory::getArticleService();
 
@@ -97,10 +96,10 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 		$this->info    = t('article_updated');
 		$this->article = $service->findById($this->article->getId(), $this->article->getClang());
 
-		$this->index();
+		$this->indexAction();
 	}
 
-	protected function moveSlice() {
+	public function movesliceAction() {
 		$slice_id  = sly_get('slice_id', 'int', null);
 		$direction = sly_get('direction', 'string', null);
 
@@ -130,10 +129,10 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			}
 		}
 
-		$this->index();
+		$this->indexAction();
 	}
 
-	protected function addArticleSlice() {
+	public function addarticlesliceAction() {
 		$module      = sly_post('module', 'string');
 		$user        = sly_Util_User::getCurrentUser();
 		$extraparams = array();
@@ -170,10 +169,10 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			$extraparams['slicevalues'] = $this->getRequestValues(array());
 		}
 
-		$this->index($extraparams);
+		$this->indexAction($extraparams);
 	}
 
-	protected function editArticleSlice() {
+	public function editarticlesliceAction() {
 		$sliceservice = sly_Service_Factory::getArticleSliceService();
 		$slice_id     = sly_request('slice_id', 'int', 0);
 		$slice        = $sliceservice->findById($slice_id);
@@ -198,10 +197,10 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			$extraparams['function']    = 'edit';
 		}
 
-		$this->index($extraparams);
+		$this->indexAction($extraparams);
 	}
 
-	protected function deleteArticleSlice() {
+	public function deletearticlesliceAction() {
 		$ok = false;
 
 		if ($this->preSliceEdit('delete') !== false) {
@@ -217,7 +216,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 		}
 
 		$this->postSliceEdit('delete', $slice_id);
-		$this->index();
+		$this->indexAction();
 	}
 
 	private function preSliceEdit($function) {

@@ -9,6 +9,7 @@
  */
 
 class sly_Controller_Structure extends sly_Controller_Backend {
+	protected $action;
 	protected $categoryId;
 	protected $clangId;
 	protected $info;
@@ -22,10 +23,11 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 
 	protected static $viewPath;
 
-	public function init() {
+	public function init($action) {
 		parent::init();
 		self::$viewPath = 'structure/';
 
+		$this->action     = $action;
 		$this->categoryId = sly_request('category_id', 'int');
 		$this->clangId    = sly_Core::getCurrentClang();
 		$this->artService = sly_Service_Factory::getArticleService();
@@ -35,8 +37,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 
 		if (count(sly_Util_Language::findAll()) === 0) {
 			print sly_Helper_Message::info(t('no_languages_yet'));
-			$this->action = 'nop';
-			return;
+			return new sly_Response_Forward('structure', 'nop');
 		}
 
 		print $this->render('toolbars/languages.phtml', array(
@@ -50,15 +51,11 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		));
 	}
 
-	public function nop() {
-		/* nop */
+	public function indexAction() {
+		$this->viewAction();
 	}
 
-	public function index() {
-		$this->view();
-	}
-
-	public function view() {
+	public function viewAction() {
 		$currentCategory = $this->catService->findById($this->categoryId, $this->clangId);
 		$categories      = $this->catService->findByParentId($this->categoryId, false, $this->clangId);
 		$articles        = $this->artService->findArticlesByCategory($this->categoryId, false, $this->clangId);
@@ -86,7 +83,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		));
 	}
 
-	protected function editStatusCategory() {
+	public function editstatuscategoryActions() {
 		$editId = sly_get('edit_id', 'int');
 
 		if ($editId) {
@@ -102,10 +99,10 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			$this->warning = t('category_not_found');
 		}
 
- 		$this->view();
+ 		$this->viewAction();
 	}
 
-	protected function editStatusArticle() {
+	public function editstatusarticleAction() {
 		$editId = sly_get('edit_id', 'int');
 
 		if ($editId) {
@@ -121,10 +118,10 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			$this->warning = t('article_not_found');
 		}
 
- 		$this->view();
+ 		$this->viewAction();
 	}
 
-	protected function deleteCategory() {
+	public function deletecategoryAction() {
 		$editId = sly_get('edit_id', 'int');
 
 		if ($editId) {
@@ -140,10 +137,10 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			$this->warning = t('category_not_found');
 		}
 
- 		$this->view();
+ 		$this->viewAction();
 	}
 
-	protected function deleteArticle() {
+	public function deletearticleAction() {
 		$editId = sly_get('edit_id', 'int');
 
 		if ($editId) {
@@ -159,10 +156,10 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			$this->warning = t('article_not_found');
 		}
 
- 		$this->view();
+ 		$this->viewAction();
 	}
 
-	protected function addCategory() {
+	public function addcategoryAction() {
 		if (sly_post('do_add_category', 'boolean')) {
 			$name     = sly_post('category_name',     'string');
 			$position = sly_post('category_position', 'int');
@@ -180,10 +177,10 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			$this->renderAddCategory = true;
 		}
 
-		$this->view();
+		$this->viewAction();
 	}
 
-	protected function addArticle() {
+	public function addarticleAction() {
 		if (sly_post('do_add_article', 'boolean')) {
 			$name     = sly_post('article_name',     'string');
 			$position = sly_post('article_position', 'integer');
@@ -201,10 +198,10 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			$this->renderAddArticle = true;
 		}
 
-		$this->view();
+		$this->viewAction();
 	}
 
-	protected function editCategory() {
+	public function editcategoryAction() {
 		$editId = sly_request('edit_id', 'int');
 
 		if (sly_post('do_edit_category', 'boolean')) {
@@ -224,10 +221,10 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			$this->renderEditCategory = $editId;
 		}
 
-		$this->view();
+		$this->viewAction();
 	}
 
-	protected function editArticle() {
+	public function editarticleAction() {
 		$editId = sly_request('edit_id', 'int');
 
 		if (sly_post('do_edit_article', 'boolean')) {
@@ -247,7 +244,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			$this->renderEditArticle = $editId;
 		}
 
-		$this->view();
+		$this->viewAction();
 	}
 
 	/**
@@ -327,7 +324,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	 *
 	 * @return boolean
 	 */
-	protected function checkPermission() {
+	public function checkPermission() {
 		$categoryId = sly_request('category_id', 'int');
 		$editId     = sly_request('edit_id', 'int');
 		$clang      = sly_Core::getCurrentClang();

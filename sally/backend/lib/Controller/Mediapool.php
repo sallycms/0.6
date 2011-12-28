@@ -14,8 +14,9 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 	protected $category;
 	protected $selectBox;
 	protected $categories;
+	protected $action;
 
-	protected function init() {
+	public function init($action) {
 		// load our i18n stuff
 		sly_Core::getI18N()->appendFile(SLY_SALLYFOLDER.'/backend/lang/pages/mediapool/');
 
@@ -23,6 +24,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		$this->warning    = sly_request('warning', 'string');
 		$this->args       = sly_requestArray('args', 'string');
 		$this->categories = array();
+		$this->action     = $action;
 
 		// init category filter
 		if (isset($this->args['categories'])) {
@@ -139,7 +141,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		return $files;
 	}
 
-	protected function index() {
+	public function indexAction() {
 		$files = $this->getFiles();
 
 		print $this->render('mediapool/toolbar.phtml');
@@ -152,24 +154,24 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		}
 	}
 
-	protected function batch() {
+	public function batchAction() {
 		if (!empty($_POST['delete'])) {
-			return $this->delete();
+			return $this->deleteAction();
 		}
 
-		return $this->move();
+		return $this->moveAction();
 	}
 
-	protected function move() {
+	public function moveAction() {
 		if (!$this->isMediaAdmin()) {
-			return $this->index();
+			return $this->indexAction();
 		}
 
 		$media = sly_postArray('selectedmedia', 'int', array());
 
 		if (empty($media)) {
 			$this->warning = t('no_files_selected');
-			return $this->index();
+			return $this->indexAction();
 		}
 
 		$service = sly_Service_Factory::getMediumService();
@@ -186,19 +188,19 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		$this->revalidate();
 
 		$this->info = t('selected_files_moved');
-		$this->index();
+		$this->indexAction();
 	}
 
-	protected function delete() {
+	public function deleteAction() {
 		if (!$this->isMediaAdmin()) {
-			return $this->index();
+			return $this->indexAction();
 		}
 
 		$files = sly_postArray('selectedmedia', 'int', array());
 
 		if (empty($files)) {
 			$this->warning = t('no_files_selected');
-			return $this->index();
+			return $this->indexAction();
 		}
 
 		foreach ($files as $fileID) {
@@ -212,7 +214,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 			}
 		}
 
-		$this->index();
+		$this->indexAction();
 	}
 
 	protected function deleteMedia(sly_Model_Medium $medium) {
@@ -259,7 +261,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		}
 	}
 
-	protected function checkPermission() {
+	public function checkPermission() {
 		$user = sly_Util_User::getCurrentUser();
 		if (is_null($user)) return false;
 

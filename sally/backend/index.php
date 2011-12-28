@@ -18,7 +18,7 @@ sly_Loader::addLoadPath(SLY_SALLYFOLDER.'/backend/lib/', 'sly_');
 
 // init the app
 $app = new sly_App_Backend();
-#sly_Core::setApp($app);
+sly_Core::setCurrentApp($app);
 $app->initialize();
 
 // ... and run it if not debugging

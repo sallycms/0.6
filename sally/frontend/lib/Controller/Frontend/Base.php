@@ -8,18 +8,12 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Error extends sly_Controller_Backend {
-	protected $exception;
-
-	public function __construct(Exception $e) {
-		$this->exception = $e;
-	}
-
-	public function indexAction() {
-		print $this->render('error/index.phtml', array('e' => $this->exception));
+abstract class sly_Controller_Frontend_Base extends sly_Controller_Base {
+	protected function getViewFolder() {
+		return SLY_DEVELOPFOLDER.'/views/';
 	}
 
 	public function checkPermission() {
-		return false; // allow only internal redirects
+		return true;
 	}
 }

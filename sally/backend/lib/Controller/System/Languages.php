@@ -16,13 +16,13 @@ class sly_Controller_System_Languages extends sly_Controller_System {
 	protected $id        = '';
 	protected $languages = array();
 
-	protected function index() {
+	public function indexAction() {
 		$languageService = sly_Service_Factory::getLanguageService();
 		$this->languages = $languageService->find(null, null, 'id');
 		print $this->render('system/languages.phtml');
 	}
 
-	protected function add() {
+	public function addAction() {
 		if (sly_post('sly-submit', 'boolean', false)) {
 			$this->id = sly_post('clang_id', 'int', -1);
 
@@ -49,10 +49,10 @@ class sly_Controller_System_Languages extends sly_Controller_System {
 			$this->func = 'add';
 		}
 
-		$this->index();
+		$this->indexAction();
 	}
 
-	protected function edit() {
+	public function editAction() {
 		$this->id = sly_request('clang_id', 'int', -1);
 
 		if (sly_post('sly-submit', 'boolean', false)) {
@@ -73,10 +73,10 @@ class sly_Controller_System_Languages extends sly_Controller_System {
 			$this->func = 'edit';
 		}
 
-		$this->index();
+		$this->indexAction();
 	}
 
-	protected function delete() {
+	public function deleteAction() {
 		$clangID   = sly_request('clang_id', 'int', -1);
 		$languages = sly_Util_Language::findAll();
 
@@ -86,6 +86,6 @@ class sly_Controller_System_Languages extends sly_Controller_System {
 			else $this->warning = t('cannot_delete_language');
 		}
 
-		$this->index();
+		$this->indexAction();
 	}
 }

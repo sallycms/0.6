@@ -30,16 +30,16 @@ class sly_Controller_System extends sly_Controller_Backend {
 		$layout->pageHeader(t('system'), $subline);
 	}
 
-	public function index() {
+	public function indexAction() {
 		print $this->render('system/index.phtml');
 	}
 
-	public function clearcache() {
+	public function clearcacheAction() {
 		$this->info = sly_Core::clearCache();
-		$this->index();
+		$this->indexAction();
 	}
 
-	public function update() {
+	public function updateAction() {
 		$startArticle    = sly_post('start_article',    'int');
 		$notFoundArticle = sly_post('notfound_article', 'int');
 		$defaultClang    = sly_post('default_clang',    'int');
@@ -106,10 +106,10 @@ class sly_Controller_System extends sly_Controller_Backend {
 		// notify system
 		sly_Core::dispatcher()->notify('SLY_SETTINGS_UPDATED');
 
-		$this->index();
+		$this->indexAction();
 	}
 
-	public function setup() {
+	public function setupAction() {
 		sly_Core::config()->setLocal('SETUP', true);
 		sly_Util_HTTP::redirect('index.php', array(), '', 302);
 	}

@@ -9,7 +9,7 @@
  */
 
 class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
-	public function index() {
+	public function indexAction() {
 		$diff = $this->getFileDiff();
 
 		if (empty($diff)) {
@@ -21,7 +21,7 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 		}
 	}
 
-	public function sync() {
+	public function syncAction() {
 		$selected = sly_postArray('sync_files', 'string');
 		$title    = sly_post('ftitle', 'string');
 		$diff     = $this->getFileDiff();
@@ -37,7 +37,7 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 			}
 		}
 
-		$this->index();
+		$this->indexAction();
 	}
 
 	protected function syncMedium($filename, $category, $title) {

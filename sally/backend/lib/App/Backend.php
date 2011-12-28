@@ -8,12 +8,12 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_App_Backend {
-	const PAGEPARAM    = 'page';    ///< string  the request param that contains the page
-	const ACTIONPARAM  = 'func';    ///< string  the request param that contains the action
+class sly_App_Backend extends sly_App_Base implements sly_App_Interface {
+	const CONTROLLER_PARAM = 'page';    ///< string  the request param that contains the page
+	const ACTION_PARAM     = 'func';    ///< string  the request param that contains the action
 
 	protected $controller = null;
-	private static $currentPage;
+	protected $action     = null;
 
 	public function initialize() {
 		$config = sly_Core::config();
@@ -37,14 +37,8 @@ class sly_App_Backend {
 		// the Scaffold CSS processing is first in the line for CSS files
 		sly_Service_Factory::getAssetService();
 
-		// include addOns
-		sly_Core::loadAddons();
-
-		// register listeners
-		sly_Core::registerListeners();
-
-		// synchronize develop
-		if (!$isSetup) $this->syncDevelopFiles();
+		// and now init the rest (addOns, listeners, ...)
+		parent::initialize();
 	}
 
 	public function run() {
@@ -63,16 +57,17 @@ class sly_App_Backend {
 
 		// get page and action from the current request
 		$page   = $this->controller === null ? $this->findPage() : $this->controller;
-		$action = $this->getAction('index');
+		$action = $this->getActionParam('index');
 
 		// let the core know where we are
-		self::$currentPage = $page;
+		$this->controller = $page;
+		$this->action     = $action;
 
 		// let the layout know as well
 		$layout->setCurrentPage($page);
 
 		// notify the addOns
-		sly_Core::dispatcher()->notify('PAGE_CHECKED', $page, compact('action'));
+		$this->notifySystemOfController(true);
 
 		// do it, baby
 		$content  = $this->dispatch($page, $action);
@@ -97,71 +92,6 @@ class sly_App_Backend {
 
 		// send the response :)
 		$response->send();
-	}
-
-	public function dispatch($page, $action) {
-		$pageResponse = $this->runPage($page, $action);
-
-		// register the new response, if the controller returned one
-		if ($pageResponse instanceof sly_Response) {
-			sly_Core::setResponse($pageResponse);
-		}
-
-		// if the controller returned another action, execute it
-		if ($pageResponse instanceof sly_Response_Action) {
-			$pageResponse = $pageResponse->execute($this);
-		}
-
-		return $pageResponse;
-	}
-
-	public function runPage($controller, $action) {
-		$response = sly_Core::getResponse();
-
-		try {
-			// prepare controller
-			$method = $action; // TODO: make this $action.'Action'
-
-			if (!($controller instanceof sly_Controller_Backend)) {
-				$className  = $this->getControllerClass($controller);
-				$controller = new $className();
-			}
-
-			if (!($controller instanceof sly_Controller_Backend)) {
-				throw new sly_Controller_Exception(t('does_not_implement', $className, 'sly_Controller_Backend'));
-			}
-
-			if (!method_exists($controller, $method)) {
-				throw new sly_Controller_Exception(t('unknown_action', $method, $className), 404);
-			}
-
-			ob_start();
-
-			// init the controller
-			$r = $controller->init($method, $response);
-			if ($r instanceof sly_Response) { ob_end_clean(); return $r; }
-
-			// run the action method
-			$r = $controller->$method($response);
-			if ($r instanceof sly_Response) { ob_end_clean(); return $r; }
-
-			// and tear it down
-			$r = $controller->teardown($method, $response);
-			if ($r instanceof sly_Response) { ob_end_clean(); return $r; }
-
-			// collect output
-			return ob_get_clean();
-		}
-		catch (Exception $e) {
-			// throw away all content (including notices and warnings)
-			sly_Core::getLayout()->closeAllBuffers();
-
-			// manually create the error controller to pass the exception
-			$controller = new sly_Controller_Error($e);
-
-			// forward to the error page
-			return new sly_Response_Forward($controller, 'index');
-		}
 	}
 
 	protected function initUserSettings($isSetup) {
@@ -203,14 +133,6 @@ class sly_App_Backend {
 		date_default_timezone_set($timezone);
 	}
 
-	protected function syncDevelopFiles() {
-		if (sly_Core::isDeveloperMode()) {
-			sly_Service_Factory::getTemplateService()->refresh();
-			sly_Service_Factory::getModuleService()->refresh();
-			sly_Service_Factory::getAssetService()->validateCache();
-		}
-	}
-
 	/**
 	 * Get the page param
 	 *
@@ -219,8 +141,8 @@ class sly_App_Backend {
 	 * @param  string $default  default value if param is not present
 	 * @return string           the page param
 	 */
-	public function getPage($default = '') {
-		return strtolower(sly_request(self::PAGEPARAM, 'string', $default));
+	public function getControllerParam($default = '') {
+		return strtolower(sly_request(self::CONTROLLER_PARAM, 'string', $default));
 	}
 
 	/**
@@ -231,8 +153,8 @@ class sly_App_Backend {
 	 * @param  string $default  default value if param is not present
 	 * @return string           the action param
 	 */
-	public function getAction($default = '') {
-		return strtolower(sly_request(self::ACTIONPARAM, 'string', $default));
+	public function getActionParam($default = '') {
+		return strtolower(sly_request(self::ACTION_PARAM, 'string', $default));
 	}
 
 	/**
@@ -251,7 +173,7 @@ class sly_App_Backend {
 	 */
 	protected function findPage() {
 		$config = sly_Core::config();
-		$page   = $this->getPage();
+		$page   = $this->getControllerParam();
 
 		// Erst normale Startseite, dann User-Startseite, dann System-Startseite und
 		// zuletzt auf die Profilseite zurückfallen.
@@ -269,36 +191,29 @@ class sly_App_Backend {
 			}
 		}
 
-		$_REQUEST[self::PAGEPARAM] = $page;
-
 		return $page;
 	}
 
-	public function isControllerAvailable($page) {
-		return class_exists($this->getControllerClass($page));
+	public function getControllerClassPrefix() {
+		return 'sly_Controller';
 	}
 
-	/**
-	 * return classname for &page=whatever
-	 *
-	 * It will return sly_Controller_System for &page=system
-	 * and sly_Controller_System_Languages for &page=system_languages
-	 *
-	 * @param  string $page
-	 * @return string
-	 */
-	public function getControllerClass($page) {
-		$className = 'sly_Controller';
-		$parts     = explode('_', $page);
-
-		foreach ($parts as $part) {
-			$className .= '_'.ucfirst($part);
-		}
-
-		return $className;
+	public function getCurrentController() {
+		return $this->controller;
 	}
 
-	public static function getCurrentPage() {
-		return self::$currentPage;
+	public function getCurrentAction() {
+		return $this->action;
+	}
+
+	protected function handleControllerError(Exception $e, $controller, $action) {
+		// throw away all content (including notices and warnings)
+		while (ob_get_level()) ob_end_clean();
+
+		// manually create the error controller to pass the exception
+		$controller = new sly_Controller_Error($e);
+
+		// forward to the error page
+		return new sly_Response_Forward($controller, 'index');
 	}
 }

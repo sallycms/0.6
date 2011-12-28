@@ -42,7 +42,7 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 		}
 	}
 
-	public function index() {
+	public function indexAction() {
 		$this->checkForNewComponents();
 
 		$data = $this->buildDataList();
@@ -111,7 +111,7 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 		}
 	}
 
-	public function install() {
+	public function installAction() {
 		$this->call('install', 'installed');
 
 		if ($this->warning === '') {
@@ -121,12 +121,12 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 		return $this->sendResponse();
 	}
 
-	public function uninstall()  { $this->call('uninstall', 'uninstalled');    return $this->sendResponse(); }
-	public function activate()   { $this->call('activate', 'activated');       return $this->sendResponse(); }
-	public function deactivate() { $this->call('deactivate', 'deactivated');   return $this->sendResponse(); }
-	public function reinit()     { $this->call('copyAssets', 'assets_copied'); return $this->sendResponse(); }
+	public function uninstallAction()  { $this->call('uninstall', 'uninstalled');    return $this->sendResponse(); }
+	public function activateAction()   { $this->call('activate', 'activated');       return $this->sendResponse(); }
+	public function deactivateAction() { $this->call('deactivate', 'deactivated');   return $this->sendResponse(); }
+	public function reinitAction()     { $this->call('copyAssets', 'assets_copied'); return $this->sendResponse(); }
 
-	public function fullinstall() {
+	public function fullinstallAction() {
 		list($service, $component) = $this->prepareAction();
 
 		$todo = $this->getInstallList($component);
@@ -188,7 +188,7 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 			die;
 		}
 
-		return $this->index();
+		return $this->indexAction();
 	}
 
 	private function readAddOns() {

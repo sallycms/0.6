@@ -38,7 +38,7 @@ class sly_Controller_Addon_Help extends sly_Controller_Backend {
 		print '</div>';
 	}
 
-	public function index() {
+	public function indexAction() {
 		if ($this->addon === null) return;
 
 		print $this->render('addon/help.phtml', array(
