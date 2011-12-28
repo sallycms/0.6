@@ -159,7 +159,7 @@ if ($isImage) {
 
 // display filename
 
-$filename = '<a href="../data/mediapool/'.$encoded.'">'.sly_html($filename).'</a> ['.$filesize.']';
+$filename = '<a href="../data/mediapool/'.$encoded.'">'.sly_html(sly_Util_String::cutText($filename, 55)).'</a> ['.$filesize.']';
 $filename = new sly_Form_Text(t('filename'), $filename);
 $filename->setIsHTML(true);
 $form->add($filename);
