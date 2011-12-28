@@ -14,385 +14,31 @@ hours_short: h
 minutes_short: m
 seconds_short: s
 milliseconds_short: ms
-general: general
+never: never
+general: General
 dateformat: '%Y-%b-%d'
 timeformat: '%H:%M'
 datetimeformat: '%Y-%b-%d %H:%M'
 setlocale: 'en_GB,en_UK,en_US,en_EN,en_AU,en_CA,American,ENG,English'
 
-ctrl: multiselect using CTRL
+home: Home
+input: Input
+output: Output
+title: Title
 
 save: Save
 apply: Apply
 reset: Reset
 delete: Delete
-
-select_all: select all
-select_none: select none
-
-open_linkmap: Open linkmap
-remove_link: Remove link
-press_del: 'Press [Del] to remove the selected element.'
-
-sort_asc: Sort ascending
-sort_desc: Sort descending
-sort_none: No sorting
-pages: Pages
-filter: Filter
-begin_sorting: Sort table
-end_sorting: End sorting mode
-
-start_article_not_selected: start article not selected
-redirect_previous_page: 'You are being redirected to your <a href="{0}">previous page</a>.'
-redirect_startpage: 'You are being redirected to your <a href="{0}">homepage</a>.'
-unknown_page: Unknown Page
-unknown_action: 'Method {0} in {1} not found!'
-page_not_allowed: 'Access to {0} in {1} not allowed!'
-security_violation: Security Violation
-controller_error: Controller Error
-unexpected_exception: Unexpected Exception
-
-importer_bad_version: The import file contained no valid export version.
-importer_no_valid_charset: The import file contained no encoding definition.
-importer_charset_mismatch: The encodings of this installation and the one in the import file do not match.
-importer_no_valid_import_file_version: 'Import file is invalid. Version stamp {0} found, but {1} expected.'
-importer_no_valid_import_file_prefix: Import file is invalid. No table prefix was found.
-importer_database_imported: Database imported
-importer_entry_count: '({0} rows)'
-
-homepage: Homepage
-
-specials: System
-user: Users
-mediapool: Mediapool
-import: Im-/export
-content: Article
-structure: Structure
-profile: My Profile
-logout: Logout
-navigation_basis: Basic Navigation
-navigation_addons: AddOns
-
-login_name: Username
-password: Password
-new_password: New password
-
-logged_out: not signed in
-logged_in_as: Logged in as
-
-add_block: add slice
-edit: edit
-no_editing_rights: permission denied
-no_article_available: no article available
-module_doesnt_exist: 'modul doesn''t exist'
-dont_delete_block: 'don''t delete slice'
-delete_block: delete slice
-submit: submit
-update_block: update slice
-save_block: save slice
-edit_block: edit slice
-
-article_moved: Article moved!
-article_deleted: Article deleted!
-could_not_move_article: Could not move article.
-check_rights_in_directory: Check folder permissions.
-category_deleted: Category deleted!
-category_doesnt_exist: 'Category doesn''t exist!'
-cant_delete_sitestartarticle: The website start article can not be deleted.
-cant_delete_notfoundarticle: The "Not Found" article cannot be deleted.
-
-move_slice_up: move up
-move_slice_down: move down
-block_updated: Block has been updated!
-block_added: Block has been added!
-no_rights_to_this_function: Improper permissions for this function.
-module_not_found: Error! Module could not be found.
-block_deleted: Block has been deleted!
-no_rights_to_this_module: Improper permissions for this module.
-error: An error occured!
-preview: Preview
-edit_mode: Edit mode
-metadata: Metadata/Others
-article_cannot_be_moved: Article cannot be moved.
-start_article_has_to_stay_in_category: 'Start-article has to stay in it''s category!'
-article_copied: Article has been copied.
-file: 'File {0] could not be found.'
-moving_file_error: 'Moving file {0} has failed.'
-metadata_updated: Metadata has been updated.
-online_from: 'Online from'
-online_to: to
-name_description: Name/Description
-description: Description
-delete_file: Delete file
-teaser: Teaser
-update_metadata: Update metadata
-other_functions: Other functions
-category: Categorie
-move_article: Move article
-copy_article: to category
-no_rights_to_edit: Insufficient permission for edit!
+edit: Edit
+submit: Submit
+add: Add
+remove: Remove
 show: Show
-slice_moved: Slice has been moved.
-slice_moved_error: Error. Slice could not be moved.
-slice_deleted_error: Error. Slice could not be deleted.
-slice_saved_error: Error. Slice could not be saved.
-content_contentcopy: Content has been copied.
-content_errorcopy: You cannot copy article content to the same language.
-content_copy: copy
-content_contentoflang: from language
-content_to: to language
-content_submitcopycontent: Copy content
-content_articlemoved: Article has been moved.
-content_choose_new_category: Choose new category.
-content_movearticle_no_startpage: Cannot move start-articles.
-content_copyarticle: Copy article.
-content_articlecopied: Article has been copied.
-content_errorcopyarticle: Error. Article not copied.
-content_error_movecategory: Error. Category could not be moved.
-content_submitmovecategory: Move Category
-content_startarticle: Start-article
-content_isstartarticle: Article is start-article'
-content_tostartarticle: Make this the start-article
-content_nottostartarticle: Cannot make this article start-article.
-content_tostartarticle_failed: Error. Article not changed to start-article.
-content_tostartarticle_ok: Article was changed to start-article.
-content_select_type: Please select an article type!
-content_no_template: This article has no template. It cannot contain any content.
-content_no_slots: This article cannot contain any content.
-content_no_modules: This slot cannot contain any content.
-move_category: to
-category_moved: Category has been moved
-content_types: Columns
-content_type: Column
-option: optional
-content_arttype: Article type
-
-input: Input
-output: Output
-action: Action
-actions: Actions
-
-title_structure: Structure management
-no_such_category: Category not found!
-category_updated: Category has been updated.
-category_still_contains_articles: Category still contains articles.
-category_still_contains_subcategories: Category still contains subcategories.
-category_status_updated: Category status has been updated.
-category_added_and_startarticle_created: Category and start-article have created!
-category_edit_delete: Rename/delete category
-article_status_updated: Article status has been updated.
-article_updated: Article has been updated.
-article_added: Article has been added.
-header_category: Category
-header_edit_category: Edit category
-header_position: Pos
-header_status: Status/Function
-header_id: ID
-add_article: Add article
-add_category: Add category
-edit_category: Change category
-delete_category: Delete category
-save_category: Save category
-status_online: online
-status_offline: offline
-no_permission_to_edit: No permission to edit
-option_no_type: No Articletype
-header_article_name: Article name
-header_date: Created
-header_article_type: Article type
-change: Change
-article_add: Add article
-article_edit: Change article
-article_save: Save article
-article: Article
-structure_categories_summary: 'List of subcategories in "{0}"'
-structure_categories_caption: 'List of subcategories in "{0}"'
-structure_articles_summary: 'List of all articles in "{0}"'
-structure_articles_caption: 'List of articles in "{0}"'
-
-article: Article
-start_article: Start-article
-path: Path
-
-title_user: User
-user_data_updated: User data updated!
-user_deleted: User deleted!
-user_added: User added!
-create_user: Create new user
-add_user: Add user
-edit_user: Edit user
-user_login_exists: The chosen login already exists!
-user_admin: Admin (full permissions / everything visible)
-user_notdeleteself: You cannot delete yourself!
-user_lang_xs: Language permissions
-user_all: General
-user_save: Save user
-user_apply: Update user
-user_delete: Delete user
-user_functions: Functions
-user_options: Options
-all_categories: All categories
-all_mediafolder: All media categories
-categories: Categories
-mediafolder: Media categories
-modules: Modules
-extras: Extras
-last_login: Last login
 login: Login
-name: Name
-permissions: Permissions
-add: add
-update: update
-user_caption: List of users
-user_summary: List of all users
-user_status: Status
-backend_language: Backend language
-startpage: Startpage
-
-info_updated: Information updated!
-delete_cache: Delete cache
-delete_cache_description: 'Templates and languages files will be created, article case will be deleted. The cache of the respective article will be recreated on front-end call of the article.'
-delete_cache_message: The cache has been deleted.
-specials_features: Features
-specials_settings: Settings
-settings_invalid_sitestart_article: Invalid ID for not-found article!
-settings_invalid_notfound_article: Invalid ID for start article!
-settings_invalid_sitestart_clang: Invalid ID for default language!
-settings_invalid_default_type: Invalid default Articletype!
-general_info_header: General information:
-specials_others: Others
-specials_update: Update
-update_button: update
-delete_button: delete
-main_preferences: Settings
-languages: Languages
-types: Types
-enter_name: Enter a name
-clang_id: Language ID
-clang_add: Add language
-clang_edit: Edit language
-clang_update: Update language
-clang_created: Language has been added.
-clang_edited: Language has been updated.
-clang_deleted: Language has been deleted.
-clang_delete_error: Language could not be deleted.
-clang_name: Name
-clang_delete: Delete language
-clang_caption: List of available languages
-clang_summary: List of languages
-clang_function: Functions
-clang_locale: Locale
-version: Version
-host: Host
-database: Database
-specials_caching_strategy: Cache Strategy
-specials_developer_mode: Enable Developer Mode
-specials_servername: Project Name
-specials_start_article: Startpage
-specials_default_type: Default Articletype
-specials_lang: Default Backend Locale
-specials_timezone: Timezone
-specials_not_found_article: Not-Found Article
-
-setup: Setup
-setup_text: 'You can initiate the setup process here. This is only for emergency and not required on normal conditions.'
-
-addon: AddOn
-addons: AddOns
-addon_help: 'Help for {0}'
-addon_no_help_file: No help file (help.inc.php) found
-addon_back: back
-addon_config_not_found: Config file (config.inc.php) could not be found!
-addon_no_install: 'AddOn {0} has not been installed because of the following error:<br /> {1}'
-addon_no_uninstall: 'AddOn {0} has not been uninstalled because of the following error:<br />{1}'
-addon_no_reason: No reason was given.
-addon_no_activation: 'AddOn {0} was not activated since it is not installed yet!'
-addon_installed: 'AddOn {0} has been installed.'
-addon_activated: 'AddOn {0} has been activated.'
-addon_deactivated: 'AddOn {0} has been deactivated.'
-addon_uninstalled: 'AddOn {0} has been uninstalled.'
-addon_uninstall_question: 'Uninstall addOn {0}?'
-addon_hname: name
-addon_hinstall: Installed
-addon_hactive: Activated
-addon_hassets: Assets
-addon_hdelete: Uninstall
-addon_reinit_assets: re-init
-addon_assets_copied: The assets have been copied.
-plugin_assets_copied: The assets have been copied.
-addon_requires_addon: 'The addOn {0} is required to install the addOn {1}.'
-addon_requires_plugin: 'The plugIn {0} is required to install the addOn {1}.'
-addon_sally_incompatible: 'This addOn is not marked as compatible with your SallyCMS version ({0}).'
-addon_has_no_sally_version_info: This addOn has no compatibility-information. It can not be installed.
-addon_reinstall: re-install
-addon_install: install
-addon_notinstalled: not installed
-addon_uninstall: uninstall
-addon_deactivate: deactivate
-addon_activate: activate
-addon_yes: yes
-addon_no: no
-addon_caption: List of available addOns
-addon_install_cant_copy_files: Error while copying the assets directory!
-addon_install_cant_delete_files: Error while deleting the assets directory!
-addon_empty_list: No addOns found. Put new addOns in sally/addons.
-plugin_plugins_installed: plugIns are installed
-plugin_config_not_found: Config file (config.inc.php) could not be found!
-plugin_no_install: 'PlugIn {0} has not been installed because of the following error:<br />{1}'
-plugin_no_uninstall: 'PlugIn {0} has not been uninstalled because of the following error:<br />{1}'
-plugin_no_reason: No reason was given.
-plugin_no_activation: 'PlugIn {0} could not be activated because is has not yet been installed!'
-plugin_installed: 'PlugIn {0} has been installed.'
-plugin_activated: 'PlugIn {0} has been activated.'
-plugin_deactivated: 'PlugIn {0} has been deactivated.'
-plugin_uninstalled: 'PlugIn {0} has been uninstalled.'
-plugin_uninstall_question: 'Uninstall plugIn {0}?'
-plugin_install_cant_copy_files: Error while copying the assets directory!
-plugin_install_cant_delete_files: Error while deleting the assets directory!
-plugin_requires_addon: 'The addOn {0} is required to install the plugIn {1}.'
-plugin_requires_plugin: 'The plugIn {0} is required to install the plugIn {1}.'
-plugin_sally_incompatible: 'This plugIn is not marked as compatible with your SallyCMS version ({0}).'
-plugin_has_no_sally_version_info: This plugIn has no compatibility-information. It can not be installed.
-
-credits: Credits
-credits_name: AddOn
-credits_version: Version
-credits_author: Author
-credits_supportpage: Help
-credits_addon_inactive: Addon inactive
-credits_caption: List of used addOns/plugins
-credits_text: |
-  <strong>The webvariants team</strong>, <a href="mailto:info@webvariants.de">info@webvariants</a><br />
-  Core Development<br />
-  webvariants GbR, <a href="http://www.webvariants.de/" class="sly-blank">www.webvariants.de</a>
-credits_thankyou: |
-  We thank all external developers and users that have contributed to the Sally development.
-
-profile_myprofile: Edit my profile
-profile_title: My profile
-profile_save: Save profile
-
-linkmap: Linkmap
-lmap_title: Linkmap
-lmap_categories: Categories
-lmap_articles: Articles
-lmap_has_no_type: has no type
-
-var_media_open: Choose media
-var_media_new: Add media
-var_media_remove: Delete selected media
-var_medialist_move_top: Move selected media to top
-var_medialist_move_up: Move selected media up
-var_medialist_move_down: Move selected media down
-var_medialist_move_bottom: Move selected media to bottom
-
-var_link_open: Choose link
-var_link_new: Add link
-var_link_remove: Delete selected link
-var_linklist_move_top: Move selected link to top
-var_linklist_move_up: Move selected link up
-var_linklist_move_down: Move selected link down
-var_linklist_move_bottom: Move selected link to bottom
+logout: Logout
+change: Change
+update: Update
 
 available: available
 unavailable: unavailable
@@ -407,14 +53,241 @@ disallowed: disallowed
 any: any
 none: none
 recommended: recommended
+unknown: unknown
 
-authorisation_exception_language_denied: 'Permission to language {0} denied!'
-exception_articletype_not_exists: 'The article type {0} does not exist!'
+from: from
+to: to
+by: by
 
-config_projectname: Project title
-config_default_fe_language: Default Frontend Language
+select_all: select all
+select_none: select none
 
-no_startarticle: 'No start article given. Please select one in your <a href="{0}">backend</a>.'
+sort_asc: Sort ascending
+sort_desc: Sort descending
+sort_none: No sorting
+pages: Pages
+filter: Filter
+begin_sorting: Sort table
+end_sorting: End sorting mode
+
+redirect_previous_page: 'You are being redirected to your <a href="{0}">previous page</a>.'
+redirect_startpage: 'You are being redirected to your <a href="{0}">homepage</a>.'
+unknown_page: Unknown Page
+unknown_action: 'Method {0} in {1} not found!'
+page_not_allowed: 'Access to {0} in {1} not allowed!'
+security_violation: Security Violation
+controller_error: Controller Error
+unexpected_exception: Unexpected Exception
+system: System
+user: User
+users: Users
+mediapool: Mediapool
+content: Article
+structure: Structure
+addons: AddOns
+profile: Profile
+my_profile: My Profile
+login_title: Login
+base_navigation: Base Navigation
+
+username: Username
+password: Password
+new_password: New password
+
+logged_out: not signed in
+logged_in_as: Logged in as
+
+add_slice: Add block
+no_articles_available: No articles available.
+no_categories_available: No categories available.
+module_not_found: 'Module {0} could not be found.'
+edit_slice: Edit block
+
+article_moved: Article has been moved.
+article_deleted: Article has been deleted.
+cannot_move_article: Article could not be moved.
+check_rights_in_directory: 'Please check the permission in the directory {0}.'
+category_deleted: Category has been deleted.
+category_not_found: 'Category {0} could not be found!'
+cannot_delete_start_article: Cannot delete the site homepage!
+cannot_delete_not_found_article: Cannot delete the not found article!
+
+slice_updated: Block has been updated.
+slice_added: Block has been added.
+no_rights_to_this_function: Improper permissions for this function!
+slice_deleted: Slice has been deleted.
+no_rights_to_this_module: Improper permissions for this module!
+preview: Preview
+edit_mode: Edit mode
+metadata: Metadata/Misc
+article_copied: Article has been copied.
+file_not_found: 'File {0} could not be found!'
+error_moving_uploaded_file: 'An error occured while moving the file {0}.'
+metadata_updated: Metadata has been updated.
+description: Description
+move_article: Move article
+slice_moved: Block has been moved.
+article_content_copied: Article content has been copied.
+cannot_move_slice: Block could not be moved!
+cannot_delete_slice: Block could not be deleted!
+cannot_update_slice: Block could not be updated!
+cannot_copy_article_content: 'Article content could not be copied!'
+
+copy_content: 'Copy contents'
+copy_article: 'Copy article'
+cannot_copy_article: Article could not be moved!
+cannot_move_category: Category could not be moved!
+move_category: Move category
+startarticle: Start article
+article_is_startarticle: This article is a start article.
+convert_to_startarticle: This article cannot be converted to a start article.
+root_articles_cannot_be_startarticles: Articles in the root level cannot be converted to start articles.
+cannot_convert_to_startarticle: Article could not be converted to start article!
+article_converted_to_startarticle: Article has been successfully converted to start article.
+select_type_first: Please select an article type first.
+no_template_defined: This article has no template and cannot contain any content.
+template_has_no_slots: This article cannot contain any content.
+no_modules_allowed: This slot cannot contain any content.
+category_moved: Category has been moved.
+articletype: Article type
+
+category_updated: Category has been updated.
+category_is_not_empty: Category still contains contents.
+category_status_updated: Category status has been updated.
+category_added: Category has been added.
+article_status_updated: Article status has been updated.
+article_updated: Article has been updated.
+article_added: Article has been added.
+category: Category
+position: Position
+position_short: Pos
+status: Status
+id: ID
+add_article: Add article
+add_category: Add category
+save_category: Save category
+status_online: online
+status_offline: offline
+no_articletype: No article type
+article_name: Article name
+created_at: created at
+updated_at: updated at
+article: Article
+
+start_article: Homepage
+path: Path
+function: Function
+functions: Functions
+
+profile_updated: Your profile has been updated.
+user_updated: User has been updated.
+user_deleted: User has been deleted.
+user_added: User has been added.
+edit_user: Edit user
+add_user: Add user
+user_login_already_exists: The chosen username already exists!
+admin: Administrator
+you_cannot_delete_yourself: You cannot delete yourself!
+categories: Categories
+modules: Modules
+last_login: Last login
+name: Name
+permissions: Permissions
+backend_locale: Backend locale
+startpage: Startpage
+
+plase_enter_a_name: Please enter a name!
+configuration_updated: System configuration has been updated.
+delete_cache: Delete cache
+delete_cache_description: 'Templates and languages files will be created, article case will be deleted. The cache of the respective article will be recreated on front-end call of the article.'
+delete_cache_message: Cache has been cleared.
+features: Features
+settings: Settings
+invalid_start_article_selected: The selected site homepage is invalid.
+invalid_not_found_article_selected: The selected not found article is invalid.
+invalid_default_language_selected: The selected default language is invalid.
+invalid_default_articletype_selected: The selected default article type is invalid.
+languages: Languages
+add_language: Add language
+edit_language: Edit language
+language_added: Language has been added.
+language_updated: Language has been updated.
+language_deleted: Language has been deleted.
+cannot_delete_language: Language could not be deleted!
+locale: Locale
+version: Version
+host: Host
+database: Database
+caching_strategy: Caching strategy
+developer_mode: Developer mode
+project_name: Project name
+default_articletype: Default article type
+timezone: Timezone
+not_found_article: Not found article
+default_language: Default language
+
+setup: Setup
+setup_text: 'You can initiate the setup process here. This is only for emergency and not required under normal circumstances.'
+
+back: back
+addon: AddOn
+install: install
+install_including_requirements: install incl. requirements
+activate_including_requirements: activate incl. requirements
+uninstall: uninstall
+deactivate: deactivate
+activate: activate
+reinit_assets: re-initialize assets
+component_help: 'Help for {0}'
+component_help_file_not_found: The help file (help.inc.php) could not be found.
+component_config_not_found: The configuration file (help.inc.php) could not be found.
+component_install_failed: '{0} could not be installed for the following reason:<br /> {1}'
+component_install_sql_failed: '{0} could not be installed for the following errors while running the installation queries:<br /> {1}'
+component_uninstall_failed: '{0} could not be uninstalled for the following reason:<br /> {1}'
+component_uninstall_sql_failed: '{0} could not be installed for the following errors while running the uninstallation queries:<br /> {1}'
+component_activate_failed: '{0} could not be activated because it is not yet installed!'
+component_installed: '{0} has been installed.'
+component_activated: '{0} has been activated.'
+component_deactivated: '{0} has been deactivated.'
+component_uninstalled: '{0} has been uninstalled.'
+component_assets_copied: Assets have been re-initialized.
+component_requires_addon: '{1} requires the addOn {0}.'
+component_requires_plugin: '{1} requires the plugIn {0}.'
+component_incompatible: '{0} is not compatible with this Sally version ({1}).'
+component_incompatible_with_this_version: not compatible with this Sally version
+component_has_no_sally_version_info: '{0} has no compatibility information and can therefore not be installed.'
+component_assets_failed: 'An error occured while copying the assets directory ({0}).'
+no_dependencies: no dependencies
+
+component_cleanup_failed: 'An error occured while cleaning up the assets directory ({0}).'
+no_addons_found: No addOns found. Put new addOns in the directory sally/addons.
+
+credits: Credits
+author: Author
+supportpage: Website
+credits_caption: List of used addOns and plugIns
+credits_text: |
+  <strong>The webvariants team</strong>, <a href="mailto:info@webvariants.de">info@webvariants</a><br />
+  Core Development<br />
+  webvariants GbR, <a href="http://www.webvariants.de/" class="sly-blank">www.webvariants.de</a>
+credits_thankyou: |
+  We thank all external developers and users that have contributed to the Sally development.
+
+linkmap: Linkmap
+
+select_medium: Select medium
+upload_medium: Upload new medium
+remove_medium: Remove medium
+
+select_link: Select article
+remove_link: Remove article
+
+you_have_no_access_to_this_language: 'You have no access to language {0}!'
+you_have_no_access_to_this_medium: You have no access to this medium!
+articletype_not_found: 'Article type {0} could not be found.'
+
+no_articletype_set: "This article's type has not yet been set."
+no_startarticle: 'No homepage given. Please select one in the <a href="{0}">backend</a>.'
 used_ressources: '{0} in {1} classes'
 to_website: Go to website
 
@@ -424,14 +297,79 @@ errorlog_is_empty: The error log is empty.
 errorlog_recenterrors: 'Here you can see the last {0} errors.'
 errorlog_total: 'Your error log contains <strong>{0}</strong> errors.'
 clear_errorlog: Clear Log
-errorlog_message: Error details
-errorlog_line: line
+error_details: Error details
+in_file: in file
+in_line: in line
 errorlog_cleared: The log has been cleared.
-errorlog_not_cleared: The log could not be cleared.
+errorlog_not_cleared: The log could not be cleared!
 
 use_default_locale: '(project default)'
-mediacat_title_cannot_be_empty: The category's name may not be empty.
 unnamed_article: unnamed article
 
 no_categories_yet: There are no categories yet.
 no_articles_yet: There are no articles yet.
+no_languages_yet: There are no languages yet.
+
+login_error: 'Login has failed. Please wait {0} before trying again.'
+you_have_been_logged_out: You have been logged out.
+
+articles: Articles
+articleslice_must_contain_slice_id_or_module: Articles slices must contain at least a slice ID or a module!
+article_not_found: 'Article {0} could not be found!'
+cannot_insert_multilingual_element_in_multicolumn_fieldset: Multicolumn fieldsets cannot contain multilingual form elements!
+cannot_move_category_into_child: A category cannot be moved into one of its children!
+cannot_render_slices: Blocks could not be rendered!
+slots: Slots
+could_not_find_log_dir: Could not find log directory!
+create: create
+db_driver: Database type
+db_prefix: Table prefix
+develop_file_not_found: 'The development resource {0} could not be found!'
+does_not_implement: 'The class {0} does not implement the interface {0}!'
+email_is_invalid: The email address is invalid!
+error_rendering_slice: An error occured while rendering the block!
+error_sending_mail: An error occured while sending the email!
+exec_time: '{0}s, variable'
+fieldset_contains_multilingual_elements_has_to_be_singlecolumn: Fieldset cannot be multicolumn because it already contains multilingual form elements.
+file_has_no_internal_name: 'File {0} has no internal name!'
+from_language: from language
+to_language: to language
+importer_database_imported: The database dump has been successfully imported.
+importer_entry_count: '({0} queries)'
+importer_no_import_file_chosen_or_wrong_version: The import file is either malformed or incompatible!
+importer_no_valid_import_file_prefix: Import file is invalid: Table prefix could not be found!
+importer_no_valid_import_file_version: Import file is invalid: Version stamp could not be found!
+invalid_develop_param: 'Detected invalid parameter {0}.'
+language_not_found: 'Language {0} could not be found!'
+login_welcome: Please log in.
+medium_not_found: 'Medium {0} could not be found!'
+move_bottom: move to the bottom
+move_down: move down
+move_top: move to the top
+move_up: move up
+multiple_condition_handlers_found: Multiple valid condition handlers have been found. Going with the first good one.
+name_contains_invalid_characters: The internal name contains invalid characters!
+not_all_requirements_met: Not all requirements have been met!
+no_condition_handler_found: No valid condition handler could be found!
+no_password_given: No password given!
+no_permission: No permission!
+no_recipients_given: No recipients given!
+no_username_given: No username given!
+parent_category_not_found: Parent category could not be found!
+password_needs_valid_createdate: Hashing requires a valid createdate to be present!
+redirect_to: 'You are being <a href="{0}">redirected</a>.'
+service_not_found: 'The {0} service could not be found!'
+slice_could_not_be_generated: 'Slice cache could not be created!'
+sort_function_not_found: 'Sort function {0} could not be found!'
+source_and_target_are_equal: Source and target are identical!
+table_is_empty: This table contains not content yet.
+target_category: Target category
+target_category_not_found: Target category could not be found!
+template_not_found: Template could not be found!
+title_cannot_be_empty: The title may not be empty!
+unknown_log_level: 'Unknown log level {0} given.'
+unsupported_direction: 'Unsupported direction {0} given.'
+use_category_service_to_copy_categories: Use the category service to copy categories.
+use_category_service_to_move_categories: Use the category service to move categories.
+view_not_found: 'View {0} could not be found!'
+safemode_openbasedir: safe_mode and open_basedir

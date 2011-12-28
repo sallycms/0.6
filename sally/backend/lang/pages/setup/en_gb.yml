@@ -1,81 +1,49 @@
+setup_step_n: 'Setup: Step {0} of {1}'
+setup_continue_to_n: 'Continue with step {0}'
+
 setup_license_title: Setup: License
 setup_license_header: Welcome to SallyCMS setup.
-setup_license_whats_next: What's next:
-setup_license_whats_next_1: File permissions are checked.
-setup_license_whats_next_2: Database access is configured.
-setup_license_whats_next_3: The database will be (re-)initialized.
-setup_license_whats_next_4: An admin account will be created (optional).
+setup_license_steps: What happens next:
+setup_license_step_1: The file permissions are checked.
+setup_license_step_2: The database access will be configured.
+setup_license_step_3: The database will be (re-)created.
+setup_license_step_4: The first user account will be created.
 setup_license_not_found: The license file could not be found.
-setup_license_accept: Start setup and accept license agreement
+setup_license_accept: Accept license agreement and start setup
 
-setup_fsperms_title: Setup: Step 1 of 5
-setup_fsperms_security_msg: The directory sally/core is not secured. Please secure it and restart the setup.
-setup_fsperms_header: System Requirements
-setup_fsperms_property: Property
-setup_fsperms_required: Required
-setup_fsperms_recommended: Recommended
-setup_fsperms_status: Status
-setup_fsperms_php_version: PHP version
-setup_fsperms_mysql_version: MySQL version
-setup_fsperms_php_time_limit: PHP time limit
-setup_fsperms_php_mem_limit: PHP memory limit
-setup_fsperms_php_pseudo: 'PHP Fake Security (open_basedir, safe_mode)'
-setup_fsperms_php_gd: PHP::gd
-setup_fsperms_php_xmlreader: PHP::xmlreader
-setup_fsperms_php_xmlwriter: PHP::xmlwriter
-setup_fsperms_php_curl: PHP::curl
-setup_fsperms_php_short: PHP Short Open Tags
-setup_fsperms_php_globals: PHP Register Globals
-setup_fsperms_php_magic: PHP Magic Quotes
-setup_fsperms_php_urlopening: PHP URL opening
-setup_fsperms_no_mysql_mysqli: neither MySQL nor MySQLi
-setup_fsperms_available: available
-setup_fsperms_not_available: not available
-setup_fsperms_timeout: timeout
-setup_fsperms_exec_time: '{0}s, changeable'
-setup_fsperms_memory: '{0}B, changeable'
-setup_fsperms_safemode_openbasedir: safe_mode and open_basedir
-setup_fsperms_please_fix: Please fixed the given problems to continue.
-setup_fsperms_fsproblems: File system problems
-setup_fsperms_cant_access: 'The listed files/directories don''t exist or can''t be created.'
-setup_fsperms_cant_protect: 'The following directories can''t be protected against HTTP access.'
-setup_fsperms_continue: Continue with step 2
+no_mysql_mysqli: neither MySQL nor MySQLi
+exec_time: '{0}s, variable'
+memory: '{0}B, variable'
 
-setup_dbconfig_title: Setup: Step 2 of 5
-setup_dbconfig_header: Database Configuration
+setup_security_msg: |
+  The directory sally/core is insecure. Please prevent access to it and restart
+  the setup procedure!
+setup_system_requirements: System requirements
+setup_property: Property
+setup_php_version: PHP version
+setup_mysql_version: MySQL version
+setup_php_time_limit: PHP time limit
+setup_php_mem_limit: PHP memory limit
+setup_php_pseudo: 'PHP pseudo security (open_basedir, safe_mode)'
+setup_filesystem_problems: Filesystem problems
+setup_please_fix_problems: Please fix the problems above to continue.
+setup_cannot_create_dirs: The following directories do not exist and could not be created:
+setup_cannot_protect_dirs: The following directory could not protected against HTTP access:
+
+setup_database_config: Database configuration
 setup_dbconfig_driver_notice: All drivers except for MySQL are highly experimental and only for testing purposes.
-setup_dbconfig_driver: Database Type
-setup_dbconfig_prefix: Table Prefix
-setup_dbconfig_prefix_notice: Allows you to install multiple SallyCMS installations in one database.
-setup_dbconfig_host: Host
-setup_dbconfig_login: Login
-setup_dbconfig_password: Password
-setup_dbconfig_database: Database Name
-setup_dbconfig_create_db: create
-setup_dbconfig_continue: Continue with step 3
 setup_invalid_driver: The chosen database driver is not supported by your system.
 setup_no_drivers_available: No database driver is available.
+setup_dbconfig_prefix_notice: Allows you to install multiple SallyCMS installations in one database.
 
-setup_initdb_title: Setup: Step 3 of 5
 setup_initdb_header: Create database
 setup_initdb_reinit: Please re-initialize your database.
 setup_initdb_func_setup: Initialize database
-setup_initdb_func_drop: Init database and overwrite an existing one.
-setup_initdb_func_nop: 'Database already exists [skip this step].'
-setup_initdb_func_drop_notice: Attention - The old page will be completely lost!
-setup_initdb_table_not_found: 'Table {0} can''t be found!'
-setup_initdb_continue: Continue with step 4
+setup_initdb_func_drop: Initialize database and overwrite an existing one
+setup_initdb_func_nop: 'Database already exists [skip this step]'
+setup_initdb_table_not_found: 'Table {0} could not be found!'
 
-setup_config_title: Setup: Step 4 of 5
-setup_config_header: General SallyCMS Settings
-setup_config_projectname: Project Name
-setup_config_timezone: Timezone
-setup_config_continue: Continue with step 5
-
-setup_createuser_title: Setup: Step 5 of 5
-setup_createuser_header: Create Admin Account
-setup_createuser_login: Login
-setup_createuser_password: Password
+setup_createuser_header: Create admin account
 setup_createuser_no_admin: Do not create an account.
 setup_createuser_no_admin_notice: Enter the login of an existing user to reset the password.
 setup_createuser_continue: Finish setup
@@ -84,10 +52,10 @@ setup_createuser_no_password_given: Please enter a password for the admin accoun
 setup_createuser_cant_create_admin: The admin account could not be created.
 setup_createuser_no_users_found: No users were found. Please create one.
 
-setup_finish_title: Setup: All Done!
-setup_finish_header: Congratulations to your SallyCMS installation!
-setup_finish_done: The installation of your CMS is now done.
-setup_finish_login: You can <a href="index.php">log in</a> and start using it right now.
+setup_finish_title: 'Setup: All Done!'
+setup_finish_header: 'Congratulations to your SallyCMS installation!'
+setup_finish_done: 'The installation of your CMS is now done.'
+setup_finish_login: 'You can <a href="index.php">log in</a> and start using it right now.'
 setup_finish_signature: "Good luck and have fun,\nThe SallyCMS Team"
 
-setup_import_cant_find_exports: 'Can''t find export files.'
+setup_import_dump_not_found: Export files could not be found!

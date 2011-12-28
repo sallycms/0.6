@@ -26,19 +26,19 @@ input: Eingabe
 output: Ausgabe
 title: Titel
 
-save: speichern
-apply: übernehmen
-reset: zurücksetzen
-delete: löschen
-edit: bearbeiten
-submit: absenden
-add: hinzufügen
-remove: entfernen
-show: anzeigen
-login: anmelden
-logout: abmelden
-change: ändern
-update: aktualisieren
+save: Speichern
+apply: Übernehmen
+reset: Zurücksetzen
+delete: Löschen
+edit: Bearbeiten
+submit: Absenden
+add: Hinzufügen
+remove: Entfernen
+show: Anzeigen
+login: Anmelden
+logout: Abmelden
+change: Ändern
+update: Aktualisieren
 
 available: verfügbar
 unavailable: nicht verfügbar
@@ -131,7 +131,7 @@ article_content_copied: Die Inhalte des Artikels wurden kopiert.
 cannot_move_slice: Beim Verschieben des Blocks ist ein Fehler aufgetreten!
 cannot_delete_slice: Beim Löschen des Blocks ist ein Fehler aufgetreten!
 cannot_update_slice: Beim Speichern des Blocks ist ein Fehler aufgetreten!
-cannot_copy_article_content: Sie können Inhalte nicht in die gleiche Sprache kopieren.
+cannot_copy_article_content: Beim Kopieren der Inhalte ist ein Fehler aufgetreten!
 
 copy_content: Inhalte kopieren
 copy_article: Artikel kopieren
@@ -185,7 +185,7 @@ user_deleted: Benutzer wurde gelöscht.
 user_added: Benutzer wurde hinzugefügt.
 edit_user: Benutzer bearbeiten
 add_user: Benutzer hinzufügen
-user_login_already_exists: Der gewählte Benutzerlogin existiert schon!
+user_login_already_exists: Der gewählte Benutzername existiert bereits!
 admin: Administrator
 you_cannot_delete_yourself: Sie können sich nicht selbst löschen!
 categories: Kategorien
@@ -256,7 +256,7 @@ component_requires_plugin: '{1} benötigt das Plugin {0}.'
 component_incompatible: '{0} ist nicht mit dieser Version von SallyCMS ({1}) kompatibel.'
 component_incompatible_with_this_version: 'nicht mit dieser Version von SallyCMS kompatibel'
 component_has_no_sally_version_info: '{0} hat keine Kompatibilitätsinformationen und kann daher nicht installiert werden.'
-component_assets_failed: Fehler beim Kopieren des assets-Verzeichnisses!
+component_assets_failed: 'Fehler beim Kopieren des assets-Verzeichnisses ({0})!'
 no_dependencies: keine Abhängigkeiten
 
 component_cleanup_failed: 'Fehler beim Löschen des assets-Verzeichnisses ({0})!'
