@@ -9,7 +9,7 @@
  */
 
 class sly_Controller_Credits extends sly_Controller_Backend {
-	public function initAction() {
+	public function init() {
 		$subline = null;
 
 		// add link to help page for bugreports
