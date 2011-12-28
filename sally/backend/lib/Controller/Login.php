@@ -9,18 +9,14 @@
  */
 
 class sly_Controller_Login extends sly_Controller_Backend {
-	public function __construct() {
-		parent::__construct();
-
-		if (!method_exists($this, $this->action)) {
-			$this->action = 'index';
-		}
-	}
-
 	public function init() {
 		$layout = sly_Core::getLayout();
 		$layout->showNavigation(false);
 		$layout->pageHeader(t('login_title'));
+	}
+
+	public function slyGetActionFallback() {
+		return 'index';
 	}
 
 	public function indexAction() {

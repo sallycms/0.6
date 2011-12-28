@@ -23,7 +23,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 
 	protected static $viewPath;
 
-	public function init($action) {
+	public function init($action = null) {
 		parent::init();
 		self::$viewPath = 'structure/';
 
@@ -33,12 +33,11 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		$this->artService = sly_Service_Factory::getArticleService();
 		$this->catService = sly_Service_Factory::getCategoryService();
 
-		sly_Core::getLayout()->pageHeader(t('structure'), $this->getBreadcrumb());
-
 		if (count(sly_Util_Language::findAll()) === 0) {
-			print sly_Helper_Message::info(t('no_languages_yet'));
 			return new sly_Response_Forward('structure', 'nop');
 		}
+
+		sly_Core::getLayout()->pageHeader(t('structure'), $this->getBreadcrumb());
 
 		print $this->render('toolbars/languages.phtml', array(
 			'curClang' => $this->clangId,
@@ -49,6 +48,11 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			'category_id' => $this->categoryId,
 			'clang'       => $this->clangId
 		));
+	}
+
+	public function nopAction() {
+		sly_Core::getLayout()->pageHeader(t('structure'));
+		print sly_Helper_Message::info(t('no_languages_yet'));
 	}
 
 	public function indexAction() {
