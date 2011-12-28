@@ -77,7 +77,7 @@ class sly_App_Backend extends sly_App_Base implements sly_App_Interface {
 		if (is_string($content)) {
 			$layout->setContent($content);
 			$payload = $layout->render();
-			$response->setContent($payload);
+			$this->handleStringResponse($response, $payload, 'backend');
 		}
 
 		// if we got a response, use that one
