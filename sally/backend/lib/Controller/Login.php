@@ -9,32 +9,28 @@
  */
 
 class sly_Controller_Login extends sly_Controller_Backend {
-	public function __construct() {
-		parent::__construct();
-
-		if (!method_exists($this, $this->action)) {
-			$this->action = 'index';
-		}
-	}
-
 	public function init() {
 		$layout = sly_Core::getLayout();
 		$layout->showNavigation(false);
 		$layout->pageHeader(t('login_title'));
 	}
 
-	public function index() {
+	public function slyGetActionFallback() {
+		return 'index';
+	}
+
+	public function indexAction() {
 		print $this->render('login/index.phtml');
 	}
 
-	protected function login() {
+	public function loginAction() {
 		$username = sly_post('username', 'string');
 		$password = sly_post('password', 'string');
 		$loginOK  = sly_Service_Factory::getUserService()->login($username, $password);
 
 		if ($loginOK !== true) {
 			$this->message = t('login_error', '<strong>'.sly_Core::config()->get('RELOGINDELAY').'</strong>');
-			$this->index();
+			$this->indexAction();
 		}
 		else {
 			// if relogin, forward to previous page
@@ -54,10 +50,10 @@ class sly_Controller_Login extends sly_Controller_Backend {
 		}
 	}
 
-	public function logout() {
+	public function logoutAction() {
 		sly_Service_Factory::getUserService()->logout();
 		$this->message = t('you_have_been_logged_out');
-		$this->index();
+		$this->indexAction();
 	}
 
 	public function checkPermission() {

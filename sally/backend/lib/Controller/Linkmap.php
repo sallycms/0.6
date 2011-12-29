@@ -135,7 +135,7 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 		return $this->globals;
 	}
 
-	public function index() {
+	public function indexAction() {
 		print $this->render('linkmap/javascript.phtml');
 		print $this->render('linkmap/index.phtml');
 	}

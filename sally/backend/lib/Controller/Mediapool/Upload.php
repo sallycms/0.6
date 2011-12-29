@@ -9,11 +9,11 @@
  */
 
 class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
-	public function index() {
+	public function indexAction() {
 		print $this->render('mediapool/upload.phtml');
 	}
 
-	public function upload() {
+	public function uploadAction() {
 		if (!empty($_FILES['file_new']['name']) && $_FILES['file_new']['name'] != 'none') {
 			$title = sly_request('ftitle', 'string');
 			$cat   = $this->getCurrentCategory();
@@ -42,7 +42,7 @@ class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 			$this->warning = t('file_not_found_maybe_too_big');
 		}
 
-		$this->index();
+		$this->indexAction();
 	}
 
 	protected function saveMedium(array $fileData, $category, $title) {

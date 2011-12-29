@@ -14,11 +14,11 @@ class sly_Controller_Profile extends sly_Controller_Backend {
 		$layout->pageHeader(t('my_profile'));
 	}
 
-	public function index() {
+	public function indexAction() {
 		print $this->render('profile/index.phtml', array('user' => $this->getUser()));
 	}
 
-	public function update() {
+	public function updateAction() {
 		$user = $this->getUser();
 
 		$user->setName(sly_post('username', 'string'));
@@ -55,7 +55,7 @@ class sly_Controller_Profile extends sly_Controller_Backend {
 
 		$service->save($user);
 		print sly_Helper_Message::info(t('profile_updated'));
-		return $this->index();
+		return $this->indexAction();
 	}
 
 	public function checkPermission() {

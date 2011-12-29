@@ -25,7 +25,7 @@ class sly_Controller_Credits extends sly_Controller_Backend {
 		$layout->pageHeader(t('credits'), $subline);
 	}
 
-	public function index() {
+	public function indexAction() {
 		print $this->render('credits/index.phtml');
 	}
 

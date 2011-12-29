@@ -32,11 +32,11 @@ class sly_Controller_User extends sly_Controller_Backend {
 		$layout->pageHeader(t('users'), $subpages);
 	}
 
-	public function index() {
+	public function indexAction() {
 		$this->listUsers();
 	}
 
-	public function add() {
+	public function addAction() {
 		if (sly_post('save', 'boolean', false)) {
 			$password = sly_post('userpsw', 'string');
 			$login    = sly_post('userlogin', 'string');
@@ -100,7 +100,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 		print $this->render('user/edit.phtml', array('user' => null));
 	}
 
-	public function edit() {
+	public function editAction() {
 		$user = $this->getUser();
 
 		if ($user === null) {
@@ -160,7 +160,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 		print $this->render('user/edit.phtml', $params);
 	}
 
-	public function delete() {
+	public function deleteAction() {
 		$user = $this->getUser();
 
 		if ($user === null) {

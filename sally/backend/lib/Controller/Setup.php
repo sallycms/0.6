@@ -13,12 +13,12 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 	protected $info;
 	protected $lang;
 
-	protected function init() {
+	public function init() {
 		$this->lang = sly_request('lang', 'string');
 		sly_Core::getI18N()->appendFile(SLY_SALLYFOLDER.'/backend/lang/pages/setup/');
 	}
 
-	public function index()	{
+	public function indexAction()	{
 		$languages = sly_I18N::getLocales(SLY_SALLYFOLDER.'/backend/lang');
 
 		// wenn nur eine Sprache -> direkte Weiterleitung
@@ -31,11 +31,11 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		print $this->render('setup/chooselang.phtml');
 	}
 
-	protected function license() {
+	public function licenseAction() {
 		print $this->render('setup/license.phtml');
 	}
 
-	protected function fsperms() {
+	public function fspermsAction() {
 		$errors    = false;
 		$sysErrors = false;
 		$warnings  = false;
@@ -76,14 +76,14 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		}
 
 		if (!$errors && !$warnings) {
-			#return $this->dbconfig();
+			return $this->dbconfigAction();
 		}
 
 		$params = compact('sysErrors', 'results', 'protects', 'errors', 'cantCreate', 'tester');
 		print $this->render('setup/fsperms.phtml', $params);
 	}
 
-	protected function dbconfig() {
+	public function dbconfigAction() {
 		$config  = sly_Core::config();
 		$data    = $config->get('DATABASE');
 		$isSent  = isset($_POST['submit']);
@@ -122,7 +122,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 
 				$config->setLocal('DATABASE', $data);
 				unset($_POST['submit']);
-				$this->initdb();
+				$this->initdbAction();
 				return;
 			}
 			catch (sly_DB_PDO_Exception $e) {
@@ -141,7 +141,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		));
 	}
 
-	protected function config() {
+	public function configAction() {
 		$config = sly_Core::config();
 		$isSent = isset($_POST['submit']);
 
@@ -156,7 +156,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 			$config->set('DEFAULT_LOCALE', $this->lang);
 
 			unset($_POST['submit']);
-			$this->createUser();
+			$this->createuserAction();
 			return;
 		}
 
@@ -166,7 +166,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		));
 	}
 
-	protected function initdb() {
+	public function initdbAction() {
 		$dbInitFunction = sly_post('db_init_function', 'string', '');
 
 		if (isset($_POST['submit'])) {
@@ -230,7 +230,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 
 			if (empty($error)) {
 				unset($_POST['submit']);
-				$this->config();
+				$this->configAction();
 				return;
 			}
 			else {
@@ -244,7 +244,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		));
 	}
 
-	protected function createuser() {
+	public function createuserAction() {
 		$config      = sly_Core::config();
 		$prefix      = $config->get('DATABASE/TABLE_PREFIX');
 		$pdo         = sly_DB_Persistence::getInstance();
@@ -293,7 +293,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 
 			if (empty($error)) {
 				unset($_POST['submit']);
-				$this->finish();
+				$this->finishAction();
 				return;
 			}
 		}
@@ -305,7 +305,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		));
 	}
 
-	public function finish() {
+	public function finishAction() {
 		sly_Core::config()->setLocal('SETUP', false);
 		print $this->render('setup/finish.phtml');
 	}
@@ -360,7 +360,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		return $err_msg;
 	}
 
-	protected function checkPermission() {
+	public function checkPermission() {
 		return sly_Core::config()->get('SETUP') === true;
 	}
 }

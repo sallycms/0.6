@@ -9,7 +9,7 @@
  */
 
 class sly_Controller_System_Errorlog extends sly_Controller_System {
-	protected function init() {
+	public function init() {
 		parent::init();
 
 		$this->handler = sly_Core::getErrorHandler();
@@ -20,7 +20,7 @@ class sly_Controller_System_Errorlog extends sly_Controller_System {
 		}
 	}
 
-	protected function index() {
+	public function indexAction() {
 		if ($this->handler === null) return;
 
 		// check log existence
@@ -75,7 +75,7 @@ class sly_Controller_System_Errorlog extends sly_Controller_System {
 		print $this->render('system/errorlog.phtml', compact('data', 'lineCount', 'max'));
 	}
 
-	protected function clear() {
+	public function clearAction() {
 		$log     = $this->handler->getLog();
 		$logfile = $log->getFilename();
 
@@ -86,7 +86,7 @@ class sly_Controller_System_Errorlog extends sly_Controller_System {
 			print sly_Helper_Message::warn(t('errorlog_not_cleared'));
 		}
 
-		return $this->index();
+		return $this->indexAction();
 	}
 
 	protected function tail($filename, $lines = 10) {
