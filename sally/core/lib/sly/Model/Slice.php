@@ -40,9 +40,9 @@ class sly_Model_Slice extends sly_Model_Base_Id {
 	 * @param  string $value
 	 * @return sly_Model_SliceValue
 	 */
-	public function addValue($type, $finder, $value = null) {
+	public function addValue($finder, $value = null) {
 		$service = sly_Service_Factory::getSliceValueService();
-		return $service->create(array('slice_id' => $this->getId(), 'type' => $type, 'finder' => $finder, 'value' => $value));
+		return $service->create(array('slice_id' => $this->getId(), 'finder' => $finder, 'value' => $value));
 	}
 
 	/**
@@ -50,11 +50,21 @@ class sly_Model_Slice extends sly_Model_Base_Id {
 	 * @param  string $finder
 	 * @return sly_Model_SliceValue
 	 */
-	public function getValue($type, $finder) {
+	public function getValue($finder) {
 		$service    = sly_Service_Factory::getSliceValueService();
-		$sliceValue = $service->findBySliceTypeFinder(array('slice_id' => $this->getId(), 'type' => $type, 'finder' => $finder));
+		$sliceValue = $service->findBySliceTypeFinder($this->getId(), $finder);
 
 		return $sliceValue;
+	}
+
+	public function getValues() {
+		$values      = array();
+		$service     = sly_Service_Factory::getSliceValueService();
+		$sliceValues = $service->find(array('slice_id' => $this->getId()));
+		foreach($sliceValues as $value) {
+			$values[$value->getFinder()] = $value->getValue();
+		}
+		return $values;
 	}
 
 	/**
@@ -69,18 +79,10 @@ class sly_Model_Slice extends sly_Model_Base_Id {
 	 * @return string
 	 */
 	public function getOutput() {
-		$service  = sly_Service_Factory::getModuleService();
-		$filename = $service->getOutputFilename($this->getModule());
-		$output   = $service->getContent($filename);
-
-		foreach (sly_Core::getVarTypes() as $idx => $var) {
-			$data   = $var->getDatabaseValues($this->getId());
-			$output = $var->getOutput($data, $output);
-		}
-
-		$output = $this->replaceLinks($output);
-		$output = $this->replacePseudoConstants($output);
-
+		$values   = $this->getValues();
+		$renderer = new sly_SliceRenderer($this->getModule(), $values);
+		$output   = $renderer->renderOutput();
+		$output   = $this->replacePseudoConstants($output);
 		return $output;
 	}
 
@@ -96,36 +98,6 @@ class sly_Model_Slice extends sly_Model_Base_Id {
 		$output   = $this->replacePseudoConstants($output);
 
 		return $output;
-	}
-
-	/**
-	 * Replaces sally://ARTICLEID and sally://ARTICLEID-CLANGID in
-	 * the slice content by article http URLs.
-	 *
-	 * @param string $content
-	 * @return string
-	 */
-	protected function replaceLinks($content) {
-		preg_match_all('#(?:redaxo|sally)://([0-9]+)(?:-([0-9]+))?/?#', $content, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
-
-		$skew = 0;
-
-		foreach ($matches as $match) {
-			$complete = $match[0];
-			$length   = strlen($complete[0]);
-			$offset   = $complete[1];
-			$id       = (int) $match[1][0];
-			$clang    = isset($match[2]) ? (int) $match[2][0] : null;
-			$repl     = sly_Util_Article::getUrl($id, $clang);
-
-			// replace the match
-			$content = substr_replace($content, $repl, $offset + $skew, $length);
-
-			// ensure the next replacements get the correct offset
-			$skew += strlen($repl) - $length;
-		}
-
-		return $content;
 	}
 
 	/**
