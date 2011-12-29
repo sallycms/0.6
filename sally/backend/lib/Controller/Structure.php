@@ -87,7 +87,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		));
 	}
 
-	public function editstatuscategoryActions() {
+	public function editstatuscategoryAction() {
 		$editId = sly_get('edit_id', 'int');
 
 		if ($editId) {
