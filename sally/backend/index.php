@@ -22,6 +22,4 @@ sly_Core::setCurrentApp($app);
 $app->initialize();
 
 // ... and run it if not debugging
-if (!SLY_IS_TESTING) {
-	$app->run();
-}
+$app->run();
