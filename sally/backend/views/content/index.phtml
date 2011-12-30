@@ -96,10 +96,7 @@ else {
 				$artslice = $articleSlices[$i];
 				if ($function == 'edit' && $slice_id == $artslice->getId()) {
 					if (!isset($slicevalues)) {
-						$slicevalues = array();
-						foreach (sly_Core::getVarTypes() as $obj) {
-							$slicevalues = array_merge($slicevalues, $obj->getDatabaseValues($artslice->getSliceId()));
-						}
+						$slicevalues = $artslice->getSlice()->getValues();
 					}
 					sly_Helper_Content::printEditSliceForm($artslice, $slicevalues);
 				}

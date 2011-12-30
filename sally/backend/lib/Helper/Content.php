@@ -96,7 +96,10 @@ class sly_Helper_Content {
 						<legend><?php echo t('edit_slice') ?>: <?php echo sly_html($moduleTitle) ?></legend>
 						<div class="sly-form-wrapper">
 							<div class="sly-contentpage-slice-input">
-								<?php eval('?>'.self::replaceObjectVars($values, $articleSlice->getInput())); ?>
+								<?php
+									$renderer = new sly_Slice_Renderer($articleSlice->getModule(), $values);
+									print $renderer->renderInput('slicevalue');
+								?>
 							</div>
 							<div class="sly-form-row">
 								<p class="sly-form-submit">
