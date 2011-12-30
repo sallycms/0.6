@@ -82,7 +82,7 @@
 		height: 20px;
 		background-color: $link_color;
 		line-height: 20px;
-		padding-left: 20px;
+		padding: 0 2px 0 20px;
 		background-repeat: no-repeat;
 		+border-radius(3px);
 
@@ -90,7 +90,6 @@
 		&.sly-edit {
 			background-image: url(../background_btn_edit.png);
 			background-position: 6px 0;
-			width: 60px;
 
 			&:hover {
 				background-color: #4bcee4;
@@ -101,7 +100,6 @@
 		&.sly-delete {
 			background-image: url(../background_btn_dlt.png);
 			background-position: 6px 0;
-			width: 55px;
 
 			&:hover {
 				background-color: #4bcee4;
@@ -111,8 +109,7 @@
 		/*  Pfeil-Buttons */
 		&.sly-up,
 		&.sly-down {
-			padding: 0px;
-			width: 22px;
+			width: 0;
 
 			&:hover {
 				background-color: #4bcee4;
