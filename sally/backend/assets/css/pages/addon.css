@@ -1,9 +1,5 @@
-/* Sprites */
-
-.sly-sprite {
-	&-addon  { background-position: 0 -32px;     }
-	&-plugin { background-position: -32px -32px; }
-}
+.sly-sprite-addon  { background-position: 0 -32px;     }
+.sly-sprite-plugin { background-position: -32px -32px; }
 
 .sly-addonlist {
 	list-style: none;

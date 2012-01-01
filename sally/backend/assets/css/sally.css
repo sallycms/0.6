@@ -250,18 +250,6 @@ caption, legend {
 	.sly-area.col-b { float: right; }
 }
 
-.rex-i-element {
-	display: block;
-	width: 16px;
-	height: 16px;
-	margin: 0 auto;
-	text-indent: -1000em;
-}
-
-.rex-i-element-text {
-	+hide;
-}
-
 .sly-delete {
 	color: red;
 	background-position: -48px -32px;

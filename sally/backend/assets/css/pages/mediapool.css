@@ -51,9 +51,6 @@
 		width: 690px;
 		margin-bottom: 0 !important;
 
-		th, td      { vertical-align: middle; }
-		th.sly-icon { padding-bottom: 6px;    }
-
 		td {
 			height: auto;
 		}
@@ -123,8 +120,8 @@
 	.sly-col-func { width: 150px; }
 }
 
-.rex-i-mediapool-category     { background-position: -32px 0; }
-.rex-i-mediapool-category-add { background-position: -32px -16px; }
+.sly-sprite-mediacat          { background-position: -32px 0;     }
+.sly-sprite-mediacat-add      { background-position: -32px -16px; }
 
 #sly-form-mediapool-media {
 	.sly-form-wrapper .sly-form-row.sly-num0 {
