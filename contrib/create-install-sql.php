@@ -216,7 +216,6 @@ $table = createTable($schema, 'sly_slice_value');
 
 serialCol($table, 'id');
 intCol($table,    'slice_id');
-stringCol($table, 'type', 50);
 stringCol($table, 'finder', 50);
 textCol($table,   'value');
 
