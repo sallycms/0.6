@@ -19,8 +19,8 @@ $format      = '<dt>%s:</dt><dd>%s</dd>';
 $credits     = sprintf($format, t('name'), sly_html($name));
 
 if ($version)     $credits .= sprintf($format, t('version'), sly_html($version));
-if ($author)      $credits .= sprintf($format, t('author'), sly_html($author));
-if ($supportPage) $credits .= sprintf($format, t('supportpage'), $supportPage);
+if ($supportPage) $credits .= sprintf($format, t('author'), $supportPage);
+elseif ($author)  $credits .= sprintf($format, t('author'), sly_html($author));
 
 ?>
 <div class="sly-area sly-addon-help">
