@@ -18,6 +18,16 @@ class sly_App_Backend extends sly_App_Base implements sly_App_Interface {
 	public function initialize() {
 		$config = sly_Core::config();
 
+		// init the current language
+		$clangID = sly_request('clang', 'int');
+
+		if ($clangID <= 0 || !sly_Util_Language::exists($clangID)) {
+			$clangID = sly_Core::getDefaultClangId();
+		}
+
+		// the following article API calls require to know a language
+		sly_Core::setCurrentClang($clangID);
+
 		// only start session if not running unit tests
 		if (!SLY_IS_TESTING) sly_Util_Session::start();
 

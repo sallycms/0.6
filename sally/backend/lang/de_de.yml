@@ -365,7 +365,7 @@ source_and_target_are_equal: Quelle und Ziel sind identisch!
 table_is_empty: Diese Tabelle enthält noch keine Inhalte.
 target_category: Ziel-Kategorie
 target_category_not_found: Die Ziel-Kategorie wurde nicht gefunden!
-template_not_found: Das Template wurde nicht gefunden!
+template_not_found: 'Das Template {0} wurde nicht gefunden!'
 title_cannot_be_empty: Der Titel kann nicht leer sein!
 unknown_log_level: 'Unbekanntes Log-Level {0} angegeben.'
 unsupported_direction: 'Fehlerhafte Richtung {0} angegeben.'
