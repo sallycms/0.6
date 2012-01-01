@@ -123,7 +123,7 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 			$this->globals = array(
 				'page'        => 'linkmap',
 				'category_id' => sly_request('category_id', 'int'),
-				'clang'       => sly_request('clang', 'int'),
+				'clang'       => sly_Core::getCurrentClang(),
 				'args'        => $this->args
 			);
 		}

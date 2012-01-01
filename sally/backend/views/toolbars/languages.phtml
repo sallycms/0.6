@@ -16,7 +16,7 @@
 $languages = sly_Util_Language::findAll();
 $user      = sly_Util_User::getCurrentUser();
 
-if (!isset($curClang)) {
+if (!isset($curClang) || !sly_Util_Language::exists($curClang)) {
 	$curClang = sly_Core::getCurrentClang();
 }
 
