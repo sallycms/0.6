@@ -16,7 +16,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 	protected $categories;
 	protected $action;
 
-	public function init($action) {
+	public function init($action = '') {
 		// load our i18n stuff
 		sly_Core::getI18N()->appendFile(SLY_SALLYFOLDER.'/backend/lang/pages/mediapool/');
 
