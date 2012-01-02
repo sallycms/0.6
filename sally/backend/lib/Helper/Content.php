@@ -14,15 +14,13 @@
 class sly_Helper_Content {
 
 	// ----- ADD Slice
-	public static function printAddSliceForm($position, $module, $articleId, $clang, $slot, $values = array()) {
+	public static function printAddSliceForm($module, $position, $articleId, $clang, $slot) {
 		$moduleService = sly_Service_Factory::getModuleService();
 
 		if (!$moduleService->exists($module)) {
 			$slice_content = sly_Helper_Message::warn(ht('module_not_found', $module));
 		}
 		else {
-			$moduleContent = $moduleService->getContent($moduleService->getInputFilename($module));
-
 			try {
 				ob_start();
 				?>
@@ -41,7 +39,10 @@ class sly_Helper_Content {
 							<legend><?php echo t('add_slice') ?>: <?php echo sly_html($moduleService->getTitle($module)) ?></legend>
 							<div class="sly-form-wrapper">
 								<div class="sly-contentpage-slice-input">
-									<?php eval('?>'.self::replaceObjectVars($values, $moduleContent)); ?>
+									<?php
+									$renderer = new sly_Slice_Renderer($module);
+									print $renderer->renderInput('slicevalue');
+									?>
 								</div>
 								<div class="sly-form-row">
 									<p class="sly-form-submit">
@@ -56,7 +57,7 @@ class sly_Helper_Content {
 				<?php
 				self::focusFirstElement();
 
-				sly_Core::dispatcher()->notify('SLY_SLICE_POSTVIEW_ADD', $values, array(
+				sly_Core::dispatcher()->notify('SLY_SLICE_POSTVIEW_ADD', array(), array(
 					'module'     => $module,
 					'article_id' => $articleId,
 					'clang'      => $clang,
@@ -130,20 +131,6 @@ class sly_Helper_Content {
 		}
 
 		print $slice_content;
-	}
-
-	/**
-	 * Perform SLY_VAR replacements
-	 *
-	 * @param  int    $slice_id  the slice's ID
-	 * @param  string $content   current slice content
-	 * @return string            parsed content
-	 */
-	private static function replaceObjectVars($values, $content) {
-		foreach (sly_Core::getVarTypes() as $idx => $var) {
-			$content = $var->getBEInput($values, $content);
-		}
-		return $content;
 	}
 
 	private static function focusFirstElement() {

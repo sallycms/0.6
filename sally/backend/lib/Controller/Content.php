@@ -286,18 +286,15 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 	}
 
 	private function getRequestValues(array $slicedata) {
-		foreach (sly_Core::getVarTypes() as $obj) {
-			$slicedata = $obj->getRequestValues($slicedata);
-		}
-
+		$slicedata['VALUES'] = sly_post('slicevalue', 'array');
 		return $slicedata;
 	}
 
 	private function setSliceValues(array $slicedata, sly_Model_ArticleSlice $slice) {
-		$sliceID = $slice->getId();
-
-		foreach (sly_Core::getVarTypes() as $obj) {
-			$obj->setSliceValues($slicedata, $sliceID);
+		if(isset($slicedata['VALUES'])) {
+			foreach ($slicedata['VALUES'] as $finder => $value) {
+				$slice->addValue($finder, $value);
+			}
 		}
 	}
 }

@@ -86,7 +86,7 @@ else {
 			}
 
 			if ($function == 'add' && $pos == $i) {
-				sly_Helper_Content::printAddSliceForm($pos, $module, $article->getId(), $article->getClang(), $slot, isset($slicevalues) ? $slicevalues : array());
+				sly_Helper_Content::printAddSliceForm($module, $pos, $article->getId(), $article->getClang(), $slot, isset($slicevalues) ? $slicevalues : array());
 			}
 			else {
 				print $this->render('content/_add_slice_form.phtml', array('article' => $article, 'pos' => $i, 'slot' => $slot, 'modules' => $modules));
