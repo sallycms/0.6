@@ -185,7 +185,6 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			$this->setSliceValues($slicedata, $slice);
 
 			$sliceservice->save($slice);
-			sly_Util_Slice::clearSliceCache($slice->getSliceId());
 
 			$this->localInfo .= t('slice_updated');
 			$this->postSliceEdit('edit', $slice_id);
