@@ -39,6 +39,7 @@ login: Login
 logout: Logout
 change: Change
 update: Update
+search: Search
 
 available: available
 unavailable: unavailable
