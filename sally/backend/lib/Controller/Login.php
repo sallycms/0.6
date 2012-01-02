@@ -9,7 +9,12 @@
  */
 
 class sly_Controller_Login extends sly_Controller_Backend {
+	private $init = false;
+
 	protected function init() {
+		if ($this->init) return;
+		$this->init = true;
+
 		$layout = sly_Core::getLayout();
 		$layout->showNavigation(false);
 		$layout->pageHeader(t('login_title'));
