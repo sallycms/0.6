@@ -115,7 +115,7 @@ class sly_Model_ArticleSlice extends sly_Model_Base_Id {
 
 	/**
 	 *
-	 * @return Sly_Model_Slice
+	 * @return sly_Model_Slice
 	 */
 	public function getSlice() {
 		if (empty($this->slice)) {
@@ -170,8 +170,12 @@ class sly_Model_ArticleSlice extends sly_Model_Base_Id {
 	 * @param  string $value
 	 * @return sly_Model_SliceValue
 	 */
-	public function addValue($type, $finder, $value = null) {
-		$this->getSlice()->addValue($type, $finder, $value);
+	public function addValue($finder, $value = null) {
+		$this->getSlice()->addValue($finder, $value);
+	}
+
+	public function setValues($values = array()) {
+		return $this->getSlice()->setValues($values);
 	}
 
 	/**
@@ -179,8 +183,8 @@ class sly_Model_ArticleSlice extends sly_Model_Base_Id {
 	 * @param  string $finder
 	 * @return mixed
 	 */
-	public function getValue($type, $finder) {
-		return $this->getSlice()->getValue($type, $finder);
+	public function getValue($finder) {
+		return $this->getSlice()->getValue($finder);
 	}
 
 
@@ -196,10 +200,8 @@ class sly_Model_ArticleSlice extends sly_Model_Base_Id {
 	 * @return string the input form of this slice
 	 */
 	public function getInput() {
-		$slice   = $this->getSlice();
-		$content = $slice->getInput();
+		$content = $this->getSlice()->getInput();
 		$content = $this->replacePseudoConstants($content);
-
 		return $content;
 	}
 
@@ -207,60 +209,9 @@ class sly_Model_ArticleSlice extends sly_Model_Base_Id {
 	 * @return string the content of the slice
 	 */
 	public function getOutput() {
-		$slice_content_file = $this->getContentFileName();
-
-		if (!file_exists($slice_content_file)) {
-			if (!$this->generateContentFile()) {
-				return t('slice_could_not_be_generated').' '.t('check_rights_in_directory', $this->getContentDir());
-			}
-		}
-
-		if (file_exists($slice_content_file)) {
-			ob_start();
-			$this->includeContentFile($slice_content_file);
-			$content = ob_get_clean();
-		}
-
-		return $content;
-	}
-
-	/**
-	 * returns the path to the contentfile directory
-	 *
-	 * @staticvar string $cachedir
-	 * @return    string path to contentfile directory
-	 */
-	private function getContentDir() {
-		static $cachedir;
-
-		if (!$cachedir) {
-			$cachedir = sly_Util_Directory::create(SLY_DYNFOLDER.'/internal/sally/article_slice/');
-		}
-
-		return $cachedir;
-	}
-
-	private function getContentFileName() {
-		$cachedir   = $this->getContentDir();
-		$modulefile = sly_Service_Factory::getModuleService()->getOutputFilename($this->getModule());
-
-		return $cachedir.DIRECTORY_SEPARATOR.$this->getSliceId().'-'.md5($modulefile).'.slice.php';
-	}
-
-	private function generateContentFile() {
-		$file    = $this->getContentFileName();
-		$slice   = $this->getSlice();
-		$content = $slice->getOutput();
+		$content = $this->getSlice()->getOutput();
 		$content = $this->replacePseudoConstants($content);
-
-		return file_put_contents($file, $content);
-	}
-
-	private function includeContentFile() {
-		$slice_content_file = $this->getContentFileName();
-		$article            = $this->getArticle(); // make available in slice
-
-		include $slice_content_file;
+		return $content;
 	}
 
 	/**

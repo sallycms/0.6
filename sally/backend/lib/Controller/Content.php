@@ -185,7 +185,6 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			$this->setSliceValues($slicedata, $slice);
 
 			$sliceservice->save($slice);
-			sly_Util_Slice::clearSliceCache($slice->getSliceId());
 
 			$this->localInfo .= t('slice_updated');
 			$this->postSliceEdit('edit', $slice_id);
@@ -286,18 +285,13 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 	}
 
 	private function getRequestValues(array $slicedata) {
-		foreach (sly_Core::getVarTypes() as $obj) {
-			$slicedata = $obj->getRequestValues($slicedata);
-		}
-
+		$slicedata['VALUES'] = sly_post('slicevalue', 'array');
 		return $slicedata;
 	}
 
 	private function setSliceValues(array $slicedata, sly_Model_ArticleSlice $slice) {
-		$sliceID = $slice->getId();
-
-		foreach (sly_Core::getVarTypes() as $obj) {
-			$obj->setSliceValues($slicedata, $sliceID);
+		if(isset($slicedata['VALUES'])) {
+			$slice->setValues($slicedata['VALUES']);
 		}
 	}
 }

@@ -17,13 +17,4 @@ abstract class sly_Controller_Backend extends sly_Controller_Base {
 	protected function getViewFolder() {
 		return SLY_SALLYFOLDER.'/backend/views/';
 	}
-
-	public function dispatch() {
-		$layout = sly_Core::getLayout('Backend');
-
-		$layout->openBuffer();
-		parent::dispatch();
-		$layout->closeBuffer();
-		return $layout->render();
-	}
 }
