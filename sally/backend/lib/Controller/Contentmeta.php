@@ -10,6 +10,8 @@
 
 class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 	public function indexAction() {
+		$this->init();
+
 		if ($this->header() !== true) return;
 
 		print $this->render('content/meta/index.phtml', array(
@@ -23,6 +25,8 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 	}
 
 	public function processmetaformAction() {
+		$this->init();
+
 		try {
 			// save metadata
 			if (sly_post('save_meta', 'boolean', false)) {

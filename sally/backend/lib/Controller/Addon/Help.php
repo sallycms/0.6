@@ -12,7 +12,7 @@ class sly_Controller_Addon_Help extends sly_Controller_Backend {
 	protected $addon  = null;
 	protected $plugin = null;
 
-	public function init() {
+	public function indexAction() {
 		$addon  = sly_request('addon', 'string', '');
 		$plugin = sly_request('plugin', 'string', '');
 
@@ -26,25 +26,18 @@ class sly_Controller_Addon_Help extends sly_Controller_Backend {
 
 			$plugins      = sly_Service_Factory::getPluginService()->getRegisteredPlugins($this->addon);
 			$this->plugin = in_array($plugin, $plugins) ? $plugin : null;
+
+			print $this->render('addon/help.phtml', array(
+				'addon'  => $this->addon,
+				'plugin' => $this->plugin
+			));
+
+			print '</div>';
 		}
 		else {
 			$controller = new sly_Controller_Addon();
-			$controller->init();
-			$controller->index();
+			$controller->indexAction();
 		}
-	}
-
-	public function teardown() {
-		print '</div>';
-	}
-
-	public function indexAction() {
-		if ($this->addon === null) return;
-
-		print $this->render('addon/help.phtml', array(
-			'addon'  => $this->addon,
-			'plugin' => $this->plugin
-		));
 	}
 
 	public function checkPermission() {

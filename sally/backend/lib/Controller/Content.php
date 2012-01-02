@@ -13,7 +13,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 	protected $localInfo;
 	protected $localWarning;
 
-	public function init() {
+	protected function init() {
 		parent::init();
 		$this->slot = sly_request('slot', 'string', sly_Util_Session::get('contentpage_slot', ''));
 
@@ -30,6 +30,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 	}
 
 	public function indexAction($extraparams = array()) {
+		$this->init();
 		if ($this->header() !== true) return;
 
 		$service      = sly_Service_Factory::getArticleTypeService();
@@ -87,6 +88,8 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 	}
 
 	public function setarticletypeAction() {
+		$this->init();
+
 		$type    = sly_post('article_type', 'string');
 		$service = sly_Service_Factory::getArticleService();
 
@@ -100,6 +103,8 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 	}
 
 	public function movesliceAction() {
+		$this->init();
+
 		$slice_id  = sly_get('slice_id', 'int', null);
 		$direction = sly_get('direction', 'string', null);
 
@@ -133,6 +138,8 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 	}
 
 	public function addarticlesliceAction() {
+		$this->init();
+
 		$module      = sly_post('module', 'string');
 		$user        = sly_Util_User::getCurrentUser();
 		$extraparams = array();
@@ -173,6 +180,8 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 	}
 
 	public function editarticlesliceAction() {
+		$this->init();
+
 		$sliceservice = sly_Service_Factory::getArticleSliceService();
 		$slice_id     = sly_request('slice_id', 'int', 0);
 		$slice        = $sliceservice->findById($slice_id);
@@ -200,6 +209,8 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 	}
 
 	public function deletearticlesliceAction() {
+		$this->init();
+
 		$ok = false;
 
 		if ($this->preSliceEdit('delete') !== false) {

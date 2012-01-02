@@ -13,12 +13,20 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 	protected $info;
 	protected $lang;
 
-	public function init() {
+	private $init = false;
+
+	protected function init() {
+		if ($this->init) return;
+
+		$this->init = true;
 		$this->lang = sly_request('lang', 'string');
+
 		sly_Core::getI18N()->appendFile(SLY_SALLYFOLDER.'/backend/lang/pages/setup/');
 	}
 
 	public function indexAction()	{
+		$this->init();
+
 		$languages = sly_I18N::getLocales(SLY_SALLYFOLDER.'/backend/lang');
 
 		// wenn nur eine Sprache -> direkte Weiterleitung
@@ -32,10 +40,13 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 	}
 
 	public function licenseAction() {
+		$this->init();
 		print $this->render('setup/license.phtml');
 	}
 
 	public function fspermsAction() {
+		$this->init();
+
 		$errors    = false;
 		$sysErrors = false;
 		$warnings  = false;
@@ -84,6 +95,8 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 	}
 
 	public function dbconfigAction() {
+		$this->init();
+
 		$config  = sly_Core::config();
 		$data    = $config->get('DATABASE');
 		$isSent  = isset($_POST['submit']);
@@ -142,6 +155,8 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 	}
 
 	public function configAction() {
+		$this->init();
+
 		$config = sly_Core::config();
 		$isSent = isset($_POST['submit']);
 
@@ -167,6 +182,8 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 	}
 
 	public function initdbAction() {
+		$this->init();
+
 		$dbInitFunction = sly_post('db_init_function', 'string', '');
 
 		if (isset($_POST['submit'])) {
@@ -245,6 +262,8 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 	}
 
 	public function createuserAction() {
+		$this->init();
+
 		$config      = sly_Core::config();
 		$prefix      = $config->get('DATABASE/TABLE_PREFIX');
 		$pdo         = sly_DB_Persistence::getInstance();
@@ -306,6 +325,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 	}
 
 	public function finishAction() {
+		$this->init();
 		sly_Core::config()->setLocal('SETUP', false);
 		print $this->render('setup/finish.phtml');
 	}

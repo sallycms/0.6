@@ -9,20 +9,22 @@
  */
 
 class sly_Controller_System_Languages extends sly_Controller_System {
-	// for now just copy those two fields and the init() method, until
-	// I find a nice way to generalize it into. --xrstf
-
 	protected $func      = '';
 	protected $id        = '';
 	protected $languages = array();
 
 	public function indexAction() {
+		$this->init();
+
 		$languageService = sly_Service_Factory::getLanguageService();
 		$this->languages = $languageService->find(null, null, 'id');
+
 		print $this->render('system/languages.phtml');
 	}
 
 	public function addAction() {
+		$this->init();
+
 		if (sly_post('sly-submit', 'boolean', false)) {
 			$this->id = sly_post('clang_id', 'int', -1);
 
@@ -53,6 +55,8 @@ class sly_Controller_System_Languages extends sly_Controller_System {
 	}
 
 	public function editAction() {
+		$this->init();
+
 		$this->id = sly_request('clang_id', 'int', -1);
 
 		if (sly_post('sly-submit', 'boolean', false)) {
@@ -77,6 +81,8 @@ class sly_Controller_System_Languages extends sly_Controller_System {
 	}
 
 	public function deleteAction() {
+		$this->init();
+
 		$clangID   = sly_request('clang_id', 'int', -1);
 		$languages = sly_Util_Language::findAll();
 

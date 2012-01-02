@@ -12,6 +12,8 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 	protected $file;
 
 	public function indexAction() {
+		$this->init('move');
+
 		$fileID = $this->getCurrentFile();
 
 		print $this->render('mediapool/toolbar.phtml');
@@ -54,6 +56,8 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 	}
 
 	public function saveAction() {
+		$this->init('save');
+
 		if (!empty($_POST['delete'])) {
 			return $this->delete();
 		}
@@ -62,6 +66,8 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 	}
 
 	public function updateAction() {
+		$this->init('update');
+
 		$fileID = $this->getCurrentFile();
 		$medium = sly_Util_Medium::findById($fileID);
 		$target = $this->getCurrentCategory();
@@ -110,6 +116,8 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 	}
 
 	public function deleteAction() {
+		$this->init('delete');
+
 		$fileID = $this->getCurrentFile();
 		$media  = sly_Util_Medium::findById($fileID);
 

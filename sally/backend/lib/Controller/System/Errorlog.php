@@ -9,7 +9,7 @@
  */
 
 class sly_Controller_System_Errorlog extends sly_Controller_System {
-	public function init() {
+	protected function init() {
 		parent::init();
 
 		$this->handler = sly_Core::getErrorHandler();
@@ -21,6 +21,8 @@ class sly_Controller_System_Errorlog extends sly_Controller_System {
 	}
 
 	public function indexAction() {
+		$this->init();
+
 		if ($this->handler === null) return;
 
 		// check log existence
@@ -76,6 +78,8 @@ class sly_Controller_System_Errorlog extends sly_Controller_System {
 	}
 
 	public function clearAction() {
+		$this->init();
+
 		$log     = $this->handler->getLog();
 		$logfile = $log->getFilename();
 

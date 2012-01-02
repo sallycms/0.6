@@ -18,7 +18,7 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 	protected $args       = array();
 	protected $category   = null;
 
-	public function init() {
+	protected function init() {
 		$this->args = sly_requestArray('args', 'string');
 
 		// init category filter
@@ -136,6 +136,8 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 	}
 
 	public function indexAction() {
+		$this->init();
+
 		print $this->render('linkmap/javascript.phtml');
 		print $this->render('linkmap/index.phtml');
 	}

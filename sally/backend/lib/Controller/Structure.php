@@ -23,8 +23,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 
 	protected static $viewPath;
 
-	public function init($action = null) {
-		parent::init();
+	protected function init($action = null) {
 		self::$viewPath = 'structure/';
 
 		$this->action     = $action;
@@ -34,7 +33,9 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 		$this->catService = sly_Service_Factory::getCategoryService();
 
 		if (count(sly_Util_Language::findAll()) === 0) {
-			return new sly_Response_Forward('structure', 'nop');
+			sly_Core::getLayout()->pageHeader(t('structure'));
+			print sly_Helper_Message::info(t('no_languages_yet'));
+			return false;
 		}
 
 		sly_Core::getLayout()->pageHeader(t('structure'), $this->getBreadcrumb());
@@ -48,11 +49,8 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			'category_id' => $this->categoryId,
 			'clang'       => $this->clangId
 		));
-	}
 
-	public function nopAction() {
-		sly_Core::getLayout()->pageHeader(t('structure'));
-		print sly_Helper_Message::info(t('no_languages_yet'));
+		return true;
 	}
 
 	public function indexAction() {
@@ -60,6 +58,8 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	}
 
 	public function viewAction() {
+		if (!$this->init('view')) return;
+
 		$currentCategory = $this->catService->findById($this->categoryId, $this->clangId);
 		$categories      = $this->catService->findByParentId($this->categoryId, false, $this->clangId);
 		$articles        = $this->artService->findArticlesByCategory($this->categoryId, false, $this->clangId);
@@ -88,6 +88,8 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	}
 
 	public function editstatuscategoryAction() {
+		if (!$this->init('editstatuscategory')) return;
+
 		$editId = sly_get('edit_id', 'int');
 
 		if ($editId) {
@@ -107,6 +109,8 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	}
 
 	public function editstatusarticleAction() {
+		if (!$this->init('editstatusarticle')) return;
+
 		$editId = sly_get('edit_id', 'int');
 
 		if ($editId) {
@@ -126,6 +130,8 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	}
 
 	public function deletecategoryAction() {
+		if (!$this->init('deletecategory')) return;
+
 		$editId = sly_get('edit_id', 'int');
 
 		if ($editId) {
@@ -145,6 +151,8 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	}
 
 	public function deletearticleAction() {
+		if (!$this->init('deletearticle')) return;
+
 		$editId = sly_get('edit_id', 'int');
 
 		if ($editId) {
@@ -164,6 +172,8 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	}
 
 	public function addcategoryAction() {
+		if (!$this->init('addcategory')) return;
+
 		if (sly_post('do_add_category', 'boolean')) {
 			$name     = sly_post('category_name',     'string');
 			$position = sly_post('category_position', 'int');
@@ -185,6 +195,8 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	}
 
 	public function addarticleAction() {
+		if (!$this->init('addarticle')) return;
+
 		if (sly_post('do_add_article', 'boolean')) {
 			$name     = sly_post('article_name',     'string');
 			$position = sly_post('article_position', 'integer');
@@ -206,6 +218,8 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	}
 
 	public function editcategoryAction() {
+		if (!$this->init('editcategory')) return;
+
 		$editId = sly_request('edit_id', 'int');
 
 		if (sly_post('do_edit_category', 'boolean')) {
@@ -229,6 +243,8 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	}
 
 	public function editarticleAction() {
+		if (!$this->init('editarticle')) return;
+
 		$editId = sly_request('edit_id', 'int');
 
 		if (sly_post('do_edit_article', 'boolean')) {
@@ -338,12 +354,12 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 			return false;
 		}
 
-		if ($this->action == 'index') {
+		if ($this->action === 'index') {
 			return $this->canViewCategory($categoryId);
 		}
 
-		if (sly_Util_String::startsWith($this->action, 'editStatus')) {
-			if ($this->action == 'editStatusCategory') {
+		if (sly_Util_String::startsWith($this->action, 'editstatus')) {
+			if ($this->action === 'editstatuscategory') {
 				return $this->canPublishCategory($editId);
 			}
 			else {

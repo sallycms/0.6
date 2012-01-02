@@ -9,16 +9,19 @@
  */
 
 class sly_Controller_Profile extends sly_Controller_Backend {
-	public function init() {
+	protected function init() {
 		$layout = sly_Core::getLayout();
 		$layout->pageHeader(t('my_profile'));
 	}
 
 	public function indexAction() {
+		$this->init();
 		print $this->render('profile/index.phtml', array('user' => $this->getUser()));
 	}
 
 	public function updateAction() {
+		$this->init();
+
 		$user = $this->getUser();
 
 		$user->setName(sly_post('username', 'string'));

@@ -13,7 +13,7 @@ abstract class sly_Controller_Content_Base extends sly_Controller_Backend {
 	protected $info;
 	protected $warning;
 
-	public function init() {
+	protected function init() {
 		$clang = sly_Core::getCurrentClang();
 		$this->article = sly_Util_Article::findById(sly_request('article_id', 'int'), $clang);
 

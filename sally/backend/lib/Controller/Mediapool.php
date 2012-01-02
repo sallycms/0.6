@@ -16,7 +16,12 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 	protected $categories;
 	protected $action;
 
-	public function init($action = '') {
+	private $init = false;
+
+	protected function init($action = '') {
+		if ($this->init) return;
+		$this->init = true;
+
 		// load our i18n stuff
 		sly_Core::getI18N()->appendFile(SLY_SALLYFOLDER.'/backend/lang/pages/mediapool/');
 
@@ -142,6 +147,8 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 	}
 
 	public function indexAction() {
+		$this->init('index');
+
 		$files = $this->getFiles();
 
 		print $this->render('mediapool/toolbar.phtml');
@@ -155,6 +162,8 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 	}
 
 	public function batchAction() {
+		$this->init('batch');
+
 		if (!empty($_POST['delete'])) {
 			return $this->deleteAction();
 		}
@@ -163,6 +172,8 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 	}
 
 	public function moveAction() {
+		$this->init('move');
+
 		if (!$this->isMediaAdmin()) {
 			return $this->indexAction();
 		}
@@ -192,6 +203,8 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 	}
 
 	public function deleteAction() {
+		$this->init('delete');
+
 		if (!$this->isMediaAdmin()) {
 			return $this->indexAction();
 		}

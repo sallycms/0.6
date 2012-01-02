@@ -9,7 +9,7 @@
  */
 
 class sly_Controller_User extends sly_Controller_Backend {
-	public function init() {
+	protected function init() {
 		$layout   = sly_Core::getLayout();
 		$subpages = sly_Core::dispatcher()->filter('SLY_PAGE_USER_SUBPAGES', array(
 			array('', t('users'))
@@ -33,10 +33,13 @@ class sly_Controller_User extends sly_Controller_Backend {
 	}
 
 	public function indexAction() {
+		$this->init();
 		$this->listUsers();
 	}
 
 	public function addAction() {
+		$this->init();
+
 		if (sly_post('save', 'boolean', false)) {
 			$password = sly_post('userpsw', 'string');
 			$login    = sly_post('userlogin', 'string');
@@ -101,6 +104,8 @@ class sly_Controller_User extends sly_Controller_Backend {
 	}
 
 	public function editAction() {
+		$this->init();
+
 		$user = $this->getUser();
 
 		if ($user === null) {
@@ -161,6 +166,8 @@ class sly_Controller_User extends sly_Controller_Backend {
 	}
 
 	public function deleteAction() {
+		$this->init();
+
 		$user = $this->getUser();
 
 		if ($user === null) {

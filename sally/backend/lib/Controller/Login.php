@@ -9,7 +9,7 @@
  */
 
 class sly_Controller_Login extends sly_Controller_Backend {
-	public function init() {
+	protected function init() {
 		$layout = sly_Core::getLayout();
 		$layout->showNavigation(false);
 		$layout->pageHeader(t('login_title'));
@@ -20,10 +20,14 @@ class sly_Controller_Login extends sly_Controller_Backend {
 	}
 
 	public function indexAction() {
+		$this->init();
+
 		print $this->render('login/index.phtml');
 	}
 
 	public function loginAction() {
+		$this->init();
+
 		$username = sly_post('username', 'string');
 		$password = sly_post('password', 'string');
 		$loginOK  = sly_Service_Factory::getUserService()->login($username, $password);
@@ -51,6 +55,7 @@ class sly_Controller_Login extends sly_Controller_Backend {
 	}
 
 	public function logoutAction() {
+		$this->init();
 		sly_Service_Factory::getUserService()->logout();
 		$this->message = t('you_have_been_logged_out');
 		$this->indexAction();

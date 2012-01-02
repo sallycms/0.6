@@ -10,6 +10,7 @@
 
 class sly_Controller_Credits_Bugreport extends sly_Controller_Credits {
 	public function indexAction() {
+		$this->init();
 		print $this->render('credits/bugreport.phtml');
 	}
 

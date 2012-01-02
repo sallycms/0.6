@@ -17,7 +17,7 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 	protected $info    = '';
 	protected $warning = '';
 
-	public function init() {
+	protected function init() {
 		if (!sly_get('json', 'boolean')) {
 			$layout = sly_Core::getLayout();
 			$layout->pageHeader(t('addons'));
@@ -43,6 +43,7 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 	}
 
 	public function indexAction() {
+		$this->init();
 		$this->checkForNewComponents();
 
 		$data = $this->buildDataList();
@@ -57,7 +58,7 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 		));
 	}
 
-	protected function prepareAction() {
+	protected function prepare() {
 		return array(
 			$this->plugin ? $this->plugins : $this->addons,
 			$this->plugin ? array($this->addon, $this->plugin) : $this->addon
@@ -102,7 +103,7 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 	}
 
 	protected function call($method, $i18n) {
-		list($service, $component) = $this->prepareAction();
+		list($service, $component) = $this->prepare();
 		$this->warning = $service->$method($component);
 
 		if ($this->warning === true || $this->warning === 1) {
@@ -112,6 +113,7 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 	}
 
 	public function installAction() {
+		$this->init();
 		$this->call('install', 'installed');
 
 		if ($this->warning === '') {
@@ -121,13 +123,15 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 		return $this->sendResponse();
 	}
 
-	public function uninstallAction()  { $this->call('uninstall', 'uninstalled');    return $this->sendResponse(); }
-	public function activateAction()   { $this->call('activate', 'activated');       return $this->sendResponse(); }
-	public function deactivateAction() { $this->call('deactivate', 'deactivated');   return $this->sendResponse(); }
-	public function reinitAction()     { $this->call('copyAssets', 'assets_copied'); return $this->sendResponse(); }
+	public function uninstallAction()  { $this->init(); $this->call('uninstall', 'uninstalled');    return $this->sendResponse(); }
+	public function activateAction()   { $this->init(); $this->call('activate', 'activated');       return $this->sendResponse(); }
+	public function deactivateAction() { $this->init(); $this->call('deactivate', 'deactivated');   return $this->sendResponse(); }
+	public function reinitAction()     { $this->init(); $this->call('copyAssets', 'assets_copied'); return $this->sendResponse(); }
 
 	public function fullinstallAction() {
-		list($service, $component) = $this->prepareAction();
+		$this->init();
+
+		list($service, $component) = $this->prepare();
 
 		$todo = $this->getInstallList($component);
 
@@ -144,7 +148,7 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 				$this->plugin = '';
 			}
 
-			list($service, $component) = $this->prepareAction();
+			list($service, $component) = $this->prepare();
 
 			// if not installed, install it
 			if (!$service->isInstalled($component)) {

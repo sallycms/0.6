@@ -10,10 +10,13 @@
 
 class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 	public function indexAction() {
+		$this->init('index');
 		print $this->render('mediapool/structure.phtml');
 	}
 
 	public function addAction() {
+		$this->init('add');
+
 		if (!empty($_POST)) {
 			$service  = sly_Service_Factory::getMediaCategoryService();
 			$name     = sly_post('catname', 'string');
@@ -35,6 +38,8 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 	}
 
 	public function editAction() {
+		$this->init('edit');
+
 		if (!empty($_POST)) {
 			$editID   = sly_request('edit_id', 'int');
 			$service  = sly_Service_Factory::getMediaCategoryService();
@@ -60,6 +65,8 @@ class sly_Controller_Mediapool_Structure extends sly_Controller_Mediapool {
 	}
 
 	public function deleteAction() {
+		$this->init('delete');
+
 		$editID   = sly_request('edit_id', 'int');
 		$service  = sly_Service_Factory::getMediaCategoryService();
 		$category = $service->findById($editID);

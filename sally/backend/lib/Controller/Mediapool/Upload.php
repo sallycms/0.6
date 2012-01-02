@@ -10,10 +10,13 @@
 
 class sly_Controller_Mediapool_Upload extends sly_Controller_Mediapool {
 	public function indexAction() {
+		$this->init('index');
 		print $this->render('mediapool/upload.phtml');
 	}
 
 	public function uploadAction() {
+		$this->init('upload');
+
 		if (!empty($_FILES['file_new']['name']) && $_FILES['file_new']['name'] != 'none') {
 			$title = sly_request('ftitle', 'string');
 			$cat   = $this->getCurrentCategory();
