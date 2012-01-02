@@ -291,9 +291,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 
 	private function setSliceValues(array $slicedata, sly_Model_ArticleSlice $slice) {
 		if(isset($slicedata['VALUES'])) {
-			foreach ($slicedata['VALUES'] as $finder => $value) {
-				$slice->addValue($finder, $value);
-			}
+			$slice->setValues($slicedata['VALUES']);
 		}
 	}
 }
