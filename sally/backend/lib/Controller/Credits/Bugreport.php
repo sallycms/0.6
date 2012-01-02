@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Credits_Bugreport extends sly_Controller_Credits {
+class sly_Controller_Credits_Bugreport extends sly_Controller_Credits implements sly_Controller_Interface {
 	public function indexAction() {
 		$this->init();
 		print $this->render('credits/bugreport.phtml');
@@ -62,7 +62,7 @@ class sly_Controller_Credits_Bugreport extends sly_Controller_Credits {
 		return $extlists;
 	}
 
-	public function checkPermission() {
+	public function checkPermission($action) {
 		$user = sly_Util_User::getCurrentUser();
 		return $user && $user->isAdmin();
 	}

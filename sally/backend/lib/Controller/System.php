@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_System extends sly_Controller_Backend {
+class sly_Controller_System extends sly_Controller_Backend implements sly_Controller_Interface {
 	protected $warning;
 	protected $info;
 
@@ -119,7 +119,7 @@ class sly_Controller_System extends sly_Controller_Backend {
 		sly_Util_HTTP::redirect('index.php', array(), '', 302);
 	}
 
-	public function checkPermission() {
+	public function checkPermission($action) {
 		$user = sly_Util_User::getCurrentUser();
 		return $user && $user->isAdmin();
 	}

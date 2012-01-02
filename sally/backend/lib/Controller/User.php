@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_User extends sly_Controller_Backend {
+class sly_Controller_User extends sly_Controller_Backend implements sly_Controller_Interface {
 	protected function init() {
 		$layout   = sly_Core::getLayout();
 		$subpages = sly_Core::dispatcher()->filter('SLY_PAGE_USER_SUBPAGES', array(
@@ -188,7 +188,7 @@ class sly_Controller_User extends sly_Controller_Backend {
 		$this->listUsers();
 	}
 
-	public function checkPermission() {
+	public function checkPermission($action) {
 		$user = sly_Util_User::getCurrentUser();
 		return !is_null($user) && $user->isAdmin();
 	}

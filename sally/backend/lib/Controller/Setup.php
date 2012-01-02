@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Setup extends sly_Controller_Backend {
+class sly_Controller_Setup extends sly_Controller_Backend implements sly_Controller_Interface {
 	protected $warning;
 	protected $info;
 	protected $lang;
@@ -380,7 +380,7 @@ class sly_Controller_Setup extends sly_Controller_Backend {
 		return $err_msg;
 	}
 
-	public function checkPermission() {
+	public function checkPermission($action) {
 		return sly_Core::config()->get('SETUP') === true;
 	}
 }

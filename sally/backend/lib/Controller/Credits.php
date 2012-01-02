@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Credits extends sly_Controller_Backend {
+class sly_Controller_Credits extends sly_Controller_Backend implements sly_Controller_Interface {
 	protected function init() {
 		$subline = null;
 
@@ -30,7 +30,7 @@ class sly_Controller_Credits extends sly_Controller_Backend {
 		print $this->render('credits/index.phtml');
 	}
 
-	public function checkPermission() {
+	public function checkPermission($action) {
 		return sly_Util_User::getCurrentUser() !== null;
 	}
 }

@@ -68,15 +68,15 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 		return 'content';
 	}
 
-	protected function checkPermission() {
+	public function checkPermission($action) {
 		if (parent::checkPermission()) {
 			$user = sly_Util_User::getCurrentUser();
 
-			if ($this->action == 'moveSlice') {
+			if ($this->action === 'moveslice') {
 				return ($user->isAdmin() || $user->hasRight('transitional', 'moveSlice'));
 			}
 
-			if ($this->action == 'addArticleSlice') {
+			if ($this->action === 'addarticleslice') {
 				$module = sly_post('module', 'string');
 				return ($user->isAdmin() || $user->hasRight('module', 'add', $module));
 			}

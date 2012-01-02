@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Linkmap extends sly_Controller_Backend {
+class sly_Controller_Linkmap extends sly_Controller_Backend implements sly_Controller_Interface {
 	protected $globals    = null;
 	protected $tree       = array();
 	protected $categories = array();
@@ -142,7 +142,7 @@ class sly_Controller_Linkmap extends sly_Controller_Backend {
 		print $this->render('linkmap/index.phtml');
 	}
 
-	public function checkPermission() {
+	public function checkPermission($action) {
 		$user = sly_Util_User::getCurrentUser();
 		return !empty($user) && $user->hasStructureRight();
 	}

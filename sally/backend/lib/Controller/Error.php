@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Error extends sly_Controller_Backend {
+class sly_Controller_Error extends sly_Controller_Backend implements sly_Controller_Interface {
 	protected $exception;
 
 	public function __construct(Exception $e) {
@@ -19,7 +19,7 @@ class sly_Controller_Error extends sly_Controller_Backend {
 		print $this->render('error/index.phtml', array('e' => $this->exception));
 	}
 
-	public function checkPermission() {
+	public function checkPermission($action) {
 		return false; // allow only internal redirects
 	}
 }

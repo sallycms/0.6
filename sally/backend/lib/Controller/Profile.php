@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Profile extends sly_Controller_Backend {
+class sly_Controller_Profile extends sly_Controller_Backend implements sly_Controller_Interface {
 	protected function init() {
 		$layout = sly_Core::getLayout();
 		$layout->pageHeader(t('my_profile'));
@@ -61,7 +61,7 @@ class sly_Controller_Profile extends sly_Controller_Backend {
 		return $this->indexAction();
 	}
 
-	public function checkPermission() {
+	public function checkPermission($action) {
 		return $this->getUser() !== null;
 	}
 

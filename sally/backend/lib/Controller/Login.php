@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Login extends sly_Controller_Backend {
+class sly_Controller_Login extends sly_Controller_Backend implements sly_Controller_Interface {
 	private $init = false;
 
 	protected function init() {
@@ -66,7 +66,7 @@ class sly_Controller_Login extends sly_Controller_Backend {
 		$this->indexAction();
 	}
 
-	public function checkPermission() {
+	public function checkPermission($action) {
 		return true;
 	}
 }

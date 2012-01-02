@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Structure extends sly_Controller_Backend {
+class sly_Controller_Structure extends sly_Controller_Backend implements sly_Controller_Interface {
 	protected $action;
 	protected $categoryId;
 	protected $clangId;
@@ -344,7 +344,7 @@ class sly_Controller_Structure extends sly_Controller_Backend {
 	 *
 	 * @return boolean
 	 */
-	public function checkPermission() {
+	public function checkPermission($action) {
 		$categoryId = sly_request('category_id', 'int');
 		$editId     = sly_request('edit_id', 'int');
 		$clang      = sly_Core::getCurrentClang();

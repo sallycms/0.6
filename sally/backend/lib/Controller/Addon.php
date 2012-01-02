@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Addon extends sly_Controller_Backend {
+class sly_Controller_Addon extends sly_Controller_Backend implements sly_Controller_Interface {
 	protected $func    = '';
 	protected $addons  = null;
 	protected $plugins = null;
@@ -169,7 +169,7 @@ class sly_Controller_Addon extends sly_Controller_Backend {
 		return $this->sendResponse();
 	}
 
-	public function checkPermission() {
+	public function checkPermission($action) {
 		$user = sly_Util_User::getCurrentUser();
 		return $user && ($user->isAdmin() || $user->hasRight('pages', 'addons'));
 	}

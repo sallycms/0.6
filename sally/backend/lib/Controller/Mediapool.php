@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-class sly_Controller_Mediapool extends sly_Controller_Backend {
+class sly_Controller_Mediapool extends sly_Controller_Backend implements sly_Controller_Interface {
 	protected $warning;
 	protected $info;
 	protected $category;
@@ -274,7 +274,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend {
 		}
 	}
 
-	public function checkPermission() {
+	public function checkPermission($action) {
 		$user = sly_Util_User::getCurrentUser();
 		if (is_null($user)) return false;
 

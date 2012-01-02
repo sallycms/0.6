@@ -8,7 +8,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-abstract class sly_Controller_Content_Base extends sly_Controller_Backend {
+abstract class sly_Controller_Content_Base extends sly_Controller_Backend implements sly_Controller_Interface {
 	protected $article;
 	protected $info;
 	protected $warning;
@@ -83,7 +83,7 @@ abstract class sly_Controller_Content_Base extends sly_Controller_Backend {
 		}
 	}
 
-	protected function checkPermission() {
+	public function checkPermission($action) {
 		$user = sly_Util_User::getCurrentUser();
 		if (is_null($user)) return false;
 
