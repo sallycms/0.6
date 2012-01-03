@@ -20,6 +20,6 @@ class sly_Controller_Error extends sly_Controller_Backend implements sly_Control
 	}
 
 	public function checkPermission($action) {
-		return false; // allow only internal redirects
+		return true;
 	}
 }
