@@ -69,7 +69,9 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 	}
 
 	public function checkPermission($action) {
-		if (parent::checkPermission()) {
+		$this->action = $action;
+
+		if (parent::checkPermission($this->action)) {
 			$user = sly_Util_User::getCurrentUser();
 
 			if ($this->action === 'moveslice') {
