@@ -20,10 +20,14 @@ class sly_Controller_Structure extends sly_Controller_Backend implements sly_Con
 	protected $renderEditCategory = false;
 	protected $renderAddArticle   = false;
 	protected $renderEditArticle  = false;
+	protected $init = false;
 
 	protected static $viewPath;
 
 	protected function init($action = null) {
+		if ($this->init) return true;
+		$this->init = true;
+
 		self::$viewPath = 'structure/';
 
 		$this->action     = $action;
