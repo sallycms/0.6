@@ -11,8 +11,12 @@
 class sly_Controller_System extends sly_Controller_Backend implements sly_Controller_Interface {
 	protected $warning;
 	protected $info;
+	protected $init;
 
 	protected function init() {
+		if ($this->init) return;
+		$this->init = true;
+
 		// add subpages
 
 		$navigation = sly_Core::getLayout()->getNavigation();
