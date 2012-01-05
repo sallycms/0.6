@@ -9,12 +9,9 @@
  */
 
 // Navigation erzeugen
-?>
+print '<dl class="sly-navigation">';
 
-<dl class="sly-navigation">
-
-<?php
-$nav    = sly_Core::getLayout()->getNavigation();
+$nav    = $this->getNavigation();
 $groups = $nav->getGroups();
 
 // give addons a way to alter the menu a last time
@@ -48,10 +45,11 @@ foreach ($groups as $group) {
 
 	foreach ($pages as $page) {
 		if ($page->isHidden()) continue;
-		$liclass = 'sly-navigation-level-1';
+
+		$liclass  = 'sly-navigation-level-1';
 		$liclass .= $page->isActive() ? ' sly-active' : '';
 		$liclass .= $page->isPopup()  ? ' popup'      : '';
-		$li = array(
+		$li       = array(
 			'class' => $liclass,
 			'id'    => 'sly-navi-page-'.$page->getPageParam()
 		);
@@ -104,5 +102,5 @@ foreach ($groups as $group) {
 
 	print '</ul></dd>';
 }
-?>
-</dl>
+
+print '</dl>';

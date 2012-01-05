@@ -12,7 +12,7 @@ class sly_Controller_User extends sly_Controller_Backend implements sly_Controll
 	protected function init() {
 		$layout   = sly_Core::getLayout();
 		$subpages = sly_Core::dispatcher()->filter('SLY_PAGE_USER_SUBPAGES', array(
-			array('', t('users'))
+			array('user', t('users'))
 		));
 
 		// don't show the menu if there is only one entry
@@ -21,7 +21,7 @@ class sly_Controller_User extends sly_Controller_Backend implements sly_Controll
 		}
 		// add subpages
 		else {
-			$navigation = sly_Core::getNavigation();
+			$navigation = $layout->getNavigation();
 			$page       = $navigation->get('user', 'system');
 
 			foreach ($subpages as $subpage) {

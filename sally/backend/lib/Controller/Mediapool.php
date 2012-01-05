@@ -41,9 +41,10 @@ class sly_Controller_Mediapool extends sly_Controller_Backend implements sly_Con
 
 		// build navigation
 
-		$nav  = sly_Core::getNavigation();
-		$page = $nav->find('mediapool');
-		$cur  = sly_Core::getCurrentController();
+		$layout = sly_Core::getLayout();
+		$nav    = $layout->getNavigation();
+		$page   = $nav->find('mediapool');
+		$cur    = sly_Core::getCurrentController();
 
 		$subline = array(
 			array('mediapool',        t('media_list')),
@@ -66,8 +67,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend implements sly_Con
 			}
 		}
 
-		$page   = sly_Core::dispatcher()->filter('SLY_MEDIAPOOL_MENU', $page);
-		$layout = sly_Core::getLayout();
+		$page = sly_Core::dispatcher()->filter('SLY_MEDIAPOOL_MENU', $page);
 
 		$layout->showNavigation(false);
 		$layout->pageHeader(t('media_list'), $page);
