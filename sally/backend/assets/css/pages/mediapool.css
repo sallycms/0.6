@@ -64,19 +64,20 @@
 			padding: 6px 0;
 		}
 
-		/* reset the checkboxes (prevents ugly checkboxes in Opera) */
-		.sly-icon input {
-			margin: 0;
-			border: 0 none;
-			padding: 0;
-		}
-
 		select {
 			width: 230px;
 		}
 
 		label {
 			float: none;
+		}
+
+		tfoot td {
+			border-top: 1px dotted $md_grey;
+		}
+
+		.sly-col-footer input:first-child {
+			margin-left: 0;
 		}
 	}
 

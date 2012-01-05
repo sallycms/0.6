@@ -124,11 +124,13 @@ a.sly-button {
 	label.sly-inline {
 		float: none;
 		display: inline;
+		vertical-align: middle;
 	}
 
 	input.sly-form-checkbox, input.sly-form-radio {
 		vertical-align: middle;
 		width: auto;
+		margin: 0 3px;
 	}
 
 	.sly-form-date, .sly-form-datetime, .sly-form-datetime-local {
@@ -140,10 +142,8 @@ a.sly-button {
 		line-height: 18px;
 		padding-left: 145px;
 
-		input {
-			vertical-align: middle;
-			border: 0;
-			padding: 0;
+		span {
+			display: block;
 		}
 	}
 }
