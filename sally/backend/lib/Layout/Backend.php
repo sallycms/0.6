@@ -68,7 +68,11 @@ class sly_Layout_Backend extends sly_Layout_XHTML5 {
 		}
 
 		if (!empty($subtitle)) {
-			$subtitle = '<div class="pagehead-row">'.$this->getSubtitle($subtitle).'</div>';
+			$subtitle = $this->getSubtitle($subtitle);
+
+			if ($subtitle) {
+				$subtitle = '<div class="pagehead-row">'.$this->getSubtitle($subtitle).'</div>';
+			}
 		}
 		else {
 			$subtitle = '';
@@ -164,6 +168,8 @@ class sly_Layout_Backend extends sly_Layout_XHTML5 {
 
 			$result[] = '<li'.$liAttr.'>'.$link.'</li>';
 		}
+
+		if (empty($result)) return '';
 
 		return '<div id="sly-navi-page"><ul>'.implode("\n", $result).'</ul></div>';
 	}
