@@ -45,54 +45,21 @@ class sly_Controller_User extends sly_Controller_Backend implements sly_Controll
 			$login    = sly_post('userlogin', 'string');
 			$timezone = sly_post('timezone', 'string');
 			$service  = sly_Service_Factory::getUserService();
-			$error    = false;
-
-			if (empty($login)) {
-				print sly_Helper_Message::warn(t('no_username_given'));
-				$error = true;
-			}
-
-			if (empty($password)) {
-				print sly_Helper_Message::warn(t('no_password_given'));
-				$error = true;
-			}
-
-			if ($service->find(array('login' => $login))) {
-				print sly_Helper_Message::warn(t('user_login_already_exists'));
-				$error = true;
-			}
-
-			if ($error) {
-				$this->func = 'add';
-				print $this->render('user/edit.phtml', array('user' => null));
-				return true;
-			}
-
-			$currentUser = sly_Util_User::getCurrentUser();
-
-			$params = array(
-				'login'       => sly_post('userlogin', 'string'),
+			$params   = array(
+				'login'       => $login,
 				'name'        => sly_post('username', 'string'),
 				'description' => sly_post('userdesc', 'string'),
-				'status'      => sly_post('userstatus', 'boolean', false) ? 1 : 0,
-				'lasttrydate' => 0,
+				'status'      => sly_post('userstatus', 'boolean', false),
 				'timezone'    => $timezone ? $timezone : null,
-				'createdate'  => time(),
-				'updatedate'  => time(),
-				'createuser'  => $currentUser->getLogin(),
-				'updateuser'  => $currentUser->getLogin(),
 				'psw'         => $password,
-				'rights'      => $this->getRightsFromForm(null),
-				'revision'    => 0
+				'rights'      => $this->getRightsFromForm(null)
 			);
-
-			// Speichern, fertig.
 
 			try {
 				$service->create($params);
 				print sly_Helper_Message::info(t('user_added'));
 				$this->listUsers();
-				return true;
+				return;
 			}
 			catch (Exception $e) {
 				print sly_Helper_Message::warn($e->getMessage());
