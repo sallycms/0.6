@@ -57,10 +57,13 @@ class sly_Controller_Mediapool extends sly_Controller_Backend implements sly_Con
 
 		foreach ($subline as $item) {
 			$sp = $page->addSubpage($item[0], $item[1]);
-			$sp->setExtraParams(array('args' => $this->args));
 
-			// ignore the extra params when detecting the current page
-			if ($cur === $item[0]) $sp->forceStatus(true);
+			if (!empty($this->args)) {
+				$sp->setExtraParams(array('args' => $this->args));
+
+				// ignore the extra params when detecting the current page
+				if ($cur === $item[0]) $sp->forceStatus(true);
+			}
 		}
 
 		$page   = sly_Core::dispatcher()->filter('SLY_MEDIAPOOL_MENU', $page);
