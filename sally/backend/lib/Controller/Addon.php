@@ -20,7 +20,7 @@ class sly_Controller_Addon extends sly_Controller_Backend implements sly_Control
 	protected function init() {
 		if (!sly_get('json', 'boolean')) {
 			$layout = sly_Core::getLayout();
-			$layout->pageHeader(t('addons'));
+			$layout->pageHeader(t('addons'), array());
 		}
 
 		$this->addons  = sly_Service_Factory::getAddOnService();
