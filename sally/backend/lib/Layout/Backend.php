@@ -62,7 +62,11 @@ class sly_Layout_Backend extends sly_Layout_XHTML5 {
 		parent::printFooter();
 	}
 
-	public function pageHeader($head, $subtitle = '') {
+	public function pageHeader($head, $subtitle = null) {
+		if ($subtitle === null) {
+			$subtitle = $this->getNavigation()->getActivePage();
+		}
+
 		if (!empty($subtitle)) {
 			$subtitle = '<div class="pagehead-row">'.$this->getSubtitle($subtitle).'</div>';
 		}
@@ -83,58 +87,85 @@ class sly_Layout_Backend extends sly_Layout_XHTML5 {
 	/**
 	 * Helper function, die den Subtitle generiert
 	 */
-	public function getSubtitle($subline, $attr = '') {
+	public function getSubtitle($subline) {
+		if (!is_array($subline) && !($subline instanceof sly_Layout_Navigation_Page)) {
+			return $subline;
+		}
+
 		if (empty($subline)) {
 			return '';
 		}
 
-		$subtitle_str = $subline;
-		$subtitle     = $subline;
-		$cur_page     = urlencode(sly_request('page', 'string'));
-		$user         = sly_Util_User::getCurrentUser();
+		$subPages   = is_array($subline) ? array_values($subline) : $subline->getSubpages();
+		$result     = array();
+		$curPage    = sly_Core::getCurrentController();
+		$numPages   = count($subPages);
+		$format     = '<a href="?page=%s%s"%s>%s</a>';
+		$activePage = false;
 
-		if (is_array($subline) && !empty($subline)) {
-			$subtitle = array();
-			$numPages = count($subline);
-			$isAdmin  = $user->isAdmin();
+		foreach ($subPages as $idx => $sp) {
+			if (!is_array($sp) && !($sp instanceof sly_Layout_Navigation_Subpage)) continue;
 
-			foreach ($subline as $subpage) {
-				if (!is_array($subpage)) {
-					continue;
+			// the numeric version is just for compatibility reasons
+
+			if (is_array($sp)) {
+				if ($activePage === false) {
+					$activePage = $this->getNavigation()->getActivePage();
+					if ($activePage === null) $activePage = $this->getNavigation()->find($curPage);
+					// It is still possible for $activePage to be null (for pages not in the
+					// navigation, like the credits).
 				}
 
-				$page     = $subpage[0];
-				$label    = $subpage[1];
-				$params   = !empty($subpage[3]) ? sly_Util_HTTP::queryString($subpage[3]) : '';
-				$pageattr = $attr;
+				$page      = isset($sp['page'])   ? $sp['page']   : (isset($sp[0]) ? $sp[0] : $curPage);
+				$label     = isset($sp['label'])  ? $sp['label']  : (isset($sp[1]) ? $sp[1] : '?');
+				$forced    = isset($sp['forced']) ? $sp['forced'] : null;     // new in 0.6
+				$extra     = isset($sp['extra'])  ? $sp['extra']  : array();  // dito
+				$className = isset($sp['class'])  ? $sp['class']  : (isset($sp[4]) ? $sp[4] : '');
 
+				$sp = $activePage === null ? $page : new sly_Layout_Navigation_Subpage($activePage, $page, $label, $page);
 
-				if($cur_page === $page) {
-					$pageattr = $attr.' class="sly-active"';
+				if ($activePage) {
+					$sp->forceStatus($forced);
+					$sp->setExtraParams($extra);
 				}
-				$format     = '<a href="?page=%s%s"%s>%s</a>';
-				$subtitle[] = sprintf($format, $page, $params, $pageattr, $label);
+			}
+			else {
+				$page      = $sp->getPageParam();
+				$label     = $sp->getTitle();
+				$extra     = $sp->getExtraParams();
+				$className = '';
 			}
 
-			if (!empty($subtitle)) {
-				$items = array();
+			$params    = !empty($extra) ? sly_Util_HTTP::queryString($extra) : '';
+			$active    = is_string($sp) ? $curPage === $sp : $sp->isActive();
+			$linkClass = array();
+			$liClass   = array();
 
-				foreach ($subtitle as $idx => $part) {
-					$className = isset($subline[$idx][4]) ? $subline[$idx][4] : '';
-
-					if ($idx == 0) {
-						$items[] = '<li class="'.rtrim("sly-first $className").'">'.$part.'</li>';
-					}
-					else {
-						$items[] = '<li'.($className ? ' class="'.$className.'"' : '').'>'.$part.'</li>';
-					}
-				}
-
-				$subtitle_str = '<div id="sly-navi-page"><ul>'.implode("\n", $items).'</ul></div>';
+			if ($className) {
+				$liClass[] = $className;
 			}
+
+			if ($idx === 0) {
+				$liClass[] = 'sly-first';
+			}
+
+			if ($idx === $numPages-1) {
+				$liClass[] = 'sly-last';
+			}
+
+			if ($active) {
+				$linkClass[] = 'sly-active';
+				$liClass[]   = 'sly-active';
+			}
+
+			$linkAttr = empty($linkClass) ? '' : ' class="'.implode(' ', $linkClass).'"';
+			$liAttr   = empty($liClass)   ? '' : ' class="'.implode(' ', $liClass).'"';
+			$link     = sprintf($format, urlencode($page), $params, $linkAttr, $label);
+
+			$result[] = '<li'.$liAttr.'>'.$link.'</li>';
 		}
 
-		return $subtitle_str;
+		return '<div id="sly-navi-page"><ul>'.implode("\n", $result).'</ul></div>';
 	}
 
 	/**

@@ -41,7 +41,7 @@ foreach ($groups as $group) {
 	// Sort the addon group automatically, since we can't load the addOns in
 	// a translated sorted way.
 
-	if ($topic == 'addon') {
+	if ($topic === 'addon') {
 		$group->sortPages();
 		$pages = $group->getPages();
 	}
@@ -81,6 +81,9 @@ foreach ($groups as $group) {
 				$class = 'sly-navigation-level-2';
 				$id    = 'sly-navi-'.$p.'-subpage-'.$param;
 				$href  = 'index.php?page='.$param;
+				$extra = http_build_query($sp->getExtraParams(), '', '&');
+
+				if (mb_strlen($extra) > 0) $href .= '&'.$extra;
 
 				if ($first)          $class .= ' sly-first';
 				if ($sp->isActive()) $class .= ' sly-active';

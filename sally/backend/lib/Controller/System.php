@@ -19,19 +19,8 @@ class sly_Controller_System extends sly_Controller_Backend implements sly_Contro
 
 		// add subpages
 
-		$navigation = sly_Core::getLayout()->getNavigation();
-		$system     = $navigation->get('system', 'system');
-
-		// show error log when using the original system error handler
-		// (that's the only case when we can ensure that we're able to parse the error log)
-
-		$subline = array();
-		foreach ($system->getSubpages() as $subpage) {
-			$subline[] = array($subpage->getPageParam(), $subpage->getTitle());
-		}
-
 		$layout = sly_Core::getLayout();
-		$layout->pageHeader(t('system'), $subline);
+		$layout->pageHeader(t('system'));
 	}
 
 	public function indexAction() {

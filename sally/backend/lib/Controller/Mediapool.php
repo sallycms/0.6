@@ -39,7 +39,11 @@ class sly_Controller_Mediapool extends sly_Controller_Backend implements sly_Con
 
 		$this->getCurrentCategory();
 
-		// Header
+		// build navigation
+
+		$nav  = sly_Core::getNavigation();
+		$page = $nav->find('mediapool');
+		$cur  = sly_Core::getCurrentController();
 
 		$subline = array(
 			array('mediapool',        t('media_list')),
@@ -51,21 +55,19 @@ class sly_Controller_Mediapool extends sly_Controller_Backend implements sly_Con
 			$subline[] = array('mediapool_sync',      t('sync_files'));
 		}
 
-		// ArgUrl an Menü anhängen
+		foreach ($subline as $item) {
+			$sp = $page->addSubpage($item[0], $item[1]);
+			$sp->setExtraParams(array('args' => $this->args));
 
-		$argString = $this->getArgumentString();
-		$args      = empty($argString) ? '' : '&amp;'.$argString;
-
-		foreach ($subline as &$item) {
-			$item[2] = '';
-			$item[3] = $args;
+			// ignore the extra params when detecting the current page
+			if ($cur === $item[0]) $sp->forceStatus(true);
 		}
 
-		$subline = sly_Core::dispatcher()->filter('PAGE_MEDIAPOOL_MENU', $subline);
-		$layout  = sly_Core::getLayout();
+		$page   = sly_Core::dispatcher()->filter('SLY_MEDIAPOOL_MENU', $page);
+		$layout = sly_Core::getLayout();
 
 		$layout->showNavigation(false);
-		$layout->pageHeader(t('media_list'), $subline);
+		$layout->pageHeader(t('media_list'), $page);
 		$layout->setBodyAttr('class', 'sly-popup sly-mediapool');
 
 		print $this->render('mediapool/javascript.phtml');

@@ -16,8 +16,8 @@ class sly_Controller_Credits extends sly_Controller_Backend implements sly_Contr
 
 		if (sly_Util_User::getCurrentUser()->isAdmin()) {
 			$subline = array(
-				array('credits', t('credits')),
-				array('credits_bugreport', 'Fehler gefunden?')
+				array('page' => 'credits', 'label' => ht('credits')),
+				array('page' => 'credits_bugreport', 'label' => 'Fehler gefunden?')
 			);
 		}
 
