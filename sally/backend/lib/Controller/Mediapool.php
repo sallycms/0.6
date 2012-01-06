@@ -44,7 +44,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend implements sly_Con
 		$layout = sly_Core::getLayout();
 		$nav    = $layout->getNavigation();
 		$page   = $nav->find('mediapool');
-		$cur    = sly_Core::getCurrentController();
+		$cur    = sly_Core::getCurrentControllerName();
 
 		$subline = array(
 			array('mediapool',        t('media_list')),

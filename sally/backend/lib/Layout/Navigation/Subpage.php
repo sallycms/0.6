@@ -76,7 +76,7 @@ class sly_Layout_Navigation_Subpage {
 		$forced = $this->forceStatus;
 		if ($forced !== null) return $forced;
 
-		$current = sly_Core::getCurrentController();
+		$current = sly_Core::getCurrentControllerName();
 		return $this->matches($current, $_REQUEST);
 	}
 

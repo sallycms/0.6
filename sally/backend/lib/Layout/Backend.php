@@ -102,7 +102,7 @@ class sly_Layout_Backend extends sly_Layout_XHTML5 {
 
 		$subPages   = is_array($subline) ? array_values($subline) : $subline->getSubpages();
 		$result     = array();
-		$curPage    = sly_Core::getCurrentController();
+		$curPage    = sly_Core::getCurrentControllerName();
 		$numPages   = count($subPages);
 		$format     = '<a href="?page=%s%s"%s>%s</a>';
 		$activePage = false;
