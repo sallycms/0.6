@@ -43,23 +43,8 @@ $form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM_FIELDSET', $form, $par
 
 /////////////////////////////////////////////////////////////////
 // misc
-// ZUM STARTARTIKEL MACHEN
 
-if ($this->canConvertToStartarticle()) {
-	$form->beginFieldset(t('startarticle'));
-
-	if ($article->getStartpage() == 0 && $article->getParentId() == 0) {
-		$form->add(new sly_Form_Text('', t('root_articles_cannot_be_startarticles')));
-	}
-	elseif ($article->getStartpage() == 1) {
-		$form->add(new sly_Form_Text('', t('article_is_startarticle')));
-	}
-	else {
-		sly_Helper_Content::metaFormAddButtonBar($form, t('convert_to_startarticle'), 'to_startarticle');
-	}
-}
-
-// INHALTE KOPIEREN
+// copy content
 
 if ($this->canCopyContent()) {
 	$languages = sly_Util_Language::findAll();
@@ -80,7 +65,7 @@ if ($this->canCopyContent()) {
 	sly_Helper_Content::metaFormAddButtonBar($form, t('copy_content'), 'copy_content');
 }
 
-// ARTIKEL VERSCHIEBEN
+// move article
 
 if ($this->canMoveArticle()) {
 	$select = sly_Form_Helper::getCategorySelect('category_id_new', false, null, null, $user);
@@ -93,7 +78,7 @@ if ($this->canMoveArticle()) {
 	sly_Helper_Content::metaFormAddButtonBar($form, t('move_article'), 'move_article');
 }
 
-// ARTIKEL KOPIEREN
+// copy article
 
 if ($this->canCopyArticle()) {
 	$select = sly_Form_Helper::getCategorySelect('category_copy_id_new', false, null, null, $user);
@@ -106,7 +91,7 @@ if ($this->canCopyArticle()) {
 	sly_Helper_Content::metaFormAddButtonBar($form, t('copy_article'), 'copy_article');
 }
 
-// KATEGORIE/STARTARTIKEL VERSCHIEBEN
+// move category
 
 if ($this->canMoveCategory()) {
 	$select = sly_Form_Helper::getCategorySelect('category_id_new', false, null, null, $user);
@@ -117,6 +102,22 @@ if ($this->canMoveCategory()) {
 	$form->add($select);
 
 	sly_Helper_Content::metaFormAddButtonBar($form, t('move_category'), 'move_category');
+}
+
+// convert to startarticle
+
+if ($this->canConvertToStartarticle()) {
+	$form->beginFieldset(t('startarticle'));
+
+	if ($article->getStartpage() == 0 && $article->getParentId() == 0) {
+		$form->add(new sly_Form_Text('', t('root_articles_cannot_be_startarticles')));
+	}
+	elseif ($article->getStartpage() == 1) {
+		$form->add(new sly_Form_Text('', t('article_is_startarticle')));
+	}
+	else {
+		sly_Helper_Content::metaFormAddButtonBar($form, t('convert_to_startarticle'), 'to_startarticle');
+	}
 }
 
 $form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM_ADDITIONAL', $form, $params);
