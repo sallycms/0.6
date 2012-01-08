@@ -117,7 +117,7 @@ foreach ($variants as $name => $settings) {
 			exec('hg identify -r latest_sly05 2>&1', $output);
 
 			$output    = implode("\n", $output);
-			$toArchive = substr($output, 0, 6) == 'abort:' ? 'tip' : 'latest_sly04';
+			$toArchive = substr($output, 0, 6) == 'abort:' ? 'tip' : 'latest_sly05';
 
 			// archive the repo into our sally archive
 
