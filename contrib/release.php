@@ -112,12 +112,12 @@ foreach ($variants as $name => $settings) {
 				print ' archiving...';
 			}
 
-			// find latest_sly05 tag
+			// find latest_sly06 tag
 			$output = array();
-			exec('hg identify -r latest_sly05 2>&1', $output);
+			exec('hg identify -r latest_sly06 2>&1', $output);
 
 			$output    = implode("\n", $output);
-			$toArchive = substr($output, 0, 6) == 'abort:' ? 'tip' : 'latest_sly04';
+			$toArchive = substr($output, 0, 6) == 'abort:' ? 'tip' : 'latest_sly06';
 
 			// archive the repo into our sally archive
 
