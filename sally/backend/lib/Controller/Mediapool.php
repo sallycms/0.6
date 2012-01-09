@@ -387,7 +387,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend implements sly_Con
 			);
 		}
 
-		$usages = sly_Core::dispatcher()->filter('SLY_OOMEDIA_IS_IN_USE', $usages, array(
+		$usages = sly_Core::dispatcher()->filter('SLY_MEDIA_USAGES', $usages, array(
 			'filename' => $medium->getFilename(),
 			'media'    => $medium
 		));
