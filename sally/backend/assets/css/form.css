@@ -34,11 +34,15 @@ select option {
 
 select {
 	height: 21px;
-	width: 462px;
 }
 
 select[multiple=multiple] {
 	height: auto;
+}
+
+select:disabled {
+	background-color: #F9F9F9;
+	color: #7D7676;
 }
 
 .sly-form-text,
@@ -47,7 +51,6 @@ select[multiple=multiple] {
 span.sly-form-read {
 	height: 17px;
 	padding: 1px 2px;
-	width: 456px;
 }
 
 .sly-form-file {
@@ -120,11 +123,6 @@ a.sly-button {
 
 	/*	Select */
 
-	select:disabled {
-		background-color: #F9F9F9;
-		color: #7D7676;
-	}
-
 	label.sly-inline {
 		float: none;
 		display: inline;
@@ -139,6 +137,17 @@ a.sly-button {
 
 	.sly-form-date, .sly-form-datetime, .sly-form-datetime-local {
 		width: auto;
+	}
+
+	.sly-form-select {
+		width: 462px;
+	}
+
+	.sly-form-text,
+	.sly-form-number,
+	.sly-form-password,
+	span.sly-form-read {
+		width: 456px;
 	}
 
 	.sly-select-group {
