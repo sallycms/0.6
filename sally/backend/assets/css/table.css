@@ -63,10 +63,6 @@
 		&:last-child { +border-bottom-right-radius(4px); }
 	}
 
-	input[type=submit] {
-		margin-left: 0;
-	}
-
 	.sly-has-input {
 		div {
 			padding: 0 11px 0 0;

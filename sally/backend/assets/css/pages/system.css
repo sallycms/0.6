@@ -18,15 +18,15 @@
 		width: 375px;
 	}
 
-	label  { width: 180px; }
-	input  { width: 185px; }
-	select { width: 191px; }
+	label          { width: 180px; }
+	.sly-form-text { width: 185px; }
+	select         { width: 191px; }
 
 	.sly-widget.sly-link {
 		input { width: 144px; }
 	}
 
-	input.sly-form-submit {
+	.sly-button {
 		margin-left: 180px;
 		width: auto;
 	}

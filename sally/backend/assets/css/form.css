@@ -1,10 +1,10 @@
-input[type=text],
-input[type=password],
-input[type=date],
-input[type=datetime],
-input[type=datetime-local],
-input[type=number],
-input[type=range],
+.sly-form-text,
+.sly-form-password,
+.sly-form-date,
+.sly-form-datetime,
+.sly-form-datetime-local,
+.sly-form-number,
+.sly-form-range,
 textarea,
 select {
 	font-size: 100%;
@@ -16,11 +16,11 @@ select {
 	font-family: Calibri, Arial, Verdana, sans-serif;
 }
 
-input[type=text],
-input[type=password],
-input[type=submit],
-input[type=reset],
-input[type=button],
+.sly-form-text,
+.sly-form-password,
+.sly-form-submit,
+.sly-form-reset,
+.sly-form-button,
 textarea,
 select option {
 	&:disabled {
@@ -41,25 +41,29 @@ select[multiple=multiple] {
 	height: auto;
 }
 
-input[type=text],
-input[type=number],
-input[type=password],
+.sly-form-text,
+.sly-form-number,
+.sly-form-password,
 span.sly-form-read {
 	height: 17px;
 	padding: 1px 2px;
 	width: 456px;
 }
 
-.sly-button, input[type=submit], input[type=reset], input[type=button] {
+.sly-form-file {
+	border: 0;
+	width: auto;
+	height: auto;
+}
+
+.sly-button, .sly-form-submit {
 	background-image: url(../button.png);
 	background-repeat: repeat-x;
 	padding: 1px 6px;
 	height: 24px;
 	color: $drk_grey;
-	text-decoration: none;
 	border: 1px solid $lt_grey;
 	+border-radius($brd_rad);
-	margin-left: 145px;
 	font-size: 100%;
 	font-family: inherit;
 	width: auto;
@@ -213,7 +217,7 @@ a.sly-button {
 	}
 
 	.sly-form-col-2 {
-		input[type=text], input[type=password], select, textarea {
+		.sly-form-text, .sly-form-password, select, textarea {
 			width: 200px;
 		}
 	}
@@ -281,7 +285,7 @@ a.sly-button {
 		margin-bottom: 20px;
 	}
 
-	input.sly-form-text[type="range"] {
+	.sly-form-range {
 		width: 114px;
 
 		&.ua-supported {
@@ -290,13 +294,13 @@ a.sly-button {
 		}
 	}
 
-	input.sly-form-text[type="number"] {
+	.sly-form-number {
 		width: 114px;
 	}
 
-	input.sly-form-text[type="date"],
-	input.sly-form-text[type="datetime"],
-	input.sly-form-text[type="datetime-local"] {
+	input.sly-form-date,
+	input.sly-form-datetime,
+	input.sly-form-datetime-local {
 		width: 114px;
 
 		&.ua-supported {
@@ -308,6 +312,14 @@ a.sly-button {
 		margin-left: 145px;
 		width: 228px;
 		top: 4px;
+	}
+
+	.sly-form-buttonbar {
+		input:first-child {
+			margin-left: 145px;
+		}
+
+		input { margin-right: 5px; }
 	}
 }
 
