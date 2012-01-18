@@ -105,7 +105,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		$cache = sly_Core::cache();
 
 		foreach (sly_Util_Language::findAll(true) as $clangID) {
-			$db->select('article', 'id', 'prior > '.$position.' AND startpage = 0 AND clang = '.$clangID.' AND re_id = '.$parentID);
+			$db->select('article', 'id', 'prior >= '.$position.' AND clang = '.$clangID.' AND ((startpage = 0 AND re_id = '.$parentID.') OR id = '.$parentID.')');
 
 			foreach ($db as $row) {
 				$cache->delete('sly.article', $row['id'].'_'.$clangID);
@@ -190,11 +190,12 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		$this->update($article);
 
 		// Cache sicherheitshalber schon einmal leeren
+		$cache->delete('sly.category', $articleID.'_'.$clangID);
 		$cache->delete('sly.article', $articleID.'_'.$clangID);
 
 		// Kategorie verschieben, wenn nötig
 		if ($position !== false && $position != $article->getPrior()) {
-			$parent = $article->getParentId();
+			$parent = $article->getCategoryId();
 			$oldPrio  = $article->getPrior();
 			$position = (int) $position;
 
@@ -219,7 +220,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 				$this->update($article);
 
 				// alle Artikel in dieser Ebene aus dem Cache entfernen
-				$db->select('article', 'id', array('re_id' => $parent, 'clang' => $clangID, 'catprior' => 0));
+				$db->select('article', 'id', $where);
 
 				foreach ($db as $row) {
 					$cache->delete('sly.article', $row['id'].'_'.$clangID);
@@ -255,7 +256,7 @@ class sly_Service_Article extends sly_Service_Model_Base {
 		foreach (sly_Util_Language::findAll(true) as $clangID) {
 			$iArticle = $this->findById($articleID, $clangID);
 			$prior    = $iArticle->getPrior();
-			$where    = 'prior >= '.$prior.' AND re_id = '.$parent.' AND catprior = 0 AND clang = '.$clangID;
+			$where    = 'prior >= '.$prior.' AND ((re_id = '.$parent.' AND catprior = 0) OR id = '.$parent.') AND clang = '.$clangID;
 
 			$db->query('UPDATE '.$prefix.'article SET prior = prior - 1 WHERE '.$where);
 
