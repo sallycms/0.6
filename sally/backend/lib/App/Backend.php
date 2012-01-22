@@ -62,12 +62,15 @@ class sly_App_Backend extends sly_App_Base implements sly_App_Interface {
 
 		// force login controller if no login is found
 		if (!$isSetup && sly_Util_User::getCurrentUser() === null) {
-			$this->controller = 'login';
-
 			// send a 403 header to prevent robots from including the login page
 			// and to help ajax requests that were fired a long time after the last
 			// interaction with the backend to easily detect the expired session
-			$response->setStatusCode(403);
+
+			if ($this->controller !== 'login') {
+				$response->setStatusCode(403);
+			}
+
+			$this->controller = 'login';
 		}
 
 		// get page and action from the current request
