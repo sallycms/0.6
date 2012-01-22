@@ -292,7 +292,7 @@ var sly = {};
 		},
 
 		onMove: function(event) {
-			var direction = $(event.target).closest('a')[0].className.replace('fct-');
+			var direction = event.target.className.replace('fct-', '');
 			var list      = this.list;
 			var selected  = list.find('option:selected');
 
@@ -463,6 +463,27 @@ var sly = {};
 		}
 	};
 
+	sly.initWidgets = function(context) {
+		$('.sly-widget:not(.sly-initialized)', context).each(function() {
+			var self = $(this);
+
+			if (self.is('.sly-link')) {
+				new sly.LinkWidget(this);
+			}
+			else if (self.is('.sly-media')) {
+				new sly.MediaWidget(this);
+			}
+			else if (self.is('.sly-linklist')) {
+				new sly.LinklistWidget(this);
+			}
+			else if (self.is('.sly-medialist')) {
+				new sly.MedialistWidget(this);
+			}
+
+			self.addClass('sly-initialized');
+		});
+	};
+
 	var catsChecked = function() {
 		var c_checked = $('#userperm_cat_all').prop('checked');
 		var m_checked = $('#userperm_media_all').prop('checked');
@@ -499,22 +520,7 @@ var sly = {};
 	$(function() {
 		// Init widgets
 
-		$('.sly-widget').each(function() {
-			var self = $(this);
-
-			if (self.is('.sly-link')) {
-				new sly.LinkWidget(this);
-			}
-			else if (self.is('.sly-media')) {
-				new sly.MediaWidget(this);
-			}
-			else if (self.is('.sly-linklist')) {
-				new sly.LinklistWidget(this);
-			}
-			else if (self.is('.sly-medialist')) {
-				new sly.MedialistWidget(this);
-			}
-		});
+		sly.initWidgets();
 
 		// "check all" function for mediapool
 
