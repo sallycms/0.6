@@ -49,8 +49,8 @@ ul.sly-setup-language {
 	}
 
 	.sly-form {
-		.sly-form-text input,
-		.sly-form-password input,
+		.sly-form-text,
+		.sly-form-password,
 		select#driver,
 		select#timezone {
 			width: 250px;
