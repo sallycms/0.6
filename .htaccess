@@ -20,3 +20,11 @@ RewriteRule ^backend/(.*)$     sally/backend/$1 [L,QSA]
 RewriteCond %{REQUEST_FILENAME}  \.(css|js|gif|jpg|jpeg|png|swf|ico|pdf)$
 RewriteCond %{REQUEST_URI}       !wym_styles.css$
 RewriteRule ^(.*)$               data/dyn/public/sally/static-cache/$1 [L]
+
+RewriteCond %{REQUEST_FILENAME}  !-f
+RewriteCond %{REQUEST_FILENAME}  !-d
+RewriteCond %{REQUEST_FILENAME}  !-l
+#RewriteCond %{REQUEST_URI}       !assets/.*
+#RewriteCond %{REQUEST_URI}       !data/.*       # Sally <= 0.4 (just in case)
+#RewriteCond %{REQUEST_URI}       !sally/.*
+RewriteRule .*                   index.php
