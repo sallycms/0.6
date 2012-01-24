@@ -98,6 +98,7 @@ ul.sly-setup-language {
 
 	#prefix { width: 50px; }
 	#create_db { width: auto; }
+	#dbname { width: 250px; }
 }
 
 #sly-form-setup-step-2 {
