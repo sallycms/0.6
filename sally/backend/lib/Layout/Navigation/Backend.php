@@ -67,10 +67,9 @@ class sly_Layout_Navigation_Backend {
 
 			foreach ($addonService->getAvailableAddons() as $addon) {
 				$link = '';
-				$perm = $addonService->getProperty($addon, 'perm', '');
 				$page = $addonService->getProperty($addon, 'page', '');
 
-				if (!empty($page) && ($isAdmin || empty($perm) || $user->hasRight('pages', $perm))) {
+				if (!empty($page) && ($isAdmin || $user->hasRight('pages', $perm))) {
 					$name  = $addonService->getProperty($addon, 'name', '');
 					$popup = $addonService->getProperty($addon, 'popup', false);
 
@@ -80,10 +79,9 @@ class sly_Layout_Navigation_Backend {
 				foreach ($pluginService->getAvailablePlugins($addon) as $plugin) {
 					$pluginArray = array($addon, $plugin);
 					$link        = '';
-					$perm        = $pluginService->getProperty($pluginArray, 'perm', '');
 					$page        = $pluginService->getProperty($pluginArray, 'page', '');
 
-					if (!empty($page) && ($isAdmin || empty($perm) || $user->hasRight('pages', $perm))) {
+					if (!empty($page) && ($isAdmin || $user->hasRight('pages', $page))) {
 						$name  = $pluginService->getProperty($pluginArray, 'name', '');
 						$popup = $pluginService->getProperty($pluginArray, 'popup', false);
 
