@@ -162,9 +162,10 @@ class sly_Layout_Backend extends sly_Layout_XHTML5 {
 				$liClass[]   = 'sly-active';
 			}
 
-			$linkAttr = empty($linkClass) ? '' : ' class="'.implode(' ', $linkClass).'"';
-			$liAttr   = empty($liClass)   ? '' : ' class="'.implode(' ', $liClass).'"';
-			$link     = sprintf($format, urlencode($page), $params, $linkAttr, $label);
+			$linkAttr  = ' rel="page-'.urlencode($page).'"';
+			$linkAttr .= empty($linkClass) ? '' : ' class="'.implode(' ', $linkClass).'"';
+			$liAttr    = empty($liClass)   ? '' : ' class="'.implode(' ', $liClass).'"';
+			$link      = sprintf($format, urlencode($page), $params, $linkAttr, $label);
 
 			$result[] = '<li'.$liAttr.'>'.$link.'</li>';
 		}
