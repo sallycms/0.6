@@ -7,12 +7,13 @@ authorisation:
       mediapool: 'translate:mediapool'
       addons: 'translate:addons'
   article:
+    title: 'translate:articles'
     token:
       edit: 'translate:edit'
       move: 'translate:move'
       publish: 'translate:publish'
-      edittype: 'translate:edittype'
-      editcontent: 'translate:editcontent'
+      edittype: 'translate:change_articletype'
+      editcontent: 'translate:edit_contents'
     supers:
       editcontent: ['edit']
       edittype: ['edit']
@@ -28,18 +29,18 @@ authorisation:
     title: 'translate:languages'
     list: 'sly_Authorisation_LanguageListProvider'
     token:
-      access: 'translate:access'
+      access: 'translate:grant_access'
   mediacategory:
-    title: 'translate:mediacategory'
+    title: 'translate:media_categories'
     list: 'sly_Authorisation_MediaCategoryListProvider'
     token:
-      access: 'translate:access'
+      access: 'translate:grant_access'
   transitional:
-    title: 'translate:transitional'
+    title: 'translate:transitional_rights'
     token:
-      moveSlice: moveSlice
-      copyContent: copyContent
-      copyArticle: copyArticle
-      moveCategory: moveCategory
-      publishCategory: publishCategory
-      article2startpage: article2startpage
+      moveSlice: translate:move_slice
+      copyContent: translate:copy_content
+      copyArticle: translate:copy_article
+      moveCategory: translate:move_category
+      publishCategory: translate:publish_category
+      article2startpage: translate:convert_to_startarticle

@@ -15,6 +15,7 @@ minutes_short: m
 seconds_short: s
 milliseconds_short: ms
 never: never
+all: all
 general: General
 dateformat: '%Y-%b-%d'
 timeformat: '%H:%M'
@@ -25,6 +26,7 @@ home: Home
 input: Input
 output: Output
 title: Title
+grant_access: Grant access
 
 save: Save
 apply: Apply
@@ -40,6 +42,8 @@ logout: Logout
 change: Change
 update: Update
 search: Search
+move: Move
+publish: Publish
 
 available: available
 unavailable: unavailable
@@ -151,6 +155,8 @@ template_has_no_slots: This article cannot contain any content.
 no_modules_allowed: This slot cannot contain any content.
 category_moved: Category has been moved.
 articletype: Article type
+change_articletype: Change article type
+edit_contents: Edit contents
 
 category_updated: Category has been updated.
 category_is_not_empty: Category still contains contents.
@@ -174,6 +180,7 @@ article_name: Article name
 created_at: created at
 updated_at: updated at
 article: Article
+publish_category: Publish category
 
 start_article: Homepage
 path: Path
@@ -374,3 +381,7 @@ use_category_service_to_copy_categories: Use the category service to copy catego
 use_category_service_to_move_categories: Use the category service to move categories.
 view_not_found: 'View {0} could not be found!'
 safemode_openbasedir: safe_mode and open_basedir
+layout_has_not_been_set: The layout has not yet been set via ::setLayout().
+media_categories: Medienkategorien
+move_slice: Move slice
+transitional_rights: Transitional rights

@@ -15,6 +15,7 @@ minutes_short: m
 seconds_short: s
 milliseconds_short: ms
 never: nie
+all: alle
 general: Allgemein
 dateformat: %d. %b. %Y
 timeformat: %H:%Mh
@@ -25,6 +26,7 @@ home: Home
 input: Eingabe
 output: Ausgabe
 title: Titel
+grant_access: Zugriff gewähren
 
 save: Speichern
 apply: Übernehmen
@@ -40,6 +42,8 @@ logout: Abmelden
 change: Ändern
 update: Aktualisieren
 search: Suchen
+move: Verschieben
+publish: Veröffentlichen
 
 available: verfügbar
 unavailable: nicht verfügbar
@@ -141,7 +145,7 @@ cannot_move_category: Die Kategorie konnte nicht verschoben werden!
 move_category: Kategorie verschieben
 startarticle: Startartikel
 article_is_startarticle: Dieser Artikel ist ein Startartikel.
-convert_to_startarticle: Diesen Artikel zum Startartikel der Kategorie umwandeln.
+convert_to_startarticle: Artikel zum Startartikel umwandeln
 root_articles_cannot_be_startarticles: Artikel auf der obersten Ebene können nicht in Startartikel umgewandelt werden.
 cannot_convert_to_startarticle: Beim Umwandeln in einen Startartikel ist ein Fehler aufgetreten!
 article_converted_to_startarticle: Dieser Artikel wurde erfolgreich zum Startartikel umgewandelt.
@@ -151,6 +155,8 @@ template_has_no_slots: In diesem Artikel können keine Inhalte eingepflegt werde
 no_modules_allowed: In diesem Slot können keine Inhalte eingepflegt werden.
 category_moved: Kategorie wurde verschoben.
 articletype: Artikeltyp
+change_articletype: Artikeltyp ändern
+edit_contents: Inhalte bearbeiten
 
 category_updated: Kategorie wurde aktualisiert.
 category_is_not_empty: Kategorie enthält noch Inhalte.
@@ -174,6 +180,7 @@ article_name: Artikelname
 created_at: Erstellt am
 updated_at: Aktualisiert am
 article: Artikel
+publish_category: Kategorie veröffentlichen
 
 start_article: Startseite
 path: Pfad
@@ -375,3 +382,6 @@ use_category_service_to_move_categories: 'Benutzen Sie den Kategorie-Service, um
 view_not_found: 'Der View {0} wurde nicht gefunden!'
 safemode_openbasedir: safe_mode und open_basedir
 layout_has_not_been_set: Das Layout wurde noch nicht über ::setLayout() gesetzt.
+media_categories: Medienkategorien
+move_slice: Slice verschieben
+transitional_rights: Vorübergehende Rechte
