@@ -107,7 +107,7 @@ var sly = {};
 	/////////////////////////////////////////////////////////////////////////////
 	// Helper
 
-	var inherit = function(subClass, baseClass) {
+	sly.inherit = function(subClass, baseClass) {
 		var tmpClass = function() {};
 		tmpClass.prototype = baseClass.prototype;
 		subClass.prototype = new tmpClass();
@@ -183,7 +183,7 @@ var sly = {};
 		this.categories = readLists(this.element, 'categories');
 	};
 
-	inherit(sly.MediaWidget, sly.AbstractWidget);
+	sly.inherit(sly.MediaWidget, sly.AbstractWidget);
 
 	sly.MediaWidget.prototype.onOpen = function() {
 		var cb = getCallbackName('slymediawidget');
@@ -209,7 +209,7 @@ var sly = {};
 		this.categories   = readLists(this.element, 'categories');
 	};
 
-	inherit(sly.LinkWidget, sly.AbstractWidget);
+	sly.inherit(sly.LinkWidget, sly.AbstractWidget);
 
 	sly.LinkWidget.prototype.onOpen = function() {
 		var catID = this.element.data('catid'), cb = getCallbackName('slylinkwidget');
@@ -340,7 +340,7 @@ var sly = {};
 		this.categories = readLists(this.element, 'categories');
 	};
 
-	inherit(sly.MedialistWidget, sly.AbstractListWidget);
+	sly.inherit(sly.MedialistWidget, sly.AbstractListWidget);
 
 	sly.MedialistWidget.prototype.onOpen = function() {
 		var cb = getCallbackName('slymedialistwidget');
@@ -366,7 +366,7 @@ var sly = {};
 		this.categories   = readLists(this.element, 'categories');
 	};
 
-	inherit(sly.LinklistWidget, sly.AbstractListWidget);
+	sly.inherit(sly.LinklistWidget, sly.AbstractListWidget);
 
 	sly.LinklistWidget.prototype.onOpen = function() {
 		var catID = this.element.data('catid'), cb = getCallbackName('slylinklistwidget');
