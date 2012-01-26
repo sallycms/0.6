@@ -225,7 +225,7 @@ var sly = {};
 
 	sly.AbstractListWidget = function(elem) {
 		this.element = $(elem);
-		this.input   = this.element.find('input');
+		this.input   = this.element.find('input[type=hidden]');
 		this.list    = this.element.find('select');
 
 		// register events
@@ -465,22 +465,24 @@ var sly = {};
 
 	sly.initWidgets = function(context) {
 		$('.sly-widget:not(.sly-initialized)', context).each(function() {
-			var self = $(this);
+			var self = $(this), init = false;
 
 			if (self.is('.sly-link')) {
-				new sly.LinkWidget(this);
+				new sly.LinkWidget(this); init = true;
 			}
 			else if (self.is('.sly-media')) {
-				new sly.MediaWidget(this);
+				new sly.MediaWidget(this); init = true;
 			}
 			else if (self.is('.sly-linklist')) {
-				new sly.LinklistWidget(this);
+				new sly.LinklistWidget(this); init = true;
 			}
 			else if (self.is('.sly-medialist')) {
-				new sly.MedialistWidget(this);
+				new sly.MedialistWidget(this); init = true;
 			}
 
-			self.addClass('sly-initialized');
+			if (init) {
+				self.addClass('sly-initialized');
+			}
 		});
 	};
 
