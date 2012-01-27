@@ -637,12 +637,12 @@ var sly = {};
 					$('input[type='+type+']').addClass('ua-supported');
 				}
 			}
-		}
 
-		// Fallback-Implementierung für autofocus
+			// Fallback-Implementierung für autofocus
 
-		if (!Modernizr.input.autofocus) {
-			$('*[autofocus]').focus();
+			if (!Modernizr.input.autofocus) {
+				$('*[autofocus]').focus();
+			}
 		}
 
 		// Fallback-Implementierung für type=range via jQuery UI Slider
