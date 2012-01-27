@@ -46,6 +46,7 @@
 			foreach ($plugins->getRegisteredPlugins($addon) as $plugin) {
 				$params['type']        = 'plugin';
 				$params['name']        = $plugin;
+				$params['addon']       = $addon;
 				$params['version']     = $plugins->getVersion(array($addon, $plugin));
 				$params['supportPage'] = $plugins->getSupportPageEx(array($addon, $plugin));
 

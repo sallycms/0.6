@@ -13,8 +13,14 @@ class sly_Controller_Addon_Help extends sly_Controller_Backend implements sly_Co
 	protected $plugin = null;
 
 	public function indexAction() {
-		$addon  = sly_request('addon', 'string', '');
-		$plugin = sly_request('plugin', 'string', '');
+		$comp = sly_request('component', 'string', '');
+		$comp = explode('/', $comp, 2);
+
+		if (count($comp) === 1) {
+			$comp[] = '';
+		}
+
+		list($addon, $plugin) = $comp;
 
 		$addons      = sly_Service_Factory::getAddOnService()->getRegisteredAddOns();
 		$this->addon = in_array($addon, $addons) ? $addon : null;

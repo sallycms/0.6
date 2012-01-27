@@ -15,11 +15,11 @@ $version = !empty($version) ? sly_html($version) : 'N/A';
 <tr class="sly-<?php echo $type ?>">
 	<?php if ($type === 'addon'): ?>
 	<td class="sly-col-icon sly-icon"><?php echo sly_Util_HTML::getSpriteLink('', $name, 'addon') ?></td>
-	<td class="sly-col-name" colspan="2"><a href="index.php?page=addon_help&amp;addon=<?php echo urlencode($name) ?>"><?php echo sly_html($name) ?></a></td>
+	<td class="sly-col-name" colspan="2"><a href="index.php?page=addon_help&amp;component=<?php echo urlencode($name) ?>"><?php echo sly_html($name) ?></a></td>
 	<?php else: ?>
 	<td>&nbsp;</td>
 	<td class="sly-col-icon sly-icon"><?php echo sly_Util_HTML::getSpriteLink('', $name, 'plugin') ?></td>
-	<td class="sly-col-name"><a href="index.php?page=addon_help&amp;addon=<?php echo urlencode($name) ?>"><?php echo sly_html($name) ?></a></td>
+	<td class="sly-col-name"><a href="index.php?page=addon_help&amp;component=<?php echo urlencode($addon).'/'.urlencode($name) ?>"><?php echo sly_html($name) ?></a></td>
 	<?php endif ?>
 	<td class="sly-col-version"><?php echo $version ?></td>
 	<td class="sly-col-author"><?php echo $supportPage ?></td>
