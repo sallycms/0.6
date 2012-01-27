@@ -352,9 +352,9 @@ class sly_Controller_Addon extends sly_Controller_Backend implements sly_Control
 			else {
 				$classes[] = 'pa0';
 
-				foreach (array_keys($aInfo['plugins']) as $plugin) {
-					$aInfo['requirements'][] = $addon.'/'.$plugin;
-				}
+//				foreach (array_keys($aInfo['plugins']) as $plugin) {
+//					$aInfo['requirements'][] = $addon.'/'.$plugin;
+//				}
 			}
 
 			$classes[] = 'i'.intval($aInfo['installed']);
@@ -402,7 +402,7 @@ class sly_Controller_Addon extends sly_Controller_Backend implements sly_Control
 				$names[] = is_array($comp) ? reset($comp).' / '.end($comp) : $comp;
 			}
 
-			$isRequiredTitle = sly_html(t('is_required', sly_Util_String::humanImplode($names)));
+			$isRequiredTitle = sly_html(t('is_required', sly_Util_String::humanImplode(array_slice($names, 0, 3))));
 		}
 		else {
 			$isRequiredTitle = '';
@@ -415,7 +415,7 @@ class sly_Controller_Addon extends sly_Controller_Backend implements sly_Control
 				$names[] = is_array($comp) ? reset($comp).' / '.end($comp) : $comp;
 			}
 
-			$requiresTitle = t('requires').' '.sly_Util_String::humanImplode($names);
+			$requiresTitle = t('requires').' '.sly_Util_String::humanImplode(array_slice($names, 0, 3));
 		}
 		else {
 			$requiresTitle = '';
