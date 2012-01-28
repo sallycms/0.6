@@ -335,7 +335,7 @@ db_prefix: Tabellen-Präfix
 develop_file_not_found: 'Die Development-Ressource {0} wurde nicht gefunden!'
 does_not_implement: 'Die Klasse {0} implementiert nicht das Interface {1}!'
 email_is_invalid: 'Die eMail-Adresse ist ungültig.'
-error_rendering_slice: 'Es trat ein Fehler beim Rendern des Slices auf.'
+error_rendering_slice: 'Es trat ein Fehler beim Rendern des Slices auf:<br />{0}'
 error_sending_mail: 'Es trat ein Fehler beim Versenden der eMail auf.'
 exec_time: 'Scriptlaufzeit'
 fieldset_contains_multilingual_elements_has_to_be_singlecolumn: 'Das Fieldset kann nicht mehrspaltig sein, da es bereits mehrsprachige Elemente enthält.'

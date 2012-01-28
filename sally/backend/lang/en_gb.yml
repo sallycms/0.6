@@ -335,7 +335,7 @@ db_prefix: Table prefix
 develop_file_not_found: 'The development resource {0} could not be found!'
 does_not_implement: 'The class {0} does not implement the interface {0}!'
 email_is_invalid: The email address is invalid!
-error_rendering_slice: An error occured while rendering the block!
+error_rendering_slice: 'An error occured while rendering the block:<br />{0}'
 error_sending_mail: An error occured while sending the email!
 exec_time: '{0}s, variable'
 fieldset_contains_multilingual_elements_has_to_be_singlecolumn: Fieldset cannot be multicolumn because it already contains multilingual form elements.
