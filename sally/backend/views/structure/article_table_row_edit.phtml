@@ -25,5 +25,5 @@ $base_url = 'index.php?page=structure&category_id='.$article->getId().'&clang='.
 	</td>
 	<td class="sly-col-name sly-has-input" colspan="2"><div><input type="text" class="sly-form-text" name="article_name" autofocus="autofocus" required="required" placeholder="<?php echo ht('article_name') ?>" value="<?php echo sly_html($article->getName()) ?>" /></div></td>
 	<td class="sly-col-pos sly-has-input"><div><input type="number" class="sly-form-text" name="article_position" value="<?php echo sly_html($article->getPosition()) ?>" min="1" max="<?php echo $maxPosition ?>" required="required" /></div></td>
-	<td class="sly-col-status sly-has-input"><div><input type="submit" name="do_edit_article" value="<?php echo t('save') ?>" /></div></td>
+	<td class="sly-col-status sly-has-input"><div><input type="submit" name="do_edit_article" value="<?php echo t('save') ?>" class="sly-form-submit" /></div></td>
 </tr>

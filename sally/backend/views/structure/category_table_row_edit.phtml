@@ -17,7 +17,7 @@ $base_url = 'index.php?page=structure&category_id='.$category->getId().'&clang='
 	</td>
 	<td class="sly-col-name sly-has-input"><div><input type="text" class="sly-form-text" name="category_name" autofocus="autofocus" required="required" placeholder="<?php echo ht('category') ?>" value="<?php echo sly_html($category->getCatName()) ?>" /></div></td>
 	<td class="sly-col-pos sly-has-input"><div><input type="number" class="sly-form-text" name="category_position" value="<?php echo sly_html($category->getCatPosition()) ?>" required="required" min="1" max="<?php echo $maxCatPosition ?>" /></div></td>
-	<td class="sly-col-status sly-has-input"><div><input type="submit" name="do_edit_category" value="<?php echo t('save') ?>" /></div></td>
+	<td class="sly-col-status sly-has-input"><div><input type="submit" name="do_edit_category" class="sly-form-submit" value="<?php echo t('save') ?>" /></div></td>
 </tr>
 <?php
 print sly_Core::dispatcher()->filter('CAT_FORM_EDIT', '', array(
