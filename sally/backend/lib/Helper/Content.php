@@ -45,9 +45,9 @@ class sly_Helper_Content {
 									?>
 								</div>
 								<div class="sly-form-row">
-									<p class="sly-form-submit">
+									<div class="sly-form-buttonbar">
 										<input class="sly-form-submit" type="submit" name="btn_save" value="<?php echo t('add_slice') ?>" />
-									</p>
+									</div>
 								</div>
 							</div>
 						</fieldset>
@@ -103,10 +103,10 @@ class sly_Helper_Content {
 								?>
 							</div>
 							<div class="sly-form-row">
-								<p class="sly-form-submit">
+								<div class="sly-form-buttonbar">
 									<input class="sly-form-submit" type="submit" value="<?php echo t('save') ?>" name="btn_save" />
-									<input class="sly-form-submit sly-form-submit-2" type="submit" value="<?php echo t('apply') ?>" name="btn_update" />
-								</p>
+									<input class="sly-form-submit" type="submit" value="<?php echo t('apply') ?>" name="btn_update" />
+								</div>
 							</div>
 						</div>
 					</fieldset>
