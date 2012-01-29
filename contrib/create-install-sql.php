@@ -119,7 +119,7 @@ $table->setPrimaryKey(array('id', 'clang'));
 
 $table = createTable($schema, 'sly_article_slice');
 
-intCol($table,    'id');
+serialCol($table, 'id');
 intCol($table,    'clang');
 stringCol($table, 'slot', 64);
 intCol($table,    'pos', true, 5);
