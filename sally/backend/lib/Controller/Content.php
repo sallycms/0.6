@@ -203,7 +203,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 
 		$extraparams = array();
 		if (sly_post('btn_update', 'string') || $slicedata['SAVE'] !== true) {
-			$extraparams['slicevalues'] = $slicedata;
+			$extraparams['slicevalues'] = $slicedata['VALUES'];
 			$extraparams['function']    = 'edit';
 		}
 
