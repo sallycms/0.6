@@ -9,7 +9,10 @@
  */
 
 class sly_Controller_Profile extends sly_Controller_Backend implements sly_Controller_Interface {
+	private $init;
+
 	protected function init() {
+		if ($this->init++) return;
 		$layout = sly_Core::getLayout();
 		$layout->pageHeader(t('my_profile'));
 	}
