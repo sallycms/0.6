@@ -21,7 +21,7 @@ function hg($cmd) {
 // Configuration
 
 $variants = array(
-	'starterkit' => array('tests' => true, 'addons' => array('image_resize', 'import_export', 'be_search', 'metainfo', 'developer_utils', 'global_settings', 'deployer', 'realurl2', 'wymeditor')),
+	'starterkit' => array('tests' => true, 'addons' => array('image_resize', 'import_export', 'be_search', 'metainfo', 'developer_utils', 'global_settings', 'deployer', 'realurl2', 'wymeditor', 'rbac')),
 	'lite'       => array('tests' => true, 'addons' => array()),
 	'minimal'    => array('tests' => false, 'addons' => array())
 );
