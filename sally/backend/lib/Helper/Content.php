@@ -36,7 +36,7 @@ class sly_Helper_Content {
 							<input type="hidden" name="pos" value="<?php echo $position ?>" />
 						</div>
 						<fieldset class="sly-form-col-1">
-							<legend><?php echo t('add_slice') ?>: <?php echo sly_html($moduleService->getTitle($module)) ?></legend>
+							<legend><?php echo t('add_slice') ?>: <?php echo sly_translate($moduleService->getTitle($module), true) ?></legend>
 							<div class="sly-form-wrapper">
 								<div class="sly-contentpage-slice-input">
 									<?php
@@ -94,7 +94,7 @@ class sly_Helper_Content {
 						<input type="hidden" name="pos" value="<?php echo $articleSlice->getPosition() ?>" />
 					</div>
 					<fieldset class="sly-form-col-1">
-						<legend><?php echo t('edit_slice') ?>: <?php echo sly_html($moduleTitle) ?></legend>
+						<legend><?php echo t('edit_slice') ?>: <?php echo sly_translate($moduleTitle, true) ?></legend>
 						<div class="sly-form-wrapper">
 							<div class="sly-contentpage-slice-input">
 								<?php

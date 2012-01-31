@@ -24,7 +24,7 @@ $service  = sly_Service_Factory::getArticleTypeService();
 $type     = $article->getType();
 
 if ($type) {
-	if ($service->exists($type)) $type = $service->getTitle($type);
+	if ($service->exists($type)) $type = sly_translate($service->getTitle($type));
 	else $type = '('.$type.')';
 }
 else {

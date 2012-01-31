@@ -18,7 +18,7 @@ if (!$service->exists($module)) {
 	$moduleName = $module;
 }
 else {
-	$moduleName = $service->get($module, 'title', '');
+	$moduleName = $service->getTitle($module);
 
 	if ($user->isAdmin() || $user->hasRight('module', 'edit', $module)) {
 		$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;function=edit').'" class="sly-edit">'.t('edit').'</a>';
@@ -50,7 +50,7 @@ $listElements = $dispatcher->filter('ART_SLICE_MENU', $listElements, array(
 
 ?>
 <div class="sly-slice-toolbar">
-	<h3><?php echo sly_html($moduleName) ?></h3>
+	<h3><?php echo sly_translate($moduleName, true) ?></h3>
 	<div class="sly-slice-actions">
 		<ul>
 			<?php foreach ($listElements as $listElement): ?>

@@ -46,6 +46,9 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			}
 		}
 
+		foreach ($modules as $idx => $module)    $modules[$idx]      = sly_translate($module);
+		foreach ($articletypes as $idx => $type) $articletypes[$idx] = sly_translate($type);
+
 		uasort($articletypes, 'strnatcasecmp');
 		uasort($modules, 'strnatcasecmp');
 
