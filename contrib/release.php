@@ -87,9 +87,9 @@ foreach ($variants as $name => $settings) {
 	// Create empty data dir
 
 	chdir($target);
-	@mkdir('sally/data');
+	@mkdir('data');
 	@mkdir('sally/addons');
-	file_put_contents('sally/data/empty', 'This directory is intentionally left blank. Please make sure it\'s chmod to 0777.');
+	file_put_contents('data/empty', 'This directory is intentionally left blank. Please make sure it\'s chmod to 0777.');
 
 	// Put addOns in the archive
 
