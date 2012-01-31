@@ -69,7 +69,7 @@ class sly_Layout_Navigation_Backend {
 				$link = '';
 				$page = $addonService->getProperty($addon, 'page', '');
 
-				if (!empty($page) && ($isAdmin || $user->hasRight('pages', $perm))) {
+				if (!empty($page) && ($isAdmin || $user->hasRight('pages', $page))) {
 					$name  = $addonService->getProperty($addon, 'name', '');
 					$popup = $addonService->getProperty($addon, 'popup', false);
 
