@@ -17,7 +17,11 @@ class sly_Controller_Addon extends sly_Controller_Backend implements sly_Control
 	protected $info    = '';
 	protected $warning = '';
 
+	private $init = 0;
+
 	protected function init() {
+		if ($this->init++) return;
+
 		if (!sly_get('json', 'boolean')) {
 			$layout = sly_Core::getLayout();
 			$layout->pageHeader(t('addons'));
@@ -107,7 +111,9 @@ class sly_Controller_Addon extends sly_Controller_Backend implements sly_Control
 		$this->warning = $service->$method($component);
 
 		if ($this->warning === true || $this->warning === 1) {
-			$this->info    = t('component_'.$i18n);
+			$name = is_array($component) ? $component[0].'/'.$component[1] : $component;
+
+			$this->info    = t('component_'.$i18n, $name);
 			$this->warning = '';
 		}
 	}
