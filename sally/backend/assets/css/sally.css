@@ -194,7 +194,7 @@ caption, legend {
 }
 
 .sly-area-content {
-	line-height: 1.6;
+	line-height: 1.5;
 	padding: 10px;
 	+border-bottom-radius($brd_rad);
 	background-color: #fff;
