@@ -66,7 +66,7 @@ class sly_App_Backend extends sly_App_Base {
 			// and to help ajax requests that were fired a long time after the last
 			// interaction with the backend to easily detect the expired session
 
-			if ($this->controller !== 'login') {
+			if ($this->getControllerParam('login') !== 'login') {
 				$response->setStatusCode(403);
 			}
 
