@@ -211,7 +211,7 @@ startpage: Startseite
 plase_enter_a_name: Bitte geben Sie einen Namen an!
 configuration_updated: Systemkonfiguration wurde aktualisiert.
 delete_cache: Cache löschen
-delete_cache_description: 'Templates und Sprachdateien werden erstellt, Artikelcache wird gelöscht. Sobald ein Artikel im Frontend aufgerufen wird, wird der Cache des/der entsprechenden Artikels/Kategorie wieder erstellt.'
+delete_cache_description: 'Mit dieser Funktion können Sie den Zwischenspeicher leeren, in dem häufig benötigte Daten abgelegt werden. Der Cache wird automatisch während der nächsten Aufrufe Ihrer Website neu aufgebaut.'
 delete_cache_message: Der Cache wurde gelöscht.
 features: Features
 settings: Einstellungen
