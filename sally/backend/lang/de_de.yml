@@ -99,6 +99,9 @@ username: Benutzername
 password: Passwort
 new_password: Neues Passwort
 
+media: Medien
+medium: Medium
+
 logged_out: nicht angemeldet
 logged_in_as: Angemeldet als
 
@@ -155,6 +158,7 @@ template_has_no_slots: In diesem Artikel können keine Inhalte eingepflegt werde
 no_modules_allowed: In diesem Slot können keine Inhalte eingepflegt werden.
 category_moved: Kategorie wurde verschoben.
 articletype: Artikeltyp
+articletypes: Artikeltypen
 change_articletype: Artikeltyp ändern
 edit_contents: Inhalte bearbeiten
 
