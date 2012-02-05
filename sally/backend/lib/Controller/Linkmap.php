@@ -168,24 +168,28 @@ class sly_Controller_Linkmap extends sly_Controller_Backend implements sly_Contr
 		$ul = '';
 
 		if (is_array($children)) {
-			$li  = '';
-			$len = count($children);
-
 			foreach ($children as $idx => $cat) {
 				if (!($cat instanceof sly_Model_Category)) {
 					$cat = sly_Util_Category::findById($cat);
 				}
 
+				if (!empty($this->categories) && !in_array($cat->getId(), $this->forced)) {
+					unset($children[$idx]);
+					continue;
+				}
+
+				$children[$idx] = $cat;
+			}
+
+			$children = array_values($children);
+			$len      = count($children);
+			$li       = '';
+
+			foreach ($children as $idx => $cat) {
 				$cat_children = $cat->getChildren();
 				$cat_id       = $cat->getId();
 				$classes      = array('lvl-'.$level);
 				$sub_li       = '';
-
-				if (!empty($this->categories) && !in_array($cat_id, $this->forced)) {
-					continue;
-				}
-
-				$classes[] = empty($cat_children) ? 'empty' : 'children';
 
 				if ($idx === 0) {
 					$classes[] = 'first';
@@ -203,6 +207,13 @@ class sly_Controller_Linkmap extends sly_Controller_Backend implements sly_Contr
 						$hasForcedChildren = true;
 						break;
 					}
+				}
+
+				if ($hasForcedChildren) {
+					$classes[] = 'children';
+				}
+				else {
+					$classes[] = 'empty';
 				}
 
 				if (in_array($cat_id, $this->tree) || ($hasForcedChildren && !$isVisitable)) {
