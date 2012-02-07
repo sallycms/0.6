@@ -47,10 +47,14 @@ select:disabled {
 
 .sly-form-text,
 .sly-form-number,
-.sly-form-password,
-span.sly-form-read {
+.sly-form-password {
 	height: 17px;
 	padding: 1px 2px;
+}
+
+.sly-form-read {
+	display: inline-block;
+	line-height: 21px;
 }
 
 .sly-form-file {
@@ -99,16 +103,8 @@ a.sly-button {
 }
 
 .sly-form {
-	span.sly-form-read,
 	.sly-form-helptext {
 		display: block;
-	}
-
-	.sly-form-read {
-		line-height: 21px;
-	}
-
-	.sly-form-helptext {
 		float: left;
 		margin-left: 145px;
 		margin-top: 5px;
