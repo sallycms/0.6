@@ -142,7 +142,7 @@ a.sly-button {
 	.sly-form-text,
 	.sly-form-number,
 	.sly-form-password,
-	span.sly-form-read {
+	.sly-form-read {
 		width: 456px;
 	}
 
@@ -222,7 +222,7 @@ a.sly-button {
 	}
 
 	.sly-form-col-2 {
-		.sly-form-text, .sly-form-password, select, textarea {
+		.sly-form-text, .sly-form-password, .sly-form-number, select, textarea, .sly-form-read {
 			width: 200px;
 		}
 	}
