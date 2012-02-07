@@ -77,6 +77,7 @@ end_sorting: End sorting mode
 
 redirect_previous_page: 'You are being redirected to your <a href="{0}">previous page</a>.'
 redirect_startpage: 'You are being redirected to your <a href="{0}">homepage</a>.'
+unknown_controller: 'Unknown controller {0}'
 unknown_page: Unknown Page
 unknown_action: 'Method {0} in {1} not found!'
 page_not_allowed: 'Access to {0} in {1} not allowed!'
