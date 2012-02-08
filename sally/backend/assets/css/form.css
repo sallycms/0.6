@@ -5,6 +5,7 @@ input[type=datetime],
 input[type=datetime-local],
 input[type=number],
 input[type=range],
+input[type=email],
 textarea,
 select {
 	font-size: 100%;
@@ -21,6 +22,7 @@ input[type=password],
 input[type=submit],
 input[type=reset],
 input[type=button],
+input[type=email],
 textarea,
 select option {
 	&:disabled {
@@ -205,6 +207,7 @@ a.sly-button {
 
 	input[type=text],
 	input[type=password],
+	input[type=email],
 	span.rex-form-read{
 		padding: 1px 2px;
 	}
