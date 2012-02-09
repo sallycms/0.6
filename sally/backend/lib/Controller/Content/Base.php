@@ -15,12 +15,16 @@ abstract class sly_Controller_Content_Base extends sly_Controller_Backend implem
 
 	protected function init() {
 		$clang = sly_Core::getCurrentClang();
-		$this->article = sly_Util_Article::findById(sly_request('article_id', 'int'), $clang);
+		$id    = sly_request('article_id', 'int');
+
+		$this->article = sly_Util_Article::findById($id, $clang);
 
 		if (is_null($this->article)) {
 			sly_Core::getLayout()->pageHeader(t('content'));
 			throw new sly_Exception(t('no_articles_available'));
 		}
+
+		sly_Core::setCurrentArticleId($id);
 	}
 
 	protected function renderLanguageBar() {
