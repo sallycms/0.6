@@ -77,16 +77,16 @@ ul.sly-setup-language {
 	th { font-weight: bold; }
 	td { border-top: 1px dotted #ACA9A9; }
 
-	td.sly-status, td.sly-recommended {
-		width: 110px;
+	td.sly-col-status, td.sly-col-recommended, td.sly-col-required {
+		white-space: pre;
 		text-align: center;
 	}
 
-	td.sly-status { color: white; }
+	td.sly-col-status { color: white; }
 
-	.ok      .sly-status { background-color: green;  }
-	.warning .sly-status { background-color: orange; }
-	.failed  .sly-status { background-color: red;    }
+	.ok      .sly-col-status { background-color: green;  }
+	.warning .sly-col-status { background-color: orange; }
+	.failed  .sly-col-status { background-color: red;    }
 }
 
 /*	Formulare */
