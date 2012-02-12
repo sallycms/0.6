@@ -59,7 +59,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 		$this->init('save');
 
 		if (!empty($_POST['delete'])) {
-			return $this->delete();
+			return $this->deleteAction();
 		}
 
 		return $this->updateAction();
@@ -77,7 +77,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 
 		if (!$medium || !$this->canAccessFile($medium) || !$this->canAccessCategory($target)) {
 			$this->warning = t('you_have_no_access_to_this_medium');
-			return $this->index();
+			return $this->indexAction();
 		}
 
 		// update our file
@@ -125,7 +125,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 
 		if (!$media || !$this->canAccessFile($media)) {
 			$this->warning = t('no_permission');
-			return $this->index();
+			return $this->indexAction();
 		}
 
 		$this->deleteMedia($media);

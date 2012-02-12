@@ -138,7 +138,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend implements sly_Con
 		}
 
 		$db     = sly_DB_Persistence::getInstance();
-		$prefix = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+		$prefix = sly_Core::getTablePrefix();
 		$query  = 'SELECT f.id FROM '.$prefix.'file f LEFT JOIN '.$prefix.'file_category c ON f.category_id = c.id WHERE '.$where.' ORDER BY f.updatedate DESC';
 		$files  = array();
 
@@ -361,13 +361,11 @@ class sly_Controller_Mediapool extends sly_Controller_Backend implements sly_Con
 	protected function isInUse(sly_Model_Medium $medium) {
 		$sql      = sly_DB_Persistence::getInstance();
 		$filename = addslashes($medium->getFilename());
-		$prefix   = sly_Core::config()->get('DATABASE/TABLE_PREFIX');
+		$prefix   = sly_Core::getTablePrefix();
 		$query    =
 			'SELECT s.article_id, s.clang FROM '.$prefix.'slice_value sv, '.$prefix.'article_slice s, '.$prefix.'article a '.
-			'WHERE sv.slice_id = s.slice_id AND a.id = s.article_id AND a.clang = s.clang AND ('.
-			'(sv.type = "'.rex_var_media::MEDIALIST.'" AND (value LIKE "'.$filename.',%" OR value LIKE "%,'.$filename.',%" OR value LIKE "%,'.$filename.'")) OR '.
-			'(sv.type <> "'.rex_var_media::MEDIALIST.'" AND value LIKE "%'.$filename.'%")'.
-			') GROUP BY s.article_id, s.clang';
+			'WHERE sv.slice_id = s.slice_id AND a.id = s.article_id AND a.clang = s.clang '.
+			'AND value LIKE "%'.$filename.'%" GROUP BY s.article_id, s.clang';
 
 		$res    = array();
 		$usages = array();
