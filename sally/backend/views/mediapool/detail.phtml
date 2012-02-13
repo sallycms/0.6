@@ -111,7 +111,11 @@ if ($this->canAccessFile($medium)) {
 
 	// extensions
 
-	$form = sly_Core::dispatcher()->filter('SLY_MEDIA_FORM_EDIT', $form, array('file_id' => $fileID, 'media' => $medium));
+	$form = sly_Core::dispatcher()->filter('SLY_MEDIA_FORM_EDIT', $form, array(
+		'file_id' => $fileID,
+		'medium'  => $medium,
+		'media'   => $medium /* BC compat */
+	));
 
 	// setup buttons
 
