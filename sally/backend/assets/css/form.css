@@ -105,7 +105,6 @@ a.sly-button {
 .sly-form {
 	.sly-form-helptext {
 		display: block;
-		float: left;
 		margin-left: 145px;
 		margin-top: 5px;
 		color: #777777;
