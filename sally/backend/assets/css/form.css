@@ -5,6 +5,7 @@
 .sly-form-datetime-local,
 .sly-form-number,
 .sly-form-range,
+.sly-form-email,
 textarea,
 select {
 	font-size: 100%;
@@ -21,6 +22,7 @@ select {
 .sly-form-submit,
 .sly-form-reset,
 .sly-form-button,
+.sly-form-email,
 textarea,
 select option {
 	&:disabled {
