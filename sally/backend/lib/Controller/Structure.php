@@ -31,7 +31,7 @@ class sly_Controller_Structure extends sly_Controller_Backend implements sly_Con
 		self::$viewPath = 'structure/';
 
 		$this->action     = $action;
-		$this->categoryId = sly_request('category_id', 'int');
+		$this->categoryId = sly_request('category_id', 'int', 0);
 		$this->clangId    = sly_Core::getCurrentClang();
 		$this->artService = sly_Service_Factory::getArticleService();
 		$this->catService = sly_Service_Factory::getCategoryService();
@@ -94,7 +94,7 @@ class sly_Controller_Structure extends sly_Controller_Backend implements sly_Con
 	public function editstatuscategoryAction() {
 		if (!$this->init('editstatuscategory')) return;
 
-		$editId = sly_get('edit_id', 'int');
+		$editId = sly_get('edit_id', 'int', 0);
 
 		if ($editId) {
 			try {
@@ -115,7 +115,7 @@ class sly_Controller_Structure extends sly_Controller_Backend implements sly_Con
 	public function editstatusarticleAction() {
 		if (!$this->init('editstatusarticle')) return;
 
-		$editId = sly_get('edit_id', 'int');
+		$editId = sly_get('edit_id', 'int', 0);
 
 		if ($editId) {
 			try {
@@ -136,7 +136,7 @@ class sly_Controller_Structure extends sly_Controller_Backend implements sly_Con
 	public function deletecategoryAction() {
 		if (!$this->init('deletecategory')) return;
 
-		$editId = sly_get('edit_id', 'int');
+		$editId = sly_get('edit_id', 'int', 0);
 
 		if ($editId) {
 			try {
@@ -157,7 +157,7 @@ class sly_Controller_Structure extends sly_Controller_Backend implements sly_Con
 	public function deletearticleAction() {
 		if (!$this->init('deletearticle')) return;
 
-		$editId = sly_get('edit_id', 'int');
+		$editId = sly_get('edit_id', 'int', 0);
 
 		if ($editId) {
 			try {
@@ -180,7 +180,7 @@ class sly_Controller_Structure extends sly_Controller_Backend implements sly_Con
 
 		if (sly_post('do_add_category', 'boolean')) {
 			$name     = sly_post('category_name',     'string');
-			$position = sly_post('category_position', 'int');
+			$position = sly_post('category_position', 'int', 0);
 
 			try {
 				$this->catService->add($this->categoryId, $name, 0, $position);
@@ -203,7 +203,7 @@ class sly_Controller_Structure extends sly_Controller_Backend implements sly_Con
 
 		if (sly_post('do_add_article', 'boolean')) {
 			$name     = sly_post('article_name',     'string');
-			$position = sly_post('article_position', 'integer');
+			$position = sly_post('article_position', 'int', 0);
 
 			try {
 				$this->artService->add($this->categoryId, $name, 0, $position);
