@@ -16,12 +16,14 @@ class sly_Layout_Navigation_Backend {
 	private $currentGroup = null;
 
 	public function __construct() {
+		$this->addGroup('system', t('base_navigation'));
+		$this->addGroup('addon', t('addons'));
+	}
+
+	public function init() {
 		$user = sly_Util_User::getCurrentUser();
 
-		if (!is_null($user)) {
-			$this->addGroup('system', t('base_navigation'));
-			$this->addGroup('addon', t('addons'));
-
+		if ($user !== null) {
 			$isAdmin = $user->isAdmin();
 
 			// Core-Seiten initialisieren

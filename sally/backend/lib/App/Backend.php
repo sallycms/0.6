@@ -43,6 +43,10 @@ class sly_App_Backend extends sly_App_Base {
 		// make sure our layout is used later on
 		sly_Core::setLayout(new sly_Layout_Backend());
 
+		// be the first to init the layout later on, after the possibly available
+		// auth provider has been setup by external addOns / frontend code.
+		sly_Core::dispatcher()->register('ADDONS_INCLUDED', array($this, 'initNavigation'));
+
 		// instantiate asset service before addOns are loaded to make sure
 		// the Scaffold CSS processing is first in the line for CSS files
 		sly_Service_Factory::getAssetService();
@@ -233,5 +237,13 @@ class sly_App_Backend extends sly_App_Base {
 
 		// forward to the error page
 		return new sly_Response_Forward($controller, 'index');
+	}
+
+	/**
+	 * Event handler
+	 */
+	public function initNavigation(array $params) {
+		$layout = sly_Core::getLayout();
+		$layout->getNavigation()->init();
 	}
 }
