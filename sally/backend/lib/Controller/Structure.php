@@ -318,7 +318,7 @@ class sly_Controller_Structure extends sly_Controller_Backend implements sly_Con
 	 */
 	protected function canPublishCategory($categoryId) {
 		$user = sly_Util_User::getCurrentUser();
-		return $user->isAdmin() || $user->hasRight('article', 'publish', $categoryId);
+		return $user->isAdmin() || $user->hasRight('article', 'publish', 0) || $user->hasRight('article', 'publish', $categoryId);
 	}
 
 	/**

@@ -184,7 +184,7 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 	protected function canMoveArticle() {
 		if ($this->article->isStartArticle()) return false;
 		$user = sly_Util_User::getCurrentUser();
-		return $user->isAdmin() || $user->hasRight('article', 'move', $this->article->getId());
+		return $user->isAdmin() || $user->hasRight('article', 'move', 0) || $user->hasRight('article', 'move', $this->article->getId());
 	}
 
 	/**
