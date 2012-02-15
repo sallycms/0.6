@@ -258,7 +258,7 @@ class sly_Controller_Mediapool extends sly_Controller_Backend implements sly_Con
 			}
 			else {
 				$tmp   = array();
-				$tmp[] = t('file_delete_error_1', $filename).'. '.t('file_delete_error_2').'<br />';
+				$tmp[] = t('file_delete_error_1', $filename).' '.t('file_delete_error_2').'<br />';
 				$tmp[] = '<ul>';
 
 				foreach ($usages as $usage) {

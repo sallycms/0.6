@@ -1,19 +1,35 @@
 <?php
+/*
+ * Copyright (c) 2012, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
 
-foreach (array('warn', 'info') as $type) {
-	if (empty($this->$type)) continue;
-
-	if (is_array($this->$type)) {
-		if (count($this->$type) > 1) {
-			$message = implode('<br />', $this->$type);
+if (!empty($this->warning)) {
+	if (is_array($this->warning)) {
+		if (count($this->warning) > 1) {
+			$this->warning = implode('<br />', $this->warning);
 		}
 		else {
-			$message = reset($this->$type);
+			$this->warning = reset($this->warning);
 		}
 	}
-	elseif (is_string($this->$type)) {
-		$message = $this->$type;
+
+	print sly_Helper_Message::warn($this->warning);
+}
+
+if (!empty($this->info)) {
+	if (is_array($this->info)) {
+		if (count($this->info) > 1) {
+			$this->info = implode('<br />', $this->info);
+		}
+		else {
+			$this->info = reset($this->info);
+		}
 	}
 
-	print call_user_func_array(array('sly_Helper_Message', $type), array($message));
+	print sly_Helper_Message::info($this->info);
 }

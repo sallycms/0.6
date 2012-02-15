@@ -6,7 +6,7 @@ edit_medium: Medium bearbeiten
 file: Datei
 file_added: Datei wurde hinzugefügt.
 file_changed: Die Datei wurde ausgetauscht.
-file_delete_error_1: 'Die Datei {0} kann nicht gelöscht werden.'
+file_delete_error_1: 'Die Datei {0} kann nicht gelöscht werden!'
 file_delete_error_2: Sie wird derzeit von folgenden Artikeln verwendet:
 file_info: Dateiinfo
 file_not_found_maybe_too_big: Datei wurde nicht gefunden. Vielleicht war sie zu groß?
