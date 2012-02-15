@@ -17,6 +17,11 @@ select {
 	font-family: Calibri, Arial, Verdana, sans-serif;
 }
 
+/* make sure elements with placeholders don't look like already filled in fields */
+:-moz-placeholder {
+	color: #A9A9A9;
+}
+
 .sly-form-text,
 .sly-form-password,
 .sly-form-submit,
