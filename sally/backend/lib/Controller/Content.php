@@ -301,7 +301,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 	}
 
 	private function getRequestValues(array $slicedata) {
-		$slicedata['VALUES'] = sly_post('slicevalue', 'array');
+		$slicedata['VALUES'] = sly_post('slicevalue', 'array', array());
 		return $slicedata;
 	}
 
