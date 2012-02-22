@@ -214,6 +214,7 @@
 	border: 0;
 	+border-bottom-radius(4px);
 	background-color: $md_grey;
+	padding: 7px 10px;
 
 	input {
 		margin-bottom: 0;
