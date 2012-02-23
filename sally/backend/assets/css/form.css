@@ -14,7 +14,7 @@ select {
 	padding: 0;
 	vertical-align: baseline;
 	color: $drk_grey;
-	font-family: Calibri, Arial, Verdana, sans-serif;
+	font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
 }
 
 /* make sure elements with placeholders don't look like already filled in fields */

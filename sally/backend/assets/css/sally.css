@@ -2,7 +2,7 @@
 +html5-reset;
 
 body {
-	font-family: Calibri, Verdana, Arial, sans-serif;
+	font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
 	color: $drk_grey;
 	font-size: 14px;
 	line-height: 18px;
