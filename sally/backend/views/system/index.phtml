@@ -31,6 +31,10 @@ catch (Exception $e) {
 	// pass...
 }
 
+foreach ($types as $key => $name) {
+	$types[$key] = sly_translate($name);
+}
+
 $backendLocale   = new sly_Form_Select_DropDown('backend_locale', t('backend_locale'), sly_Core::getDefaultLocale(), $locales);
 $defaultType     = new sly_Form_Select_DropDown('default_type', t('default_articletype'), sly_Core::getDefaultArticleType(), $types);
 $cachingStrategy = new sly_Form_Select_DropDown('caching_strategy', t('caching_strategy'), sly_Cache::getStrategy(), sly_Cache::getAvailableCacheImpls());
