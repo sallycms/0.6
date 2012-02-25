@@ -247,6 +247,7 @@ addon: AddOn
 install: install
 install_including_requirements: install incl. requirements
 activate_including_requirements: activate incl. requirements
+reinstall: re-install
 uninstall: uninstall
 deactivate: deactivate
 activate: activate

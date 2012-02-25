@@ -753,7 +753,7 @@ var sly = {};
 					if (!stati.hasOwnProperty(key)) continue;
 					var status = stati[key], comp = $('.component[data-key="' + key + '"]');
 					comp.attr('class', status['classes'] + ' component');
-					$('.depsinfo', comp).html(status.deps);
+					$('.deps', comp).html(status.deps);
 				}
 			};
 

@@ -31,14 +31,6 @@
 		text-shadow: 1px 1px 0px rgba(255,255,255,.8);
 	}
 
-	.name span {
-		font-size: 11px;
-		display: block;
-		width: 330px;
-		overflow: hidden;
-		height: 18px;
-	}
-
 	.name { float: left; }
 
 	.plugins {
@@ -46,13 +38,13 @@
 
 		h2 {
 			margin-bottom: 0;
-			font-size: 1.2em;
-			line-height: 1.1em;
+			font-size: 17px;
+			line-height: 20px;
 		}
 
 		.buttons {
-			height: 18px;
-			line-height: 18px;
+			height: 20px;
+			line-height: 20px;
 		}
 	}
 
@@ -77,9 +69,19 @@
 
 	.depsinfo {
 		clear: right;
+		float: none;
 		font-size: 11px;
 		height: 18px;
 		line-height: 18px;
+	}
+
+	.version {
+		float: left;
+		overflow: hidden;
+	}
+
+	.deps {
+		float: right;
 	}
 
 	/* status map */
@@ -102,11 +104,16 @@
 		display: none;
 	}
 
+	.buttons.depsinfo > span {
+		display: inline;
+	}
+
 	.u0.c1           > .details .unusable     { display: inline; }
 	.u0.c0           > .details .incompatible { display: inline; }
 	.u1.c1.i0.ro1    > .details .install      { display: inline; }
 	.u1.c1.i0.ro0    > .details .fullinstall  { display: inline; }
 	.u1.c1.i1.a0.ro0 > .details .fullactivate { display: inline; }
+	.i1              > .details .reinstall    { display: inline; }
 	.i1.d0           > .details .uninstall    { display: inline; }
 	.i1.a0.ro1       > .details .activate     { display: inline; }
 	.i1.a1.d0        > .details .deactivate   { display: inline; }

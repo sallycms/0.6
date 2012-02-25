@@ -21,20 +21,20 @@ if (!empty($info['author'])) {
 ?>
 <li class="name"><?php
 	print '<h2>'.sly_html($name).'</h2>';
-	if (!empty($subline)) print '<span>('.implode(', ', $subline).')</span>';
 ?></li>
 <li class="buttons reinit">
 	<span class="reinit"><a class="sly-button" href="<?php echo $base ?>reinit"><?php echo t('reinit_assets') ?></a></span>
 </li>
-<li class="buttons uninstaller">
-	<span class="uninstall"><a class="sly-button" href="<?php echo $base ?>uninstall"><?php echo t('uninstall') ?></a></span>
-	<span class="hasdeps"><del class="sly-button"><?php echo t('uninstall') ?></del></span>
-</li>
 <li class="buttons installer">
+	<span class="reinstall"><a class="sly-button" href="<?php echo $base ?>install"><?php echo t('reinstall') ?></a></span>
 	<span class="install"><a class="sly-button" href="<?php echo $base ?>install"><?php echo t('install') ?></a></span>
 	<span class="incompatible">(<?php echo t('component_incompatible_with_this_version') ?>)</span>
 	<span class="unusable">(<?php echo t('not_all_requirements_met') ?>)</span>
 	<?php if ($info['requirements']): ?><span class="fullinstall"><a class="sly-button" href="<?php echo $base ?>fullinstall"><?php echo t('install_including_requirements') ?></a></span><?php endif ?>
+</li>
+<li class="buttons uninstaller">
+	<span class="uninstall"><a class="sly-button" href="<?php echo $base ?>uninstall"><?php echo t('uninstall') ?></a></span>
+	<span class="hasdeps"><del class="sly-button"><?php echo t('uninstall') ?></del></span>
 </li>
 <li class="buttons enabler">
 	<span class="activate"><a class="sly-button" href="<?php echo $base ?>activate"><?php echo t('activate') ?></a></span>
@@ -42,4 +42,7 @@ if (!empty($info['author'])) {
 	<span class="hasdeps"><del class="sly-button"><?php echo t('deactivate') ?></del></span>
 	<?php if ($info['requirements']): ?><span class="fullactivate"><a class="sly-button" href="<?php echo $base ?>fullinstall"><?php echo t('activate_including_requirements') ?></a></span><?php endif ?>
 </li>
-<li class="buttons depsinfo"><?php echo $stati[$key]['deps'] ?></li>
+<li class="buttons depsinfo">
+	<?php if (!empty($subline)) print '<span class="version">('.implode(', ', $subline).')</span>'; ?>
+	<span class="deps"><?php echo $stati[$key]['deps'] ?></span>
+</li>
