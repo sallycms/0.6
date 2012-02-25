@@ -34,7 +34,7 @@ if (count($slots) < 2) return;
 		$params['slot'] = $tmpSlot;
 		$class          = (($this instanceof sly_Controller_Content) && $tmpSlot == $this->slot) ? ' class="sly-active"' : '';
 		$slotTitle      = sly_translate($templateService->getSlotTitle($templateName, $tmpSlot), true);
-		$listElements[] = '<a href="index.php?'.http_build_query($params).'"'.$class.'>'.$slotTitle.'</a>';
+		$listElements[] = '<a href="index.php?'.sly_Util_HTTP::queryString($params).'"'.$class.'>'.$slotTitle.'</a>';
 	}
 
 	$listElements = sly_Core::dispatcher()->filter('SLY_PAGE_CONTENT_SLOT_MENU', $listElements, array(
