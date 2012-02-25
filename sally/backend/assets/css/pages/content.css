@@ -194,7 +194,8 @@
 		}
 
 		legend {
-			display: none;
+			background: $md_grey;
+			+border-radius(0);
 		}
 
 		.sly-form-wrapper {
