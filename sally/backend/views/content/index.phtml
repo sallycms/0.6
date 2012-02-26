@@ -76,7 +76,7 @@ else {
 
 	for ($i = 0; $i <= count($articleSlices); $i++) {
 		try {
-			if ($pos == $i) {
+			if ($pos === $i) {
 				if (!empty($this->localInfo)) {
 					print sly_Helper_Message::info($this->localInfo);
 				}
@@ -85,8 +85,13 @@ else {
 				}
 			}
 
-			if ($function == 'add' && $pos == $i) {
-				sly_Helper_Content::printAddSliceForm($module, $pos, $article->getId(), $article->getClang(), $slot, isset($slicevalues) ? $slicevalues : array());
+			if ($function === 'add' && $pos === $i) {
+				if (!$this->checkPermission('addarticleslice', $module)) {
+					print sly_Helper_Message::warn(t('no_rights_to_this_module'));
+				}
+				else {
+					sly_Helper_Content::printAddSliceForm($module, $pos, $article->getId(), $article->getClang(), $slot, isset($slicevalues) ? $slicevalues : array());
+				}
 			}
 			else {
 				print $this->render('content/_add_slice_form.phtml', array('article' => $article, 'pos' => $i, 'slot' => $slot, 'modules' => $modules));
@@ -94,11 +99,16 @@ else {
 
 			if (isset($articleSlices[$i])) {
 				$artslice = $articleSlices[$i];
-				if ($function == 'edit' && $slice_id == $artslice->getId()) {
-					if (!isset($slicevalues)) {
-						$slicevalues = $artslice->getSlice()->getValues();
+				if ($function === 'edit' && $slice_id === $artslice->getId()) {
+					if (!$this->checkPermission('editarticleslice', $artslice->getModule())) {
+						print sly_Helper_Message::warn(t('no_rights_to_this_module'));
 					}
-					sly_Helper_Content::printEditSliceForm($artslice, $slicevalues);
+					else {
+						if (!isset($slicevalues)) {
+							$slicevalues = $artslice->getSlice()->getValues();
+						}
+						sly_Helper_Content::printEditSliceForm($artslice, $slicevalues);
+					}
 				}
 				else {
 					print $this->render('content/_slice_toolbar.phtml', array('articleSlice' => $artslice));
