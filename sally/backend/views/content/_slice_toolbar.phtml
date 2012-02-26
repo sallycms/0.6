@@ -16,6 +16,10 @@ $listElements = array();
 
 if (!$service->exists($module)) {
 	$moduleName = $module;
+
+	if ($user->isAdmin()) {
+		$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;pos='.$articleSlice->getPosition().'&amp;func=deleteArticleSlice').'" class="sly-delete">'.t('delete').'</a>';
+	}
 }
 else {
 	$moduleName = $service->getTitle($module);
