@@ -58,7 +58,7 @@ if (count($languages) > 1) {
 			}
 
 			$params['clang'] = $clangID;
-			print '<a'.$class.' href="index.php?'.http_build_query($params).'">'.$clangName.'</a>';
+			print '<a'.$class.' href="index.php?'.http_build_query($params, '', '&amp;').'">'.$clangName.'</a>';
 		}
 
 		print '</li>';
