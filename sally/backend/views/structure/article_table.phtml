@@ -23,7 +23,7 @@
 	}
 	$add_article = sly_Util_HTML::getSpriteLink($add_url, t('add_article'), 'article-add');
 
-	$table = new sly_Table();
+	$table = new sly_Table('sly-structure-articles');
 	$table->addColumn(new sly_Table_Column($add_article, '', '', array('class' => 'sly-col-icon sly-icon')));
 	$table->addColumn(new sly_Table_Column(t('article_name'), '', '', array('class' => 'sly-col-name')));
 	$table->addColumn(new sly_Table_Column(t('articletype'), '', '', array('class' => 'sly-col-arttype')));

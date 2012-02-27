@@ -23,7 +23,7 @@
 	}
 	$add_category = sly_Util_HTML::getSpriteLink($add_url, t('add_category'), 'category-add');
 
-	$table = new sly_Table();
+	$table = new sly_Table('sly-structure-categories');
 	$table->addColumn(new sly_Table_Column($add_category, '', '', array('class' => 'sly-col-icon sly-icon')));
 	$table->addColumn(new sly_Table_Column(t('category'), '', '', array('class' => 'sly-col-name')));
 
