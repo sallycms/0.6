@@ -47,22 +47,28 @@ $form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM_FIELDSET', $form, $par
 // copy content
 
 if ($this->canCopyContent()) {
-	$languages = sly_Util_Language::findAll();
+	$baseSelect = sly_Form_Helper::getLanguageSelect('clang_a', null, 'clang_a');
 
-	foreach ($languages as $id => $lang) {
-		$languages[$id] = $lang->getName();
+	if ($baseSelect->getValueCount() > 1) {
+		$baseSelect->setSize(1);
+
+		$langA = clone $baseSelect;
+		$langB = clone $baseSelect;
+
+		$langA->setLabel(t('from_language'));
+		$langB->setLabel(t('to_language'));
+
+		$langA->setAttribute('name', 'lang_a');
+		$langB->setAttribute('name', 'lang_b');
+
+		$langA->setSelected(sly_request('clang_a', 'int', null));
+		$langB->setSelected(sly_request('clang_b', 'int', null));
+
+		$form->beginFieldset(t('copy_content'), null, 2);
+		$form->addRow(array($langA, $langB));
+
+		sly_Helper_Content::metaFormAddButtonBar($form, t('copy_content'), 'copy_content');
 	}
-
-	$lang_a = new sly_Form_Select_DropDown('clang_a', t('from_language'), sly_request('clang_a', 'int', null), $languages, 'clang_a');
-	$lang_a->setSize(1);
-
-	$lang_b = new sly_Form_Select_DropDown('clang_b', t('to_language'), sly_request('clang_b', 'int', null), $languages, 'clang_b');
-	$lang_b->setSize(1);
-
-	$form->beginFieldset(t('copy_content'), null, 2);
-	$form->addRow(array($lang_a, $lang_b));
-
-	sly_Helper_Content::metaFormAddButtonBar($form, t('copy_content'), 'copy_content');
 }
 
 // move article
