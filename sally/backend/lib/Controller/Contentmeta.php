@@ -191,28 +191,28 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 	 * @return boolean
 	 */
 	protected function canConvertToStartArticle() {
-		return $this->canDoStuff('article2startpage[]');
+		return $this->canDoStuff('article2startpage');
 	}
 
 	/**
 	 * @return boolean
 	 */
 	protected function canCopyContent() {
-		return sly_Util_Language::isMultilingual() && $this->canDoStuff('copyContent[]');
+		return sly_Util_Language::isMultilingual() && $this->canDoStuff('copyContent');
 	}
 
 	/**
 	 * @return boolean
 	 */
 	protected function canCopyArticle() {
-		return $this->canDoStuff('copyArticle[]');
+		return $this->canDoStuff('copyArticle');
 	}
 
 	/**
 	 * @return boolean
 	 */
 	protected function canMoveCategory() {
-		return $this->canDoStuff('moveCategory[]', true);
+		return $this->canDoStuff('moveCategory', true);
 	}
 
 	private function canDoStuff($right, $categoryOnly = false, $requireEditing = true) {
@@ -224,6 +224,6 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 			return false;
 		}
 
-		return $user->isAdmin() || $user->hasRight($right);
+		return $user->isAdmin() || $user->hasRight('transitional', $right);
 	}
 }
