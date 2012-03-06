@@ -12,7 +12,7 @@ $module  = $articleSlice->getModule();
 $service = sly_Service_Factory::getModuleService();
 
 if (!$service->exists($module)) {
-	print sly_Helper_Message::warn(t('module_not_found'));
+	print sly_Helper_Message::warn(ht('module_not_found', $module));
 	return;
 }
 
