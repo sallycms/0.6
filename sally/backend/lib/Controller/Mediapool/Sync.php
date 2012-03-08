@@ -31,12 +31,8 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 		$diff     = $this->getFileDiff();
 		$cat      = $this->getCurrentCategory();
 
-		foreach ($selected as $file) {
-			$idx = array_search($file, $diff);
-			if ($idx === false) continue;
-
-			if ($this->syncMedium($idx, $cat, $title)) {
-				unset($diff[$idx]);
+		foreach ($selected as $hash) {
+			if (isset($diff[$hash]) && $this->syncMedium($diff[$hash], $cat, $title)) {
 				$this->info = t('files_synced');
 			}
 		}
@@ -49,7 +45,8 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 		if (!file_exists($absFile)) return false;
 
 		// get cleaned filename
-		$newName = SLY_MEDIAFOLDER.'/'.sly_Util_Medium::createFilename($filename, false);
+		$filename = sly_Util_Directory::fixWindowsDisplayFilename($filename);
+		$newName  = SLY_MEDIAFOLDER.'/'.sly_Util_Medium::createFilename($filename, false);
 
 		if ($newName !== $absFile) {
 			// move file to cleaned filename
@@ -90,9 +87,12 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 		$diff       = array_diff($filesystem, $database);
 		$res        = array();
 
-		// possibly broken encoded filename + utf8 filename
+		// Do not use the filename as the array's key to avoid problems
+		// when the filename contains broken characters.
+
 		foreach ($diff as $filename) {
-			$res[$filename] = sly_Util_Medium::correctEncoding($filename);
+			$hash = substr(md5($filename), 0, 12);
+			$res[$hash] = $filename;
 		}
 
 		return $res;

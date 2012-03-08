@@ -56,9 +56,8 @@ $diffCount = count($diffFiles);
 $label     = t('affected_files');
 $title     = $label.' ('.$diffCount.')';
 
-foreach($diffFiles as $key => $filename) {
-	unset($diffFiles[$key]);
-	$diffFiles[sly_Util_Medium::correctEncoding($key)] = $filename;
+foreach ($diffFiles as $hash => $filename) {
+	$diffFiles[$hash] = sly_Util_Directory::fixWindowsDisplayFilename($filename);
 }
 
 $form->beginFieldset($title);
