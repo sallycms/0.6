@@ -152,6 +152,10 @@ var sly = {};
 		setValue: function(identifier, title) {
 			this.valueInput.val(identifier);
 			this.nameInput.val(title);
+
+			// notify listeners
+			this.valueInput.change();
+
 			return true; // signalize the popup to close itself
 		},
 
@@ -257,7 +261,7 @@ var sly = {};
 
 		clear: function() {
 			this.list.find('option').remove();
-			this.input.val('');
+			this.input.val('').change();
 		},
 
 		addValue: function(identifier, title) {
@@ -318,7 +322,7 @@ var sly = {};
 		},
 
 		createList: function() {
-			this.input.val(this.getElements().join(','));
+			this.input.val(this.getElements().join(',')).change();
 		},
 
 		onOpen: function() {
