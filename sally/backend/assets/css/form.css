@@ -210,6 +210,22 @@ a.sly-button {
 		}
 	}
 
+	/* link or media widget */
+	&.required .fct-delete {
+		display: none;
+	}
+
+	/* linklist or medialist widget */
+	&.at-min .sly-icons .fct-delete {
+		background: transparent url(../file_del_disabled.png) 0 0 no-repeat;
+		cursor: default;
+	}
+
+	&.at-max .sly-icons {
+		.fct-add  { cursor: default; background: transparent url(../file_add_disabled.png) 0 0 no-repeat;  }
+		.fct-open { cursor: default; background: transparent url(../file_open_disabled.png) 0 0 no-repeat; }
+	}
+
 	&.sly-media input { width: 393px; }
 	&.sly-link input  { width: 413px; }
 }

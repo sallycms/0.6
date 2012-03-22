@@ -23,7 +23,11 @@
 	select         { width: 191px; }
 
 	.sly-widget.sly-link {
-		input { width: 144px; }
+		input { width: 164px; }
+
+		.sly-icons:last-child {
+			display: none;
+		}
 	}
 
 	.sly-button {

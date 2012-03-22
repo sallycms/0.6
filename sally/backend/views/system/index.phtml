@@ -90,12 +90,16 @@ $buttonBar = new sly_Form_ButtonBar(array(
 			$timezoneList   = array_combine($timezoneList, $timezoneList);
 			$timezoneSelect = new sly_Form_Select_DropDown('timezone', t('timezone'), sly_Core::getTimezone(), $timezoneList);
 			$projectName    = new sly_Form_Input_Text('projectname', t('project_name'), sly_Core::getProjectName());
+			$startArticle   = new sly_Form_Widget_Link('start_article', t('start_article'), sly_Core::getSiteStartArticleId());
+			$notFound       = new sly_Form_Widget_Link('notfound_article', t('not_found_article'), sly_Core::getNotFoundArticleId());
 
 			$projectName->setRequired();
+			$startArticle->setRequired();
+			$notFound->setRequired();
 
 			$form->addElement($projectName);
-			$form->addElement(new sly_Form_Widget_Link('start_article', t('start_article'), sly_Core::getSiteStartArticleId()));
-			$form->addElement(new sly_Form_Widget_Link('notfound_article', t('not_found_article'), sly_Core::getNotFoundArticleId()));
+			$form->addElement($startArticle);
+			$form->addElement($notFound);
 			$form->addElement($defaultClang);
 			$form->addElement($defaultType);
 			$form->addElement($frontendSync);

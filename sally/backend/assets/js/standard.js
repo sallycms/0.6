@@ -231,6 +231,8 @@ var sly = {};
 		this.element = $(elem);
 		this.input   = this.element.find('input[type=hidden]');
 		this.list    = this.element.find('select');
+		this.min     = this.element.data('min') || 0;
+		this.max     = this.element.data('max') || -1;
 
 		// register events
 		var icons = this.element.find('.sly-icons.move');
@@ -254,6 +256,10 @@ var sly = {};
 			return result;
 		},
 
+		getCount: function() {
+			return this.list.find('option').length;
+		},
+
 		getSelected: function() {
 			var selected = this.list.find('option:selected');
 			return selected.length ? selected.val() : null;
@@ -265,9 +271,25 @@ var sly = {};
 		},
 
 		addValue: function(identifier, title) {
+			var count = this.getCount(), max = this.max;
+
+			if (count === max) {
+				return true; // close the popup
+			}
+
 			this.list.append($('<option>').val(identifier).text(title));
 			this.createList();
-			return false; // signalize the popup to keep open
+
+			var full = (count+1) === max;
+
+			if (full) {
+				this.element.addClass('at-max');
+			}
+
+			this.element.toggleClass('at-min', (count+1) <= this.min);
+
+			// close if the maximum number of elements is reached
+			return full;
 		},
 
 		onDelete: function() {
@@ -276,6 +298,15 @@ var sly = {};
 			if (selected.length === 0) {
 				return false;
 			}
+
+			// only delete as many elements as we are allowed to
+			var possible = this.getCount() - this.min;
+
+			if (possible === 0) {
+				return false;
+			}
+
+			selected = selected.slice(0, possible);
 
 			// find the element to select
 			var toSelect = selected.next();
@@ -287,6 +318,9 @@ var sly = {};
 			// remove element and mark the next/prev one
 			selected.remove();
 			toSelect.prop('selected', true);
+
+			// update classes
+			this.element.removeClass('at-max').toggleClass('at-min', this.getCount() === this.min);
 
 			// re-create the <input>
 			this.createList();
@@ -347,6 +381,7 @@ var sly = {};
 	sly.inherit(sly.MedialistWidget, sly.AbstractListWidget);
 
 	sly.MedialistWidget.prototype.onOpen = function() {
+		if (this.getCount() === this.max) return false;
 		var cb = getCallbackName('slymedialistwidget');
 		sly.openMediapool('detail', this.getSelected(), cb, this.filetypes, this.categories);
 		win[cb] = $.proxy(this.addValue, this);
@@ -354,6 +389,7 @@ var sly = {};
 	};
 
 	sly.MedialistWidget.prototype.onAdd = function() {
+		if (this.getCount() === this.max) return false;
 		var cb = getCallbackName('slymedialistwidget');
 		sly.openMediapool('upload', '', cb, this.filetypes, this.categories);
 		win[cb] = $.proxy(this.addValue, this);
@@ -373,6 +409,7 @@ var sly = {};
 	sly.inherit(sly.LinklistWidget, sly.AbstractListWidget);
 
 	sly.LinklistWidget.prototype.onOpen = function() {
+		if (this.getCount() === this.max) return false;
 		var catID = this.element.data('catid'), cb = getCallbackName('slylinklistwidget');
 
 		sly.openLinkmap(catID, cb, this.articletypes, this.categories);
