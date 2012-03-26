@@ -92,8 +92,8 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 	}
 
 	private function copyContent() {
-		$clang_a = sly_post('clang_a', 'int');
-		$clang_b = sly_post('clang_b', 'int');
+		$clang_a = sly_post('clang_a', 'int', 0);
+		$clang_b = sly_post('clang_b', 'int', 0);
 		$user    = sly_Util_User::getCurrentUser();
 
 		if (!sly_Util_Language::hasPermissionOnLanguage($user, $clang_a)) {
@@ -123,7 +123,7 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 	}
 
 	private function moveArticle() {
-		$target = sly_post('category_id_new', 'int');
+		$target = sly_post('category_id_new', 'int', 0);
 
 		if ($this->canMoveArticle()) {
 			try {
@@ -142,7 +142,7 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 	}
 
 	private function copyArticle() {
-		$target = sly_post('category_copy_id_new', 'int');
+		$target = sly_post('category_copy_id_new', 'int', 0);
 
 		if ($this->canCopyArticle()) {
 			try {
@@ -160,7 +160,7 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 	}
 
 	private function moveCategory() {
-		$target = sly_post('category_id_new', 'int');
+		$target = sly_post('category_id_new', 'int', 0);
 
 		if ($this->canMoveCategory()) {
 			try {
