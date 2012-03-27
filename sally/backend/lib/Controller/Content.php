@@ -83,12 +83,12 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 
 			if ($action === 'addarticleslice') {
 				$module = $forceModule === null ? sly_request('module', 'string') : $forceModule;
-				return ($user->isAdmin() || $user->hasRight('module', 'add', $module));
+				return ($user->isAdmin() || $user->hasRight('module', 'add', sly_Authorisation_ModuleListProvider::ALL) || $user->hasRight('module', 'add', $module));
 			}
 
 			if ($action === 'editarticleslice') {
 				$module = $forceModule === null ? sly_request('module', 'string') : $forceModule;
-				return ($user->isAdmin() || $user->hasRight('module', 'edit', $module));
+				return ($user->isAdmin() || $user->hasRight('module', 'edit', sly_Authorisation_ModuleListProvider::ALL) || $user->hasRight('module', 'edit', $module));
 			}
 
 			return true;
