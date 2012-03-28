@@ -24,7 +24,7 @@ if (!$service->exists($module)) {
 else {
 	$moduleName = $service->getTitle($module);
 
-	if ($user->isAdmin() || $user->hasRight('module', 'edit', $module)) {
+	if ($user->isAdmin() || $user->hasRight('module', 'edit', sly_Authorisation_ModuleListProvider::ALL) || $user->hasRight('module', 'edit', $module)) {
 		$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;function=edit').'" class="sly-edit">'.t('edit').'</a>';
 		$listElements[] = '<a href="'.sprintf($sliceUrl, '&amp;pos='.$articleSlice->getPosition().'&amp;func=deleteArticleSlice').'" class="sly-delete">'.t('delete').'</a>';
 	}
