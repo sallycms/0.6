@@ -47,22 +47,31 @@ class sly_Controller_System extends sly_Controller_Backend implements sly_Contro
 		$cachingStrategy = sly_post('caching_strategy', 'string');
 		$timezone        = sly_post('timezone',         'string');
 
+		$keys = array(
+			'START_ARTICLE_ID', 'NOTFOUND_ARTICLE_ID', 'DEFAULT_CLANG_ID', 'DEFAULT_ARTICLE_TYPE',
+			'DEVELOPER_MODE', 'DEFAULT_LOCALE', 'PROJECTNAME', 'CACHING_STRATEGY', 'TIMEZONE'
+		);
+
 		// Änderungen speichern
 
 		$conf = sly_Core::config();
 		$this->warning = array();
 
+		foreach ($keys as $key) {
+			$originals[$key] = $conf->get($key);
+		}
+
 		if (sly_Util_Article::exists($startArticle)) {
 			$conf->set('START_ARTICLE_ID', $startArticle);
 		}
-		else {
+		elseif ($startArticle > 0) {
 			$this->warning[] = t('invalid_start_article_selected');
 		}
 
 		if (sly_Util_Article::exists($notFoundArticle)) {
 			$conf->set('NOTFOUND_ARTICLE_ID', $notFoundArticle);
 		}
-		else {
+		elseif ($notFoundArticle > 0) {
 			$this->warning[] = t('invalid_not_found_article_selected').'<br />';
 		}
 
@@ -101,7 +110,7 @@ class sly_Controller_System extends sly_Controller_Backend implements sly_Contro
 		$this->warning = implode("<br />\n", $this->warning);
 
 		// notify system
-		sly_Core::dispatcher()->notify('SLY_SETTINGS_UPDATED');
+		sly_Core::dispatcher()->notify('SLY_SETTINGS_UPDATED', null, compact('originals'));
 
 		$this->indexAction();
 	}
