@@ -95,6 +95,7 @@
 	d   has dependencies (is required)
 	r   has requirements
 	ro  requirements are OK (all required components are available)
+	u   usable (component exists, is compatible and has only usable requirements)
 
 	Append '0' to the letters above to get the 'false' class and 1 for the 'true' class.
 	*/
@@ -129,6 +130,13 @@
 
 	.sly-addon.i0 .sly-plugin.i0 {
 		display: none !important;
+	}
+
+	/* hide all controls if an addOn is not compatible and was forcefully disabled */
+	.i1.a0.c0, .i1.a0.ro0.u0 {
+		.reinit, .reinstall, .uninstall, .activate {
+			display: none !important;
+		}
 	}
 
 	/* color map */
