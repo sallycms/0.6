@@ -18,8 +18,15 @@ var sly = {};
 		this.url  = url;
 		this.obj  = window.open(url, name, 'width='+width+',height='+height+extra);
 
-		this.obj.moveTo(posx, posy);
-		this.obj.focus();
+		// Don't position the popup in Chrome 18.
+		//   bug details: http://code.google.com/p/chromium/issues/detail?id=114762
+		//   workaround:  http://code.google.com/p/chromium/issues/detail?id=115585
+		// Remove this once Chrome 18 is not used anymore (~ June 2012)
+
+		if (navigator.userAgent.indexOf('Chrome/18.') === -1) {
+			this.obj.moveTo(posx, posy);
+			this.obj.focus();
+		}
 
 		openPopups[name] = this;
 
