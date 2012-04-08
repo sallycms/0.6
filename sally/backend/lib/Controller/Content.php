@@ -87,8 +87,20 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			}
 
 			if ($action === 'editarticleslice') {
-				$module = $forceModule === null ? sly_request('module', 'string') : $forceModule;
-				return ($user->isAdmin() || $user->hasRight('module', 'edit', sly_Authorisation_ModuleListProvider::ALL) || $user->hasRight('module', 'edit', $module));
+				// skip the slice stuff if the user is admin
+				if ($user->isAdmin()) return true;
+
+				if ($forceModule === null) {
+					$sliceservice = sly_Service_Factory::getArticleSliceService();
+					$slice_id     = sly_request('slice_id', 'int', 0);
+					$slice        = $sliceservice->findById($slice_id);
+					$module       = $slice->getModule();
+				}
+				else {
+					$module = $forceModule;
+				}
+
+				return $user->hasRight('module', 'edit', sly_Authorisation_ModuleListProvider::ALL) || $user->hasRight('module', 'edit', $module);
 			}
 
 			return true;
