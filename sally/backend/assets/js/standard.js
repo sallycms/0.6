@@ -534,20 +534,6 @@ var sly = {};
 		});
 	};
 
-	var catsChecked = function() {
-		var c_checked = $('#userperm_cat_all').prop('checked');
-		var m_checked = $('#userperm_media_all').prop('checked');
-		var slider    = $('#sly-page-user .sly-form .sly-form-wrapper .sly-num7');
-
-		$('#userperm_cat').prop('disabled', c_checked);
-		$('#userperm_media').prop('disabled', m_checked);
-
-		if (c_checked && m_checked)
-			slider.slideUp('slow');
-		else
-			slider.slideDown('slow');
-	};
-
 	/////////////////////////////////////////////////////////////////////////////
 	// dom:loaded handler
 
