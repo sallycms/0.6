@@ -548,22 +548,6 @@ var sly = {};
 			slider.slideDown('slow');
 	};
 
-	var updateStartpageSelect = function() {
-		var isAdmin   = $('#is_admin').is(':checked');
-		var hasPerms  = $('#userperm_sprachen').val() ? true : false;
-		var list      = $('#userperm_startpage');
-		var structure = list.find('option[value=structure]');
-		var isStruct  = structure.is(':selected');
-
-		if (isAdmin || hasPerms) {
-			structure.prop('disabled', false);
-		}
-		else {
-			structure.prop('disabled', true);
-			if (isStruct) list.find('option[value=profile]').prop('selected', true);
-		}
-	};
-
 	/////////////////////////////////////////////////////////////////////////////
 	// dom:loaded handler
 
@@ -627,46 +611,7 @@ var sly = {};
 			return false;
 		});
 
-		// Benutzer-Formular
-
-		if ($('#sly-page-user .sly-form').length > 0) {
-			var wrapper = $('#sly-page-user .sly-form .sly-form-wrapper');
-			var sliders = wrapper.find('.sly-num6,.sly-num7');
-
-			$('#is_admin').change(function() {
-				if ($(this).is(':checked')) {
-					$('#userperm_module').prop('disabled', true);
-					sliders.slideUp('slow');
-				}
-				else {
-					$('#userperm_module').prop('disabled', false);
-					sliders.slideDown('slow');
-					catsChecked();
-				}
-			});
-
-			catsChecked();
-			$('#userperm_cat_all, #userperm_media_all').change(catsChecked);
-
-			// init behaviour
-
-			if ($('#is_admin').is(':checked')) {
-				$('#userperm_module').prop('disabled', true);
-				sliders.hide();
-			}
-
-			if ($('#userperm_cat_all').is(':checked') && $('#userperm_media_all').is(':checked')) {
-				wrapper.find('.sly-num7').hide();
-			}
-
-			// remove structure from list of possible startpages as long as the
-			// user neither is admin nor has any language permissions
-
-			updateStartpageSelect();
-			$('#is_admin, #userperm_sprachen').change(updateStartpageSelect);
-		}
-
-		// Formularframework
+		// form framework
 
 		$('.sly-form .sly-select-checkbox-list a').live('click', function() {
 			var rel   = $(this).attr('rel');
