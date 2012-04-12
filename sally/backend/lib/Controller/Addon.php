@@ -239,6 +239,10 @@ class sly_Controller_Addon extends sly_Controller_Backend implements sly_Control
 		$author       = $service->getSupportPageEx($component);
 		$usable       = $compatible ? $this->canBeUsed($component) : false;
 
+		if (is_array($component)) {
+			$requirements[] = $component[0];
+		}
+
 		foreach ($requirements as $req) {
 			if (is_array($req)) {
 				if (!$this->plugins->isAvailable($req)) $missing[] = $req;
@@ -292,6 +296,10 @@ class sly_Controller_Addon extends sly_Controller_Backend implements sly_Control
 		$service      = is_string($component) ? $this->addons : $this->plugins;
 		$idx          = array_search($component, $list);
 		$requirements = $service->getRequirements($component);
+
+		if (is_array($component) && !in_array($component[0], $requirements)) {
+			$requirements[] = $component[0];
+		}
 
 		if ($idx !== false) {
 			unset($list[$idx]);
