@@ -28,6 +28,13 @@ class sly_Controller_Structure extends sly_Controller_Backend implements sly_Con
 		if ($this->init) return true;
 		$this->init = true;
 
+		$user    = sly_Util_User::getCurrentUser();
+		$allowed = $user->getAllowedCLangs();
+		if (!empty($user) && !empty($allowed) && !isset($_REQUEST['clang']) && !in_array(sly_Core::getDefaultClangId(), $allowed)) {
+			$first = reset($allowed);
+			sly_Util_HTTP::redirect('index.php', array('page'=>'structure', 'clang'=>$first), '&', 302);
+		}
+
 		self::$viewPath = 'structure/';
 
 		$this->action     = $action;
