@@ -3,6 +3,7 @@
 @include 'navigation.css';
 @include 'table.css';
 @include 'form.css';
+@include 'chosen.css';
 
 @include 'pages/credits.css';
 @include 'pages/linkmap.css';

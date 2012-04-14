@@ -58,6 +58,9 @@ if ($this->canCopyContent()) {
 		$langA->setLabel(t('from_language'));
 		$langB->setLabel(t('to_language'));
 
+		$langA->setAttribute('id', 'clang_a');
+		$langB->setAttribute('id', 'clang_b');
+
 		$langA->setAttribute('name', 'clang_a');
 		$langB->setAttribute('name', 'clang_b');
 
