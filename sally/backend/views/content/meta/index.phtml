@@ -64,6 +64,8 @@ if ($this->canCopyContent()) {
 		$langA->setSelected(sly_request('clang_a', 'int', null));
 		$langB->setSelected(sly_request('clang_b', 'int', null));
 
+		$langB->setMultiple(true);
+
 		$form->beginFieldset(t('copy_content'), null, 2);
 		$form->addRow(array($langA, $langB));
 

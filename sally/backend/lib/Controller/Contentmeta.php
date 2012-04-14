@@ -92,34 +92,58 @@ class sly_Controller_Contentmeta extends sly_Controller_Content_Base {
 	}
 
 	private function copyContent() {
-		$clang_a = sly_post('clang_a', 'int', 0);
-		$clang_b = sly_post('clang_b', 'int', 0);
-		$user    = sly_Util_User::getCurrentUser();
+		$srcClang  = sly_post('clang_a', 'int', 0);
+		$dstClangs = array_unique(sly_postArray('clang_b', 'int'));
+		$user      = sly_Util_User::getCurrentUser();
+		$infos     = array();
+		$errs      = array();
+		$articleID = $this->article->getId();
 
-		if (!sly_Util_Language::hasPermissionOnLanguage($user, $clang_a)) {
-			$lang = sly_Util_Language::findById($clang_a);
+		if (empty($dstClangs)) {
+			throw new sly_Authorisation_Exception(t('no_language_selected'));
+		}
+
+		if (!sly_Util_Language::hasPermissionOnLanguage($user, $srcClang)) {
+			$lang = sly_Util_Language::findById($srcClang);
 			throw new sly_Authorisation_Exception(t('you_have_no_access_to_this_language', sly_translate($lang->getName())));
 		}
 
-		if (!sly_Util_Language::hasPermissionOnLanguage($user, $clang_b)) {
-			$lang = sly_Util_Language::findById($clang_b);
-			throw new sly_Authorisation_Exception(t('you_have_no_access_to_this_language', sly_translate($lang->getName())));
-		}
+		foreach ($dstClangs as $targetClang) {
+			if (!sly_Util_Language::hasPermissionOnLanguage($user, $targetClang)) {
+				$lang = sly_Util_Language::findById($targetClang);
+				$errs[$targetClang] = t('you_have_no_access_to_this_language', sly_translate($lang->getName()));
+				continue;
+			}
 
-		if ($this->canCopyContent($clang_a, $clang_b)) {
-			$article_id = $this->article->getId();
+			if (!$this->canCopyContent($srcClang, $targetClang)) {
+				$errs[$targetClang] = t('no_rights_to_this_function');
+				continue;
+			}
 
 			try {
-				sly_Service_Factory::getArticleService()->copyContent($article_id, $article_id, $clang_a, $clang_b);
-				$this->info = t('article_content_copied');
+				sly_Service_Factory::getArticleService()->copyContent($articleID, $articleID, $srcClang, $targetClang);
+				$infos[$targetClang] = t('article_content_copied');
 			}
 			catch (sly_Exception $e) {
-				$this->warning = t('cannot_copy_article_content').': '.$e->getMessage();
+				$errs[$targetClang] = t('cannot_copy_article_content').': '.$e->getMessage();
 			}
 		}
-		else {
-			$this->warning = t('no_rights_to_this_function');
+
+		// only prepend language names if there were more than one language
+		if (count($dstClangs) > 1) {
+			foreach ($infos as $clang => $msg) {
+				$lang = sly_Util_Language::findById($clang);
+				$infos[$clang] = sly_translate($lang->getName()).': '.$msg;
+			}
+
+			foreach ($errs as $clang => $msg) {
+				$lang = sly_Util_Language::findById($clang);
+				$errs[$clang] = sly_translate($lang->getName()).': '.$msg;
+			}
 		}
+
+		$this->info    = implode("<br />\n", $infos);
+		$this->warning = implode("<br />\n", $errs);
 	}
 
 	private function moveArticle() {

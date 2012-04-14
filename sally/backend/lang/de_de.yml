@@ -391,3 +391,4 @@ layout_has_not_been_set: Das Layout wurde noch nicht über ::setLayout() gesetzt
 media_categories: Medienkategorien
 move_slice: Slice verschieben
 transitional_rights: Vorübergehende Rechte
+no_language_selected: Es wurden keine Sprachen ausgewählt.
