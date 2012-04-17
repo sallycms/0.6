@@ -653,18 +653,20 @@ var sly = {};
 		// run Chosen, but transform manual indentation (aka prefixing values with '&nbsp;'s)
 		// into lvl-N classes, or else the quick filter function of Chosen will not work
 		// properly.
-		var options = $('select:not(.sly-no-chosen) option'), len = options.length, i = 0, depth, option;
+		if (typeof $.fn.chosen !== 'undefined') {
+			var options = $('select:not(.sly-no-chosen) option'), len = options.length, i = 0, depth, option;
 
-		for (; i < len; ++i) {
-			option = $(options[i]);
-			depth  = option.html().match(/^(&nbsp;)*/)[0].length / 6;
+			for (; i < len; ++i) {
+				option = $(options[i]);
+				depth  = option.html().match(/^(&nbsp;)*/)[0].length / 6;
 
-			if (depth > 0) {
-				option.addClass('sly-lvl-'+depth).html(option.html().substr(depth*6));
+				if (depth > 0) {
+					option.addClass('sly-lvl-'+depth).html(option.html().substr(depth*6));
+				}
 			}
-		}
 
-		$('.sly-form-select:not(.sly-no-chosen)').data('placeholder', 'Bitte auswählen').chosen();
+			$('.sly-form-select:not(.sly-no-chosen)').data('placeholder', 'Bitte auswählen').chosen();
+		}
 
 		// Mehrsprachige Formulare initialisieren
 
