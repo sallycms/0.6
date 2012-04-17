@@ -392,3 +392,6 @@ media_categories: Medienkategorien
 move_slice: Move slice
 transitional_rights: Transitional rights
 no_language_selected: No languages have been selected.
+sally_core_cache: 'SallyCMS cache (articles, contents)'
+sally_assetcache: Asset cache
+sally_develop_content: 'Synchronize templates & modules'

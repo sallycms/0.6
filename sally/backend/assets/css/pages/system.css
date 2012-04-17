@@ -8,6 +8,28 @@
 	}
 }
 
+#sly-form-system-caches {
+	min-height: 10px; /* compensate missing .button class on cache clear button */
+
+	p {
+		display: none;
+		padding-bottom: 10px;
+	}
+
+	.sly-select-group {
+		padding-left: 20px;
+	}
+
+	.sly-form-helptext {
+		margin-left: 20px;
+	}
+}
+
+#sly-system-toggle-cache {
+	margin-left: 15px;
+	color: $md_grey;
+}
+
 #sly-form-system-setup {
 	.sly-form-wrapper {
 		margin: 0;

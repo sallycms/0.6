@@ -30,8 +30,42 @@ class sly_Controller_System extends sly_Controller_Backend implements sly_Contro
 
 	public function clearcacheAction() {
 		$this->init();
-		$this->info = sly_Core::clearCache();
+
+		// do not call sly_Core::clearCache(), since we want to have fine-grained
+		// control over what caches get cleared
+
+		clearstatcache();
+
+		// clear loader cache
+		sly_Loader::clearCache();
+
+		// create bootcache
+		sly_Util_BootCache::recreate('frontend');
+		sly_Util_BootCache::recreate('backend');
+
+		// clear our own data caches
+		if ($this->isCacheSelected('sly_core')) {
+			sly_Core::cache()->flush('sly', true);
+		}
+
+		// sync develop files
+		if ($this->isCacheSelected('sly_develop')) {
+			sly_Service_Factory::getTemplateService()->refresh();
+			sly_Service_Factory::getModuleService()->refresh();
+		}
+
+		// clear asset cache
+		if ($this->isCacheSelected('sly_asset')) {
+			sly_Service_Factory::getAssetService()->clearCache();
+		}
+
+		$this->info = sly_Core::dispatcher()->filter('SLY_CACHE_CLEARED', t('delete_cache_message'), array('backend' => true));
 		$this->indexAction();
+	}
+
+	public function isCacheSelected($name) {
+		$caches = sly_postArray('caches', 'string', array());
+		return in_array($name, $caches);
 	}
 
 	public function updateAction() {

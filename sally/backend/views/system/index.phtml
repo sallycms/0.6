@@ -45,6 +45,15 @@ $buttonBar = new sly_Form_ButtonBar(array(
 	'submit' => new sly_Form_Input_Button('submit', 'sendit', t('update'))
 ));
 
+$caches = array(
+	'sly_core'    => t('sally_core_cache'),
+	'sly_asset'   => t('sally_assetcache'),
+	'sly_develop' => t('sally_develop_content'),
+);
+
+$caches = new sly_Form_Select_Checkbox('caches', '', array_keys($caches), $caches);
+$caches = sly_Core::dispatcher()->filter('SLY_SYSTEM_CACHES', $caches);
+
 ?>
 
 <div class="sly-area-col-2">
@@ -54,7 +63,19 @@ $buttonBar = new sly_Form_ButtonBar(array(
 		<div class="sly-area-content">
 			<h4><?php echo t('delete_cache') ?></h4>
 			<p><?php echo t('delete_cache_description') ?></p>
-			<p class="button"><a class="sly-button" href="index.php?page=system&amp;func=clearcache"><?php echo t('delete_cache') ?></a></p>
+
+			<form method="post" action="index.php">
+				<p>
+					<input type="hidden" name="page" value="system" />
+					<input type="hidden" name="func" value="clearcache" />
+					<input type="submit" class="sly-button" value="<?php echo t('delete_cache') ?>" />
+					<a href="#" id="sly-system-toggle-cache">(&hellip;)</a>
+				</p>
+
+				<div class="sly-form" id="sly-form-system-caches">
+					<p class="sly-form-col-a sly-form-select-row"><?php echo $caches->render(); ?></p>
+				</div>
+			</form>
 
 			<h4><?php echo t('setup') ?></h4>
 			<p><?php echo t('setup_text') ?></p>
