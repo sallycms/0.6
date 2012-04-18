@@ -361,10 +361,10 @@ move_bottom: an das Ende bewegen
 move_down: nach unten bewegen
 move_top: an den Anfang bewegen
 move_up: nach oben bewegen
-multiple_condition_handlers_found: Es wurden mehrere mögliche Condition-Handler gefunden. Verwende den erstbesten.
+condition_handlers_result_ambiguous: 'Mehr als eine Ressource nach Anwendung der Condition-Handler für "{0}" übrig: {1}'
+condition_handlers_empty_result: 'Durch Anwendung der Condition-Handler für "{0}" wurden alle möglichen Elemente entfernt.'
 name_contains_invalid_characters: Der interne Name enthält ungültige Zeichen.
 not_all_requirements_met: Es sind nicht alle Abhängigkeiten erfüllt.
-no_condition_handler_found: Es wurde kein Condition-Handler gefunden.
 no_password_given: Kein Passwort angegeben.
 no_permission: Keine Berechtigung.
 no_recipients_given: Es wurden keine Empfänger angegeben.
