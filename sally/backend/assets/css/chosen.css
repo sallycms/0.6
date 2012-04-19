@@ -18,6 +18,11 @@
 }
 /* @end */
 
+/* @sly Be-Search toolbar positioning */
+.sly-toolbar .sly-toolbar-content .chzn-container {
+	top: 2px;
+}
+
 /* @group Single Chosen */
 .chzn-container-single {
 	.chzn-single {
@@ -31,8 +36,8 @@
 		white-space: nowrap;
 		position: relative;
 		height: 17px;
-		line-height: 17px;
-		padding: 1px 0 1px 3px;
+		line-height: 16px;
+		padding: 2px 2px 0px 3px;
 		color: #4D4646;
 		text-decoration: none;
 
@@ -185,9 +190,9 @@
 
 /* @group Results */
 .chzn-container .chzn-results {
-	margin: 0 4px 4px 0;
+	margin: 0 0 4px 0 !important;
 	max-height: 240px;
-	padding: 0 0 0 4px;
+	padding: 0 4px;
 	position: relative;
 	overflow-x: hidden;
 	overflow-y: auto;
@@ -202,7 +207,7 @@
 	li {
 		display: none;
 		line-height: 14px;
-		padding: 4px 6px;
+		padding: 4px 0 4px 6px;
 		margin: 0;
 		list-style: none;
 	}
