@@ -18,11 +18,6 @@
 }
 /* @end */
 
-/* @sly Be-Search toolbar positioning */
-.sly-toolbar .sly-toolbar-content .chzn-container {
-	top: 2px;
-}
-
 /* @group Single Chosen */
 .chzn-container-single {
 	.chzn-single {
