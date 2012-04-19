@@ -55,8 +55,9 @@ select:disabled {
 .sly-form-text,
 .sly-form-number,
 .sly-form-password {
-	height: 17px;
-	padding: 1px 2px;
+	height: 19px;
+	line-height: 19px;
+	padding: 0 2px;
 }
 
 .sly-form-read {
