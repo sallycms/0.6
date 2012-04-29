@@ -11,6 +11,11 @@
 class sly_Helper_Modernizr {
 	private static $data = null;
 
+	public static function hasCapability($test) {
+		$info = self::getCapabilities();
+		return isset($info[$test]) && $info[$test] === true;
+	}
+
 	public static function getCapabilities() {
 		if (self::$data === null) {
 			$cookie = isset($_COOKIE['sly_modernizr']) ? $_COOKIE['sly_modernizr'] : 'false';
