@@ -17,12 +17,8 @@ $this->printHiddens('config', $form);
 
 // fields
 
-$timezoneList   = DateTimeZone::listIdentifiers();
-$timezoneList   = array_combine($timezoneList, $timezoneList);
-$timezoneSelect = new sly_Form_Select_DropDown('timezone', t('timezone'), $timezone, $timezoneList);
-
 $form->add(new sly_Form_Input_Text('projectname', t('project_name'), $projectName));
-$form->add($timezoneSelect);
+$form->add(sly_Form_Helper::getTimezoneSelect('timezone', $timezone));
 
 // button config
 
