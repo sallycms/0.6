@@ -455,30 +455,29 @@ var sly = {};
 	sly.setModernizrCookie = function() {
 		if (typeof Modernizr === 'undefined') return false;
 
-		var contents = [];
+		// Audio and video elements get squashed together and are stored as
+		// just true or false. We have to manually copy all elements to make
+		// them available inside of our cookie. Sigh.
+		var m = Modernizr, copy = JSON.parse(JSON.stringify(m)), key;
 
-		for (var group in Modernizr) {
-			if (Modernizr.hasOwnProperty(group)) {
-				var val = Modernizr[group];
-				group = '"' + group + '"';
+		copy.audio = {};
+		copy.video = {};
 
-				if (typeof val === 'object') {
-					var list = [];
-
-					for (var capability in val) {
-						list.push('"' + capability + '":' + (val[capability] ? 1 : 0));
-					}
-
-					contents.push(group + ':{' + list.join(',') + '}');
-				}
-				else {
-					contents.push(group + ':"' + val + '"');
-				}
-			}
+		for (key in m.audio) {
+			copy.audio[key] = m.audio[key];
 		}
 
-		contents = '{' + contents.join(',') + '}';
-		document.cookie = 'sly_modernizr='+escape(contents);
+		for (key in m.video) {
+			copy.video[key] = m.video[key];
+		}
+
+		// Keep the cookie small and remove all underscore properties.
+		copy._version       = undef;
+		copy._prefixes      = undef;
+		copy._domPrefixes   = undef;
+		copy._cssomPrefixes = undef;
+
+		document.cookie = 'sly_modernizr='+escape(JSON.stringify(copy));
 	};
 
 	sly.addDatepickerToggler = function(picker, value) {

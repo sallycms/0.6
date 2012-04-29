@@ -21,9 +21,10 @@ class sly_Layout_Backend extends sly_Layout_XHTML5 {
 		$this->addCSSFile('assets/css/import.css');
 
 		$this->addJavaScriptFile('assets/js/jquery.min.js');
+		$this->addJavaScriptFile('assets/js/json2.min.js');
 		$this->addJavaScriptFile('assets/js/jquery.chosen.min.js');
-		$this->addJavaScriptFile('assets/js/standard.min.js');
 		$this->addJavaScriptFile('assets/js/modernizr.min.js');
+		$this->addJavaScriptFile('assets/js/standard.min.js');
 
 		$this->setTitle(sly_Core::getProjectName().' - ');
 
