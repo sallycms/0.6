@@ -725,7 +725,7 @@ var sly = {};
 		$('#sly-system-toggle-cache').click(function() {
 			$('#sly-form-system-caches p').slideToggle();
 			return false;
-		})
+		});
 
 		// use ajax to install/activate addOns
 		var errorHider = null;
