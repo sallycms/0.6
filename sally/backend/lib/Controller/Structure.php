@@ -32,7 +32,7 @@ class sly_Controller_Structure extends sly_Controller_Backend implements sly_Con
 			$allowed = $user->getAllowedCLangs();
 
 			if (!empty($user) && !empty($allowed) && !isset($_REQUEST['clang']) && !in_array(sly_Core::getDefaultClangId(), $allowed)) {
-				sly_Util_HTTP::redirect('index.php?page=structure&clang='.reset($allowed), '&', 302);
+				sly_Util_HTTP::redirect(sly_Util_HTTP::getBaseUrl(true).'/backend/index.php?page=structure&clang='.reset($allowed), '&', 302);
 			}
 		}
 	}
