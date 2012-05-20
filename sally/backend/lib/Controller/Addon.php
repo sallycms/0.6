@@ -243,9 +243,10 @@ class sly_Controller_Addon extends sly_Controller_Backend implements sly_Control
 			$requirements[] = $component[0];
 		}
 
-		foreach ($requirements as $req) {
+		foreach ($requirements as $idx => $req) {
 			if (is_array($req)) {
-				if (!$this->plugins->isAvailable($req)) $missing[] = $req;
+				if (!$this->plugins->isAvailable($req)) $missing[] = implode('/', $req);
+				$requirements[$idx] = implode('/', $req);
 			}
 			else {
 				if (!$this->addons->isAvailable($req)) $missing[] = $req;
