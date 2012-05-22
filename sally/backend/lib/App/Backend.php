@@ -63,9 +63,10 @@ class sly_App_Backend extends sly_App_Base {
 		// get the most probably already prepared response object
 		// (addOns had a shot at modifying it)
 		$response = sly_Core::getResponse();
+		$user     = sly_Util_User::getCurrentUser();
 
 		// force login controller if no login is found
-		if (!$isSetup && sly_Util_User::getCurrentUser() === null) {
+		if (!$isSetup && ($user === null || (!$user->isAdmin() && !$user->hasRight('apps', 'backend')))) {
 			// send a 403 header to prevent robots from including the login page
 			// and to help ajax requests that were fired a long time after the last
 			// interaction with the backend to easily detect the expired session

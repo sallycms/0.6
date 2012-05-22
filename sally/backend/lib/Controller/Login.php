@@ -37,6 +37,12 @@ class sly_Controller_Login extends sly_Controller_Backend implements sly_Control
 		$password = sly_post('password', 'string');
 		$loginOK  = sly_Service_Factory::getUserService()->login($username, $password);
 
+		// login was only successful if the user is either admin or has apps/backend permission
+		if ($loginOK === true) {
+			$user    = sly_Util_User::getCurrentUser();
+			$loginOK = $user->isAdmin() || $user->hasRight('apps', 'backend');
+		}
+
 		if ($loginOK !== true) {
 			$this->message = t('login_error', '<strong>'.sly_Core::config()->get('RELOGINDELAY').'</strong>');
 			$this->indexAction();
