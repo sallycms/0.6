@@ -1,6 +1,9 @@
 RELOGINDELAY: 2
 START_PAGE: structure
 authorisation:
+  apps:
+    token:
+      backend: 'translate:backend'
   pages:
     title: 'translate:pages'
     token:

@@ -395,3 +395,5 @@ no_language_selected: No languages have been selected.
 sally_core_cache: 'SallyCMS cache (articles, contents)'
 sally_assetcache: Asset cache
 sally_develop_content: 'Synchronize templates & modules'
+applications: Applications
+backend: Backend
