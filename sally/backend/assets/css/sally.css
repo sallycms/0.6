@@ -162,6 +162,10 @@ caption, legend {
 		display: block;
 		padding: 0 45px;
 	}
+	
+	ul {
+		padding: 0 60px;
+	}
 }
 
 
