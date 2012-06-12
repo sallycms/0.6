@@ -47,12 +47,16 @@ $(function() {
 		links[i].href = links[i].href += '&callback=<?php echo $callback ?>';
 	}
 });
-
+	<?php
+}
+?>
 function openPage(src) {
 	window.opener.location.href = src;
 	self.close();
 }
-	<?php
-	$javascript = ob_get_clean();
-	sly_Core::getLayout()->addJavaScript($javascript);
-}
+<?php
+$javascript = ob_get_clean();
+sly_Core::getLayout()->addJavaScript($javascript);
+?>
+
+
