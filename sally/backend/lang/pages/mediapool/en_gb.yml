@@ -7,7 +7,7 @@ file: File
 file_added: File has been added.
 file_changed: File has been replaced.
 file_delete_error_1: 'File {0} could not be deleted!'
-file_delete_error_2: 'File is still references in the following articles:'
+file_delete_error_2: 'File is still references in the following items:'
 file_info: File info
 file_not_found_maybe_too_big: 'File could not be found, maybe it was to large?'
 filename: Filename
