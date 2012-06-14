@@ -139,7 +139,7 @@ class sly_Controller_User extends sly_Controller_Backend implements sly_Controll
 
 	public function checkPermission($action) {
 		$user = sly_Util_User::getCurrentUser();
-		return !is_null($user) && $user->isAdmin();
+		return !is_null($user) && ($user->isAdmin() || $user->hasRight('pages', 'user'));
 	}
 
 	protected function listUsers() {
