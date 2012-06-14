@@ -7,8 +7,9 @@ authorisation:
   pages:
     title: 'translate:pages'
     token:
-      mediapool: 'translate:mediapool'
       addons: 'translate:addons'
+      user: 'translate:users'
+      mediapool: 'translate:mediapool'
   article:
     title: 'translate:articles'
     token:
