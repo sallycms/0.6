@@ -190,6 +190,10 @@ class sly_Controller_User extends sly_Controller_Backend implements sly_Controll
 			$where = str_replace('?', $db->quote('%'.$search.'%'), $where);
 		}
 
+		// allow addOns to filter on their own and append something like ' AND id IN (the,ids,the,addon,found)'
+		// do not only do this when !empty($search) to allow addOns to have their own filtering GUI
+		$where = sly_Core::dispatcher()->filter('SLY_USER_FILTER_WHERE', $where, array('search' => $search, 'paging' => $paging));
+
 		$users = $service->find($where, null, 'name', $paging['start'], $paging['elements']);
 		$total = $service->count($where);
 
