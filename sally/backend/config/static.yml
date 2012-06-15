@@ -48,3 +48,10 @@ authorisation:
       moveCategory: translate:move_category
       publishCategory: translate:publish_category
       article2startpage: translate:convert_to_startarticle
+  user:
+    title: 'translate:users'
+    token:
+      add: 'translate:add'
+      edit: 'translate:edit'
+      delete: 'translate:delete'
+

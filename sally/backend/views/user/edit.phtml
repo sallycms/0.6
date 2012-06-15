@@ -11,7 +11,9 @@
 // Daten vorbereiten
 
 $label     = t($this->func == 'edit' ? 'edit_user' : 'add_user');
-$currentID = sly_Util_User::getCurrentUser()->getId();
+$curUser   = sly_Util_User::getCurrentUser();
+$currentID = $curUser->getId();
+$safeMode  = $user && $user->isAdmin() && !$curUser->isAdmin();
 
 //////////////////////////////////////////////////////////////////
 // start the form
@@ -34,11 +36,18 @@ else {
 	$login->setRequired();
 }
 
-$password = new sly_Form_Input_Text('userpsw', t('password'), '');
-$password->setRequired($user === null);
-
 $form->beginFieldset($label, '', 2);
-$form->addRow(array($login, $password));
+
+// non-admins may not change admin's passwords
+if ($safeMode) {
+	$form->add($login);
+}
+else {
+	$password = new sly_Form_Input_Text('userpsw', t('password'), '');
+	$password->setRequired($user === null);
+
+	$form->addRow(array($login, $password));
+}
 
 //////////////////////////////////////////////////////////////////
 // second row: name and description
@@ -58,10 +67,21 @@ if ($user) {
 	$userAdmin->setChecked($user->isAdmin());
 	$userStatus->setChecked($user->getStatus());
 
+	// one may not change one's own status
 	if ($currentID == $user->getId()) {
 		$userAdmin->setDisabled(true);
 		$userStatus->setDisabled(true);
 	}
+}
+
+// non-admins may not create admin accounts
+if (!$curUser->isAdmin()) {
+	$userAdmin->setDisabled(true);
+}
+
+// non-admins may not create admin accounts
+if ($safeMode) {
+	$userStatus->setDisabled(true);
 }
 
 $form->addRow(array($userAdmin, $userStatus));

@@ -201,6 +201,7 @@ add_user: Add user
 user_login_already_exists: The chosen username already exists!
 admin: Administrator
 you_cannot_delete_yourself: You cannot delete yourself!
+you_cannot_delete_admins: You cannot delete administrators!
 categories: Categories
 modules: Modules
 last_login: Last login

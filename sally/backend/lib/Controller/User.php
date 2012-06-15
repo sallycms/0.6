@@ -49,7 +49,7 @@ class sly_Controller_User extends sly_Controller_Backend implements sly_Controll
 		}
 
 		$this->func = 'add';
-		print $this->render('user/edit.phtml', array('user' => null));
+		$this->render('user/edit.phtml', array('user' => null), false);
 	}
 
 	public function editAction() {
@@ -64,12 +64,14 @@ class sly_Controller_User extends sly_Controller_Backend implements sly_Controll
 		$save        = sly_post('save', 'boolean', false);
 		$service     = sly_Service_Factory::getUserService();
 		$currentUser = sly_Util_User::getCurrentUser();
+		$isSelf      = $currentUser->getId() === $user->getId();
+		$safeMode    = $user->isAdmin() && !$currentUser->isAdmin();
 
 		if ($save) {
 			$status = sly_post('userstatus', 'boolean', false) ? 1 : 0;
 			$tz     = sly_post('timezone', 'string', '');
 
-			if ($currentUser->getId() == $user->getId()) {
+			if ($isSelf || $safeMode) {
 				$status = $user->getStatus();
 			}
 
@@ -111,7 +113,7 @@ class sly_Controller_User extends sly_Controller_Backend implements sly_Controll
 		$params     = array('user' => $user);
 		$this->func = 'edit';
 
-		print $this->render('user/edit.phtml', $params);
+		$this->render('user/edit.phtml', $params, false);
 	}
 
 	public function deleteAction() {
@@ -131,15 +133,47 @@ class sly_Controller_User extends sly_Controller_Backend implements sly_Controll
 			return false;
 		}
 
+		if ($user->isAdmin() && !$current->isAdmin()) {
+			print sly_Helper_Message::warn(t('you_cannot_delete_admins'));
+			return false;
+		}
+
 		$user->delete();
 		print sly_Helper_Message::info(t('user_deleted'));
 
 		$this->listUsers();
 	}
 
+	public function viewAction() {
+		$this->init();
+
+		$user = $this->getUser();
+
+		if ($user === null) {
+			return $this->listUsers();
+		}
+
+		$params = array('user' => $user);
+		$this->render('user/view.phtml', $params, false);
+	}
+
 	public function checkPermission($action) {
 		$user = sly_Util_User::getCurrentUser();
-		return !is_null($user) && ($user->isAdmin() || $user->hasRight('pages', 'user'));
+		if (!$user) return false;
+
+		if ($user->isAdmin()) {
+			return true;
+		}
+
+		if (!$user->hasRight('pages', 'user')) {
+			return false;
+		}
+
+		if (in_array($action, array('add', 'edit', 'delete'))) {
+			return $user->hasRight('user', $action);
+		}
+
+		return true;
 	}
 
 	protected function listUsers() {
@@ -159,7 +193,7 @@ class sly_Controller_User extends sly_Controller_Backend implements sly_Controll
 		$users = $service->find($where, null, 'name', $paging['start'], $paging['elements']);
 		$total = $service->count($where);
 
-		print $this->render('user/list.phtml', compact('users', 'total'));
+		$this->render('user/list.phtml', compact('users', 'total'), false);
 	}
 
 	protected function getUser() {
@@ -205,9 +239,14 @@ class sly_Controller_User extends sly_Controller_Backend implements sly_Controll
 
 	protected function getRightsFromForm($user) {
 		$permissions = array();
-		$current     = sly_Util_User::getCurrentUser()->getId();
+		$curUser     = sly_Util_User::getCurrentUser();
+		$isAdmin     = $curUser->isAdmin();
+		$isSelfEdit  = $user !== null && $curUser->getId() === $user->getId();
+		$safeMode    = $user && $user->isAdmin() && !$curUser->isAdmin();
 
-		if (sly_post('is_admin', 'boolean', false) || ($user && $current == $user->getId())) {
+		// admin status
+
+		if ($safeMode || ($isAdmin && ($isSelfEdit || sly_post('is_admin', 'boolean', false)))) {
 			$permissions[] = 'admin[]';
 		}
 

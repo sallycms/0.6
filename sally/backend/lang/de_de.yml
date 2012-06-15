@@ -201,6 +201,7 @@ add_user: Benutzer hinzufügen
 user_login_already_exists: Der gewählte Benutzername existiert bereits!
 admin: Administrator
 you_cannot_delete_yourself: Sie können sich nicht selbst löschen!
+you_cannot_delete_admins: Sie können keine Administratoren löschen!
 categories: Kategorien
 modules: Module
 last_login: Letzter Login

@@ -1,0 +1,72 @@
+<?php
+/*
+ * Copyright (c) 2012, webvariants GbR, http://www.webvariants.de
+ *
+ * This file is released under the terms of the MIT license. You can find the
+ * complete text in the attached LICENSE file or online at:
+ *
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+//////////////////////////////////////////////////////////////////
+// start the form
+
+$form = new sly_Form('index.php', 'GET', '');
+$form->addHiddenValue('page', 'user');
+$form->setSubmitButton(null);
+$form->setResetButton(null);
+$form->beginFieldset(t('user'), '', 2);
+
+//////////////////////////////////////////////////////////////////
+// first row: login and last login
+
+$try   = $user->getLastTryDate();
+$login = new sly_Form_Text(t('username'), $user->getLogin());
+$last  = new sly_Form_Text(t('last_login'), $try === 0 ? t('never') : sly_Util_String::formatDatetime($try));
+
+$form->addRow(array($login, $last));
+
+//////////////////////////////////////////////////////////////////
+// second row: name and description
+
+$name        = new sly_Form_Text(t('name'), $user->getName());
+$description = new sly_Form_Text(t('description'), $user->getDescription());
+
+$form->addRow(array($name, $description));
+
+//////////////////////////////////////////////////////////////////
+// third row: admin and status
+
+$userAdmin  = new sly_Form_Input_Checkbox('is_admin', '', '1', t('admin'));
+$userStatus = new sly_Form_Input_Checkbox('userstatus', '', '1', t('activated'));
+
+$userAdmin->setChecked($user->isAdmin());
+$userStatus->setChecked($user->getStatus());
+$userAdmin->setDisabled(true);
+$userStatus->setDisabled(true);
+
+$form->addRow(array($userAdmin, $userStatus));
+
+//////////////////////////////////////////////////////////////////
+// fourth row: backend startpage and backend locale
+
+$startPage     = $user->getStartPage();
+$backendLocale = $user->getBackendLocale();
+$startpages    = $this->getPossibleStartpages();
+$locales       = $this->getBackendLocales();
+
+$startpageSelect = new sly_Form_Text(t('startpage'), $startPage ? $startpages[$startPage] : t('structure'));
+$localeSelect    = new sly_Form_Text(t('backend_locale'), $locales[$backendLocale]);
+
+$form->addRow(array($startpageSelect, $localeSelect));
+
+//////////////////////////////////////////////////////////////////
+// let listeners extend the form
+
+$eventparams = array('user' => $user);
+$form = sly_Core::dispatcher()->filter('SLY_USER_VIEW_FORM', $form, $eventparams);
+
+//////////////////////////////////////////////////////////////////
+// Finally, render it!
+
+print $form->render();
