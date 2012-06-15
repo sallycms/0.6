@@ -556,12 +556,12 @@ var sly = {};
 
 		// Filter-Funktionen in sly_Table
 
-		$('.sly-table-extras-filter input[class^=filter_input_]').keyup(function(event) {
+		$('.sly-table-extras-filter input[class*=filter_input_]').keyup(function(event) {
 			// Klassen- und Tabellennamen ermitteln
 
 			var
 				className = $(this).attr('class'),
-				tableName = className.replace('filter_input_', ''),
+				tableName = className.match(/filter_input_([a-zA-Z0-9-_]+)/)[1],
 				table     = $('#' + tableName),
 				c         = event.keyCode;
 
