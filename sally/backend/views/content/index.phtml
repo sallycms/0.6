@@ -64,15 +64,7 @@ elseif (empty($modules)) {
 else {
 	print '<div class="sly-content-editmode">';
 
-	$articleSlices = sly_Service_Factory::getArticleSliceService()->find(
-		array(
-			'article_id' => $this->article->getId(),
-			'clang'      => $this->article->getClang(),
-			'slot'       => $this->slot
-		),
-		null,
-		'pos ASC'
-	);
+	$articleSlices = sly_Util_ArticleSlice::findByArticle($this->article->getId(), $this->article->getClang(), $this->slot);
 
 	for ($i = 0; $i <= count($articleSlices); $i++) {
 		try {
