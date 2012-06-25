@@ -11,8 +11,8 @@
 $callback = sly_request('callback', '');
 $callback = preg_replace('#[^a-z0-9.]#i', '', $callback);
 
+ob_start();
 if ($callback) {
-	ob_start();
 	?>
 $(function() {
 	$('#sly-wrapper').delegate('a[href="#"]', 'click', function() {
@@ -57,6 +57,3 @@ function openPage(src) {
 <?php
 $javascript = ob_get_clean();
 sly_Core::getLayout()->addJavaScript($javascript);
-?>
-
-

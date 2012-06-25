@@ -12,7 +12,7 @@ class sly_Controller_Mediapool_Detail extends sly_Controller_Mediapool {
 	protected $file;
 
 	public function indexAction() {
-		$this->init('move');
+		$this->init('index');
 
 		$fileID = $this->getCurrentFile();
 
