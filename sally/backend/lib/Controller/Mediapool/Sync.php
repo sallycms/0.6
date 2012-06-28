@@ -46,6 +46,7 @@ class sly_Controller_Mediapool_Sync extends sly_Controller_Mediapool {
 
 		// get cleaned filename
 		$filename = sly_Util_Directory::fixWindowsDisplayFilename($filename);
+		if(empty($title)) $title = $filename;
 		$newName  = SLY_MEDIAFOLDER.'/'.sly_Util_Medium::createFilename($filename, false);
 
 		if ($newName !== $absFile) {
