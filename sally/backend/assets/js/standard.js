@@ -11,6 +11,8 @@ var sly = {};
 	var openPopups = [];
 
 	sly.Popup = function(name, url, posx, posy, width, height, extra) {
+		var ua = navigator.userAgent;
+
 		// ensure names are somewhat unique
 		name += (new Date()).getTime();
 
@@ -18,12 +20,12 @@ var sly = {};
 		this.url  = url;
 		this.obj  = window.open(url, name, 'width='+width+',height='+height+extra);
 
-		// Don't position the popup in Chrome 18.
+		// Don't position the popup in Chrome 18 and 20.
 		//   bug details: http://code.google.com/p/chromium/issues/detail?id=114762
 		//   workaround:  http://code.google.com/p/chromium/issues/detail?id=115585
-		// Remove this once Chrome 18 is not used anymore (~ June 2012)
+		// Remove this once Chrome 18/20 is not used anymore (~ September 2012)
 
-		if (navigator.userAgent.indexOf('Chrome/18.') === -1) {
+		if (ua.indexOf('Chrome/18.') === -1 && ua.indexOf('Chrome/20.') === -1) {
 			this.obj.moveTo(posx, posy);
 			this.obj.focus();
 		}
