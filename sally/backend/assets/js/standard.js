@@ -556,6 +556,14 @@ var sly = {};
 			return confirm('Sicher?');
 		});
 
+		// use a distinct class to make sure when we change the delete question to
+		// something like 'Are you sure you want to delete...?', existing code does
+		// not look weird.
+
+		$('a.sly-confirm-me').click(function() {
+			return confirm('Sicher?');
+		});
+
 		// Filter-Funktionen in sly_Table
 
 		$('.sly-table-extras-filter input[class*=filter_input_]').keyup(function(event) {
