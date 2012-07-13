@@ -32,7 +32,7 @@ if ($canDelete) {
 	$table->addColumn(new sly_Table_Column(t('function'), '', '', array('class' => 'sly-col-func')));
 }
 
-$table->enableSearching();
+$table->enableSearching(true, array('page' => 'user'));
 $table->setIsEmpty(false);
 $table->openBuffer();
 
