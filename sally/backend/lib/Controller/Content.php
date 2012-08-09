@@ -141,7 +141,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 			$clang = sly_Core::getCurrentClang();
 
 			// check permission
-			if ($user->isAdmin() || $user->hasRight('transitional', 'moveSlice') || $user->hasRight('module', 'edit', $module)) {
+			if ($user->isAdmin() || $user->hasRight('transitional', 'moveSlice') || $user->hasRight('module', 'edit', sly_Authorisation_ModuleListProvider::ALL) || $user->hasRight('module', 'edit', $module)) {
 				$success = sly_Service_Factory::getArticleSliceService()->move($slice_id, $clang, $direction);
 
 				if ($success) {
@@ -245,7 +245,7 @@ class sly_Controller_Content extends sly_Controller_Content_Base {
 		$module = $slice->getModule();
 		$user   = sly_Util_User::getCurrentUser();
 
-		if (!$user->isAdmin() && !$user->hasRight('module', 'edit', $module)) {
+		if (!$user->isAdmin() && !$user->hasRight('module', 'edit', sly_Authorisation_ModuleListProvider::ALL) && !$user->hasRight('module', 'edit', $module)) {
 			$this->localWarning = t('no_rights_to_this_module');
 			return $this->indexAction();
 		}
