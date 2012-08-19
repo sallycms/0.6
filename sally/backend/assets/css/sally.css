@@ -158,11 +158,20 @@ caption, legend {
 		background-color: #b32430;
 	}
 
+	em {
+		font-style: italic;
+	}
+
+	a {
+		color: #fff;
+		text-decoration: underline;
+	}
+
 	span {
 		display: block;
 		padding: 0 45px;
 	}
-	
+
 	ul {
 		padding: 0 60px;
 	}
