@@ -260,6 +260,8 @@ a.sly-button {
 		&:first-child {
 			border-top: 0 none;
 		}
+
+		&.hide { display: none }
 	}
 
 	.sly-radio-group {
