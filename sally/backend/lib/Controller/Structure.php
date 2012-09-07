@@ -371,22 +371,22 @@ class sly_Controller_Structure extends sly_Controller_Backend implements sly_Con
 			return false;
 		}
 
-		if ($this->action === 'index') {
+		if ($action === 'index') {
 			return $this->canViewCategory($categoryId);
 		}
 
-		if (sly_Util_String::startsWith($this->action, 'editstatus')) {
-			if ($this->action === 'editstatuscategory') {
+		if (sly_Util_String::startsWith($action, 'editstatus')) {
+			if ($action === 'editstatuscategory') {
 				return $this->canPublishCategory($editId);
 			}
 			else {
 				return $this->canPublishCategory($categoryId);
 			}
 		}
-		elseif (sly_Util_String::startsWith($this->action, 'edit') || sly_Util_String::startsWith($this->action, 'delete')) {
+		elseif (sly_Util_String::startsWith($action, 'edit') || sly_Util_String::startsWith($action, 'delete')) {
 			return $this->canEditCategory($editId);
 		}
-		elseif (sly_Util_String::startsWith($this->action, 'add')) {
+		elseif (sly_Util_String::startsWith($action, 'add')) {
 			return $this->canEditCategory($categoryId);
 		}
 
