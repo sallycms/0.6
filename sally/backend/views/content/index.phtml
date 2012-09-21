@@ -42,6 +42,7 @@ $form = sly_Core::dispatcher()->filter('SLY_ART_META_FORM', $form, $params);
 
 //buttons
 $button = new sly_Form_Input_Button('submit', 'save_article', t('submit'));
+$button->addClass('sly-form-submit');
 $form->setSubmitButton($button);
 
 print $form->render();
