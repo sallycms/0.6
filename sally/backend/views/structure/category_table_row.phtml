@@ -21,7 +21,7 @@ else {
 	$status = '<span class="'.$status_class.'">'.$status.'</span>';
 }
 ?>
-<tr>
+<tr data-slyid="<?php echo $category->getId() ?>" data-slystatus="<?php echo $category->getStatus() ?>">
 	<td class="sly-col-icon sly-icon"><?php echo sly_Util_HTML::getSpriteLink($base_url, $category->getCatName(), 'category') ?></td>
 	<td class="sly-col-name"><a href="<?php echo sly_html($base_url) ?>"><?php echo sly_html($category->getCatName()) ?></a></td>
 	<?php if ($isActive): ?>

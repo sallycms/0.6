@@ -65,7 +65,7 @@
 
 	if (!$this->renderAddArticle && empty($articles)) {
 		?>
-		<tr>
+		<tr data-slyid="0">
 			<td colspan="<?php echo $isActive ? 5 : 4 ?>" class="sly-col-empty center"><?php echo t('no_articles_yet') ?></td>
 		</tr>
 		<?php

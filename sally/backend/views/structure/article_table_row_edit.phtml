@@ -18,7 +18,7 @@ else {
 $base_url = 'index.php?page=structure&category_id='.$article->getId().'&clang='.$this->clangId;
 ?>
 
-<tr class="sly-active">
+<tr class="sly-active" data-slyid="<?php echo $article->getId() ?>" data-slystatus="<?php echo $article->getStatus() ?>" data-slytype="<?php echo $article->getType() ?>">
 	<td class="sly-col-icon sly-icon">
 		<input type="hidden" name="edit_id" value="<?php echo $article->getId() ?>" />
 		<?php echo sly_Util_HTML::getSpriteLink($base_url, $article->getName(), $sprite) ?>

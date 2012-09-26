@@ -39,7 +39,7 @@ else {
 	$status = '<span class="'.$status_class.'">'.$status.'</span>';
 }
 ?>
-<tr>
+<tr data-slyid="<?php echo $article->getId() ?>" data-slystatus="<?php echo $article->getStatus() ?>" data-slytype="<?php echo $article->getType() ?>">
 	<td class="sly-col-icon sly-icon"><?php echo sly_Util_HTML::getSpriteLink($base_url, $article->getName(), $sprite) ?></td>
 	<td class="sly-col-name"><a href="<?php echo sly_html($base_url) ?>"><?php echo sly_html($article->getName()) ?></a></td>
 	<td class="sly-col-arttype"><?php echo sly_html($type) ?></td>
