@@ -196,6 +196,7 @@ profile_updated: Your profile has been updated.
 user_updated: User has been updated.
 user_deleted: User has been deleted.
 user_added: User has been added.
+user_not_found: 'User {0} could not be found!'
 edit_user: Edit user
 add_user: Add user
 user_login_already_exists: The chosen username already exists!
