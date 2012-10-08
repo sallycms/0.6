@@ -11,11 +11,12 @@
 $baseURL = 'index.php?article_id='.$this->article->getId().'&clang='.$this->article->getClang();
 $menu    = '';
 $isMeta  = $this instanceof sly_Controller_Contentmeta;
+$url     = sly_Util_HTTP::getAbsoluteUrl($this->article);
 
 $listElements = array();
 $listElements[] = '<a href="'.$baseURL.'&amp;page=content"'.($isMeta ? '' : ' class="sly-active"').'>'.t('edit_mode').'</a>';
 $listElements[] = '<a href="'.$baseURL.'&amp;page=contentmeta"'.($isMeta ? ' class="sly-active"' : '').'>'.t('metadata').'</a>';
-$listElements[] = '<a href="../'.$this->article->getUrl().'" class="sly-blank">'.t('show').'</a>';
+$listElements[] = '<a href="'.$url.'" class="sly-blank">'.t('show').'</a>';
 
 $listElements = sly_Core::dispatcher()->filter('SLY_PAGE_CONTENT_ACTIONS_MENU', $listElements, array(
 	'article_id' => $this->article->getId(),
