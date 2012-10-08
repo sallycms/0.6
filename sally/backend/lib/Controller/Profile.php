@@ -74,7 +74,7 @@ class sly_Controller_Profile extends sly_Controller_Backend implements sly_Contr
 		$result   = array('' => t('use_default_locale'));
 
 		foreach ($langs as $locale) {
-			$i18n = new sly_I18N($locale, $langpath);
+			$i18n = new sly_I18N($locale, $langpath, false);
 			$result[$locale] = $i18n->msg('lang');
 		}
 

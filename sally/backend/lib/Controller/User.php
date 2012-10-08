@@ -214,7 +214,7 @@ class sly_Controller_User extends sly_Controller_Backend implements sly_Controll
 		$result   = array('' => t('use_default_locale'));
 
 		foreach ($locales as $locale) {
-			$i18n = new sly_I18N($locale, $langpath);
+			$i18n = new sly_I18N($locale, $langpath, false);
 			$result[$locale] = $i18n->msg('lang');
 		}
 
