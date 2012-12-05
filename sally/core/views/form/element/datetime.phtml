@@ -40,7 +40,7 @@ if ($value !== null) {
 // JavaScript-Version
 
 $type       = $this->withTime() ? 'datetime-local' : 'date';
-$hasNative  = sly_Helper_Modernizr::hasInputtype($type);
+$hasNative  = !$this->withTime() ? sly_Helper_Modernizr::hasInputtype($type) : false;
 $dateformat = '%d.%m.%Y'; // t('dateformat');
 $formatJS   = $dateformat;
 $formatJS   = str_replace(
@@ -66,7 +66,7 @@ print '<input '.sly_Util_HTML::buildAttributeString($attrs).' />';
 $registry = sly_Core::getTempRegistry();
 $locale   = t('htmllang');
 
-if (!$hasNative && !$registry->has('sly.form.datetime.links')) {
+if (!$hasNative && !$registry->has('sly.form.date.links')) {
 	$path   = 'assets/js/';
 	$layout = sly_Core::getLayout();
 
@@ -76,14 +76,17 @@ if (!$hasNative && !$registry->has('sly.form.datetime.links')) {
 	$layout->addJavaScriptFile($path.'jqueryui.datepicker.min.js');
 	$layout->addJavaScriptFile($path.'jqueryui.effects.min.js');
 
-	if ($this->withTime()) {
-		$layout->addJavaScriptFile($path.'jqueryui.widget.min.js');
-		$layout->addJavaScriptFile($path.'jqueryui.mouse.min.js');
-		$layout->addJavaScriptFile($path.'jqueryui.slider.min.js');
-		$layout->addJavaScriptFile($path.'jquery.timepicker.min.js');
-	}
+	$registry->set('sly.form.date.links', true);
+} elseif ($this->withTime() && !$registry->has('sly.form.datetime.links')) {
+	$path   = 'assets/js/';
+	$layout = sly_Core::getLayout();
 
-	$registry->set('sly.form.datetime.links', true);
+	$layout->addJavaScriptFile($path.'jqueryui.widget.min.js');
+	$layout->addJavaScriptFile($path.'jqueryui.mouse.min.js');
+	$layout->addJavaScriptFile($path.'jqueryui.slider.min.js');
+	$layout->addJavaScriptFile($path.'jquery.timepicker.min.js');
+
+	$registry->has('sly.form.datetime.links', true);
 }
 
 // Die userLang dient dazu, dass PHP auch ohne korrekt gesetztes Locale das
