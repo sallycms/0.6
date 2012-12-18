@@ -66,7 +66,7 @@ print '<input '.sly_Util_HTML::buildAttributeString($attrs).' />';
 $registry = sly_Core::getTempRegistry();
 $locale   = t('htmllang');
 
-if (!$hasNative && !$registry->has('sly.form.date.links')) {
+if (!$hasNative && !$registry->get('sly.form.date.links', false)) {
 	$path   = 'assets/js/';
 	$layout = sly_Core::getLayout();
 
@@ -77,7 +77,9 @@ if (!$hasNative && !$registry->has('sly.form.date.links')) {
 	$layout->addJavaScriptFile($path.'jqueryui.effects.min.js');
 
 	$registry->set('sly.form.date.links', true);
-} elseif ($this->withTime() && !$registry->has('sly.form.datetime.links')) {
+}
+
+if ($this->withTime() && !$registry->get('sly.form.datetime.links', false)) {
 	$path   = 'assets/js/';
 	$layout = sly_Core::getLayout();
 
@@ -86,7 +88,7 @@ if (!$hasNative && !$registry->has('sly.form.date.links')) {
 	$layout->addJavaScriptFile($path.'jqueryui.slider.min.js');
 	$layout->addJavaScriptFile($path.'jquery.timepicker.min.js');
 
-	$registry->has('sly.form.datetime.links', true);
+	$registry->set('sly.form.datetime.links', true);
 }
 
 // Die userLang dient dazu, dass PHP auch ohne korrekt gesetztes Locale das
